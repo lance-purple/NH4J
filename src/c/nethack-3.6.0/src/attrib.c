@@ -1169,4 +1169,40 @@ void decreaseYourAttrChangeFromExercise(int index, xchar delta) {
         (yourAttrChangeFromExercise(index) - delta));
 }
 
+xchar yourAttrAsMonster(int index) {
+    return u.macurr.a[index];
+}
+
+void setYourAttrAsMonster(int index, xchar value) {
+    u.macurr.a[index] = value;
+}
+
+void increaseYourAttrAsMonster(int index, xchar delta) {
+    setYourAttrAsMonster(index,
+        (yourAttrAsMonster(index) + delta));
+}
+
+void decreaseYourAttrAsMonster(int index, xchar delta) {
+    setYourAttrAsMonster(index,
+        (yourAttrAsMonster(index) - delta));
+}
+
+xchar yourAttrMaxAsMonster(int index) {
+    return u.mamax.a[index];
+}
+
+void setYourAttrMaxAsMonster(int index, xchar value) {
+    u.mamax.a[index] = value;
+}
+
+void increaseYourAttrMaxAsMonster(int index, xchar delta) {
+    setYourAttrMaxAsMonster(index,
+        (yourAttrMaxAsMonster(index) + delta));
+}
+
+void decreaseYourAttrMaxAsMonster(int index, xchar delta) {
+    setYourAttrMaxAsMonster(index,
+        (yourAttrMaxAsMonster(index) - delta));
+}
+
 /*attrib.c*/

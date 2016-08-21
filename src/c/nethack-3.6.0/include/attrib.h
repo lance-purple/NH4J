@@ -40,9 +40,16 @@ extern void decreaseYourAttrChangeFromExercise(int index, xchar delta);
 #define ACURRSTR (acurrstr())
 /* should be: */
 /* #define ACURR(x) (ABON(x) + ATEMP(x) + (Upolyd  ? MBASE(x) : ABASE(x)) */
-#define MCURR(x) (u.macurr.a[x])
 
-#define MMAX(x) (u.mamax.a[x])
+extern xchar yourAttrAsMonster(int index);
+extern void setYourAttrAsMonster(int index, xchar value);
+extern void increaseYourAttrAsMonster(int index, xchar delta);
+extern void decreaseYourAttrAsMonster(int index, xchar delta);
+
+extern xchar yourAttrMaxAsMonster(int index);
+extern void setYourAttrMaxAsMonster(int index, xchar value);
+extern void increaseYourAttrMaxAsMonster(int index, xchar delta);
+extern void decreaseYourAttrMaxAsMonster(int index, xchar delta);
 
 #define ATEMP(x) (u.atemp.a[x])
 #define ATIME(x) (u.atime.a[x])

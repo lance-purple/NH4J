@@ -154,8 +154,8 @@ const char *fmt, *arg;
         /* restore old attribs */
         int i;
         for (i = 0; i < A_MAX; i++) {
-            setYourCurrentAttr(i, u.macurr.a[i]);
-            setYourAttrMax    (i, u.mamax.a[i]);
+            setYourCurrentAttr(i, yourAttrAsMonster(i));
+            setYourAttrMax    (i, yourAttrMaxAsMonster(i));
         } 
         u.umonnum = u.umonster;
         flags.female = u.mfemale;
@@ -607,8 +607,8 @@ int mntmp;
         /* Human to monster; save human stats */
         int i;
         for (i = 0; i < A_MAX; i++) {
-            u.macurr.a[i] = yourCurrentAttr(i);
-            u.mamax.a[i]  = yourAttrMax(i);
+            setYourAttrAsMonster(i, yourCurrentAttr(i));
+            setYourAttrMaxAsMonster(i, yourAttrMax(i));
         }
         u.mfemale = flags.female;
     } else {
@@ -617,8 +617,8 @@ int mntmp;
          */
         int i;
         for (i = 0; i < A_MAX; i++) {
-            setYourCurrentAttr(i, u.macurr.a[i]);
-            setYourAttrMax(i,     u.mamax.a[i]);
+            setYourCurrentAttr(i, yourAttrAsMonster(i));
+            setYourAttrMax(i,     yourAttrMaxAsMonster(i));
         }
         flags.female = u.mfemale;
     }
