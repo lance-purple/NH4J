@@ -384,7 +384,7 @@ Helmet_on(VOID_ARGS)
          * about, but it takes trained arrogance to pull it off,
          * and the actual enchantment of the hat is irrelevant.
          */
-        ABON(A_CHA) += (Role_if(PM_WIZARD) ? 1 : -1);
+        increaseYourAttrBonus(A_CHA, (Role_if(PM_WIZARD) ? 1 : -1));
         context.botl = 1;
         makeknown(uarmh->otyp);
         break;
@@ -413,7 +413,7 @@ Helmet_on(VOID_ARGS)
         } else if (uarmh && uarmh->otyp == DUNCE_CAP) {
             You_feel("%s.", /* track INT change; ignore WIS */
                      ACURR(A_INT)
-                             <= (yourCurrentAttr(A_INT) + ABON(A_INT) + ATEMP(A_INT))
+                             <= (yourCurrentAttr(A_INT) + yourAttrBonus(A_INT) + ATEMP(A_INT))
                          ? "like sitting in a corner"
                          : "giddy");
         } else {
@@ -445,7 +445,7 @@ Helmet_off(VOID_ARGS)
         break;
     case CORNUTHAUM:
         if (!context.takeoff.cancelled_don) {
-            ABON(A_CHA) += (Role_if(PM_WIZARD) ? -1 : 1);
+            increaseYourAttrBonus(A_CHA, (Role_if(PM_WIZARD) ? -1 : 1));
             context.botl = 1;
         }
         break;
@@ -917,7 +917,7 @@ register struct obj *obj;
         which = A_CHA;
     adjust_attrib:
         old_attrib = ACURR(which);
-        ABON(which) += obj->spe;
+        increaseYourAttrBonus(which, obj->spe);
         observable = (old_attrib != ACURR(which));
         /* if didn't change, usually means ring is +0 but might
            be because nonzero couldn't go below min or above max;
@@ -1031,7 +1031,7 @@ boolean gone;
         which = A_CHA;
     adjust_attrib:
         old_attrib = ACURR(which);
-        ABON(which) -= obj->spe;
+        decreaseYourAttrBonus(which, obj->spe);
         observable = (old_attrib != ACURR(which));
         /* same criteria as Ring_on() */
         if (observable || !extremeattr(which))
@@ -2602,15 +2602,15 @@ register schar delta;
     if (uarmg && uarmg == otmp && otmp->otyp == GAUNTLETS_OF_DEXTERITY) {
         if (delta) {
             makeknown(uarmg->otyp);
-            ABON(A_DEX) += (delta);
+            increaseYourAttrBonus(A_DEX, delta);
         }
         context.botl = 1;
     }
     if (uarmh && uarmh == otmp && otmp->otyp == HELM_OF_BRILLIANCE) {
         if (delta) {
             makeknown(uarmh->otyp);
-            ABON(A_INT) += (delta);
-            ABON(A_WIS) += (delta);
+            increaseYourAttrBonus(A_INT, delta);
+            increaseYourAttrBonus(A_WIS, delta);
         }
         context.botl = 1;
     }

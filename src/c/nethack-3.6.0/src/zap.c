@@ -910,19 +910,19 @@ register struct obj *obj;
     switch (otyp) {
     case RIN_GAIN_STRENGTH:
         if ((obj->owornmask & W_RING) && u_ring) {
-            ABON(A_STR) -= obj->spe;
+            decreaseYourAttrBonus(A_STR, obj->spe);
             context.botl = 1;
         }
         break;
     case RIN_GAIN_CONSTITUTION:
         if ((obj->owornmask & W_RING) && u_ring) {
-            ABON(A_CON) -= obj->spe;
+            decreaseYourAttrBonus(A_CON, obj->spe);
             context.botl = 1;
         }
         break;
     case RIN_ADORNMENT:
         if ((obj->owornmask & W_RING) && u_ring) {
-            ABON(A_CHA) -= obj->spe;
+            decreaseYourAttrBonus(A_CHA, obj->spe);
             context.botl = 1;
         }
         break;
@@ -936,14 +936,14 @@ register struct obj *obj;
         break;
     case GAUNTLETS_OF_DEXTERITY:
         if ((obj->owornmask & W_ARMG) && (obj == uarmg)) {
-            ABON(A_DEX) -= obj->spe;
+            decreaseYourAttrBonus(A_DEX, obj->spe);
             context.botl = 1;
         }
         break;
     case HELM_OF_BRILLIANCE:
         if ((obj->owornmask & W_ARMH) && (obj == uarmh)) {
-            ABON(A_INT) -= obj->spe;
-            ABON(A_WIS) -= obj->spe;
+            decreaseYourAttrBonus(A_INT, obj->spe);
+            decreaseYourAttrBonus(A_WIS, obj->spe);
             context.botl = 1;
         }
         break;
@@ -1026,19 +1026,19 @@ register struct obj *obj;
     switch (obj->otyp) {
     case RIN_GAIN_STRENGTH:
         if ((obj->owornmask & W_RING) && u_ring) {
-            ABON(A_STR)--;
+            decreaseYourAttrBonus(A_STR, 1);
             context.botl = 1;
         }
         break;
     case RIN_GAIN_CONSTITUTION:
         if ((obj->owornmask & W_RING) && u_ring) {
-            ABON(A_CON)--;
+            decreaseYourAttrBonus(A_CON, 1);
             context.botl = 1;
         }
         break;
     case RIN_ADORNMENT:
         if ((obj->owornmask & W_RING) && u_ring) {
-            ABON(A_CHA)--;
+            decreaseYourAttrBonus(A_CHA, 1);
             context.botl = 1;
         }
         break;
@@ -1052,14 +1052,14 @@ register struct obj *obj;
         break;
     case HELM_OF_BRILLIANCE:
         if ((obj->owornmask & W_ARMH) && (obj == uarmh)) {
-            ABON(A_INT)--;
-            ABON(A_WIS)--;
+            decreaseYourAttrBonus(A_INT, 1);
+            decreaseYourAttrBonus(A_WIS, 1);
             context.botl = 1;
         }
         break;
     case GAUNTLETS_OF_DEXTERITY:
         if ((obj->owornmask & W_ARMG) && (obj == uarmg)) {
-            ABON(A_DEX)--;
+            decreaseYourAttrBonus(A_DEX, 1);
             context.botl = 1;
         }
         break;

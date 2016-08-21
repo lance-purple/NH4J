@@ -26,7 +26,11 @@ extern void setYourAttrMax(int index, xchar value);
 extern void increaseYourAttrMax(int index, xchar delta);
 extern void decreaseYourAttrMax(int index, xchar delta);
 
-#define ABON(x) (u.abon.a[x])
+extern xchar yourAttrBonus(int index);
+extern void setYourAttrBonus(int index, xchar value);
+extern void increaseYourAttrBonus(int index, xchar delta);
+extern void decreaseYourAttrBonus(int index, xchar delta);
+
 #define AEXE(x) (u.aexe.a[x])
 #define ACURR(x) (acurr(x))
 #define ACURRSTR (acurrstr())

@@ -123,7 +123,7 @@ int msgflg; /* positive => no message, zero => message, and */
             setYourCurrentAttr(ndx, yourAttrMax(ndx));
         }
         attrstr = plusattr[ndx];
-        abonflg = (ABON(ndx) < 0);
+        abonflg = (yourAttrBonus(ndx) < 0);
     } else {
         increaseYourCurrentAttr(ndx, incr);
         if (yourCurrentAttr(ndx) < ATTRMIN(ndx)) {
@@ -134,7 +134,7 @@ int msgflg; /* positive => no message, zero => message, and */
                 setYourAttrMax(ndx, ATTRMIN(ndx));
         }
         attrstr = minusattr[ndx];
-        abonflg = (ABON(ndx) > 0);
+        abonflg = (yourAttrBonus(ndx) > 0);
     }
     if (ACURR(ndx) == old_acurr) {
         if (msgflg == 0 && flags.verbose)
@@ -974,7 +974,7 @@ schar
 acurr(x)
 int x;
 {
-    register int tmp = (u.abon.a[x] + u.atemp.a[x] + yourCurrentAttr(x));
+    register int tmp = (yourAttrBonus(x) + u.atemp.a[x] + yourCurrentAttr(x));
 
     if (x == A_STR) {
         if (tmp >= 125 || (uarmg && uarmg->otyp == GAUNTLETS_OF_POWER))
@@ -1130,6 +1130,22 @@ void increaseYourAttrMax(int index, xchar delta) {
 
 void decreaseYourAttrMax(int index, xchar delta) {
     setYourAttrMax(index, (yourAttrMax(index) - delta));
+}
+
+xchar yourAttrBonus(int index) {
+    return u.abon.a[index];
+}
+
+void setYourAttrBonus(int index, xchar value) {
+    u.abon.a[index] = value;
+}
+
+void increaseYourAttrBonus(int index, xchar delta) {
+    setYourAttrBonus(index, (yourAttrBonus(index) + delta));
+}
+
+void decreaseYourAttrBonus(int index, xchar delta) {
+    setYourAttrBonus(index, (yourAttrBonus(index) - delta));
 }
 
 /*attrib.c*/
