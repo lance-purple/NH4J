@@ -181,7 +181,7 @@ in_trouble()
         return TROUBLE_HIT;
     if (u.ulycn >= LOW_PM)
         return TROUBLE_LYCANTHROPE;
-    if (near_capacity() >= EXT_ENCUMBER && AMAX(A_STR) - ABASE(A_STR) > 3)
+    if (near_capacity() >= EXT_ENCUMBER && yourAttrMax(A_STR) - yourCurrentAttr(A_STR) > 3)
         return TROUBLE_COLLAPSING;
 
     for (i = -1; i <= 1; i++)
@@ -234,7 +234,7 @@ in_trouble()
             || !attacktype_fordmg(u.ustuck->data, AT_ENGL, AD_BLND)))
         return TROUBLE_BLIND;
     for (i = 0; i < A_MAX; i++)
-        if (ABASE(i) < AMAX(i))
+        if (yourCurrentAttr(i) < yourAttrMax(i))
             return TROUBLE_POISONED;
     if (Wounded_legs && !u.usteed)
         return TROUBLE_WOUNDED_LEGS;
@@ -379,8 +379,8 @@ int trouble;
     case TROUBLE_COLLAPSING:
         /* override Fixed_abil; uncurse that if feasible */
         You_feel("%sstronger.",
-                 (AMAX(A_STR) - ABASE(A_STR) > 6) ? "much " : "");
-        ABASE(A_STR) = AMAX(A_STR);
+                 (yourAttrMax(A_STR) - yourCurrentAttr(A_STR) > 6) ? "much " : "");
+        setYourCurrentAttr(A_STR, yourAttrMax(A_STR));
         context.botl = 1;
         if (Fixed_abil) {
             if ((otmp = stuck_ring(uleft, RIN_SUSTAIN_ABILITY)) != 0) {
@@ -479,8 +479,8 @@ int trouble;
         else
             You_feel("in good health again.");
         for (i = 0; i < A_MAX; i++) {
-            if (ABASE(i) < AMAX(i)) {
-                ABASE(i) = AMAX(i);
+            if (yourCurrentAttr(i) < yourAttrMax(i)) {
+                setYourCurrentAttr(i, yourAttrMax(i));
                 context.botl = 1;
             }
         }
@@ -1045,7 +1045,7 @@ aligntyp g_align;
             u.uhp = u.uhpmax;
             if (Upolyd)
                 u.mh = u.mhmax;
-            ABASE(A_STR) = AMAX(A_STR);
+            setYourCurrentAttr(A_STR, yourAttrMax(A_STR));
             if (u.uhunger < 900)
                 init_uhunger();
             if (u.uluck < 0)

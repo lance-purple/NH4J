@@ -1568,8 +1568,8 @@ int mode, final, attrindx;
            (while game is in progress; trying to reduce dependency on
            spoilers to keep track of such stuff) or attrmax was different
            from abase (at end of game; this attribute wasn't maxed out) */
-        abase = ABASE(attrindx);
-        apeak = AMAX(attrindx);
+        abase = yourCurrentAttr(attrindx);
+        apeak = yourAttrMax(attrindx);
         alimit = ATTRMAX(attrindx);
         /* criterium for whether the limit is interesting varies */
         interesting_alimit =

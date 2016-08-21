@@ -151,8 +151,12 @@ const char *fmt, *arg;
     boolean was_blind = !!Blind;
 
     if (Upolyd) {
-        u.acurr = u.macurr; /* restore old attribs */
-        u.amax = u.mamax;
+        /* restore old attribs */
+        int i;
+        for (i = 0; i < A_MAX; i++) {
+            setYourCurrentAttr(i, u.macurr.a[i]);
+            setYourAttrMax    (i, u.mamax.a[i]);
+        } 
         u.umonnum = u.umonster;
         flags.female = u.mfemale;
     }
@@ -601,15 +605,21 @@ int mntmp;
 
     if (!Upolyd) {
         /* Human to monster; save human stats */
-        u.macurr = u.acurr;
-        u.mamax = u.amax;
+        int i;
+        for (i = 0; i < A_MAX; i++) {
+            u.macurr.a[i] = yourCurrentAttr(i);
+            u.mamax.a[i]  = yourAttrMax(i);
+        }
         u.mfemale = flags.female;
     } else {
         /* Monster to monster; restore human stats, to be
          * immediately changed to provide stats for the new monster
          */
-        u.acurr = u.macurr;
-        u.amax = u.mamax;
+        int i;
+        for (i = 0; i < A_MAX; i++) {
+            setYourCurrentAttr(i, u.macurr.a[i]);
+            setYourAttrMax(i,     u.mamax.a[i]);
+        }
         flags.female = u.mfemale;
     }
 
@@ -660,7 +670,8 @@ int mntmp;
      * Currently only strength gets changed.
      */
     if (strongmonst(&mons[mntmp]))
-        ABASE(A_STR) = AMAX(A_STR) = STR18(100);
+        setYourCurrentAttr(A_STR, STR18(100));
+        setYourAttrMax(A_STR, STR18(100));
 
     if (Stone_resistance && Stoned) { /* parnes@eniac.seas.upenn.edu */
         make_stoned(0L, "You no longer seem to be petrifying.", 0,

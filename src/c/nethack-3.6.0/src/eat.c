@@ -519,11 +519,11 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
             *dmg_p += xtra_dmg; /* Rider takes extra damage */
         } else {
             morehungry(-rnd(30)); /* cannot choke */
-            if (ABASE(A_INT) < AMAX(A_INT)) {
+            if (yourCurrentAttr(A_INT) < yourAttrMax(A_INT)) {
                 /* recover lost Int; won't increase current max */
-                ABASE(A_INT) += rnd(4);
-                if (ABASE(A_INT) > AMAX(A_INT))
-                    ABASE(A_INT) = AMAX(A_INT);
+                increaseYourCurrentAttr(A_INT, rnd(4));
+                if (yourCurrentAttr(A_INT) > yourAttrMax(A_INT))
+                    setYourCurrentAttr(A_INT, yourAttrMax(A_INT));
                 context.botl = 1;
             }
             exercise(A_WIS, TRUE);
@@ -538,7 +538,7 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
          * monster mind flayer is eating hero's brain
          */
         /* no such thing as mindless players */
-        if (ABASE(A_INT) <= ATTRMIN(A_INT)) {
+        if (yourCurrentAttr(A_INT) <= ATTRMIN(A_INT)) {
             static NEARDATA const char brainlessness[] = "brainlessness";
 
             if (Lifesaved) {
@@ -558,7 +558,7 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
             done(DIED);
             /* can only get here when in wizard or explore mode and user has
                explicitly chosen not to die; arbitrarily boost intelligence */
-            ABASE(A_INT) = ATTRMIN(A_INT) + 2;
+            setYourCurrentAttr(A_INT, (ATTRMIN(A_INT) + 2));
             You_feel("like a scarecrow.");
         }
         give_nutrit = TRUE; /* in case a conflicted pet is doing this */
@@ -1039,7 +1039,7 @@ register int pm;
         break;
     case PM_MIND_FLAYER:
     case PM_MASTER_MIND_FLAYER:
-        if (ABASE(A_INT) < ATTRMAX(A_INT)) {
+        if (yourCurrentAttr(A_INT) < ATTRMAX(A_INT)) {
             if (!rn2(2)) {
                 pline("Yum! That was real brain food!");
                 (void) adjattrib(A_INT, 1, FALSE);

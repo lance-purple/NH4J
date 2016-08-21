@@ -1802,26 +1802,26 @@ struct obj *obj;
 
     /* collect attribute troubles */
     for (idx = 0; idx < A_MAX; idx++) {
-        if (ABASE(idx) >= AMAX(idx))
+        if (yourCurrentAttr(idx) >= yourAttrMax(idx))
             continue;
-        val_limit = AMAX(idx);
+        val_limit = yourAttrMax(idx);
         /* don't recover strength lost from hunger */
         if (idx == A_STR && u.uhs >= WEAK)
             val_limit--;
         if (Fixed_abil) {
             /* potion/spell of restore ability override sustain ability
                intrinsic but unicorn horn usage doesn't */
-            unfixable_trbl += val_limit - ABASE(idx);
+            unfixable_trbl += val_limit - yourCurrentAttr(idx);
             continue;
         }
         /* don't recover more than 3 points worth of any attribute */
-        if (val_limit > ABASE(idx) + 3)
-            val_limit = ABASE(idx) + 3;
+        if (val_limit > yourCurrentAttr(idx) + 3)
+            val_limit = yourCurrentAttr(idx) + 3;
 
-        for (val = ABASE(idx); val < val_limit; val++)
+        for (val = yourCurrentAttr(idx); val < val_limit; val++)
             attr_trouble(idx);
         /* keep track of unfixed trouble, for message adjustment below */
-        unfixable_trbl += (AMAX(idx) - val_limit);
+        unfixable_trbl += (yourAttrMax(idx) - val_limit);
     }
 
     if (trouble_count == 0) {
@@ -1883,7 +1883,7 @@ struct obj *obj;
             break;
         default:
             if (idx >= 0 && idx < A_MAX) {
-                ABASE(idx) += 1;
+                increaseYourCurrentAttr(idx, 1);
                 did_attr++;
             } else
                 panic("use_unicorn_horn: bad trouble? (%d)", idx);

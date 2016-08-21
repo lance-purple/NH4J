@@ -889,8 +889,8 @@ u_init()
             register int xd = rn2(7) - 2; /* biased variation */
 
             (void) adjattrib(i, xd, TRUE);
-            if (ABASE(i) < AMAX(i))
-                AMAX(i) = ABASE(i);
+            if (yourCurrentAttr(i) < yourAttrMax(i))
+                setYourAttrMax(i, yourCurrentAttr(i));
         }
 
     /* make sure you can carry all you have - especially for Tourists */

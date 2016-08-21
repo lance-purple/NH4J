@@ -564,11 +564,11 @@ register struct obj *otmp;
                       : "good");
             i = rn2(A_MAX); /* start at a random point */
             for (ii = 0; ii < A_MAX; ii++) {
-                lim = AMAX(i);
+                lim = yourAttrMax(i);
                 if (i == A_STR && u.uhs >= 3)
                     --lim; /* WEAK */
-                if (ABASE(i) < lim) {
-                    ABASE(i) = lim;
+                if (yourCurrentAttr(i) < lim) {
+                    setYourCurrentAttr(i, lim);
                     context.botl = 1;
                     /* only first found if not blessed */
                     if (!otmp->blessed)
@@ -1515,8 +1515,8 @@ register struct obj *obj;
         } else {
             i = rn2(A_MAX); /* start at a random point */
             for (isdone = ii = 0; !isdone && ii < A_MAX; ii++) {
-                if (ABASE(i) < AMAX(i)) {
-                    ABASE(i)++;
+                if (yourCurrentAttr(i) < yourAttrMax(i)) {
+                    increaseYourCurrentAttr(i, 1);
                     /* only first found if not blessed */
                     isdone = !(obj->blessed);
                     context.botl = 1;

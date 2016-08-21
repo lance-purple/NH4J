@@ -114,24 +114,24 @@ int msgflg; /* positive => no message, zero => message, and */
 
     old_acurr = ACURR(ndx);
     if (incr > 0) {
-        ABASE(ndx) += incr;
-        if (ABASE(ndx) > AMAX(ndx)) {
-            incr = ABASE(ndx) - AMAX(ndx);
-            AMAX(ndx) += incr;
-            if (AMAX(ndx) > ATTRMAX(ndx))
-                AMAX(ndx) = ATTRMAX(ndx);
-            ABASE(ndx) = AMAX(ndx);
+        increaseYourCurrentAttr(ndx, incr);
+        if (yourCurrentAttr(ndx) > yourAttrMax(ndx)) {
+            incr = yourCurrentAttr(ndx) - yourAttrMax(ndx);
+            increaseYourAttrMax(ndx, incr);
+            if (yourAttrMax(ndx) > ATTRMAX(ndx))
+                setYourAttrMax(ndx, ATTRMAX(ndx));
+            setYourCurrentAttr(ndx, yourAttrMax(ndx));
         }
         attrstr = plusattr[ndx];
         abonflg = (ABON(ndx) < 0);
     } else {
-        ABASE(ndx) += incr;
-        if (ABASE(ndx) < ATTRMIN(ndx)) {
-            incr = ABASE(ndx) - ATTRMIN(ndx);
-            ABASE(ndx) = ATTRMIN(ndx);
-            AMAX(ndx) += incr;
-            if (AMAX(ndx) < ATTRMIN(ndx))
-                AMAX(ndx) = ATTRMIN(ndx);
+        increaseYourCurrentAttr(ndx, incr);
+        if (yourCurrentAttr(ndx) < ATTRMIN(ndx)) {
+            incr = yourCurrentAttr(ndx) - ATTRMIN(ndx);
+            setYourCurrentAttr(ndx, ATTRMIN(ndx));
+            increaseYourAttrMax(ndx, incr);
+            if (yourAttrMax(ndx) < ATTRMIN(ndx))
+                setYourAttrMax(ndx, ATTRMIN(ndx));
         }
         attrstr = minusattr[ndx];
         abonflg = (ABON(ndx) > 0);
@@ -160,9 +160,9 @@ boolean givemsg;
     int num = incr;
 
     if (!num) {
-        if (ABASE(A_STR) < 18)
+        if (yourCurrentAttr(A_STR) < 18)
             num = (rn2(4) ? 1 : rnd(6));
-        else if (ABASE(A_STR) < STR18(85))
+        else if (yourCurrentAttr(A_STR) < STR18(85))
             num = rnd(10);
         else
             num = 1;
@@ -176,7 +176,7 @@ void
 losestr(num)
 register int num;
 {
-    int ustr = ABASE(A_STR) - num;
+    int ustr = yourCurrentAttr(A_STR) - num;
 
     while (ustr < 3) {
         ++ustr;
@@ -498,7 +498,7 @@ exerchk()
             hilim = ATTRMAX(i); /* usually 18; maybe lower or higher */
             if (hilim > 18)
                 hilim = 18;
-            if ((ax < 0) ? (ABASE(i) <= lolim) : (ABASE(i) >= hilim))
+            if ((ax < 0) ? (yourCurrentAttr(i) <= lolim) : (yourCurrentAttr(i) >= hilim))
                 goto nextattrib;
             /* can't exercise non-Wisdom while polymorphed; previous
                exercise/abuse gradually wears off without impact then */
@@ -556,7 +556,8 @@ register int np;
     register int i, x, tryct;
 
     for (i = 0; i < A_MAX; i++) {
-        ABASE(i) = AMAX(i) = urole.attrbase[i];
+        setYourCurrentAttr(i, urole.attrbase[i]);
+        setYourAttrMax(i,     urole.attrbase[i]);
         ATEMP(i) = ATIME(i) = 0;
         np -= urole.attrbase[i];
     }
@@ -569,13 +570,13 @@ register int np;
         if (i >= A_MAX)
             continue; /* impossible */
 
-        if (ABASE(i) >= ATTRMAX(i)) {
+        if (yourCurrentAttr(i) >= ATTRMAX(i)) {
             tryct++;
             continue;
         }
         tryct = 0;
-        ABASE(i)++;
-        AMAX(i)++;
+        increaseYourCurrentAttr(i, 1);
+        increaseYourAttrMax(i, 1);
         np--;
     }
 
@@ -588,13 +589,13 @@ register int np;
         if (i >= A_MAX)
             continue; /* impossible */
 
-        if (ABASE(i) <= ATTRMIN(i)) {
+        if (yourCurrentAttr(i) <= ATTRMIN(i)) {
             tryct++;
             continue;
         }
         tryct = 0;
-        ABASE(i)--;
-        AMAX(i)--;
+        decreaseYourCurrentAttr(i, 1);
+        decreaseYourAttrMax(i, 1);
         np++;
     }
 }
@@ -608,16 +609,16 @@ redist_attr()
         if (i == A_INT || i == A_WIS)
             continue;
         /* Polymorphing doesn't change your mind */
-        tmp = AMAX(i);
-        AMAX(i) += (rn2(5) - 2);
-        if (AMAX(i) > ATTRMAX(i))
-            AMAX(i) = ATTRMAX(i);
-        if (AMAX(i) < ATTRMIN(i))
-            AMAX(i) = ATTRMIN(i);
-        ABASE(i) = ABASE(i) * AMAX(i) / tmp;
-        /* ABASE(i) > ATTRMAX(i) is impossible */
-        if (ABASE(i) < ATTRMIN(i))
-            ABASE(i) = ATTRMIN(i);
+        tmp = yourAttrMax(i);
+        increaseYourAttrMax(i, (rn2(5) - 2));
+        if (yourAttrMax(i) > ATTRMAX(i))
+            setYourAttrMax(i, ATTRMAX(i));
+        if (yourAttrMax(i) < ATTRMIN(i))
+            setYourAttrMax(i, ATTRMIN(i));
+        setYourCurrentAttr(i, (yourCurrentAttr(i) * yourAttrMax(i) / tmp));
+        /* yourCurrentAttr(i) > ATTRMAX(i) is impossible */
+        if (yourCurrentAttr(i) < ATTRMIN(i))
+            setYourCurrentAttr(i, ATTRMIN(i));
     }
     (void) encumber_msg();
 }
@@ -973,7 +974,7 @@ schar
 acurr(x)
 int x;
 {
-    register int tmp = (u.abon.a[x] + u.atemp.a[x] + u.acurr.a[x]);
+    register int tmp = (u.abon.a[x] + u.atemp.a[x] + yourCurrentAttr(x));
 
     if (x == A_STR) {
         if (tmp >= 125 || (uarmg && uarmg->otyp == GAUNTLETS_OF_POWER))
@@ -1097,6 +1098,38 @@ int reason; /* 0==conversion, 1==helm-of-OA on, 2==helm-of-OA off */
         u.ualign.record = 0; /* slate is wiped clean */
         retouch_equipment(0);
     }
+}
+
+xchar yourCurrentAttr(int index) {
+    return u.acurr.a[index];
+}
+
+void setYourCurrentAttr(int index, xchar value) {
+    u.acurr.a[index] = value;
+}
+
+void increaseYourCurrentAttr(int index, xchar delta) {
+    setYourCurrentAttr(index, (yourCurrentAttr(index) + delta));
+}
+
+void decreaseYourCurrentAttr(int index, xchar delta) {
+    setYourCurrentAttr(index, (yourCurrentAttr(index) - delta));
+}
+
+xchar yourAttrMax(int index) {
+    return u.amax.a[index];
+}
+
+void setYourAttrMax(int index, xchar value) {
+    u.amax.a[index] = value;
+}
+
+void increaseYourAttrMax(int index, xchar delta) {
+    setYourAttrMax(index, (yourAttrMax(index) + delta));
+}
+
+void decreaseYourAttrMax(int index, xchar delta) {
+    setYourAttrMax(index, (yourAttrMax(index) - delta));
 }
 
 /*attrib.c*/

@@ -16,7 +16,16 @@
 
 #define A_MAX 6 /* used in rn2() selection of attrib */
 
-#define ABASE(x) (u.acurr.a[x])
+extern xchar yourCurrentAttr(int index);
+extern void setYourCurrentAttr(int index, xchar value);
+extern void increaseYourCurrentAttr(int index, xchar delta);
+extern void decreaseYourCurrentAttr(int index, xchar delta);
+
+extern xchar yourAttrMax(int index);
+extern void setYourAttrMax(int index, xchar value);
+extern void increaseYourAttrMax(int index, xchar delta);
+extern void decreaseYourAttrMax(int index, xchar delta);
+
 #define ABON(x) (u.abon.a[x])
 #define AEXE(x) (u.aexe.a[x])
 #define ACURR(x) (acurr(x))
@@ -24,7 +33,7 @@
 /* should be: */
 /* #define ACURR(x) (ABON(x) + ATEMP(x) + (Upolyd  ? MBASE(x) : ABASE(x)) */
 #define MCURR(x) (u.macurr.a[x])
-#define AMAX(x) (u.amax.a[x])
+
 #define MMAX(x) (u.mamax.a[x])
 
 #define ATEMP(x) (u.atemp.a[x])

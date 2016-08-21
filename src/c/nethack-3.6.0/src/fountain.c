@@ -227,8 +227,8 @@ drinkfountain()
         pline("Wow!  This makes you feel great!");
         /* blessed restore ability */
         for (ii = 0; ii < A_MAX; ii++)
-            if (ABASE(ii) < AMAX(ii)) {
-                ABASE(ii) = AMAX(ii);
+            if (yourCurrentAttr(ii) < yourAttrMax(ii)) {
+                setYourCurrentAttr(ii, yourAttrMax(ii));
                 context.botl = 1;
             }
         /* gain ability, blessed if "natural" luck is high */
