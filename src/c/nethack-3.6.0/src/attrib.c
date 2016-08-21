@@ -361,7 +361,7 @@ boolean inc_or_dec;
     if (Upolyd && i != A_WIS)
         return;
 
-    if (abs(AEXE(i)) < AVAL) {
+    if (abs(yourAttrChangeFromExercise(i)) < AVAL) {
         /*
          *      Law of diminishing returns (Part I):
          *
@@ -371,12 +371,13 @@ boolean inc_or_dec;
          *
          *      Note: *YES* ACURR is the right one to use.
          */
-        AEXE(i) += (inc_or_dec) ? (rn2(19) > ACURR(i)) : -rn2(2);
-        debugpline3("%s, %s AEXE = %d",
+        increaseYourAttrChangeFromExercise(i, ((inc_or_dec) ? (rn2(19) > ACURR(i)) : -rn2(2)));
+
+        debugpline3("%s, %s AttrChangeFromExercise = %d",
                     (i == A_STR) ? "Str" : (i == A_WIS) ? "Wis" : (i == A_DEX)
                                                                       ? "Dex"
                                                                       : "Con",
-                    (inc_or_dec) ? "inc" : "dec", AEXE(i));
+                    (inc_or_dec) ? "inc" : "dec", yourAttrChangeFromExercise(i));
     }
     if (moves > 0 && (i == A_STR || i == A_CON))
         (void) encumber_msg();
@@ -485,7 +486,7 @@ exerchk()
          *      accumulated effects.
          */
         for (i = 0; i < A_MAX; ++i) {
-            ax = AEXE(i);
+            ax = yourAttrChangeFromExercise(i);
             /* nothing to do here if no exercise or abuse has occurred
                (Int and Cha always fall into this category) */
             if (!ax)
@@ -533,16 +534,18 @@ exerchk()
             if (adjattrib(i, mod_val, -1)) {
                 debugpline1("exerchk: changed %d.", i);
                 /* if you actually changed an attrib - zero accumulation */
-                AEXE(i) = ax = 0;
+                setYourAttrChangeFromExercise(i, 0);
+                ax = 0;
                 /* then print an explanation */
                 You("%s %s.",
                     (mod_val > 0) ? "must have been" : "haven't been",
                     exertext[i][(mod_val > 0) ? 0 : 1]);
             }
         nextattrib:
-            /* this used to be ``AEXE(i) /= 2'' but that would produce
+            /* this used to be ``yourAttrChangeFromExercise(i) /= 2''
+               but that would produce
                platform-dependent rounding/truncation for negative vals */
-            AEXE(i) = (abs(ax) / 2) * mod_val;
+            setYourAttrChangeFromExercise(i, ((abs(ax) / 2) * mod_val));
         }
         context.next_attrib_check += rn1(200, 800);
         debugpline1("exerchk: next check at %ld.", context.next_attrib_check);
@@ -1146,6 +1149,24 @@ void increaseYourAttrBonus(int index, xchar delta) {
 
 void decreaseYourAttrBonus(int index, xchar delta) {
     setYourAttrBonus(index, (yourAttrBonus(index) - delta));
+}
+
+xchar yourAttrChangeFromExercise(int index) {
+    return u.aexe.a[index];
+}
+
+void setYourAttrChangeFromExercise(int index, xchar value) {
+    u.aexe.a[index] = value;
+}
+
+void increaseYourAttrChangeFromExercise(int index, xchar delta) {
+    setYourAttrChangeFromExercise(index,
+        (yourAttrChangeFromExercise(index) + delta));
+}
+
+void decreaseYourAttrChangeFromExercise(int index, xchar delta) {
+    setYourAttrChangeFromExercise(index,
+        (yourAttrChangeFromExercise(index) - delta));
 }
 
 /*attrib.c*/

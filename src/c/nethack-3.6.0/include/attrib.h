@@ -31,7 +31,11 @@ extern void setYourAttrBonus(int index, xchar value);
 extern void increaseYourAttrBonus(int index, xchar delta);
 extern void decreaseYourAttrBonus(int index, xchar delta);
 
-#define AEXE(x) (u.aexe.a[x])
+extern xchar yourAttrChangeFromExercise(int index);
+extern void setYourAttrChangeFromExercise(int index, xchar value);
+extern void increaseYourAttrChangeFromExercise(int index, xchar delta);
+extern void decreaseYourAttrChangeFromExercise(int index, xchar delta);
+
 #define ACURR(x) (acurr(x))
 #define ACURRSTR (acurrstr())
 /* should be: */
