@@ -313,8 +313,8 @@ struct you {
     int umonnum;  /* current monster number */
 
     int mh, mhmax, mtimedone; /* for polymorph-self */
-    struct attribs macurr,    /* for monster attribs */
-        mamax;                /* for monster attribs */
+    struct attribs attribsAsMonster;    /* for monster attribs */
+    struct attribs maxAttribsAsMonster; /* for monster attribs */
     int ulycn;                /* lycanthrope type */
 
     unsigned ucreamed;
@@ -336,12 +336,9 @@ struct you {
     struct u_have uhave;       /* you're carrying special objects */
     struct u_conduct uconduct; /* KMH, conduct */
     struct u_roleplay uroleplay;
-    struct attribs acurr, /* your current attributes (eg. str)*/
-        aexe,             /* for gain/loss via "exercise" */
-        abon,             /* your bonus attributes (eg. str) */
-        amax,             /* your max attributes (eg. str) */
-        atemp,            /* used for temporary loss/gain */
-        atime;            /* used for loss/gain countdown */
+    struct attribs  /* your current attributes (eg. str)*/
+        temporaryAttrChange,    /* used for temporary loss/gain */
+        attrChangeTimeout;      /* used for loss/gain countdown */
     align ualign;         /* character alignment */
 #define CONVERT 2
 #define A_ORIGINAL 1
