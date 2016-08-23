@@ -1791,7 +1791,7 @@ register int timex;
      */
 
     if (!Wounded_legs) {
-        ATEMP(A_DEX)--;
+        decreaseYourTemporaryAttrChange(A_DEX, 1);
         context.botl = 1;
     }
 
@@ -1805,8 +1805,8 @@ void
 heal_legs()
 {
     if (Wounded_legs) {
-        if (ATEMP(A_DEX) < 0) {
-            ATEMP(A_DEX)++;
+        if (yourTemporaryAttrChange(A_DEX) < 0) {
+            increaseYourTemporaryAttrChange(A_DEX, 1);
             context.botl = 1;
         }
 

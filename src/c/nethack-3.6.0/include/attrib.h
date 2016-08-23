@@ -51,8 +51,15 @@ extern void setYourAttrMaxAsMonster(int index, xchar value);
 extern void increaseYourAttrMaxAsMonster(int index, xchar delta);
 extern void decreaseYourAttrMaxAsMonster(int index, xchar delta);
 
-#define ATEMP(x) (u.atemp.a[x])
-#define ATIME(x) (u.atime.a[x])
+extern xchar yourTemporaryAttrChange(int index);
+extern void setYourTemporaryAttrChange(int index, xchar value);
+extern void increaseYourTemporaryAttrChange(int index, xchar delta);
+extern void decreaseYourTemporaryAttrChange(int index, xchar delta);
+
+extern xchar yourAttrChangeTimeout(int index);
+extern void setYourAttrChangeTimeout(int index, xchar value);
+extern void increaseYourAttrChangeTimeout(int index, xchar delta);
+extern void decreaseYourAttrChangeTimeout(int index, xchar delta);
 
 /* KMH -- Conveniences when dealing with strength constants */
 #define STR18(x) (18 + (x))  /* 18/xx */

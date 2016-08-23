@@ -334,12 +334,13 @@ restore_attrib()
 
     for (i = 0; i < A_MAX; i++) { /* all temporary losses/gains */
 
-        if (ATEMP(i) && ATIME(i)) {
-            if (!(--(ATIME(i)))) { /* countdown for change */
-                ATEMP(i) += ATEMP(i) > 0 ? -1 : 1;
+        if (yourTemporaryAttrChange(i) && yourAttrChangeTimeout(i)) {
+            decreaseYourAttrChangeTimeout(i, 1);
+            if (! yourAttrChangeTimeout(i)) { /* countdown for change */
+                increaseYourTemporaryAttrChange(i, (yourTemporaryAttrChange(i) > 0 ? -1 : 1));
 
-                if (ATEMP(i)) /* reset timer */
-                    ATIME(i) = 100 / ACURR(A_CON);
+                if (yourTemporaryAttrChange(i)) /* reset timer */
+                    setYourAttrChangeTimeout(i, (100 / ACURR(A_CON)));
             }
         }
     }
@@ -561,7 +562,8 @@ register int np;
     for (i = 0; i < A_MAX; i++) {
         setYourCurrentAttr(i, urole.attrbase[i]);
         setYourAttrMax(i,     urole.attrbase[i]);
-        ATEMP(i) = ATIME(i) = 0;
+        setYourTemporaryAttrChange(i, 0);
+        setYourAttrChangeTimeout(i, 0);
         np -= urole.attrbase[i];
     }
 
@@ -977,7 +979,7 @@ schar
 acurr(x)
 int x;
 {
-    register int tmp = (yourAttrBonus(x) + u.atemp.a[x] + yourCurrentAttr(x));
+    register int tmp = (yourAttrBonus(x) + yourTemporaryAttrChange(x) + yourCurrentAttr(x));
 
     if (x == A_STR) {
         if (tmp >= 125 || (uarmg && uarmg->otyp == GAUNTLETS_OF_POWER))
@@ -1203,6 +1205,42 @@ void increaseYourAttrMaxAsMonster(int index, xchar delta) {
 void decreaseYourAttrMaxAsMonster(int index, xchar delta) {
     setYourAttrMaxAsMonster(index,
         (yourAttrMaxAsMonster(index) - delta));
+}
+
+xchar yourTemporaryAttrChange(int index) {
+    return u.atemp.a[index];
+}
+
+void setYourTemporaryAttrChange(int index, xchar value) {
+    u.atemp.a[index] = value;
+}
+
+void increaseYourTemporaryAttrChange(int index, xchar delta) {
+    setYourTemporaryAttrChange(index,
+        (yourTemporaryAttrChange(index) + delta));
+}
+
+void decreaseYourTemporaryAttrChange(int index, xchar delta) {
+    setYourTemporaryAttrChange(index,
+        (yourTemporaryAttrChange(index) - delta));
+}
+
+xchar yourAttrChangeTimeout(int index) {
+    return u.atime.a[index];
+}
+
+void setYourAttrChangeTimeout(int index, xchar value) {
+    u.atime.a[index] = value;
+}
+
+void increaseYourAttrChangeTimeout(int index, xchar delta) {
+    setYourAttrChangeTimeout(index,
+	(yourAttrChangeTimeout(index) + delta));
+}
+
+void decreaseYourAttrChangeTimeout(int index, xchar delta) {
+    setYourAttrChangeTimeout(index,
+	(yourAttrChangeTimeout(index) - delta));
 }
 
 /*attrib.c*/

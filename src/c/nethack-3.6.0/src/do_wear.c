@@ -413,7 +413,7 @@ Helmet_on(VOID_ARGS)
         } else if (uarmh && uarmh->otyp == DUNCE_CAP) {
             You_feel("%s.", /* track INT change; ignore WIS */
                      ACURR(A_INT)
-                             <= (yourCurrentAttr(A_INT) + yourAttrBonus(A_INT) + ATEMP(A_INT))
+                             <= (yourCurrentAttr(A_INT) + yourAttrBonus(A_INT) + yourTemporaryAttrChange(A_INT))
                          ? "like sitting in a corner"
                          : "giddy");
         } else {
