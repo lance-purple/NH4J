@@ -1218,75 +1218,99 @@ void decreaseYourAttrChangeFromExercise(int index, xchar delta) {
 }
 
 xchar yourAttrAsMonster(int index) {
-    return u.attribsAsMonster.a[index];
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "attributeAsMonster", "(I)I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method, index);
 }
 
 void setYourAttrAsMonster(int index, xchar value) {
-    u.attribsAsMonster.a[index] = value;
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setAttributeAsMonster", "(II)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, value);
 }
 
 void increaseYourAttrAsMonster(int index, xchar delta) {
-    setYourAttrAsMonster(index,
-        (yourAttrAsMonster(index) + delta));
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "increaseAttributeAsMonster", "(II)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, delta);
 }
 
 void decreaseYourAttrAsMonster(int index, xchar delta) {
-    setYourAttrAsMonster(index,
-        (yourAttrAsMonster(index) - delta));
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "decreaseAttributeAsMonster", "(II)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, delta);
 }
 
 xchar yourAttrMaxAsMonster(int index) {
-    return u.maxAttribsAsMonster.a[index];
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "maximumAttributeAsMonster", "(I)I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method, index);
 }
 
 void setYourAttrMaxAsMonster(int index, xchar value) {
-    u.maxAttribsAsMonster.a[index] = value;
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setMaximumAttributeAsMonster", "(II)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, value);
 }
 
 void increaseYourAttrMaxAsMonster(int index, xchar delta) {
-    setYourAttrMaxAsMonster(index,
-        (yourAttrMaxAsMonster(index) + delta));
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "increaseMaximumAttributeAsMonster", "(II)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, delta);
 }
 
 void decreaseYourAttrMaxAsMonster(int index, xchar delta) {
-    setYourAttrMaxAsMonster(index,
-        (yourAttrMaxAsMonster(index) - delta));
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "decreaseMaximumAttributeAsMonster", "(II)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, delta);
 }
 
 xchar yourTemporaryAttrChange(int index) {
-    return u.temporaryAttrChange.a[index];
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "temporaryAttributeChange", "(I)I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method, index);
 }
 
 void setYourTemporaryAttrChange(int index, xchar value) {
-    u.temporaryAttrChange.a[index] = value;
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setTemporaryAttributeChange", "(II)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, value);
 }
 
 void increaseYourTemporaryAttrChange(int index, xchar delta) {
-    setYourTemporaryAttrChange(index,
-        (yourTemporaryAttrChange(index) + delta));
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "increaseTemporaryAttributeChange", "(II)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, delta);
 }
 
 void decreaseYourTemporaryAttrChange(int index, xchar delta) {
-    setYourTemporaryAttrChange(index,
-        (yourTemporaryAttrChange(index) - delta));
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "decreaseTemporaryAttributeChange", "(II)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, delta);
 }
 
 xchar yourAttrChangeTimeout(int index) {
-    return u.attrChangeTimeout.a[index];
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "attributeChangeTimeout", "(I)I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method, index);
 }
 
 void setYourAttrChangeTimeout(int index, xchar value) {
-    u.attrChangeTimeout.a[index] = value;
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setAttributeChangeTimeout", "(II)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, value);
 }
 
 void increaseYourAttrChangeTimeout(int index, xchar delta) {
-    setYourAttrChangeTimeout(index,
-	(yourAttrChangeTimeout(index) + delta));
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "increaseAttributeChangeTimeout", "(II)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, delta);
 }
 
 void decreaseYourAttrChangeTimeout(int index, xchar delta) {
-    setYourAttrChangeTimeout(index,
-	(yourAttrChangeTimeout(index) - delta));
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "decreaseAttributeChangeTimeout", "(II)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, delta);
 }
 
 /*attrib.c*/

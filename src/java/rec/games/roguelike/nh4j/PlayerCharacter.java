@@ -6,7 +6,11 @@ public class PlayerCharacter {
     private static NHAttributeSet maximumAttributes = new NHAttributeSet();
     private static NHAttributeSet attributeBonuses = new NHAttributeSet();
     private static NHAttributeSet attributeChangesFromExertion = new NHAttributeSet();
+    private static NHAttributeSet temporaryAttributeChanges = new NHAttributeSet();
+    private static NHAttributeSet attributeChangeTimeouts = new NHAttributeSet();
 
+    private static NHAttributeSet attributesAsMonster = new NHAttributeSet();
+    private static NHAttributeSet maximumAttributesAsMonster = new NHAttributeSet();
     
     public static int currentAttribute(int attrIndex) {
     	return currentAttributes.get(attrIndex);
@@ -70,6 +74,70 @@ public class PlayerCharacter {
 
     public static void decreaseAttributeChangeFromExertion(int attrIndex, int delta) {
     	attributeChangesFromExertion.decrease(attrIndex, delta);
+    }
+
+    public static int temporaryAttributeChange(int attrIndex) {
+    	return temporaryAttributeChanges.get(attrIndex);
+    }
+
+    public static void setTemporaryAttributeChange(int attrIndex, int value) {
+    	temporaryAttributeChanges.set(attrIndex, value);
+    }
+
+    public static void increaseTemporaryAttributeChange(int attrIndex, int delta) {
+    	temporaryAttributeChanges.increase(attrIndex, delta);
+    }
+
+    public static void decreaseTemporaryAttributeChange(int attrIndex, int delta) {
+    	temporaryAttributeChanges.decrease(attrIndex, delta);
+    }
+    
+    public static int attributeChangeTimeout(int attrIndex) {
+    	return attributeChangeTimeouts.get(attrIndex);
+    }
+
+    public static void setAttributeChangeTimeout(int attrIndex, int value) {
+    	attributeChangeTimeouts.set(attrIndex, value);
+    }
+
+    public static void increaseAttributeChangeTimeout(int attrIndex, int delta) {
+    	attributeChangeTimeouts.increase(attrIndex, delta);
+    }
+
+    public static void decreaseAttributeChangeTimeout(int attrIndex, int delta) {
+    	attributeChangeTimeouts.decrease(attrIndex, delta);
+    }
+
+    public static int attributeAsMonster(int attrIndex) {
+    	return attributesAsMonster.get(attrIndex);
+    }
+
+    public static void setAttributeAsMonster(int attrIndex, int value) {
+    	attributesAsMonster.set(attrIndex, value);
+    }
+
+    public static void increaseAttributeAsMonster(int attrIndex, int delta) {
+    	attributesAsMonster.increase(attrIndex, delta);
+    }
+
+    public static void decreaseAttributeAsMonster(int attrIndex, int delta) {
+    	attributesAsMonster.decrease(attrIndex, delta);
+    }
+
+    public static int maximumAttributeAsMonster(int attrIndex) {
+    	return maximumAttributesAsMonster.get(attrIndex);
+    }
+
+    public static void setMaximumAttributeAsMonster(int attrIndex, int value) {
+    	maximumAttributesAsMonster.set(attrIndex, value);
+    }
+
+    public static void increaseMaximumAttributeAsMonster(int attrIndex, int delta) {
+    	maximumAttributesAsMonster.increase(attrIndex, delta);
+    }
+
+    public static void decreaseMaximumAttributeAsMonster(int attrIndex, int delta) {
+    	maximumAttributesAsMonster.decrease(attrIndex, delta);
     }
 
 }
