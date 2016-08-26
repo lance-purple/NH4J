@@ -198,16 +198,7 @@
     ((u.usteed && mon_visible(u.usteed)) ? ridden_mon_to_glyph(u.usteed) \
                                          : (otherwise_self))
 
-#define display_self() \
-    show_glyph(u.ux, u.uy,                                                  \
-           maybe_display_usteed((youmonst.m_ap_type == M_AP_NOTHING)        \
-                                ? hero_glyph                                \
-                                : (youmonst.m_ap_type == M_AP_FURNITURE)    \
-                                  ? cmap_to_glyph(youmonst.mappearance)     \
-                                  : (youmonst.m_ap_type == M_AP_OBJECT)     \
-                                    ? objnum_to_glyph(youmonst.mappearance) \
-                                    /* else M_AP_MONSTER */                 \
-                                    : monnum_to_glyph(youmonst.mappearance)))
+extern void display_self();
 
 /*
  * A glyph is an abstraction that represents a _unique_ monster, object,
