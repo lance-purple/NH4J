@@ -141,7 +141,7 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
          */
         if (mtmp->m_ap_type && !Protection_from_shape_changers
             /* applied pole-arm attack is too far to get stuck */
-            && distu(mtmp->mx, mtmp->my) <= 2) {
+            && distanceSquaredToYou(mtmp->mx, mtmp->my) <= 2) {
             if (!u.ustuck && !mtmp->mflee && dmgtype(mtmp->data, AD_STCK))
                 u.ustuck = mtmp;
         }

@@ -1500,7 +1500,7 @@ domindblast()
         nmon = mtmp->nmon;
         if (DEADMONSTER(mtmp))
             continue;
-        if (distu(mtmp->mx, mtmp->my) > BOLT_LIM * BOLT_LIM)
+        if (distanceSquaredToYou(mtmp->mx, mtmp->my) > BOLT_LIM * BOLT_LIM)
             continue;
         if (mtmp->mpeaceful)
             continue;

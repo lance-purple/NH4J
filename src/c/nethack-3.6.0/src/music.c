@@ -67,7 +67,7 @@ int distance;
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
         if (DEADMONSTER(mtmp))
             continue;
-        if ((distm = distu(mtmp->mx, mtmp->my)) < distance) {
+        if ((distm = distanceSquaredToYou(mtmp->mx, mtmp->my)) < distance) {
             mtmp->msleeping = 0;
             mtmp->mcanmove = 1;
             mtmp->mfrozen = 0;
@@ -95,7 +95,7 @@ int distance;
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
         if (DEADMONSTER(mtmp))
             continue;
-        if (distu(mtmp->mx, mtmp->my) < distance
+        if (distanceSquaredToYou(mtmp->mx, mtmp->my) < distance
             && sleep_monst(mtmp, d(10, 10), TOOL_CLASS)) {
             mtmp->msleeping = 1; /* 10d10 turns + wake_nearby to rouse */
             slept_monst(mtmp);
@@ -118,7 +118,7 @@ int distance;
         if (DEADMONSTER(mtmp))
             continue;
         if (mtmp->data->mlet == S_SNAKE && mtmp->mcanmove
-            && distu(mtmp->mx, mtmp->my) < distance) {
+            && distanceSquaredToYou(mtmp->mx, mtmp->my) < distance) {
             was_peaceful = mtmp->mpeaceful;
             mtmp->mpeaceful = 1;
             mtmp->mavenge = 0;
@@ -152,7 +152,7 @@ int distance;
         if (DEADMONSTER(mtmp))
             continue;
         if (mtmp->data->mlet == S_NYMPH && mtmp->mcanmove
-            && distu(mtmp->mx, mtmp->my) < distance) {
+            && distanceSquaredToYou(mtmp->mx, mtmp->my) < distance) {
             mtmp->msleeping = 0;
             mtmp->mpeaceful = 1;
             mtmp->mavenge = 0;
@@ -188,7 +188,7 @@ struct monst *bugler; /* monster that played instrument */
             else
                 Norep("You hear the rattle of battle gear being readied.");
         } else if ((distm = ((bugler == &youmonst)
-                                 ? distu(mtmp->mx, mtmp->my)
+                                 ? distanceSquaredToYou(mtmp->mx, mtmp->my)
                                  : dist2(bugler->mx, bugler->my, mtmp->mx,
                                          mtmp->my))) < distance) {
             mtmp->msleeping = 0;
@@ -223,7 +223,7 @@ int distance;
             if (DEADMONSTER(mtmp))
                 continue;
 
-            if (distu(mtmp->mx, mtmp->my) <= distance) {
+            if (distanceSquaredToYou(mtmp->mx, mtmp->my) <= distance) {
                 if (!resist(mtmp, TOOL_CLASS, 0, NOTELL))
                     (void) tamedog(mtmp, (struct obj *) 0);
             }

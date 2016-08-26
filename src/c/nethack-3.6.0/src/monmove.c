@@ -103,10 +103,10 @@ register struct monst *mtmp;
     /* check whether hero notices monster and stops current activity */
     if (occupation && !rd && !Confusion && (!mtmp->mpeaceful || Hallucination)
         /* it's close enough to be a threat */
-        && distu(x, y) <= (BOLT_LIM + 1) * (BOLT_LIM + 1)
+        && distanceSquaredToYou(x, y) <= (BOLT_LIM + 1) * (BOLT_LIM + 1)
         /* and either couldn't see it before, or it was too far away */
         && (!already_saw_mon || !couldsee(x, y)
-            || distu(x, y) > (BOLT_LIM + 1) * (BOLT_LIM + 1))
+            || distanceSquaredToYou(x, y) > (BOLT_LIM + 1) * (BOLT_LIM + 1))
         /* can see it now, or sense it and would normally see it */
         && (canseemon(mtmp) || (sensemon(mtmp) && couldsee(x, y)))
         && mtmp->mcanmove && !noattacks(mtmp->data)
@@ -197,7 +197,7 @@ register struct monst *mtmp;
      *  Aggravate or mon is (dog or human) or
      *      (1/7 and mon is not mimicing furniture or object)
      */
-    if (couldsee(mtmp->mx, mtmp->my) && distu(mtmp->mx, mtmp->my) <= 100
+    if (couldsee(mtmp->mx, mtmp->my) && distanceSquaredToYou(mtmp->mx, mtmp->my) <= 100
         && (!Stealth || (mtmp->data == &mons[PM_ETTIN] && rn2(10)))
         && (!(mtmp->data->mlet == S_NYMPH
               || mtmp->data == &mons[PM_JABBERWOCK]
@@ -462,7 +462,7 @@ register struct monst *mtmp;
 
         if (canseemon(mtmp))
             pline("%s concentrates.", Monnam(mtmp));
-        if (distu(mtmp->mx, mtmp->my) > BOLT_LIM * BOLT_LIM) {
+        if (distanceSquaredToYou(mtmp->mx, mtmp->my) > BOLT_LIM * BOLT_LIM) {
             You("sense a faint wave of psychic energy.");
             goto toofar;
         }
@@ -595,7 +595,7 @@ toofar:
                 if (u.uswallow)
                     return mattacku(mtmp);
                 /* if confused grabber has wandered off, let go */
-                if (distu(mtmp->mx, mtmp->my) > 2)
+                if (distanceSquaredToYou(mtmp->mx, mtmp->my) > 2)
                     unstuck(mtmp);
             }
             return 0;

@@ -55,7 +55,7 @@ amulet()
         && !rn2(15)) {
         for (ttmp = ftrap; ttmp; ttmp = ttmp->ntrap) {
             if (ttmp->ttyp == MAGIC_PORTAL) {
-                int du = distu(ttmp->tx, ttmp->ty);
+                int du = distanceSquaredToYou(ttmp->tx, ttmp->ty);
                 if (du <= 9)
                     pline("%s hot!", Tobjnam(amu, "feel"));
                 else if (du <= 64)
@@ -76,7 +76,7 @@ amulet()
             continue;
         if (mtmp->iswiz && mtmp->msleeping && !rn2(40)) {
             mtmp->msleeping = 0;
-            if (distu(mtmp->mx, mtmp->my) > 2)
+            if (distanceSquaredToYou(mtmp->mx, mtmp->my) > 2)
                 You(
       "get the creepy feeling that somebody noticed your taking the Amulet.");
             return;
@@ -329,7 +329,7 @@ register struct monst *mtmp;
             (void) mnearto(mtmp, xupstair, yupstair, TRUE);
         }
         /* if you're not around, cast healing spells */
-        if (distu(mtmp->mx, mtmp->my) > (BOLT_LIM * BOLT_LIM))
+        if (distanceSquaredToYou(mtmp->mx, mtmp->my) > (BOLT_LIM * BOLT_LIM))
             if (mtmp->mhp <= mtmp->mhpmax - 8) {
                 mtmp->mhp += rnd(8);
                 return 1;
@@ -364,7 +364,7 @@ register struct monst *mtmp;
                 if ((otmp = on_ground(which_arti(targ))) != 0) {
                     if (cansee(mtmp->mx, mtmp->my))
                         pline("%s picks up %s.", Monnam(mtmp),
-                              (distu(mtmp->mx, mtmp->my) <= 5)
+                              (distanceSquaredToYou(mtmp->mx, mtmp->my) <= 5)
                                   ? doname(otmp)
                                   : distant_name(otmp, doname));
                     obj_extract_self(otmp);

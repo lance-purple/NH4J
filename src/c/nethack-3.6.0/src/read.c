@@ -919,7 +919,7 @@ is_valid_stinking_cloud_pos(x, y, showmsg)
 int x, y;
 boolean showmsg;
 {
-    if (!cansee(x, y) || !ACCESSIBLE(levl[x][y].typ) || distu(x, y) >= 32) {
+    if (!cansee(x, y) || !ACCESSIBLE(levl[x][y].typ) || distanceSquaredToYou(x, y) >= 32) {
         if (showmsg)
             You("smell rotten eggs.");
         return FALSE;

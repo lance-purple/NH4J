@@ -67,7 +67,7 @@ noises(magr, mattk)
 register struct monst *magr;
 register struct attack *mattk;
 {
-    boolean farq = (distu(magr->mx, magr->my) > 15);
+    boolean farq = (distanceSquaredToYou(magr->mx, magr->my) > 15);
 
     if (!Deaf && (farq != far_noise || moves - noisetime > 10)) {
         far_noise = farq;

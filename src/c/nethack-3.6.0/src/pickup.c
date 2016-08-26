@@ -1801,8 +1801,8 @@ reverse_loot()
                 if (coffers->spe == 2)
                     break; /* a throne room chest */
                 if (!otmp
-                    || distu(coffers->ox, coffers->oy)
-                           < distu(otmp->ox, otmp->oy))
+                    || distanceSquaredToYou(coffers->ox, coffers->oy)
+                           < distanceSquaredToYou(otmp->ox, otmp->oy))
                     otmp = coffers; /* remember closest ordinary chest */
             }
         if (!coffers)

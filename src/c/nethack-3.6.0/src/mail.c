@@ -168,7 +168,7 @@ retry:
     for (row = 0; row < ROWNO; row++) {
         if (viz_rmin[row] < viz_rmax[row]) {
             /* There are valid positions on this row. */
-            dd = distu(viz_rmin[row], row);
+            dd = distanceSquaredToYou(viz_rmin[row], row);
             if (dd > max_distance) {
                 if (lax) {
                     max_distance = dd;
@@ -183,7 +183,7 @@ retry:
                     *startp = testcc;
                 }
             }
-            dd = distu(viz_rmax[row], row);
+            dd = distanceSquaredToYou(viz_rmax[row], row);
             if (dd > max_distance) {
                 if (lax) {
                     max_distance = dd;
@@ -387,7 +387,7 @@ struct mail_info *info;
         if (info->response_cmd)
             new_omailcmd(obj, info->response_cmd);
 
-        if (distu(md->mx, md->my) > 2)
+        if (distanceSquaredToYou(md->mx, md->my) > 2)
             verbalize("Catch!");
         display_nhwindow(WIN_MESSAGE, FALSE);
         obj = hold_another_object(obj, "Oops!", (const char *) 0,

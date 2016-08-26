@@ -2812,7 +2812,7 @@ struct monst *mon;
     if (tp_sensemon(mon))
         how_seen |= MONSEEN_TELEPAT;
     /* xray */
-    if (useemon && xraydist > 0 && distu(mon->mx, mon->my) <= xraydist)
+    if (useemon && xraydist > 0 && distanceSquaredToYou(mon->mx, mon->my) <= xraydist)
         how_seen |= MONSEEN_XRAYVIS;
     /* extended detection */
     if (Detect_monsters)

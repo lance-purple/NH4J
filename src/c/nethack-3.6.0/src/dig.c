@@ -248,7 +248,7 @@ dig(VOID_ARGS)
     if (u.uswallow || !uwep || (!ispick && !is_axe(uwep))
         || !on_level(&context.digging.level, &u.uz)
         || ((context.digging.down ? (dpx != u.ux || dpy != u.uy)
-                                  : (distu(dpx, dpy) > 2))))
+                                  : (distanceSquaredToYou(dpx, dpy) > 2))))
         return 0;
 
     if (context.digging.down) {

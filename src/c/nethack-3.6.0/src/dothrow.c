@@ -1782,7 +1782,7 @@ boolean from_invent;
         obj->in_use = 1; /* in case it's fatal */
         if (obj->otyp == POT_OIL && obj->lamplit) {
             explode_oil(obj, x, y);
-        } else if (distu(x, y) <= 2) {
+        } else if (distanceSquaredToYou(x, y) <= 2) {
             if (!breathless(youmonst.data) || haseyes(youmonst.data)) {
                 if (obj->otyp != POT_WATER) {
                     if (!breathless(youmonst.data)) {

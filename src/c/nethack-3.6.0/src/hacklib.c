@@ -494,6 +494,17 @@ int x0, y0, x1, y1;
     return dx * dx + dy * dy;
 }
 
+/* square of euclidean distance from pt to your current position */
+int
+distanceSquaredToYou(x, y)
+int x, y;
+{
+    register int dx = u.ux - x;
+    register int dy = u.uy - y;
+
+    return (dx * dx) + (dy * dy);
+}
+
 /* integer square root function without using floating point */
 int
 isqrt(val)

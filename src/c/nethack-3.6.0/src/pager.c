@@ -110,7 +110,7 @@ struct obj **obj_p;
             otmp->corpsenm = MCORPSENM(mtmp);
     }
     /* if located at adjacent spot, mark it as having been seen up close */
-    if (otmp && distu(x, y) <= 2 && !Blind && !Hallucination)
+    if (otmp && distanceSquaredToYou(x, y) <= 2 && !Blind && !Hallucination)
         otmp->dknown = 1;
 
     *obj_p = otmp;
@@ -324,7 +324,7 @@ char *buf, *monbuf;
             Sprintf(buf, "%s %saltar",
                     /* like endgame high priests, endgame high altars
                        are only recognizable when immediately adjacent */
-                    (Is_astralevel(&u.uz) && distu(x, y) > 2)
+                    (Is_astralevel(&u.uz) && distanceSquaredToYou(x, y) > 2)
                         ? "aligned"
                         : align_str(
                               Amask2align(levl[x][y].altarmask & ~AM_SHRINE)),

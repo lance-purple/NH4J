@@ -96,12 +96,12 @@ boolean pushing;
                 wake_nearto(rx, ry, 40);
             }
 
-            if (fills_up && u.uinwater && distu(rx, ry) == 0) {
+            if (fills_up && u.uinwater && distanceSquaredToYou(rx, ry) == 0) {
                 u.uinwater = 0;
                 docrt();
                 vision_full_recalc = 1;
                 You("find yourself on dry land again!");
-            } else if (lava && distu(rx, ry) <= 2) {
+            } else if (lava && distanceSquaredToYou(rx, ry) <= 2) {
                 int dmg;
                 You("are hit by molten lava%c", Fire_resistance ? '.' : '!');
                 burn_away_slime();
@@ -1362,7 +1362,7 @@ boolean at_stairs, falling, portal;
         coord cc;
 
         if (!rn2(2) && enexto(&cc, u.ux, u.uy, youmonst.data)
-            && distu(cc.x, cc.y) <= 2)
+            && distanceSquaredToYou(cc.x, cc.y) <= 2)
             u_on_newpos(cc.x, cc.y); /*[maybe give message here?]*/
         else
             mnexto(mtmp);

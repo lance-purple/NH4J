@@ -1316,7 +1316,7 @@ domove()
         }
 
         if (u.ustuck && (x != u.ustuck->mx || y != u.ustuck->my)) {
-            if (distu(u.ustuck->mx, u.ustuck->my) > 2) {
+            if (distanceSquaredToYou(u.ustuck->mx, u.ustuck->my) > 2) {
                 /* perhaps it fled (or was teleported or ... ) */
                 u.ustuck = 0;
             } else if (sticks(youmonst.data)) {

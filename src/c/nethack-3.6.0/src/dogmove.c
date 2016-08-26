@@ -645,7 +645,7 @@ register int after; /* this is extra fast monster movement */
     if (has_edog && dog_hunger(mtmp, edog))
         return 2; /* starved */
 
-    udist = distu(omx, omy);
+    udist = distanceSquaredToYou(omx, omy);
     /* Let steeds eat and maybe throw rider during Conflict */
     if (mtmp == u.usteed) {
         if (Conflict && !resist(mtmp, RING_CLASS, 0, 0)) {
@@ -745,11 +745,11 @@ register int after; /* this is extra fast monster movement */
         cursemsg[i] = FALSE;
 
         /* if leashed, we drag him along. */
-        if (mtmp->mleashed && distu(nx, ny) > 4)
+        if (mtmp->mleashed && distanceSquaredToYou(nx, ny) > 4)
             continue;
 
         /* if a guardian, try to stay close by choice */
-        if (!has_edog && (j = distu(nx, ny)) > 16 && j >= udist)
+        if (!has_edog && (j = distanceSquaredToYou(nx, ny)) > 16 && j >= udist)
             continue;
 
         if ((info[i] & ALLOW_M) && MON_AT(nx, ny)) {
@@ -920,7 +920,7 @@ newdogpos:
             if (dog_eat(mtmp, obj, omx, omy, FALSE) == 2)
                 return 2;
         }
-    } else if (mtmp->mleashed && distu(omx, omy) > 4) {
+    } else if (mtmp->mleashed && distanceSquaredToYou(omx, omy) > 4) {
         /* an incredible kludge, but the only way to keep pooch near
          * after it spends time eating or in a trap, etc.
          */
@@ -1020,7 +1020,7 @@ genericptr_t distance;
 {
     int ndist;
 
-    if (*(int *) distance > (ndist = distu(x, y))) {
+    if (*(int *) distance > (ndist = distanceSquaredToYou(x, y))) {
         gx = x;
         gy = y;
         *(int *) distance = ndist;

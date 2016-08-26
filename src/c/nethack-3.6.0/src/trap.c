@@ -2325,7 +2325,7 @@ register struct monst *mtmp;
                 (void) destroy_mitem(mtmp, POTION_CLASS, AD_FIRE);
             }
             if (burn_floor_objects(mtmp->mx, mtmp->my, see_it, FALSE)
-                && !see_it && distu(mtmp->mx, mtmp->my) <= 3 * 3)
+                && !see_it && distanceSquaredToYou(mtmp->mx, mtmp->my) <= 3 * 3)
                 You("smell smoke.");
             if (is_ice(mtmp->mx, mtmp->my))
                 melt_ice(mtmp->mx, mtmp->my, (char *) 0);
@@ -4422,7 +4422,7 @@ boolean *noticed; /* set to true iff hero notices the effect; */
                 pline("%s %s opens.", upstart(strcpy(buf, which)), trapdescr);
         }
         /* might pacify monster if adjacent */
-        if (rn2(2) && distu(mon->mx, mon->my) <= 2)
+        if (rn2(2) && distanceSquaredToYou(mon->mx, mon->my) <= 2)
             reward_untrap(t, mon);
     }
     return TRUE;

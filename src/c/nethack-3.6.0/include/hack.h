@@ -398,7 +398,6 @@ NEARDATA extern coord bhitpos; /* place where throw or zap hits or stops */
      - min((int) greatest_erosion(obj), objects[(obj)->otyp].a_ac))
 
 #define makeknown(x) discover_object((x), TRUE, TRUE)
-#define distu(xx, yy) dist2((int)(xx), (int)(yy), (int) u.ux, (int) u.uy)
 #define onlineu(xx, yy) online2((int)(xx), (int)(yy), (int) u.ux, (int) u.uy)
 
 #define rn1(x, y) (rn2(x) + (y))

@@ -782,7 +782,7 @@ int x, y;
     if (cansee(x, y) || cansee(x2, y2))
         You_see("a drawbridge %s up!",
                 (((u.ux == x || u.uy == y) && !Underwater)
-                 || distu(x2, y2) < distu(x, y))
+                 || distanceSquaredToYou(x2, y2) < distanceSquaredToYou(x, y))
                     ? "coming"
                     : "going");
     else /* "5 gears turn" for castle drawbridge tune */
@@ -843,7 +843,7 @@ int x, y;
     get_wall_for_db(&x2, &y2);
     if (cansee(x, y) || cansee(x2, y2))
         You_see("a drawbridge %s down!",
-                (distu(x2, y2) < distu(x, y)) ? "going" : "coming");
+                (distanceSquaredToYou(x2, y2) < distanceSquaredToYou(x, y)) ? "going" : "coming");
     else /* "5 gears turn" for castle drawbridge tune */
         You_hear("gears turning and chains rattling.");
     lev1->typ = DRAWBRIDGE_DOWN;

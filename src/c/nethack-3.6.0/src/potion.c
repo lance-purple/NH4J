@@ -1245,7 +1245,7 @@ boolean your_fault;
                     && ((rnl(10) > 7 && obj->cursed)
                         || (rnl(10) < 4 && obj->blessed) || !rn2(3)))))
             hit_saddle = TRUE;
-        distance = distu(mon->mx, mon->my);
+        distance = distanceSquaredToYou(mon->mx, mon->my);
         if (!cansee(mon->mx, mon->my))
             pline("Crash!");
         else {

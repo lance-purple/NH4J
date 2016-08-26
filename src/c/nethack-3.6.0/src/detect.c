@@ -1205,7 +1205,7 @@ genericptr_t num;
         if (levl[zx][zy].typ == SDOOR)
             cvt_sdoor_to_door(&levl[zx][zy]); /* .typ = DOOR */
         if (levl[zx][zy].doormask & D_TRAPPED) {
-            if (distu(zx, zy) < 3)
+            if (distanceSquaredToYou(zx, zy) < 3)
                 b_trapped("door", 0);
             else
                 Norep("You %s an explosion!",

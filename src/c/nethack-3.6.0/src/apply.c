@@ -665,9 +665,9 @@ next_to_u()
         if (DEADMONSTER(mtmp))
             continue;
         if (mtmp->mleashed) {
-            if (distu(mtmp->mx, mtmp->my) > 2)
+            if (distanceSquaredToYou(mtmp->mx, mtmp->my) > 2)
                 mnexto(mtmp);
-            if (distu(mtmp->mx, mtmp->my) > 2) {
+            if (distanceSquaredToYou(mtmp->mx, mtmp->my) > 2) {
                 for (otmp = invent; otmp; otmp = otmp->nobj)
                     if (otmp->otyp == LEASH
                         && otmp->leashmon == (int) mtmp->m_id) {
@@ -1442,14 +1442,14 @@ is_valid_jump_pos(x, y, magic, showmsg)
 int x, y, magic;
 boolean showmsg;
 {
-    if (!magic && !(HJumping & ~INTRINSIC) && !EJumping && distu(x, y) != 5) {
+    if (!magic && !(HJumping & ~INTRINSIC) && !EJumping && distanceSquaredToYou(x, y) != 5) {
         /* The Knight jumping restriction still applies when riding a
          * horse.  After all, what shape is the knight piece in chess?
          */
         if (showmsg)
             pline("Illegal move!");
         return FALSE;
-    } else if (distu(x, y) > (magic ? 6 + magic * 3 : 9)) {
+    } else if (distanceSquaredToYou(x, y) > (magic ? 6 + magic * 3 : 9)) {
         if (showmsg)
             pline("Too far!");
         return FALSE;
@@ -2718,8 +2718,8 @@ int min_range, max_range;
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon)
         if (mtmp && !DEADMONSTER(mtmp) && !mtmp->mtame
             && cansee(mtmp->mx, mtmp->my)
-            && distu(mtmp->mx, mtmp->my) <= max_range
-            && distu(mtmp->mx, mtmp->my) >= min_range) {
+            && distanceSquaredToYou(mtmp->mx, mtmp->my) <= max_range
+            && distanceSquaredToYou(mtmp->mx, mtmp->my) >= min_range) {
             if (selmon)
                 return FALSE;
             selmon = mtmp;
@@ -2748,8 +2748,8 @@ int state;
                 x = dx + (int) u.ux;
                 y = dy + (int) u.uy;
                 if (isok(x, y) && ACCESSIBLE(levl[x][y].typ)
-                    && distu(x, y) >= polearm_range_min
-                    && distu(x, y) <= polearm_range_max) {
+                    && distanceSquaredToYou(x, y) >= polearm_range_min
+                    && distanceSquaredToYou(x, y) <= polearm_range_max) {
                     tmp_at(x, y);
                 }
             }
@@ -2814,8 +2814,8 @@ struct obj *obj;
     cc.y = u.uy;
     if (!find_poleable_mon(&cc, min_range, max_range) && hitm
         && !DEADMONSTER(hitm) && cansee(hitm->mx, hitm->my)
-        && distu(hitm->mx, hitm->my) <= max_range
-        && distu(hitm->mx, hitm->my) >= min_range) {
+        && distanceSquaredToYou(hitm->mx, hitm->my) <= max_range
+        && distanceSquaredToYou(hitm->mx, hitm->my) >= min_range) {
         cc.x = hitm->mx;
         cc.y = hitm->my;
     }
@@ -2824,10 +2824,10 @@ struct obj *obj;
         return res; /* ESC; uses turn iff polearm became wielded */
 
     glyph = glyph_at(cc.x, cc.y);
-    if (distu(cc.x, cc.y) > max_range) {
+    if (distanceSquaredToYou(cc.x, cc.y) > max_range) {
         pline("Too far!");
         return res;
-    } else if (distu(cc.x, cc.y) < min_range) {
+    } else if (distanceSquaredToYou(cc.x, cc.y) < min_range) {
         pline("Too close!");
         return res;
     } else if (!cansee(cc.x, cc.y) && !glyph_is_monster(glyph)
@@ -2956,7 +2956,7 @@ struct obj *obj;
         max_range = 5;
     else
         max_range = 8;
-    if (distu(cc.x, cc.y) > max_range) {
+    if (distanceSquaredToYou(cc.x, cc.y) > max_range) {
         pline("Too far!");
         return res;
     } else if (!cansee(cc.x, cc.y)) {

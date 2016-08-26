@@ -293,7 +293,7 @@ register struct monst *mtmp;
     struct attack *mattk, alt_attk;
     int i, j, tmp, sum[NATTK];
     struct permonst *mdat = mtmp->data;
-    boolean ranged = (distu(mtmp->mx, mtmp->my) > 3);
+    boolean ranged = (distanceSquaredToYou(mtmp->mx, mtmp->my) > 3);
     /* Is it near you?  Affects your actions */
     boolean range2 = !monnear(mtmp, mtmp->mux, mtmp->muy);
     /* Does it think it's near you?  Affects its actions */
@@ -328,14 +328,14 @@ register struct monst *mtmp;
             return 0;
         /* Orcs like to steal and eat horses and the like */
         if (!rn2(is_orc(mtmp->data) ? 2 : 4)
-            && distu(mtmp->mx, mtmp->my) <= 2) {
+            && distanceSquaredToYou(mtmp->mx, mtmp->my) <= 2) {
             /* Attack your steed instead */
             i = mattackm(mtmp, u.usteed);
             if ((i & MM_AGR_DIED))
                 return 1;
             /* make sure steed is still alive and within range */
             if ((i & MM_DEF_DIED) || !u.usteed
-                || distu(mtmp->mx, mtmp->my) > 2)
+                || distanceSquaredToYou(mtmp->mx, mtmp->my) > 2)
                 return 0;
             /* Let your steed retaliate */
             return !!(mattackm(u.usteed, mtmp) & MM_DEF_DIED);
@@ -2086,7 +2086,7 @@ register struct attack *mattk;
         break;
     case AD_BLND:
         if (canseemon(mtmp) && !resists_blnd(&youmonst)
-            && distu(mtmp->mx, mtmp->my) <= BOLT_LIM * BOLT_LIM) {
+            && distanceSquaredToYou(mtmp->mx, mtmp->my) <= BOLT_LIM * BOLT_LIM) {
             if (cancelled) {
                 react = rn1(2, 2); /* "puzzled" || "dazzled" */
                 already = (mtmp->mcansee == 0);

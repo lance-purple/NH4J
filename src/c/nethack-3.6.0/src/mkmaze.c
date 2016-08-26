@@ -916,7 +916,7 @@ fumaroles()
             NhRegion *r = create_gas_cloud(x, y, 4 + rn2(5), rn1(10, 5));
             clear_heros_fault(r);
             snd = TRUE;
-            if (distu(x, y) < 15)
+            if (distanceSquaredToYou(x, y) < 15)
                 loud = TRUE;
         }
     }

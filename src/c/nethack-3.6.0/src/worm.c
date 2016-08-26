@@ -303,7 +303,7 @@ register struct monst *worm;
      *  before we decide to do this.
      */
     for (seg = wtails[wnum]; seg; seg = seg->nseg)
-        if (distu(seg->wx, seg->wy) < 3)
+        if (distanceSquaredToYou(seg->wx, seg->wy) < 3)
             (void) mattacku(worm);
 }
 

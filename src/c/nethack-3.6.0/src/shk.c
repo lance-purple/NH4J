@@ -1171,7 +1171,7 @@ dopay()
     for (shkp = next_shkp(fmon, FALSE); shkp;
          shkp = next_shkp(shkp->nmon, FALSE)) {
         sk++;
-        if (ANGRY(shkp) && distu(shkp->mx, shkp->my) <= 2)
+        if (ANGRY(shkp) && distanceSquaredToYou(shkp->mx, shkp->my) <= 2)
             nxtm = shkp;
         if (canspotmon(shkp))
             seensk++;
@@ -1207,7 +1207,7 @@ dopay()
              shkp = next_shkp(shkp->nmon, FALSE))
             if (canspotmon(shkp))
                 break;
-        if (shkp != resident && distu(shkp->mx, shkp->my) > 2) {
+        if (shkp != resident && distanceSquaredToYou(shkp->mx, shkp->my) > 2) {
             pline("%s is not near enough to receive your payment.",
                   Monnam(shkp));
             return 0;
@@ -1241,7 +1241,7 @@ dopay()
             pline("%s is not interested in your payment.", Monnam(mtmp));
             return 0;
         }
-        if (mtmp != resident && distu(mtmp->mx, mtmp->my) > 2) {
+        if (mtmp != resident && distanceSquaredToYou(mtmp->mx, mtmp->my) > 2) {
             pline("%s is too far to receive your payment.", Monnam(mtmp));
             return 0;
         }
@@ -1734,7 +1734,7 @@ int croaked;
         takes[0] = '\0';
         if (!shkp->mcanmove || shkp->msleeping)
             Strcat(takes, "wakes up and ");
-        if (distu(shkp->mx, shkp->my) > 2)
+        if (distanceSquaredToYou(shkp->mx, shkp->my) > 2)
             Strcat(takes, "comes and ");
         Strcat(takes, "takes");
 
@@ -3503,7 +3503,7 @@ register struct monst *shkp;
     if (inhishop(shkp))
         remove_damage(shkp, FALSE);
 
-    if ((udist = distu(omx, omy)) < 3 && (shkp->data != &mons[PM_GRID_BUG]
+    if ((udist = distanceSquaredToYou(omx, omy)) < 3 && (shkp->data != &mons[PM_GRID_BUG]
                                           || (omx == u.ux || omy == u.uy))) {
         if (ANGRY(shkp) || (Conflict && !resist(shkp, RING_CLASS, 0, 0))) {
             if (Displaced)
@@ -3573,7 +3573,7 @@ register struct monst *shkp;
                     return 0;
                 avoid = !badinv;
             } else {
-                avoid = (*u.ushops && distu(gx, gy) > 8);
+                avoid = (*u.ushops && distanceSquaredToYou(gx, gy) > 8);
                 badinv = FALSE;
             }
 
@@ -3678,10 +3678,10 @@ register int fall;
             return;
 #endif
         }
-        if (distu(shkp->mx, shkp->my) > 2) {
+        if (distanceSquaredToYou(shkp->mx, shkp->my) > 2) {
             mnexto(shkp);
             /* for some reason the shopkeeper can't come next to you */
-            if (distu(shkp->mx, shkp->my) > 2) {
+            if (distanceSquaredToYou(shkp->mx, shkp->my) > 2) {
                 if (lang == 2)
                     pline("%s curses you in anger and frustration!",
                           shkname(shkp));
@@ -3774,7 +3774,7 @@ boolean cant_mollify;
                 continue;
             if (tmp_shk == shkp) {
                 unsigned int damage_distance =
-                    distu(tmp_dam->place.x, tmp_dam->place.y);
+                    distanceSquaredToYou(tmp_dam->place.x, tmp_dam->place.y);
 
                 if (damage_distance < nearest_damage) {
                     nearest_damage = damage_distance;
@@ -3784,7 +3784,7 @@ boolean cant_mollify;
             }
             if (!inhishop(tmp_shk))
                 continue;
-            shk_distance = distu(tmp_shk->mx, tmp_shk->my);
+            shk_distance = distanceSquaredToYou(tmp_shk->mx, tmp_shk->my);
             if (shk_distance > nearest_shk)
                 continue;
             if ((shk_distance == nearest_shk) && picks) {
@@ -3795,7 +3795,7 @@ boolean cant_mollify;
             shkp = tmp_shk;
             nearest_shk = shk_distance;
             appear_here = tmp_dam;
-            nearest_damage = distu(tmp_dam->place.x, tmp_dam->place.y);
+            nearest_damage = distanceSquaredToYou(tmp_dam->place.x, tmp_dam->place.y);
         }
     }
 

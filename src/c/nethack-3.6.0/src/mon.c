@@ -680,7 +680,7 @@ movemon()
             if (mtmp->mundetected)
                 continue;
         } else if (mtmp->data->mlet == S_EEL && !mtmp->mundetected
-                   && (mtmp->mflee || distu(mtmp->mx, mtmp->my) > 2)
+                   && (mtmp->mflee || distanceSquaredToYou(mtmp->mx, mtmp->my) > 2)
                    && !canseemon(mtmp) && !rn2(4)) {
             /* some eels end up stuck in isolated pools, where they
                can't--or at least won't--move, so they never reach
@@ -700,7 +700,7 @@ movemon()
              *  have died if it returns 1.
              */
             if (couldsee(mtmp->mx, mtmp->my)
-                && (distu(mtmp->mx, mtmp->my) <= BOLT_LIM * BOLT_LIM)
+                && (distanceSquaredToYou(mtmp->mx, mtmp->my) <= BOLT_LIM * BOLT_LIM)
                 && fightm(mtmp))
                 continue; /* mon might have died */
         }
@@ -1009,7 +1009,7 @@ register const char *str;
             }
             if (cansee(mtmp->mx, mtmp->my) && flags.verbose)
                 pline("%s picks up %s.", Monnam(mtmp),
-                      (distu(mtmp->mx, mtmp->my) <= 5)
+                      (distanceSquaredToYou(mtmp->mx, mtmp->my) <= 5)
                           ? doname(otmp3)
                           : distant_name(otmp3, doname));
             obj_extract_self(otmp3);      /* remove from floor */
@@ -2523,7 +2523,7 @@ wake_nearby()
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
         if (DEADMONSTER(mtmp))
             continue;
-        if (distu(mtmp->mx, mtmp->my) < u.ulevel * 20) {
+        if (distanceSquaredToYou(mtmp->mx, mtmp->my) < u.ulevel * 20) {
             mtmp->msleeping = 0;
             if (!unique_corpstat(mtmp->data))
                 mtmp->mstrategy &= ~STRAT_WAITMASK;
@@ -2653,7 +2653,7 @@ register struct monst *mtmp;
         /* can't hide while trapped except in pits */
         || (mtmp->mtrapped && (t = t_at(mtmp->mx, mtmp->my)) != 0
             && !(t->ttyp == PIT || t->ttyp == SPIKED_PIT))
-        || (sensemon(mtmp) && distu(mtmp->mx, mtmp->my) <= 2))
+        || (sensemon(mtmp) && distanceSquaredToYou(mtmp->mx, mtmp->my) <= 2))
         return FALSE;
 
     if (mtmp->data->mlet == S_MIMIC) {
@@ -3458,7 +3458,7 @@ boolean silent;
         if (is_watch(mtmp->data) && mtmp->mpeaceful) {
             ct++;
             if (cansee(mtmp->mx, mtmp->my) && mtmp->mcanmove) {
-                if (distu(mtmp->mx, mtmp->my) == 2)
+                if (distanceSquaredToYou(mtmp->mx, mtmp->my) == 2)
                     nct++;
                 else
                     sct++;

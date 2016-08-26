@@ -1919,7 +1919,7 @@ doturn()
 
         if (DEADMONSTER(mtmp))
             continue;
-        if (!cansee(mtmp->mx, mtmp->my) || distu(mtmp->mx, mtmp->my) > range)
+        if (!cansee(mtmp->mx, mtmp->my) || distanceSquaredToYou(mtmp->mx, mtmp->my) > range)
             continue;
 
         if (!mtmp->mpeaceful
