@@ -528,12 +528,12 @@ int val;
     return rt;
 }
 
-/* are two points lined up (on a straight line)? */
+/* is a point lined up (on a straight line) with you? */
 boolean
-online2(x0, y0, x1, y1)
-int x0, y0, x1, y1;
+linedUpWithYou(x, y)
+int x, y;
 {
-    int dx = x0 - x1, dy = y0 - y1;
+    int dx = x - u.ux, dy = y - u.uy;
     /*  If either delta is zero then they're on an orthogonal line,
      *  else if the deltas are equal (signs ignored) they're on a diagonal.
      */

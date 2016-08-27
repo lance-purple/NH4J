@@ -108,7 +108,7 @@ pick_move:
         }
     }
     if (mtmp->ispriest && avoid && nix == omx && niy == omy
-        && onlineu(omx, omy)) {
+        && linedUpWithYou(omx, omy)) {
         /* might as well move closer as long it's going to stay
          * lined up */
         avoid = FALSE;

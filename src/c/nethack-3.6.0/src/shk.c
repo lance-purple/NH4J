@@ -3579,7 +3579,7 @@ register struct monst *shkp;
 
             if (((!eshkp->robbed && !eshkp->billct && !eshkp->debit) || avoid)
                 && GDIST(omx, omy) < 3) {
-                if (!badinv && !onlineu(omx, omy))
+                if (!badinv && !linedUpWithYou(omx, omy))
                     return 0;
                 if (satdoor)
                     appr = gx = gy = 0;

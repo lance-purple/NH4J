@@ -1321,7 +1321,7 @@ nexttry: /* eels prefer the water, but if there is no water nearby,
                         continue;
                     info[cnt] |= ALLOW_ROCK;
                 }
-                if (monseeu && onlineu(nx, ny)) {
+                if (monseeu && linedUpWithYou(nx, ny)) {
                     if (flag & NOTONL)
                         continue;
                     info[cnt] |= NOTONL;

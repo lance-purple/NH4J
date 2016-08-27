@@ -861,7 +861,7 @@ E int FDECL(dist2, (int, int, int, int));
 E int FDECL(distanceSquaredToYou, (int, int));
 E int FDECL(isqrt, (int));
 E int FDECL(distmin, (int, int, int, int));
-E boolean FDECL(online2, (int, int, int, int));
+E boolean FDECL(linedUpWithYou, (int, int));
 E boolean FDECL(pmatch, (const char *, const char *));
 E boolean FDECL(pmatchi, (const char *, const char *));
 E boolean FDECL(pmatchz, (const char *, const char *));
