@@ -24,7 +24,7 @@ const char *what;
         /* when stuck in floor (not possible at fountain or sink location,
            so must be attempting to move down), override the usual message */
         umsg = "are trapped in the %s.";
-        what = surface(u.ux, u.uy); /* probably redundant */
+        what = surface(currentX(), currentY()); /* probably redundant */
     }
     You(umsg, what);
 }
@@ -43,7 +43,7 @@ dowatersnakes()
         else
             You_hear("%s hissing!", something);
         while (num-- > 0)
-            if ((mtmp = makemon(&mons[PM_WATER_MOCCASIN], u.ux, u.uy,
+            if ((mtmp = makemon(&mons[PM_WATER_MOCCASIN], currentX(), currentY(),
                                 NO_MM_FLAGS)) != 0
                 && t_at(mtmp->mx, mtmp->my))
                 (void) mintrap(mtmp);
@@ -58,7 +58,7 @@ dowaterdemon()
     struct monst *mtmp;
 
     if (!(mvitals[PM_WATER_DEMON].mvflags & G_GONE)) {
-        if ((mtmp = makemon(&mons[PM_WATER_DEMON], u.ux, u.uy,
+        if ((mtmp = makemon(&mons[PM_WATER_DEMON], currentX(), currentY(),
                             NO_MM_FLAGS)) != 0) {
             if (!Blind)
                 You("unleash %s!", a_monnam(mtmp));
@@ -86,7 +86,7 @@ dowaternymph()
     register struct monst *mtmp;
 
     if (!(mvitals[PM_WATER_NYMPH].mvflags & G_GONE)
-        && (mtmp = makemon(&mons[PM_WATER_NYMPH], u.ux, u.uy,
+        && (mtmp = makemon(&mons[PM_WATER_NYMPH], currentX(), currentY(),
                            NO_MM_FLAGS)) != 0) {
         if (!Blind)
             You("attract %s!", a_monnam(mtmp));
@@ -101,14 +101,14 @@ dowaternymph()
         You_hear("a loud pop.");
 }
 
-/* Gushing forth along LOS from (u.ux, u.uy) */
+/* Gushing forth along LOS from (currentX(), currentY()) */
 void
 dogushforth(drinking)
 int drinking;
 {
     int madepool = 0;
 
-    do_clear_area(u.ux, u.uy, 7, gush, (genericptr_t) &madepool);
+    do_clear_area(currentX(), currentY(), 7, gush, (genericptr_t) &madepool);
     if (!madepool) {
         if (drinking)
             Your("thirst is quenched.");
@@ -125,8 +125,8 @@ genericptr_t poolcnt;
     register struct monst *mtmp;
     register struct trap *ttmp;
 
-    if (((x + y) % 2) || (x == u.ux && y == u.uy)
-        || (rn2(1 + distmin(u.ux, u.uy, x, y))) || (levl[x][y].typ != ROOM)
+    if (((x + y) % 2) || (x == currentX() && y == currentY())
+        || (rn2(1 + distmin(currentX(), currentY(), x, y))) || (levl[x][y].typ != ROOM)
         || (sobj_at(BOULDER, x, y)) || nexttodoor(x, y))
         return;
 
@@ -156,10 +156,10 @@ dofindgem()
         You("spot a gem in the sparkling waters!");
     else
         You_feel("a gem here!");
-    (void) mksobj_at(rnd_class(DILITHIUM_CRYSTAL, LUCKSTONE - 1), u.ux, u.uy,
+    (void) mksobj_at(rnd_class(DILITHIUM_CRYSTAL, LUCKSTONE - 1), currentX(), currentY(),
                      FALSE, FALSE);
-    SET_FOUNTAIN_LOOTED(u.ux, u.uy);
-    newsym(u.ux, u.uy);
+    SET_FOUNTAIN_LOOTED(currentX(), currentY());
+    newsym(currentX(), currentY());
     exercise(A_WIS, TRUE); /* a discovery! */
 }
 
@@ -213,7 +213,7 @@ void
 drinkfountain()
 {
     /* What happens when you drink from a fountain? */
-    register boolean mgkftn = (levl[u.ux][u.uy].blessedftn == 1);
+    register boolean mgkftn = (levl[currentX()][currentY()].blessedftn == 1);
     register int fate = rnd(30);
 
     if (Levitation) {
@@ -242,7 +242,7 @@ drinkfountain()
         display_nhwindow(WIN_MESSAGE, FALSE);
         pline("A wisp of vapor escapes the fountain...");
         exercise(A_WIS, TRUE);
-        levl[u.ux][u.uy].blessedftn = 0;
+        levl[currentX()][currentY()].blessedftn = 0;
         return;
     }
 
@@ -308,7 +308,7 @@ drinkfountain()
                 pline("But it disappears.");
             }
             HSee_invisible |= FROMOUTSIDE;
-            newsym(u.ux, u.uy);
+            newsym(currentX(), currentY());
             exercise(A_WIS, TRUE);
             break;
         case 26: /* See Monsters */
@@ -316,7 +316,7 @@ drinkfountain()
             exercise(A_WIS, TRUE);
             break;
         case 27: /* Find a gem in the sparkling waters. */
-            if (!FOUNTAIN_IS_LOOTED(u.ux, u.uy)) {
+            if (!FOUNTAIN_IS_LOOTED(currentX(), currentY())) {
                 dofindgem();
                 break;
             }
@@ -343,7 +343,7 @@ drinkfountain()
             break;
         }
     }
-    dryup(u.ux, u.uy, TRUE);
+    dryup(currentX(), currentY(), TRUE);
 }
 
 void
@@ -384,11 +384,11 @@ register struct obj *obj;
             exercise(A_WIS, TRUE);
         }
         update_inventory();
-        levl[u.ux][u.uy].typ = ROOM;
-        levl[u.ux][u.uy].looted = 0;
-        newsym(u.ux, u.uy);
+        levl[currentX()][currentY()].typ = ROOM;
+        levl[currentX()][currentY()].looted = 0;
+        newsym(currentX(), currentY());
         level.flags.nfountains--;
-        if (in_town(u.ux, u.uy))
+        if (in_town(currentX(), currentY()))
             (void) angry_guards(FALSE);
         return;
     } else {
@@ -429,7 +429,7 @@ register struct obj *obj;
         dowatersnakes();
         break;
     case 24: /* Find a gem */
-        if (!FOUNTAIN_IS_LOOTED(u.ux, u.uy)) {
+        if (!FOUNTAIN_IS_LOOTED(currentX(), currentY())) {
             dofindgem();
             break;
         }
@@ -463,7 +463,7 @@ register struct obj *obj;
                             delobj(otmp);
                     }
                 You("lost some of your money in the fountain!");
-                CLEAR_FOUNTAIN_LOOTED(u.ux, u.uy);
+                CLEAR_FOUNTAIN_LOOTED(currentX(), currentY());
                 exercise(A_WIS, FALSE);
             }
         }
@@ -473,27 +473,27 @@ register struct obj *obj;
          * surface.  After all, there will have been more people going
          * by.	Just like a shopping mall!  Chris Woodbury  */
 
-        if (FOUNTAIN_IS_LOOTED(u.ux, u.uy))
+        if (FOUNTAIN_IS_LOOTED(currentX(), currentY()))
             break;
-        SET_FOUNTAIN_LOOTED(u.ux, u.uy);
+        SET_FOUNTAIN_LOOTED(currentX(), currentY());
         (void) mkgold((long) (rnd((dunlevs_in_dungeon(&u.uz) - dunlev(&u.uz)
                                    + 1) * 2) + 5),
-                      u.ux, u.uy);
+                      currentX(), currentY());
         if (!Blind)
             pline("Far below you, you see coins glistening in the water.");
         exercise(A_WIS, TRUE);
-        newsym(u.ux, u.uy);
+        newsym(currentX(), currentY());
         break;
     }
     update_inventory();
-    dryup(u.ux, u.uy, TRUE);
+    dryup(currentX(), currentY(), TRUE);
 }
 
 void
 breaksink(x, y)
 int x, y;
 {
-    if (cansee(x, y) || (x == u.ux && y == u.uy))
+    if (cansee(x, y) || (x == currentX() && y == currentY()))
         pline_The("pipes break!  Water spurts out!");
     level.flags.nsinks--;
     levl[x][y].doormask = 0;
@@ -531,7 +531,7 @@ drinksink()
         if (mvitals[PM_SEWER_RAT].mvflags & G_GONE)
             pline_The("sink seems quite dirty.");
         else {
-            mtmp = makemon(&mons[PM_SEWER_RAT], u.ux, u.uy, NO_MM_FLAGS);
+            mtmp = makemon(&mons[PM_SEWER_RAT], currentX(), currentY(), NO_MM_FLAGS);
             if (mtmp)
                 pline("Eek!  There's %s in the sink!",
                       (Blind || !canspotmon(mtmp)) ? "something squirmy"
@@ -556,22 +556,22 @@ drinksink()
         obfree(otmp, (struct obj *) 0);
         break;
     case 5:
-        if (!(levl[u.ux][u.uy].looted & S_LRING)) {
+        if (!(levl[currentX()][currentY()].looted & S_LRING)) {
             You("find a ring in the sink!");
-            (void) mkobj_at(RING_CLASS, u.ux, u.uy, TRUE);
-            levl[u.ux][u.uy].looted |= S_LRING;
+            (void) mkobj_at(RING_CLASS, currentX(), currentY(), TRUE);
+            levl[currentX()][currentY()].looted |= S_LRING;
             exercise(A_WIS, TRUE);
-            newsym(u.ux, u.uy);
+            newsym(currentX(), currentY());
         } else
             pline("Some dirty water backs up in the drain.");
         break;
     case 6:
-        breaksink(u.ux, u.uy);
+        breaksink(currentX(), currentY());
         break;
     case 7:
         pline_The("water moves as though of its own will!");
         if ((mvitals[PM_WATER_ELEMENTAL].mvflags & G_GONE)
-            || !makemon(&mons[PM_WATER_ELEMENTAL], u.ux, u.uy, NO_MM_FLAGS))
+            || !makemon(&mons[PM_WATER_ELEMENTAL], currentX(), currentY(), NO_MM_FLAGS))
             pline("But it quiets down.");
         break;
     case 8:

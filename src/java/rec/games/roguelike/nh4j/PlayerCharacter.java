@@ -2,6 +2,9 @@ package rec.games.roguelike.nh4j;
 
 public class PlayerCharacter {
 	
+	private static int currentX;
+	private static int currentY;
+	
     private static NHAttributeSet currentAttributes = new NHAttributeSet();
     private static NHAttributeSet maximumAttributes = new NHAttributeSet();
     private static NHAttributeSet attributeBonuses = new NHAttributeSet();
@@ -12,6 +15,22 @@ public class PlayerCharacter {
     private static NHAttributeSet attributesAsMonster = new NHAttributeSet();
     private static NHAttributeSet maximumAttributesAsMonster = new NHAttributeSet();
     
+    public static int currentX() {
+    	return currentX;
+    }
+
+    public static int currentY() {
+    	return currentY;
+    }
+
+    public static void setCurrentX(int x) {
+    	currentX = x;
+    }
+
+    public static void setCurrentY(int y) {
+    	currentY = y;
+    }
+
     public static int currentAttribute(int attrIndex) {
     	return currentAttributes.get(attrIndex);
     }

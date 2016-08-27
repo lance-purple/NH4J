@@ -996,7 +996,7 @@ dochat()
         return 0;
     }
 
-    if (!Blind && (otmp = shop_object(u.ux, u.uy)) != (struct obj *) 0) {
+    if (!Blind && (otmp = shop_object(currentX(), currentY())) != (struct obj *) 0) {
         /* standing on something in a shop and chatting causes the shopkeeper
            to describe the price(s).  This can inhibit other chatting inside
            a shop, but that shouldn't matter much.  shop_object() returns an
@@ -1041,8 +1041,8 @@ dochat()
         return 0;
     }
 
-    tx = u.ux + u.dx;
-    ty = u.uy + u.dy;
+    tx = currentX() + u.dx;
+    ty = currentY() + u.dy;
 
     if (!isok(tx, ty))
         return 0;

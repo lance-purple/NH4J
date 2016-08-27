@@ -1241,7 +1241,7 @@ nexttry: /* eels prefer the water, but if there is no water nearby,
                     /* mustn't pass between adjacent long worm segments,
                        but can attack that way */
                     || (m_at(x, ny) && m_at(nx, y) && worm_cross(x, y, nx, ny)
-                        && !m_at(nx, ny) && (nx != u.ux || ny != u.uy))))
+                        && !m_at(nx, ny) && (nx != currentX() || ny != currentY()))))
                 continue;
             if ((is_pool(nx, ny) == wantpool || poolok)
                 && (lavaok || !is_lava(nx, ny))) {
@@ -1254,8 +1254,8 @@ nexttry: /* eels prefer the water, but if there is no water nearby,
                  * as long as you are visible.
                  */
                 if (Displaced && monseeu && mon->mux == nx && mon->muy == ny) {
-                    dispx = u.ux;
-                    dispy = u.uy;
+                    dispx = currentX();
+                    dispy = currentY();
                 } else {
                     dispx = nx;
                     dispy = ny;
@@ -1267,17 +1267,17 @@ nexttry: /* eels prefer the water, but if there is no water nearby,
                         continue;
                     info[cnt] |= ALLOW_SSM;
                 }
-                if ((nx == u.ux && ny == u.uy)
+                if ((nx == currentX() && ny == currentY())
                     || (nx == mon->mux && ny == mon->muy)) {
-                    if (nx == u.ux && ny == u.uy) {
+                    if (nx == currentX() && ny == currentY()) {
                         /* If it's right next to you, it found you,
                          * displaced or no.  We must set mux and muy
                          * right now, so when we return we can tell
                          * that the ALLOW_U means to attack _you_ and
                          * not the image.
                          */
-                        mon->mux = u.ux;
-                        mon->muy = u.uy;
+                        mon->mux = currentX();
+                        mon->muy = currentY();
                     }
                     if (!(flag & ALLOW_U))
                         continue;
@@ -2076,8 +2076,8 @@ struct monst *mtmp;
 {
     if (u.ustuck == mtmp) {
         if (u.uswallow) {
-            u.ux = mtmp->mx;
-            u.uy = mtmp->my;
+            setCurrentX(mtmp->mx);
+            setCurrentY(mtmp->my);
             u.uswallow = 0;
             u.uswldtim = 0;
             if (Punished && uchain->where != OBJ_FLOOR)
@@ -2200,7 +2200,7 @@ int dest; /* dest==1, normal; dest==0, don't print message; dest==2, don't
         /* illogical but traditional "treasure drop" */
         if (!rn2(6) && !(mvitals[mndx].mvflags & G_NOCORPSE)
             /* no extra item from swallower or steed */
-            && (x != u.ux || y != u.uy)
+            && (x != currentX() || y != currentY())
             /* no extra item from kops--too easy to abuse */
             && mdat->mlet != S_KOP
             /* no items from cloned monsters */
@@ -2321,12 +2321,12 @@ struct monst *mtmp;
 
     if (mtmp == u.usteed) {
         /* Keep your steed in sync with you instead */
-        mtmp->mx = u.ux;
-        mtmp->my = u.uy;
+        mtmp->mx = currentX();
+        mtmp->my = currentY();
         return;
     }
 
-    if (!enexto(&mm, u.ux, u.uy, mtmp->data))
+    if (!enexto(&mm, currentX(), currentY(), mtmp->data))
         return;
     rloc_to(mtmp, mm.x, mm.y);
     if (!in_mklev && (mtmp->mstrategy & STRAT_APPEARMSG)) {
@@ -2349,7 +2349,7 @@ struct monst *mtmp;
     int tryct = 20;
 
     do {
-        if (!enexto(&mm, u.ux, u.uy, ptr))
+        if (!enexto(&mm, currentX(), currentY(), ptr))
             return;
         if (couldsee(mm.x, mm.y)
             /* don't move grid bugs diagonally */
@@ -2674,7 +2674,7 @@ struct monst *mtmp;
 {
     struct trap *t;
     boolean undetected = FALSE, is_u = (mtmp == &youmonst);
-    xchar x = is_u ? u.ux : mtmp->mx, y = is_u ? u.uy : mtmp->my;
+    xchar x = is_u ? currentX() : mtmp->mx, y = is_u ? currentY() : mtmp->my;
 
     if (mtmp == u.ustuck) {
         ; /* can't hide if holding you or held by you */

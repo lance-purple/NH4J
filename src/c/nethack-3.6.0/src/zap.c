@@ -464,8 +464,8 @@ int locflags;
 {
     switch (obj->where) {
     case OBJ_INVENT:
-        *xp = u.ux;
-        *yp = u.uy;
+        *xp = currentX();
+        *yp = currentY();
         return TRUE;
     case OBJ_FLOOR:
         *xp = obj->ox;
@@ -501,8 +501,8 @@ xchar *xp, *yp;
 int locflags; /* non-zero means get location even if monster is buried */
 {
     if (mon == &youmonst) {
-        *xp = u.ux;
-        *yp = u.uy;
+        *xp = currentX();
+        *yp = currentY();
         return TRUE;
     } else if (mon->mx > 0 && (!mon->mburied || locflags)) {
         *xp = mon->mx;
@@ -669,7 +669,7 @@ boolean by_hero;
             x = carrier->mx, y = carrier->my;
             break;
         case OBJ_INVENT:
-            x = u.ux, y = u.uy;
+            x = currentX(), y = currentY();
             break;
         case OBJ_FLOOR:
             (void) get_obj_location(corpse, &x, &y, CONTAINED_TOO);
@@ -1562,9 +1562,9 @@ int id;
             && inhishop(shkp)) {
             if (shkp->mpeaceful) {
                 if (*u.ushops
-                    && *in_rooms(u.ux, u.uy, 0)
+                    && *in_rooms(currentX(), currentY(), 0)
                            == *in_rooms(shkp->mx, shkp->my, 0)
-                    && !costly_spot(u.ux, u.uy))
+                    && !costly_spot(currentX(), currentY()))
                     make_angry_shk(shkp, ox, oy);
                 else {
                     pline("%s gets angry!", Monnam(shkp));
@@ -1625,7 +1625,7 @@ struct obj *obj;
                 mon = makemon(ptr, oox, ooy, NO_MINVENT);
                 if (mon) {
                     if (costly_spot(oox, ooy) && !obj->no_charge) {
-                        if (costly_spot(u.ux, u.uy))
+                        if (costly_spot(currentX(), currentY()))
                             addtobill(obj, carried(obj), FALSE, FALSE);
                         else
                             stolen_value(obj, oox, ooy, TRUE, FALSE);
@@ -1791,7 +1791,7 @@ struct obj *obj, *otmp;
 
             if (obj_shudders(obj)) {
                 boolean cover =
-                    ((obj == level.objects[u.ux][u.uy]) && u.uundetected
+                    ((obj == level.objects[currentX()][currentY()]) && u.uundetected
                      && hides_under(youmonst.data));
 
                 if (cansee(obj->ox, obj->oy))
@@ -1964,7 +1964,7 @@ schar zz;
     for (otmp = level.objects[tx][ty]; otmp; otmp = next_obj) {
         next_obj = otmp->nexthere;
         /* for zap downwards, don't hit object poly'd hero is hiding under */
-        if (zz > 0 && u.uundetected && otmp == level.objects[u.ux][u.uy]
+        if (zz > 0 && u.uundetected && otmp == level.objects[currentX()][currentY()]
             && hides_under(youmonst.data))
             continue;
 
@@ -2129,7 +2129,7 @@ boolean ordinary;
     case SPE_FORCE_BOLT:
         learn_it = TRUE;
         if (Antimagic) {
-            shieldeff(u.ux, u.uy);
+            shieldeff(currentX(), currentY());
             pline("Boing!");
         } else {
             if (ordinary) {
@@ -2148,7 +2148,7 @@ boolean ordinary;
             damage = d(12, 6);
             exercise(A_CON, FALSE);
         } else {
-            shieldeff(u.ux, u.uy);
+            shieldeff(currentX(), currentY());
             You("zap yourself, but seem unharmed.");
             ugolemeffects(AD_ELEC, d(12, 6));
         }
@@ -2159,13 +2159,13 @@ boolean ordinary;
 
     case SPE_FIREBALL:
         You("explode a fireball on top of yourself!");
-        explode(u.ux, u.uy, 11, d(6, 6), WAND_CLASS, EXPL_FIERY);
+        explode(currentX(), currentY(), 11, d(6, 6), WAND_CLASS, EXPL_FIERY);
         break;
     case WAN_FIRE:
     case FIRE_HORN:
         learn_it = TRUE;
         if (Fire_resistance) {
-            shieldeff(u.ux, u.uy);
+            shieldeff(currentX(), currentY());
             You_feel("rather warm.");
             ugolemeffects(AD_FIRE, d(12, 6));
         } else {
@@ -2185,7 +2185,7 @@ boolean ordinary;
     case FROST_HORN:
         learn_it = TRUE;
         if (Cold_resistance) {
-            shieldeff(u.ux, u.uy);
+            shieldeff(currentX(), currentY());
             You_feel("a little chill.");
             ugolemeffects(AD_COLD, d(12, 6));
         } else {
@@ -2199,7 +2199,7 @@ boolean ordinary;
     case SPE_MAGIC_MISSILE:
         learn_it = TRUE;
         if (Antimagic) {
-            shieldeff(u.ux, u.uy);
+            shieldeff(currentX(), currentY());
             pline_The("missiles bounce!");
         } else {
             damage = d(4, 6);
@@ -2246,7 +2246,7 @@ boolean ordinary;
         }
         if (msg) {
             learn_it = TRUE;
-            newsym(u.ux, u.uy);
+            newsym(currentX(), currentY());
             self_invis_message();
         }
         break;
@@ -2268,7 +2268,7 @@ boolean ordinary;
     case SPE_SLEEP:
         learn_it = TRUE;
         if (Sleep_resistance) {
-            shieldeff(u.ux, u.uy);
+            shieldeff(currentX(), currentY());
             You("don't feel sleepy!");
         } else {
             pline_The("sleep ray hits you!");
@@ -2430,7 +2430,7 @@ struct attack *mattk;
     int dtyp = 20 + mattk->adtyp - 1;      /* breath by hero */
     const char *fltxt = flash_types[dtyp]; /* blast of <something> */
 
-    zhitu(dtyp, mattk->damn, fltxt, u.ux, u.uy);
+    zhitu(dtyp, mattk->damn, fltxt, currentX(), currentY());
 }
 
 /* light damages hero in gremlin form */
@@ -2620,9 +2620,9 @@ struct obj *obj; /* wand or spell */
     char buf[BUFSZ];
 
     /* some wands have special effects other than normal bhitpile */
-    /* drawbridge might change <u.ux,u.uy> */
-    x = xx = u.ux;     /* <x,y> is zap location */
-    y = yy = u.uy;     /* <xx,yy> is drawbridge (portcullis) position */
+    /* drawbridge might change <currentX(),currentY()> */
+    x = xx = currentX();     /* <x,y> is zap location */
+    y = yy = currentY();     /* <xx,yy> is drawbridge (portcullis) position */
     ttmp = t_at(x, y); /* trap if there is one */
 
     switch (obj->otyp) {
@@ -2729,18 +2729,18 @@ struct obj *obj; /* wand or spell */
             pline1(nothing_happens);
         } else if (u.dz < 0) { /* we should do more... */
             pline("Blood drips on your %s.", body_part(FACE));
-        } else if (u.dz > 0 && !OBJ_AT(u.ux, u.uy)) {
+        } else if (u.dz > 0 && !OBJ_AT(currentX(), currentY())) {
             /*
             Print this message only if there wasn't an engraving
             affected here.  If water or ice, act like waterlevel case.
             */
-            e = engr_at(u.ux, u.uy);
+            e = engr_at(currentX(), currentY());
             if (!(e && e->engr_type == ENGRAVE)) {
-                if (is_pool(u.ux, u.uy) || is_ice(u.ux, u.uy))
+                if (is_pool(currentX(), currentY()) || is_ice(currentX(), currentY()))
                     pline1(nothing_happens);
                 else
                     pline("Blood %ss %s your %s.",
-                          is_lava(u.ux, u.uy) ? "boil" : "pool",
+                          is_lava(currentX(), currentY()) ? "boil" : "pool",
                           Levitation ? "beneath" : "at",
                           makeplural(body_part(FOOT)));
             }
@@ -2796,7 +2796,7 @@ struct obj *obj; /* wand or spell */
          */
         if (u.uundetected && hides_under(youmonst.data)) {
             int hitit = 0;
-            otmp = level.objects[u.ux][u.uy];
+            otmp = level.objects[currentX()][currentY()];
 
             if (otmp)
                 hitit = bhito(otmp, obj);
@@ -2860,11 +2860,11 @@ struct obj *obj;
         if (otyp == WAN_DIGGING || otyp == SPE_DIG)
             zap_dig();
         else if (otyp >= SPE_MAGIC_MISSILE && otyp <= SPE_FINGER_OF_DEATH)
-            buzz(otyp - SPE_MAGIC_MISSILE + 10, u.ulevel / 2 + 1, u.ux, u.uy,
+            buzz(otyp - SPE_MAGIC_MISSILE + 10, u.ulevel / 2 + 1, currentX(), currentY(),
                  u.dx, u.dy);
         else if (otyp >= WAN_MAGIC_MISSILE && otyp <= WAN_LIGHTNING)
             buzz(otyp - WAN_MAGIC_MISSILE,
-                 (otyp == WAN_MAGIC_MISSILE) ? 2 : 6, u.ux, u.uy, u.dx, u.dy);
+                 (otyp == WAN_MAGIC_MISSILE) ? 2 : 6, currentX(), currentY(), u.dx, u.dy);
         else
             impossible("weffects: unexpected spell or wand");
         disclose = TRUE;
@@ -3033,12 +3033,12 @@ struct obj **pobj; /* object tossed/used, set to NULL
 
     if (weapon == KICKED_WEAPON) {
         /* object starts one square in front of player */
-        bhitpos.x = u.ux + ddx;
-        bhitpos.y = u.uy + ddy;
+        bhitpos.x = currentX() + ddx;
+        bhitpos.y = currentY() + ddy;
         range--;
     } else {
-        bhitpos.x = u.ux;
-        bhitpos.y = u.uy;
+        bhitpos.x = currentX();
+        bhitpos.y = currentY();
     }
 
     if (weapon == THROWN_WEAPON && obj && obj->otyp == ROCK) {
@@ -3157,7 +3157,7 @@ struct obj **pobj; /* object tossed/used, set to NULL
                    not canspotmon() because it makes no difference
                    whether the hero can see the monster or not. */
                 if (mtmp->minvis) {
-                    obj->ox = u.ux, obj->oy = u.uy;
+                    obj->ox = currentX(), obj->oy = currentY();
                     (void) flash_hits_mon(mtmp, obj);
                 } else {
                     tmp_at(DISP_END, 0);
@@ -3314,8 +3314,8 @@ int dx, dy;
      * (invert rows for corresponding clockwise patterns)
      */
 
-    bhitpos.x = u.ux;
-    bhitpos.y = u.uy;
+    bhitpos.x = currentX();
+    bhitpos.y = currentY();
     boom = counterclockwise ? S_boomleft : S_boomright;
     for (i = 0; i < 8; i++)
         if (xdir[i] == dx && ydir[i] == dy)
@@ -3340,7 +3340,7 @@ int dx, dy;
             bhitpos.y -= dy;
             break;
         }
-        if (bhitpos.x == u.ux && bhitpos.y == u.uy) { /* ct == 9 */
+        if (bhitpos.x == currentX() && bhitpos.y == currentY()) { /* ct == 9 */
             if (Fumbling || rn2(20) >= ACURR(A_DEX)) {
                 /* we hit ourselves */
                 (void) thitu(10 + obj->spe, dmgval(obj, &youmonst), obj,
@@ -3582,7 +3582,7 @@ xchar sx, sy;
         break;
     case ZT_SLEEP:
         if (Sleep_resistance) {
-            shieldeff(u.ux, u.uy);
+            shieldeff(currentX(), currentY());
             You("don't feel sleepy.");
         } else {
             fall_asleep(-d(nd, 25), TRUE); /* sleep ray */
@@ -3701,11 +3701,11 @@ boolean u_caused;
                 /* save name before potential delobj() */
                 if (give_feedback) {
                     obj->quan = 1L;
-                    Strcpy(buf1, (x == u.ux && y == u.uy)
+                    Strcpy(buf1, (x == currentX() && y == currentY())
                                      ? xname(obj)
                                      : distant_name(obj, xname));
                     obj->quan = 2L;
-                    Strcpy(buf2, (x == u.ux && y == u.uy)
+                    Strcpy(buf2, (x == currentX() && y == currentY())
                                      ? xname(obj)
                                      : distant_name(obj, xname));
                     obj->quan = scrquan;
@@ -3842,7 +3842,7 @@ register int dx, dy;
         return;
     }
     if (type < 0)
-        newsym(u.ux, u.uy);
+        newsym(currentX(), currentY());
     range = rn1(7, 7);
     if (dx == 0 && dy == 0)
         range = 1;
@@ -3950,7 +3950,7 @@ register int dx, dy;
             } else {
                 miss(fltxt, mon);
             }
-        } else if (sx == u.ux && sy == u.uy && range >= 0) {
+        } else if (sx == currentX() && sy == currentY() && range >= 0) {
             nomul(0);
             if (u.usteed && !rn2(3) && !mon_reflects(u.usteed, (char *) 0)) {
                 mon = u.usteed;
@@ -4091,7 +4091,7 @@ const char *msg;
         } while (is_pool(x, y) && (otmp = sobj_at(BOULDER, x, y)) != 0);
         newsym(x, y);
     }
-    if (x == u.ux && y == u.uy)
+    if (x == currentX() && y == currentY())
         spoteffects(TRUE); /* possibly drown, notice objects */
 }
 
@@ -4240,7 +4240,7 @@ short exploding_wand_typ;
                 } else if (!lava)
                     You_hear("a crackling sound.");
 
-                if (x == u.ux && y == u.uy) {
+                if (x == currentX() && y == currentY()) {
                     if (u.uinwater) { /* not just `if (Underwater)' */
                         /* leave the no longer existent water */
                         u.uinwater = 0;
@@ -4974,8 +4974,8 @@ retry:
             *oops_msg = (u.uswallow
                          ? "Oops!  %s out of your reach!"
                          : (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz)
-                            || levl[u.ux][u.uy].typ < IRONBARS
-                            || levl[u.ux][u.uy].typ >= ICE)
+                            || levl[currentX()][currentY()].typ < IRONBARS
+                            || levl[currentX()][currentY()].typ >= ICE)
                             ? "Oops!  %s away from you!"
                             : "Oops!  %s to the floor!");
 

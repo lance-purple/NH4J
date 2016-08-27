@@ -241,17 +241,17 @@ int force;
     register int x, y;
     struct monst *mtmp;
     struct obj *otmp;
-    struct trap *chasm, *trap_at_u = t_at(u.ux, u.uy);
+    struct trap *chasm, *trap_at_u = t_at(currentX(), currentY());
     int start_x, start_y, end_x, end_y;
     schar filltype;
     unsigned tu_pit = 0;
 
     if (trap_at_u)
         tu_pit = (trap_at_u->ttyp == PIT || trap_at_u->ttyp == SPIKED_PIT);
-    start_x = u.ux - (force * 2);
-    start_y = u.uy - (force * 2);
-    end_x = u.ux + (force * 2);
-    end_y = u.uy + (force * 2);
+    start_x = currentX() - (force * 2);
+    start_y = currentY() - (force * 2);
+    end_x = currentX() + (force * 2);
+    end_y = currentY() + (force * 2);
     if (start_x < 1)
         start_x = 1;
     if (start_y < 1)
@@ -271,7 +271,7 @@ int force;
                               Amonnam(mtmp));
                     else
                         You_hear("a thumping sound.");
-                    if (x == u.ux && y == u.uy)
+                    if (x == currentX() && y == currentY())
                         You("easily dodge the falling %s.", mon_nam(mtmp));
                     newsym(x, y);
                 }
@@ -326,7 +326,7 @@ int force;
                     if ((otmp = sobj_at(BOULDER, x, y)) != 0) {
                         if (cansee(x, y))
                             pline("KADOOM! The boulder falls into a chasm%s!",
-                                  ((x == u.ux) && (y == u.uy)) ? " below you"
+                                  ((x == currentX()) && (y == currentY())) ? " below you"
                                                                : "");
                         if (mtmp)
                             mtmp->mtrapped = 0;
@@ -372,7 +372,7 @@ int force;
                                     xkilled(mtmp, 0);
                                 }
                         }
-                    } else if (x == u.ux && y == u.uy) {
+                    } else if (x == currentX() && y == currentY()) {
                         if (Levitation || Flying
                             || is_clinger(youmonst.data)) {
                             if (!tu_pit) { /* no pit here previously */
@@ -500,7 +500,7 @@ struct obj *instr;
                 }
             } else {
                 buzz((instr->otyp == FROST_HORN) ? AD_COLD - 1 : AD_FIRE - 1,
-                     rn1(6, 6), u.ux, u.uy, u.dx, u.dy);
+                     rn1(6, 6), currentX(), currentY(), u.dx, u.dy);
             }
             makeknown(instr->otyp);
             break;
@@ -646,8 +646,8 @@ struct obj *instr;
             exercise(A_WIS, TRUE); /* just for trying */
             if (!strcmp(buf, tune)) {
                 /* Search for the drawbridge */
-                for (y = u.uy - 1; y <= u.uy + 1; y++)
-                    for (x = u.ux - 1; x <= u.ux + 1; x++)
+                for (y = currentY() - 1; y <= currentY() + 1; y++)
+                    for (x = currentX() - 1; x <= currentX() + 1; x++)
                         if (isok(x, y))
                             if (find_drawbridge(&x, &y)) {
                                 u.uevent.uheard_tune =
@@ -665,8 +665,8 @@ struct obj *instr;
                  * we can give the player some hints like in the
                  * Mastermind game */
                 ok = FALSE;
-                for (y = u.uy - 1; y <= u.uy + 1 && !ok; y++)
-                    for (x = u.ux - 1; x <= u.ux + 1 && !ok; x++)
+                for (y = currentY() - 1; y <= currentY() + 1 && !ok; y++)
+                    for (x = currentX() - 1; x <= currentX() + 1 && !ok; x++)
                         if (isok(x, y))
                             if (IS_DRAWBRIDGE(levl[x][y].typ)
                                 || is_drawbridge_wall(x, y) >= 0)

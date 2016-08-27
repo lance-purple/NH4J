@@ -24,8 +24,8 @@ settrack()
         utcnt++;
     if (utpnt == UTSZ)
         utpnt = 0;
-    utrack[utpnt].x = u.ux;
-    utrack[utpnt].y = u.uy;
+    utrack[utpnt].x = currentX();
+    utrack[utpnt].y = currentY();
     utpnt++;
 }
 

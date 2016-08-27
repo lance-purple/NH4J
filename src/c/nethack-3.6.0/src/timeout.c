@@ -349,7 +349,7 @@ nh_timeout()
                     stop_occupation();
                 break;
             case INVIS:
-                newsym(u.ux, u.uy);
+                newsym(currentX(), currentY());
                 if (!Invis && !BInvis && !Blind) {
                     You(!See_invisible
                             ? "are no longer invisible."
@@ -360,7 +360,7 @@ nh_timeout()
             case SEE_INVIS:
                 set_mimic_blocking(); /* do special mimic handling */
                 see_monsters();       /* make invis mons appear */
-                newsym(u.ux, u.uy);   /* make self appear */
+                newsym(currentX(), currentY());   /* make self appear */
                 stop_occupation();
                 break;
             case WOUNDED_LEGS:
@@ -687,14 +687,14 @@ struct obj *figurine;
 STATIC_OVL void
 slip_or_trip()
 {
-    struct obj *otmp = vobj_at(u.ux, u.uy), *otmp2;
+    struct obj *otmp = vobj_at(currentX(), currentY()), *otmp2;
     const char *what;
     char buf[BUFSZ];
     boolean on_foot = TRUE;
     if (u.usteed)
         on_foot = FALSE;
 
-    if (otmp && on_foot && !u.uinwater && is_pool(u.ux, u.uy))
+    if (otmp && on_foot && !u.uinwater && is_pool(currentX(), currentY()))
         otmp = 0;
 
     if (otmp && on_foot) { /* trip over something in particular */
@@ -710,7 +710,7 @@ slip_or_trip()
                       : Hallucination ? "they" : "them")
                 : (otmp->dknown || !Blind)
                       ? doname(otmp)
-                      : ((otmp2 = sobj_at(ROCK, u.ux, u.uy)) == 0
+                      : ((otmp2 = sobj_at(ROCK, currentX(), currentY())) == 0
                              ? something
                              : (otmp2->quan == 1L ? "a rock" : "some rocks"));
         if (Hallucination) {
@@ -727,7 +727,7 @@ slip_or_trip()
                     an(mons[otmp->corpsenm].mname));
             instapetrify(killer.name);
         }
-    } else if (rn2(3) && is_ice(u.ux, u.uy)) {
+    } else if (rn2(3) && is_ice(currentX(), currentY())) {
         pline("%s %s%s on the ice.",
               u.usteed ? upstart(x_monnam(u.usteed,
                                           (has_mname(u.usteed)) ? ARTICLE_NONE
@@ -1283,7 +1283,7 @@ do_storms()
         }
     }
 
-    if (levl[u.ux][u.uy].typ == CLOUD) {
+    if (levl[currentX()][currentY()].typ == CLOUD) {
         /* Inside a cloud during a thunder storm is deafening. */
         /* Even if already deaf, we sense the thunder's vibrations. */
         pline("Kaboom!!!  Boom!!  Boom!!");

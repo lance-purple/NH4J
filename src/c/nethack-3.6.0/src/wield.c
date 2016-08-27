@@ -204,7 +204,7 @@ struct obj *wep;
         if (wep->unpaid) {
             struct monst *this_shkp;
 
-            if ((this_shkp = shop_keeper(inside_shop(u.ux, u.uy)))
+            if ((this_shkp = shop_keeper(inside_shop(currentX(), currentY())))
                 != (struct monst *) 0) {
                 pline("%s says \"You be careful with my %s!\"",
                       shkname(this_shkp), xname(wep));

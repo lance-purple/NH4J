@@ -247,7 +247,7 @@ boolean message;
     }
     unstuck(mtmp); /* ball&chain returned in unstuck() */
     mnexto(mtmp);
-    newsym(u.ux, u.uy);
+    newsym(currentX(), currentY());
     spoteffects(TRUE);
     /* to cover for a case where mtmp is not in a next square */
     if (um_dist(mtmp->mx, mtmp->my, 1))
@@ -297,7 +297,7 @@ register struct monst *mtmp;
     /* Is it near you?  Affects your actions */
     boolean range2 = !monnear(mtmp, mtmp->mux, mtmp->muy);
     /* Does it think it's near you?  Affects its actions */
-    boolean foundyou = (mtmp->mux == u.ux && mtmp->muy == u.uy);
+    boolean foundyou = (mtmp->mux == currentX() && mtmp->muy == currentY());
     /* Is it attacking you or your image? */
     boolean youseeit = canseemon(mtmp);
     /* Might be attacking your image around the corner, or
@@ -315,8 +315,8 @@ register struct monst *mtmp;
     if (u.uswallow) {
         if (mtmp != u.ustuck)
             return 0;
-        u.ustuck->mux = u.ux;
-        u.ustuck->muy = u.uy;
+        u.ustuck->mux = currentX();
+        u.ustuck->muy = currentY();
         range2 = 0;
         foundyou = 1;
         if (u.uinvulnerable)
@@ -351,41 +351,41 @@ register struct monst *mtmp;
             coord cc; /* maybe we need a unexto() function? */
             struct obj *obj;
 
-            You("fall from the %s!", ceiling(u.ux, u.uy));
+            You("fall from the %s!", ceiling(currentX(), currentY()));
             /* take monster off map now so that its location
                is eligible for placing hero; we assume that a
                removed monster remembers its old spot <mx,my> */
             remove_monster(mtmp->mx, mtmp->my);
-            if (!enexto(&cc, u.ux, u.uy, youmonst.data)
+            if (!enexto(&cc, currentX(), currentY(), youmonst.data)
                 /* a fish won't voluntarily swap positions
                    when it's in water and hero is over land */
                 || (mtmp->data->mlet == S_EEL
                     && is_pool(mtmp->mx, mtmp->my)
-                    && !is_pool(u.ux, u.uy))) {
+                    && !is_pool(currentX(), currentY()))) {
                 /* couldn't find any spot for hero; this used to
                    kill off attacker, but now we just give a "miss"
                    message and keep both mtmp and hero at their
                    original positions; hero has become unconcealed
                    so mtmp's next move will be a regular attack */
                 place_monster(mtmp, mtmp->mx, mtmp->my); /* put back */
-                newsym(u.ux, u.uy); /* u.uundetected was toggled */
+                newsym(currentX(), currentY()); /* u.uundetected was toggled */
                 pline("%s draws back as you drop!", Monnam(mtmp));
                 return 0;
             }
 
             /* put mtmp at hero's spot and move hero to <cc.x,.y> */
             newsym(mtmp->mx, mtmp->my); /* finish removal */
-            place_monster(mtmp, u.ux, u.uy);
+            place_monster(mtmp, currentX(), currentY());
             if (mtmp->wormno) {
                 worm_move(mtmp);
                 /* tail hasn't grown, so if it now occupies <cc.x,.y>
                    then one of its original spots must be free */
                 if (m_at(cc.x, cc.y))
-                    (void) enexto(&cc, u.ux, u.uy, youmonst.data);
+                    (void) enexto(&cc, currentX(), currentY(), youmonst.data);
             }
             teleds(cc.x, cc.y, TRUE); /* move hero */
             set_apparxy(mtmp);
-            newsym(u.ux, u.uy);
+            newsym(currentX(), currentY());
 
             if (youmonst.data->mlet != S_PIERCER)
                 return 0; /* lurkers don't attack */
@@ -416,11 +416,11 @@ register struct monst *mtmp;
                  * parallelism to work, we can't rephrase it, so we
                  * zap the "laid by you" momentarily instead.
                  */
-                struct obj *obj = level.objects[u.ux][u.uy];
+                struct obj *obj = level.objects[currentX()][currentY()];
 
                 if (obj || u.umonnum == PM_TRAPPER
                     || (youmonst.data->mlet == S_EEL
-                        && is_pool(u.ux, u.uy))) {
+                        && is_pool(currentX(), currentY()))) {
                     int save_spe = 0; /* suppress warning */
 
                     if (obj) {
@@ -437,13 +437,13 @@ register struct monst *mtmp;
                         pline(
                           "Wait, %s!  There's a %s named %s hiding under %s!",
                               m_monnam(mtmp), youmonst.data->mname, plname,
-                              doname(level.objects[u.ux][u.uy]));
+                              doname(level.objects[currentX()][currentY()]));
                     if (obj)
                         obj->spe = save_spe;
                 } else
                     impossible("hiding under nothing?");
             }
-            newsym(u.ux, u.uy);
+            newsym(currentX(), currentY());
         }
         return 0;
     }
@@ -464,7 +464,7 @@ register struct monst *mtmp;
             u.ustuck = mtmp;
         youmonst.m_ap_type = M_AP_NOTHING;
         youmonst.mappearance = 0;
-        newsym(u.ux, u.uy);
+        newsym(currentX(), currentY());
         return 0;
     }
 
@@ -1494,7 +1494,7 @@ register struct attack *mattk;
         case 1:
         case 0:
             if (Antimagic)
-                shieldeff(u.ux, u.uy);
+                shieldeff(currentX(), currentY());
             pline("Lucky for you, it didn't work!");
             dmg = 0;
             break;
@@ -1636,7 +1636,7 @@ gulpmu(mtmp, mattk)
 register struct monst *mtmp;
 register struct attack *mattk;
 {
-    struct trap *t = t_at(u.ux, u.uy);
+    struct trap *t = t_at(currentX(), currentY());
     int tmp = d((int) mattk->damn, (int) mattk->damd);
     int tim_tmp;
     register struct obj *otmp2;
@@ -1649,14 +1649,14 @@ register struct attack *mattk;
         if (!engulf_target(mtmp, &youmonst))
             return 0;
         if ((t && ((t->ttyp == PIT) || (t->ttyp == SPIKED_PIT)))
-            && sobj_at(BOULDER, u.ux, u.uy))
+            && sobj_at(BOULDER, currentX(), currentY()))
             return 0;
 
         if (Punished)
             unplacebc(); /* ball&chain go away */
         remove_monster(omx, omy);
         mtmp->mtrapped = 0; /* no longer on old trap */
-        place_monster(mtmp, u.ux, u.uy);
+        place_monster(mtmp, currentX(), currentY());
         u.ustuck = mtmp;
         newsym(mtmp->mx, mtmp->my);
         if (is_animal(mtmp->data) && u.usteed) {
@@ -1690,7 +1690,7 @@ register struct attack *mattk;
         if (touch_petrifies(youmonst.data) && !resists_ston(mtmp)) {
             /* put the attacker back where it started;
                the resulting statue will end up there */
-            remove_monster(mtmp->mx, mtmp->my); /* u.ux,u.uy */
+            remove_monster(mtmp->mx, mtmp->my); /* currentX(),currentY() */
             place_monster(mtmp, omx, omy);
             minstapetrify(mtmp, TRUE);
             /* normally unstuck() would do this, but we're not
@@ -1801,7 +1801,7 @@ register struct attack *mattk;
         if (!mtmp->mcan && rn2(2)) {
             pline_The("air around you crackles with electricity.");
             if (Shock_resistance) {
-                shieldeff(u.ux, u.uy);
+                shieldeff(currentX(), currentY());
                 You("seem unhurt.");
                 ugolemeffects(AD_ELEC, tmp);
                 tmp = 0;
@@ -1812,7 +1812,7 @@ register struct attack *mattk;
     case AD_COLD:
         if (!mtmp->mcan && rn2(2)) {
             if (Cold_resistance) {
-                shieldeff(u.ux, u.uy);
+                shieldeff(currentX(), currentY());
                 You_feel("mildly chilly.");
                 ugolemeffects(AD_COLD, tmp);
                 tmp = 0;
@@ -1824,7 +1824,7 @@ register struct attack *mattk;
     case AD_FIRE:
         if (!mtmp->mcan && rn2(2)) {
             if (Fire_resistance) {
-                shieldeff(u.ux, u.uy);
+                shieldeff(currentX(), currentY());
                 You_feel("mildly hot.");
                 ugolemeffects(AD_FIRE, tmp);
                 tmp = 0;
@@ -2733,7 +2733,7 @@ cloneu()
         return (struct monst *) 0;
     if (mvitals[mndx].mvflags & G_EXTINCT)
         return (struct monst *) 0;
-    mon = makemon(youmonst.data, u.ux, u.uy, NO_MINVENT | MM_EDOG);
+    mon = makemon(youmonst.data, currentX(), currentY(), NO_MINVENT | MM_EDOG);
     if (!mon)
         return NULL;
     mon->mcloned = 1;

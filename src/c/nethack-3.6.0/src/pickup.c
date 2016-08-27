@@ -289,7 +289,7 @@ boolean picked_some;
     register int ct = 0;
 
     /* count the objects here */
-    for (obj = level.objects[u.ux][u.uy]; obj; obj = obj->nexthere) {
+    for (obj = level.objects[currentX()][currentY()]; obj; obj = obj->nexthere) {
         if (obj != uchain)
             ct++;
     }
@@ -301,7 +301,7 @@ boolean picked_some;
         flush_screen(1);
         (void) look_here(ct, picked_some);
     } else {
-        read_engr_at(u.ux, u.uy);
+        read_engr_at(currentX(), currentY());
     }
 }
 
@@ -478,12 +478,12 @@ int what; /* should be a long */
         count = 0;
 
     if (!u.uswallow) {
-        struct trap *ttmp = t_at(u.ux, u.uy);
+        struct trap *ttmp = t_at(currentX(), currentY());
         /* no auto-pick if no-pick move, nothing there, or in a pool */
-        if (autopickup && (context.nopick || !OBJ_AT(u.ux, u.uy)
-                           || (is_pool(u.ux, u.uy) && !Underwater)
-                           || is_lava(u.ux, u.uy))) {
-            read_engr_at(u.ux, u.uy);
+        if (autopickup && (context.nopick || !OBJ_AT(currentX(), currentY())
+                           || (is_pool(currentX(), currentY()) && !Underwater)
+                           || is_lava(currentX(), currentY()))) {
+            read_engr_at(currentX(), currentY());
             return 0;
         }
 
@@ -491,7 +491,7 @@ int what; /* should be a long */
         if (!can_reach_floor(TRUE)) {
             if ((multi && !context.run) || (autopickup && !flags.pickup)
                 || (ttmp && uteetering_at_seen_pit(ttmp)))
-                read_engr_at(u.ux, u.uy);
+                read_engr_at(currentX(), currentY());
             return 0;
         }
         /* multi && !context.run means they are in the middle of some other
@@ -511,14 +511,14 @@ int what; /* should be a long */
         }
 
         /* if there's anything here, stop running */
-        if (OBJ_AT(u.ux, u.uy) && context.run && context.run != 8
+        if (OBJ_AT(currentX(), currentY()) && context.run && context.run != 8
             && !context.nopick)
             nomul(0);
     }
 
     add_valid_menu_class(0); /* reset */
     if (!u.uswallow) {
-        objchain = level.objects[u.ux][u.uy];
+        objchain = level.objects[currentX()][currentY()];
         traverse_how = BY_NEXTHERE;
     } else {
         objchain = u.ustuck->minvent;
@@ -666,7 +666,7 @@ int what; /* should be a long */
 
         /* position may need updating (invisible hero) */
         if (n_picked)
-            newsym(u.ux, u.uy);
+            newsym(currentX(), currentY());
 
         /* check if there's anything else here after auto-pickup is done */
         if (autopickup)
@@ -1629,8 +1629,8 @@ doloot()
             return 1; /* costs a turn */
         }             /* else fallthrough to normal looting */
     }
-    cc.x = u.ux;
-    cc.y = u.uy;
+    cc.x = currentX();
+    cc.y = currentY();
 
 lootcont:
 
@@ -1705,11 +1705,11 @@ lootcont:
     /*
      * 3.3.1 introduced directional looting for some things.
      */
-    if (c != 'y' && mon_beside(u.ux, u.uy)) {
+    if (c != 'y' && mon_beside(currentX(), currentY())) {
         if (!get_adjacent_loc("Loot in what direction?",
-                              "Invalid loot location", u.ux, u.uy, &cc))
+                              "Invalid loot location", currentX(), currentY(), &cc))
             return 0;
-        if (cc.x == u.ux && cc.y == u.uy) {
+        if (cc.x == currentX() && cc.y == currentY()) {
             underfoot = TRUE;
             if (container_at(cc.x, cc.y, FALSE))
                 goto lootcont;
@@ -1763,7 +1763,7 @@ reverse_loot()
     struct obj *goldob = 0, *coffers, *otmp, boxdummy;
     struct monst *mon;
     long contribution;
-    int n, x = u.ux, y = u.uy;
+    int n, x = currentX(), y = currentY();
 
     if (!rn2(3)) {
         /* n objects: 1/(n+1) chance per object plus 1/(n+1) to fall off end
@@ -2000,7 +2000,7 @@ register struct obj *obj;
     if (obj_is_burning(obj)) /* this used to be part of freeinv() */
         (void) snuff_lit(obj);
 
-    if (floor_container && costly_spot(u.ux, u.uy)) {
+    if (floor_container && costly_spot(currentX(), currentY())) {
         if (current_container->no_charge && !obj->unpaid) {
             /* don't sell when putting the item into your own container */
             obj->no_charge = 1;
@@ -2009,7 +2009,7 @@ register struct obj *obj;
              * note: coins are handled later */
             was_unpaid = obj->unpaid ? TRUE : FALSE;
             sellobj_state(SELL_DELIBERATE);
-            sellobj(obj, u.ux, u.uy);
+            sellobj(obj, currentX(), currentY());
             sellobj_state(SELL_NORMAL);
         }
     }
@@ -2034,7 +2034,7 @@ register struct obj *obj;
         delete_contents(current_container);
         if (!floor_container)
             useup(current_container);
-        else if (obj_here(current_container, u.ux, u.uy))
+        else if (obj_here(current_container, currentX(), currentY()))
             useupf(current_container, current_container->quan);
         else
             panic("in_container:  bag not found.");
@@ -2148,8 +2148,8 @@ struct obj *item;
         You("%s %s disappear!", Blind ? "notice" : "see", doname(item));
 
     if (*u.ushops && (shkp = shop_keeper(*u.ushops)) != 0) {
-        if (held ? (boolean) item->unpaid : costly_spot(u.ux, u.uy))
-            loss = stolen_value(item, u.ux, u.uy, (boolean) shkp->mpeaceful,
+        if (held ? (boolean) item->unpaid : costly_spot(currentX(), currentY()))
+            loss = stolen_value(item, currentX(), currentY(), (boolean) shkp->mpeaceful,
                                 TRUE);
     }
     obfree(item, (struct obj *) 0);
@@ -2685,7 +2685,7 @@ dotip()
      */
 
     /* at present, can only tip things at current spot, not adjacent ones */
-    cc.x = u.ux, cc.y = u.uy;
+    cc.x = currentX(), cc.y = currentY();
 
     /* check floor container(s) first; at most one will be accessed */
     if ((boxes = container_at(cc.x, cc.y, TRUE)) > 0) {
@@ -2796,13 +2796,13 @@ dotip()
     }
     if (spillage) {
         buf[0] = '\0';
-        if (is_pool(u.ux, u.uy))
+        if (is_pool(currentX(), currentY()))
             Sprintf(buf, " and gradually %s", vtense(spillage, "dissipate"));
-        else if (is_lava(u.ux, u.uy))
+        else if (is_lava(currentX(), currentY()))
             Sprintf(buf, " and immediately %s away",
                     vtense(spillage, "burn"));
         pline("Some %s %s onto the %s%s.", spillage,
-              vtense(spillage, "spill"), surface(u.ux, u.uy), buf);
+              vtense(spillage, "spill"), surface(currentX(), currentY()), buf);
         /* shop usage message comes after the spill message */
         if (cobj->otyp == CAN_OF_GREASE && cobj->spe > 0) {
             consume_obj_charge(cobj, TRUE);
@@ -2824,7 +2824,7 @@ STATIC_OVL void
 tipcontainer(box)
 struct obj *box; /* or bag */
 {
-    xchar ox = u.ux, oy = u.uy; /* #tip only works at hero's location */
+    xchar ox = currentX(), oy = currentY(); /* #tip only works at hero's location */
     boolean empty_it = FALSE,
             /* Shop handling:  can't rely on the container's own unpaid
                or no_charge status because contents might differ with it.

@@ -34,7 +34,7 @@ ballfall()
 {
     boolean gets_hit;
 
-    gets_hit = (((uball->ox != u.ux) || (uball->oy != u.uy))
+    gets_hit = (((uball->ox != currentX()) || (uball->oy != currentY()))
                 && ((uwep == uball) ? FALSE : (boolean) rn2(5)));
     ballrelease(TRUE);
     if (gets_hit) {
@@ -110,22 +110,22 @@ placebc()
         return;
     }
 
-    (void) flooreffects(uchain, u.ux, u.uy, ""); /* chain might rust */
+    (void) flooreffects(uchain, currentX(), currentY(), ""); /* chain might rust */
 
     if (carried(uball)) /* the ball is carried */
         u.bc_order = BCPOS_DIFFER;
     else {
         /* ball might rust -- already checked when carried */
-        (void) flooreffects(uball, u.ux, u.uy, "");
-        place_object(uball, u.ux, u.uy);
+        (void) flooreffects(uball, currentX(), currentY(), "");
+        place_object(uball, currentX(), currentY());
         u.bc_order = BCPOS_CHAIN;
     }
 
-    place_object(uchain, u.ux, u.uy);
+    place_object(uchain, currentX(), currentY());
 
-    u.bglyph = u.cglyph = levl[u.ux][u.uy].glyph; /* pick up glyph */
+    u.bglyph = u.cglyph = levl[currentX()][currentY()].glyph; /* pick up glyph */
 
-    newsym(u.ux, u.uy);
+    newsym(currentX(), currentY());
 }
 
 void
@@ -200,7 +200,7 @@ int already_blind;
     u.bc_felt = ball_on_floor ? BC_BALL | BC_CHAIN : BC_CHAIN; /* felt */
 
     if (already_blind || u.uswallow) {
-        u.cglyph = u.bglyph = levl[u.ux][u.uy].glyph;
+        u.cglyph = u.bglyph = levl[currentX()][currentY()].glyph;
         return;
     }
 
@@ -415,8 +415,8 @@ boolean allow_drag;
         if (carried(uball)) {
             /* move chain only if necessary */
             if (distmin(x, y, uchain->ox, uchain->oy) > 1) {
-                *chainx = u.ux;
-                *chainy = u.uy;
+                *chainx = currentX();
+                *chainy = currentY();
             }
             return TRUE;
         }
@@ -440,7 +440,7 @@ boolean allow_drag;
         move_bc(0, *bc_control, *ballx, *bally, *chainx, *chainy); \
         goto drag;                                                 \
     }
-        if (IS_CHAIN_ROCK(u.ux, u.uy) || IS_CHAIN_ROCK(*chainx, *chainy)
+        if (IS_CHAIN_ROCK(currentX(), currentY()) || IS_CHAIN_ROCK(*chainx, *chainy)
             || IS_CHAIN_ROCK(uball->ox, uball->oy))
             already_in_rock = TRUE;
         else
@@ -483,7 +483,7 @@ boolean allow_drag;
                      *   _X  move northeast  ----->  X@
                      *    @
                      */
-                    if (dist2(u.ux, u.uy, uball->ox, uball->oy) == 5
+                    if (distanceSquaredToYou(uball->ox, uball->oy) == 5
                         && dist2(x, y, tempx, tempy) == 1)
                         SKIP_TO_DRAG;
                     /* Avoid pathological case *if* not teleporting:
@@ -491,7 +491,7 @@ boolean allow_drag;
                      *   _X  move east       ----->  X_
                      *    @                           @
                      */
-                    if (dist2(u.ux, u.uy, uball->ox, uball->oy) == 4
+                    if (distanceSquaredToYou(uball->ox, uball->oy) == 4
                         && dist2(x, y, tempx, tempy) == 2)
                         SKIP_TO_DRAG;
                 }
@@ -500,10 +500,10 @@ boolean allow_drag;
             } else if (!IS_CHAIN_ROCK(tempx, tempy)
                        && IS_CHAIN_ROCK(tempx2, tempy2) && !already_in_rock) {
                 if (allow_drag) {
-                    if (dist2(u.ux, u.uy, uball->ox, uball->oy) == 5
+                    if (distanceSquaredToYou(uball->ox, uball->oy) == 5
                         && dist2(x, y, tempx2, tempy2) == 1)
                         SKIP_TO_DRAG;
-                    if (dist2(u.ux, u.uy, uball->ox, uball->oy) == 4
+                    if (distanceSquaredToYou(uball->ox, uball->oy) == 4
                         && dist2(x, y, tempx2, tempy2) == 2)
                         SKIP_TO_DRAG;
                 }
@@ -563,9 +563,9 @@ boolean allow_drag;
             if (CHAIN_IN_MIDDLE(uchain->ox, uchain->oy))
                 break;
             /* otherwise try to drag chain to player's old position */
-            if (CHAIN_IN_MIDDLE(u.ux, u.uy)) {
-                *chainx = u.ux;
-                *chainy = u.uy;
+            if (CHAIN_IN_MIDDLE(currentX(), currentY())) {
+                *chainx = currentX();
+                *chainy = currentY();
                 break;
             }
             /* otherwise use player's new position (they must have
@@ -585,7 +585,7 @@ boolean allow_drag;
 
 drag:
 
-    if (near_capacity() > SLT_ENCUMBER && dist2(x, y, u.ux, u.uy) <= 2) {
+    if (near_capacity() > SLT_ENCUMBER && distanceSquaredToYou(x, y) <= 2) {
         You("cannot %sdrag the heavy iron ball.",
             invent ? "carry all that and also " : "");
         nomul(0);
@@ -620,9 +620,9 @@ drag:
 
             } /* now check again in case mon died */
             if (!m_at(uchain->ox, uchain->oy)) {
-                u.ux = uchain->ox;
-                u.uy = uchain->oy;
-                newsym(u.ux0, u.uy0);
+                setCurrentX(uchain->ox);
+                setCurrentY(uchain->oy);
+                newsym(currentX(), currentY());
             }
             nomul(0);
 
@@ -639,7 +639,7 @@ drag:
     *bc_control = BC_BALL | BC_CHAIN;
 
     move_bc(1, *bc_control, *ballx, *bally, *chainx, *chainy);
-    if (dist2(x, y, u.ux, u.uy) > 2) {
+    if (distanceSquaredToYou(x, y) > 2) {
         /* Awful case: we're still in range of the ball, so we thought we
          * could only move the chain, but it turned out that the target
          * square for the chain was rock, so we had to drag it instead.
@@ -650,7 +650,7 @@ drag:
         *ballx = *chainx = x;
         *bally = *chainy = y;
     } else {
-        xchar newchainx = u.ux, newchainy = u.uy;
+        xchar newchainx = currentX(), newchainy = currentY();
 
         /*
          * Generally, chain moves to hero's previous location and ball
@@ -665,8 +665,8 @@ drag:
             newchainy = (y + uchain->oy) / 2;
             if (IS_CHAIN_ROCK(newchainx, newchainy)) {
                 /* don't let chain move to inaccessible location */
-                newchainx = u.ux;
-                newchainy = u.uy;
+                newchainx = currentX();
+                newchainy = currentY();
             }
         }
 
@@ -700,7 +700,7 @@ xchar x, y;
         u.bglyph = (u.bc_order) ? u.cglyph : levl[x][y].glyph;
     }
 
-    if (x != u.ux || y != u.uy) {
+    if (x != currentX() || y != currentY()) {
         struct trap *t;
         const char *pullmsg = "The ball pulls you out of the %s!";
 
@@ -713,7 +713,7 @@ xchar x, y;
             case TT_WEB:
                 pline(pullmsg, "web");
                 pline_The("web is destroyed!");
-                deltrap(t_at(u.ux, u.uy));
+                deltrap(t_at(currentX(), currentY()));
                 break;
             case TT_LAVA:
                 pline(pullmsg, "lava");
@@ -734,21 +734,21 @@ xchar x, y;
             }
             }
             u.utrap = 0;
-            fill_pit(u.ux, u.uy);
+            fill_pit(currentX(), currentY());
         }
 
-        u.ux0 = u.ux;
-        u.uy0 = u.uy;
+        u.ux0 = currentX();
+        u.uy0 = currentY();
         if (!Levitation && !MON_AT(x, y) && !u.utrap
             && (is_pool(x, y)
                 || ((t = t_at(x, y))
                     && (t->ttyp == PIT || t->ttyp == SPIKED_PIT
                         || t->ttyp == TRAPDOOR || t->ttyp == HOLE)))) {
-            u.ux = x;
-            u.uy = y;
+            setCurrentX(x);
+            setCurrentY(y);
         } else {
-            u.ux = x - u.dx;
-            u.uy = y - u.dy;
+            setCurrentX(x - u.dx);
+            setCurrentY(y - u.dy);
         }
         vision_full_recalc = 1; /* hero has moved, recalculate vision later */
 
@@ -758,14 +758,14 @@ xchar x, y;
                 levl[uchain->ox][uchain->oy].glyph = u.cglyph;
             u.bc_felt = 0; /* feel nothing */
             /* pick up new glyph */
-            u.cglyph = (u.bc_order) ? u.bglyph : levl[u.ux][u.uy].glyph;
+            u.cglyph = (u.bc_order) ? u.bglyph : levl[currentX()][currentY()].glyph;
         }
-        movobj(uchain, u.ux, u.uy); /* has a newsym */
+        movobj(uchain, currentX(), currentY()); /* has a newsym */
         if (Blind) {
             u.bc_order = bc_order();
         }
         newsym(u.ux0, u.uy0); /* clean up old position */
-        if (u.ux0 != u.ux || u.uy0 != u.uy) {
+        if (u.ux0 != currentX() || u.uy0 != currentY()) {
             spoteffects(TRUE);
             sokoban_guilt();
         }

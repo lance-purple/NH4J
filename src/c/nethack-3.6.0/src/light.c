@@ -156,7 +156,7 @@ char **cs_rows;
 
         /* minor optimization: don't bother with duplicate light sources */
         /* at hero */
-        if (ls->x == u.ux && ls->y == u.uy) {
+        if (ls->x == currentX() && ls->y == currentY()) {
             if (at_hero_range >= ls->range)
                 ls->flags &= ~LSF_SHOW;
             else
@@ -184,7 +184,7 @@ char **cs_rows;
                 if ((max_x = (ls->x + offset)) >= COLNO)
                     max_x = COLNO - 1;
 
-                if (ls->x == u.ux && ls->y == u.uy) {
+                if (ls->x == currentX() && ls->y == currentY()) {
                     /*
                      * If the light source is located at the hero, then
                      * we can use the COULD_SEE bits already calculated
@@ -688,7 +688,7 @@ wiz_light_sources()
     if (win == WIN_ERR)
         return 0;
 
-    Sprintf(buf, "Mobile light sources: hero @ (%2d,%2d)", u.ux, u.uy);
+    Sprintf(buf, "Mobile light sources: hero @ (%2d,%2d)", currentX(), currentY());
     putstr(win, 0, buf);
     putstr(win, 0, "");
 

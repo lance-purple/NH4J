@@ -69,7 +69,7 @@ register struct monst *mtmp;
 {
     int x, y;
 
-    if (mtmp->mpeaceful && in_town(u.ux + u.dx, u.uy + u.dy)
+    if (mtmp->mpeaceful && in_town(currentX() + u.dx, currentY() + u.dy)
         && mtmp->mcansee && m_canseeu(mtmp) && !rn2(3)) {
         if (picking_lock(&x, &y) && IS_DOOR(levl[x][y].typ)
             && (levl[x][y].doormask & D_LOCKED)) {
@@ -110,7 +110,7 @@ register struct monst *mtmp;
         /* can see it now, or sense it and would normally see it */
         && (canseemon(mtmp) || (sensemon(mtmp) && couldsee(x, y)))
         && mtmp->mcanmove && !noattacks(mtmp->data)
-        && !onscary(u.ux, u.uy, mtmp))
+        && !onscary(currentX(), currentY(), mtmp))
         stop_occupation();
 
     return rd;
@@ -149,7 +149,7 @@ struct monst *mtmp;
      * Elbereth doesn't work in Gehennom, the Elemental Planes, or the
      * Astral Plane; the influence of the Valar only reaches so far.  */
     return (epresent
-            && ((u.ux == x && u.uy == y)
+            && ((currentX() == x && currentY() == y)
                 || (Displaced && mtmp->mux == x && mtmp->muy == y))
             && !(mtmp->isshk || mtmp->isgd || !mtmp->mcansee
                  || mtmp->mpeaceful || mtmp->data->mlet == S_HUMAN
@@ -296,8 +296,8 @@ int *inrange, *nearby, *scared;
         seescaryx = mtmp->mux;
         seescaryy = mtmp->muy;
     } else {
-        seescaryx = u.ux;
-        seescaryy = u.uy;
+        seescaryx = currentX();
+        seescaryy = currentY();
     }
 
     sawscary = onscary(seescaryx, seescaryy, mtmp);
@@ -361,7 +361,7 @@ register struct monst *mtmp;
         if (Hallucination)
             newsym(mtmp->mx, mtmp->my);
         if (mtmp->mcanmove && (mtmp->mstrategy & STRAT_CLOSE)
-            && !mtmp->msleeping && monnear(mtmp, u.ux, u.uy))
+            && !mtmp->msleeping && monnear(mtmp, currentX(), currentY()))
             quest_talk(mtmp); /* give the leaders a chance to speak */
         return 0;             /* other frozen monsters can't do anything */
     }
@@ -433,7 +433,7 @@ register struct monst *mtmp;
     /* Demonic Blackmail! */
     if (nearby && mdat->msound == MS_BRIBE && mtmp->mpeaceful && !mtmp->mtame
         && !u.uswallow) {
-        if (mtmp->mux != u.ux || mtmp->muy != u.uy) {
+        if (mtmp->mux != currentX() || mtmp->muy != currentY()) {
             pline("%s whispers at thin air.",
                   cansee(mtmp->mux, mtmp->muy) ? Monnam(mtmp) : "It");
 
@@ -548,7 +548,7 @@ toofar:
         /* arbitrary distance restriction to keep monster far away
            from you from having cast dozens of sticks-to-snakes
            or similar spells by the time you reach it */
-        if (dist2(mtmp->mx, mtmp->my, u.ux, u.uy) <= 49
+        if (dist2(mtmp->mx, mtmp->my, currentX(), currentY()) <= 49
             && !mtmp->mspec_used) {
             struct attack *a;
 
@@ -1092,7 +1092,7 @@ not_special:
     if (mmoved) {
         register int j;
 
-        if (mmoved == 1 && (u.ux != nix || u.uy != niy) && itsstuck(mtmp))
+        if (mmoved == 1 && (currentX() != nix || currentY() != niy) && itsstuck(mtmp))
             return 3;
 
         if (mmoved == 1 && can_tunnel && needspick(ptr)
@@ -1127,9 +1127,9 @@ not_special:
             nix = mtmp->mux;
             niy = mtmp->muy;
         }
-        if (nix == u.ux && niy == u.uy) {
-            mtmp->mux = u.ux;
-            mtmp->muy = u.uy;
+        if (nix == currentX() && niy == currentY()) {
+            mtmp->mux = currentX();
+            mtmp->muy = currentY();
             return 0;
         }
         /* The monster may attack another based on 1 of 2 conditions:
@@ -1315,10 +1315,10 @@ postmov:
             if (u.uswallow && mtmp == u.ustuck
                 && (mtmp->mx != omx || mtmp->my != omy)) {
                 /* If the monster moved, then update */
-                u.ux0 = u.ux;
-                u.uy0 = u.uy;
-                u.ux = mtmp->mx;
-                u.uy = mtmp->my;
+                u.ux0 = currentX();
+                u.uy0 = currentY();
+                setCurrentX(mtmp->mx);
+                setCurrentY(mtmp->my);
                 swallowed(0);
             } else
                 newsym(mtmp->mx, mtmp->my);
@@ -1443,7 +1443,7 @@ register struct monst *mtmp;
 
     /* monsters which know where you are don't suddenly forget,
        if you haven't moved away */
-    if (mx == u.ux && my == u.uy)
+    if (mx == currentX() && my == currentY())
         goto found_you;
 
     notseen = (!mtmp->mcansee || (Invis && !perceives(mtmp->data)));
@@ -1471,19 +1471,19 @@ register struct monst *mtmp;
         do {
             if (++try_cnt > 200)
                 goto found_you; /* punt */
-            mx = u.ux - disp + rn2(2 * disp + 1);
-            my = u.uy - disp + rn2(2 * disp + 1);
+            mx = currentX() - disp + rn2(2 * disp + 1);
+            my = currentY() - disp + rn2(2 * disp + 1);
         } while (!isok(mx, my)
                  || (disp != 2 && mx == mtmp->mx && my == mtmp->my)
-                 || ((mx != u.ux || my != u.uy) && !passes_walls(mtmp->data)
+                 || ((mx != currentX() || my != currentY()) && !passes_walls(mtmp->data)
                      && !(accessible(mx, my)
                           || (closed_door(mx, my)
                               && (can_ooze(mtmp) || can_fog(mtmp)))))
                  || !couldsee(mx, my));
     } else {
     found_you:
-        mx = u.ux;
-        my = u.uy;
+        mx = currentX();
+        my = currentY();
     }
 
     mtmp->mux = mx;

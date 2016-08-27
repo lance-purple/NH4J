@@ -4,6 +4,7 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
 #include "hack.h" /* for config.h+extern.h */
+
 /*=
     Assorted 'small' utility routines.  They're virtually independent of
     NetHack, except that rounddiv may call panic().  setrandom calls one
@@ -63,6 +64,22 @@
 #else
 #define Static static
 #endif
+
+jclass getJavaClass(const char* className) {
+    jclass javaClass = (*jni_env)->FindClass(jni_env, className);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        (*jni_env)->ExceptionDescribe(jni_env);
+    }
+    return javaClass;
+}
+
+jmethodID getStaticMethod(jclass javaClass, const char* methodName, const char* typeSignature) {
+    jmethodID method = (*jni_env)->GetStaticMethodID(jni_env, javaClass, methodName, typeSignature);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        (*jni_env)->ExceptionDescribe(jni_env);
+    }
+    return method;
+}
 
 static boolean FDECL(pmatch_internal, (const char *, const char *,
                                        BOOLEAN_P, const char *));
@@ -494,13 +511,39 @@ int x0, y0, x1, y1;
     return dx * dx + dy * dy;
 }
 
+/* your current position */
+
+int currentX() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "currentX", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+}
+
+int currentY() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "currentY", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+}
+
+void setCurrentX(x) int x; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setCurrentX", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, x);
+}
+
+void setCurrentY(y) int y; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setCurrentY", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, y);
+}
+
 /* square of euclidean distance from pt to your current position */
 int
 distanceSquaredToYou(x, y)
 int x, y;
 {
-    register int dx = u.ux - x;
-    register int dy = u.uy - y;
+    register int dx = currentX() - x;
+    register int dy = currentY() - y;
 
     return (dx * dx) + (dy * dy);
 }
@@ -533,7 +576,7 @@ boolean
 linedUpWithYou(x, y)
 int x, y;
 {
-    int dx = x - u.ux, dy = y - u.uy;
+    int dx = x - currentX(), dy = y - currentY();
     /*  If either delta is zero then they're on an orthogonal line,
      *  else if the deltas are equal (signs ignored) they're on a diagonal.
      */

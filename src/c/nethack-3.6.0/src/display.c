@@ -270,7 +270,7 @@ void
 map_invisible(x, y)
 register xchar x, y;
 {
-    if (x != u.ux || y != u.uy) { /* don't display I at hero's location */
+    if (x != currentX() || y != currentY()) { /* don't display I at hero's location */
         if (level.flags.hero_memory)
             levl[x][y].glyph = GLYPH_INVISIBLE;
         show_glyph(x, y, GLYPH_INVISIBLE);
@@ -539,7 +539,7 @@ xchar x, y;
 
     /* Set the seen vector as if the hero had seen it.
        It doesn't matter if the hero is levitating or not. */
-    set_seenv(lev, u.ux, u.uy, x, y);
+    set_seenv(lev, currentX(), currentY(), x, y);
 
     if (!can_reach_floor(FALSE)) {
         /*
@@ -659,7 +659,7 @@ xchar x, y;
             show_glyph(x, y, lev->glyph = cmap_to_glyph(S_corr));
     }
     /* draw monster on top if we can sense it */
-    if ((x != u.ux || y != u.uy) && (mon = m_at(x, y)) && sensemon(mon))
+    if ((x != currentX() || y != currentY()) && (mon = m_at(x, y)) && sensemon(mon))
         display_monster(x, y, mon,
                         (tp_sensemon(mon) || MATCH_WARN_OF_MON(mon))
                             ? PHYSICALLY_SEEN
@@ -690,7 +690,7 @@ register int x, y;
 
     /* only permit updating the hero when swallowed */
     if (u.uswallow) {
-        if (x == u.ux && y == u.uy)
+        if (x == currentX() && y == currentY())
             display_self();
         return;
     }
@@ -700,10 +700,10 @@ register int x, y;
         int dx, dy;
         if (!is_pool(x, y))
             return;
-        dx = x - u.ux;
+        dx = x - currentX();
         if (dx < 0)
             dx = -dx;
-        dy = y - u.uy;
+        dy = y - currentY();
         if (dy < 0)
             dy = -dy;
         if (dx > 1 || dy > 1)
@@ -737,7 +737,7 @@ register int x, y;
             show_region(reg, x, y);
             return;
         }
-        if (x == u.ux && y == u.uy) {
+        if (x == currentX() && y == currentY()) {
             if (canspotself()) {
                 _map_location(x, y, 0); /* map *under* self */
                 display_self();
@@ -778,8 +778,8 @@ register int x, y;
 
     /* Can't see the location. */
     } else {
-        if (x == u.ux && y == u.uy) {
-            feel_location(u.ux, u.uy); /* forces an update */
+        if (x == currentX() && y == currentY()) {
+            feel_location(currentX(), currentY()); /* forces an update */
 
             if (canspotself())
                 display_self();
@@ -1024,41 +1024,41 @@ int first;
     }
 
     swallower = monsndx(u.ustuck->data);
-    /* assume isok(u.ux,u.uy) */
-    left_ok = isok(u.ux - 1, u.uy);
-    rght_ok = isok(u.ux + 1, u.uy);
+    /* assume isok(currentX(),currentY()) */
+    left_ok = isok(currentX() - 1, currentY());
+    rght_ok = isok(currentX() + 1, currentY());
     /*
      *  Display the hero surrounded by the monster's stomach.
      */
-    if (isok(u.ux, u.uy - 1)) {
+    if (isok(currentX(), currentY() - 1)) {
         if (left_ok)
-            show_glyph(u.ux - 1, u.uy - 1,
+            show_glyph(currentX() - 1, currentY() - 1,
                        swallow_to_glyph(swallower, S_sw_tl));
-        show_glyph(u.ux, u.uy - 1, swallow_to_glyph(swallower, S_sw_tc));
+        show_glyph(currentX(), currentY() - 1, swallow_to_glyph(swallower, S_sw_tc));
         if (rght_ok)
-            show_glyph(u.ux + 1, u.uy - 1,
+            show_glyph(currentX() + 1, currentY() - 1,
                        swallow_to_glyph(swallower, S_sw_tr));
     }
 
     if (left_ok)
-        show_glyph(u.ux - 1, u.uy, swallow_to_glyph(swallower, S_sw_ml));
+        show_glyph(currentX() - 1, currentY(), swallow_to_glyph(swallower, S_sw_ml));
     display_self();
     if (rght_ok)
-        show_glyph(u.ux + 1, u.uy, swallow_to_glyph(swallower, S_sw_mr));
+        show_glyph(currentX() + 1, currentY(), swallow_to_glyph(swallower, S_sw_mr));
 
-    if (isok(u.ux, u.uy + 1)) {
+    if (isok(currentX(), currentY() + 1)) {
         if (left_ok)
-            show_glyph(u.ux - 1, u.uy + 1,
+            show_glyph(currentX() - 1, currentY() + 1,
                        swallow_to_glyph(swallower, S_sw_bl));
-        show_glyph(u.ux, u.uy + 1, swallow_to_glyph(swallower, S_sw_bc));
+        show_glyph(currentX(), currentY() + 1, swallow_to_glyph(swallower, S_sw_bc));
         if (rght_ok)
-            show_glyph(u.ux + 1, u.uy + 1,
+            show_glyph(currentX() + 1, currentY() + 1,
                        swallow_to_glyph(swallower, S_sw_br));
     }
 
     /* Update the swallowed position. */
-    lastx = u.ux;
-    lasty = u.uy;
+    lastx = currentX();
+    lasty = currentY();
 }
 
 /*
@@ -1097,16 +1097,16 @@ int mode;
                     show_glyph(x, y, cmap_to_glyph(S_stone));
     }
 
-    for (x = u.ux - 1; x <= u.ux + 1; x++)
-        for (y = u.uy - 1; y <= u.uy + 1; y++)
+    for (x = currentX() - 1; x <= currentX() + 1; x++)
+        for (y = currentY() - 1; y <= currentY() + 1; y++)
             if (isok(x, y) && is_pool(x, y)) {
-                if (Blind && !(x == u.ux && y == u.uy))
+                if (Blind && !(x == currentX() && y == currentY()))
                     show_glyph(x, y, cmap_to_glyph(S_stone));
                 else
                     newsym(x, y);
             }
-    lastx = u.ux;
-    lasty = u.uy;
+    lastx = currentX();
+    lasty = currentY();
 }
 
 /*
@@ -1136,7 +1136,7 @@ int mode;
 
     /* limited update */
     } else {
-        newsym(u.ux, u.uy);
+        newsym(currentX(), currentY());
     }
 }
 
@@ -1185,7 +1185,7 @@ see_monsters()
 
     /* when mounted, hero's location gets caught by monster loop */
     if (!u.usteed)
-        newsym(u.ux, u.uy);
+        newsym(currentX(), currentY());
 }
 
 /*
@@ -1262,7 +1262,7 @@ docrt()
     register int x, y;
     register struct rm *lev;
 
-    if (!u.ux)
+    if (!currentX())
         return; /* display isn't ready yet */
 
     if (u.uswallow) {
@@ -1501,7 +1501,7 @@ int cursor_on_u;
     }
 
     if (cursor_on_u)
-        curs(WIN_MAP, u.ux, u.uy); /* move cursor to the hero */
+        curs(WIN_MAP, currentX(), currentY()); /* move cursor to the hero */
     display_nhwindow(WIN_MAP, FALSE);
     reset_glyph_bbox();
     flushing = 0;
@@ -2464,7 +2464,7 @@ struct rm *lev;
 
 void display_self()
 {
-    show_glyph(u.ux, u.uy,                                                  
+    show_glyph(currentX(), currentY(),                                                  
            maybe_display_usteed((youmonst.m_ap_type == M_AP_NOTHING)        
                                 ? hero_glyph                                
                                 : (youmonst.m_ap_type == M_AP_FURNITURE)    

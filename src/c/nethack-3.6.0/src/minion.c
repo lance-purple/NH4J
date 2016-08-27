@@ -123,7 +123,7 @@ struct monst *mon;
     census = monster_census(FALSE);
 
     while (cnt > 0) {
-        mtmp = makemon(&mons[dtype], u.ux, u.uy, MM_EMIN);
+        mtmp = makemon(&mons[dtype], currentX(), currentY(), MM_EMIN);
         if (mtmp) {
             result++;
             /* an angel's alignment should match the summoner */
@@ -173,7 +173,7 @@ boolean talk;
     if (mnum == NON_PM) {
         mon = 0;
     } else if (mnum == PM_ANGEL) {
-        mon = makemon(&mons[mnum], u.ux, u.uy, MM_EMIN);
+        mon = makemon(&mons[mnum], currentX(), currentY(), MM_EMIN);
         if (mon) {
             mon->isminion = 1;
             EMIN(mon)->min_align = alignment;
@@ -183,14 +183,14 @@ boolean talk;
                && mnum != PM_ALIGNED_PRIEST && mnum != PM_HIGH_PRIEST) {
         /* This was mons[mnum].pxlth == 0 but is this restriction
            appropriate or necessary now that the structures are separate? */
-        mon = makemon(&mons[mnum], u.ux, u.uy, MM_EMIN);
+        mon = makemon(&mons[mnum], currentX(), currentY(), MM_EMIN);
         if (mon) {
             mon->isminion = 1;
             EMIN(mon)->min_align = alignment;
             EMIN(mon)->renegade = FALSE;
         }
     } else {
-        mon = makemon(&mons[mnum], u.ux, u.uy, NO_MM_FLAGS);
+        mon = makemon(&mons[mnum], currentX(), currentY(), NO_MM_FLAGS);
     }
     if (mon) {
         if (talk) {
@@ -410,8 +410,8 @@ struct monst *mon; /* if null, angel hasn't been created yet */
     }
     /* create 2 to 4 hostile angels to replace the lost guardian */
     for (i = rn1(3, 2); i > 0; --i) {
-        mm.x = u.ux;
-        mm.y = u.uy;
+        mm.x = currentX();
+        mm.y = currentY();
         if (enexto(&mm, mm.x, mm.y, &mons[PM_ANGEL]))
             (void) mk_roamer(&mons[PM_ANGEL], u.ualign.type, mm.x, mm.y,
                              FALSE);
@@ -436,8 +436,8 @@ gain_guardian_angel()
     } else if (u.ualign.record > 8) { /* fervent */
         pline("A voice whispers:");
         verbalize("Thou hast been worthy of me!");
-        mm.x = u.ux;
-        mm.y = u.uy;
+        mm.x = currentX();
+        mm.y = currentY();
         if (enexto(&mm, mm.x, mm.y, &mons[PM_ANGEL])
             && (mtmp = mk_roamer(&mons[PM_ANGEL], u.ualign.type, mm.x, mm.y,
                                  TRUE)) != 0) {

@@ -214,8 +214,8 @@ const char *goal;
             msg_given = TRUE;
             goto nxtc;
         } else if (c == '@') {
-            cx = u.ux;
-            cy = u.uy;
+            cx = currentX();
+            cy = currentY();
             goto nxtc;
         } else {
             if (!index(quitchars, c)) {
@@ -424,14 +424,14 @@ do_mname()
         You("would never recognize it anyway.");
         return;
     }
-    cc.x = u.ux;
-    cc.y = u.uy;
+    cc.x = currentX();
+    cc.y = currentY();
     if (getpos(&cc, FALSE, "the monster you want to name") < 0
         || (cx = cc.x) < 0)
         return;
     cy = cc.y;
 
-    if (cx == u.ux && cy == u.uy) {
+    if (cx == currentX() && cy == currentY()) {
         if (u.usteed && canspotmon(u.usteed))
             mtmp = u.usteed;
         else {
@@ -737,7 +737,7 @@ namefloorobj()
     struct obj *obj = 0;
     boolean fakeobj = FALSE, use_plural;
 
-    cc.x = u.ux, cc.y = u.uy;
+    cc.x = currentX(), cc.y = currentY();
     /* "dot for under/over you" only makes sense when the cursor hasn't
        been moved off the hero's '@' yet, but there's no way to adjust
        the help text once getpos() has started */
@@ -745,8 +745,8 @@ namefloorobj()
             (u.uundetected && hides_under(youmonst.data)) ? "over" : "under");
     if (getpos(&cc, FALSE, buf) < 0 || cc.x <= 0)
         return;
-    if (cc.x == u.ux && cc.y == u.uy) {
-        obj = vobj_at(u.ux, u.uy);
+    if (cc.x == currentX() && cc.y == currentY()) {
+        obj = vobj_at(currentX(), currentY());
     } else {
         glyph = glyph_at(cc.x, cc.y);
         if (glyph_is_object(glyph))
@@ -756,7 +756,7 @@ namefloorobj()
     if (!obj) {
         /* "under you" is safe here since there's no object to hide under */
         pline("There doesn't seem to be any object %s.",
-              (cc.x == u.ux && cc.y == u.uy) ? "under you" : "there");
+              (cc.x == currentX() && cc.y == currentY()) ? "under you" : "there");
         return;
     }
     /* note well: 'obj' might be as instance of STRANGE_OBJECT if target

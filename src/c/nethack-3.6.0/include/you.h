@@ -255,7 +255,6 @@ extern const struct Align aligns[]; /* table of available alignments */
 
 /*** Information about the player ***/
 struct you {
-    xchar ux, uy;
     schar dx, dy, dz;  /* direction of move (or zap or ... ) */
     schar di;          /* direction of FF */
     xchar tx, ty;      /* destination of travel */

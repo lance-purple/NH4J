@@ -54,8 +54,8 @@ struct obj *otmp;
         pline("Saddle yourself?  Very funny...");
         return 0;
     }
-    if (!isok(u.ux + u.dx, u.uy + u.dy)
-        || !(mtmp = m_at(u.ux + u.dx, u.uy + u.dy)) || !canspotmon(mtmp)) {
+    if (!isok(currentX() + u.dx, currentY() + u.dy)
+        || !(mtmp = m_at(currentX() + u.dx, currentY() + u.dy)) || !canspotmon(mtmp)) {
         pline("I see nobody there.");
         return 1;
     }
@@ -165,10 +165,10 @@ doride()
 
     if (u.usteed) {
         dismount_steed(DISMOUNT_BYCHOICE);
-    } else if (getdir((char *) 0) && isok(u.ux + u.dx, u.uy + u.dy)) {
+    } else if (getdir((char *) 0) && isok(currentX() + u.dx, currentY() + u.dy)) {
         if (wizard && yn("Force the mount to succeed?") == 'y')
             forcemount = TRUE;
-        return (mount_steed(m_at(u.ux + u.dx, u.uy + u.dy), forcemount));
+        return (mount_steed(m_at(currentX() + u.dx, currentY() + u.dy), forcemount));
     } else {
         return 0;
     }
@@ -235,7 +235,7 @@ boolean force;      /* Quietly force this animal */
         return (FALSE);
     }
     if (u.uswallow || u.ustuck || u.utrap || Punished
-        || !test_move(u.ux, u.uy, mtmp->mx - u.ux, mtmp->my - u.uy,
+        || !test_move(currentX(), currentY(), mtmp->mx - currentX(), mtmp->my - currentY(),
                       TEST_MOVE)) {
         if (Punished || !(u.uswallow || u.ustuck || u.utrap))
             You("are unable to swing your %s over.", body_part(LEG));
@@ -421,9 +421,9 @@ int forceit;
     if (reason != DISMOUNT_BYCHOICE || Stunned || Confusion || Fumbling)
         i = 1;
     for (; !found && i < 2; ++i) {
-        for (x = u.ux - 1; x <= u.ux + 1; x++)
-            for (y = u.uy - 1; y <= u.uy + 1; y++) {
-                if (!isok(x, y) || (x == u.ux && y == u.uy))
+        for (x = currentX() - 1; x <= currentX() + 1; x++)
+            for (y = currentY() - 1; y <= currentY() + 1; y++) {
+                if (!isok(x, y) || (x == currentX() && y == currentY()))
                     continue;
 
                 if (accessible(x, y) && !MON_AT(x, y)) {
@@ -445,7 +445,7 @@ int forceit;
 
     /* If we didn't find a good spot and forceit is on, try enexto(). */
     if (forceit && min_distance < 0
-        && !enexto(spot, u.ux, u.uy, youmonst.data))
+        && !enexto(spot, currentX(), currentY(), youmonst.data))
         return FALSE;
 
     return found;
@@ -533,28 +533,28 @@ int reason; /* Player was thrown off etc. */
        unless we're in the midst of creating a bones file. */
     if (reason == DISMOUNT_BONES) {
         /* move the steed to an adjacent square */
-        if (enexto(&cc, u.ux, u.uy, mtmp->data))
+        if (enexto(&cc, currentX(), currentY(), mtmp->data))
             rloc_to(mtmp, cc.x, cc.y);
         else /* evidently no room nearby; move steed elsewhere */
             (void) rloc(mtmp, FALSE);
         return;
     }
     if (mtmp->mhp > 0) {
-        place_monster(mtmp, u.ux, u.uy);
+        place_monster(mtmp, currentX(), currentY());
         if (!u.uswallow && !u.ustuck && have_spot) {
             struct permonst *mdat = mtmp->data;
 
             /* The steed may drop into water/lava */
             if (!is_flyer(mdat) && !is_floater(mdat) && !is_clinger(mdat)) {
-                if (is_pool(u.ux, u.uy)) {
+                if (is_pool(currentX(), currentY())) {
                     if (!Underwater)
                         pline("%s falls into the %s!", Monnam(mtmp),
-                              surface(u.ux, u.uy));
+                              surface(currentX(), currentY()));
                     if (!is_swimmer(mdat) && !amphibious(mdat)) {
                         killed(mtmp);
                         adjalign(-1);
                     }
-                } else if (is_lava(u.ux, u.uy)) {
+                } else if (is_lava(currentX(), currentY())) {
                     pline("%s is pulled into the lava!", Monnam(mtmp));
                     if (!likes_lava(mdat)) {
                         killed(mtmp);
@@ -594,7 +594,7 @@ int reason; /* Player was thrown off etc. */
                     (void) mintrap(mtmp);
             }
             /* Couldn't... try placing the steed */
-        } else if (enexto(&cc, u.ux, u.uy, mtmp->data)) {
+        } else if (enexto(&cc, currentX(), currentY(), mtmp->data)) {
             /* Keep player here, move the steed to cc */
             rloc_to(mtmp, cc.x, cc.y);
             /* Player stays put */

@@ -7,7 +7,7 @@
 STATIC_DCL int FDECL(drop_throw, (struct obj *, BOOLEAN_P, int, int));
 
 #define URETREATING(x, y) \
-    (distmin(u.ux, u.uy, x, y) > distmin(u.ux0, u.uy0, x, y))
+    (distmin(currentX(), currentY(), x, y) > distmin(u.ux0, u.uy0, x, y))
 
 #define POLE_LIM 5 /* How far monsters can use pole-weapons */
 
@@ -116,7 +116,7 @@ int x, y;
             if (!flooreffects(obj, x, y,
                               "fall")) { /* don't double-dip on damage */
                 place_object(obj, x, y);
-                if (!mtmp && x == u.ux && y == u.uy)
+                if (!mtmp && x == currentX() && y == currentY())
                     mtmp = &youmonst;
                 if (mtmp && ohit)
                     passive_obj(mtmp, obj, (struct attack *) 0);
@@ -335,7 +335,7 @@ struct obj *obj;         /* missile (or stack providing it) */
         if ((mtmp = m_at(bhitpos.x, bhitpos.y)) != 0) {
             if (ohitmon(mtmp, singleobj, range, TRUE))
                 break;
-        } else if (bhitpos.x == u.ux && bhitpos.y == u.uy) {
+        } else if (bhitpos.x == currentX() && bhitpos.y == currentY()) {
             if (multi)
                 nomul(0);
 
@@ -381,7 +381,7 @@ struct obj *obj;         /* missile (or stack providing it) */
                 break;
             default:
                 dam = dmgval(singleobj, &youmonst);
-                hitv = 3 - distmin(u.ux, u.uy, mon->mx, mon->my);
+                hitv = 3 - distmin(currentX(), currentY(), mon->mx, mon->my);
                 if (hitv < -4)
                     hitv = -4;
                 if (is_elf(mon->data)
@@ -442,7 +442,7 @@ struct obj *obj;         /* missile (or stack providing it) */
             }
             stop_occupation();
             if (hitu || !range) {
-                (void) drop_throw(singleobj, hitu, u.ux, u.uy);
+                (void) drop_throw(singleobj, hitu, currentX(), currentY());
                 break;
             }
         }
@@ -547,7 +547,7 @@ struct monst *mtmp;
         }
 
         dam = dmgval(otmp, &youmonst);
-        hitv = 3 - distmin(u.ux, u.uy, mtmp->mx, mtmp->my);
+        hitv = 3 - distmin(currentX(), currentY(), mtmp->mx, mtmp->my);
         if (hitv < -4)
             hitv = -4;
         if (bigmonst(youmonst.data))
@@ -774,7 +774,7 @@ int boulderhandling; /* 0=block, 1=ignore, 2=conditionally block */
 
     if ((!tbx || !tby || abs(tbx) == abs(tby)) /* straight line or diagonal */
         && distmin(tbx, tby, 0, 0) < BOLT_LIM) {
-        if ((ax == u.ux && ay == u.uy) ? (boolean) couldsee(bx, by)
+        if ((ax == currentX() && ay == currentY()) ? (boolean) couldsee(bx, by)
                                        : clear_path(ax, ay, bx, by))
             return TRUE;
         /* don't have line of sight, but might still be lined up

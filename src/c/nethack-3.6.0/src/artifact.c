@@ -1107,8 +1107,8 @@ char *hittee;              /* target's name: "you" or mon_nam(mdef) */
         (void) upstart(hittee); /* capitalize */
         if (resisted) {
             pline("%s %s!", hittee, vtense(fakename, "resist"));
-            shieldeff(youdefend ? u.ux : mdef->mx,
-                      youdefend ? u.uy : mdef->my);
+            shieldeff(youdefend ? currentX() : mdef->mx,
+                      youdefend ? currentY() : mdef->my);
         }
         if ((do_stun || do_confuse) && flags.verbose) {
             char buf[BUFSZ];
@@ -1631,7 +1631,7 @@ struct obj *obj;
         case INVIS:
             if (BInvis || Blind)
                 goto nothing_special;
-            newsym(u.ux, u.uy);
+            newsym(currentX(), currentY());
             if (on)
                 Your("body takes on a %s transparency...",
                      Hallucination ? "normal" : "strange");
@@ -1927,9 +1927,9 @@ boolean loseit;    /* whether to drop it if hero can longer touch it */
             hitfloor(obj);
         } else {
             /* dropx gives a message iff item lands on an altar */
-            if (!IS_ALTAR(levl[u.ux][u.uy].typ))
+            if (!IS_ALTAR(levl[currentX()][currentY()].typ))
                 pline("%s to the %s.", Tobjnam(obj, "fall"),
-                      surface(u.ux, u.uy));
+                      surface(currentX(), currentY()));
             dropx(obj);
         }
         *objp = obj = 0; /* no longer in inventory */

@@ -1572,8 +1572,8 @@ mkinvokearea()
     }
 
     You("are standing at the top of a stairwell leading down!");
-    mkstairs(u.ux, u.uy, 0, (struct mkroom *) 0); /* down */
-    newsym(u.ux, u.uy);
+    mkstairs(currentX(), currentY(), 0, (struct mkroom *) 0); /* down */
+    newsym(currentX(), currentY());
     vision_full_recalc = 1; /* everything changed */
 }
 

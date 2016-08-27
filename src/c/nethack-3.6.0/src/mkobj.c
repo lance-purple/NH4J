@@ -667,7 +667,7 @@ int alter_type;
         /* this get_obj_location shouldn't fail, but if it does,
            use hero's location */
         if (!get_obj_location(obj, &ox, &oy, CONTAINED_TOO))
-            ox = u.ux, oy = u.uy;
+            ox = currentX(), oy = currentY();
         if (!costly_spot(ox, oy))
             return;
         objroom = *in_rooms(ox, oy, SHOPBASE);
@@ -699,7 +699,7 @@ int alter_type;
     case OBJ_FLOOR:
         if (set_bknown)
             obj->bknown = 1;
-        if (costly_spot(u.ux, u.uy) && objroom == *u.ushops) {
+        if (costly_spot(currentX(), currentY()) && objroom == *u.ushops) {
             verbalize("You %s %s, you pay for %s!",
                       alteration_verbs[alter_type], those, them);
             bill_dummy_object(obj);
@@ -2119,8 +2119,8 @@ boolean tipping; /* caller emptying entire contents; affects shop handling */
             obj = hold_another_object(
                 obj, u.uswallow ? "Oops!  %s out of your reach!"
                                 : (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz)
-                                   || levl[u.ux][u.uy].typ < IRONBARS
-                                   || levl[u.ux][u.uy].typ >= ICE)
+                                   || levl[currentX()][currentY()].typ < IRONBARS
+                                   || levl[currentX()][currentY()].typ >= ICE)
                                       ? "Oops!  %s away from you!"
                                       : "Oops!  %s to the floor!",
                 The(aobjnam(obj, "slip")), (const char *) 0);
@@ -2129,11 +2129,11 @@ boolean tipping; /* caller emptying entire contents; affects shop handling */
             if (!can_reach_floor(TRUE)) {
                 hitfloor(obj); /* does altar check, message, drop */
             } else {
-                if (IS_ALTAR(levl[u.ux][u.uy].typ))
+                if (IS_ALTAR(levl[currentX()][currentY()].typ))
                     doaltarobj(obj); /* does its own drop message */
                 else
                     pline("%s %s to the %s.", Doname2(obj),
-                          otense(obj, "drop"), surface(u.ux, u.uy));
+                          otense(obj, "drop"), surface(currentX(), currentY()));
                 dropy(obj);
             }
         }

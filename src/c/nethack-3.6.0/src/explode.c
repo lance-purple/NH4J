@@ -140,7 +140,7 @@ int expltype;
             } else
                 explmask[i][j] = 0;
 
-            if (i + x - 1 == u.ux && j + y - 1 == u.uy) {
+            if (i + x - 1 == currentX() && j + y - 1 == currentY()) {
                 switch (adtyp) {
                 case AD_PHYS:
                     explmask[i][j] = 0;
@@ -177,7 +177,7 @@ int expltype;
             }
             /* can be both you and mtmp if you're swallowed */
             mtmp = m_at(i + x - 1, j + y - 1);
-            if (!mtmp && i + x - 1 == u.ux && j + y - 1 == u.uy)
+            if (!mtmp && i + x - 1 == currentX() && j + y - 1 == currentY())
                 mtmp = u.usteed;
             if (mtmp) {
                 if (mtmp->mhp < 1)
@@ -288,9 +288,9 @@ int expltype;
             for (j = 0; j < 3; j++) {
                 if (explmask[i][j] == 2)
                     continue;
-                if (i + x - 1 == u.ux && j + y - 1 == u.uy)
+                if (i + x - 1 == currentX() && j + y - 1 == currentY())
                     uhurt = (explmask[i][j] == 1) ? 1 : 2;
-                /* for inside_engulfer, only <u.ux,u.uy> is affected */
+                /* for inside_engulfer, only <currentX(),currentY()> is affected */
                 else if (inside_engulfer)
                     continue;
                 idamres = idamnonres = 0;
@@ -300,7 +300,7 @@ int expltype;
                                           &shopdamage, exploding_wand_typ);
 
                 mtmp = m_at(i + x - 1, j + y - 1);
-                if (!mtmp && i + x - 1 == u.ux && j + y - 1 == u.uy)
+                if (!mtmp && i + x - 1 == currentX() && j + y - 1 == currentY())
                     mtmp = u.usteed;
                 if (!mtmp)
                     continue;
@@ -398,7 +398,7 @@ int expltype;
                     int mdam = dam;
 
                     if (resist(mtmp, olet, 0, FALSE)) {
-                        /* inside_engulfer: <i+x-1,j+y-1> == <u.ux,u.uy> */
+                        /* inside_engulfer: <i+x-1,j+y-1> == <currentX(),currentY()> */
                         if (cansee(i + x - 1, j + y - 1) || inside_engulfer)
                             pline("%s resists the %s!", Monnam(mtmp), str);
                         mdam = (dam + 1) / 2;
@@ -652,7 +652,7 @@ struct obj *obj; /* only scatter this obj        */
                             stmp->stopped = TRUE;
                         }
                     }
-                } else if (bhitpos.x == u.ux && bhitpos.y == u.uy) {
+                } else if (bhitpos.x == currentX() && bhitpos.y == currentY()) {
                     if (scflags & MAY_HITYOU) {
                         int hitvalu, hitu;
 

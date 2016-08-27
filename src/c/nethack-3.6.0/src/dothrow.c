@@ -416,19 +416,19 @@ void
 hitfloor(obj)
 register struct obj *obj;
 {
-    if (IS_SOFT(levl[u.ux][u.uy].typ) || u.uinwater) {
+    if (IS_SOFT(levl[currentX()][currentY()].typ) || u.uinwater) {
         dropy(obj);
         return;
     }
-    if (IS_ALTAR(levl[u.ux][u.uy].typ))
+    if (IS_ALTAR(levl[currentX()][currentY()].typ))
         doaltarobj(obj);
     else
         pline("%s hit%s the %s.", Doname2(obj), (obj->quan == 1L) ? "s" : "",
-              surface(u.ux, u.uy));
+              surface(currentX(), currentY()));
 
-    if (hero_breaks(obj, u.ux, u.uy, TRUE))
+    if (hero_breaks(obj, currentX(), currentY(), TRUE))
         return;
-    if (ship_object(obj, u.ux, u.uy, FALSE))
+    if (ship_object(obj, currentX(), currentY(), FALSE))
         return;
     dropz(obj, TRUE);
 }
@@ -584,8 +584,8 @@ int x, y;
             wake_nearto(x,y, 10);
             return FALSE;
         }
-        if ((u.ux - x) && (u.uy - y) && bad_rock(youmonst.data, u.ux, y)
-            && bad_rock(youmonst.data, x, u.uy)) {
+        if ((currentX() - x) && (currentY() - y) && bad_rock(youmonst.data, currentX(), y)
+            && bad_rock(youmonst.data, x, currentY())) {
             boolean too_much =
                 (invent && (inv_weight() + weight_cap() > 600));
             /* Move at a diagonal. */
@@ -607,8 +607,8 @@ int x, y;
         wake_nearto(x,y, 10);
         return FALSE;
     }
-    if ((u.ux - x) && (u.uy - y) && bad_rock(youmonst.data, u.ux, y)
-        && bad_rock(youmonst.data, x, u.uy)) {
+    if ((currentX() - x) && (currentY() - y) && bad_rock(youmonst.data, currentX(), y)
+        && bad_rock(youmonst.data, x, currentY())) {
         /* Move at a diagonal. */
         if (Sokoban) {
             You("come to an abrupt halt!");
@@ -616,8 +616,8 @@ int x, y;
         }
     }
 
-    ox = u.ux;
-    oy = u.uy;
+    ox = currentX();
+    oy = currentY();
     u_on_newpos(x, y); /* set u.<ux,uy>, u.usteed-><mx,my>; cliparound(); */
     newsym(ox, oy);    /* update old position */
     vision_recalc(1);  /* update for new position */
@@ -714,7 +714,7 @@ boolean verbose;
                 : u.utraptype == TT_LAVA
                       ? "lava"
                       : u.utraptype == TT_INFLOOR
-                            ? surface(u.ux, u.uy)
+                            ? surface(currentX(), currentY())
                             : u.utraptype == TT_BURIEDBALL ? "buried ball"
                                                            : "trap");
         nomul(0);
@@ -736,11 +736,11 @@ boolean verbose;
     /* if we're in the midst of shooting multiple projectiles, stop */
     endmultishot(TRUE);
     sokoban_guilt();
-    uc.x = u.ux;
-    uc.y = u.uy;
+    uc.x = currentX();
+    uc.y = currentY();
     /* this setting of cc is only correct if dx and dy are [-1,0,1] only */
-    cc.x = u.ux + (dx * range);
-    cc.y = u.uy + (dy * range);
+    cc.x = currentX() + (dx * range);
+    cc.y = currentY() + (dy * range);
     (void) walk_path(&uc, &cc, hurtle_step, (genericptr_t) &range);
 }
 
@@ -796,12 +796,12 @@ boolean broken;
         || *in_rooms(x, y, SHOPBASE) != *u.ushops) {
         /* thrown out of a shop or into a different shop */
         if (is_unpaid(obj))
-            (void) stolen_value(obj, u.ux, u.uy, (boolean) shkp->mpeaceful,
+            (void) stolen_value(obj, currentX(), currentY(), (boolean) shkp->mpeaceful,
                                 FALSE);
         if (broken)
             obj->no_charge = 1;
     } else {
-        if (costly_spot(u.ux, u.uy) && costly_spot(x, y)) {
+        if (costly_spot(currentX(), currentY()) && costly_spot(x, y)) {
             if (is_unpaid(obj))
                 subfrombill(obj, shkp);
             else if (x != shkp->mx || y != shkp->my)
@@ -829,9 +829,9 @@ boolean hitsroof;
         action = "flies up into"; /* into "the sky" or "the water above" */
     } else if (hitsroof) {
         if (breaktest(obj)) {
-            pline("%s hits the %s.", Doname2(obj), ceiling(u.ux, u.uy));
+            pline("%s hits the %s.", Doname2(obj), ceiling(currentX(), currentY()));
             breakmsg(obj, !Blind);
-            breakobj(obj, u.ux, u.uy, TRUE, TRUE);
+            breakobj(obj, currentX(), currentY(), TRUE, TRUE);
             return FALSE;
         }
         action = "hits";
@@ -839,7 +839,7 @@ boolean hitsroof;
         action = "almost hits";
     }
     pline("%s %s the %s, then falls back on top of your %s.", Doname2(obj),
-          action, ceiling(u.ux, u.uy), body_part(HEAD));
+          action, ceiling(currentX(), currentY()), body_part(HEAD));
 
     /* object now hits you */
 
@@ -856,7 +856,7 @@ boolean hitsroof;
                        ? rnd(25)
                        : 0;
         breakmsg(obj, !Blind);
-        breakobj(obj, u.ux, u.uy, TRUE, TRUE);
+        breakobj(obj, currentX(), currentY(), TRUE, TRUE);
         obj = 0; /* it's now gone */
         switch (otyp) {
         case EGG:
@@ -961,11 +961,11 @@ sho_obj_return_to_u(obj)
 struct obj *obj;
 {
     /* might already be our location (bounced off a wall) */
-    if (bhitpos.x != u.ux || bhitpos.y != u.uy) {
+    if (bhitpos.x != currentX() || bhitpos.y != currentY()) {
         int x = bhitpos.x - u.dx, y = bhitpos.y - u.dy;
 
         tmp_at(DISP_FLASH, obj_to_glyph(obj));
-        while (x != u.ux || y != u.uy) {
+        while (x != currentX() || y != currentY()) {
             tmp_at(x, y);
             delay_output();
             x -= u.dx;
@@ -1035,7 +1035,7 @@ boolean
         if (u.dz < 0 && Role_if(PM_VALKYRIE) && obj->oartifact == ART_MJOLLNIR
             && !impaired) {
             pline("%s the %s and returns to your hand!", Tobjnam(obj, "hit"),
-                  ceiling(u.ux, u.uy));
+                  ceiling(currentX(), currentY()));
             obj = addinv(obj);
             (void) encumber_msg();
             setuwep(obj);
@@ -1126,7 +1126,7 @@ boolean
                    (int FDECL((*), (OBJ_P, OBJ_P))) 0, &obj);
         thrownobj = obj; /* obj may be null now */
 
-        /* have to do this after bhit() so u.ux & u.uy are correct */
+        /* have to do this after bhit() so currentX() & currentY() are correct */
         if (Is_airlevel(&u.uz) || Levitation)
             hurtle(-u.dx, -u.dy, urange, TRUE);
 
@@ -1149,7 +1149,7 @@ boolean
 
         /* [perhaps this should be moved into thitmonst or hmon] */
         if (mon && mon->isshk
-            && (!inside_shop(u.ux, u.uy)
+            && (!inside_shop(currentX(), currentY())
                 || !index(in_rooms(mon->mx, mon->my, SHOPBASE), *u.ushops)))
             hot_pursuit(mon);
 
@@ -1198,7 +1198,7 @@ boolean
                     losehp(Maybe_Half_Phys(dmg), killer_xname(obj),
                            KILLED_BY);
                 }
-                if (ship_object(obj, u.ux, u.uy, FALSE)) {
+                if (ship_object(obj, currentX(), currentY(), FALSE)) {
                     thrownobj = (struct obj *) 0;
                     return;
                 }
@@ -1244,7 +1244,7 @@ boolean
            (container_impact_dmg handles item already owned by shop) */
         if (!IS_SOFT(levl[bhitpos.x][bhitpos.y].typ))
             /* <x,y> is spot where you initiated throw, not bhitpos */
-            container_impact_dmg(obj, u.ux, u.uy);
+            container_impact_dmg(obj, currentX(), currentY());
         /* charge for items thrown out of shop;
            shk takes possession for items thrown into one */
         if ((*u.ushops || obj->unpaid) && obj != uball)
@@ -1376,7 +1376,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
      * Polearms get a distance penalty even when wielded; it's
      * hard to hit at a distance.
      */
-    disttmp = 3 - distmin(u.ux, u.uy, mon->mx, mon->my);
+    disttmp = 3 - distmin(currentX(), currentY(), mon->mx, mon->my);
     if (disttmp < -4)
         disttmp = -4;
     tmp += disttmp;
@@ -1431,7 +1431,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
         if (mon->mcanmove) {
             pline("%s catches %s.", Monnam(mon), the(xname(obj)));
             if (mon->mpeaceful) {
-                boolean next2u = monnear(mon, u.ux, u.uy);
+                boolean next2u = monnear(mon, currentX(), currentY());
 
                 finish_quest(obj); /* acknowledge quest completion */
                 pline("%s %s %s back to you.", Monnam(mon),
@@ -1838,7 +1838,7 @@ boolean from_invent;
                 if (moves != lastmovetime)
                     peaceful_shk = shkp->mpeaceful;
                 if (stolen_value(obj, x, y, peaceful_shk, FALSE) > 0L
-                    && (*o_shop != u.ushops[0] || !inside_shop(u.ux, u.uy))
+                    && (*o_shop != u.ushops[0] || !inside_shop(currentX(), currentY()))
                     && moves != lastmovetime)
                     make_angry_shk(shkp, x, y);
                 lastmovetime = moves;
@@ -1941,24 +1941,24 @@ struct obj *obj;
         if (u.dz < 0 && !Is_airlevel(&u.uz) && !Underwater
             && !Is_waterlevel(&u.uz)) {
             pline_The("gold hits the %s, then falls back on top of your %s.",
-                      ceiling(u.ux, u.uy), body_part(HEAD));
+                      ceiling(currentX(), currentY()), body_part(HEAD));
             /* some self damage? */
             if (uarmh)
                 pline("Fortunately, you are wearing %s!",
                       an(helm_simple_name(uarmh)));
         }
-        bhitpos.x = u.ux;
-        bhitpos.y = u.uy;
+        bhitpos.x = currentX();
+        bhitpos.y = currentY();
     } else {
         /* consistent with range for normal objects */
         range = (int) ((ACURRSTR) / 2 - obj->owt / 40);
 
         /* see if the gold has a place to move into */
-        odx = u.ux + u.dx;
-        ody = u.uy + u.dy;
+        odx = currentX() + u.dx;
+        ody = currentY() + u.dy;
         if (!ZAP_POS(levl[odx][ody].typ) || closed_door(odx, ody)) {
-            bhitpos.x = u.ux;
-            bhitpos.y = u.uy;
+            bhitpos.x = currentX();
+            bhitpos.y = currentY();
         } else {
             mon = bhit(u.dx, u.dy, range, THROWN_WEAPON,
                        (int FDECL((*), (MONST_P, OBJ_P))) 0,

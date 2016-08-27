@@ -299,7 +299,7 @@ rogue_vision(next, rmin, rmax)
 char **next; /* could_see array pointers */
 char *rmin, *rmax;
 {
-    int rnum = levl[u.ux][u.uy].roomno - ROOMOFFSET; /* no SHARED... */
+    int rnum = levl[currentX()][currentY()].roomno - ROOMOFFSET; /* no SHARED... */
     int start, stop, in_door, xhi, xlo, yhi, ylo;
     register int zx, zy;
 
@@ -320,13 +320,13 @@ char *rmin, *rmax;
         }
     }
 
-    in_door = levl[u.ux][u.uy].typ == DOOR;
+    in_door = levl[currentX()][currentY()].typ == DOOR;
 
     /* Can always see adjacent. */
-    ylo = max(u.uy - 1, 0);
-    yhi = min(u.uy + 1, ROWNO - 1);
-    xlo = max(u.ux - 1, 1);
-    xhi = min(u.ux + 1, COLNO - 1);
+    ylo = max(currentY() - 1, 0);
+    yhi = min(currentY() + 1, ROWNO - 1);
+    xlo = max(currentX() - 1, 1);
+    xhi = min(currentX() + 1, COLNO - 1);
     for (zy = ylo; zy <= yhi; zy++) {
         if (xlo < rmin[zy])
             rmin[zy] = xlo;
@@ -343,7 +343,7 @@ char *rmin, *rmax;
              * positions are not updated because they were already in sight.
              * So, we have to do it here.
              */
-            if (in_door && (zx == u.ux || zy == u.uy))
+            if (in_door && (zx == currentX() || zy == currentY()))
                 newsym(zx, zy);
         }
     }
@@ -546,7 +546,7 @@ int control;
          *
          *      + Monsters can see you even when you're in a pit.
          */
-        view_from(u.uy, u.ux, next_array, next_rmin, next_rmax, 0,
+        view_from(currentY(), currentX(), next_array, next_rmin, next_rmax, 0,
                   (void FDECL((*), (int, int, genericptr_t))) 0,
                   (genericptr_t) 0);
 
@@ -585,8 +585,8 @@ int control;
              */
             has_night_vision = 0;
 
-            for (row = u.uy - 1; row <= u.uy + 1; row++)
-                for (col = u.ux - 1; col <= u.ux + 1; col++) {
+            for (row = currentY() - 1; row <= currentY() + 1; row++)
+                for (col = currentX() - 1; col <= currentX() + 1; col++) {
                     if (!isok(col, row) || !is_pool(col, row))
                         continue;
 
@@ -597,21 +597,21 @@ int control;
 
         /* if in a pit, just update for immediate locations */
         } else if (u.utrap && u.utraptype == TT_PIT) {
-            for (row = u.uy - 1; row <= u.uy + 1; row++) {
+            for (row = currentY() - 1; row <= currentY() + 1; row++) {
                 if (row < 0)
                     continue;
                 if (row >= ROWNO)
                     break;
 
-                next_rmin[row] = max(0, u.ux - 1);
-                next_rmax[row] = min(COLNO - 1, u.ux + 1);
+                next_rmin[row] = max(0, currentX() - 1);
+                next_rmax[row] = min(COLNO - 1, currentX() + 1);
                 next_row = next_array[row];
 
                 for (col = next_rmin[row]; col <= next_rmax[row]; col++)
                     next_row[col] = IN_SIGHT | COULD_SEE;
             }
         } else
-            view_from(u.uy, u.ux, next_array, next_rmin, next_rmax, 0,
+            view_from(currentY(), currentX(), next_array, next_rmin, next_rmax, 0,
                       (void FDECL((*), (int, int, genericptr_t))) 0,
                       (genericptr_t) 0);
 
@@ -622,17 +622,17 @@ int control;
             if (u.xray_range) {
                 ranges = circle_ptr(u.xray_range);
 
-                for (row = u.uy - u.xray_range; row <= u.uy + u.xray_range;
+                for (row = currentY() - u.xray_range; row <= currentY() + u.xray_range;
                      row++) {
                     if (row < 0)
                         continue;
                     if (row >= ROWNO)
                         break;
-                    dy = v_abs(u.uy - row);
+                    dy = v_abs(currentY() - row);
                     next_row = next_array[row];
 
-                    start = max(0, u.ux - ranges[dy]);
-                    stop = min(COLNO - 1, u.ux + ranges[dy]);
+                    start = max(0, currentX() - ranges[dy]);
+                    stop = min(COLNO - 1, currentX() + ranges[dy]);
 
                     for (col = start; col <= stop; col++) {
                         char old_row_val = next_row[col];
@@ -649,33 +649,33 @@ int control;
                 }
 
             } else { /* range is 0 */
-                next_array[u.uy][u.ux] |= IN_SIGHT;
-                levl[u.ux][u.uy].seenv = SVALL;
-                next_rmin[u.uy] = min(u.ux, next_rmin[u.uy]);
-                next_rmax[u.uy] = max(u.ux, next_rmax[u.uy]);
+                next_array[currentY()][currentX()] |= IN_SIGHT;
+                levl[currentX()][currentY()].seenv = SVALL;
+                next_rmin[currentY()] = min(currentX(), next_rmin[currentY()]);
+                next_rmax[currentY()] = max(currentX(), next_rmax[currentY()]);
             }
         }
 
         if (has_night_vision && u.xray_range < u.nv_range) {
             if (!u.nv_range) { /* range is 0 */
-                next_array[u.uy][u.ux] |= IN_SIGHT;
-                levl[u.ux][u.uy].seenv = SVALL;
-                next_rmin[u.uy] = min(u.ux, next_rmin[u.uy]);
-                next_rmax[u.uy] = max(u.ux, next_rmax[u.uy]);
+                next_array[currentY()][currentX()] |= IN_SIGHT;
+                levl[currentX()][currentY()].seenv = SVALL;
+                next_rmin[currentY()] = min(currentX(), next_rmin[currentY()]);
+                next_rmax[currentY()] = max(currentX(), next_rmax[currentY()]);
             } else if (u.nv_range > 0) {
                 ranges = circle_ptr(u.nv_range);
 
-                for (row = u.uy - u.nv_range; row <= u.uy + u.nv_range;
+                for (row = currentY() - u.nv_range; row <= currentY() + u.nv_range;
                      row++) {
                     if (row < 0)
                         continue;
                     if (row >= ROWNO)
                         break;
-                    dy = v_abs(u.uy - row);
+                    dy = v_abs(currentY() - row);
                     next_row = next_array[row];
 
-                    start = max(0, u.ux - ranges[dy]);
-                    stop = min(COLNO - 1, u.ux + ranges[dy]);
+                    start = max(0, currentX() - ranges[dy]);
+                    stop = min(COLNO - 1, currentX() + ranges[dy]);
 
                     for (col = start; col <= stop; col++)
                         if (next_row[col])
@@ -713,9 +713,9 @@ int control;
      *      Even so, that is not entirely correct.  But it seems close
      *      enough for now.
      */
-    colbump[u.ux] = colbump[u.ux + 1] = 1;
+    colbump[currentX()] = colbump[currentX() + 1] = 1;
     for (row = 0; row < ROWNO; row++) {
-        dy = u.uy - row;
+        dy = currentY() - row;
         dy = sign(dy);
         next_row = next_array[row];
         old_row = temp_array[row];
@@ -725,7 +725,7 @@ int control;
         stop = max(viz_rmax[row], next_rmax[row]);
         lev = &levl[start][row];
 
-        sv = &seenv_matrix[dy + 1][start < u.ux ? 0 : (start > u.ux ? 2 : 1)];
+        sv = &seenv_matrix[dy + 1][start < currentX() ? 0 : (start > currentX() ? 2 : 1)];
 
         for (col = start; col <= stop;
              lev += ROWNO, sv += (int) colbump[++col]) {
@@ -755,7 +755,7 @@ int control;
                      * the adjacent position.  If it is lit, then we can see
                      * the door or wall, otherwise we can't.
                      */
-                    dx = u.ux - col;
+                    dx = currentX() - col;
                     dx = sign(dx);
                     flev = &(levl[col + dx][row + dy]);
                     if (flev->lit
@@ -817,16 +817,15 @@ int control;
 
         } /* end for col . . */
     }     /* end for row . .  */
-    colbump[u.ux] = colbump[u.ux + 1] = 0;
+    colbump[currentX()] = colbump[currentX() + 1] = 0;
 
 skip:
     /* This newsym() caused a crash delivering msg about failure to open
      * dungeon file init_dungeons() -> panic() -> done(11) ->
-     * vision_recalc(2) -> newsym() -> crash!  u.ux and u.uy are 0 and
+     * vision_recalc(2) -> newsym() -> crash!  currentX() and currentY() are 0 and
      * program_state.panicking == 1 under those circumstances
      */
     if (!program_state.panicking)
-        newsym(u.ux, u.uy); /* Make sure the hero shows up! */
 
     /* Set the new min and max pointers. */
     viz_rmin = next_rmin;
@@ -2750,7 +2749,7 @@ void FDECL((*func), (int, int, genericptr_t));
 genericptr_t arg;
 {
     /* If not centered on hero, do the hard work of figuring the area */
-    if (scol != u.ux || srow != u.uy) {
+    if (scol != currentX() || srow != currentY()) {
         view_from(srow, scol, (char **) 0, (char *) 0, (char *) 0, range,
                   func, arg);
     } else {

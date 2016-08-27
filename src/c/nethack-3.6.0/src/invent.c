@@ -526,7 +526,7 @@ const char *drop_fmt, *drop_arg, *hold_msg;
         boolean wasUpolyd = Upolyd;
 
         /* in case touching this object turns out to be fatal */
-        place_object(obj, u.ux, u.uy);
+        place_object(obj, currentX(), currentY());
 
         if (!touch_artifact(obj, &youmonst)) {
             obj_extract_self(obj); /* remove it from the floor */
@@ -2714,12 +2714,12 @@ boolean picked_some;
         }
         return !!Blind;
     }
-    if (!skip_objects && (trap = t_at(u.ux, u.uy)) && trap->tseen)
+    if (!skip_objects && (trap = t_at(currentX(), currentY())) && trap->tseen)
         There("is %s here.",
               an(defsyms[trap_to_defsym(trap->ttyp)].explanation));
 
-    otmp = level.objects[u.ux][u.uy];
-    dfeature = dfeature_at(u.ux, u.uy, fbuf2);
+    otmp = level.objects[currentX()][currentY()];
+    dfeature = dfeature_at(currentX(), currentY(), fbuf2);
     if (dfeature && !strcmp(dfeature, "pool of water") && Underwater)
         dfeature = 0;
 
@@ -2735,12 +2735,12 @@ boolean picked_some;
                                     : "lying here on the ",
                        *onwhat = (Blind && !can_reach_floor(TRUE))
                                      ? ""
-                                     : surface(u.ux, u.uy);
+                                     : surface(currentX(), currentY());
 
             You("try to feel what is %s%s.", drift ? "floating here" : where,
                 drift ? "" : onwhat);
         }
-        if (dfeature && !drift && !strcmp(dfeature, surface(u.ux, u.uy)))
+        if (dfeature && !drift && !strcmp(dfeature, surface(currentX(), currentY())))
             dfeature = 0; /* ice already identified */
         if (!can_reach_floor(TRUE)) {
             pline("But you can't reach it!");
@@ -2751,11 +2751,11 @@ boolean picked_some;
     if (dfeature)
         Sprintf(fbuf, "There is %s here.", an(dfeature));
 
-    if (!otmp || is_lava(u.ux, u.uy)
-        || (is_pool(u.ux, u.uy) && !Underwater)) {
+    if (!otmp || is_lava(currentX(), currentY())
+        || (is_pool(currentX(), currentY()) && !Underwater)) {
         if (dfeature)
             pline1(fbuf);
-        read_engr_at(u.ux, u.uy); /* Eric Backus */
+        read_engr_at(currentX(), currentY()); /* Eric Backus */
         if (!skip_objects && (Blind || !dfeature))
             You("%s no objects here.", verb);
         return !!Blind;
@@ -2765,7 +2765,7 @@ boolean picked_some;
     if (skip_objects) {
         if (dfeature)
             pline1(fbuf);
-        read_engr_at(u.ux, u.uy); /* Eric Backus */
+        read_engr_at(currentX(), currentY()); /* Eric Backus */
         if (obj_cnt == 1 && otmp->quan == 1L)
             There("is %s object here.", picked_some ? "another" : "an");
         else
@@ -2795,7 +2795,7 @@ boolean picked_some;
         /* only one object */
         if (dfeature)
             pline1(fbuf);
-        read_engr_at(u.ux, u.uy); /* Eric Backus */
+        read_engr_at(currentX(), currentY()); /* Eric Backus */
         You("%s here %s.", verb, doname_with_price(otmp));
         iflags.last_msg = PLNMSG_ONE_ITEM_HERE;
         if (otmp->otyp == CORPSE)
@@ -2826,7 +2826,7 @@ boolean picked_some;
         destroy_nhwindow(tmpwin);
         if (felt_cockatrice)
             feel_cockatrice(otmp, FALSE);
-        read_engr_at(u.ux, u.uy); /* Eric Backus */
+        read_engr_at(currentX(), currentY()); /* Eric Backus */
     }
     return !!Blind;
 }
@@ -3145,7 +3145,7 @@ register struct obj *obj;
 long numused;
 {
     register struct obj *otmp;
-    boolean at_u = (obj->ox == u.ux && obj->oy == u.uy);
+    boolean at_u = (obj->ox == currentX() && obj->oy == currentY());
 
     /* burn_floor_objects() keeps an object pointer that it tries to
      * useupf() multiple times, so obj must survive if plural */

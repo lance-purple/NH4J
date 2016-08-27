@@ -3094,7 +3094,7 @@ srch:
 wiztrap:
     if (wizard && !program_state.wizkit_wishing) {
         struct rm *lev;
-        int trap, x = u.ux, y = u.uy;
+        int trap, x = currentX(), y = currentY();
 
         for (trap = NO_TRAP + 1; trap < TRAPNUM; trap++) {
             struct trap *t;
@@ -3259,7 +3259,7 @@ typfnd:
 
     if (islit && (typ == OIL_LAMP || typ == MAGIC_LAMP || typ == BRASS_LANTERN
                   || Is_candle(otmp) || typ == POT_OIL)) {
-        place_object(otmp, u.ux, u.uy); /* make it viable light source */
+        place_object(otmp, currentX(), currentY()); /* make it viable light source */
         begin_burn(otmp, FALSE);
         obj_extract_self(otmp); /* now release it for caller's use */
     }

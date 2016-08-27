@@ -1036,7 +1036,7 @@ movebubbles()
                             newsym(x, y); /* clean up old position */
                             mon->mx = mon->my = 0;
                         }
-                        if (!u.uswallow && x == u.ux && y == u.uy) {
+                        if (!u.uswallow && x == currentX() && y == currentY()) {
                             struct container *cons =
                                 (struct container *) alloc(
                                     sizeof(struct container));
@@ -1106,20 +1106,20 @@ water_friction()
 
     if (u.dx && !rn2(!u.dy ? 3 : 6)) { /* 1/3 chance or half that */
         /* cancel delta x and choose an arbitrary delta y value */
-        x = u.ux;
+        x = currentX();
         do {
             dy = rn2(3) - 1; /* -1, 0, 1 */
-            y = u.uy + dy;
+            y = currentY() + dy;
         } while (dy && (!isok(x, y) || !is_pool(x, y)));
         u.dx = 0;
         u.dy = dy;
         eff = TRUE;
     } else if (u.dy && !rn2(!u.dx ? 3 : 5)) { /* 1/3 or 1/5*(5/6) */
         /* cancel delta y and choose an arbitrary delta x value */
-        y = u.uy;
+        y = currentY();
         do {
             dx = rn2(3) - 1; /* -1 .. 1 */
-            x = u.ux + dx;
+            x = currentX() + dx;
         } while (dx && (!isok(x, y) || !is_pool(x, y)));
         u.dy = 0;
         u.dx = dx;
@@ -1445,11 +1445,11 @@ register boolean ini;
             }
 
             case CONS_HERO: {
-                int ux0 = u.ux, uy0 = u.uy;
+                int ux0 = currentX(), uy0 = currentY();
 
                 /* change u.ux0 and u.uy0? */
-                u.ux = cons->x;
-                u.uy = cons->y;
+                setCurrentX(cons->x);
+                setCurrentY(cons->y);
                 newsym(ux0, uy0); /* clean up old position */
 
                 if (MON_AT(cons->x, cons->y)) {

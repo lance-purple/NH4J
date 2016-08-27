@@ -485,8 +485,8 @@ int after, udist, whappr;
 
     if (!edog || mtmp->mleashed) { /* he's not going anywhere... */
         gtyp = APPORT;
-        gx = u.ux;
-        gy = u.uy;
+        gx = currentX();
+        gy = currentY();
     } else {
 #define DDIST(x, y) (dist2(x, y, omx, omy))
 #define SQSRCHRADIUS 5
@@ -530,7 +530,7 @@ int after, udist, whappr;
                     }
                 } else if (gtyp == UNDEF && in_masters_sight
                            && !dog_has_minvent
-                           && (!levl[omx][omy].lit || levl[u.ux][u.uy].lit)
+                           && (!levl[omx][omy].lit || levl[currentX()][currentY()].lit)
                            && (otyp == MANFOOD || m_cansee(mtmp, nx, ny))
                            && edog->apport > rn2(8)
                            && can_carry(mtmp, obj) > 0) {
@@ -545,13 +545,13 @@ int after, udist, whappr;
     /* follow player if appropriate */
     if (gtyp == UNDEF || (gtyp != DOGFOOD && gtyp != APPORT
                           && monstermoves < edog->hungrytime)) {
-        gx = u.ux;
-        gy = u.uy;
-        if (after && udist <= 4 && gx == u.ux && gy == u.uy)
+        gx = currentX();
+        gy = currentY();
+        if (after && udist <= 4 && gx == currentX() && gy == currentY())
             return -2;
         appr = (udist >= 9) ? 1 : (mtmp->mflee) ? -1 : 0;
         if (udist > 1) {
-            if (!IS_ROOM(levl[u.ux][u.uy].typ) || !rn2(4) || whappr
+            if (!IS_ROOM(levl[currentX()][currentY()].typ) || !rn2(4) || whappr
                 || (dog_has_minvent && rn2(edog->apport)))
                 appr = 1;
         }
@@ -572,7 +572,7 @@ int after, udist, whappr;
         appr = 0;
 
 #define FARAWAY (COLNO + 2) /* position outside screen */
-    if (gx == u.ux && gy == u.uy && !in_masters_sight) {
+    if (gx == currentX() && gy == currentY() && !in_masters_sight) {
         register coord *cp;
 
         cp = gettrack(omx, omy);
@@ -595,8 +595,8 @@ int after, udist, whappr;
 
                 /* here gx == FARAWAY e.g. when dog is in a vault */
                 if (gx == FARAWAY || (gx == omx && gy == omy)) {
-                    gx = u.ux;
-                    gy = u.uy;
+                    gx = currentX();
+                    gy = currentY();
                 } else if (edog) {
                     edog->ogoal.x = gx;
                     edog->ogoal.y = gy;
@@ -926,10 +926,10 @@ newdogpos:
          */
         coord cc;
 
-        nx = sgn(omx - u.ux);
-        ny = sgn(omy - u.uy);
-        cc.x = u.ux + nx;
-        cc.y = u.uy + ny;
+        nx = sgn(omx - currentX());
+        ny = sgn(omy - currentY());
+        cc.x = currentX() + nx;
+        cc.y = currentY() + ny;
         if (goodpos(cc.x, cc.y, mtmp, 0))
             goto dognext;
 

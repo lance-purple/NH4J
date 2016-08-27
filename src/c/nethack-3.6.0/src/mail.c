@@ -133,7 +133,7 @@ coord *startp;
      * the hero is not going to see it anyway.  So pick a nearby position.
      */
     if (Blind && !Blind_telepat) {
-        if (!enexto(startp, u.ux, u.uy, (struct permonst *) 0))
+        if (!enexto(startp, currentX(), currentY(), (struct permonst *) 0))
             return FALSE; /* no good positions */
         return TRUE;
     }
@@ -225,9 +225,9 @@ coord *startp; /* starting position (read only) */
 {
     int x, y, distance, min_distance = -1;
 
-    for (x = u.ux - 1; x <= u.ux + 1; x++)
-        for (y = u.uy - 1; y <= u.uy + 1; y++) {
-            if (!isok(x, y) || (x == u.ux && y == u.uy))
+    for (x = currentX() - 1; x <= currentX() + 1; x++)
+        for (y = currentY() - 1; y <= currentY() + 1; y++) {
+            if (!isok(x, y) || (x == currentX() && y == currentY()))
                 continue;
 
             if (accessible(x, y) && !MON_AT(x, y)) {
@@ -242,7 +242,7 @@ coord *startp; /* starting position (read only) */
         }
 
     /* If we didn't find a good spot, try enexto(). */
-    if (min_distance < 0 && !enexto(stopp, u.ux, u.uy, &mons[PM_MAIL_DAEMON]))
+    if (min_distance < 0 && !enexto(stopp, currentX(), currentY(), &mons[PM_MAIL_DAEMON]))
         return FALSE;
 
     return TRUE;
@@ -311,7 +311,7 @@ register int tx, ty; /* destination of mail daemon */
 
         if ((mon = m_at(fx, fy)) != 0) /* save monster at this position */
             verbalize1(md_exclamations());
-        else if (fx == u.ux && fy == u.uy)
+        else if (fx == currentX() && fy == currentY())
             verbalize("Excuse me.");
 
         place_monster(md, fx, fy); /* put md down */

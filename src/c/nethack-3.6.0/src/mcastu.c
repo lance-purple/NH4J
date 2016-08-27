@@ -54,11 +54,11 @@ boolean undirected;
         if (undirected)
             point_msg = "all around, then curses";
         else if ((Invis && !perceives(mtmp->data)
-                  && (mtmp->mux != u.ux || mtmp->muy != u.uy))
+                  && (mtmp->mux != currentX() || mtmp->muy != currentY()))
                  || is_obj_mappear(&youmonst, STRANGE_OBJECT)
                  || u.uundetected)
             point_msg = "and curses in your general direction";
-        else if (Displaced && (mtmp->mux != u.ux || mtmp->muy != u.uy))
+        else if (Displaced && (mtmp->mux != currentX() || mtmp->muy != currentY()))
             point_msg = "and curses at your displaced image";
         else
             point_msg = "at you, then curses";
@@ -259,10 +259,10 @@ boolean foundyou;
               is_undirected_spell(mattk->adtyp, spellnum)
                   ? ""
                   : (Invisible && !perceives(mtmp->data)
-                     && (mtmp->mux != u.ux || mtmp->muy != u.uy))
+                     && (mtmp->mux != currentX() || mtmp->muy != currentY()))
                         ? " at a spot near you"
                         : (Displaced
-                           && (mtmp->mux != u.ux || mtmp->muy != u.uy))
+                           && (mtmp->mux != currentX() || mtmp->muy != currentY()))
                               ? " at your displaced image"
                               : " at you");
     }
@@ -292,7 +292,7 @@ boolean foundyou;
     case AD_FIRE:
         pline("You're enveloped in flames.");
         if (Fire_resistance) {
-            shieldeff(u.ux, u.uy);
+            shieldeff(currentX(), currentY());
             pline("But you resist the effects.");
             dmg = 0;
         }
@@ -301,7 +301,7 @@ boolean foundyou;
     case AD_COLD:
         pline("You're covered in frost.");
         if (Cold_resistance) {
-            shieldeff(u.ux, u.uy);
+            shieldeff(currentX(), currentY());
             pline("But you resist the effects.");
             dmg = 0;
         }
@@ -309,7 +309,7 @@ boolean foundyou;
     case AD_MAGM:
         You("are hit by a shower of missiles!");
         if (Antimagic) {
-            shieldeff(u.ux, u.uy);
+            shieldeff(currentX(), currentY());
             pline_The("missiles bounce off!");
             dmg = 0;
         } else
@@ -367,7 +367,7 @@ int spellnum;
             }
         } else {
             if (Antimagic)
-                shieldeff(u.ux, u.uy);
+                shieldeff(currentX(), currentY());
             pline("Lucky for you, it didn't work!");
         }
         dmg = 0;
@@ -393,9 +393,9 @@ int spellnum;
             /* messages not quite right if plural monsters created but
                only a single monster is seen */
             if (Invisible && !perceives(mtmp->data)
-                && (mtmp->mux != u.ux || mtmp->muy != u.uy))
+                && (mtmp->mux != currentX() || mtmp->muy != currentY()))
                 pline("%s around a spot near you!", mappear);
-            else if (Displaced && (mtmp->mux != u.ux || mtmp->muy != u.uy))
+            else if (Displaced && (mtmp->mux != currentX() || mtmp->muy != currentY()))
                 pline("%s around your displaced image!", mappear);
             else
                 pline("%s from nowhere!", mappear);
@@ -415,7 +415,7 @@ int spellnum;
         break;
     case MGC_DESTRY_ARMR:
         if (Antimagic) {
-            shieldeff(u.ux, u.uy);
+            shieldeff(currentX(), currentY());
             pline("A field of force surrounds you!");
         } else if (!destroy_arm(some_armor(&youmonst))) {
             Your("skin itches.");
@@ -424,7 +424,7 @@ int spellnum;
         break;
     case MGC_WEAKEN_YOU: /* drain strength */
         if (Antimagic) {
-            shieldeff(u.ux, u.uy);
+            shieldeff(currentX(), currentY());
             You_feel("momentarily weakened.");
         } else {
             You("suddenly feel weaker!");
@@ -449,7 +449,7 @@ int spellnum;
         break;
     case MGC_STUN_YOU:
         if (Antimagic || Free_action) {
-            shieldeff(u.ux, u.uy);
+            shieldeff(currentX(), currentY());
             if (!Stunned)
                 You_feel("momentarily disoriented.");
             make_stunned(1L, FALSE);
@@ -480,7 +480,7 @@ int spellnum;
         /* prior to 3.4.0 Antimagic was setting the damage to 1--this
            made the spell virtually harmless to players with magic res. */
         if (Antimagic) {
-            shieldeff(u.ux, u.uy);
+            shieldeff(currentX(), currentY());
             dmg = (dmg + 1) / 2;
         }
         if (dmg <= 5)
@@ -527,7 +527,7 @@ int spellnum;
     case CLC_FIRE_PILLAR:
         pline("A pillar of fire strikes all around you!");
         if (Fire_resistance) {
-            shieldeff(u.ux, u.uy);
+            shieldeff(currentX(), currentY());
             dmg = 0;
         } else
             dmg = d(8, 6);
@@ -538,7 +538,7 @@ int spellnum;
         destroy_item(SCROLL_CLASS, AD_FIRE);
         destroy_item(POTION_CLASS, AD_FIRE);
         destroy_item(SPBOOK_CLASS, AD_FIRE);
-        (void) burn_floor_objects(u.ux, u.uy, TRUE, FALSE);
+        (void) burn_floor_objects(currentX(), currentY(), TRUE, FALSE);
         break;
     case CLC_LIGHTNING: {
         boolean reflects;
@@ -546,7 +546,7 @@ int spellnum;
         pline("A bolt of lightning strikes down at you from above!");
         reflects = ureflects("It bounces off your %s%s.", "");
         if (reflects || Shock_resistance) {
-            shieldeff(u.ux, u.uy);
+            shieldeff(currentX(), currentY());
             dmg = 0;
             if (reflects)
                 break;
@@ -624,9 +624,9 @@ int spellnum;
         else if (let == S_SNAKE)
             fmt = "%s transforms a clump of sticks into snakes!";
         else if (Invisible && !perceives(mtmp->data)
-                 && (mtmp->mux != u.ux || mtmp->muy != u.uy))
+                 && (mtmp->mux != currentX() || mtmp->muy != currentY()))
             fmt = "%s summons insects around a spot near you!";
-        else if (Displaced && (mtmp->mux != u.ux || mtmp->muy != u.uy))
+        else if (Displaced && (mtmp->mux != currentX() || mtmp->muy != currentY()))
             fmt = "%s summons insects around your displaced image!";
         else
             fmt = "%s summons insects!";
@@ -652,7 +652,7 @@ int spellnum;
         break;
     case CLC_PARALYZE:
         if (Antimagic || Free_action) {
-            shieldeff(u.ux, u.uy);
+            shieldeff(currentX(), currentY());
             if (multi >= 0)
                 You("stiffen briefly.");
             nomul(-1);
@@ -671,7 +671,7 @@ int spellnum;
         break;
     case CLC_CONFUSE_YOU:
         if (Antimagic) {
-            shieldeff(u.ux, u.uy);
+            shieldeff(currentX(), currentY());
             You_feel("momentarily dizzy.");
         } else {
             boolean oldprop = !!Confusion;
@@ -699,7 +699,7 @@ int spellnum;
         break;
     case CLC_OPEN_WOUNDS:
         if (Antimagic) {
-            shieldeff(u.ux, u.uy);
+            shieldeff(currentX(), currentY());
             dmg = (dmg + 1) / 2;
         }
         if (dmg <= 5)

@@ -1033,10 +1033,10 @@ int how;
                        ? urace.femalenum
                        : urace.malenum;
         }
-        corpse = mk_named_object(CORPSE, &mons[mnum], u.ux, u.uy, plname);
+        corpse = mk_named_object(CORPSE, &mons[mnum], currentX(), currentY(), plname);
         Sprintf(pbuf, "%s, ", plname);
         formatkiller(eos(pbuf), sizeof pbuf - strlen(pbuf), how);
-        make_grave(u.ux, u.uy, pbuf);
+        make_grave(currentX(), currentY(), pbuf);
     }
     pbuf[0] = '\0'; /* clear grave text; also lint suppression */
 

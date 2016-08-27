@@ -391,20 +391,20 @@ make_bones:
         struct obj *otmp;
 
         /* embed your possessions in your statue */
-        otmp = mk_named_object(STATUE, &mons[u.umonnum], u.ux, u.uy, plname);
+        otmp = mk_named_object(STATUE, &mons[u.umonnum], currentX(), currentY(), plname);
 
-        drop_upon_death((struct monst *) 0, otmp, u.ux, u.uy);
+        drop_upon_death((struct monst *) 0, otmp, currentX(), currentY());
         if (!otmp)
             return; /* couldn't make statue */
         mtmp = (struct monst *) 0;
     } else if (u.ugrave_arise < LOW_PM) {
         /* drop everything */
-        drop_upon_death((struct monst *) 0, (struct obj *) 0, u.ux, u.uy);
+        drop_upon_death((struct monst *) 0, (struct obj *) 0, currentX(), currentY());
         /* trick makemon() into allowing monster creation
          * on your location
          */
         in_mklev = TRUE;
-        mtmp = makemon(&mons[PM_GHOST], u.ux, u.uy, MM_NONAME);
+        mtmp = makemon(&mons[PM_GHOST], currentX(), currentY(), MM_NONAME);
         in_mklev = FALSE;
         if (!mtmp)
             return;
@@ -414,10 +414,10 @@ make_bones:
     } else {
         /* give your possessions to the monster you become */
         in_mklev = TRUE; /* use <u.ux,u.uy> as-is */
-        mtmp = makemon(&mons[u.ugrave_arise], u.ux, u.uy, NO_MINVENT);
+        mtmp = makemon(&mons[u.ugrave_arise], currentX(), currentY(), NO_MINVENT);
         in_mklev = FALSE;
         if (!mtmp) {
-            drop_upon_death((struct monst *) 0, (struct obj *) 0, u.ux, u.uy);
+            drop_upon_death((struct monst *) 0, (struct obj *) 0, currentX(), currentY());
             u.ugrave_arise = NON_PM; /* in case caller cares */
             return;
         }
@@ -426,11 +426,11 @@ make_bones:
         if (mtmp->data->mlet == S_MUMMY && !carrying(MUMMY_WRAPPING))
             (void) mongets(mtmp, MUMMY_WRAPPING);
         mtmp = christen_monst(mtmp, plname);
-        newsym(u.ux, u.uy);
+        newsym(currentX(), currentY());
         /* ["Your body rises from the dead as an <mname>..." used
            to be given here, but it has been moved to done() so that
            it gets delivered even when savebones() isn't called] */
-        drop_upon_death(mtmp, (struct obj *) 0, u.ux, u.uy);
+        drop_upon_death(mtmp, (struct obj *) 0, currentX(), currentY());
         m_dowear(mtmp, TRUE);
     }
     if (mtmp) {
@@ -454,7 +454,8 @@ make_bones:
     resetobjs(level.buriedobjlist, FALSE);
 
     /* Hero is no longer on the map. */
-    u.ux = u.uy = 0;
+    setCurrentX(0);
+    setCurrentY(0);
 
     /* Clear all memory from the level. */
     for (x = 1; x < COLNO; x++)
@@ -479,7 +480,7 @@ make_bones:
     formatkiller(newbones->how, sizeof newbones->how, how);
     Strcpy(newbones->when, yyyymmddhhmmss(when));
     /* final resting place, used to decide when bones are discovered */
-    newbones->frpx = u.ux, newbones->frpy = u.uy;
+    newbones->frpx = currentX(), newbones->frpy = currentY();
     newbones->bonesknown = FALSE;
     /* if current character died on a bones level, the cemetery list
        will have multiple entries, most recent (this dead hero) first */

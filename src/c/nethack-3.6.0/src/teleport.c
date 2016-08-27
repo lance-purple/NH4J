@@ -38,7 +38,7 @@ unsigned gpflags;
      * which could be co-located and thus get restricted a bit too much.
      * oh well.
      */
-    if (mtmp != &youmonst && x == u.ux && y == u.uy
+    if (mtmp != &youmonst && x == currentX() && y == currentY()
         && (!u.usteed || mtmp != u.usteed))
         return FALSE;
 
@@ -234,7 +234,7 @@ boolean trapok;
         return FALSE;
     if (!goodpos(x, y, &youmonst, 0))
         return FALSE;
-    if (!tele_jump_ok(u.ux, u.uy, x, y))
+    if (!tele_jump_ok(currentX(), currentY(), x, y))
         return FALSE;
     if (!in_out_region(x, y))
         return FALSE;
@@ -275,7 +275,7 @@ boolean allow_drag;
             ball_still_in_range = TRUE; /* don't have to move the ball */
         else {
             /* have to move the ball */
-            if (!allow_drag || distmin(u.ux, u.uy, nux, nuy) > 1) {
+            if (!allow_drag || distmin(currentX(), currentY(), nux, nuy) > 1) {
                 /* we should not have dist > 1 and allow_drag at the same
                  * time, but just in case, we must then revert to teleport.
                  */
@@ -286,8 +286,8 @@ boolean allow_drag;
     }
     u.utrap = 0;
     u.ustuck = 0;
-    u.ux0 = u.ux;
-    u.uy0 = u.uy;
+    u.ux0 = currentX();
+    u.uy0 = currentY();
 
     if (!hideunder(&youmonst) && youmonst.data->mlet == S_MIMIC) {
         /* mimics stop being unnoticed */
@@ -314,7 +314,7 @@ boolean allow_drag;
                 move_bc(0, bc_control, ballx, bally, chainx, chainy);
         }
     }
-    /* must set u.ux, u.uy after drag_ball(), which may need to know
+    /* must set currentX(), currentY() after drag_ball(), which may need to know
        the old position if allow_drag is true... */
     u_on_newpos(nux, nuy); /* set u.<x,y>, usteed-><mx,my>; cliparound() */
     fill_pit(u.ux0, u.uy0);
@@ -453,8 +453,8 @@ struct obj *scroll;
             if (u.usteed)
                 Sprintf(eos(whobuf), " and %s", mon_nam(u.usteed));
             pline("To what position do %s want to be teleported?", whobuf);
-            cc.x = u.ux;
-            cc.y = u.uy;
+            cc.x = currentX();
+            cc.y = currentY();
             if (getpos(&cc, TRUE, "the desired position") < 0)
                 return TRUE; /* abort */
             /* possible extensions: introduce a small error if
@@ -492,7 +492,7 @@ dotele()
     struct trap *trap;
     boolean trap_once = FALSE;
 
-    trap = t_at(u.ux, u.uy);
+    trap = t_at(currentX(), currentY());
     if (trap && (!trap->tseen || trap->ttyp != TELEP_TRAP))
         trap = 0;
 
@@ -504,7 +504,7 @@ dotele()
                 trap = 0;
             else {
                 deltrap(trap);
-                newsym(u.ux, u.uy);
+                newsym(currentX(), currentY());
             }
         }
         if (trap)
@@ -665,7 +665,7 @@ level_tele()
             You("cease to exist.");
             if (invent)
                 Your("possessions land on the %s with a thud.",
-                     surface(u.ux, u.uy));
+                     surface(currentX(), currentY()));
             killer.format = NO_KILLER_PREFIX;
             Strcpy(killer.name, "committed suicide");
             done(DIED);
@@ -857,13 +857,13 @@ struct trap *trap;
 {
     if (In_endgame(&u.uz) || Antimagic) {
         if (Antimagic)
-            shieldeff(u.ux, u.uy);
+            shieldeff(currentX(), currentY());
         You_feel("a wrenching sensation.");
     } else if (!next_to_u()) {
         You1(shudder_for_moment);
     } else if (trap->once) {
         deltrap(trap);
-        newsym(u.ux, u.uy); /* get rid of trap symbol */
+        newsym(currentX(), currentY()); /* get rid of trap symbol */
         vault_tele();
     } else
         tele();
@@ -877,7 +877,7 @@ struct trap *trap;
         Levitation ? (const char *) "float"
                    : locomotion(youmonst.data, "step"));
     if (Antimagic) {
-        shieldeff(u.ux, u.uy);
+        shieldeff(currentX(), currentY());
     }
     if (Antimagic || In_endgame(&u.uz)) {
         You_feel("a wrenching sensation.");
@@ -888,7 +888,7 @@ struct trap *trap;
     else
         You("are momentarily disoriented.");
     deltrap(trap);
-    newsym(u.ux, u.uy); /* get rid of trap symbol */
+    newsym(currentX(), currentY()); /* get rid of trap symbol */
     level_tele();
 }
 
@@ -988,8 +988,8 @@ register int x, y;
 
     if (u.ustuck == mtmp) {
         if (u.uswallow) {
-            u.ux = x;
-            u.uy = y;
+            setCurrentX(x);
+            setCurrentY(y);
             docrt();
         } else
             u.ustuck = 0;
@@ -1020,7 +1020,7 @@ boolean suppress_impossible;
     }
 
     if (mtmp->iswiz && mtmp->mx) { /* Wizard, not just arriving */
-        if (!In_W_tower(u.ux, u.uy, &u.uz))
+        if (!In_W_tower(currentX(), currentY(), &u.uz))
             x = xupstair, y = yupstair;
         else if (!xdnladder) /* bottom level of tower */
             x = xupladder, y = yupladder;
@@ -1233,7 +1233,7 @@ register struct obj *obj;
         if (costly_spot(otx, oty)
             && (!costly_spot(tx, ty)
                 || !index(in_rooms(tx, ty, 0), *in_rooms(otx, oty, 0)))) {
-            if (costly_spot(u.ux, u.uy)
+            if (costly_spot(currentX(), currentY())
                 && index(u.urooms, *in_rooms(otx, oty, 0)))
                 addtobill(obj, FALSE, FALSE, FALSE);
             else
@@ -1336,7 +1336,7 @@ boolean give_feedback;
         unstuck(mtmp);
         (void) rloc(mtmp, TRUE);
     } else if (is_rider(mtmp->data) && rn2(13)
-               && enexto(&cc, u.ux, u.uy, mtmp->data))
+               && enexto(&cc, currentX(), currentY(), mtmp->data))
         rloc_to(mtmp, cc.x, cc.y);
     else
         (void) rloc(mtmp, TRUE);

@@ -80,7 +80,7 @@ void
 stealgold(mtmp)
 register struct monst *mtmp;
 {
-    register struct obj *fgold = g_at(u.ux, u.uy);
+    register struct obj *fgold = g_at(currentX(), currentY());
     register struct obj *ygold;
     register long tmp;
     struct monst *who;
@@ -96,7 +96,7 @@ register struct monst *mtmp;
     if (fgold && (!ygold || fgold->quan > ygold->quan || !rn2(5))) {
         obj_extract_self(fgold);
         add_to_minv(mtmp, fgold);
-        newsym(u.ux, u.uy);
+        newsym(currentX(), currentY());
         if (u.usteed) {
             who = u.usteed;
             whose = s_suffix(y_monnam(who));
@@ -253,7 +253,7 @@ char *objnambuf;
     if (objnambuf)
         *objnambuf = '\0';
     /* the following is true if successful on first of two attacks. */
-    if (!monnear(mtmp, u.ux, u.uy))
+    if (!monnear(mtmp, currentX(), currentY()))
         return 0;
 
     /* food being eaten might already be used up but will not have
@@ -619,7 +619,7 @@ boolean verbosely;
         } else if (mon->mtame && (obj->owornmask & W_SADDLE) && !obj->unpaid
                    && costly_spot(omx, omy)
                    /* being at costly_spot guarantees lev->roomno is not 0 */
-                   && index(in_rooms(u.ux, u.uy, SHOPBASE),
+                   && index(in_rooms(currentX(), currentY(), SHOPBASE),
                             levl[omx][omy].roomno)) {
             obj->no_charge = 1;
         }

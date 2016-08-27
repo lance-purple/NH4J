@@ -176,7 +176,7 @@ const char *fmt, *arg;
         youmonst.m_ap_type = M_AP_NOTHING;
     }
 
-    newsym(u.ux, u.uy);
+    newsym(currentX(), currentY());
 
     You(fmt, arg);
     /* check whether player foolishly genocided self while poly'd */
@@ -212,7 +212,7 @@ const char *fmt, *arg;
     }
     check_strangling(TRUE);
 
-    if (!Levitation && !u.ustuck && is_pool_or_lava(u.ux, u.uy))
+    if (!Levitation && !u.ustuck && is_pool_or_lava(currentX(), currentY()))
         spoteffects(TRUE);
 
     see_monsters();
@@ -574,7 +574,7 @@ made_change:
         if (new_light == 1)
             ++new_light; /* otherwise it's undetectable */
         if (new_light)
-            new_light_source(u.ux, u.uy, new_light, LS_MONSTER,
+            new_light_source(currentX(), currentY(), new_light, LS_MONSTER,
                              monst_to_any(&youmonst));
     }
 }
@@ -738,7 +738,7 @@ int mntmp;
         Blinded = 1L;
         make_blinded(0L, TRUE); /* remove blindness */
     }
-    newsym(u.ux, u.uy); /* Change symbol */
+    newsym(currentX(), currentY()); /* Change symbol */
 
     if (!sticky && !u.uswallow && u.ustuck && sticks(youmonst.data))
         u.ustuck = 0;
@@ -797,7 +797,7 @@ int mntmp;
         learn_egg_type(egg_type_from_parent(u.umonnum, TRUE));
     }
     find_ac();
-    if ((!Levitation && !u.ustuck && !Flying && is_pool_or_lava(u.ux, u.uy))
+    if ((!Levitation && !u.ustuck && !Flying && is_pool_or_lava(currentX(), currentY()))
         || (Underwater && !Swimming))
         spoteffects(TRUE);
     if (Passes_walls && u.utrap
@@ -921,7 +921,7 @@ break_armor()
                 if (donning(otmp))
                     cancel_don();
                 Your("%s falls to the %s!", helm_simple_name(otmp),
-                     surface(u.ux, u.uy));
+                     surface(currentX(), currentY()));
                 (void) Helmet_off();
                 dropx(otmp);
             }
@@ -946,7 +946,7 @@ break_armor()
             if (donning(otmp))
                 cancel_don();
             Your("%s falls to the %s!", helm_simple_name(otmp),
-                 surface(u.ux, u.uy));
+                 surface(currentX(), currentY()));
             (void) Helmet_off();
             dropx(otmp);
         }
@@ -1073,7 +1073,7 @@ dobreathe()
     else if (!u.dx && !u.dy && !u.dz)
         ubreatheu(mattk);
     else
-        buzz((int) (20 + mattk->adtyp - 1), (int) mattk->damn, u.ux, u.uy,
+        buzz((int) (20 + mattk->adtyp - 1), (int) mattk->damn, currentX(), currentY(),
              u.dx, u.dy);
     return 1;
 }
@@ -1114,7 +1114,7 @@ doremove()
     if (!Punished) {
         if (u.utrap && u.utraptype == TT_BURIEDBALL) {
             pline_The("ball and chain are buried firmly in the %s.",
-                      surface(u.ux, u.uy));
+                      surface(currentX(), currentY()));
             return 0;
         }
         You("are not chained to anything!");
@@ -1127,7 +1127,7 @@ doremove()
 int
 dospinweb()
 {
-    register struct trap *ttmp = t_at(u.ux, u.uy);
+    register struct trap *ttmp = t_at(currentX(), currentY());
 
     if (Levitation || Is_airlevel(&u.uz) || Underwater
         || Is_waterlevel(&u.uz)) {
@@ -1181,13 +1181,13 @@ dospinweb()
         case SPIKED_PIT:
             You("spin a web, covering up the pit.");
             deltrap(ttmp);
-            bury_objs(u.ux, u.uy);
-            newsym(u.ux, u.uy);
+            bury_objs(currentX(), currentY());
+            newsym(currentX(), currentY());
             return 1;
         case SQKY_BOARD:
             pline_The("squeaky board is muffled.");
             deltrap(ttmp);
-            newsym(u.ux, u.uy);
+            newsym(currentX(), currentY());
             return 1;
         case TELEP_TRAP:
         case LEVEL_TELEP:
@@ -1203,12 +1203,12 @@ dospinweb()
             You("web over the %s.",
                 (ttmp->ttyp == TRAPDOOR) ? "trap door" : "hole");
             deltrap(ttmp);
-            newsym(u.ux, u.uy);
+            newsym(currentX(), currentY());
             return 1;
         case ROLLING_BOULDER_TRAP:
             You("spin a web, jamming the trigger.");
             deltrap(ttmp);
-            newsym(u.ux, u.uy);
+            newsym(currentX(), currentY());
             return 1;
         case ARROW_TRAP:
         case DART_TRAP:
@@ -1228,13 +1228,13 @@ dospinweb()
             impossible("Webbing over trap type %d?", ttmp->ttyp);
             return 0;
         }
-    } else if (On_stairs(u.ux, u.uy)) {
+    } else if (On_stairs(currentX(), currentY())) {
         /* cop out: don't let them hide the stairs */
         Your("web fails to impede access to the %s.",
-             (levl[u.ux][u.uy].typ == STAIRS) ? "stairs" : "ladder");
+             (levl[currentX()][currentY()].typ == STAIRS) ? "stairs" : "ladder");
         return 1;
     }
-    ttmp = maketrap(u.ux, u.uy, WEB);
+    ttmp = maketrap(currentX(), currentY(), WEB);
     if (ttmp) {
         ttmp->madeby_u = 1;
         feeltrap(ttmp);
@@ -1414,21 +1414,21 @@ dohide()
             || (ismimic && youmonst.m_ap_type != M_AP_NOTHING)) {
             u.uundetected = 0;
             youmonst.m_ap_type = M_AP_NOTHING;
-            newsym(u.ux, u.uy);
+            newsym(currentX(), currentY());
         }
         return 0;
     }
     /* note: the eel and hides_under cases are hypothetical;
        such critters aren't offered the option of hiding via #monster */
-    if (youmonst.data->mlet == S_EEL && !is_pool(u.ux, u.uy)) {
-        if (IS_FOUNTAIN(levl[u.ux][u.uy].typ))
+    if (youmonst.data->mlet == S_EEL && !is_pool(currentX(), currentY())) {
+        if (IS_FOUNTAIN(levl[currentX()][currentY()].typ))
             The("fountain is not deep enough to hide in.");
         else
             There("is no water to hide in here.");
         u.uundetected = 0;
         return 0;
     }
-    if (hides_under(youmonst.data) && !level.objects[u.ux][u.uy]) {
+    if (hides_under(youmonst.data) && !level.objects[currentX()][currentY()]) {
         There("is nothing to hide under here.");
         u.uundetected = 0;
         return 0;
@@ -1460,7 +1460,7 @@ dohide()
         youmonst.mappearance = STRANGE_OBJECT;
     } else
         u.uundetected = 1;
-    newsym(u.ux, u.uy);
+    newsym(currentX(), currentY());
     youhiding(FALSE, 0); /* "you are now hiding" */
     return 1;
 }
@@ -1474,7 +1474,7 @@ dopoly()
         polyself(2);
         if (savedat != youmonst.data) {
             You("transform into %s.", an(youmonst.data->mname));
-            newsym(u.ux, u.uy);
+            newsym(currentX(), currentY());
         }
     }
     return 1;

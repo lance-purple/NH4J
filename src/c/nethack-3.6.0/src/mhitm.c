@@ -610,7 +610,7 @@ struct monst *magr, *mdef;
        a wall-phaser and end up with a non-phaser inside a wall */
     dx = mdef->mx, dy = mdef->my;
     if (mdef == &youmonst)
-        dx = u.ux, dy = u.uy;
+        dx = currentX(), dy = currentY();
     lev = &levl[dx][dy];
     if (IS_ROCK(lev->typ) || closed_door(dx, dy) || IS_TREE(lev->typ)
         /* not passes_bars(); engulfer isn't squeezing through */

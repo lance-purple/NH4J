@@ -410,7 +410,7 @@ xchar x, y; /* coordinates where object was before the impact, not after */
 
     costly = ((shkp = shop_keeper(*in_rooms(x, y, SHOPBASE)))
               && costly_spot(x, y));
-    insider = (*u.ushops && inside_shop(u.ux, u.uy)
+    insider = (*u.ushops && inside_shop(currentX(), currentY())
                && *in_rooms(x, y, SHOPBASE) == *u.ushops);
     /* if dropped or thrown, shop ownership flags are set on this obj */
     frominv = (obj != kickedobj);
@@ -561,7 +561,7 @@ xchar x, y;
 
     if (IS_ROCK(levl[x][y].typ) || closed_door(x, y)) {
         if ((!martial() && rn2(20) > ACURR(A_DEX))
-            || IS_ROCK(levl[u.ux][u.uy].typ) || closed_door(u.ux, u.uy)) {
+            || IS_ROCK(levl[currentX()][currentY()].typ) || closed_door(currentX(), currentY())) {
             if (Blind)
                 pline("It doesn't come loose.");
             else
@@ -577,13 +577,13 @@ xchar x, y;
                   otense(kickedobj, "come"));
         obj_extract_self(kickedobj);
         newsym(x, y);
-        if (costly && (!costly_spot(u.ux, u.uy)
+        if (costly && (!costly_spot(currentX(), currentY())
                        || !index(u.urooms, *in_rooms(x, y, SHOPBASE))))
             addtobill(kickedobj, FALSE, FALSE, FALSE);
-        if (!flooreffects(kickedobj, u.ux, u.uy, "fall")) {
-            place_object(kickedobj, u.ux, u.uy);
+        if (!flooreffects(kickedobj, currentX(), currentY(), "fall")) {
+            place_object(kickedobj, currentX(), currentY());
             stackobj(kickedobj);
-            newsym(u.ux, u.uy);
+            newsym(currentX(), currentY());
         }
         return 1;
     }
@@ -820,8 +820,8 @@ dokick()
     if (!u.dx && !u.dy)
         return 0;
 
-    x = u.ux + u.dx;
-    y = u.uy + u.dy;
+    x = currentX() + u.dx;
+    y = currentY() + u.dy;
 
     /* KMH -- Kicking boots always succeed */
     if (uarmf && uarmf->otyp == KICKING_BOOTS)
@@ -852,8 +852,8 @@ dokick()
     if (Levitation) {
         int xx, yy;
 
-        xx = u.ux - u.dx;
-        yy = u.uy - u.dy;
+        xx = currentX() - u.dx;
+        yy = currentY() - u.dy;
         /* doors can be opened while levitating, so they must be
          * reachable for bracing purposes
          * Possible extension: allow bracing against stuff on the side?
@@ -1403,7 +1403,7 @@ xchar dlev;          /* if !0 send to dlev near player */
 
         if (costly) {
             price += stolen_value(
-                obj, x, y, (costly_spot(u.ux, u.uy)
+                obj, x, y, (costly_spot(currentX(), currentY())
                             && index(u.urooms, *in_rooms(x, y, SHOPBASE))),
                 TRUE);
             /* set obj->no_charge to 0 */
@@ -1522,13 +1522,13 @@ boolean shop_floor_obj;
 
     if (unpaid || shop_floor_obj) {
         if (unpaid) {
-            (void) stolen_value(otmp, u.ux, u.uy, TRUE, FALSE);
+            (void) stolen_value(otmp, currentX(), currentY(), TRUE, FALSE);
         } else {
             ox = otmp->ox;
             oy = otmp->oy;
             (void) stolen_value(
                 otmp, ox, oy,
-                (costly_spot(u.ux, u.uy)
+                (costly_spot(currentX(), currentY())
                  && index(u.urooms, *in_rooms(ox, oy, SHOPBASE))),
                 FALSE);
         }
@@ -1623,7 +1623,7 @@ boolean near_hero;
             nx = sstairs.sx, ny = sstairs.sy;
             break;
         case MIGR_WITH_HERO:
-            nx = u.ux, ny = u.uy;
+            nx = currentX(), ny = currentY();
             break;
         default:
         case MIGR_RANDOM:

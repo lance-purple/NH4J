@@ -193,11 +193,11 @@ register struct obj *sobj;
     for (obj = fobj; obj; obj = obj->nobj) {
         if (sobj->blessed && o_material(obj, GOLD)) {
             known = TRUE;
-            if (obj->ox != u.ux || obj->oy != u.uy)
+            if (obj->ox != currentX() || obj->oy != currentY())
                 goto outgoldmap;
         } else if (o_in(obj, COIN_CLASS)) {
             known = TRUE;
-            if (obj->ox != u.ux || obj->oy != u.uy)
+            if (obj->ox != currentX() || obj->oy != currentY())
                 goto outgoldmap;
         }
     }
@@ -269,7 +269,7 @@ outgoldmap:
                     break;
                 }
     }
-    newsym(u.ux, u.uy);
+    newsym(currentX(), currentY());
     u.uinwater = iflags.save_uinwater, u.uburied = iflags.save_uburied;
     You_feel("very greedy, and sense gold!");
     exercise(A_WIS, TRUE);
@@ -299,7 +299,7 @@ register struct obj *sobj;
 
     for (obj = fobj; obj; obj = obj->nobj)
         if (o_in(obj, oclass)) {
-            if (obj->ox == u.ux && obj->oy == u.uy)
+            if (obj->ox == currentX() && obj->oy == currentY())
                 ctu++;
             else
                 ct++;
@@ -373,7 +373,7 @@ register struct obj *sobj;
                     map_object(temp, 1);
                     break; /* skip rest of this monster's inventory */
                 }
-        newsym(u.ux, u.uy);
+        newsym(currentX(), currentY());
         u.uinwater = iflags.save_uinwater, u.uburied = iflags.save_uburied;
         if (sobj) {
             if (sobj->blessed) {
@@ -445,7 +445,7 @@ int class;            /* an object class, 0 for all */
 
     for (obj = fobj; obj; obj = obj->nobj) {
         if ((!class && !boulder) || o_in(obj, class) || o_in(obj, boulder)) {
-            if (obj->ox == u.ux && obj->oy == u.uy)
+            if (obj->ox == currentX() && obj->oy == currentY())
                 ctu++;
             else
                 ct++;
@@ -456,7 +456,7 @@ int class;            /* an object class, 0 for all */
 
     for (obj = level.buriedobjlist; obj; obj = obj->nobj) {
         if (!class || o_in(obj, class)) {
-            if (obj->ox == u.ux && obj->oy == u.uy)
+            if (obj->ox == currentX() && obj->oy == currentY())
                 ctu++;
             else
                 ct++;
@@ -572,7 +572,7 @@ int class;            /* an object class, 0 for all */
         }
     }
 
-    newsym(u.ux, u.uy);
+    newsym(currentX(), currentY());
     u.uinwater = iflags.save_uinwater, u.uburied = iflags.save_uburied;
     You("detect the %s of %s.", ct ? "presence" : "absence", stuff);
     display_nhwindow(WIN_MAP, TRUE);
@@ -714,7 +714,7 @@ int how; /* 1 for misleading map feedback */
     for (otmp = objlist; otmp; otmp = otmp->nobj) {
         if (Is_box(otmp) && otmp->otrapped
             && get_obj_location(otmp, &x, &y, BURIED_TOO | CONTAINED_TOO)) {
-            result |= (x == u.ux && y == u.uy) ? OTRAP_HERE : OTRAP_THERE;
+            result |= (x == currentX() && y == currentY()) ? OTRAP_HERE : OTRAP_THERE;
             if (show_them)
                 sense_trap((struct trap *) 0, x, y, how);
         }
@@ -743,7 +743,7 @@ register struct obj *sobj;
 
     /* floor/ceiling traps */
     for (ttmp = ftrap; ttmp; ttmp = ttmp->ntrap) {
-        if (ttmp->tx != u.ux || ttmp->ty != u.uy)
+        if (ttmp->tx != currentX() || ttmp->ty != currentY())
             goto outtrapmap;
         else
             found = TRUE;
@@ -778,7 +778,7 @@ register struct obj *sobj;
     for (door = 0; door < doorindex; door++) {
         cc = doors[door];
         if (levl[cc.x][cc.y].doormask & D_TRAPPED) {
-            if (cc.x != u.ux || cc.y != u.uy)
+            if (cc.x != currentX() || cc.y != currentY())
                 goto outtrapmap;
             else
                 found = TRUE;
@@ -821,9 +821,9 @@ outtrapmap:
     }
 
     /* redisplay hero unless sense_trap() revealed something at <ux,uy> */
-    glyph = glyph_at(u.ux, u.uy);
+    glyph = glyph_at(currentX(), currentY());
     if (!(glyph_is_trap(glyph) || glyph_is_object(glyph)))
-        newsym(u.ux, u.uy);
+        newsym(currentX(), currentY());
     u.uinwater = iflags.save_uinwater, u.uburied = iflags.save_uburied;
 
     You_feel("%s.", cursed_src ? "very greedy" : "entrapped");
@@ -1101,10 +1101,10 @@ void
 do_vicinity_map()
 {
     register int zx, zy;
-    int lo_y = (u.uy - 5 < 0 ? 0 : u.uy - 5),
-        hi_y = (u.uy + 6 > ROWNO ? ROWNO : u.uy + 6),
-        lo_x = (u.ux - 9 < 1 ? 1 : u.ux - 9), /* avoid column 0 */
-        hi_x = (u.ux + 10 > COLNO ? COLNO : u.ux + 10);
+    int lo_y = (currentY() - 5 < 0 ? 0 : currentY() - 5),
+        hi_y = (currentY() + 6 > ROWNO ? ROWNO : currentY() + 6),
+        lo_x = (currentX() - 9 < 1 ? 1 : currentX() - 9), /* avoid column 0 */
+        hi_x = (currentX() + 10 > COLNO ? COLNO : currentX() + 10);
 
     for (zx = lo_x; zx < hi_x; zx++)
         for (zy = lo_y; zy < hi_y; zy++)
@@ -1232,7 +1232,7 @@ genericptr_t num;
             newsym(zx, zy);
             (*num_p)++;
         }
-        mon = (zx == u.ux && zy == u.uy) ? &youmonst : m_at(zx, zy);
+        mon = (zx == currentX() && zy == currentY()) ? &youmonst : m_at(zx, zy);
         if (openholdingtrap(mon, &dummy)
             || openfallingtrap(mon, TRUE, &dummy))
             (*num_p)++;
@@ -1251,7 +1251,7 @@ findit()
 
     if (u.uswallow)
         return 0;
-    do_clear_area(u.ux, u.uy, BOLT_LIM, findone, (genericptr_t) &num);
+    do_clear_area(currentX(), currentY(), BOLT_LIM, findone, (genericptr_t) &num);
     return num;
 }
 
@@ -1272,7 +1272,7 @@ openit()
         return -1;
     }
 
-    do_clear_area(u.ux, u.uy, BOLT_LIM, openone, (genericptr_t) &num);
+    do_clear_area(currentX(), currentY(), BOLT_LIM, openone, (genericptr_t) &num);
     return num;
 }
 
@@ -1339,11 +1339,11 @@ register int aflag; /* intrinsic autosearch vs explicit searching */
             fund += 2; /* JDS: lenses help searching */
         if (fund > 5)
             fund = 5;
-        for (x = u.ux - 1; x < u.ux + 2; x++)
-            for (y = u.uy - 1; y < u.uy + 2; y++) {
+        for (x = currentX() - 1; x < currentX() + 2; x++)
+            for (y = currentY() - 1; y < currentY() + 2; y++) {
                 if (!isok(x, y))
                     continue;
-                if (x == u.ux && y == u.uy)
+                if (x == currentX() && y == currentY())
                     continue;
 
                 if (Blind && !aflag)
@@ -1510,7 +1510,7 @@ int which_subset; /* when not full, whether to suppress objs and/or traps */
                        the invisible monster glyph, which is handled like
                        an object, replacing any object or trap at its spot) */
                     glyph = !save_swallowed ? glyph_at(x, y) : levl_glyph;
-                    if (keep_mons && x == u.ux && y == u.uy && save_swallowed)
+                    if (keep_mons && x == currentX() && y == currentY() && save_swallowed)
                         glyph = mon_to_glyph(u.ustuck);
                     else if (((glyph_is_monster(glyph)
                                || glyph_is_warning(glyph)) && !keep_mons)

@@ -1,0 +1,75 @@
+( cd src ; make )
+make[1]: Entering directory '/cygdrive/c/Users/Lance/workspace/NH4J/src/c/nethack-3.6.0/src'
+cc -O -I../include   -c -o allmain.o allmain.c
+In file included from ../include/hack.h:180:0,
+                 from allmain.c:7:
+../include/extern.h:2789:67: warning: missing terminating ' character
+ extern jmethodID getStaticMethod(jclass, const char*, const char*)'
+                                                                   ^
+../include/extern.h:2789:1: error: missing terminating ' character
+ extern jmethodID getStaticMethod(jclass, const char*, const char*)'
+ ^
+In file included from ../include/hack.h:181:0,
+                 from allmain.c:7:
+../include/winprocs.h: In function ‘getStaticMethod’:
+../include/winprocs.h:11:1: warning: empty declaration
+ struct window_procs {
+ ^
+../include/winprocs.h:94:34: error: storage class specified for parameter ‘windowprocs’
+     NEARDATA struct window_procs windowprocs;
+                                  ^
+../include/winprocs.h:281:1: warning: empty declaration
+ struct wc_Opt {
+ ^
+In file included from ../include/hack.h:182:0,
+                 from allmain.c:7:
+../include/sys.h:8:1: warning: empty declaration
+ struct sysopt {
+ ^
+../include/sys.h:40:22: error: storage class specified for parameter ‘sysopt’
+ extern struct sysopt sysopt;
+                      ^
+allmain.c:19:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘boolean’
+ boolean resuming;
+ ^
+In file included from ../include/hack.h:180:0,
+                 from allmain.c:7:
+../include/extern.h:2789:18: error: old-style parameter declarations in prototyped function definition
+ extern jmethodID getStaticMethod(jclass, const char*, const char*)'
+                  ^
+../include/extern.h:2789:1: error: parameter name omitted
+ extern jmethodID getStaticMethod(jclass, const char*, const char*)'
+ ^
+../include/extern.h:2789:1: error: parameter name omitted
+../include/extern.h:2789:1: error: parameter name omitted
+allmain.c:42:9: error: ‘resuming’ undeclared (first use in this function)
+     if (resuming && iflags.deferred_X)
+         ^
+allmain.c:42:9: note: each undeclared identifier is reported only once for each function it appears in
+In file included from ../include/hack.h:181:0,
+                 from allmain.c:7:
+../include/winprocs.h:121:28: error: ‘windowprocs’ undeclared (first use in this function)
+ #define update_inventory (*windowprocs.win_update_inventory)
+                            ^
+allmain.c:65:9: note: in expansion of macro ‘update_inventory’
+         update_inventory(); /* for perm_invent */
+         ^
+allmain.c: In function ‘display_gamewindows’:
+../include/winprocs.h:108:27: error: ‘windowprocs’ undeclared (first use in this function)
+ #define create_nhwindow (*windowprocs.win_create_nhwindow)
+                           ^
+allmain.c:501:19: note: in expansion of macro ‘create_nhwindow’
+     WIN_MESSAGE = create_nhwindow(NHW_MESSAGE);
+                   ^
+allmain.c: In function ‘newgame’:
+../include/winprocs.h:115:24: error: ‘windowprocs’ undeclared (first use in this function)
+ #define display_file (*windowprocs.win_display_file)
+                        ^
+allmain.c:569:9: note: in expansion of macro ‘display_file’
+         display_file(NEWS, FALSE);
+         ^
+<builtin>: recipe for target 'allmain.o' failed
+make[1]: *** [allmain.o] Error 1
+make[1]: Leaving directory '/cygdrive/c/Users/Lance/workspace/NH4J/src/c/nethack-3.6.0/src'
+Makefile:140: recipe for target 'nethack' failed
+make: *** [nethack] Error 2

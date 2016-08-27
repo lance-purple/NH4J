@@ -157,7 +157,7 @@ struct obj *bp;
         break;
     case 6:
         if (Antimagic) {
-            shieldeff(u.ux, u.uy);
+            shieldeff(currentX(), currentY());
             pline_The("book %s, but you are unharmed!", explodes);
         } else {
             pline("As you read the book, it %s in your %s!", explodes,
@@ -210,7 +210,7 @@ struct obj *book2;
     makeknown(SPE_BOOK_OF_THE_DEAD);
     /* KMH -- Need ->known to avoid "_a_ Book of the Dead" */
     book2->known = 1;
-    if (invocation_pos(u.ux, u.uy) && !On_stairs(u.ux, u.uy)) {
+    if (invocation_pos(currentX(), currentY()) && !On_stairs(currentX(), currentY())) {
         register struct obj *otmp;
         register boolean arti1_primed = FALSE, arti2_primed = FALSE,
                          arti_cursed = FALSE;
@@ -274,9 +274,9 @@ struct obj *book2;
 
         You("raised the dead!");
         /* first maybe place a dangerous adversary */
-        if (!rn2(3) && ((mtmp = makemon(&mons[PM_MASTER_LICH], u.ux, u.uy,
+        if (!rn2(3) && ((mtmp = makemon(&mons[PM_MASTER_LICH], currentX(), currentY(),
                                         NO_MINVENT)) != 0
-                        || (mtmp = makemon(&mons[PM_NALFESHNEE], u.ux, u.uy,
+                        || (mtmp = makemon(&mons[PM_NALFESHNEE], currentX(), currentY(),
                                            NO_MINVENT)) != 0)) {
             mtmp->mpeaceful = 0;
             set_malign(mtmp);
@@ -284,8 +284,8 @@ struct obj *book2;
         /* next handle the affect on things you're carrying */
         (void) unturn_dead(&youmonst);
         /* last place some monsters around you */
-        mm.x = u.ux;
-        mm.y = u.uy;
+        mm.x = currentX();
+        mm.y = currentY();
         mkundead(&mm, TRUE, NO_MINVENT);
     } else if (book2->blessed) {
         for (mtmp = fmon; mtmp; mtmp = mtmp2) {
@@ -788,7 +788,7 @@ cast_protection()
             if (u.uspellprot) {
                 pline_The("%s haze around you becomes more dense.", hgolden);
             } else {
-                rmtyp = levl[u.ux][u.uy].typ;
+                rmtyp = levl[currentX()][currentY()].typ;
                 atmosphere = u.uswallow
                                 ? ((u.ustuck->data == &mons[PM_FOG_CLOUD])
                                    ? "mist"
@@ -1134,7 +1134,7 @@ boolean atme;
         healup(0, 0, TRUE, FALSE);
         break;
     case SPE_CREATE_FAMILIAR:
-        (void) make_familiar((struct obj *) 0, u.ux, u.uy, FALSE);
+        (void) make_familiar((struct obj *) 0, currentX(), currentY(), FALSE);
         break;
     case SPE_CLAIRVOYANCE:
         if (!BClairvoyant)
@@ -1179,12 +1179,12 @@ throwspell()
     }
 
     pline("Where do you want to cast the spell?");
-    cc.x = u.ux;
-    cc.y = u.uy;
+    cc.x = currentX();
+    cc.y = currentY();
     if (getpos(&cc, TRUE, "the desired position") < 0)
         return 0; /* user pressed ESC */
     /* The number of moves from hero to where the spell drops.*/
-    if (distmin(u.ux, u.uy, cc.x, cc.y) > 10) {
+    if (distmin(currentX(), currentY(), cc.x, cc.y) > 10) {
         pline_The("spell dissipates over the distance!");
         return 0;
     } else if (u.uswallow) {

@@ -264,7 +264,7 @@ char *buf, *monbuf;
 
     buf[0] = monbuf[0] = '\0';
     glyph = glyph_at(x, y);
-    if (u.ux == x && u.uy == y && canspotself()) {
+    if (currentX() == x && currentY() == y && canspotself()) {
         /* fill in buf[] */
         (void) self_lookat(buf);
 
@@ -610,7 +610,7 @@ const char **firstmatch;
        playing a character which isn't normally displayed by that
        symbol; firstmatch is assumed to already be set for '@' */
     if ((looked ? (sym == showsyms[S_HUMAN + SYM_OFF_M]
-                   && cc.x == u.ux && cc.y == u.uy)
+                   && cc.x == currentX() && cc.y == currentY())
                 : (sym == def_monsyms[S_HUMAN].sym && !flags.showrace))
         && !(Race_if(PM_HUMAN) || Race_if(PM_ELF)) && !Upolyd)
         found += append_str(out_str, "you"); /* tack on "or you" */
@@ -867,8 +867,8 @@ coord *click_cc;
         case '/':
             from_screen = TRUE;
             sym = 0;
-            cc.x = u.ux;
-            cc.y = u.uy;
+            cc.x = currentX();
+            cc.y = currentY();
             break;
         case 'i':
           {
@@ -993,10 +993,10 @@ boolean do_mons; /* True => monsters, False => objects */
             (COLNO <= 100) ? "02" : (COLNO <= 1000) ? "03" : "");
 
     win = create_nhwindow(NHW_TEXT);
-    lo_y = nearby ? max(u.uy - BOLT_LIM, 0) : 0;
-    lo_x = nearby ? max(u.ux - BOLT_LIM, 1) : 1;
-    hi_y = nearby ? min(u.uy + BOLT_LIM, ROWNO - 1) : ROWNO - 1;
-    hi_x = nearby ? min(u.ux + BOLT_LIM, COLNO - 1) : COLNO - 1;
+    lo_y = nearby ? max(currentY() - BOLT_LIM, 0) : 0;
+    lo_x = nearby ? max(currentX() - BOLT_LIM, 1) : 1;
+    hi_y = nearby ? min(currentY() + BOLT_LIM, ROWNO - 1) : ROWNO - 1;
+    hi_x = nearby ? min(currentX() + BOLT_LIM, COLNO - 1) : COLNO - 1;
     for (y = lo_y; y <= hi_y; y++) {
         for (x = lo_x; x <= hi_x; x++) {
             buf[0] = '\0';
@@ -1007,7 +1007,7 @@ boolean do_mons; /* True => monsters, False => objects */
 
                     bhitpos.x = x; /* [is this actually necessary?] */
                     bhitpos.y = y;
-                    if (x == u.ux && y == u.uy && canspotself()) {
+                    if (x == currentX() && y == currentY() && canspotself()) {
                         (void) self_lookat(buf);
                         ++count;
                     } else if ((mtmp = m_at(x, y)) != 0) {
@@ -1036,7 +1036,7 @@ boolean do_mons; /* True => monsters, False => objects */
 
                     Strcpy(which, do_mons ? "monsters" : "objects");
                     if (nearby) {
-                        Sprintf(coordbuf, fmt, u.uy, u.ux);
+                        Sprintf(coordbuf, fmt, currentY(), currentX());
                         Sprintf(outbuf, "%s currently shown near %s:",
                                 upstart(which), coordbuf);
                     } else
@@ -1087,8 +1087,8 @@ doidtrap()
 
     if (!getdir("^"))
         return 0;
-    x = u.ux + u.dx;
-    y = u.uy + u.dy;
+    x = currentX() + u.dx;
+    y = currentY() + u.dy;
     for (trap = ftrap; trap; trap = trap->ntrap)
         if (trap->tx == x && trap->ty == y) {
             if (!trap->tseen)

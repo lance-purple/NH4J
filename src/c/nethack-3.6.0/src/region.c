@@ -319,7 +319,7 @@ NhRegion *reg;
                 newsym(i, j);
         }
     /* Check for player now... */
-    if (inside_region(reg, u.ux, u.uy))
+    if (inside_region(reg, currentX(), currentY()))
         set_hero_inside(reg);
     else
         clear_hero_inside(reg);
@@ -525,7 +525,7 @@ update_player_regions()
     register int i;
 
     for (i = 0; i < n_regions; i++)
-        if (!regions[i]->attach_2_u && inside_region(regions[i], u.ux, u.uy))
+        if (!regions[i]->attach_2_u && inside_region(regions[i], currentX(), currentY()))
             set_hero_inside(regions[i]);
         else
             clear_hero_inside(regions[i]);

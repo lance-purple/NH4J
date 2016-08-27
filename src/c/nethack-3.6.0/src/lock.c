@@ -24,8 +24,8 @@ picking_lock(x, y)
 int *x, *y;
 {
     if (occupation == picklock) {
-        *x = u.ux + u.dx;
-        *y = u.uy + u.dy;
+        *x = currentX() + u.dx;
+        *y = currentY() + u.dy;
         return TRUE;
     } else {
         *x = *y = 0;
@@ -75,11 +75,11 @@ STATIC_PTR int
 picklock(VOID_ARGS)
 {
     if (xlock.box) {
-        if ((xlock.box->ox != u.ux) || (xlock.box->oy != u.uy)) {
+        if ((xlock.box->ox != currentX()) || (xlock.box->oy != currentY())) {
             return ((xlock.usedtime = 0)); /* you or it moved */
         }
     } else { /* door */
-        if (xlock.door != &(levl[u.ux + u.dx][u.uy + u.dy])) {
+        if (xlock.door != &(levl[currentX() + u.dx][currentY() + u.dy])) {
             return ((xlock.usedtime = 0)); /* you moved */
         }
         switch (xlock.door->doormask) {
@@ -109,10 +109,10 @@ picklock(VOID_ARGS)
         if (xlock.door->doormask & D_TRAPPED) {
             b_trapped("door", FINGER);
             xlock.door->doormask = D_NODOOR;
-            unblock_point(u.ux + u.dx, u.uy + u.dy);
-            if (*in_rooms(u.ux + u.dx, u.uy + u.dy, SHOPBASE))
-                add_damage(u.ux + u.dx, u.uy + u.dy, 0L);
-            newsym(u.ux + u.dx, u.uy + u.dy);
+            unblock_point(currentX() + u.dx, currentY() + u.dy);
+            if (*in_rooms(currentX() + u.dx, currentY() + u.dy, SHOPBASE))
+                add_damage(currentX() + u.dx, currentY() + u.dy, 0L);
+            newsym(currentX() + u.dx, currentY() + u.dy);
         } else if (xlock.door->doormask & D_LOCKED)
             xlock.door->doormask = D_CLOSED;
         else
@@ -141,9 +141,9 @@ boolean destroyit;
         box->olocked = 0;
         box->obroken = 1;
         box->lknown = 1;
-    } else { /* #force has destroyed this box (at <u.ux,u.uy>) */
+    } else { /* #force has destroyed this box (at <currentX(),currentY()>) */
         struct obj *otmp;
-        struct monst *shkp = (*u.ushops && costly_spot(u.ux, u.uy))
+        struct monst *shkp = (*u.ushops && costly_spot(currentX(), currentY()))
                                  ? shop_keeper(*u.ushops)
                                  : 0;
         boolean costly = (boolean) (shkp != 0),
@@ -158,7 +158,7 @@ boolean destroyit;
                 chest_shatter_msg(otmp);
                 if (costly)
                     loss +=
-                        stolen_value(otmp, u.ux, u.uy, peaceful_shk, TRUE);
+                        stolen_value(otmp, currentX(), currentY(), peaceful_shk, TRUE);
                 if (otmp->quan == 1L) {
                     obfree(otmp, (struct obj *) 0);
                     continue;
@@ -169,11 +169,11 @@ boolean destroyit;
                 otmp->age = monstermoves - otmp->age; /* actual age */
                 start_corpse_timeout(otmp);
             }
-            place_object(otmp, u.ux, u.uy);
+            place_object(otmp, currentX(), currentY());
             stackobj(otmp);
         }
         if (costly)
-            loss += stolen_value(box, u.ux, u.uy, peaceful_shk, TRUE);
+            loss += stolen_value(box, currentX(), currentY(), peaceful_shk, TRUE);
         if (loss)
             You("owe %ld %s for objects destroyed.", loss, currency(loss));
         delobj(box);
@@ -184,7 +184,7 @@ boolean destroyit;
 STATIC_PTR int
 forcelock(VOID_ARGS)
 {
-    if ((xlock.box->ox != u.ux) || (xlock.box->oy != u.uy))
+    if ((xlock.box->ox != currentX()) || (xlock.box->oy != currentY()))
         return ((xlock.usedtime = 0)); /* you or it moved */
 
     if (xlock.usedtime++ >= 50 || !uwep || nohands(youmonst.data)) {
@@ -289,10 +289,10 @@ struct obj *pick;
     }
     ch = 0; /* lint suppression */
 
-    if (!get_adjacent_loc((char *) 0, "Invalid location!", u.ux, u.uy, &cc))
+    if (!get_adjacent_loc((char *) 0, "Invalid location!", currentX(), currentY(), &cc))
         return PICKLOCK_DID_NOTHING;
 
-    if (cc.x == u.ux && cc.y == u.uy) { /* pick lock on a container */
+    if (cc.x == currentX() && cc.y == currentY()) { /* pick lock on a container */
         const char *verb;
         char qsfx[QBUFSZ];
         boolean it;
@@ -302,10 +302,10 @@ struct obj *pick;
             There("isn't any sort of lock up %s.",
                   Levitation ? "here" : "there");
             return PICKLOCK_LEARNED_SOMETHING;
-        } else if (is_lava(u.ux, u.uy)) {
+        } else if (is_lava(currentX(), currentY())) {
             pline("Doing that would probably melt %s.", yname(pick));
             return PICKLOCK_LEARNED_SOMETHING;
-        } else if (is_pool(u.ux, u.uy) && !Underwater) {
+        } else if (is_pool(currentX(), currentY()) && !Underwater) {
             pline_The("water has no lock.");
             return PICKLOCK_LEARNED_SOMETHING;
         }
@@ -484,7 +484,7 @@ doforce()
         return 0;
     }
     if (!can_reach_floor(TRUE)) {
-        cant_reach_floor(u.ux, u.uy, FALSE, TRUE);
+        cant_reach_floor(currentX(), currentY(), FALSE, TRUE);
         return 0;
     }
 
@@ -497,7 +497,7 @@ doforce()
 
     /* A lock is made only for the honest man, the thief will break it. */
     xlock.box = (struct obj *) 0;
-    for (otmp = level.objects[u.ux][u.uy]; otmp; otmp = otmp->nexthere)
+    for (otmp = level.objects[currentX()][currentY()]; otmp; otmp = otmp->nexthere)
         if (Is_box(otmp)) {
             if (otmp->obroken || !otmp->olocked) {
                 There("is %s here, but its lock is already %s.", doname(otmp),
@@ -577,10 +577,10 @@ int x, y;
     if (x > 0 && y > 0) {
         cc.x = x;
         cc.y = y;
-    } else if (!get_adjacent_loc((char *) 0, (char *) 0, u.ux, u.uy, &cc))
+    } else if (!get_adjacent_loc((char *) 0, (char *) 0, currentX(), currentY(), &cc))
         return 0;
 
-    if ((cc.x == u.ux) && (cc.y == u.uy))
+    if ((cc.x == currentX()) && (cc.y == currentY()))
         return 0;
 
     if (stumble_on_door_mimic(cc.x, cc.y))
@@ -716,9 +716,9 @@ doclose()
     if (!getdir((char *) 0))
         return 0;
 
-    x = u.ux + u.dx;
-    y = u.uy + u.dy;
-    if ((x == u.ux) && (y == u.uy)) {
+    x = currentX() + u.dx;
+    y = currentY() + u.dy;
+    if ((x == currentX()) && (y == currentY())) {
         You("are in the way!");
         return 1;
     }

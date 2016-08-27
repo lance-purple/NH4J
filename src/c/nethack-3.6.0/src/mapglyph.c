@@ -198,7 +198,7 @@ unsigned *ospecial;
     } else { /* a monster */
         idx = mons[glyph].mlet + SYM_OFF_M;
         if (has_rogue_color && iflags.use_color) {
-            if (x == u.ux && y == u.uy)
+            if (x == currentX() && y == currentY())
                 /* actually player should be yellow-on-gray if in corridor */
                 color = CLR_YELLOW;
             else
@@ -207,7 +207,7 @@ unsigned *ospecial;
             mon_color(glyph);
 #ifdef TEXTCOLOR
             /* special case the hero for `showrace' option */
-            if (iflags.use_color && x == u.ux && y == u.uy
+            if (iflags.use_color && x == currentX() && y == currentY()
                 && flags.showrace && !Upolyd)
                 color = HI_DOMESTIC;
 #endif

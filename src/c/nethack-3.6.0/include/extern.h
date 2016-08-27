@@ -858,6 +858,10 @@ E char *FDECL(sitoa, (int));
 E int FDECL(sgn, (int));
 E int FDECL(rounddiv, (long, int));
 E int FDECL(dist2, (int, int, int, int));
+E int FDECL(currentX, ());
+E int FDECL(currentY, ());
+E void FDECL(setCurrentX, (int));
+E void FDECL(setCurrentY, (int));
 E int FDECL(distanceSquaredToYou, (int, int));
 E int FDECL(isqrt, (int));
 E int FDECL(distmin, (int, int, int, int));
@@ -2780,5 +2784,8 @@ E void NDECL(makewish);
 #endif /* !MAKEDEFS_C && !LEV_LEX_C */
 
 #undef E
+
+extern jclass getJavaClass(const char*);
+extern jmethodID getStaticMethod(jclass, const char*, const char*);
 
 #endif /* EXTERN_H */

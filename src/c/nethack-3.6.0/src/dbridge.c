@@ -339,8 +339,8 @@ u_to_e(etmp)
 struct entity *etmp;
 {
     etmp->emon = &youmonst;
-    etmp->ex = u.ux;
-    etmp->ey = u.uy;
+    etmp->ex = currentX();
+    etmp->ey = currentY();
     etmp->edata = youmonst.data;
 }
 
@@ -349,7 +349,7 @@ set_entity(x, y, etmp)
 int x, y;
 struct entity *etmp;
 {
-    if ((x == u.ux) && (y == u.uy))
+    if ((x == currentX()) && (y == currentY()))
         u_to_e(etmp);
     else if (MON_AT(x, y))
         m_to_e(m_at(x, y), x, y, etmp);
@@ -460,7 +460,7 @@ int dest, how;
             }
         }
         /* we might have crawled out of the moat to survive */
-        etmp->ex = u.ux, etmp->ey = u.uy;
+        etmp->ex = currentX(), etmp->ey = currentY();
     } else {
         int entitycnt;
 
@@ -691,8 +691,8 @@ struct entity *etmp;
             place_monster(etmp->emon, newx, newy);
             update_monster_region(etmp->emon);
         } else {
-            u.ux = newx;
-            u.uy = newy;
+            setCurrentX(newx);
+            setCurrentY(newy);
         }
         etmp->ex = newx;
         etmp->ey = newy;
@@ -781,7 +781,7 @@ int x, y;
     get_wall_for_db(&x2, &y2);
     if (cansee(x, y) || cansee(x2, y2))
         You_see("a drawbridge %s up!",
-                (((u.ux == x || u.uy == y) && !Underwater)
+                (((currentX() == x || currentY() == y) && !Underwater)
                  || distanceSquaredToYou(x2, y2) < distanceSquaredToYou(x, y))
                     ? "coming"
                     : "going");

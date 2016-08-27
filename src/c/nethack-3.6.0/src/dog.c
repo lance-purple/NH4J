@@ -179,7 +179,7 @@ makedog()
             petname = "Sirius"; /* Orion's dog */
     }
 
-    mtmp = makemon(&mons[pettype], u.ux, u.uy, MM_EDOG);
+    mtmp = makemon(&mons[pettype], currentX(), currentY(), MM_EDOG);
 
     if (!mtmp)
         return ((struct monst *) 0); /* pets were genocided */
@@ -320,7 +320,7 @@ boolean with_you;
     mtmp->mstrategy |= STRAT_ARRIVE;
 
     /* make sure mnexto(rloc_to(set_apparxy())) doesn't use stale data */
-    mtmp->mux = u.ux, mtmp->muy = u.uy;
+    mtmp->mux = currentX(), mtmp->muy = currentY();
     xyloc = mtmp->mtrack[0].x;
     xyflags = mtmp->mtrack[0].y;
     xlocale = mtmp->mtrack[1].x;
@@ -336,9 +336,9 @@ boolean with_you;
            that spot.  This code doesn't control the final outcome;
            goto_level(do.c) decides who ends up at your target spot
            when there is a monster there too. */
-        if (!MON_AT(u.ux, u.uy)
+        if (!MON_AT(currentX(), currentY())
             && !rn2(mtmp->mtame ? 10 : mtmp->mpeaceful ? 5 : 2))
-            rloc_to(mtmp, u.ux, u.uy);
+            rloc_to(mtmp, currentX(), currentY());
         else
             mnexto(mtmp);
         return;
@@ -368,7 +368,7 @@ boolean with_you;
         wander = 0;
         break;
     case MIGR_WITH_HERO:
-        xlocale = u.ux, ylocale = u.uy;
+        xlocale = currentX(), ylocale = currentY();
         break;
     case MIGR_STAIRS_UP:
         xlocale = xupstair, ylocale = yupstair;
@@ -592,7 +592,7 @@ boolean pets_only; /* true for ascension or final escape */
             mtmp->mfrozen = 0;
             mtmp->mcanmove = 1;
         }
-        if (((monnear(mtmp, u.ux, u.uy) && levl_follower(mtmp))
+        if (((monnear(mtmp, currentX(), currentY()) && levl_follower(mtmp))
              /* the wiz will level t-port from anywhere to chase
                 the amulet; if you don't have it, will chase you
                 only if in range. -3. */

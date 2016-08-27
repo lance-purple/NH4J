@@ -1145,7 +1145,7 @@ void
 next_level(at_stairs)
 boolean at_stairs;
 {
-    if (at_stairs && u.ux == sstairs.sx && u.uy == sstairs.sy) {
+    if (at_stairs && currentX() == sstairs.sx && currentY() == sstairs.sy) {
         /* Taking a down dungeon branch. */
         goto_level(&sstairs.tolev, at_stairs, FALSE, FALSE);
     } else {
@@ -1163,7 +1163,7 @@ void
 prev_level(at_stairs)
 boolean at_stairs;
 {
-    if (at_stairs && u.ux == sstairs.sx && u.uy == sstairs.sy) {
+    if (at_stairs && currentX() == sstairs.sx && currentY() == sstairs.sy) {
         /* Taking an up dungeon branch. */
         /* KMH -- Upwards branches are okay if not level 1 */
         /* (Just make sure it doesn't go above depth 1) */
@@ -1184,18 +1184,18 @@ void
 u_on_newpos(x, y)
 int x, y;
 {
-    u.ux = x;
-    u.uy = y;
+    setCurrentX(x);
+    setCurrentY(y);
 #ifdef CLIPPING
-    cliparound(u.ux, u.uy);
+    cliparound(currentX(), currentY());
 #endif
     /* ridden steed always shares hero's location */
     if (u.usteed)
-        u.usteed->mx = u.ux, u.usteed->my = u.uy;
+        u.usteed->mx = currentX(), u.usteed->my = currentY();
     /* when changing levels, don't leave old position set with
        stale values from previous level */
     if (!on_level(&u.uz, &u.uz0))
-        u.ux0 = u.ux, u.uy0 = u.uy;
+        u.ux0 = currentX(), u.uy0 = currentY();
 }
 
 /* place you on a random location */
@@ -1906,7 +1906,7 @@ xchar *rdgn;
     if (Invocation_lev(&u.uz)) {
         putstr(win, 0, "");
         Sprintf(buf, "Invocation position @ (%d,%d), hero @ (%d,%d)",
-                inv_pos.x, inv_pos.y, u.ux, u.uy);
+                inv_pos.x, inv_pos.y, currentX(), currentY());
         putstr(win, 0, buf);
     }
     /*
@@ -1924,7 +1924,7 @@ xchar *rdgn;
         putstr(win, 0, "");
         if (trap)
             Sprintf(buf, "Portal @ (%d,%d), hero @ (%d,%d)", trap->tx,
-                    trap->ty, u.ux, u.uy);
+                    trap->ty, currentX(), currentY());
         else
             Sprintf(buf, "No portal found.");
         putstr(win, 0, buf);
@@ -2350,7 +2350,7 @@ recalc_mapseen()
      */
     for (x = 1; x < COLNO; x++) {
         for (y = 0; y < ROWNO; y++) {
-            if (cansee(x, y) || (x == u.ux && y == u.uy && !Levitation)) {
+            if (cansee(x, y) || (x == currentX() && y == currentY() && !Levitation)) {
                 ltyp = levl[x][y].typ;
                 if (ltyp == DRAWBRIDGE_UP)
                     ltyp = db_under_typ(levl[x][y].drawbridgemask);

@@ -220,7 +220,7 @@ Boots_off(VOID_ARGS)
         break;
     case WATER_WALKING_BOOTS:
         /* check for lava since fireproofed boots make it viable */
-        if ((is_pool(u.ux, u.uy) || is_lava(u.ux, u.uy))
+        if ((is_pool(currentX(), currentY()) || is_lava(currentX(), currentY()))
             && !Levitation && !Flying && !is_clinger(youmonst.data)
             && !context.takeoff.cancelled_don
             /* avoid recursive call to lava_effects() */
@@ -284,7 +284,7 @@ Cloak_on(VOID_ARGS)
     case MUMMY_WRAPPING:
         /* Note: it's already being worn, so we have to cheat here. */
         if ((HInvis || EInvis) && !Blind) {
-            newsym(u.ux, u.uy);
+            newsym(currentX(), currentY());
             You("can %s!", See_invisible ? "no longer see through yourself"
                                          : see_yourself);
         }
@@ -294,7 +294,7 @@ Cloak_on(VOID_ARGS)
            wasn't, so no need to check `oldprop' against blocked */
         if (!oldprop && !HInvis && !Blind) {
             makeknown(uarmc->otyp);
-            newsym(u.ux, u.uy);
+            newsym(currentX(), currentY());
             pline("Suddenly you can%s yourself.",
                   See_invisible ? " see through" : "not see");
         }
@@ -339,7 +339,7 @@ Cloak_off(VOID_ARGS)
         break;
     case MUMMY_WRAPPING:
         if (Invis && !Blind) {
-            newsym(u.ux, u.uy);
+            newsym(currentX(), currentY());
             You("can %s.", See_invisible ? "see through yourself"
                                          : "no longer see yourself");
         }
@@ -347,7 +347,7 @@ Cloak_off(VOID_ARGS)
     case CLOAK_OF_INVISIBILITY:
         if (!oldprop && !HInvis && !Blind) {
             makeknown(CLOAK_OF_INVISIBILITY);
-            newsym(u.ux, u.uy);
+            newsym(currentX(), currentY());
             pline("Suddenly you can %s.",
                   See_invisible ? "no longer see through yourself"
                                 : see_yourself);
@@ -886,7 +886,7 @@ register struct obj *obj;
         see_monsters();
 
         if (Invis && !oldprop && !HSee_invisible && !Blind) {
-            newsym(u.ux, u.uy);
+            newsym(currentX(), currentY());
             pline("Suddenly you are transparent, but there!");
             learnring(obj, TRUE);
         }
@@ -894,7 +894,7 @@ register struct obj *obj;
     case RIN_INVISIBILITY:
         if (!oldprop && !HInvis && !BInvis && !Blind) {
             learnring(obj, TRUE);
-            newsym(u.ux, u.uy);
+            newsym(currentX(), currentY());
             self_invis_message();
         }
         break;
@@ -999,14 +999,14 @@ boolean gone;
         }
 
         if (Invisible && !Blind) {
-            newsym(u.ux, u.uy);
+            newsym(currentX(), currentY());
             pline("Suddenly you cannot see yourself.");
             learnring(obj, TRUE);
         }
         break;
     case RIN_INVISIBILITY:
         if (!Invis && !BInvis && !Blind) {
-            newsym(u.ux, u.uy);
+            newsym(currentX(), currentY());
             Your("body seems to unfade%s.",
                  See_invisible ? " completely" : "..");
             learnring(obj, TRUE);
@@ -1664,7 +1664,7 @@ boolean noisy;
             } else if (u.utraptype == TT_INFLOOR || u.utraptype == TT_LAVA) {
                 if (noisy)
                     Your("%s are stuck in the %s!",
-                         makeplural(body_part(FOOT)), surface(u.ux, u.uy));
+                         makeplural(body_part(FOOT)), surface(currentX(), currentY()));
             } else { /*TT_BURIEDBALL*/
                 if (noisy)
                     Your("%s is attached to the buried ball!",
@@ -2209,7 +2209,7 @@ register struct obj *otmp;
             return 0;
         } else if (u.utrap && u.utraptype == TT_INFLOOR) {
             You("are stuck in the %s, and cannot pull your %s out.",
-                surface(u.ux, u.uy), makeplural(body_part(FOOT)));
+                surface(currentX(), currentY()), makeplural(body_part(FOOT)));
             return 0;
         }
     }
@@ -2551,7 +2551,7 @@ register struct obj *atmp;
     } else if (DESTROY_ARM(uarm)) {
         if (donning(otmp))
             cancel_don();
-        Your("armor turns to dust and falls to the %s!", surface(u.ux, u.uy));
+        Your("armor turns to dust and falls to the %s!", surface(currentX(), currentY()));
         (void) Armor_gone();
         useup(otmp);
     } else if (DESTROY_ARM(uarmu)) {

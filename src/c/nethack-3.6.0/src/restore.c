@@ -578,10 +578,11 @@ unsigned int *stuckid, *steedid;
 
     set_uasmon();
 #ifdef CLIPPING
-    cliparound(u.ux, u.uy);
+    cliparound(currentX(), currentY());
 #endif
     if (u.uhp <= 0 && (!Upolyd || u.mh <= 0)) {
-        u.ux = u.uy = 0; /* affects pline() [hence You()] */
+        setCurrentX(0);
+        setCurrentY(0); /* affects pline() [hence You()] */
         You("were not healthy enough to survive restoration.");
         /* wiz1_level.dlevel is used by mklev.c to see if lots of stuff is
          * uninitialized, so we only have to set it and not the other stuff.

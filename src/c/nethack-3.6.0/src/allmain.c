@@ -64,7 +64,7 @@ boolean resuming;
 #ifndef WIN32
         update_inventory(); /* for perm_invent */
 #endif
-        read_engr_at(u.ux, u.uy); /* subset of pickup() */
+        read_engr_at(currentX(), currentY()); /* subset of pickup() */
     }
 #ifdef WIN32
     update_inventory(); /* for perm_invent */
@@ -198,7 +198,7 @@ boolean resuming;
                         /* for the moment at least, you're in tiptop shape */
                         wtcap = UNENCUMBERED;
                     } else if (Upolyd && youmonst.data->mlet == S_EEL
-                               && !is_pool(u.ux, u.uy)
+                               && !is_pool(currentX(), currentY())
                                && !Is_waterlevel(&u.uz)) {
                         /* eel out of water loses hp, same as for monsters;
                            as hp gets lower, rate of further loss slows down
@@ -274,9 +274,10 @@ boolean resuming;
 
                     if (!u.uinvulnerable) {
                         if (Teleportation && !rn2(85)) {
-                            xchar old_ux = u.ux, old_uy = u.uy;
+                            xchar old_ux = currentX();
+                            xchar old_uy = currentY();
                             tele();
-                            if (u.ux != old_ux || u.uy != old_uy) {
+                            if (currentX() != old_ux || currentY() != old_uy) {
                                 if (!next_to_u()) {
                                     check_leash(old_ux, old_uy);
                                 }
@@ -434,7 +435,7 @@ boolean resuming;
 
 #ifdef CLIPPING
         /* just before rhack */
-        cliparound(u.ux, u.uy);
+        cliparound(currentX(), currentY());
 #endif
 
         u.umoved = FALSE;
@@ -577,8 +578,8 @@ newgame()
     vision_reset();          /* set up internals for level (after mklev) */
     check_special_room(FALSE);
 
-    if (MON_AT(u.ux, u.uy))
-        mnexto(m_at(u.ux, u.uy));
+    if (MON_AT(currentX(), currentY()))
+        mnexto(m_at(currentX(), currentY()));
     (void) makedog();
     docrt();
 
@@ -680,9 +681,9 @@ do_positionbar()
     }
 
     /* hero location */
-    if (u.ux) {
+    if (currentX()) {
         *p++ = '@';
-        *p++ = u.ux;
+        *p++ = currentX();
     }
     /* fence post */
     *p = 0;

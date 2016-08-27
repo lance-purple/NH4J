@@ -342,7 +342,7 @@ register struct monst *mtmp;
                     break;
                 }
 
-            if (inshop || foo || (IS_ROCK(levl[u.ux][u.uy].typ)
+            if (inshop || foo || (IS_ROCK(levl[currentX()][currentY()].typ)
                                   && !passes_walls(mtmp->data))) {
                 char buf[BUFSZ];
 
@@ -363,10 +363,10 @@ register struct monst *mtmp;
     /* possibly set in attack_checks;
        examined in known_hitum, called via hitum or hmonas below */
     override_confirmation = FALSE;
-    /* attack_checks() used to use <u.ux+u.dx,u.uy+u.dy> directly, now
+    /* attack_checks() used to use <currentX()+u.dx,currentY()+u.dy> directly, now
        it uses bhitpos instead; it might map an invisible monster there */
-    bhitpos.x = u.ux + u.dx;
-    bhitpos.y = u.uy + u.dy;
+    bhitpos.x = currentX() + u.dx;
+    bhitpos.y = currentY() + u.dy;
     if (attack_checks(mtmp, uwep))
         return TRUE;
 
@@ -406,8 +406,8 @@ register struct monst *mtmp;
     if (mdat->mlet == S_LEPRECHAUN && !mtmp->mfrozen && !mtmp->msleeping
         && !mtmp->mconf && mtmp->mcansee && !rn2(7)
         && (m_move(mtmp, 0) == 2 /* it died */
-            || mtmp->mx != u.ux + u.dx
-            || mtmp->my != u.uy + u.dy)) /* it moved */
+            || mtmp->mx != currentX() + u.dx
+            || mtmp->my != currentY() + u.dy)) /* it moved */
         return FALSE;
 
     if (Upolyd)
@@ -423,9 +423,9 @@ atk_done:
      * evade.
      */
     if (context.forcefight && mtmp->mhp > 0 && !canspotmon(mtmp)
-        && !glyph_is_invisible(levl[u.ux + u.dx][u.uy + u.dy].glyph)
+        && !glyph_is_invisible(levl[currentX() + u.dx][currentY() + u.dy].glyph)
         && !(u.uswallow && mtmp == u.ustuck))
-        map_invisible(u.ux + u.dx, u.uy + u.dy);
+        map_invisible(currentX() + u.dx, currentY() + u.dy);
 
     return TRUE;
 }
@@ -451,7 +451,7 @@ struct attack *uattk;
     if (!*mhit) {
         missum(mon, uattk, (rollneeded + armorpenalty > dieroll));
     } else {
-        int oldhp = mon->mhp, x = u.ux + u.dx, y = u.uy + u.dy;
+        int oldhp = mon->mhp, x = currentX() + u.dx, y = currentY() + u.dy;
         long oldweaphit = u.uconduct.weaphit;
 
         /* KMH, conduct */
@@ -494,7 +494,7 @@ struct attack *uattk;
 {
     boolean malive, wep_was_destroyed = FALSE;
     struct obj *wepbefore = uwep;
-    int armorpenalty, attknum = 0, x = u.ux + u.dx, y = u.uy + u.dy,
+    int armorpenalty, attknum = 0, x = currentX() + u.dx, y = currentY() + u.dy,
                       tmp = find_roll_to_hit(mon, uattk->aatyp, uwep,
                                              &attknum, &armorpenalty);
     int mhit = (tmp > (dieroll = rnd(20)) || u.uswallow);
@@ -758,7 +758,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                 case EXPENSIVE_CAMERA:
                     You("succeed in destroying %s.  Congratulations!",
                         ysimple_name(obj));
-                    release_camera_demon(obj, u.ux, u.uy);
+                    release_camera_demon(obj, currentX(), currentY());
                     useup(obj);
                     return TRUE;
                 case CORPSE: /* fixed by polder@cs.vu.nl */
@@ -1279,7 +1279,7 @@ demonpet()
     pline("Some hell-p has arrived!");
     i = !rn2(6) ? ndemon(u.ualign.type) : NON_PM;
     pm = i != NON_PM ? &mons[i] : youmonst.data;
-    if ((dtmp = makemon(pm, u.ux, u.uy, NO_MM_FLAGS)) != 0)
+    if ((dtmp = makemon(pm, currentX(), currentY(), NO_MM_FLAGS)) != 0)
         (void) tamedog(dtmp, (struct obj *) 0);
     exercise(A_WIS, TRUE);
 }
@@ -1683,7 +1683,7 @@ register struct attack *mattk;
                 }
             } else if (u.ustuck == mdef) {
                 /* Monsters don't wear amulets of magical breathing */
-                if (is_pool(u.ux, u.uy) && !is_swimmer(pd)
+                if (is_pool(currentX(), currentY()) && !is_swimmer(pd)
                     && !amphibious(pd)) {
                     You("drown %s...", mon_nam(mdef));
                     tmp = mdef->mhp;
@@ -1830,7 +1830,7 @@ start_engulf(mdef)
 struct monst *mdef;
 {
     if (!Invisible) {
-        map_location(u.ux, u.uy, TRUE);
+        map_location(currentX(), currentY(), TRUE);
         tmp_at(DISP_ALWAYS, mon_to_glyph(&youmonst));
         tmp_at(mdef->mx, mdef->my);
     }
@@ -1844,7 +1844,7 @@ end_engulf()
 {
     if (!Invisible) {
         tmp_at(DISP_END, 0);
-        newsym(u.ux, u.uy);
+        newsym(currentX(), currentY());
     }
 }
 
@@ -2106,7 +2106,7 @@ register struct monst *mon;
             } else
                 sum[i] = dhit;
             /* might be a worm that gets cut in half */
-            if (m_at(u.ux + u.dx, u.uy + u.dy) != mon)
+            if (m_at(currentX() + u.dx, currentY() + u.dy) != mon)
                 return (boolean) (nsum != 0);
             /* Do not print "You hit" message, since known_hitum
              * already did it.
@@ -2376,7 +2376,7 @@ boolean wep_was_destroyed;
     case AD_MAGM:
         /* wrath of gods for attacking Oracle */
         if (Antimagic) {
-            shieldeff(u.ux, u.uy);
+            shieldeff(currentX(), currentY());
             pline("A hail of magic missiles narrowly misses you!");
         } else {
             You("are hit by magic missiles appearing from thin air!");
@@ -2445,9 +2445,9 @@ boolean wep_was_destroyed;
             }
             break;
         case AD_COLD: /* brown mold or blue jelly */
-            if (monnear(mon, u.ux, u.uy)) {
+            if (monnear(mon, currentX(), currentY())) {
                 if (Cold_resistance) {
-                    shieldeff(u.ux, u.uy);
+                    shieldeff(currentX(), currentY());
                     You_feel("a mild chill.");
                     ugolemeffects(AD_COLD, tmp);
                     break;
@@ -2468,9 +2468,9 @@ boolean wep_was_destroyed;
                 make_stunned((long) tmp, TRUE);
             break;
         case AD_FIRE:
-            if (monnear(mon, u.ux, u.uy)) {
+            if (monnear(mon, currentX(), currentY())) {
                 if (Fire_resistance) {
-                    shieldeff(u.ux, u.uy);
+                    shieldeff(currentX(), currentY());
                     You_feel("mildly warm.");
                     ugolemeffects(AD_FIRE, tmp);
                     break;
@@ -2481,7 +2481,7 @@ boolean wep_was_destroyed;
             break;
         case AD_ELEC:
             if (Shock_resistance) {
-                shieldeff(u.ux, u.uy);
+                shieldeff(currentX(), currentY());
                 You_feel("a mild tingle.");
                 ugolemeffects(AD_ELEC, tmp);
                 break;
@@ -2582,7 +2582,7 @@ struct monst *mtmp;
         else if (mtmp->m_ap_type == M_AP_MONSTER)
             what = a_monnam(mtmp); /* differs from what was sensed */
     } else {
-        int glyph = levl[u.ux + u.dx][u.uy + u.dy].glyph;
+        int glyph = levl[currentX() + u.dx][currentY() + u.dy].glyph;
 
         if (glyph_is_cmap(glyph) && (glyph_to_cmap(glyph) == S_hcdoor
                                      || glyph_to_cmap(glyph) == S_vcdoor))

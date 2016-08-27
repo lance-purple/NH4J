@@ -196,7 +196,7 @@ register struct monst *priest;
 
     if (!priest->mpeaceful
         || (Conflict && !resist(priest, RING_CLASS, 0, 0))) {
-        if (monnear(priest, u.ux, u.uy)) {
+        if (monnear(priest, currentX(), currentY())) {
             if (Displaced)
                 Your("displaced image doesn't fool %s!", mon_nam(priest));
             (void) mattacku(priest);
@@ -204,8 +204,8 @@ register struct monst *priest;
         } else if (index(u.urooms, temple)) {
             /* chase player if inside temple & can see him */
             if (priest->mcansee && m_canseeu(priest)) {
-                gx = u.ux;
-                gy = u.uy;
+                gx = currentX();
+                gy = currentY();
             }
             avoid = FALSE;
         }
@@ -489,7 +489,7 @@ int roomno;
                       make sure we give one the first time */
         }
         if (!rn2(5)
-            && (mtmp = makemon(&mons[PM_GHOST], u.ux, u.uy, NO_MM_FLAGS))
+            && (mtmp = makemon(&mons[PM_GHOST], currentX(), currentY(), NO_MM_FLAGS))
                    != 0) {
             /* [TODO: alter this (at a minimum, by switching from
                an exclamation to a simple declaration) if hero has
@@ -727,42 +727,42 @@ struct monst *priest;
     ay = y = EPRI(priest)->shrpos.y;
     troom = &rooms[roomno - ROOMOFFSET];
 
-    if ((u.ux == x && u.uy == y) || !linedup(u.ux, u.uy, x, y, 1)) {
-        if (IS_DOOR(levl[u.ux][u.uy].typ)) {
-            if (u.ux == troom->lx - 1) {
+    if ((currentX() == x && currentY() == y) || !linedup(currentX(), currentY(), x, y, 1)) {
+        if (IS_DOOR(levl[currentX()][currentY()].typ)) {
+            if (currentX() == troom->lx - 1) {
                 x = troom->hx;
-                y = u.uy;
-            } else if (u.ux == troom->hx + 1) {
+                y = currentY();
+            } else if (currentX() == troom->hx + 1) {
                 x = troom->lx;
-                y = u.uy;
-            } else if (u.uy == troom->ly - 1) {
-                x = u.ux;
+                y = currentY();
+            } else if (currentY() == troom->ly - 1) {
+                x = currentX();
                 y = troom->hy;
-            } else if (u.uy == troom->hy + 1) {
-                x = u.ux;
+            } else if (currentY() == troom->hy + 1) {
+                x = currentX();
                 y = troom->ly;
             }
         } else {
             switch (rn2(4)) {
             case 0:
-                x = u.ux;
+                x = currentX();
                 y = troom->ly;
                 break;
             case 1:
-                x = u.ux;
+                x = currentX();
                 y = troom->hy;
                 break;
             case 2:
                 x = troom->lx;
-                y = u.uy;
+                y = currentY();
                 break;
             default:
                 x = troom->hx;
-                y = u.uy;
+                y = currentY();
                 break;
             }
         }
-        if (!linedup(u.ux, u.uy, x, y, 1))
+        if (! linedup(currentX(), currentY(), x, y, 1))
             return;
     }
 

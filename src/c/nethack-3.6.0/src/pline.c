@@ -89,7 +89,7 @@ VA_DECL(const char *, line)
 #endif /* MAC */
     if (vision_full_recalc)
         vision_recalc(0);
-    if (u.ux)
+    if (currentX())
         flush_screen(1); /* %% */
     msgtyp = msgtype_type(line);
     if (msgtyp == MSGTYP_NOSHOW) return;

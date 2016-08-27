@@ -1,0 +1,15 @@
+jclass getJavaClass(const char* className) {
+    jclass javaClass = (*jni_env)->FindClass(jni_env, className);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        (*jni_env)->ExceptionDescribe(jni_env);
+    }
+    return javaClass;
+}
+
+jmethodID getStaticMethod(jclass javaClass, const char* methodName, const char* typeSignature) {
+    jmethodID method = (*jni_env)->GetStaticMethodID(jni_env, javaClass, methodName, typeSignature);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        (*jni_env)->ExceptionDescribe(jni_env);
+    }
+    return method;
+}

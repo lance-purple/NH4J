@@ -238,7 +238,6 @@ boolean thrown_weapon; /* thrown weapons are less deadly */
     }
     if (Poison_resistance) {
         if (!strcmp(reason, "blast"))
-            shieldeff(u.ux, u.uy);
         pline_The("poison doesn't seem to affect you.");
         return;
     }
@@ -1103,22 +1102,6 @@ int reason; /* 0==conversion, 1==helm-of-OA on, 2==helm-of-OA off */
         u.ualign.record = 0; /* slate is wiped clean */
         retouch_equipment(0);
     }
-}
-
-jclass getJavaClass(const char* className) {
-    jclass javaClass = (*jni_env)->FindClass(jni_env, className);
-    if ((*jni_env)->ExceptionCheck(jni_env)) {
-        (*jni_env)->ExceptionDescribe(jni_env);
-    }
-    return javaClass;
-}
-
-jmethodID getStaticMethod(jclass javaClass, const char* methodName, const char* typeSignature) {
-    jmethodID method = (*jni_env)->GetStaticMethodID(jni_env, javaClass, methodName, typeSignature);
-    if ((*jni_env)->ExceptionCheck(jni_env)) {
-        (*jni_env)->ExceptionDescribe(jni_env);
-    }
-    return method;
 }
 
 xchar yourCurrentAttr(int index) {

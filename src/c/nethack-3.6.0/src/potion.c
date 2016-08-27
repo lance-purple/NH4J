@@ -421,7 +421,7 @@ boolean talk;
 STATIC_OVL void
 ghost_from_bottle()
 {
-    struct monst *mtmp = makemon(&mons[PM_GHOST], u.ux, u.uy, NO_MM_FLAGS);
+    struct monst *mtmp = makemon(&mons[PM_GHOST], currentX(), currentY(), NO_MM_FLAGS);
 
     if (!mtmp) {
         pline("This bottle turns out to be empty.");
@@ -452,7 +452,7 @@ dodrink()
         return 0;
     }
     /* Is there a fountain to drink from here? */
-    if (IS_FOUNTAIN(levl[u.ux][u.uy].typ)
+    if (IS_FOUNTAIN(levl[currentX()][currentY()].typ)
         /* not as low as floor level but similar restrictions apply */
         && can_reach_floor(FALSE)) {
         if (yn("Drink from the fountain?") == 'y') {
@@ -461,7 +461,7 @@ dodrink()
         }
     }
     /* Or a kitchen sink? */
-    if (IS_SINK(levl[u.ux][u.uy].typ)
+    if (IS_SINK(levl[currentX()][currentY()].typ)
         /* not as low as floor level but similar restrictions apply */
         && can_reach_floor(FALSE)) {
         if (yn("Drink from the sink?") == 'y') {
@@ -690,7 +690,7 @@ register struct obj *otmp;
             HInvis |= FROMOUTSIDE;
         else
             incr_itimeout(&HInvis, rn1(15, 31));
-        newsym(u.ux, u.uy); /* update position */
+        newsym(currentX(), currentY()); /* update position */
         if (otmp->cursed) {
             pline("For some reason, you feel your presence is known.");
             aggravate();
@@ -727,7 +727,7 @@ register struct obj *otmp;
             incr_itimeout(&HSee_invisible, rn1(100, 750));
         set_mimic_blocking(); /* do special mimic handling */
         see_monsters();       /* see invisible monsters */
-        newsym(u.ux, u.uy);   /* see yourself! */
+        newsym(currentX(), currentY());   /* see yourself! */
         if (msg && !Blind) {  /* Blind possible if polymorphed */
             You("can see through yourself, but you are visible!");
             unkn--;
@@ -744,7 +744,7 @@ register struct obj *otmp;
                 You("are frozen in place!");
             else
                 Your("%s are frozen to the %s!", makeplural(body_part(FOOT)),
-                     surface(u.ux, u.uy));
+                     surface(currentX(), currentY()));
             nomul(-(rn1(10, 25 - 12 * bcsign(otmp))));
             multi_reason = "frozen by a potion";
             nomovemsg = You_can_move_again;
@@ -908,11 +908,11 @@ register struct obj *otmp;
             unkn++;
             /* they went up a level */
             if ((ledger_no(&u.uz) == 1 && u.uhave.amulet)
-                || Can_rise_up(u.ux, u.uy, &u.uz)) {
+                || Can_rise_up(currentX(), currentY(), &u.uz)) {
                 const char *riseup = "rise up, through the %s!";
 
                 if (ledger_no(&u.uz) == 1) {
-                    You(riseup, ceiling(u.ux, u.uy));
+                    You(riseup, ceiling(currentX(), currentY()));
                     goto_level(&earth_level, FALSE, FALSE, FALSE);
                 } else {
                     register int newlev = depth(&u.uz) - 1;
@@ -923,7 +923,7 @@ register struct obj *otmp;
                         pline("It tasted bad.");
                         break;
                     } else
-                        You(riseup, ceiling(u.ux, u.uy));
+                        You(riseup, ceiling(currentX(), currentY()));
                     goto_level(&newlevel, FALSE, FALSE, FALSE);
                 }
             } else
@@ -976,17 +976,17 @@ register struct obj *otmp;
             /* reverse kludge */
             set_itimeout(&HLevitation, 0L);
             if (otmp->cursed) {
-                if ((u.ux == xupstair && u.uy == yupstair)
-                    || (sstairs.up && u.ux == sstairs.sx
-                        && u.uy == sstairs.sy)
-                    || (xupladder && u.ux == xupladder
-                        && u.uy == yupladder)) {
+                if ((currentX() == xupstair && currentY() == yupstair)
+                    || (sstairs.up && currentX() == sstairs.sx
+                        && currentY() == sstairs.sy)
+                    || (xupladder && currentX() == xupladder
+                        && currentY() == yupladder)) {
                     (void) doup();
                 } else if (has_ceiling(&u.uz)) {
                     int dmg = uarmh ? 1 : rnd(10);
 
                     You("hit your %s on the %s.", body_part(HEAD),
-                        ceiling(u.ux, u.uy));
+                        ceiling(currentX(), currentY()));
                     losehp(Maybe_Half_Phys(dmg), "colliding with the ceiling",
                            KILLED_BY);
                 }
@@ -1278,7 +1278,7 @@ boolean your_fault;
         switch (obj->otyp) {
         case POT_OIL:
             if (obj->lamplit)
-                explode_oil(obj, u.ux, u.uy);
+                explode_oil(obj, currentX(), currentY());
             break;
         case POT_POLYMORPH:
             You_feel("a little %s.", Hallucination ? "normal" : "strange");
@@ -1480,10 +1480,10 @@ boolean your_fault;
              && !objects[obj->otyp].oc_uname && cansee(mon->mx, mon->my))
         docall(obj);
     if (*u.ushops && obj->unpaid) {
-        struct monst *shkp = shop_keeper(*in_rooms(u.ux, u.uy, SHOPBASE));
+        struct monst *shkp = shop_keeper(*in_rooms(currentX(), currentY(), SHOPBASE));
 
         if (shkp)
-            (void) stolen_value(obj, u.ux, u.uy, (boolean) shkp->mpeaceful,
+            (void) stolen_value(obj, currentX(), currentY(), (boolean) shkp->mpeaceful,
                                 FALSE);
         else
             obj->unpaid = 0;
@@ -1768,7 +1768,7 @@ dodip()
         return 0;
 
     Sprintf(qbuf, "dip %s into", thesimpleoname(obj));
-    here = levl[u.ux][u.uy].typ;
+    here = levl[currentX()][currentY()].typ;
     /* Is there a fountain to dip into here? */
     if (IS_FOUNTAIN(here)) {
         /* "Dip <the object> into the fountain?" */
@@ -1777,8 +1777,8 @@ dodip()
             dipfountain(obj);
             return 1;
         }
-    } else if (is_pool(u.ux, u.uy)) {
-        const char *pooltype = waterbody_name(u.ux, u.uy);
+    } else if (is_pool(currentX(), currentY())) {
+        const char *pooltype = waterbody_name(currentX(), currentY());
 
         /* "Dip <the object> into the {pool, moat, &c}?" */
         Sprintf(qtoo, "%s the %s?", qbuf, pooltype);
@@ -1883,7 +1883,7 @@ dodip()
                to 'amt' because that's not implemented] */
             obj->in_use = 1;
             pline("BOOM!  They explode!");
-            wake_nearto(u.ux, u.uy, (BOLT_LIM + 1) * (BOLT_LIM + 1));
+            wake_nearto(currentX(), currentY(), (BOLT_LIM + 1) * (BOLT_LIM + 1));
             exercise(A_STR, FALSE);
             if (!breathless(youmonst.data) || haseyes(youmonst.data))
                 potionbreathe(obj);
@@ -1990,7 +1990,7 @@ dodip()
         boolean wisx = FALSE;
 
         if (potion->lamplit) { /* burning */
-            fire_damage(obj, TRUE, u.ux, u.uy);
+            fire_damage(obj, TRUE, currentX(), currentY());
         } else if (potion->cursed) {
             pline_The("potion spills and covers your %s with oil.",
                       makeplural(body_part(FINGER)));
@@ -2031,7 +2031,7 @@ more_dips:
         /* Turn off engine before fueling, turn off fuel too :-)  */
         if (obj->lamplit || potion->lamplit) {
             useup(potion);
-            explode(u.ux, u.uy, 11, d(6, 6), 0, EXPL_FIERY);
+            explode(currentX(), currentY(), 11, d(6, 6), 0, EXPL_FIERY);
             exercise(A_WIS, FALSE);
             return 1;
         }
@@ -2154,7 +2154,7 @@ struct obj *obj;
     struct monst *mtmp;
     int chance;
 
-    if (!(mtmp = makemon(&mons[PM_DJINNI], u.ux, u.uy, NO_MM_FLAGS))) {
+    if (!(mtmp = makemon(&mons[PM_DJINNI], currentX(), currentY(), NO_MM_FLAGS))) {
         pline("It turns out to be empty.");
         return;
     }

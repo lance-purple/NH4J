@@ -93,8 +93,8 @@ static int p_type; /* (-1)-3: (-1)=really naughty, 3=really good */
 
 
 #define ugod_is_angry() (u.ualign.record < 0)
-#define on_altar() IS_ALTAR(levl[u.ux][u.uy].typ)
-#define on_shrine() ((levl[u.ux][u.uy].altarmask & AM_SHRINE) != 0)
+#define on_altar() IS_ALTAR(levl[currentX()][currentY()].typ)
+#define on_shrine() ((levl[currentX()][currentY()].altarmask & AM_SHRINE) != 0)
 #define a_align(x, y) ((aligntyp) Amask2align(levl[x][y].altarmask & AM_MASK))
 
 /* critically low hit points if hp <= 5 or hp <= maxhp/N for some N */
@@ -188,8 +188,8 @@ in_trouble()
         for (j = -1; j <= 1; j++) {
             if (!i && !j)
                 continue;
-            if (!isok(u.ux + i, u.uy + j)
-                || IS_ROCK(levl[u.ux + i][u.uy + j].typ)
+            if (!isok(currentX() + i, currentY() + j)
+                || IS_ROCK(levl[currentX() + i][currentY() + j].typ)
                 || (blocked_boulder(i, j) && !throws_rocks(youmonst.data)))
                 count++;
         }
@@ -547,13 +547,13 @@ aligntyp resp_god;
     } else {
         pline("Suddenly, a bolt of lightning strikes you!");
         if (Reflecting) {
-            shieldeff(u.ux, u.uy);
+            shieldeff(currentX(), currentY());
             if (Blind)
                 pline("For some reason you're unaffected.");
             else
                 (void) ureflects("%s reflects from your %s.", "It");
         } else if (Shock_resistance) {
-            shieldeff(u.ux, u.uy);
+            shieldeff(currentX(), currentY());
             pline("It seems not to affect you.");
         } else
             fry_by_god(resp_god, FALSE);
@@ -672,7 +672,7 @@ aligntyp resp_god;
     case 8:
         godvoice(resp_god, (char *) 0);
         verbalize("Thou durst %s me?",
-                  (on_altar() && (a_align(u.ux, u.uy) != resp_god))
+                  (on_altar() && (a_align(currentX(), currentY()) != resp_god))
                       ? "scorn"
                       : "call upon");
         pline("\"Then die, %s!\"",
@@ -1137,8 +1137,8 @@ aligntyp g_align;
             }
             bless(otmp);
             at_your_feet("A spellbook");
-            place_object(otmp, u.ux, u.uy);
-            newsym(u.ux, u.uy);
+            place_object(otmp, currentX(), currentY());
+            newsym(currentX(), currentY());
             break;
         }
         default:
@@ -1167,7 +1167,7 @@ boolean bless_water;
     register long changed = 0;
     boolean other = FALSE, bc_known = !(Blind || Hallucination);
 
-    for (otmp = level.objects[u.ux][u.uy]; otmp; otmp = otmp->nexthere) {
+    for (otmp = level.objects[currentX()][currentY()]; otmp; otmp = otmp->nexthere) {
         /* turn water into (un)holy water */
         if (otmp->otyp == POT_WATER
             && (bless_water ? !otmp->blessed : !otmp->cursed)) {
@@ -1260,14 +1260,14 @@ dosacrifice()
     register struct obj *otmp;
     int value = 0, pm;
     boolean highaltar;
-    aligntyp altaralign = a_align(u.ux, u.uy);
+    aligntyp altaralign = a_align(currentX(), currentY());
 
     if (!on_altar() || u.uswallow) {
         You("are not standing on an altar.");
         return 0;
     }
     highaltar = ((Is_astralevel(&u.uz) || Is_sanctum(&u.uz))
-                 && (levl[u.ux][u.uy].altarmask & AM_SHRINE));
+                 && (levl[currentX()][currentY()].altarmask & AM_SHRINE));
 
     otmp = floorfood("sacrifice", 1);
     if (!otmp)
@@ -1319,7 +1319,7 @@ dosacrifice()
             } else if (altaralign != A_CHAOTIC && altaralign != A_NONE) {
                 /* curse the lawful/neutral altar */
                 pline_The("altar is stained with %s blood.", urace.adj);
-                levl[u.ux][u.uy].altarmask = AM_CHAOTIC;
+                levl[currentX()][currentY()].altarmask = AM_CHAOTIC;
                 angry_priest();
             } else {
                 struct monst *dmon;
@@ -1331,9 +1331,9 @@ dosacrifice()
                     pline(
                     "The blood floods the altar, which vanishes in %s cloud!",
                           an(hcolor(NH_BLACK)));
-                    levl[u.ux][u.uy].typ = ROOM;
-                    levl[u.ux][u.uy].altarmask = 0;
-                    newsym(u.ux, u.uy);
+                    levl[currentX()][currentY()].typ = ROOM;
+                    levl[currentX()][currentY()].altarmask = 0;
+                    newsym(currentX(), currentY());
                     angry_priest();
                     demonless_msg = "cloud dissipates";
                 } else {
@@ -1343,7 +1343,7 @@ dosacrifice()
                     demonless_msg = "blood coagulates";
                 }
                 if ((pm = dlord(altaralign)) != NON_PM
-                    && (dmon = makemon(&mons[pm], u.ux, u.uy, NO_MM_FLAGS))
+                    && (dmon = makemon(&mons[pm], currentX(), currentY(), NO_MM_FLAGS))
                            != 0) {
                     char dbuf[BUFSZ];
 
@@ -1580,10 +1580,10 @@ dosacrifice()
                     exercise(A_WIS, TRUE);
                     change_luck(1);
                     /* Yes, this is supposed to be &=, not |= */
-                    levl[u.ux][u.uy].altarmask &= AM_SHRINE;
+                    levl[currentX()][currentY()].altarmask &= AM_SHRINE;
                     /* the following accommodates stupid compilers */
-                    levl[u.ux][u.uy].altarmask =
-                        levl[u.ux][u.uy].altarmask
+                    levl[currentX()][currentY()].altarmask =
+                        levl[currentX()][currentY()].altarmask
                         | (Align2amask(u.ualign.type));
                     if (!Blind)
                         pline_The("altar glows %s.",
@@ -1678,7 +1678,7 @@ dosacrifice()
             /* The chance goes down as the number of artifacts goes up */
             if (u.ulevel > 2 && u.uluck >= 0
                 && !rn2(10 + (2 * u.ugifts * nartifacts))) {
-                otmp = mk_artifact((struct obj *) 0, a_align(u.ux, u.uy));
+                otmp = mk_artifact((struct obj *) 0, a_align(currentX(), currentY()));
                 if (otmp) {
                     if (otmp->spe < 0)
                         otmp->spe = 0;
@@ -1726,7 +1726,7 @@ boolean praying; /* false means no messages should be given */
 {
     int alignment;
 
-    p_aligntyp = on_altar() ? a_align(u.ux, u.uy) : u.ualign.type;
+    p_aligntyp = on_altar() ? a_align(currentX(), currentY()) : u.ualign.type;
     p_trouble = in_trouble();
 
     if (is_demon(youmonst.data) && (p_aligntyp != A_CHAOTIC)) {
@@ -1974,7 +1974,7 @@ doturn()
 const char *
 a_gname()
 {
-    return a_gname_at(u.ux, u.uy);
+    return a_gname_at(currentX(), currentY());
 }
 
 /* returns the name of an altar's deity */
@@ -2141,7 +2141,7 @@ int dx, dy;
     register struct obj *otmp;
     long count = 0L;
 
-    for (otmp = level.objects[u.ux + dx][u.uy + dy]; otmp;
+    for (otmp = level.objects[currentX() + dx][currentY() + dy]; otmp;
          otmp = otmp->nexthere) {
         if (otmp->otyp == BOULDER)
             count += otmp->quan;
@@ -2160,11 +2160,11 @@ int dx, dy;
         return TRUE;
     }
 
-    if (!isok(u.ux + 2 * dx, u.uy + 2 * dy))
+    if (!isok(currentX() + 2 * dx, currentY() + 2 * dy))
         return TRUE;
-    if (IS_ROCK(levl[u.ux + 2 * dx][u.uy + 2 * dy].typ))
+    if (IS_ROCK(levl[currentX() + 2 * dx][currentY() + 2 * dy].typ))
         return TRUE;
-    if (sobj_at(BOULDER, u.ux + 2 * dx, u.uy + 2 * dy))
+    if (sobj_at(BOULDER, currentX() + 2 * dx, currentY() + 2 * dy))
         return TRUE;
 
     return FALSE;

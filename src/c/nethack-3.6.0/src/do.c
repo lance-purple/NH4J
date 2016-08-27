@@ -149,7 +149,7 @@ const char *verb;
              && (t->ttyp == PIT || t->ttyp == SPIKED_PIT
                  || t->ttyp == TRAPDOOR || t->ttyp == HOLE)) {
         if (((mtmp = m_at(x, y)) && mtmp->mtrapped)
-            || (u.utrap && u.ux == x && u.uy == y)) {
+            || (u.utrap && currentX() == x && currentY() == y)) {
             if (*verb)
                 pline_The("boulder %s into the pit%s.",
                           vtense((const char *) 0, verb),
@@ -170,7 +170,7 @@ const char *verb;
             }
         }
         if (*verb) {
-            if (Blind && (x == u.ux) && (y == u.uy)) {
+            if (Blind && (x == currentX()) && (y == currentY())) {
                 You_hear("a CRASH! beneath you.");
             } else if (!Blind && cansee(x, y)) {
                 pline_The("boulder %s%s.", t->tseen ? "" : "triggers and ",
@@ -194,7 +194,7 @@ const char *verb;
          * If you're floating above the water even small things make
          * noise.  Stuff dropped near fountains always misses */
         if ((Blind || (Levitation || Flying)) && !Deaf
-            && ((x == u.ux) && (y == u.uy))) {
+            && ((x == currentX()) && (y == currentY()))) {
             if (!Underwater) {
                 if (weight(obj) > 9) {
                     pline("Splash!");
@@ -206,7 +206,7 @@ const char *verb;
             newsym(x, y);
         }
         return water_damage(obj, NULL, FALSE) == ER_DESTROYED;
-    } else if (u.ux == x && u.uy == y && (t = t_at(x, y)) != 0
+    } else if (currentX() == x && currentY() == y && (t = t_at(x, y)) != 0
                && uteetering_at_seen_pit(t)) {
         if (Blind && !Deaf)
             You_hear("%s tumble downwards.", the(xname(obj)));
@@ -270,33 +270,33 @@ register struct obj *obj;
 STATIC_DCL void
 polymorph_sink()
 {
-    if (levl[u.ux][u.uy].typ != SINK)
+    if (levl[currentX()][currentY()].typ != SINK)
         return;
 
     level.flags.nsinks--;
-    levl[u.ux][u.uy].doormask = 0;
+    levl[currentX()][currentY()].doormask = 0;
     switch (rn2(4)) {
     default:
     case 0:
-        levl[u.ux][u.uy].typ = FOUNTAIN;
+        levl[currentX()][currentY()].typ = FOUNTAIN;
         level.flags.nfountains++;
         break;
     case 1:
-        levl[u.ux][u.uy].typ = THRONE;
+        levl[currentX()][currentY()].typ = THRONE;
         break;
     case 2:
-        levl[u.ux][u.uy].typ = ALTAR;
-        levl[u.ux][u.uy].altarmask = Align2amask(rn2((int) A_LAWFUL + 2) - 1);
+        levl[currentX()][currentY()].typ = ALTAR;
+        levl[currentX()][currentY()].altarmask = Align2amask(rn2((int) A_LAWFUL + 2) - 1);
         break;
     case 3:
-        levl[u.ux][u.uy].typ = ROOM;
-        make_grave(u.ux, u.uy, (char *) 0);
+        levl[currentX()][currentY()].typ = ROOM;
+        make_grave(currentX(), currentY(), (char *) 0);
         break;
     }
-    pline_The("sink transforms into %s!", (levl[u.ux][u.uy].typ == THRONE)
+    pline_The("sink transforms into %s!", (levl[currentX()][currentY()].typ == THRONE)
                                               ? "a throne"
-                                              : an(surface(u.ux, u.uy)));
-    newsym(u.ux, u.uy);
+                                              : an(surface(currentX(), currentY())));
+    newsym(currentX(), currentY());
 }
 
 /* Teleports the sink at the player's position;
@@ -320,12 +320,12 @@ teleport_sink()
     if (levl[cx][cy].typ == ROOM && !trp && !eng) {
         /* create sink at new position */
         levl[cx][cy].typ = SINK;
-        levl[cx][cy].looted = levl[u.ux][u.uy].looted;
+        levl[cx][cy].looted = levl[currentX()][currentY()].looted;
         newsym(cx, cy);
         /* remove old sink */
-        levl[u.ux][u.uy].typ = ROOM;
-        levl[u.ux][u.uy].looted = 0;
-        newsym(u.ux, u.uy);
+        levl[currentX()][currentY()].typ = ROOM;
+        levl[currentX()][currentY()].looted = 0;
+        newsym(currentX(), currentY());
         return TRUE;
     }
     return FALSE;
@@ -390,7 +390,7 @@ register struct obj *obj;
         break;
     case RIN_HUNGER:
         ideed = FALSE;
-        for (otmp = level.objects[u.ux][u.uy]; otmp; otmp = otmp2) {
+        for (otmp = level.objects[currentX()][currentY()]; otmp; otmp = otmp2) {
             otmp2 = otmp->nexthere;
             if (otmp != uball && otmp != uchain
                 && !obj_resists(otmp, 1, 99)) {
@@ -552,7 +552,7 @@ register struct obj *obj;
         }
     } else {
         if ((obj->oclass == RING_CLASS || obj->otyp == MEAT_RING)
-            && IS_SINK(levl[u.ux][u.uy].typ)) {
+            && IS_SINK(levl[currentX()][currentY()].typ)) {
             dosinkring(obj);
             return 1;
         }
@@ -575,7 +575,7 @@ register struct obj *obj;
                 float_down(I_SPECIAL | TIMEOUT, W_ARTI | W_ART);
             return 1;
         }
-        if (!IS_ALTAR(levl[u.ux][u.uy].typ) && flags.verbose)
+        if (!IS_ALTAR(levl[currentX()][currentY()].typ) && flags.verbose)
             You("drop %s.", doname(obj));
     }
     dropx(obj);
@@ -594,9 +594,9 @@ register struct obj *obj;
         context.botl = 1;
     freeinv(obj);
     if (!u.uswallow) {
-        if (ship_object(obj, u.ux, u.uy, FALSE))
+        if (ship_object(obj, currentX(), currentY(), FALSE))
             return;
-        if (IS_ALTAR(levl[u.ux][u.uy].typ))
+        if (IS_ALTAR(levl[currentX()][currentY()].typ))
             doaltarobj(obj); /* set bknown */
     }
     dropy(obj);
@@ -623,7 +623,7 @@ boolean with_impact;
     if (obj == uswapwep)
         setuswapwep((struct obj *) 0);
 
-    if (!u.uswallow && flooreffects(obj, u.ux, u.uy, "drop"))
+    if (!u.uswallow && flooreffects(obj, currentX(), currentY(), "drop"))
         return;
     /* uswallow check done by GAN 01/29/87 */
     if (u.uswallow) {
@@ -664,17 +664,17 @@ boolean with_impact;
             }
         }
     } else {
-        place_object(obj, u.ux, u.uy);
+        place_object(obj, currentX(), currentY());
         if (with_impact)
-            container_impact_dmg(obj, u.ux, u.uy);
+            container_impact_dmg(obj, currentX(), currentY());
         if (obj == uball)
-            drop_ball(u.ux, u.uy);
+            drop_ball(currentX(), currentY());
         else if (level.flags.has_shop)
-            sellobj(obj, u.ux, u.uy);
+            sellobj(obj, currentX(), currentY());
         stackobj(obj);
         if (Blind && Levitation)
             map_object(obj, 0);
-        newsym(u.ux, u.uy); /* remap location under self */
+        newsym(currentX(), currentY()); /* remap location under self */
     }
 }
 
@@ -852,10 +852,10 @@ int
 dodown()
 {
     struct trap *trap = 0;
-    boolean stairs_down = ((u.ux == xdnstair && u.uy == ydnstair)
-                           || (u.ux == sstairs.sx && u.uy == sstairs.sy
+    boolean stairs_down = ((currentX() == xdnstair && currentY() == ydnstair)
+                           || (currentX() == sstairs.sx && currentY() == sstairs.sy
                                && !sstairs.up)),
-            ladder_down = (u.ux == xdnladder && u.uy == ydnladder);
+            ladder_down = (currentX() == xdnladder && currentY() == ydnladder);
 
     if (u_rooted())
         return 1;
@@ -896,18 +896,18 @@ dodown()
              */
             if (stairs_down)
                 stairs_down =
-                    (glyph_to_cmap(levl[u.ux][u.uy].glyph) == S_dnstair);
+                    (glyph_to_cmap(levl[currentX()][currentY()].glyph) == S_dnstair);
             else if (ladder_down)
                 ladder_down =
-                    (glyph_to_cmap(levl[u.ux][u.uy].glyph) == S_dnladder);
+                    (glyph_to_cmap(levl[currentX()][currentY()].glyph) == S_dnladder);
         }
         floating_above(stairs_down ? "stairs" : ladder_down
                                                     ? "ladder"
-                                                    : surface(u.ux, u.uy));
+                                                    : surface(currentX(), currentY()));
         return 0; /* didn't move */
     }
     if (!stairs_down && !ladder_down) {
-        trap = t_at(u.ux, u.uy);
+        trap = t_at(currentX(), currentY());
         if (trap && uteetering_at_seen_pit(trap)) {
             dotrap(trap, TOOKPLUNGE);
             return 1;
@@ -950,7 +950,7 @@ dodown()
     if (trap && Is_stronghold(&u.uz)) {
         goto_hell(FALSE, TRUE);
     } else {
-        at_ladder = (boolean) (levl[u.ux][u.uy].typ == LADDER);
+        at_ladder = (boolean) (levl[currentX()][currentY()].typ == LADDER);
         next_level(!trap);
         at_ladder = FALSE;
     }
@@ -970,9 +970,9 @@ doup()
         return 1;
     }
 
-    if ((u.ux != xupstair || u.uy != yupstair)
-        && (!xupladder || u.ux != xupladder || u.uy != yupladder)
-        && (!sstairs.sx || u.ux != sstairs.sx || u.uy != sstairs.sy
+    if ((currentX() != xupstair || currentY() != yupstair)
+        && (!xupladder || currentX() != xupladder || currentY() != yupladder)
+        && (!sstairs.sx || currentX() != sstairs.sx || currentY() != sstairs.sy
             || !sstairs.up)) {
         You_cant("go up here.");
         return 0;
@@ -990,7 +990,7 @@ doup()
     if (near_capacity() > SLT_ENCUMBER) {
         /* No levitation check; inv_weight() already allows for it */
         Your("load is too heavy to climb the %s.",
-             levl[u.ux][u.uy].typ == STAIRS ? "stairs" : "ladder");
+             levl[currentX()][currentY()].typ == STAIRS ? "stairs" : "ladder");
         return 1;
     }
     if (ledger_no(&u.uz) == 1) {
@@ -1001,7 +1001,7 @@ doup()
         You("are held back by your pet!");
         return 0;
     }
-    at_ladder = (boolean) (levl[u.ux][u.uy].typ == LADDER);
+    at_ladder = (boolean) (levl[currentX()][currentY()].typ == LADDER);
     prev_level(TRUE);
     at_ladder = FALSE;
     return 1;
@@ -1087,7 +1087,7 @@ boolean at_stairs, falling, portal;
     xchar new_ledger;
     boolean cant_go_back, up = (depth(newlevel) < depth(&u.uz)),
                           newdungeon = (u.uz.dnum != newlevel->dnum),
-                          was_in_W_tower = In_W_tower(u.ux, u.uy, &u.uz),
+                          was_in_W_tower = In_W_tower(currentX(), currentY(), &u.uz),
                           familiar = FALSE;
     boolean new = FALSE; /* made a new level? */
     struct monst *mtmp;
@@ -1168,13 +1168,13 @@ boolean at_stairs, falling, portal;
         return;
 
     if (falling) /* assuming this is only trap door or hole */
-        impact_drop((struct obj *) 0, u.ux, u.uy, newlevel->dlevel);
+        impact_drop((struct obj *) 0, currentX(), currentY(), newlevel->dlevel);
 
     check_special_room(TRUE); /* probably was a trap door */
     if (Punished)
         unplacebc();
     u.utrap = 0; /* needed in level_tele */
-    fill_pit(u.ux, u.uy);
+    fill_pit(currentX(), currentY());
     u.ustuck = 0; /* idem */
     u.uinwater = 0;
     u.uundetected = 0; /* not hidden, even if means are available */
@@ -1353,7 +1353,7 @@ boolean at_stairs, falling, portal;
 
     initrack();
 
-    if ((mtmp = m_at(u.ux, u.uy)) != 0 && mtmp != u.usteed) {
+    if ((mtmp = m_at(currentX(), currentY())) != 0 && mtmp != u.usteed) {
         /* There's a monster at your target destination; it might be one
            which accompanied you--see mon_arrive(dogmove.c)--or perhaps
            it was already here.  Randomly move you to an adjacent spot
@@ -1361,13 +1361,13 @@ boolean at_stairs, falling, portal;
            the latter was done unconditionally. */
         coord cc;
 
-        if (!rn2(2) && enexto(&cc, u.ux, u.uy, youmonst.data)
+        if (!rn2(2) && enexto(&cc, currentX(), currentY(), youmonst.data)
             && distanceSquaredToYou(cc.x, cc.y) <= 2)
             u_on_newpos(cc.x, cc.y); /*[maybe give message here?]*/
         else
             mnexto(mtmp);
 
-        if ((mtmp = m_at(u.ux, u.uy)) != 0) {
+        if ((mtmp = m_at(currentX(), currentY())) != 0) {
             /* there was an unconditional impossible("mnearto failed")
                here, but it's not impossible and we're prepared to cope
                with the situation, so only say something when debugging */
@@ -1502,7 +1502,7 @@ boolean at_stairs, falling, portal;
         You("remember this level as %s.", annotation);
 
     /* assume this will always return TRUE when changing level */
-    (void) in_out_region(u.ux, u.uy);
+    (void) in_out_region(currentX(), currentY());
     (void) pickup(1);
     context.polearm.hitmon = NULL;
 }
@@ -1571,11 +1571,11 @@ deferred_goto()
             pline1(dfr_pre_msg);
         goto_level(&dest, !!(typmask & 1), !!(typmask & 2), !!(typmask & 4));
         if (typmask & 0200) { /* remove portal */
-            struct trap *t = t_at(u.ux, u.uy);
+            struct trap *t = t_at(currentX(), currentY());
 
             if (t) {
                 deltrap(t);
-                newsym(u.ux, u.uy);
+                newsym(currentX(), currentY());
             }
         }
         if (dfr_post_msg)

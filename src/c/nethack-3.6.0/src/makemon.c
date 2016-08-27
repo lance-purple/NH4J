@@ -1014,7 +1014,7 @@ coord *cc;
 /*
  * called with [x,y] = coordinates;
  *      [0,0] means anyplace
- *      [u.ux,u.uy] means: near player (if !in_mklev)
+ *      [currentX(),currentY()] means: near player (if !in_mklev)
  *
  *      In case we make a monster group, only return the one at [x,y].
  */
@@ -1027,7 +1027,7 @@ int mmflags;
     register struct monst *mtmp;
     int mndx, mcham, ct, mitem;
     boolean anymon = (!ptr);
-    boolean byyou = (x == u.ux && y == u.uy);
+    boolean byyou = (x == currentX() && y == currentY());
     boolean allow_minvent = ((mmflags & NO_MINVENT) == 0);
     boolean countbirth = ((mmflags & MM_NOCOUNTBIRTH) == 0);
     unsigned gpflags = (mmflags & MM_IGNOREWATER) ? MM_IGNOREWATER : 0;
@@ -1047,7 +1047,7 @@ int mmflags;
     } else if (byyou && !in_mklev) {
         coord bypos;
 
-        if (enexto_core(&bypos, u.ux, u.uy, ptr, gpflags)) {
+        if (enexto_core(&bypos, currentX(), currentY(), ptr, gpflags)) {
             x = bypos.x;
             y = bypos.y;
         } else
@@ -1351,7 +1351,7 @@ boolean neverask;
             } else
                 ask = FALSE; /* ESC will shut off prompting */
         }
-        x = u.ux, y = u.uy;
+        x = currentX(), y = currentY();
         /* if in water, try to encourage an aquatic monster
            by finding and then specifying another wet location */
         if (!mptr && u.uinwater && enexto(&c, x, y, &mons[PM_GIANT_EEL]))
@@ -2119,7 +2119,7 @@ int *seencount;  /* secondary output */
         if (!rn2(23))
             creatcnt += rnd(7);
         do {
-            mtmp = makemon((struct permonst *) 0, u.ux, u.uy, NO_MM_FLAGS);
+            mtmp = makemon((struct permonst *) 0, currentX(), currentY(), NO_MM_FLAGS);
             if (mtmp) {
                 ++moncount;
                 if (canspotmon(mtmp))

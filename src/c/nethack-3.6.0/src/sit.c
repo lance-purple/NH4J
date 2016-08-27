@@ -34,8 +34,8 @@ int
 dosit()
 {
     static const char sit_message[] = "sit on the %s.";
-    register struct trap *trap = t_at(u.ux, u.uy);
-    register int typ = levl[u.ux][u.uy].typ;
+    register struct trap *trap = t_at(currentX(), currentY());
+    register int typ = levl[currentX()][currentY()].typ;
 
     if (u.usteed) {
         You("are already sitting on %s.", mon_nam(u.usteed));
@@ -60,16 +60,16 @@ dosit()
         else
             pline("%s has no lap.", Monnam(u.ustuck));
         return 0;
-    } else if (is_pool(u.ux, u.uy) && !Underwater) { /* water walking */
+    } else if (is_pool(currentX(), currentY()) && !Underwater) { /* water walking */
         goto in_water;
     }
 
-    if (OBJ_AT(u.ux, u.uy)
+    if (OBJ_AT(currentX(), currentY())
         /* ensure we're not standing on the precipice */
         && !uteetering_at_seen_pit(trap)) {
         register struct obj *obj;
 
-        obj = level.objects[u.ux][u.uy];
+        obj = level.objects[currentX()][currentY()];
         if (youmonst.data->mlet == S_DRAGON && obj->oclass == COIN_CLASS) {
             You("coil up around your %shoard.",
                 (obj->quan + money_cnt(invent) < u.ulevel * 1000) ? "meager "
@@ -120,7 +120,7 @@ dosit()
             There("are no cushions floating nearby.");
         else
             You("sit down on the muddy bottom.");
-    } else if (is_pool(u.ux, u.uy)) {
+    } else if (is_pool(currentX(), currentY())) {
     in_water:
         You("sit in the water.");
         if (!rn2(10) && uarm)
@@ -132,14 +132,14 @@ dosit()
         Your("%s gets wet.", humanoid(youmonst.data) ? "rump" : "underside");
     } else if (IS_ALTAR(typ)) {
         You(sit_message, defsyms[S_altar].explanation);
-        altar_wrath(u.ux, u.uy);
+        altar_wrath(currentX(), currentY());
     } else if (IS_GRAVE(typ)) {
         You(sit_message, defsyms[S_grave].explanation);
     } else if (typ == STAIRS) {
         You(sit_message, "stairs");
     } else if (typ == LADDER) {
         You(sit_message, "ladder");
-    } else if (is_lava(u.ux, u.uy)) {
+    } else if (is_lava(currentX(), currentY())) {
         /* must be WWalking */
         You(sit_message, "lava");
         burn_away_slime();
@@ -150,7 +150,7 @@ dosit()
         pline_The("lava burns you!");
         losehp(d((Fire_resistance ? 2 : 10), 10), /* lava damage */
                "sitting on lava", KILLED_BY);
-    } else if (is_ice(u.ux, u.uy)) {
+    } else if (is_ice(currentX(), currentY())) {
         You(sit_message, defsyms[S_ice].explanation);
         if (!Cold_resistance)
             pline_The("ice feels cold.");
@@ -208,7 +208,7 @@ dosit()
                 verbalize("Thy audience hath been summoned, %s!",
                           flags.female ? "Dame" : "Sire");
                 while (cnt--)
-                    (void) makemon(courtmon(), u.ux, u.uy, NO_MM_FLAGS);
+                    (void) makemon(courtmon(), currentX(), currentY(), NO_MM_FLAGS);
                 break;
               }
             case 8:
@@ -241,7 +241,7 @@ dosit()
                 } else {
                     Your("vision becomes clear.");
                     HSee_invisible |= FROMOUTSIDE;
-                    newsym(u.ux, u.uy);
+                    newsym(currentX(), currentY());
                 }
                 break;
             case 11:
@@ -276,11 +276,11 @@ dosit()
                 You_feel("somehow out of place...");
         }
 
-        if (!rn2(3) && IS_THRONE(levl[u.ux][u.uy].typ)) {
+        if (!rn2(3) && IS_THRONE(levl[currentX()][currentY()].typ)) {
             /* may have teleported */
-            levl[u.ux][u.uy].typ = ROOM;
+            levl[currentX()][currentY()].typ = ROOM;
             pline_The("throne vanishes in a puff of logic.");
-            newsym(u.ux, u.uy);
+            newsym(currentX(), currentY());
         }
     } else if (lays_eggs(youmonst.data)) {
         struct obj *uegg;
@@ -308,7 +308,7 @@ dosit()
         stackobj(uegg);
         morehungry((int) objects[EGG].oc_nutrition);
     } else {
-        pline("Having fun sitting on the %s?", surface(u.ux, u.uy));
+        pline("Having fun sitting on the %s?", surface(currentX(), currentY()));
     }
     return 1;
 }
@@ -328,7 +328,7 @@ rndcurse()
     }
 
     if (Antimagic) {
-        shieldeff(u.ux, u.uy);
+        shieldeff(currentX(), currentY());
         You(mal_aura, "you");
     }
 

@@ -156,7 +156,7 @@ char *genbuf;
         default:
             continue;
         }
-        mtmp = makemon(&mons[typ], u.ux, u.uy, NO_MM_FLAGS);
+        mtmp = makemon(&mons[typ], currentX(), currentY(), NO_MM_FLAGS);
         if (mtmp) {
             total++;
             if (canseemon(mtmp))

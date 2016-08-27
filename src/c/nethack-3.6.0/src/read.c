@@ -788,7 +788,7 @@ forget_traps()
 
     /* forget all traps (except the one the hero is in :-) */
     for (trap = ftrap; trap; trap = trap->ntrap)
-        if ((trap->tx != u.ux || trap->ty != u.uy) && (trap->ttyp != HOLE))
+        if ((trap->tx != currentX() || trap->ty != currentY()) && (trap->ttyp != HOLE))
             trap->tseen = 0;
 }
 
@@ -939,8 +939,8 @@ int state;
 
         for (dx = -dist; dx <= dist; dx++)
             for (dy = -dist; dy <= dist; dy++) {
-                x = u.ux + dx;
-                y = u.uy + dy;
+                x = currentX() + dx;
+                y = currentY() + dy;
                 if (isok(x, y) && is_valid_stinking_cloud_pos(x, y, FALSE))
                     tmp_at(x, y);
             }
@@ -1356,9 +1356,9 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             candidates = results = vis_results = 0;
             for (i = -bd; i <= bd; i++)
                 for (j = -bd; j <= bd; j++) {
-                    if (!isok(u.ux + i, u.uy + j))
+                    if (!isok(currentX() + i, currentY() + j))
                         continue;
-                    if ((mtmp = m_at(u.ux + i, u.uy + j)) != 0
+                    if ((mtmp = m_at(currentX() + i, currentY() + j)) != 0
                         || (!i && !j && (mtmp = u.usteed) != 0)) {
                         ++candidates;
                         res = maybe_tame(mtmp, sobj);
@@ -1544,7 +1544,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             (void) learnscrolltyp(SCR_FIRE);
         if (confused) {
             if (Fire_resistance) {
-                shieldeff(u.ux, u.uy);
+                shieldeff(currentX(), currentY());
                 if (!Blind)
                     pline("Oh, look, what a pretty fire in your %s.",
                           makeplural(body_part(HAND)));
@@ -1565,7 +1565,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             iflags.last_msg = PLNMSG_TOWER_OF_FLAME; /* for explode() */
             burn_away_slime();
         }
-        explode(u.ux, u.uy, 11, (2 * (rn1(3, 3) + 2 * cval) + 1) / 3,
+        explode(currentX(), currentY(), 11, (2 * (rn1(3, 3) + 2 * cval) + 1) / 3,
                 SCROLL_CLASS, EXPL_FIERY);
         break;
     case SCR_EARTH:
@@ -1579,20 +1579,20 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             if (u.uswallow)
                 You_hear("rumbling.");
             else
-                pline_The("%s rumbles %s you!", ceiling(u.ux, u.uy),
+                pline_The("%s rumbles %s you!", ceiling(currentX(), currentY()),
                           sblessed ? "around" : "above");
             known = 1;
             sokoban_guilt();
 
             /* Loop through the surrounding squares */
             if (!scursed)
-                for (x = u.ux - 1; x <= u.ux + 1; x++) {
-                    for (y = u.uy - 1; y <= u.uy + 1; y++) {
+                for (x = currentX() - 1; x <= currentX() + 1; x++) {
+                    for (y = currentY() - 1; y <= currentY() + 1; y++) {
                         /* Is this a suitable spot? */
                         if (isok(x, y) && !closed_door(x, y)
                             && !IS_ROCK(levl[x][y].typ)
                             && !IS_AIR(levl[x][y].typ)
-                            && (x != u.ux || y != u.uy)) {
+                            && (x != currentX() || y != currentY())) {
                             nboulders +=
                                 drop_boulder_on_monster(x, y, confused, TRUE);
                         }
@@ -1621,8 +1621,8 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
         known = TRUE;
         pline("Where do you want to center the %scloud?",
               already_known ? "stinking " : "");
-        cc.x = u.ux;
-        cc.y = u.uy;
+        cc.x = currentX();
+        cc.y = currentY();
         getpos_sethilite(display_stinking_cloud_positions);
         if (getpos(&cc, TRUE, "the desired position") < 0) {
             pline1(Never_mind);
@@ -1649,7 +1649,7 @@ boolean confused, helmet_protects, byu, skip_uswallow;
 
     /* hit monster if swallowed */
     if (u.uswallow && !skip_uswallow) {
-        drop_boulder_on_monster(u.ux, u.uy, confused, byu);
+        drop_boulder_on_monster(currentX(), currentY(), confused, byu);
         return;
     }
 
@@ -1674,10 +1674,10 @@ boolean confused, helmet_protects, byu, skip_uswallow;
     } else
         dmg = 0;
     /* Must be before the losehp(), for bones files */
-    if (!flooreffects(otmp2, u.ux, u.uy, "fall")) {
-        place_object(otmp2, u.ux, u.uy);
+    if (!flooreffects(otmp2, currentX(), currentY(), "fall")) {
+        place_object(otmp2, currentX(), currentY());
         stackobj(otmp2);
-        newsym(u.ux, u.uy);
+        newsym(currentX(), currentY());
     }
     if (dmg)
         losehp(Maybe_Half_Phys(dmg), "scroll of earth", KILLED_BY_AN);
@@ -1893,7 +1893,7 @@ struct obj *obj;
     if (Is_rogue_level(&u.uz)) {
         /* Can't use do_clear_area because MAX_RADIUS is too small */
         /* rogue lighting must light the entire room */
-        int rnum = levl[u.ux][u.uy].roomno - ROOMOFFSET;
+        int rnum = levl[currentX()][currentY()].roomno - ROOMOFFSET;
         int rx, ry;
 
         if (rnum >= 0) {
@@ -1905,7 +1905,7 @@ struct obj *obj;
         }
         /* hallways remain dark on the rogue level */
     } else
-        do_clear_area(u.ux, u.uy,
+        do_clear_area(currentX(), currentY(),
                       (obj && obj->oclass == SCROLL_CLASS && obj->blessed)
                          ? 9 : 5,
                       set_lit, (genericptr_t) (on ? &is_lit : (char *) 0));
@@ -2231,7 +2231,7 @@ int how;
         if (!(mons[mndx].geno & G_UNIQ)
             && !(mvitals[mndx].mvflags & (G_GENOD | G_EXTINCT)))
             for (i = rn1(3, 4); i > 0; i--) {
-                if (!makemon(ptr, u.ux, u.uy, NO_MINVENT))
+                if (!makemon(ptr, currentX(), currentY(), NO_MINVENT))
                     break; /* couldn't make one */
                 ++cnt;
                 if (mvitals[mndx].mvflags & G_EXTINCT)
@@ -2288,7 +2288,7 @@ struct obj *sobj;
         placebc();
         if (Blind)
             set_bc(1);      /* set up ball and chain variables */
-        newsym(u.ux, u.uy); /* see ball&chain if can't see self */
+        newsym(currentX(), currentY()); /* see ball&chain if can't see self */
     }
 }
 
@@ -2417,7 +2417,7 @@ create_particular()
                 whichpm = mkclass(monclass, 0);
             else if (randmonst)
                 whichpm = rndmonst();
-            mtmp = makemon(whichpm, u.ux, u.uy, NO_MM_FLAGS);
+            mtmp = makemon(whichpm, currentX(), currentY(), NO_MM_FLAGS);
             if (!mtmp) {
                 /* quit trying if creation failed and is going to repeat */
                 if (monclass == MAXMCLASSES && !randmonst)

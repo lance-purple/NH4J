@@ -232,7 +232,7 @@ register struct monst *mtmp;
     otyp = which_arti(mask);
     if (!mon_has_arti(mtmp, otyp)) {
         if (you_have(mask))
-            return STRAT(STRAT_PLAYER, u.ux, u.uy, mask);
+            return STRAT(STRAT_PLAYER, currentX(), currentY(), mask);
         else if ((otmp = on_ground(otyp)))
             return STRAT(STRAT_GROUND, otmp->ox, otmp->oy, mask);
         else if ((mtmp2 = other_mon_has_arti(mtmp, otyp)) != 0
@@ -351,7 +351,7 @@ register struct monst *mtmp;
         if (!targ) { /* simply wants you to close */
             return 0;
         }
-        if ((u.ux == tx && u.uy == ty) || where == STRAT_PLAYER) {
+        if ((currentX() == tx && currentY() == ty) || where == STRAT_PLAYER) {
             /* player is standing on it (or has it) */
             mnexto(mtmp);
             return 0;
@@ -410,7 +410,7 @@ clonewiz()
 {
     register struct monst *mtmp2;
 
-    if ((mtmp2 = makemon(&mons[PM_WIZARD_OF_YENDOR], u.ux, u.uy, NO_MM_FLAGS))
+    if ((mtmp2 = makemon(&mons[PM_WIZARD_OF_YENDOR], currentX(), currentY(), NO_MM_FLAGS))
         != 0) {
         mtmp2->msleeping = mtmp2->mtame = mtmp2->mpeaceful = 0;
         if (!u.uhave.amulet && rn2(2)) { /* give clone a fake */
@@ -465,8 +465,8 @@ struct monst *mcast;
         tmp = (u.ulevel > 3) ? u.ulevel / 3 : 1; /* just in case -- rph */
         /* if we don't have a casting monster, the nasties appear around you
          */
-        bypos.x = u.ux;
-        bypos.y = u.uy;
+        bypos.x = currentX();
+        bypos.y = currentY();
         for (i = rnd(tmp); i > 0; --i)
             for (j = 0; j < 20; j++) {
                 int makeindex;
@@ -515,7 +515,7 @@ resurrect()
     if (!context.no_of_wizards) {
         /* make a new Wizard */
         verb = "kill";
-        mtmp = makemon(&mons[PM_WIZARD_OF_YENDOR], u.ux, u.uy, MM_NOWAIT);
+        mtmp = makemon(&mons[PM_WIZARD_OF_YENDOR], currentX(), currentY(), MM_NOWAIT);
         /* affects experience; he's not coming back from a corpse
            but is subject to repeated killing like a revived corpse */
         if (mtmp) mtmp->mrevived = 1;

@@ -148,7 +148,7 @@ eatmdone(VOID_ARGS)
     /* update display */
     if (youmonst.m_ap_type) {
         youmonst.m_ap_type = M_AP_NOTHING;
-        newsym(u.ux, u.uy);
+        newsym(currentX(), currentY());
     }
     return 0;
 }
@@ -184,7 +184,7 @@ eatmupdate()
         nomovemsg = strcpy(eatmbuf, altmsg);
         /* update current image */
         youmonst.mappearance = altapp;
-        newsym(u.ux, u.uy);
+        newsym(currentX(), currentY());
     }
 }
 
@@ -392,7 +392,7 @@ eatfood(VOID_ARGS)
 {
     if (!context.victual.piece
         || (!carried(context.victual.piece)
-            && !obj_here(context.victual.piece, u.ux, u.uy))) {
+            && !obj_here(context.victual.piece, currentX(), currentY()))) {
         /* maybe it was stolen? */
         do_reset_eat();
         return 0;
@@ -960,7 +960,7 @@ register int pm;
             HInvis |= FROMOUTSIDE;
             HSee_invisible |= FROMOUTSIDE;
         }
-        newsym(u.ux, u.uy);
+        newsym(currentX(), currentY());
         /*FALLTHRU*/
     case PM_YELLOW_LIGHT:
     case PM_GIANT_BAT:
@@ -999,7 +999,7 @@ register int pm;
             /* ??? what if this was set before? */
             youmonst.m_ap_type = M_AP_OBJECT;
             youmonst.mappearance = Hallucination ? ORANGE : GOLD_PIECE;
-            newsym(u.ux, u.uy);
+            newsym(currentX(), currentY());
             curs_on_u();
             /* make gold symbol show up now */
             display_nhwindow(WIN_MAP, TRUE);
@@ -1383,7 +1383,7 @@ opentin(VOID_ARGS)
 {
     /* perhaps it was stolen (although that should cause interruption) */
     if (!carried(context.tin.tin)
-        && (!obj_here(context.tin.tin, u.ux, u.uy) || !can_reach_floor(TRUE)))
+        && (!obj_here(context.tin.tin, currentX(), currentY()) || !can_reach_floor(TRUE)))
         return 0; /* %% probably we should use tinoid */
     if (context.tin.usedtime++ >= 50) {
         You("give up your attempt to open the tin.");
@@ -1510,7 +1510,7 @@ struct obj *obj;
             what = "you lose control of", where = "yourself";
         else
             what = "you slap against the",
-            where = (u.usteed) ? "saddle" : surface(u.ux, u.uy);
+            where = (u.usteed) ? "saddle" : surface(currentX(), currentY());
         pline_The("world spins and %s %s.", what, where);
         incr_itimeout(&HDeaf, duration);
         nomul(-duration);
@@ -1864,7 +1864,7 @@ struct obj *otmp;
                 see_monsters();
                 if (Invis && !oldprop && !ESee_invisible
                     && !perceives(youmonst.data) && !Blind) {
-                    newsym(u.ux, u.uy);
+                    newsym(currentX(), currentY());
                     pline("Suddenly you can see yourself.");
                     makeknown(typ);
                 }
@@ -1872,7 +1872,7 @@ struct obj *otmp;
             case RIN_INVISIBILITY:
                 if (!oldprop && !EInvis && !BInvis && !See_invisible
                     && !Blind) {
-                    newsym(u.ux, u.uy);
+                    newsym(currentX(), currentY());
                     Your("body takes on a %s transparency...",
                          Hallucination ? "normal" : "strange");
                     makeknown(typ);
@@ -2378,7 +2378,7 @@ doeat()
         otmp->oerodeproof = 0;
         make_stunned((HStun & TIMEOUT) + (long) rn2(10), TRUE);
         You("spit %s out onto the %s.", the(xname(otmp)),
-            surface(u.ux, u.uy));
+            surface(currentX(), currentY()));
         if (carried(otmp)) {
             freeinv(otmp);
             dropy(otmp);
@@ -2896,14 +2896,14 @@ int corpsecheck; /* 0, no check, 1, corpses, 2, tinnable corpses */
 
     /* if we can't touch floor objects then use invent food only */
     if (!can_reach_floor(TRUE) || (feeding && u.usteed)
-        || (is_pool_or_lava(u.ux, u.uy)
+        || (is_pool_or_lava(currentX(), currentY())
             && (Wwalking || is_clinger(youmonst.data)
                 || (Flying && !Breathless))))
         goto skipfloor;
 
     if (feeding && metallivorous(youmonst.data)) {
         struct obj *gold;
-        struct trap *ttmp = t_at(u.ux, u.uy);
+        struct trap *ttmp = t_at(currentX(), currentY());
 
         if (ttmp && ttmp->tseen && ttmp->ttyp == BEAR_TRAP) {
             /* If not already stuck in the trap, perhaps there should
@@ -2922,7 +2922,7 @@ int corpsecheck; /* 0, no check, 1, corpses, 2, tinnable corpses */
         }
 
         if (youmonst.data != &mons[PM_RUST_MONSTER]
-            && (gold = g_at(u.ux, u.uy)) != 0) {
+            && (gold = g_at(currentX(), currentY())) != 0) {
             if (gold->quan == 1L)
                 Sprintf(qbuf, "There is 1 gold piece here; eat it?");
             else
@@ -2937,7 +2937,7 @@ int corpsecheck; /* 0, no check, 1, corpses, 2, tinnable corpses */
     }
 
     /* Is there some food (probably a heavy corpse) here on the ground? */
-    for (otmp = level.objects[u.ux][u.uy]; otmp; otmp = otmp->nexthere) {
+    for (otmp = level.objects[currentX()][currentY()]; otmp; otmp = otmp->nexthere) {
         if (corpsecheck
                 ? (otmp->otyp == CORPSE
                    && (corpsecheck == 1 || tinnable(otmp)))
@@ -3097,7 +3097,7 @@ int threat;
     otin = context.tin.tin;
     /* make sure hero still has access to tin */
     if (!carried(otin)
-        && (!obj_here(otin, u.ux, u.uy) || !can_reach_floor(TRUE)))
+        && (!obj_here(otin, currentX(), currentY()) || !can_reach_floor(TRUE)))
         return FALSE;
     /* unknown tin is assumed to be helpful */
     if (!otin->known)

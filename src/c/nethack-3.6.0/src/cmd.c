@@ -504,9 +504,9 @@ domonability(VOID_ARGS)
     else if (is_mind_flayer(youmonst.data))
         return domindblast();
     else if (u.umonnum == PM_GREMLIN) {
-        if (IS_FOUNTAIN(levl[u.ux][u.uy].typ)) {
+        if (IS_FOUNTAIN(levl[currentX()][currentY()].typ)) {
             if (split_mon(&youmonst, (struct monst *) 0))
-                dryup(u.ux, u.uy, TRUE);
+                dryup(currentX(), currentY(), TRUE);
         } else
             There("is no fountain here.");
     } else if (is_unicorn(youmonst.data)) {
@@ -755,7 +755,7 @@ wiz_show_seenv(VOID_ARGS)
      * Each seenv description takes up 2 characters, so center
      * the seenv display around the hero.
      */
-    startx = max(1, u.ux - (COLNO / 4));
+    startx = max(1, currentX() - (COLNO / 4));
     stopx = min(startx + (COLNO / 2), COLNO);
     /* can't have a line exactly 80 chars long */
     if (stopx - startx == COLNO / 2)
@@ -763,7 +763,7 @@ wiz_show_seenv(VOID_ARGS)
 
     for (y = 0; y < ROWNO; y++) {
         for (x = startx, curx = 0; x < stopx; x++, curx += 2) {
-            if (x == u.ux && y == u.uy) {
+            if (x == currentX() && y == currentY()) {
                 row[curx] = row[curx + 1] = '@';
             } else {
                 v = levl[x][y].seenv & 0xff;
@@ -801,7 +801,7 @@ wiz_show_vision(VOID_ARGS)
     putstr(win, 0, "");
     for (y = 0; y < ROWNO; y++) {
         for (x = 1; x < COLNO; x++) {
-            if (x == u.ux && y == u.uy)
+            if (x == currentX() && y == currentY())
                 row[x] = '@';
             else {
                 v = viz_array[y][x]; /* data access should be hidden */
@@ -840,7 +840,7 @@ wiz_show_wmodes(VOID_ARGS)
     for (y = 0; y < ROWNO; y++) {
         for (x = 0; x < COLNO; x++) {
             lev = &levl[x][y];
-            if (x == u.ux && y == u.uy)
+            if (x == currentX() && y == currentY())
                 row[x] = '@';
             else if (IS_WALL(lev->typ) || lev->typ == SDOOR)
                 row[x] = '0' + (lev->wall_info & WM_MASK);
@@ -1071,8 +1071,8 @@ wiz_smell(VOID_ARGS)
     coord cc;  /* screen pos of unknown glyph */
     int glyph; /* glyph at selected position */
 
-    cc.x = u.ux;
-    cc.y = u.uy;
+    cc.x = currentX();
+    cc.y = currentY();
     mndx = 0; /* gcc -Wall lint */
     if (!olfaction(youmonst.data)) {
         You("are incapable of detecting odors in your present form.");
@@ -1289,7 +1289,7 @@ walking_on_water()
     if (u.uinwater || Levitation || Flying)
         return FALSE;
     return (boolean) (Wwalking
-                      && (is_pool(u.ux, u.uy) || is_lava(u.ux, u.uy)));
+                      && (is_pool(currentX(), currentY()) || is_lava(currentX(), currentY())));
 }
 
 /* check whether hero is wearing something that player definitely knows
@@ -1655,9 +1655,9 @@ int final;
     } else if (walking_on_water()) {
         /* show active Wwalking here, potential Wwalking elsewhere */
         Sprintf(buf, "walking on %s",
-                is_pool(u.ux, u.uy) ? "water"
-                : is_lava(u.ux, u.uy) ? "lava"
-                  : surface(u.ux, u.uy)); /* catchall; shouldn't happen */
+                is_pool(currentX(), currentY()) ? "water"
+                : is_lava(currentX(), currentY()) ? "lava"
+                  : surface(currentX(), currentY())); /* catchall; shouldn't happen */
         you_are(buf, from_what(WWALKING));
     }
     if (Upolyd && (u.uundetected || youmonst.m_ap_type != M_AP_NOTHING))
@@ -1729,10 +1729,10 @@ int final;
         if (anchored) {
             Strcpy(predicament, "tethered to something buried");
         } else if (u.utraptype == TT_INFLOOR || u.utraptype == TT_LAVA) {
-            Sprintf(predicament, "stuck in %s", the(surface(u.ux, u.uy)));
+            Sprintf(predicament, "stuck in %s", the(surface(currentX(), currentY())));
         } else {
             Strcpy(predicament, "trapped");
-            if ((t = t_at(u.ux, u.uy)) != 0)
+            if ((t = t_at(currentX(), currentY())) != 0)
                 Sprintf(eos(predicament), " in %s",
                         an(defsyms[trap_to_defsym(t->ttyp)].explanation));
         }
@@ -2454,25 +2454,25 @@ int msgflag;          /* for variant message phrasing */
     } else if (u.uundetected) {
         bp = eos(buf); /* points past "hiding" */
         if (youmonst.data->mlet == S_EEL) {
-            if (is_pool(u.ux, u.uy))
-                Sprintf(bp, " in the %s", waterbody_name(u.ux, u.uy));
+            if (is_pool(currentX(), currentY()))
+                Sprintf(bp, " in the %s", waterbody_name(currentX(), currentY()));
         } else if (hides_under(youmonst.data)) {
-            struct obj *o = level.objects[u.ux][u.uy];
+            struct obj *o = level.objects[currentX()][currentY()];
 
             if (o)
                 Sprintf(bp, " underneath %s", ansimpleoname(o));
         } else if (is_clinger(youmonst.data) || Flying) {
             /* Flying: 'lurker above' hides on ceiling but doesn't cling */
-            Sprintf(bp, " on the %s", ceiling(u.ux, u.uy));
+            Sprintf(bp, " on the %s", ceiling(currentX(), currentY()));
         } else {
             /* on floor; is_hider() but otherwise not special: 'trapper' */
             if (u.utrap && u.utraptype == TT_PIT) {
-                struct trap *t = t_at(u.ux, u.uy);
+                struct trap *t = t_at(currentX(), currentY());
 
                 Sprintf(bp, " in a %spit",
                         (t && t->ttyp == SPIKED_PIT) ? "spiked " : "");
             } else
-                Sprintf(bp, " on the %s", surface(u.ux, u.uy));
+                Sprintf(bp, " on the %s", surface(currentX(), currentY()));
         }
     } else {
         ; /* shouldn't happen; will result in generic "you are hiding" */
@@ -3732,41 +3732,41 @@ int x, y, mod;
         return cmd;
     }
 
-    x -= u.ux;
-    y -= u.uy;
+    x -= currentX();
+    y -= currentY();
 
     if (flags.travelcmd) {
         if (abs(x) <= 1 && abs(y) <= 1) {
             x = sgn(x), y = sgn(y);
         } else {
-            u.tx = u.ux + x;
-            u.ty = u.uy + y;
+            u.tx = currentX() + x;
+            u.ty = currentY() + y;
             cmd[0] = CMD_TRAVEL;
             return cmd;
         }
 
         if (x == 0 && y == 0) {
             /* here */
-            if (IS_FOUNTAIN(levl[u.ux][u.uy].typ)
-                || IS_SINK(levl[u.ux][u.uy].typ)) {
+            if (IS_FOUNTAIN(levl[currentX()][currentY()].typ)
+                || IS_SINK(levl[currentX()][currentY()].typ)) {
                 cmd[0] = mod == CLICK_1 ? 'q' : M('d');
                 return cmd;
-            } else if (IS_THRONE(levl[u.ux][u.uy].typ)) {
+            } else if (IS_THRONE(levl[currentX()][currentY()].typ)) {
                 cmd[0] = M('s');
                 return cmd;
-            } else if ((u.ux == xupstair && u.uy == yupstair)
-                       || (u.ux == sstairs.sx && u.uy == sstairs.sy
+            } else if ((currentX() == xupstair && currentY() == yupstair)
+                       || (currentX() == sstairs.sx && currentY() == sstairs.sy
                            && sstairs.up)
-                       || (u.ux == xupladder && u.uy == yupladder)) {
+                       || (currentX() == xupladder && currentY() == yupladder)) {
                 return "<";
-            } else if ((u.ux == xdnstair && u.uy == ydnstair)
-                       || (u.ux == sstairs.sx && u.uy == sstairs.sy
+            } else if ((currentX() == xdnstair && currentY() == ydnstair)
+                       || (currentX() == sstairs.sx && currentY() == sstairs.sy
                            && !sstairs.up)
-                       || (u.ux == xdnladder && u.uy == ydnladder)) {
+                       || (currentX() == xdnladder && currentY() == ydnladder)) {
                 return ">";
-            } else if (OBJ_AT(u.ux, u.uy)) {
+            } else if (OBJ_AT(currentX(), currentY())) {
                 cmd[0] =
-                    Is_container(level.objects[u.ux][u.uy]) ? M('l') : ',';
+                    Is_container(level.objects[currentX()][currentY()]) ? M('l') : ',';
                 return cmd;
             } else {
                 return "."; /* just rest */
@@ -3777,23 +3777,23 @@ int x, y, mod;
 
         dir = xytod(x, y);
 
-        if (!m_at(u.ux + x, u.uy + y)
-            && !test_move(u.ux, u.uy, x, y, TEST_MOVE)) {
+        if (!m_at(currentX() + x, currentY() + y)
+            && !test_move(currentX(), currentY(), x, y, TEST_MOVE)) {
             cmd[1] = Cmd.dirchars[dir];
             cmd[2] = '\0';
-            if (IS_DOOR(levl[u.ux + x][u.uy + y].typ)) {
+            if (IS_DOOR(levl[currentX() + x][currentY() + y].typ)) {
                 /* slight assistance to the player: choose kick/open for them
                  */
-                if (levl[u.ux + x][u.uy + y].doormask & D_LOCKED) {
+                if (levl[currentX() + x][currentY() + y].doormask & D_LOCKED) {
                     cmd[0] = C('d');
                     return cmd;
                 }
-                if (levl[u.ux + x][u.uy + y].doormask & D_CLOSED) {
+                if (levl[currentX() + x][currentY() + y].doormask & D_CLOSED) {
                     cmd[0] = 'o';
                     return cmd;
                 }
             }
-            if (levl[u.ux + x][u.uy + y].typ <= SCORR) {
+            if (levl[currentX() + x][currentY() + y].typ <= SCORR) {
                 cmd[0] = 's';
                 cmd[1] = 0;
                 return cmd;
@@ -3981,7 +3981,7 @@ char
 readchar()
 {
     register int sym;
-    int x = u.ux, y = u.uy, mod = 0;
+    int x = currentX(), y = currentY(), mod = 0;
 
     if (*readchar_queue)
         sym = *readchar_queue++;
@@ -4039,8 +4039,8 @@ dotravel(VOID_ARGS)
     cc.y = iflags.travelcc.y;
     if (cc.x == -1 && cc.y == -1) {
         /* No cached destination, start attempt from current position */
-        cc.x = u.ux;
-        cc.y = u.uy;
+        cc.x = currentX();
+        cc.y = currentY();
     }
     pline("Where do you want to travel to?");
     if (getpos(&cc, TRUE, "the desired destination") < 0) {

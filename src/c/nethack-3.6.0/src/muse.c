@@ -426,7 +426,7 @@ struct monst *mtmp;
             /* skip if it's hero's location
                or a diagonal spot and monster can't move diagonally
                or some other monster is there */
-            if ((xx == u.ux && yy == u.uy)
+            if ((xx == currentX() && yy == currentY())
                 || (xx != x && yy != y && !diag_ok)
                 || (level.monsters[xx][yy] && !(xx == x && yy == y)))
                 continue;
@@ -1212,7 +1212,7 @@ register struct obj *otmp;
             if (zap_oseen)
                 makeknown(WAN_STRIKING);
             if (Antimagic) {
-                shieldeff(u.ux, u.uy);
+                shieldeff(currentX(), currentY());
                 pline("Boing!");
             } else if (rnd(20) < 10 + u.uac) {
                 pline_The("wand hits you!");
@@ -1307,7 +1307,7 @@ struct obj *obj;                     /* 2nd arg to fhitm/fhito */
             case WAN_STRIKING:
                 destroy_drawbridge(x, y);
             }
-        if (bhitpos.x == u.ux && bhitpos.y == u.uy) {
+        if (bhitpos.x == currentX() && bhitpos.y == currentY()) {
             (*fhitm)(&youmonst, obj);
             range -= 3;
         } else if ((mtmp = m_at(bhitpos.x, bhitpos.y)) != 0) {
@@ -1448,14 +1448,14 @@ struct monst *mtmp;
                     && !IS_ROCK(levl[x][y].typ) && !IS_AIR(levl[x][y].typ)
                     && (((x == mmx) && (y == mmy)) ? !otmp->blessed
                                                    : !otmp->cursed)
-                    && (x != u.ux || y != u.uy)) {
+                    && (x != currentX() || y != currentY())) {
                     (void) drop_boulder_on_monster(x, y, confused, FALSE);
                 }
             }
         }
         m_useup(mtmp, otmp);
         /* Attack the player */
-        if (distmin(mmx, mmy, u.ux, u.uy) == 1 && !is_cursed) {
+        if (distmin(mmx, mmy, currentX(), currentY()) == 1 && !is_cursed) {
             drop_boulder_on_player(confused, !is_cursed, FALSE, TRUE);
         }
 
@@ -1626,7 +1626,7 @@ struct monst *mtmp;
 
         for (xx = x - 1; xx <= x + 1; xx++)
             for (yy = y - 1; yy <= y + 1; yy++)
-                if (isok(xx, yy) && (xx != u.ux || yy != u.uy)
+                if (isok(xx, yy) && (xx != currentX() || yy != currentY())
                     && (diag_ok || xx == x || yy == y)
                     && ((xx == x && yy == y) || !level.monsters[xx][yy]))
                     if ((t = t_at(xx, yy)) != 0
@@ -1666,7 +1666,7 @@ struct monst *mtmp;
                monster from attempting disarm every turn */
             && uwep && !rn2(5) && obj == MON_WEP(mtmp)
             /* hero's location must be known and adjacent */
-            && mtmp->mux == u.ux && mtmp->muy == u.uy
+            && mtmp->mux == currentX() && mtmp->muy == currentY()
             && distanceSquaredToYou(mtmp->mx, mtmp->my) <= 2
             /* don't bother if it can't work (this doesn't
                prevent cursed weapons from being targetted) */
@@ -1924,7 +1924,7 @@ struct monst *mtmp;
                 break;
             case 2: /* onto floor beneath you */
                 pline("%s yanks %s to the %s!", Monnam(mtmp), the_weapon,
-                      surface(u.ux, u.uy));
+                      surface(currentX(), currentY()));
                 dropy(obj);
                 break;
             case 3: /* into mon's inventory */

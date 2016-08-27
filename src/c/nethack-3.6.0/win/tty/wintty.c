@@ -227,11 +227,11 @@ winch()
             tty_destroy_nhwindow(WIN_STATUS);
             WIN_STATUS = tty_create_nhwindow(NHW_STATUS);
 
-            if (u.ux) {
+            if (currentX()) {
 #ifdef CLIPPING
                 if (CO < COLNO || LI < ROWNO + 3) {
                     setclipped();
-                    tty_cliparound(u.ux, u.uy);
+                    tty_cliparound(currentX(), currentY());
                 } else {
                     clipping = FALSE;
                     clipx = clipy = 0;
@@ -2542,7 +2542,7 @@ boolean complain;
                 perror(fname);
                 tty_wait_synch();
                 pline("Cannot open \"%s\".", fname);
-            } else if (u.ux)
+            } else if (currentX())
                 docrt();
         } else {
             winid datawin = tty_create_nhwindow(NHW_TEXT);
