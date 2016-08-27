@@ -238,6 +238,7 @@ boolean thrown_weapon; /* thrown weapons are less deadly */
     }
     if (Poison_resistance) {
         if (!strcmp(reason, "blast"))
+            shieldeff(currentX(), currentY());
         pline_The("poison doesn't seem to affect you.");
         return;
     }

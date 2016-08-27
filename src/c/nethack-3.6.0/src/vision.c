@@ -826,6 +826,7 @@ skip:
      * program_state.panicking == 1 under those circumstances
      */
     if (!program_state.panicking)
+        newsym(currentX(), currentY()); /* Make sure the hero shows up! */
 
     /* Set the new min and max pointers. */
     viz_rmin = next_rmin;
