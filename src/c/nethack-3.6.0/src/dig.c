@@ -977,11 +977,11 @@ struct obj *obj;
             ; /* all directions are viable when swallowed */
         } else if (movecmd(*sdp)) {
             /* normal direction, within plane of the level map;
-               movecmd() sets directionX, u.dy, u.dz and returns !u.dz */
+               movecmd() sets directionX, directionY, u.dz and returns !u.dz */
             if (!dxdy_moveok())
                 continue; /* handle NODIAG */
             rx = currentX() + directionX();
-            ry = currentY() + u.dy;
+            ry = currentY() + directionY();
             if (!isok(rx, ry) || dig_typ(obj, rx, ry) == DIGTYP_UNDIGGABLE)
                 continue;
         } else {
@@ -1006,7 +1006,7 @@ struct obj *obj;
 
 /* MRKR: use_pick_axe() is split in two to allow autodig to bypass */
 /*       the "In what direction do you want to dig?" query.        */
-/*       use_pick_axe2() uses the existing directionX, u.dy and u.dz    */
+/*       use_pick_axe2() uses the existing directionX, directionY and u.dz    */
 int
 use_pick_axe2(obj)
 struct obj *obj;
@@ -1027,7 +1027,7 @@ struct obj *obj;
             You("don't have enough leverage.");
         else
             You_cant("reach the %s.", ceiling(currentX(), currentY()));
-    } else if (!directionX() && !u.dy && !u.dz) {
+    } else if (!directionX() && !directionY() && !u.dz) {
         char buf[BUFSZ];
         int dam;
 
@@ -1043,7 +1043,7 @@ struct obj *obj;
         if (Stunned || (Confusion && !rn2(5)))
             confdir();
         rx = currentX() + directionX();
-        ry = currentY() + u.dy;
+        ry = currentY() + directionY();
         if (!isok(rx, ry)) {
             pline("Clash!");
             return 1;
@@ -1088,7 +1088,7 @@ struct obj *obj;
                        && !conjoined_pits(trap, trap_with_u, FALSE)) {
                 int idx;
                 for (idx = 0; idx < 8; idx++) {
-                    if (xdir[idx] == directionX() && ydir[idx] == u.dy)
+                    if (xdir[idx] == directionX() && ydir[idx] == directionY())
                         break;
                 }
                 /* idx is valid if < 8 */
@@ -1429,12 +1429,12 @@ zap_dig()
     shopdoor = shopwall = FALSE;
     maze_dig = level.flags.is_maze_lev && !Is_earthlevel(&u.uz);
     zx = currentX() + directionX();
-    zy = currentY() + u.dy;
+    zy = currentY() + directionY();
     if (u.utrap && u.utraptype == TT_PIT
         && (trap_with_u = t_at(currentX(), currentY()))) {
         pitdig = TRUE;
         for (diridx = 0; diridx < 8; diridx++) {
-            if (xdir[diridx] == directionX() && ydir[diridx] == u.dy)
+            if (xdir[diridx] == directionX() && ydir[diridx] == directionY())
                 break;
             /* diridx is valid if < 8 */
         }
@@ -1478,7 +1478,7 @@ zap_dig()
                 }
                 if (is_pool(zx, zy) || is_lava(zx, zy)) {
                     flow_x = zx - directionX();
-                    flow_y = zy - u.dy;
+                    flow_y = zy - directionY();
                     pitflow = TRUE;
                 }
                 break;
@@ -1551,7 +1551,7 @@ zap_dig()
             unblock_point(zx, zy); /* vision */
         }
         zx += directionX();
-        zy += u.dy;
+        zy += directionY();
     }                    /* while */
     tmp_at(DISP_END, 0); /* closing call */
 

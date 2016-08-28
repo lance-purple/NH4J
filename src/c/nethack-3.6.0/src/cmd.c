@@ -3492,12 +3492,12 @@ char sym;
     if (!dp || !*dp)
         return 0;
     setDirectionX(xdir[dp - Cmd.dirchars]);
-    u.dy = ydir[dp - Cmd.dirchars];
+    setDirectionY(ydir[dp - Cmd.dirchars]);
     u.dz = zdir[dp - Cmd.dirchars];
 #if 0 /* now handled elsewhere */
-    if (directionX() && u.dy && NODIAG(u.umonnum)) {
+    if (directionX() && directionY() && NODIAG(u.umonnum)) {
         setDirectionX(0);
-        u.dy = 0;
+        setDirectionY(0);
         return 0;
     }
 #endif
@@ -3508,11 +3508,11 @@ char sym;
 int
 dxdy_moveok()
 {
-    if (directionX() && u.dy && NODIAG(u.umonnum)) {
+    if (directionX() && directionY() && NODIAG(u.umonnum)) {
         setDirectionX(0);
-        u.dy = 0;
+        setDirectionY(0);
     }
-    return directionX() || u.dy;
+    return directionX() || directionY();
 }
 
 /* decide whether a character (user input keystroke) requests screen repaint */
@@ -3545,7 +3545,7 @@ coord *cc;
         return 0;
     }
     new_x = x + directionX();
-    new_y = y + u.dy;
+    new_y = y + directionY();
     if (cc && isok(new_x, new_y)) {
         cc->x = new_x;
         cc->y = new_y;
@@ -3581,7 +3581,8 @@ retry:
 
     if (dirsym == '.' || dirsym == 's') {
         setDirectionX(0);
-        u.dy = u.dz = 0;
+        setDirectionY(0);
+        u.dz = 0;
     } else if (!(is_mov = movecmd(dirsym)) && !u.dz) {
         boolean did_help = FALSE, help_requested;
 
@@ -3690,7 +3691,7 @@ confdir()
     register int x = NODIAG(u.umonnum) ? 2 * rn2(4) : rn2(8);
 
     setDirectionX(xdir[x]);
-    u.dy = ydir[x];
+    setDirectionY(ydir[x]);
     return;
 }
 

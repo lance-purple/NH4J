@@ -3523,7 +3523,7 @@ drown()
     int i, x, y;
 
     /* happily wading in the same contiguous pool */
-    if (u.uinwater && is_pool(currentX() - directionX(), currentY() - u.dy)
+    if (u.uinwater && is_pool(currentX() - directionX(), currentY() - directionY())
         && (Swimming || Amphibious)) {
         /* water effects on objects every now and then */
         if (!rn2(5))
@@ -3820,7 +3820,7 @@ boolean force_failure;
 {
     struct monst *mtmp = m_at(ttmp->tx, ttmp->ty);
     int ttype = ttmp->ttyp;
-    boolean under_u = (!directionX() && !u.dy);
+    boolean under_u = (!directionX() && !directionY());
     boolean holdingtrap = (ttype == BEAR_TRAP || ttype == WEB);
 
     /* Test for monster first, monsters are displayed instead of trap. */
@@ -3834,7 +3834,7 @@ boolean force_failure;
         return 0;
     }
     /* duplicate tight-space checks from test_move */
-    if (directionX() && u.dy && bad_rock(youmonst.data, currentX(), ttmp->ty)
+    if (directionX() && directionY() && bad_rock(youmonst.data, currentX(), ttmp->ty)
         && bad_rock(youmonst.data, ttmp->tx, currentY())) {
         if ((invent && (inv_weight() + weight_cap() > 600))
             || bigmonst(youmonst.data)) {
@@ -3947,7 +3947,7 @@ struct trap *ttmp;
             deltrap(ttmp);
         }
     }
-    newsym(currentX() + directionX(), currentY() + u.dy);
+    newsym(currentX() + directionX(), currentY() + directionY());
     return 1;
 }
 
@@ -3997,7 +3997,7 @@ struct trap *ttmp;
     }
     You("repair the squeaky board."); /* no madeby_u */
     deltrap(ttmp);
-    newsym(currentX() + directionX(), currentY() + u.dy);
+    newsym(currentX() + directionX(), currentY() + directionY());
     more_experienced(1, 5);
     newexplevel();
     return 1;
@@ -4153,7 +4153,7 @@ boolean force;
     if (!getdir((char *) 0))
         return 0;
     x = currentX() + directionX();
-    y = currentY() + u.dy;
+    y = currentY() + directionY();
     if (!isok(x, y)) {
         pline_The("perils lurking there are beyond your grasp.");
         return 0;
@@ -4162,7 +4162,7 @@ boolean force;
     if (ttmp && !ttmp->tseen)
         ttmp = 0;
     trapdescr = ttmp ? defsyms[trap_to_defsym(ttmp->ttyp)].explanation : 0;
-    here = (x == currentX() && y == currentY()); /* !directionX && !u.dy */
+    here = (x == currentX() && y == currentY()); /* !directionX && !directionY() */
 
     if (here) /* are there are one or more containers here? */
         for (otmp = level.objects[x][y]; otmp; otmp = otmp->nexthere)

@@ -491,7 +491,7 @@ struct obj *instr;
             if (!getdir((char *) 0)) {
                 pline("%s.", Tobjnam(instr, "vibrate"));
                 break;
-            } else if (!directionX() && !u.dy && !u.dz) {
+            } else if (!directionX() && !directionY() && !u.dz) {
                 if ((damage = zapyourself(instr, TRUE)) != 0) {
                     char buf[BUFSZ];
 
@@ -500,7 +500,7 @@ struct obj *instr;
                 }
             } else {
                 buzz((instr->otyp == FROST_HORN) ? AD_COLD - 1 : AD_FIRE - 1,
-                     rn1(6, 6), currentX(), currentY(), directionX(), u.dy);
+                     rn1(6, 6), currentX(), currentY(), directionX(), directionY());
             }
             makeknown(instr->otyp);
             break;

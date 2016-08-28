@@ -79,7 +79,7 @@ int shotlimit;
         pline("It's too heavy.");
         return 1;
     }
-    if (!directionX() && !u.dy && !u.dz) {
+    if (!directionX() && !directionY() && !u.dz) {
         You("cannot throw an object at yourself.");
         return 0;
     }
@@ -962,14 +962,14 @@ struct obj *obj;
 {
     /* might already be our location (bounced off a wall) */
     if (bhitpos.x != currentX() || bhitpos.y != currentY()) {
-        int x = bhitpos.x - directionX(), y = bhitpos.y - u.dy;
+        int x = bhitpos.x - directionX(), y = bhitpos.y - directionY();
 
         tmp_at(DISP_FLASH, obj_to_glyph(obj));
         while (x != currentX() || y != currentY()) {
             tmp_at(x, y);
             delay_output();
             x -= directionX();
-            y -= u.dy;
+            y -= directionY();
         }
         tmp_at(DISP_END, 0);
     }
@@ -989,7 +989,7 @@ boolean
                                      || Hallucination || Fumbling);
 
     notonhead = FALSE; /* reset potentially stale value */
-    if ((obj->cursed || obj->greased) && (directionX() || u.dy) && !rn2(7)) {
+    if ((obj->cursed || obj->greased) && (directionX() || directionY()) && !rn2(7)) {
         boolean slipok = TRUE;
         if (ammo_and_launcher(obj, uwep))
             pline("%s!", Tobjnam(obj, "misfire"));
@@ -1004,14 +1004,14 @@ boolean
         }
         if (slipok) {
             setDirectionX(rn2(3) - 1);
-            u.dy = rn2(3) - 1;
-            if (!directionX() && !u.dy)
+            setDirectionY(rn2(3) - 1);
+            if (!directionX() && !directionY())
                 u.dz = 1;
             impaired = TRUE;
         }
     }
 
-    if ((directionX() || u.dy || (u.dz < 1))
+    if ((directionX() || directionY() || (u.dz < 1))
         && calc_capacity((int) obj->owt) > SLT_ENCUMBER
         && (Upolyd ? (u.mh < 5 && u.mh != u.mhmax)
                    : (u.uhp < 10 && u.uhp != u.uhpmax))
@@ -1021,7 +1021,7 @@ boolean
             the(xname(obj)));
         exercise(A_CON, FALSE);
         setDirectionX(0);
-        u.dy = 0;
+        setDirectionY(0);
         u.dz = 1;
     }
 
@@ -1056,8 +1056,8 @@ boolean
 
     } else if (obj->otyp == BOOMERANG && !Underwater) {
         if (Is_airlevel(&u.uz) || Levitation)
-            hurtle(-directionX(), -u.dy, 1, TRUE);
-        mon = boomhit(obj, directionX(), u.dy);
+            hurtle(-directionX(), -directionY(), 1, TRUE);
+        mon = boomhit(obj, directionX(), directionY());
         if (mon == &youmonst) { /* the thing was caught */
             exercise(A_DEX, TRUE);
             obj = addinv(obj);
@@ -1122,14 +1122,14 @@ boolean
         if (Underwater)
             range = 1;
 
-        mon = bhit(directionX(), u.dy, range, THROWN_WEAPON,
+        mon = bhit(directionX(), directionY(), range, THROWN_WEAPON,
                    (int FDECL((*), (MONST_P, OBJ_P))) 0,
                    (int FDECL((*), (OBJ_P, OBJ_P))) 0, &obj);
         thrownobj = obj; /* obj may be null now */
 
         /* have to do this after bhit() so currentX() & currentY() are correct */
         if (Is_airlevel(&u.uz) || Levitation)
-            hurtle(-directionX(), -u.dy, urange, TRUE);
+            hurtle(-directionX(), -directionY(), urange, TRUE);
 
         if (!obj)
             return;
@@ -1925,7 +1925,7 @@ struct obj *obj;
     int range, odx, ody;
     register struct monst *mon;
 
-    if (!directionX() && !u.dy && !u.dz) {
+    if (!directionX() && !directionY() && !u.dz) {
         You("cannot throw gold at yourself.");
         return 0;
     }
@@ -1956,12 +1956,12 @@ struct obj *obj;
 
         /* see if the gold has a place to move into */
         odx = currentX() + directionX();
-        ody = currentY() + u.dy;
+        ody = currentY() + directionY();
         if (!ZAP_POS(levl[odx][ody].typ) || closed_door(odx, ody)) {
             bhitpos.x = currentX();
             bhitpos.y = currentY();
         } else {
-            mon = bhit(directionX(), u.dy, range, THROWN_WEAPON,
+            mon = bhit(directionX(), directionY(), range, THROWN_WEAPON,
                        (int FDECL((*), (MONST_P, OBJ_P))) 0,
                        (int FDECL((*), (OBJ_P, OBJ_P))) 0, &obj);
             if (!obj)

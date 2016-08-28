@@ -1104,7 +1104,7 @@ water_friction()
     if (Swimming && rn2(4))
         return; /* natural swimmers have advantage */
 
-    if (directionX() && !rn2(!u.dy ? 3 : 6)) { /* 1/3 chance or half that */
+    if (directionX() && !rn2(!directionY() ? 3 : 6)) { /* 1/3 chance or half that */
         /* cancel delta x and choose an arbitrary delta y value */
         x = currentX();
         do {
@@ -1112,16 +1112,16 @@ water_friction()
             y = currentY() + dy;
         } while (dy && (!isok(x, y) || !is_pool(x, y)));
         setDirectionX(0);
-        u.dy = dy;
+        setDirectionY(dy);
         eff = TRUE;
-    } else if (u.dy && !rn2(!directionX() ? 3 : 5)) { /* 1/3 or 1/5*(5/6) */
+    } else if (directionY() && !rn2(!directionX() ? 3 : 5)) { /* 1/3 or 1/5*(5/6) */
         /* cancel delta y and choose an arbitrary delta x value */
         y = currentY();
         do {
             dx = rn2(3) - 1; /* -1 .. 1 */
             x = currentX() + dx;
         } while (dx && (!isok(x, y) || !is_pool(x, y)));
-        u.dy = 0;
+        setDirectionY(0);
         setDirectionX(dx);
         eff = TRUE;
     }

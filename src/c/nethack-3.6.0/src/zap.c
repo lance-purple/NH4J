@@ -2089,7 +2089,7 @@ dozap()
         if (!Blind)
             pline("%s glows and fades.", The(xname(obj)));
         /* make him pay for knowing !NODIR */
-    } else if (!directionX() && !u.dy && !u.dz
+    } else if (!directionX() && !directionY() && !u.dz
                && !(objects[obj->otyp].oc_dir == NODIR)) {
         if ((damage = zapyourself(obj, TRUE)) != 0) {
             char buf[BUFSZ];
@@ -2835,7 +2835,7 @@ struct obj *obj;
     boolean disclose = FALSE, was_unkn = !objects[otyp].oc_name_known;
 
     exercise(A_WIS, TRUE);
-    if (u.usteed && (objects[otyp].oc_dir != NODIR) && !directionX() && !u.dy
+    if (u.usteed && (objects[otyp].oc_dir != NODIR) && !directionX() && !directionY()
         && (u.dz > 0) && zap_steed(obj)) {
         disclose = TRUE;
     } else if (objects[otyp].oc_dir == IMMEDIATE) {
@@ -2846,7 +2846,7 @@ struct obj *obj;
         } else if (u.dz) {
             disclose = zap_updown(obj);
         } else {
-            (void) bhit(directionX(), u.dy, rn1(8, 6), ZAPPED_WAND, bhitm, bhito,
+            (void) bhit(directionX(), directionY(), rn1(8, 6), ZAPPED_WAND, bhitm, bhito,
                         &obj);
         }
         zapwrapup(); /* give feedback for obj_zapped */
@@ -2861,10 +2861,10 @@ struct obj *obj;
             zap_dig();
         else if (otyp >= SPE_MAGIC_MISSILE && otyp <= SPE_FINGER_OF_DEATH)
             buzz(otyp - SPE_MAGIC_MISSILE + 10, u.ulevel / 2 + 1, currentX(), currentY(),
-                 directionX(), u.dy);
+                 directionX(), directionY());
         else if (otyp >= WAN_MAGIC_MISSILE && otyp <= WAN_LIGHTNING)
             buzz(otyp - WAN_MAGIC_MISSILE,
-                 (otyp == WAN_MAGIC_MISSILE) ? 2 : 6, currentX(), currentY(), directionX(), u.dy);
+                 (otyp == WAN_MAGIC_MISSILE) ? 2 : 6, currentX(), currentY(), directionX(), directionY());
         else
             impossible("weffects: unexpected spell or wand");
         disclose = TRUE;

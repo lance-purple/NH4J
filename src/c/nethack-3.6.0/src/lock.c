@@ -25,7 +25,7 @@ int *x, *y;
 {
     if (occupation == picklock) {
         *x = currentX() + directionX();
-        *y = currentY() + u.dy;
+        *y = currentY() + directionY();
         return TRUE;
     } else {
         *x = *y = 0;
@@ -79,7 +79,7 @@ picklock(VOID_ARGS)
             return ((xlock.usedtime = 0)); /* you or it moved */
         }
     } else { /* door */
-        if (xlock.door != &(levl[currentX() + directionX()][currentY() + u.dy])) {
+        if (xlock.door != &(levl[currentX() + directionX()][currentY() + directionY()])) {
             return ((xlock.usedtime = 0)); /* you moved */
         }
         switch (xlock.door->doormask) {
@@ -109,10 +109,10 @@ picklock(VOID_ARGS)
         if (xlock.door->doormask & D_TRAPPED) {
             b_trapped("door", FINGER);
             xlock.door->doormask = D_NODOOR;
-            unblock_point(currentX() + directionX(), currentY() + u.dy);
-            if (*in_rooms(currentX() + directionX(), currentY() + u.dy, SHOPBASE))
-                add_damage(currentX() + directionX(), currentY() + u.dy, 0L);
-            newsym(currentX() + directionX(), currentY() + u.dy);
+            unblock_point(currentX() + directionX(), currentY() + directionY());
+            if (*in_rooms(currentX() + directionX(), currentY() + directionY(), SHOPBASE))
+                add_damage(currentX() + directionX(), currentY() + directionY(), 0L);
+            newsym(currentX() + directionX(), currentY() + directionY());
         } else if (xlock.door->doormask & D_LOCKED)
             xlock.door->doormask = D_CLOSED;
         else
@@ -554,7 +554,7 @@ doopen()
     return doopen_indir(0, 0);
 }
 
-/* try to open a door in direction directionX/u.dy */
+/* try to open a door in direction directionX/directionY */
 int
 doopen_indir(x, y)
 int x, y;
@@ -717,7 +717,7 @@ doclose()
         return 0;
 
     x = currentX() + directionX();
-    y = currentY() + u.dy;
+    y = currentY() + directionY();
     if ((x == currentX()) && (y == currentY())) {
         You("are in the way!");
         return 1;

@@ -1088,7 +1088,7 @@ doidtrap()
     if (!getdir("^"))
         return 0;
     x = currentX() + directionX();
-    y = currentY() + u.dy;
+    y = currentY() + directionY();
     for (trap = ftrap; trap; trap = trap->ntrap)
         if (trap->tx == x && trap->ty == y) {
             if (!trap->tseen)

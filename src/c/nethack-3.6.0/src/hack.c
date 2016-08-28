@@ -102,14 +102,14 @@ moverock()
     register struct trap *ttmp;
     register struct monst *mtmp;
 
-    sx = currentX() + directionX(), sy = currentY() + u.dy; /* boulder starting position */
+    sx = currentX() + directionX(), sy = currentY() + directionY(); /* boulder starting position */
     while ((otmp = sobj_at(BOULDER, sx, sy)) != 0) {
         /* make sure that this boulder is visible as the top object */
         if (otmp != level.objects[sx][sy])
             movobj(otmp, sx, sy);
 
         rx = currentX() + 2 * directionX(); /* boulder destination position */
-        ry = currentY() + 2 * u.dy;
+        ry = currentY() + 2 * directionY();
         nomul(0);
         if (Levitation || Is_airlevel(&u.uz)) {
             if (Blind)
@@ -126,13 +126,13 @@ moverock()
         }
         if (isok(rx, ry) && !IS_ROCK(levl[rx][ry].typ)
             && levl[rx][ry].typ != IRONBARS
-            && (!IS_DOOR(levl[rx][ry].typ) || !(directionX() && u.dy)
+            && (!IS_DOOR(levl[rx][ry].typ) || !(directionX() && directionY())
                 || doorless_door(rx, ry)) && !sobj_at(BOULDER, rx, ry)) {
             ttmp = t_at(rx, ry);
             mtmp = m_at(rx, ry);
 
             /* KMH -- Sokoban doesn't let you push boulders diagonally */
-            if (Sokoban && directionX() && u.dy) {
+            if (Sokoban && directionX() && directionY()) {
                 if (Blind)
                     feel_location(sx, sy);
                 pline("%s won't roll diagonally on this %s.",
@@ -326,7 +326,7 @@ moverock()
 
             if (!u.usteed
                 && (((!invent || inv_weight() <= -850)
-                     && (!directionX() || !u.dy || (IS_ROCK(levl[currentX()][sy].typ)
+                     && (!directionX() || !directionY() || (IS_ROCK(levl[currentX()][sy].typ)
                                             && IS_ROCK(levl[sx][currentY()].typ))))
                     || verysmall(youmonst.data))) {
                 pline(
@@ -867,7 +867,7 @@ boolean guess;
         context.run = 0;
         if (test_move(currentX(), currentY(), u.tx - currentX(), u.ty - currentY(), TEST_MOVE)) {
             setDirectionX(u.tx - currentX());
-            u.dy = u.ty - currentY();
+            setDirectionY(u.ty - currentY());
             nomul(0);
             iflags.travelcc.x = iflags.travelcc.y = -1;
             return TRUE;
@@ -940,7 +940,7 @@ boolean guess;
                         if (nx == ux && ny == uy) {
                             if (!guess) {
                                 setDirectionX(x - ux);
-                                u.dy = y - uy;
+                                setDirectionY(y - uy);
                                 if (x == u.tx && y == u.ty) {
                                     nomul(0);
                                     /* reset run so domove run checks work */
@@ -1011,8 +1011,8 @@ boolean guess;
             if (px == currentX() && py == currentY()) {
                 /* no guesses, just go in the general direction */
                 setDirectionX(sgn(u.tx - currentX()));
-                u.dy = sgn(u.ty - currentY());
-                if (test_move(currentX(), currentY(), directionX(), u.dy, TEST_MOVE))
+                setDirectionY(sgn(u.ty - currentY()));
+                if (test_move(currentX(), currentY(), directionX(), directionY(), TEST_MOVE))
                     return TRUE;
                 goto found;
             }
@@ -1045,7 +1045,7 @@ boolean guess;
 
 found:
     setDirectionX(0);
-    u.dy = 0;
+    setDirectionY(0);
     nomul(0);
     return FALSE;
 }
@@ -1055,7 +1055,7 @@ found:
    (all failures and most successful escapes leave hero at original spot) */
 STATIC_OVL boolean
 trapmove(x, y, desttrap)
-int x, y;              /* targetted destination, <currentX()+directionX(),currentY()+u.dy> */
+int x, y;              /* targetted destination, <currentX+directionX,currentY+directionY> */
 struct trap *desttrap; /* nonnull if another trap at <x,y> */
 {
     boolean anchored;
@@ -1075,7 +1075,7 @@ struct trap *desttrap; /* nonnull if another trap at <x,y> */
                 Norep("You are %s.", predicament);
         }
         /* [why does diagonal movement give quickest escape?] */
-        if ((directionX() && u.dy) || !rn2(5))
+        if ((directionX() && directionY()) || !rn2(5))
             u.utrap--;
         break;
     case TT_PIT:
@@ -1235,7 +1235,8 @@ domove()
     }
     if (u.uswallow) {
         setDirectionX(0);
-        u.dy = 0;
+        setDirectionY(0);
+
         x = u.ustuck->mx;
         y = u.ustuck->my;
         setCurrentX(x);
@@ -1279,7 +1280,7 @@ domove()
             HFumbling &= ~FROMOUTSIDE;
 
         x = currentX() + directionX();
-        y = currentY() + u.dy;
+        y = currentY() + directionY();
         if (Stunned || (Confusion && !rn2(5))) {
             register int tries = 0;
 
@@ -1290,18 +1291,18 @@ domove()
                 }
                 confdir();
                 x = currentX() + directionX();
-                y = currentY() + u.dy;
+                y = currentY() + directionY();
             } while (!isok(x, y) || bad_rock(youmonst.data, x, y));
         }
         /* turbulence might alter your actual destination */
         if (u.uinwater) {
             water_friction();
-            if (!directionX() && !u.dy) {
+            if (!directionX() && !directionY()) {
                 nomul(0);
                 return;
             }
             x = currentX() + directionX();
-            y = currentY() + u.dy;
+            y = currentY() + directionY();
         }
         if (!isok(x, y)) {
             nomul(0);
@@ -1504,7 +1505,7 @@ domove()
         newsym(x, y);
     }
     /* not attacking an animal, so we try to move */
-    if ((directionX() || u.dy) && u.usteed && stucksteed(FALSE)) {
+    if ((directionX() || directionY()) && u.usteed && stucksteed(FALSE)) {
         nomul(0);
         return;
     }
@@ -1538,7 +1539,7 @@ domove()
     /* now move the hero */
     mtmp = m_at(x, y);
     setCurrentX(currentX() + directionX());
-    setCurrentY(currentY() + u.dy);
+    setCurrentY(currentY() + directionY());
     /* Move your steed, too */
     if (u.usteed) {
         u.usteed->mx = currentX();
@@ -1664,7 +1665,7 @@ domove()
     }
 
     if (hides_under(youmonst.data) || (youmonst.data->mlet == S_EEL) || directionX()
-        || u.dy)
+        || directionY())
         (void) hideunder(&youmonst);
 
     /*
@@ -1672,7 +1673,7 @@ domove()
      * imitating something that doesn't move.  We could extend this
      * to non-moving monsters...
      */
-    if ((directionX() || u.dy) && (youmonst.m_ap_type == M_AP_OBJECT
+    if ((directionX() || directionY()) && (youmonst.m_ap_type == M_AP_OBJECT
                            || youmonst.m_ap_type == M_AP_FURNITURE))
         youmonst.m_ap_type = M_AP_NOTHING;
 
@@ -2390,7 +2391,7 @@ lookaround()
 
     /* Grid bugs stop if trying to move diagonal, even if blind.  Maybe */
     /* they polymorphed while in the middle of a long move. */
-    if (u.umonnum == PM_GRID_BUG && directionX() && u.dy) {
+    if (u.umonnum == PM_GRID_BUG && directionX() && directionY()) {
         nomul(0);
         return;
     }
@@ -2412,13 +2413,13 @@ lookaround()
                 && mtmp->m_ap_type != M_AP_OBJECT
                 && (!mtmp->minvis || See_invisible) && !mtmp->mundetected) {
                 if ((context.run != 1 && !mtmp->mtame)
-                    || (x == currentX() + directionX() && y == currentY() + u.dy))
+                    || (x == currentX() + directionX() && y == currentY() + directionY()))
                     goto stop;
             }
 
             if (levl[x][y].typ == STONE)
                 continue;
-            if (x == currentX() - directionX() && y == currentY() - u.dy)
+            if (x == currentX() - directionX() && y == currentY() - directionY())
                 continue;
 
             if (IS_ROCK(levl[x][y].typ) || (levl[x][y].typ == ROOM)
@@ -2436,7 +2437,7 @@ lookaround()
                 if (levl[currentX()][currentY()].typ != ROOM) {
                     if (context.run == 1 || context.run == 3
                         || context.run == 8) {
-                        i = dist2(x, y, currentX() + directionX(), currentY() + u.dy);
+                        i = dist2(x, y, currentX() + directionX(), currentY() + directionY());
                         if (i > 2)
                             continue;
                         if (corrct == 1 && dist2(x, y, x0, y0) != 1)
@@ -2454,7 +2455,7 @@ lookaround()
             } else if ((trap = t_at(x, y)) && trap->tseen) {
                 if (context.run == 1)
                     goto bcorr; /* if you must */
-                if (x == currentX() + directionX() && y == currentY() + u.dy)
+                if (x == currentX() + directionX() && y == currentY() + directionY())
                     goto stop;
                 continue;
             } else if (is_pool_or_lava(x, y)) {
@@ -2462,7 +2463,7 @@ lookaround()
                  * you even if you are running
                  */
                 if (!Levitation && !Flying && !is_clinger(youmonst.data)
-                    && x == currentX() + directionX() && y == currentY() + u.dy)
+                    && x == currentX() + directionX() && y == currentY() + directionY())
                     /* No Wwalking check; otherwise they'd be able
                      * to test boots by trying to SHIFT-direction
                      * into a pool and seeing if the game allowed it
@@ -2476,8 +2477,8 @@ lookaround()
                     continue;
                 if (mtmp)
                     continue; /* d */
-                if (((x == currentX() - directionX()) && (y != currentY() + u.dy))
-                    || ((y == currentY() - u.dy) && (x != currentX() + directionX())))
+                if (((x == currentX() - directionX()) && (y != currentY() + directionY()))
+                    || ((y == currentY() - directionY()) && (x != currentX() + directionX())))
                     continue;
             }
         stop:
@@ -2491,18 +2492,18 @@ lookaround()
         && !m0 && i0 && (corrct == 1 || (corrct == 2 && i0 == 1))) {
         /* make sure that we do not turn too far */
         if (i0 == 2) {
-            if (directionX() == y0 - currentY() && u.dy == currentX() - x0)
+            if (directionX() == y0 - currentY() && directionY() == currentX() - x0)
                 i = 2; /* straight turn right */
             else
                 i = -2; /* straight turn left */
-        } else if (directionX() && u.dy) {
-            if ((directionX() == u.dy && y0 == currentY()) || (directionX() != u.dy && y0 != currentY()))
+        } else if (directionX() && directionY()) {
+            if ((directionX() == directionY() && y0 == currentY()) || (directionX() != directionY() && y0 != currentY()))
                 i = -1; /* half turn left */
             else
                 i = 1; /* half turn right */
         } else {
-            if ((x0 - currentX() == y0 - currentY() && !u.dy)
-                || (x0 - currentX() != y0 - currentY() && u.dy))
+            if ((x0 - currentX() == y0 - currentY() && !directionY())
+                || (x0 - currentX() != y0 - currentY() && directionY()))
                 i = 1; /* half turn right */
             else
                 i = -1; /* half turn left */
@@ -2512,7 +2513,7 @@ lookaround()
         if (i <= 2 && i >= -2) {
             u.last_str_turn = i;
             setDirectionX(x0 - currentX());
-            u.dy = y0 - currentY();
+            setDirectionY(y0 - currentY());
         }
     }
 }

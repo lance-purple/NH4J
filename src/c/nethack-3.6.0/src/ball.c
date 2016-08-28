@@ -748,7 +748,7 @@ xchar x, y;
             setCurrentY(y);
         } else {
             setCurrentX(x - directionX());
-            setCurrentY(y - u.dy);
+            setCurrentY(y - directionY());
         }
         vision_full_recalc = 1; /* hero has moved, recalculate vision later */
 
