@@ -69,7 +69,7 @@ register struct monst *mtmp;
 {
     int x, y;
 
-    if (mtmp->mpeaceful && in_town(currentX() + u.dx, currentY() + u.dy)
+    if (mtmp->mpeaceful && in_town(currentX() + directionX(), currentY() + u.dy)
         && mtmp->mcansee && m_canseeu(mtmp) && !rn2(3)) {
         if (picking_lock(&x, &y) && IS_DOOR(levl[x][y].typ)
             && (levl[x][y].doormask & D_LOCKED)) {

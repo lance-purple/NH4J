@@ -537,6 +537,44 @@ void setCurrentY(y) int y; {
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, y);
 }
 
+/* your direction of movement (or spellcasting etc.) */
+
+int directionX() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "directionX", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+}
+
+int directionY() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "directionY", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+}
+
+int directionZ() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "directionZ", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+}
+
+void setDirectionX(x) int x; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setDirectionX", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, x);
+}
+
+void setDirectionY(y) int y; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setDirectionY", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, y);
+}
+
+void setDirectionZ(z) int z; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setDirectionZ", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, z);
+}
+
 /* square of euclidean distance from pt to your current position */
 int
 distanceSquaredToYou(x, y)

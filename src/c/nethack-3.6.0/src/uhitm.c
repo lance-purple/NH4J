@@ -306,7 +306,7 @@ int *attk_count, *role_roll_penalty;
 }
 
 /* try to attack; return False if monster evaded;
-   u.dx and u.dy must be set */
+   directionX and directionY must be set */
 boolean
 attack(mtmp)
 register struct monst *mtmp;
@@ -363,9 +363,9 @@ register struct monst *mtmp;
     /* possibly set in attack_checks;
        examined in known_hitum, called via hitum or hmonas below */
     override_confirmation = FALSE;
-    /* attack_checks() used to use <currentX()+u.dx,currentY()+u.dy> directly, now
+    /* attack_checks() used to use <currentX()+directionX(),currentY()+u.dy> directly, now
        it uses bhitpos instead; it might map an invisible monster there */
-    bhitpos.x = currentX() + u.dx;
+    bhitpos.x = currentX() + directionX();
     bhitpos.y = currentY() + u.dy;
     if (attack_checks(mtmp, uwep))
         return TRUE;
@@ -406,7 +406,7 @@ register struct monst *mtmp;
     if (mdat->mlet == S_LEPRECHAUN && !mtmp->mfrozen && !mtmp->msleeping
         && !mtmp->mconf && mtmp->mcansee && !rn2(7)
         && (m_move(mtmp, 0) == 2 /* it died */
-            || mtmp->mx != currentX() + u.dx
+            || mtmp->mx != currentX() + directionX()
             || mtmp->my != currentY() + u.dy)) /* it moved */
         return FALSE;
 
@@ -423,9 +423,9 @@ atk_done:
      * evade.
      */
     if (context.forcefight && mtmp->mhp > 0 && !canspotmon(mtmp)
-        && !glyph_is_invisible(levl[currentX() + u.dx][currentY() + u.dy].glyph)
+        && !glyph_is_invisible(levl[currentX() + directionX()][currentY() + u.dy].glyph)
         && !(u.uswallow && mtmp == u.ustuck))
-        map_invisible(currentX() + u.dx, currentY() + u.dy);
+        map_invisible(currentX() + directionX(), currentY() + u.dy);
 
     return TRUE;
 }
@@ -451,7 +451,7 @@ struct attack *uattk;
     if (!*mhit) {
         missum(mon, uattk, (rollneeded + armorpenalty > dieroll));
     } else {
-        int oldhp = mon->mhp, x = currentX() + u.dx, y = currentY() + u.dy;
+        int oldhp = mon->mhp, x = currentX() + directionX(), y = currentY() + u.dy;
         long oldweaphit = u.uconduct.weaphit;
 
         /* KMH, conduct */
@@ -494,7 +494,7 @@ struct attack *uattk;
 {
     boolean malive, wep_was_destroyed = FALSE;
     struct obj *wepbefore = uwep;
-    int armorpenalty, attknum = 0, x = currentX() + u.dx, y = currentY() + u.dy,
+    int armorpenalty, attknum = 0, x = currentX() + directionX(), y = currentY() + u.dy,
                       tmp = find_roll_to_hit(mon, uattk->aatyp, uwep,
                                              &attknum, &armorpenalty);
     int mhit = (tmp > (dieroll = rnd(20)) || u.uswallow);
@@ -1037,7 +1037,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
         }
         /* avoid migrating a dead monster */
         if (mon->mhp > tmp) {
-            mhurtle(mon, u.dx, u.dy, 1);
+            mhurtle(mon, directionX(), u.dy, 1);
             mdat = mon->data; /* in case of a polymorph trap */
             if (DEADMONSTER(mon))
                 already_killed = TRUE;
@@ -1052,7 +1052,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                       makeplural(stagger(mon->data, "stagger")));
             /* avoid migrating a dead monster */
             if (mon->mhp > tmp) {
-                mhurtle(mon, u.dx, u.dy, 1);
+                mhurtle(mon, directionX(), u.dy, 1);
                 mdat = mon->data; /* in case of a polymorph trap */
                 if (DEADMONSTER(mon))
                     already_killed = TRUE;
@@ -2106,7 +2106,7 @@ register struct monst *mon;
             } else
                 sum[i] = dhit;
             /* might be a worm that gets cut in half */
-            if (m_at(currentX() + u.dx, currentY() + u.dy) != mon)
+            if (m_at(currentX() + directionX(), currentY() + u.dy) != mon)
                 return (boolean) (nsum != 0);
             /* Do not print "You hit" message, since known_hitum
              * already did it.
@@ -2582,7 +2582,7 @@ struct monst *mtmp;
         else if (mtmp->m_ap_type == M_AP_MONSTER)
             what = a_monnam(mtmp); /* differs from what was sensed */
     } else {
-        int glyph = levl[currentX() + u.dx][currentY() + u.dy].glyph;
+        int glyph = levl[currentX() + directionX()][currentY() + u.dy].glyph;
 
         if (glyph_is_cmap(glyph) && (glyph_to_cmap(glyph) == S_hcdoor
                                      || glyph_to_cmap(glyph) == S_vcdoor))

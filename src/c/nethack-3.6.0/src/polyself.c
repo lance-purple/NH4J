@@ -669,9 +669,10 @@ int mntmp;
     /* New stats for monster, to last only as long as polymorphed.
      * Currently only strength gets changed.
      */
-    if (strongmonst(&mons[mntmp]))
+    if (strongmonst(&mons[mntmp])) {
         setYourCurrentAttr(A_STR, STR18(100));
         setYourAttrMax(A_STR, STR18(100));
+    }
 
     if (Stone_resistance && Stoned) { /* parnes@eniac.seas.upenn.edu */
         make_stoned(0L, "You no longer seem to be petrifying.", 0,
@@ -1070,11 +1071,11 @@ dobreathe()
     mattk = attacktype_fordmg(youmonst.data, AT_BREA, AD_ANY);
     if (!mattk)
         impossible("bad breath attack?"); /* mouthwash needed... */
-    else if (!u.dx && !u.dy && !u.dz)
+    else if (!directionX() && !u.dy && !u.dz)
         ubreatheu(mattk);
     else
         buzz((int) (20 + mattk->adtyp - 1), (int) mattk->damn, currentX(), currentY(),
-             u.dx, u.dy);
+             directionX(), u.dy);
     return 1;
 }
 

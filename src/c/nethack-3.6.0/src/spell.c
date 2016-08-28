@@ -1009,11 +1009,11 @@ boolean atme;
     case SPE_CONE_OF_COLD:
         if (role_skill >= P_SKILLED) {
             if (throwspell()) {
-                cc.x = u.dx;
+                cc.x = directionX();
                 cc.y = u.dy;
                 n = rnd(8) + 1;
                 while (n--) {
-                    if (!u.dx && !u.dy && !u.dz) {
+                    if (!directionX() && !u.dy && !u.dz) {
                         if ((damage = zapyourself(pseudo, TRUE)) != 0) {
                             char buf[BUFSZ];
                             Sprintf(buf, "zapped %sself with a spell",
@@ -1021,19 +1021,19 @@ boolean atme;
                             losehp(damage, buf, NO_KILLER_PREFIX);
                         }
                     } else {
-                        explode(u.dx, u.dy,
+                        explode(directionX(), u.dy,
                                 pseudo->otyp - SPE_MAGIC_MISSILE + 10,
                                 spell_damage_bonus(u.ulevel / 2 + 1), 0,
                                 (pseudo->otyp == SPE_CONE_OF_COLD)
                                    ? EXPL_FROSTY
                                    : EXPL_FIERY);
                     }
-                    u.dx = cc.x + rnd(3) - 2;
+                    setDirectionX(cc.x + rnd(3) - 2);
                     u.dy = cc.y + rnd(3) - 2;
-                    if (!isok(u.dx, u.dy) || !cansee(u.dx, u.dy)
-                        || IS_STWALL(levl[u.dx][u.dy].typ) || u.uswallow) {
+                    if (!isok(directionX(), u.dy) || !cansee(directionX(), u.dy)
+                        || IS_STWALL(levl[directionX()][u.dy].typ) || u.uswallow) {
                         /* Spell is reflected back to center */
-                        u.dx = cc.x;
+                        setDirectionX(cc.x);
                         u.dy = cc.y;
                     }
                 }
@@ -1064,7 +1064,8 @@ boolean atme;
     case SPE_STONE_TO_FLESH:
         if (!(objects[pseudo->otyp].oc_dir == NODIR)) {
             if (atme) {
-                u.dx = u.dy = u.dz = 0;
+                setDirectionX(0);
+                u.dy = u.dz = 0;
             } else if (!getdir((char *) 0)) {
                 /* getdir cancelled, re-use previous direction */
                 /*
@@ -1077,7 +1078,7 @@ boolean atme;
                  */
                 pline_The("magical energy is released!");
             }
-            if (!u.dx && !u.dy && !u.dz) {
+            if (!directionX() && !u.dy && !u.dz) {
                 if ((damage = zapyourself(pseudo, TRUE)) != 0) {
                     char buf[BUFSZ];
 
@@ -1190,7 +1191,7 @@ throwspell()
     } else if (u.uswallow) {
         pline_The("spell is cut short!");
         exercise(A_WIS, FALSE); /* What were you THINKING! */
-        u.dx = 0;
+        setDirectionX(0);
         u.dy = 0;
         return 1;
     } else if ((!cansee(cc.x, cc.y)
@@ -1200,7 +1201,7 @@ throwspell()
         return 0;
     }
 
-    u.dx = cc.x;
+    setDirectionX(cc.x);
     u.dy = cc.y;
     return 1;
 }

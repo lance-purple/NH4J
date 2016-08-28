@@ -100,7 +100,7 @@ register boolean clumsy;
     if (mon->mhp > 0 && martial() && !bigmonst(mon->data) && !rn2(3)
         && mon->mcanmove && mon != u.ustuck && !mon->mtrapped) {
         /* see if the monster has a place to move into */
-        mdx = mon->mx + u.dx;
+        mdx = mon->mx + directionX();
         mdy = mon->my + u.dy;
         if (goodpos(mdx, mdy, mon, 0)) {
             pline("%s reels from the blow.", Monnam(mon));
@@ -550,8 +550,8 @@ xchar x, y;
         range = 1;
 
     /* see if the object has a place to move into */
-    if (!ZAP_POS(levl[x + u.dx][y + u.dy].typ)
-        || closed_door(x + u.dx, y + u.dy))
+    if (!ZAP_POS(levl[x + directionX()][y + u.dy].typ)
+        || closed_door(x + directionX(), y + u.dy))
         range = 1;
 
     costly = (!(kickedobj->no_charge && !Has_contents(kickedobj))
@@ -664,7 +664,7 @@ xchar x, y;
     obj_extract_self(kickedobj);
     (void) snuff_candle(kickedobj);
     newsym(x, y);
-    mon = bhit(u.dx, u.dy, range, KICKED_WEAPON,
+    mon = bhit(directionX(), u.dy, range, KICKED_WEAPON,
                (int FDECL((*), (MONST_P, OBJ_P))) 0,
                (int FDECL((*), (OBJ_P, OBJ_P))) 0, &kickedobj);
     if (!kickedobj)
@@ -817,10 +817,10 @@ dokick()
 
     if (!getdir((char *) 0))
         return 0;
-    if (!u.dx && !u.dy)
+    if (!directionX() && !u.dy)
         return 0;
 
-    x = currentX() + u.dx;
+    x = currentX() + directionX();
     y = currentY() + u.dy;
 
     /* KMH -- Kicking boots always succeed */
@@ -852,7 +852,7 @@ dokick()
     if (Levitation) {
         int xx, yy;
 
-        xx = currentX() - u.dx;
+        xx = currentX() - directionX();
         yy = currentY() - u.dy;
         /* doors can be opened while levitating, so they must be
          * reachable for bracing purposes
@@ -932,7 +932,7 @@ dokick()
 
             if (range < 1)
                 range = 1;
-            hurtle(-u.dx, -u.dy, range, TRUE);
+            hurtle(-directionX(), -u.dy, range, TRUE);
         }
         return 1;
     }
@@ -950,7 +950,7 @@ dokick()
                          || Is_waterlevel(&u.uz) || sobj_at(BOULDER, x, y))) {
         if (kick_object(x, y)) {
             if (Is_airlevel(&u.uz))
-                hurtle(-u.dx, -u.dy, 1, TRUE); /* assume it's light */
+                hurtle(-directionX(), -u.dy, 1, TRUE); /* assume it's light */
             return 1;
         }
         goto ouch;
@@ -1213,7 +1213,7 @@ dokick()
             dmg = rnd(ACURR(A_CON) > 15 ? 3 : 5);
             losehp(Maybe_Half_Phys(dmg), kickstr(buf), KILLED_BY);
             if (Is_airlevel(&u.uz) || Levitation)
-                hurtle(-u.dx, -u.dy, rn1(2, 4), TRUE); /* assume it's heavy */
+                hurtle(-directionX(), -u.dy, rn1(2, 4), TRUE); /* assume it's heavy */
             return 1;
         }
         goto dumb;
@@ -1233,7 +1233,7 @@ dokick()
             set_wounded_legs(RIGHT_SIDE, 5 + rnd(5));
         }
         if ((Is_airlevel(&u.uz) || Levitation) && rn2(2))
-            hurtle(-u.dx, -u.dy, 1, TRUE);
+            hurtle(-directionX(), -u.dy, 1, TRUE);
         return 1; /* uses a turn */
     }
 

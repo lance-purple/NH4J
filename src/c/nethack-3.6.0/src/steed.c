@@ -50,12 +50,12 @@ struct obj *otmp;
         pline1(Never_mind);
         return 0;
     }
-    if (!u.dx && !u.dy) {
+    if (!directionX() && !u.dy) {
         pline("Saddle yourself?  Very funny...");
         return 0;
     }
-    if (!isok(currentX() + u.dx, currentY() + u.dy)
-        || !(mtmp = m_at(currentX() + u.dx, currentY() + u.dy)) || !canspotmon(mtmp)) {
+    if (!isok(currentX() + directionX(), currentY() + u.dy)
+        || !(mtmp = m_at(currentX() + directionX(), currentY() + u.dy)) || !canspotmon(mtmp)) {
         pline("I see nobody there.");
         return 1;
     }
@@ -165,10 +165,10 @@ doride()
 
     if (u.usteed) {
         dismount_steed(DISMOUNT_BYCHOICE);
-    } else if (getdir((char *) 0) && isok(currentX() + u.dx, currentY() + u.dy)) {
+    } else if (getdir((char *) 0) && isok(currentX() + directionX(), currentY() + u.dy)) {
         if (wizard && yn("Force the mount to succeed?") == 'y')
             forcemount = TRUE;
-        return (mount_steed(m_at(currentX() + u.dx, currentY() + u.dy), forcemount));
+        return (mount_steed(m_at(currentX() + directionX(), currentY() + u.dy), forcemount));
     } else {
         return 0;
     }

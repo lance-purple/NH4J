@@ -73,9 +73,9 @@ struct obj *obj;
     } else if (u.dz) {
         You("take a picture of the %s.",
             (u.dz > 0) ? surface(currentX(), currentY()) : ceiling(currentX(), currentY()));
-    } else if (!u.dx && !u.dy) {
+    } else if (!directionX() && !u.dy) {
         (void) zapyourself(obj, TRUE);
-    } else if ((mtmp = bhit(u.dx, u.dy, COLNO, FLASHED_LIGHT,
+    } else if ((mtmp = bhit(directionX(), u.dy, COLNO, FLASHED_LIGHT,
                             (int FDECL((*), (MONST_P, OBJ_P))) 0,
                             (int FDECL((*), (OBJ_P, OBJ_P))) 0, &obj)) != 0) {
         obj->ox = currentX(), obj->oy = currentY();
@@ -323,7 +323,7 @@ register struct obj *obj;
         } else
             mstatusline(u.usteed);
         return res;
-    } else if (u.uswallow && (u.dx || u.dy || u.dz)) {
+    } else if (u.uswallow && (directionX() || u.dy || u.dz)) {
         mstatusline(u.ustuck);
         return res;
     } else if (u.uswallow && interference) {
@@ -348,11 +348,11 @@ register struct obj *obj;
     }
     if (Stunned || (Confusion && !rn2(5)))
         confdir();
-    if (!u.dx && !u.dy) {
+    if (!directionX() && !u.dy) {
         ustatusline();
         return res;
     }
-    rx = currentX() + u.dx;
+    rx = currentX() + directionX();
     ry = currentY() + u.dy;
     if (!isok(rx, ry)) {
         You_hear("a faint typing noise.");
@@ -791,7 +791,7 @@ struct obj *obj;
             pline_The("%s fogs up and doesn't reflect!", mirror);
         return 1;
     }
-    if (!u.dx && !u.dy && !u.dz) {
+    if (!directionX() && !u.dy && !u.dz) {
         if (!useeit) {
             You_cant("see your %s %s.", uvisage, body_part(FACE));
         } else {
@@ -843,7 +843,7 @@ struct obj *obj;
                 (u.dz > 0) ? surface(currentX(), currentY()) : ceiling(currentX(), currentY()));
         return 1;
     }
-    mtmp = bhit(u.dx, u.dy, COLNO, INVIS_BEAM,
+    mtmp = bhit(directionX(), u.dy, COLNO, INVIS_BEAM,
                 (int FDECL((*), (MONST_P, OBJ_P))) 0,
                 (int FDECL((*), (OBJ_P, OBJ_P))) 0, &obj);
     if (!mtmp || !haseyes(mtmp->data) || notonhead)
@@ -2076,7 +2076,7 @@ struct obj **optr;
         context.move = multi = 0;
         return;
     }
-    x = currentX() + u.dx;
+    x = currentX() + directionX();
     y = currentY() + u.dy;
     cc.x = x;
     cc.y = y;
@@ -2084,7 +2084,7 @@ struct obj **optr;
     if (!figurine_location_checks(obj, &cc, FALSE))
         return;
     You("%s and it transforms.",
-        (u.dx || u.dy) ? "set the figurine beside you"
+        (directionX() || u.dy) ? "set the figurine beside you"
                        : (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz)
                           || is_pool(cc.x, cc.y))
                              ? "release the figurine"
@@ -2459,7 +2459,7 @@ struct obj *obj;
     } else {
         if (Stunned || (Confusion && !rn2(5)))
             confdir();
-        rx = currentX() + u.dx;
+        rx = currentX() + directionX();
         ry = currentY() + u.dy;
         if (!isok(rx, ry)) {
             You("miss.");
@@ -2492,7 +2492,7 @@ struct obj *obj;
     } else if (u.dz < 0) {
         You("flick a bug off of the %s.", ceiling(currentX(), currentY()));
 
-    } else if ((!u.dx && !u.dy) || (u.dz > 0)) {
+    } else if ((!directionX() && !u.dy) || (u.dz > 0)) {
         int dam;
 
         /* Sometimes you hit your steed by mistake */

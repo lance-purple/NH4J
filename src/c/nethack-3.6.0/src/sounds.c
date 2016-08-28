@@ -1026,7 +1026,7 @@ dochat()
         return 0;
     }
 
-    if (u.dx == 0 && u.dy == 0) {
+    if (directionX() == 0 && u.dy == 0) {
         /*
          * Let's not include this.
          * It raises all sorts of questions: can you wear
@@ -1041,7 +1041,7 @@ dochat()
         return 0;
     }
 
-    tx = currentX() + u.dx;
+    tx = currentX() + directionX();
     ty = currentY() + u.dy;
 
     if (!isok(tx, ty))

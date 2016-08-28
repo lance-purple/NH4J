@@ -24,7 +24,7 @@ picking_lock(x, y)
 int *x, *y;
 {
     if (occupation == picklock) {
-        *x = currentX() + u.dx;
+        *x = currentX() + directionX();
         *y = currentY() + u.dy;
         return TRUE;
     } else {
@@ -79,7 +79,7 @@ picklock(VOID_ARGS)
             return ((xlock.usedtime = 0)); /* you or it moved */
         }
     } else { /* door */
-        if (xlock.door != &(levl[currentX() + u.dx][currentY() + u.dy])) {
+        if (xlock.door != &(levl[currentX() + directionX()][currentY() + u.dy])) {
             return ((xlock.usedtime = 0)); /* you moved */
         }
         switch (xlock.door->doormask) {
@@ -109,10 +109,10 @@ picklock(VOID_ARGS)
         if (xlock.door->doormask & D_TRAPPED) {
             b_trapped("door", FINGER);
             xlock.door->doormask = D_NODOOR;
-            unblock_point(currentX() + u.dx, currentY() + u.dy);
-            if (*in_rooms(currentX() + u.dx, currentY() + u.dy, SHOPBASE))
-                add_damage(currentX() + u.dx, currentY() + u.dy, 0L);
-            newsym(currentX() + u.dx, currentY() + u.dy);
+            unblock_point(currentX() + directionX(), currentY() + u.dy);
+            if (*in_rooms(currentX() + directionX(), currentY() + u.dy, SHOPBASE))
+                add_damage(currentX() + directionX(), currentY() + u.dy, 0L);
+            newsym(currentX() + directionX(), currentY() + u.dy);
         } else if (xlock.door->doormask & D_LOCKED)
             xlock.door->doormask = D_CLOSED;
         else
@@ -554,7 +554,7 @@ doopen()
     return doopen_indir(0, 0);
 }
 
-/* try to open a door in direction u.dx/u.dy */
+/* try to open a door in direction directionX/u.dy */
 int
 doopen_indir(x, y)
 int x, y;
@@ -716,7 +716,7 @@ doclose()
     if (!getdir((char *) 0))
         return 0;
 
-    x = currentX() + u.dx;
+    x = currentX() + directionX();
     y = currentY() + u.dy;
     if ((x == currentX()) && (y == currentY())) {
         You("are in the way!");
