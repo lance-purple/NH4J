@@ -3744,8 +3744,8 @@ int x, y, mod;
         if (abs(x) <= 1 && abs(y) <= 1) {
             x = sgn(x), y = sgn(y);
         } else {
-            u.tx = currentX() + x;
-            u.ty = currentY() + y;
+            setDestinationX(currentX() + x);
+            setDestinationY(currentY() + y);
             cmd[0] = CMD_TRAVEL;
             return cmd;
         }
@@ -4052,8 +4052,10 @@ dotravel(VOID_ARGS)
         /* user pressed ESC */
         return 0;
     }
-    iflags.travelcc.x = u.tx = cc.x;
-    iflags.travelcc.y = u.ty = cc.y;
+    setDestinationX(cc.x);
+    iflags.travelcc.x = cc.x;
+    setDestinationY(cc.y);
+    iflags.travelcc.y = cc.y;
     cmd[0] = CMD_TRAVEL;
     readchar_queue = cmd;
     return 0;

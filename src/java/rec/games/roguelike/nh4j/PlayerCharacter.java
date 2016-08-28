@@ -9,6 +9,9 @@ public class PlayerCharacter {
 	private static int directionY;
 	private static int directionZ;
 
+	private static int destinationX;
+	private static int destinationY;
+
 	private static NHAttributeSet currentAttributes = new NHAttributeSet();
 	private static NHAttributeSet maximumAttributes = new NHAttributeSet();
 	private static NHAttributeSet attributeBonuses = new NHAttributeSet();
@@ -54,9 +57,25 @@ public class PlayerCharacter {
 	public static void setDirectionY(int y) {
 		directionY = y;
 	}
-
+	
 	public static void setDirectionZ(int z) {
 		directionZ = z;
+	}
+
+	public static int destinationX() {
+		return destinationX;
+	}
+
+	public static int destinationY() {
+		return destinationY;
+	}
+
+	public static void setDestinationX(int x) {
+		destinationX = x;
+	}
+
+	public static void setDestinationY(int y) {
+		destinationY = y;
 	}
 
 	public static int currentAttribute(int attrIndex) {

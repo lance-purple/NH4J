@@ -852,7 +852,7 @@ int wiz_debug_cmd_traveldisplay()
 #endif /* DEBUG */
 
 /*
- * Find a path from the destination (u.tx,u.ty) back to (currentX(),currentY()).
+ * Find a path from the destination (destinationX,destinationY) back to (currentX(),currentY()).
  * A shortest path is returned.  If guess is TRUE, consider various
  * inaccessible locations as valid intermediate path points.
  * Returns TRUE if a path was found.
@@ -862,19 +862,19 @@ findtravelpath(guess)
 boolean guess;
 {
     /* if travel to adjacent, reachable location, use normal movement rules */
-    if (!guess && context.travel1 && distmin(currentX(), currentY(), u.tx, u.ty) == 1
-        && !(currentX() != u.tx && currentY() != u.ty && NODIAG(u.umonnum))) {
+    if (!guess && context.travel1 && distmin(currentX(), currentY(), destinationX(), destinationY()) == 1
+        && !(currentX() != destinationX() && currentY() != destinationY() && NODIAG(u.umonnum))) {
         context.run = 0;
-        if (test_move(currentX(), currentY(), u.tx - currentX(), u.ty - currentY(), TEST_MOVE)) {
-            setDirectionX(u.tx - currentX());
-            setDirectionY(u.ty - currentY());
+        if (test_move(currentX(), currentY(), destinationX() - currentX(), destinationY() - currentY(), TEST_MOVE)) {
+            setDirectionX(destinationX() - currentX());
+            setDirectionY(destinationY() - currentY());
             nomul(0);
             iflags.travelcc.x = iflags.travelcc.y = -1;
             return TRUE;
         }
         context.run = 8;
     }
-    if (u.tx != currentX() || u.ty != currentY()) {
+    if (destinationX() != currentX() || destinationY() != currentY()) {
         xchar travel[COLNO][ROWNO];
         xchar travelstepx[2][COLNO * ROWNO];
         xchar travelstepy[2][COLNO * ROWNO];
@@ -891,11 +891,11 @@ boolean guess;
         if (guess) {
             tx = currentX();
             ty = currentY();
-            ux = u.tx;
-            uy = u.ty;
+            ux = destinationX();
+            uy = destinationY();
         } else {
-            tx = u.tx;
-            ty = u.ty;
+            tx = destinationX();
+            ty = destinationY();
             ux = currentX();
             uy = currentY();
         }
@@ -941,7 +941,7 @@ boolean guess;
                             if (!guess) {
                                 setDirectionX(x - ux);
                                 setDirectionY(y - uy);
-                                if (x == u.tx && y == u.ty) {
+                                if (x == destinationX() && y == destinationY()) {
                                     nomul(0);
                                     /* reset run so domove run checks work */
                                     context.run = 8;
@@ -1010,8 +1010,8 @@ boolean guess;
 
             if (px == currentX() && py == currentY()) {
                 /* no guesses, just go in the general direction */
-                setDirectionX(sgn(u.tx - currentX()));
-                setDirectionY(sgn(u.ty - currentY()));
+                setDirectionX(sgn(destinationX() - currentX()));
+                setDirectionY(sgn(destinationY() - currentY()));
                 if (test_move(currentX(), currentY(), directionX(), directionY(), TEST_MOVE))
                     return TRUE;
                 goto found;

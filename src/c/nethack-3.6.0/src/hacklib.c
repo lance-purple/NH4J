@@ -575,6 +575,32 @@ void setDirectionZ(z) int z; {
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, z);
 }
 
+/* your travel destination */
+
+int destinationX() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "destinationX", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+}
+
+int destinationY() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "destinationY", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+}
+
+void setDestinationX(x) int x; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setDestinationX", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, x);
+}
+
+void setDestinationY(y) int y; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setDestinationY", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, y);
+}
+
 /* square of euclidean distance from pt to your current position */
 int
 distanceSquaredToYou(x, y)
