@@ -70,9 +70,9 @@ struct obj *obj;
     } else if (u.uswallow) {
         You("take a picture of %s %s.", s_suffix(mon_nam(u.ustuck)),
             mbodypart(u.ustuck, STOMACH));
-    } else if (u.dz) {
+    } else if (directionZ()) {
         You("take a picture of the %s.",
-            (u.dz > 0) ? surface(currentX(), currentY()) : ceiling(currentX(), currentY()));
+            (directionZ() > 0) ? surface(currentX(), currentY()) : ceiling(currentX(), currentY()));
     } else if (!directionX() && !directionY()) {
         (void) zapyourself(obj, TRUE);
     } else if ((mtmp = bhit(directionX(), directionY(), COLNO, FLASHED_LIGHT,
@@ -316,25 +316,25 @@ register struct obj *obj;
     context.stethoscope_move = moves;
     context.stethoscope_movement = youmonst.movement;
 
-    if (u.usteed && u.dz > 0) {
+    if (u.usteed && directionZ() > 0) {
         if (interference) {
             pline("%s interferes.", Monnam(u.ustuck));
             mstatusline(u.ustuck);
         } else
             mstatusline(u.usteed);
         return res;
-    } else if (u.uswallow && (directionX() || directionY() || u.dz)) {
+    } else if (u.uswallow && (directionX() || directionY() || directionZ())) {
         mstatusline(u.ustuck);
         return res;
     } else if (u.uswallow && interference) {
         pline("%s interferes.", Monnam(u.ustuck));
         mstatusline(u.ustuck);
         return res;
-    } else if (u.dz) {
+    } else if (directionZ()) {
         if (Underwater)
             You_hear("faint splashing.");
-        else if (u.dz < 0 || !can_reach_floor(TRUE))
-            cant_reach_floor(currentX(), currentY(), (u.dz < 0), TRUE);
+        else if (directionZ() < 0 || !can_reach_floor(TRUE))
+            cant_reach_floor(currentX(), currentY(), (directionZ() < 0), TRUE);
         else if (its_dead(currentX(), currentY(), &res))
             ; /* message already given */
         else if (Is_stronghold(&u.uz))
@@ -578,7 +578,7 @@ struct obj *obj;
         return;
 
     if ((cc.x == currentX()) && (cc.y == currentY())) {
-        if (u.usteed && u.dz > 0) {
+        if (u.usteed && directionZ() > 0) {
             mtmp = u.usteed;
             spotmon = 1;
             goto got_target;
@@ -791,7 +791,7 @@ struct obj *obj;
             pline_The("%s fogs up and doesn't reflect!", mirror);
         return 1;
     }
-    if (!directionX() && !directionY() && !u.dz) {
+    if (!directionX() && !directionY() && !directionZ()) {
         if (!useeit) {
             You_cant("see your %s %s.", uvisage, body_part(FACE));
         } else {
@@ -837,10 +837,10 @@ struct obj *obj;
                               : "reflect the murky water.");
         return 1;
     }
-    if (u.dz) {
+    if (directionZ()) {
         if (useeit)
             You("reflect the %s.",
-                (u.dz > 0) ? surface(currentX(), currentY()) : ceiling(currentX(), currentY()));
+                (directionZ() > 0) ? surface(currentX(), currentY()) : ceiling(currentX(), currentY()));
         return 1;
     }
     mtmp = bhit(directionX(), directionY(), COLNO, INVIS_BEAM,
@@ -2088,7 +2088,7 @@ struct obj **optr;
                        : (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz)
                           || is_pool(cc.x, cc.y))
                              ? "release the figurine"
-                             : (u.dz < 0 ? "toss the figurine into the air"
+                             : (directionZ() < 0 ? "toss the figurine into the air"
                                          : "set the figurine on the ground"));
     (void) make_familiar(obj, cc.x, cc.y, FALSE);
     (void) stop_timer(FIG_TRANSFORM, obj_to_any(obj));
@@ -2489,10 +2489,10 @@ struct obj *obj;
     } else if (Underwater) {
         There("is too much resistance to flick your bullwhip.");
 
-    } else if (u.dz < 0) {
+    } else if (directionZ() < 0) {
         You("flick a bug off of the %s.", ceiling(currentX(), currentY()));
 
-    } else if ((!directionX() && !directionY()) || (u.dz > 0)) {
+    } else if ((!directionX() && !directionY()) || (directionZ() > 0)) {
         int dam;
 
         /* Sometimes you hit your steed by mistake */

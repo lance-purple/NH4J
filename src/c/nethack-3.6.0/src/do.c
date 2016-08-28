@@ -1302,7 +1302,7 @@ boolean at_stairs, falling, portal;
                 u_on_sstairs(0);
             else
                 u_on_upstairs();
-            if (!u.dz) {
+            if (!directionZ()) {
                 ; /* stayed on same level? (no transit effects) */
             } else if (Flying) {
                 if (flags.verbose)

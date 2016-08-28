@@ -298,7 +298,7 @@ struct obj *pick;
         boolean it;
         int count;
 
-        if (u.dz < 0) {
+        if (directionZ() < 0) {
             There("isn't any sort of lock up %s.",
                   Levitation ? "here" : "there");
             return PICKLOCK_LEARNED_SOMETHING;

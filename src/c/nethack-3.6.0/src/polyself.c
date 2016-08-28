@@ -1071,7 +1071,7 @@ dobreathe()
     mattk = attacktype_fordmg(youmonst.data, AT_BREA, AD_ANY);
     if (!mattk)
         impossible("bad breath attack?"); /* mouthwash needed... */
-    else if (!directionX() && !directionY() && !u.dz)
+    else if (!directionX() && !directionY() && !directionZ())
         ubreatheu(mattk);
     else
         buzz((int) (20 + mattk->adtyp - 1), (int) mattk->damn, currentX(), currentY(),

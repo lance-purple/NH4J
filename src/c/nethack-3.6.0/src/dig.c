@@ -977,7 +977,7 @@ struct obj *obj;
             ; /* all directions are viable when swallowed */
         } else if (movecmd(*sdp)) {
             /* normal direction, within plane of the level map;
-               movecmd() sets directionX, directionY, u.dz and returns !u.dz */
+               movecmd() sets directionX, directionY, directionZ and returns !directionZ */
             if (!dxdy_moveok())
                 continue; /* handle NODIAG */
             rx = currentX() + directionX();
@@ -990,7 +990,7 @@ struct obj *obj;
                it shouldn't be a likely candidate when floating high
                above the floor; include up instead in that situation
                (as a silly candidate rather than a likely one...) */
-            if ((u.dz > 0) ^ downok)
+            if ((directionZ() > 0) ^ downok)
                 continue;
         }
         /* include this direction */
@@ -1006,7 +1006,7 @@ struct obj *obj;
 
 /* MRKR: use_pick_axe() is split in two to allow autodig to bypass */
 /*       the "In what direction do you want to dig?" query.        */
-/*       use_pick_axe2() uses the existing directionX, directionY and u.dz    */
+/*       use_pick_axe2() uses the existing directionX, directionY and directionZ    */
 int
 use_pick_axe2(obj)
 struct obj *obj;
@@ -1022,12 +1022,12 @@ struct obj *obj;
         ; /* return 1 */
     } else if (Underwater) {
         pline("Turbulence torpedoes your %s attempts.", verbing);
-    } else if (u.dz < 0) {
+    } else if (directionZ() < 0) {
         if (Levitation)
             You("don't have enough leverage.");
         else
             You_cant("reach the %s.", ceiling(currentX(), currentY()));
-    } else if (!directionX() && !directionY() && !u.dz) {
+    } else if (!directionX() && !directionY() && !directionZ()) {
         char buf[BUFSZ];
         int dam;
 
@@ -1039,7 +1039,7 @@ struct obj *obj;
         losehp(Maybe_Half_Phys(dam), buf, KILLED_BY);
         context.botl = 1;
         return 1;
-    } else if (u.dz == 0) {
+    } else if (directionZ() == 0) {
         if (Stunned || (Confusion && !rn2(5)))
             confdir();
         rx = currentX() + directionX();
@@ -1397,9 +1397,9 @@ zap_dig()
         return;
     } /* swallowed */
 
-    if (u.dz) {
+    if (directionZ()) {
         if (!Is_airlevel(&u.uz) && !Is_waterlevel(&u.uz) && !Underwater) {
-            if (u.dz < 0 || On_stairs(currentX(), currentY())) {
+            if (directionZ() < 0 || On_stairs(currentX(), currentY())) {
                 int dmg;
                 if (On_stairs(currentX(), currentY()))
                     pline_The("beam bounces off the %s and hits the %s.",

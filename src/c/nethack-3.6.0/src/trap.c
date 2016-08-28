@@ -2957,7 +2957,7 @@ climb_pit()
                 : u.usteed ? "ride" : "crawl");
         fill_pit(currentX(), currentY());
         vision_full_recalc = 1; /* vision limits change */
-    } else if (u.dz || flags.verbose) {
+    } else if (directionZ() || flags.verbose) {
         if (u.usteed)
             Norep("%s is still in a pit.", upstart(y_monnam(u.usteed)));
         else

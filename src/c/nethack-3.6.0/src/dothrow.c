@@ -79,7 +79,7 @@ int shotlimit;
         pline("It's too heavy.");
         return 1;
     }
-    if (!directionX() && !directionY() && !u.dz) {
+    if (!directionX() && !directionY() && !directionZ()) {
         You("cannot throw an object at yourself.");
         return 0;
     }
@@ -1005,13 +1005,14 @@ boolean
         if (slipok) {
             setDirectionX(rn2(3) - 1);
             setDirectionY(rn2(3) - 1);
-            if (!directionX() && !directionY())
-                u.dz = 1;
+            if (!directionX() && !directionY()) {
+                setDirectionZ(1);
+            }
             impaired = TRUE;
         }
     }
 
-    if ((directionX() || directionY() || (u.dz < 1))
+    if ((directionX() || directionY() || (directionZ() < 1))
         && calc_capacity((int) obj->owt) > SLT_ENCUMBER
         && (Upolyd ? (u.mh < 5 && u.mh != u.mhmax)
                    : (u.uhp < 10 && u.uhp != u.uhpmax))
@@ -1022,7 +1023,7 @@ boolean
         exercise(A_CON, FALSE);
         setDirectionX(0);
         setDirectionY(0);
-        u.dz = 1;
+        setDirectionZ(1);
     }
 
     thrownobj = obj;
@@ -1032,8 +1033,8 @@ boolean
         mon = u.ustuck;
         bhitpos.x = mon->mx;
         bhitpos.y = mon->my;
-    } else if (u.dz) {
-        if (u.dz < 0 && Role_if(PM_VALKYRIE) && obj->oartifact == ART_MJOLLNIR
+    } else if (directionZ()) {
+        if (directionZ() < 0 && Role_if(PM_VALKYRIE) && obj->oartifact == ART_MJOLLNIR
             && !impaired) {
             pline("%s the %s and returns to your hand!", Tobjnam(obj, "hit"),
                   ceiling(currentX(), currentY()));
@@ -1041,9 +1042,9 @@ boolean
             (void) encumber_msg();
             setuwep(obj);
             u.twoweap = twoweap;
-        } else if (u.dz < 0) {
+        } else if (directionZ() < 0) {
             (void) toss_up(obj, rn2(5) && !Underwater);
-        } else if (u.dz > 0 && u.usteed && obj->oclass == POTION_CLASS
+        } else if (directionZ() > 0 && u.usteed && obj->oclass == POTION_CLASS
                    && rn2(6)) {
             /* alternative to prayer or wand of opening/spell of knock
                for dealing with cursed saddle:  throw holy water > */
@@ -1925,7 +1926,7 @@ struct obj *obj;
     int range, odx, ody;
     register struct monst *mon;
 
-    if (!directionX() && !directionY() && !u.dz) {
+    if (!directionX() && !directionY() && !directionZ()) {
         You("cannot throw gold at yourself.");
         return 0;
     }
@@ -1938,8 +1939,8 @@ struct obj *obj;
         return 1;
     }
 
-    if (u.dz) {
-        if (u.dz < 0 && !Is_airlevel(&u.uz) && !Underwater
+    if (directionZ()) {
+        if (directionZ() < 0 && !Is_airlevel(&u.uz) && !Underwater
             && !Is_waterlevel(&u.uz)) {
             pline_The("gold hits the %s, then falls back on top of your %s.",
                       ceiling(currentX(), currentY()), body_part(HEAD));
@@ -1978,7 +1979,7 @@ struct obj *obj;
 
     if (flooreffects(obj, bhitpos.x, bhitpos.y, "fall"))
         return 1;
-    if (u.dz > 0)
+    if (directionZ() > 0)
         pline_The("gold hits the %s.", surface(bhitpos.x, bhitpos.y));
     place_object(obj, bhitpos.x, bhitpos.y);
     if (*u.ushops)

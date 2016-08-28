@@ -1094,8 +1094,8 @@ doidtrap()
             if (!trap->tseen)
                 break;
             tt = trap->ttyp;
-            if (u.dz) {
-                if (u.dz < 0 ? (tt == TRAPDOOR || tt == HOLE)
+            if (directionZ()) {
+                if (directionZ() < 0 ? (tt == TRAPDOOR || tt == HOLE)
                              : tt == ROCKTRAP)
                     break;
             }

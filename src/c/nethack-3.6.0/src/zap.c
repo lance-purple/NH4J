@@ -2089,7 +2089,7 @@ dozap()
         if (!Blind)
             pline("%s glows and fades.", The(xname(obj)));
         /* make him pay for knowing !NODIR */
-    } else if (!directionX() && !directionY() && !u.dz
+    } else if (!directionX() && !directionY() && !directionZ()
                && !(objects[obj->otyp].oc_dir == NODIR)) {
         if ((damage = zapyourself(obj, TRUE)) != 0) {
             char buf[BUFSZ];
@@ -2628,10 +2628,10 @@ struct obj *obj; /* wand or spell */
     switch (obj->otyp) {
     case WAN_PROBING:
         ptmp = 0;
-        if (u.dz < 0) {
+        if (directionZ() < 0) {
             You("probe towards the %s.", ceiling(x, y));
         } else {
-            ptmp += bhitpile(obj, bhito, x, y, u.dz);
+            ptmp += bhitpile(obj, bhito, x, y, directionZ());
             You("probe beneath the %s.", surface(x, y));
             ptmp += display_binventory(x, y, TRUE);
         }
@@ -2644,7 +2644,7 @@ struct obj *obj; /* wand or spell */
         if (is_db_wall(x, y) && find_drawbridge(&xx, &yy)) {
             open_drawbridge(xx, yy);
             disclose = TRUE;
-        } else if (u.dz > 0 && (x == xdnstair && y == ydnstair) &&
+        } else if (directionZ() > 0 && (x == xdnstair && y == ydnstair) &&
                    /* can't use the stairs down to quest level 2 until
                       leader "unlocks" them; give feedback if you try */
                    on_level(&u.uz, &qstart_level) && !ok_to_quest()) {
@@ -2652,10 +2652,10 @@ struct obj *obj; /* wand or spell */
             disclose = TRUE;
         }
         /* down will release you from bear trap or web */
-        if (u.dz > 0 && u.utrap) {
+        if (directionZ() > 0 && u.utrap) {
             (void) openholdingtrap(&youmonst, &disclose);
             /* down will trigger trapdoor, hole, or [spiked-] pit */
-        } else if (u.dz > 0 && !u.utrap) {
+        } else if (directionZ() > 0 && !u.utrap) {
             (void) openfallingtrap(&youmonst, FALSE, &disclose);
         }
         break;
@@ -2667,7 +2667,7 @@ struct obj *obj; /* wand or spell */
     case SPE_WIZARD_LOCK:
         /* down at open bridge or up or down at open portcullis */
         if (((levl[x][y].typ == DRAWBRIDGE_DOWN)
-                 ? (u.dz > 0)
+                 ? (directionZ() > 0)
                  : (is_drawbridge_wall(x, y) >= 0 && !is_db_wall(x, y)))
             && find_drawbridge(&xx, &yy)) {
             if (!striking)
@@ -2675,7 +2675,7 @@ struct obj *obj; /* wand or spell */
             else
                 destroy_drawbridge(xx, yy);
             disclose = TRUE;
-        } else if (striking && u.dz < 0 && rn2(3) && !Is_airlevel(&u.uz)
+        } else if (striking && directionZ() < 0 && rn2(3) && !Is_airlevel(&u.uz)
                    && !Is_waterlevel(&u.uz) && !Underwater
                    && !Is_qstart(&u.uz)) {
             int dmg;
@@ -2689,7 +2689,7 @@ struct obj *obj; /* wand or spell */
                 stackobj(otmp);
             }
             newsym(x, y);
-        } else if (u.dz > 0 && ttmp) {
+        } else if (directionZ() > 0 && ttmp) {
             if (!striking && closeholdingtrap(&youmonst, &disclose)) {
                 ; /* now stuck in web or bear trap */
             } else if (striking && ttmp->ttyp == TRAPDOOR) {
@@ -2725,11 +2725,11 @@ struct obj *obj; /* wand or spell */
         break;
     case SPE_STONE_TO_FLESH:
         if (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz) || Underwater
-            || (Is_qstart(&u.uz) && u.dz < 0)) {
+            || (Is_qstart(&u.uz) && directionZ() < 0)) {
             pline1(nothing_happens);
-        } else if (u.dz < 0) { /* we should do more... */
+        } else if (directionZ() < 0) { /* we should do more... */
             pline("Blood drips on your %s.", body_part(FACE));
-        } else if (u.dz > 0 && !OBJ_AT(currentX(), currentY())) {
+        } else if (directionZ() > 0 && !OBJ_AT(currentX(), currentY())) {
             /*
             Print this message only if there wasn't an engraving
             affected here.  If water or ice, act like waterlevel case.
@@ -2750,9 +2750,9 @@ struct obj *obj; /* wand or spell */
         break;
     }
 
-    if (u.dz > 0) {
+    if (directionZ() > 0) {
         /* zapping downward */
-        (void) bhitpile(obj, bhito, x, y, u.dz);
+        (void) bhitpile(obj, bhito, x, y, directionZ());
 
         /* subset of engraving effects; none sets `disclose' */
         if ((e = engr_at(x, y)) != 0 && e->engr_type != HEADSTONE) {
@@ -2788,7 +2788,7 @@ struct obj *obj; /* wand or spell */
                 break;
             }
         }
-    } else if (u.dz < 0) {
+    } else if (directionZ() < 0) {
         /* zapping upward */
 
         /* game flavor: if you're hiding under "something"
@@ -2836,14 +2836,14 @@ struct obj *obj;
 
     exercise(A_WIS, TRUE);
     if (u.usteed && (objects[otyp].oc_dir != NODIR) && !directionX() && !directionY()
-        && (u.dz > 0) && zap_steed(obj)) {
+        && (directionZ() > 0) && zap_steed(obj)) {
         disclose = TRUE;
     } else if (objects[otyp].oc_dir == IMMEDIATE) {
         zapsetup(); /* reset obj_zapped */
         if (u.uswallow) {
             (void) bhitm(u.ustuck, obj);
             /* [how about `bhitpile(u.ustuck->minvent)' effect?] */
-        } else if (u.dz) {
+        } else if (directionZ()) {
             disclose = zap_updown(obj);
         } else {
             (void) bhit(directionX(), directionY(), rn1(8, 6), ZAPPED_WAND, bhitm, bhito,

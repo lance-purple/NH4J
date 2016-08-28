@@ -1013,7 +1013,7 @@ boolean atme;
                 cc.y = directionY();
                 n = rnd(8) + 1;
                 while (n--) {
-                    if (!directionX() && !directionY() && !u.dz) {
+                    if (!directionX() && !directionY() && !directionZ()) {
                         if ((damage = zapyourself(pseudo, TRUE)) != 0) {
                             char buf[BUFSZ];
                             Sprintf(buf, "zapped %sself with a spell",
@@ -1066,7 +1066,7 @@ boolean atme;
             if (atme) {
                 setDirectionX(0);
                 setDirectionY(0);
-                u.dz = 0;
+                setDirectionZ(0);
             } else if (!getdir((char *) 0)) {
                 /* getdir cancelled, re-use previous direction */
                 /*
@@ -1079,7 +1079,7 @@ boolean atme;
                  */
                 pline_The("magical energy is released!");
             }
-            if (!directionX() && !directionY() && !u.dz) {
+            if (!directionX() && !directionY() && !directionZ()) {
                 if ((damage = zapyourself(pseudo, TRUE)) != 0) {
                     char buf[BUFSZ];
 

@@ -491,7 +491,7 @@ struct obj *instr;
             if (!getdir((char *) 0)) {
                 pline("%s.", Tobjnam(instr, "vibrate"));
                 break;
-            } else if (!directionX() && !directionY() && !u.dz) {
+            } else if (!directionX() && !directionY() && !directionZ()) {
                 if ((damage = zapyourself(instr, TRUE)) != 0) {
                     char buf[BUFSZ];
 

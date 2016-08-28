@@ -3291,10 +3291,10 @@ register char *cmd;
             prefix_seen = TRUE;
         break;
     case 'm':
-        if (movecmd(cmd[1]) || u.dz) {
+        if (movecmd(cmd[1]) || directionZ()) {
             context.run = 0;
             context.nopick = 1;
-            if (!u.dz)
+            if (!directionZ())
                 do_walk = TRUE;
             else
                 cmd[0] = cmd[1]; /* "m<" or "m>" */
@@ -3481,19 +3481,19 @@ register int dd;
     return;
 }
 
-/* also sets u.dz, but returns false for <> */
+/* also sets directionZ, but returns false for <> */
 int
 movecmd(sym)
 char sym;
 {
     register const char *dp = index(Cmd.dirchars, sym);
 
-    u.dz = 0;
+    setDirectionZ(0);
     if (!dp || !*dp)
         return 0;
     setDirectionX(xdir[dp - Cmd.dirchars]);
     setDirectionY(ydir[dp - Cmd.dirchars]);
-    u.dz = zdir[dp - Cmd.dirchars];
+    setDirectionZ(zdir[dp - Cmd.dirchars]);
 #if 0 /* now handled elsewhere */
     if (directionX() && directionY() && NODIAG(u.umonnum)) {
         setDirectionX(0);
@@ -3501,7 +3501,7 @@ char sym;
         return 0;
     }
 #endif
-    return !u.dz;
+    return !directionZ();
 }
 
 /* grid bug handling which used to be in movecmd() */
@@ -3582,8 +3582,8 @@ retry:
     if (dirsym == '.' || dirsym == 's') {
         setDirectionX(0);
         setDirectionY(0);
-        u.dz = 0;
-    } else if (!(is_mov = movecmd(dirsym)) && !u.dz) {
+        setDirectionZ(0);
+    } else if (!(is_mov = movecmd(dirsym)) && !directionZ()) {
         boolean did_help = FALSE, help_requested;
 
         if (!index(quitchars, dirsym)) {
@@ -3604,7 +3604,7 @@ retry:
         You_cant("orient yourself that direction.");
         return 0;
     }
-    if (!u.dz && (Stunned || (Confusion && !rn2(5))))
+    if (!directionZ() && (Stunned || (Confusion && !rn2(5))))
         confdir();
     return 1;
 }

@@ -1013,7 +1013,7 @@ dochat()
         return 0;
     }
 
-    if (u.usteed && u.dz > 0) {
+    if (u.usteed && directionZ() > 0) {
         if (!u.usteed->mcanmove || u.usteed->msleeping) {
             pline("%s seems not to notice you.", Monnam(u.usteed));
             return 1;
@@ -1021,8 +1021,8 @@ dochat()
             return domonnoise(u.usteed);
     }
 
-    if (u.dz) {
-        pline("They won't hear you %s there.", u.dz < 0 ? "up" : "down");
+    if (directionZ()) {
+        pline("They won't hear you %s there.", directionZ() < 0 ? "up" : "down");
         return 0;
     }
 

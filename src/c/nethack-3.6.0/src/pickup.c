@@ -1715,7 +1715,7 @@ lootcont:
                 goto lootcont;
         } else
             underfoot = FALSE;
-        if (u.dz < 0) {
+        if (directionZ() < 0) {
             You("%s to loot on the %s.", dont_find_anything,
                 ceiling(cc.x, cc.y));
             timepassed = 1;
