@@ -1380,8 +1380,8 @@ domove()
         }
     }
 
-    u.ux0 = currentX();
-    u.uy0 = currentY();
+    setOriginalX(currentX());
+    setOriginalY(currentY());
     bhitpos.x = x;
     bhitpos.y = y;
     tmpr = &levl[x][y];
@@ -1582,19 +1582,19 @@ domove()
             && (trap->ttyp == PIT || trap->ttyp == SPIKED_PIT)
             && sobj_at(BOULDER, trap->tx, trap->ty)) {
             /* can't swap places with pet pinned in a pit by a boulder */
-            setCurrentX(u.ux0);
-            setCurrentY(u.uy0); /* didn't move after all */
-        } else if (u.ux0 != x && u.uy0 != y && NODIAG(mtmp->data - mons)) {
+            setCurrentX(originalX());
+            setCurrentY(originalY()); /* didn't move after all */
+        } else if ((originalX() != x) && (originalY() != y) && NODIAG(mtmp->data - mons)) {
             /* can't swap places when pet can't move to your spot */
-            setCurrentX(u.ux0);
-            setCurrentY(u.uy0);
+            setCurrentX(originalX());
+            setCurrentY(originalY());
             You("stop.  %s can't move diagonally.", upstart(y_monnam(mtmp)));
-        } else if (u.ux0 != x && u.uy0 != y && bad_rock(mtmp->data, x, u.uy0)
-                   && bad_rock(mtmp->data, u.ux0, y)
+        } else if ((originalX() != x) && (originalY() != y) && bad_rock(mtmp->data, x, originalY())
+                   && bad_rock(mtmp->data, originalX(), y)
                    && (bigmonst(mtmp->data) || (curr_mon_load(mtmp) > 600))) {
             /* can't swap places when pet won't fit thru the opening */
-            setCurrentX(u.ux0);
-            setCurrentY(u.uy0); /* didn't move after all */
+            setCurrentX(originalX());
+            setCurrentY(originalY()); /* didn't move after all */
             You("stop.  %s won't fit through.", upstart(y_monnam(mtmp)));
         } else {
             char pnambuf[BUFSZ];
@@ -1603,9 +1603,9 @@ domove()
             Strcpy(pnambuf, y_monnam(mtmp));
             mtmp->mtrapped = 0;
             remove_monster(x, y);
-            place_monster(mtmp, u.ux0, u.uy0);
+            place_monster(mtmp, originalX(), originalY());
             newsym(x, y);
-            newsym(u.ux0, u.uy0);
+            newsym(originalX(), originalY());
 
             You("%s %s.", mtmp->mtame ? "swap places with" : "frighten",
                 pnambuf);
@@ -1677,12 +1677,12 @@ domove()
                            || youmonst.m_ap_type == M_AP_FURNITURE))
         youmonst.m_ap_type = M_AP_NOTHING;
 
-    check_leash(u.ux0, u.uy0);
+    check_leash(originalX(), originalY());
 
-    if (u.ux0 != currentX() || u.uy0 != currentY()) {
+    if ((originalX() != currentX()) || (originalY() != currentY())) {
         u.umoved = TRUE;
         /* Clean old position -- vision_recalc() will print our new one. */
-        newsym(u.ux0, u.uy0);
+        newsym(originalX(), originalY());
         /* Since the hero has moved, adjust what can be seen/unseen. */
         vision_recalc(1); /* Do the work now in the recover time. */
         invocation_message();
@@ -1906,7 +1906,7 @@ boolean pick;
     spotloc.x = currentX(), spotloc.y = currentY();
 
     /* moving onto different terrain might cause Levitation to toggle */
-    if (spotterrain != levl[u.ux0][u.uy0].typ || !on_level(&u.uz, &u.uz0))
+    if (spotterrain != levl[originalX()][originalY()].typ || !on_level(&u.uz, &u.uz0))
         switch_terrain();
 
     if (pooleffects(TRUE))

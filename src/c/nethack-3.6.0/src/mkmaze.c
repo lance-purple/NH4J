@@ -1447,7 +1447,7 @@ register boolean ini;
             case CONS_HERO: {
                 int ux0 = currentX(), uy0 = currentY();
 
-                /* change u.ux0 and u.uy0? */
+                /* change originalX and originalY? */
                 setCurrentX(cons->x);
                 setCurrentY(cons->y);
                 newsym(ux0, uy0); /* clean up old position */

@@ -7,7 +7,7 @@
 STATIC_DCL int FDECL(drop_throw, (struct obj *, BOOLEAN_P, int, int));
 
 #define URETREATING(x, y) \
-    (distmin(currentX(), currentY(), x, y) > distmin(u.ux0, u.uy0, x, y))
+    (distmin(currentX(), currentY(), x, y) > distmin(originalX(), originalY(), x, y))
 
 #define POLE_LIM 5 /* How far monsters can use pole-weapons */
 

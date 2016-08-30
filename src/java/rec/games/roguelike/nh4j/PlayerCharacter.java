@@ -8,6 +8,9 @@ public class PlayerCharacter {
 	private static int directionX;
 	private static int directionY;
 	private static int directionZ;
+	
+	private static int originalX;
+	private static int originalY;
 
 	private static int destinationX;
 	private static int destinationY;
@@ -60,6 +63,22 @@ public class PlayerCharacter {
 	
 	public static void setDirectionZ(int z) {
 		directionZ = z;
+	}
+
+	public static int originalX() {
+		return originalX;
+	}
+
+	public static int originalY() {
+		return originalY;
+	}
+
+	public static void setOriginalX(int x) {
+		originalX = x;
+	}
+
+	public static void setOriginalY(int y) {
+		originalY = y;
 	}
 
 	public static int destinationX() {

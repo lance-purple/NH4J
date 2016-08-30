@@ -286,8 +286,8 @@ boolean allow_drag;
     }
     u.utrap = 0;
     u.ustuck = 0;
-    u.ux0 = currentX();
-    u.uy0 = currentY();
+    setOriginalX(currentX());
+    setOriginalY(currentY());
 
     if (!hideunder(&youmonst) && youmonst.data->mlet == S_MIMIC) {
         /* mimics stop being unnoticed */
@@ -317,7 +317,7 @@ boolean allow_drag;
     /* must set currentX(), currentY() after drag_ball(), which may need to know
        the old position if allow_drag is true... */
     u_on_newpos(nux, nuy); /* set u.<x,y>, usteed-><mx,my>; cliparound() */
-    fill_pit(u.ux0, u.uy0);
+    fill_pit(originalX(), originalY());
     if (ball_active) {
         if (!ball_still_in_range && !allow_drag)
             placebc();
@@ -330,7 +330,7 @@ boolean allow_drag;
      *  location.  Force a full vision recalculation because the hero
      *  is now in a new location.
      */
-    newsym(u.ux0, u.uy0);
+    newsym(originalX(), originalY());
     see_monsters();
     vision_full_recalc = 1;
     nomul(0);
@@ -339,7 +339,7 @@ boolean allow_drag;
         /* when teleporting by scroll, we need to handle discovery
            now before getting feedback about any objects at our
            destination since we might land on another such scroll */
-        if (distanceSquaredToYou(u.ux0, u.uy0) >= 16 || !couldsee(u.ux0, u.uy0))
+        if (distanceSquaredToYou(originalX(), originalY()) >= 16 || !couldsee(originalX(), originalY()))
             learnscroll(telescroll);
         else
             telescroll = 0; /* no discovery by scrolltele()'s caller */

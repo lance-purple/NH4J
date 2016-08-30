@@ -403,7 +403,7 @@ boolean newlev;
      *   (he wasn't strictly-inside last turn anyway)))
      * THEN (there's nothing to do, so just return)
      */
-    if (!*leavestring && (!levl[currentX()][currentY()].edge || levl[u.ux0][u.uy0].edge))
+    if (!*leavestring && (!levl[currentX()][currentY()].edge || levl[originalX()][originalY()].edge))
         return;
 
     shkp = shop_keeper(*u.ushops0);
@@ -426,7 +426,7 @@ boolean newlev;
     }
 
     if (rob_shop(shkp)) {
-        call_kops(shkp, (!newlev && levl[u.ux0][u.uy0].edge));
+        call_kops(shkp, (!newlev && levl[originalX()][originalY()].edge));
     }
 }
 
@@ -530,7 +530,7 @@ char *enterstring;
     if (!(shkp = shop_keeper(*enterstring))) {
         if (!index(empty_shops, *enterstring)
             && in_rooms(currentX(), currentY(), SHOPBASE)
-                   != in_rooms(u.ux0, u.uy0, SHOPBASE))
+                   != in_rooms(originalX(), originalY(), SHOPBASE))
             deserted_shop(enterstring);
         Strcpy(empty_shops, u.ushops);
         u.ushops[0] = '\0';

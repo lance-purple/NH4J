@@ -737,8 +737,8 @@ xchar x, y;
             fill_pit(currentX(), currentY());
         }
 
-        u.ux0 = currentX();
-        u.uy0 = currentY();
+        setOriginalX(currentX());
+        setOriginalY(currentY());
         if (!Levitation && !MON_AT(x, y) && !u.utrap
             && (is_pool(x, y)
                 || ((t = t_at(x, y))
@@ -764,8 +764,7 @@ xchar x, y;
         if (Blind) {
             u.bc_order = bc_order();
         }
-        newsym(u.ux0, u.uy0); /* clean up old position */
-        if (u.ux0 != currentX() || u.uy0 != currentY()) {
+        newsym(originalX(), originalY()); /* clean up old position */
             spoteffects(TRUE);
             sokoban_guilt();
         }

@@ -1194,8 +1194,10 @@ int x, y;
         u.usteed->mx = currentX(), u.usteed->my = currentY();
     /* when changing levels, don't leave old position set with
        stale values from previous level */
-    if (!on_level(&u.uz, &u.uz0))
-        u.ux0 = currentX(), u.uy0 = currentY();
+    if (!on_level(&u.uz, &u.uz0)) {
+        setOriginalX(currentX());
+        setOriginalY(currentY());
+    }
 }
 
 /* place you on a random location */

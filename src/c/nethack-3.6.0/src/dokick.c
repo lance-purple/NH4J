@@ -817,8 +817,9 @@ dokick()
 
     if (!getdir((char *) 0))
         return 0;
-    if (!directionX() && !directionY())
+    if (!directionX() && !directionY()) {
         return 0;
+    }
 
     x = currentX() + directionX();
     y = currentY() + directionY();

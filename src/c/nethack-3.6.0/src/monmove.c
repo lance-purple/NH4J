@@ -1315,8 +1315,8 @@ postmov:
             if (u.uswallow && mtmp == u.ustuck
                 && (mtmp->mx != omx || mtmp->my != omy)) {
                 /* If the monster moved, then update */
-                u.ux0 = currentX();
-                u.uy0 = currentY();
+                setOriginalX(currentX());
+                setOriginalY(currentY());
                 setCurrentX(mtmp->mx);
                 setCurrentY(mtmp->my);
                 swallowed(0);

@@ -812,7 +812,7 @@ unsigned trflags;
             webmsgok = (trflags & NOWEBMSG) == 0,
             forcebungle = (trflags & FORCEBUNGLE) != 0,
             plunged = (trflags & TOOKPLUNGE) != 0,
-            adj_pit = conjoined_pits(trap, t_at(u.ux0, u.uy0), TRUE);
+            adj_pit = conjoined_pits(trap, t_at(originalX(), originalY()), TRUE);
     int oldumort;
     int steed_article = ARTICLE_THE;
 
@@ -2827,12 +2827,12 @@ long hmask, emask; /* might cancel timeout */
             || ((trap = t_at(uball->ox, uball->oy))
                 && ((trap->ttyp == PIT) || (trap->ttyp == SPIKED_PIT)
                     || (trap->ttyp == TRAPDOOR) || (trap->ttyp == HOLE))))) {
-        u.ux0 = currentX();
-        u.uy0 = currentY();
+        setOriginalX(currentX());
+        setOriginalY(currentY());
         setCurrentX(uball->ox);
         setCurrentY(uball->oy);
         movobj(uchain, uball->ox, uball->oy);
-        newsym(u.ux0, u.uy0);
+        newsym(originalX(), originalY());
         vision_full_recalc = 1; /* in case the hero moved. */
     }
     /* check for falling into pool - added by GAN 10/20/86 */
@@ -3789,13 +3789,12 @@ struct trap *ttmp;
     /* we know there's no monster in the way, and we're not trapped */
     if (!Punished
         || drag_ball(x, y, &bc, &bx, &by, &cx, &cy, &unused, TRUE)) {
-        u.ux0 = currentX(), u.uy0 = currentY();
+        setOriginalX(currentX());
+        setOriginalY(currentY());
         setCurrentX(x);
         setCurrentY(y);
         u.umoved = TRUE;
-        newsym(u.ux0, u.uy0);
         vision_recalc(1);
-        check_leash(u.ux0, u.uy0);
         if (Punished)
             move_bc(0, bc, bx, by, cx, cy);
         /* marking the trap unseen forces dotrap() to treat it like a new

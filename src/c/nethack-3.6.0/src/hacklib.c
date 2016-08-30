@@ -575,6 +575,32 @@ void setDirectionZ(z) int z; {
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, z);
 }
 
+/* your original position */
+
+int originalX() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "originalX", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+}
+
+int originalY() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "originalY", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+}
+
+void setOriginalX(x) int x; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setOriginalX", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, x);
+}
+
+void setOriginalY(y) int y; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setOriginalY", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, y);
+}
+
 /* your travel destination */
 
 int destinationX() {
