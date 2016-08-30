@@ -3794,7 +3794,9 @@ struct trap *ttmp;
         setCurrentX(x);
         setCurrentY(y);
         u.umoved = TRUE;
+        newsym(originalX(), originalY());
         vision_recalc(1);
+        check_leash(originalX(), originalY());
         if (Punished)
             move_bc(0, bc, bx, by, cx, cy);
         /* marking the trap unseen forces dotrap() to treat it like a new

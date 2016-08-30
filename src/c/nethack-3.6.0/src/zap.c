@@ -2288,6 +2288,8 @@ boolean ordinary;
     case SPE_TELEPORT_AWAY:
         tele();
         /* same criteria as when mounted (zap_steed) */
+        if ((Teleport_control && !Stunned) || !couldsee(originalX(), originalY())
+            || distanceSquaredToYou(originalX(), originalY()) >= 16)
             learn_it = TRUE;
         break;
 

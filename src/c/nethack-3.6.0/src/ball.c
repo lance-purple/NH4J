@@ -765,6 +765,7 @@ xchar x, y;
             u.bc_order = bc_order();
         }
         newsym(originalX(), originalY()); /* clean up old position */
+        if ((originalX() != currentX()) || (originalX() != currentY())) {
             spoteffects(TRUE);
             sokoban_guilt();
         }

@@ -255,8 +255,6 @@ extern const struct Align aligns[]; /* table of available alignments */
 
 /*** Information about the player ***/
 struct you {
-    xchar tx, ty;      /* destination of travel */
-    xchar ux0, uy0;    /* initial position FF */
     d_level uz, uz0;   /* your level on this and the previous turn */
     d_level utolev;    /* level monster teleported you to, or uz */
     uchar utotype;     /* bitmask of goto_level() flags for utolev */
