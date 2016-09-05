@@ -273,6 +273,12 @@ dosave0()
     return 1;
 }
 
+static void write_int(fd, value)
+int fd, value;
+{
+    bwrite(fd, (genericptr_t) &value, sizeof(int));
+}
+
 STATIC_OVL void
 savegamestate(fd, mode)
 register int fd, mode;
@@ -291,6 +297,33 @@ register int fd, mode;
 #endif
     urealtime.realtime += (long) (getnow() - urealtime.restored);
     bwrite(fd, (genericptr_t) &u, sizeof(struct you));
+
+    /* save former 'you' fields that are now stored in Java */
+    write_int(fd, currentX());
+    write_int(fd, currentY());
+
+    write_int(fd, directionX());
+    write_int(fd, directionY());
+    write_int(fd, directionZ());
+
+    write_int(fd, originalX());
+    write_int(fd, originalY());
+
+    write_int(fd, destinationX());
+    write_int(fd, destinationY());
+
+    int i;
+    for (i = 0; i < A_MAX; i++) {
+        write_int(fd, yourCurrentAttr(i));
+        write_int(fd, yourAttrMax(i));
+        write_int(fd, yourAttrBonus(i));
+        write_int(fd, yourAttrChangeFromExercise(i));
+        write_int(fd, yourTemporaryAttrChange(i));
+        write_int(fd, yourAttrChangeTimeout(i));
+        write_int(fd, yourAttrAsMonster(i));
+        write_int(fd, yourAttrMaxAsMonster(i));
+    }
+
     bwrite(fd, yyyymmddhhmmss(ubirthday), 14);
     bwrite(fd, (genericptr_t) &urealtime.realtime,
            sizeof(urealtime.realtime));

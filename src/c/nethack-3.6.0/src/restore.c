@@ -507,6 +507,14 @@ register struct obj *otmp;
 #define SYSOPT_CHECK_SAVE_UID TRUE
 #endif
 
+static int read_int(fd)
+register int fd;
+{
+    int value;
+    mread(fd, (genericptr_t) &value, sizeof(int));
+    return value;
+}
+
 STATIC_OVL
 boolean
 restgamestate(fd, stuckid, steedid)
@@ -561,6 +569,32 @@ unsigned int *stuckid, *steedid;
     amii_setpens(amii_numcolors); /* use colors from save file */
 #endif
     mread(fd, (genericptr_t) &u, sizeof(struct you));
+
+    /* read former 'you' fields that are now stored in Java */
+    setCurrentX(read_int(fd));
+    setCurrentY(read_int(fd));
+
+    setDirectionX(read_int(fd));
+    setDirectionY(read_int(fd));
+    setDirectionZ(read_int(fd));
+
+    setOriginalX(read_int(fd));
+    setOriginalY(read_int(fd));
+
+    setDestinationX(read_int(fd));
+    setDestinationY(read_int(fd));
+
+    int i;
+    for (i = 0; i < A_MAX; i++) {
+        setYourCurrentAttr(i, read_int(fd));
+        setYourAttrMax(i, read_int(fd));
+        setYourAttrBonus(i, read_int(fd));
+        setYourAttrChangeFromExercise(i, read_int(fd));
+        setYourTemporaryAttrChange(i, read_int(fd));
+        setYourAttrChangeTimeout(i, read_int(fd));
+        setYourAttrAsMonster(i, read_int(fd));
+        setYourAttrMaxAsMonster(i, read_int(fd));
+    }
 
 #define ReadTimebuf(foo)                   \
     mread(fd, (genericptr_t) timebuf, 14); \
