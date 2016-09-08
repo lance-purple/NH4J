@@ -685,7 +685,7 @@ const char **firstmatch;
                        && !(found >= 3 && is_cmap_drawbridge(i))
                        /* don't mention vibrating square outside of Gehennom
                           unless this happens to be one (hallucination?) */
-                       && (i != S_vibrating_square || Inhell
+                       && (i != S_vibrating_square || areYouInHell()
                            || (looked && glyph_is_trap(glyph)
                                && glyph_to_trap(glyph) == VIBRATING_SQUARE))) {
                 found += append_str(out_str, (article == 2) ? the(x_str)

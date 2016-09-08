@@ -235,7 +235,7 @@ boolean artif;
     if (oclass == RANDOM_CLASS) {
         const struct icp *iprobs = Is_rogue_level(&u.uz)
                                    ? (const struct icp *) rogueprobs
-                                   : Inhell ? (const struct icp *) hellprobs
+                                   : areYouInHell() ? (const struct icp *) hellprobs
                                             : (const struct icp *) mkobjprobs;
 
         for (tprob = rnd(100); (tprob -= iprobs->iprob) > 0; iprobs++)
@@ -349,7 +349,7 @@ rndmonnum()
         return monsndx(ptr);
 
     /* Plan B: get any common monster */
-    excludeflags = G_UNIQ | G_NOGEN | (Inhell ? G_NOHELL : G_HELL);
+    excludeflags = G_UNIQ | G_NOGEN | (areYouInHell() ? G_NOHELL : G_HELL);
     do {
         i = rn1(SPECIAL_PM - LOW_PM, LOW_PM);
         ptr = &mons[i];

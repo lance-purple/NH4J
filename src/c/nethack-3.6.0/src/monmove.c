@@ -154,7 +154,7 @@ struct monst *mtmp;
             && !(mtmp->isshk || mtmp->isgd || !mtmp->mcansee
                  || mtmp->mpeaceful || mtmp->data->mlet == S_HUMAN
                  || mtmp->data == &mons[PM_MINOTAUR]
-                 || Inhell || In_endgame(&u.uz)));
+                 || areYouInHell() || In_endgame(&u.uz)));
 }
 
 

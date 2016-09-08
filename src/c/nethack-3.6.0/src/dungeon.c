@@ -1498,6 +1498,11 @@ d_level *lev;
     return (boolean) (dungeons[lev->dnum].flags.hellish);
 }
 
+boolean areYouInHell()
+{
+    return (boolean) (dungeons[u.uz.dnum].flags.hellish);
+}
+
 /* sets *lev to be the gateway to Gehennom... */
 void
 find_hell(lev)
@@ -2916,6 +2921,11 @@ boolean printdun;
             }
         }
     }
+}
+
+int DARKROOMSYM()
+{
+    return (Is_rogue_level(&u.uz) ? S_stone : S_darkroom);
 }
 
 /*dungeon.c*/

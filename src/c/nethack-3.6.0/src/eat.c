@@ -2897,7 +2897,7 @@ int corpsecheck; /* 0, no check, 1, corpses, 2, tinnable corpses */
     /* if we can't touch floor objects then use invent food only */
     if (!can_reach_floor(TRUE) || (feeding && u.usteed)
         || (is_pool_or_lava(currentX(), currentY())
-            && (Wwalking || is_clinger(youmonst.data)
+            && (canYouWalkOnWater() || is_clinger(youmonst.data)
                 || (Flying && !Breathless))))
         goto skipfloor;
 

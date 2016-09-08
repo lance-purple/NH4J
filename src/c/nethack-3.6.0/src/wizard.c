@@ -458,7 +458,7 @@ struct monst *mcast;
        of non-null makemon() return is inadequate */
     census = monster_census(FALSE);
 
-    if (!rn2(10) && Inhell) {
+    if (!rn2(10) && areYouInHell()) {
         count = msummon((struct monst *) 0); /* summons like WoY */
     } else {
         count = 0;

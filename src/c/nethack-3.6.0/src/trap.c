@@ -495,7 +495,7 @@ boolean td; /* td == TRUE : trap door or hole */
     else if (Levitation || u.ustuck
              || (!Can_fall_thru(&u.uz) && !levl[currentX()][currentY()].candig) || Flying
              || is_clinger(youmonst.data)
-             || (Inhell && !u.uevent.invoked && newlevel == bottom)) {
+             || (areYouInHell() && !u.uevent.invoked && newlevel == bottom)) {
         dont_fall = "don't fall in.";
     } else if (youmonst.data->msize >= MZ_HUGE) {
         dont_fall = "don't fit through.";
@@ -2854,7 +2854,7 @@ long hmask, emask; /* might cancel timeout */
          * Use knowledge of the two routines as a hack -- this
          * should really be handled differently -dlc
          */
-        if (is_pool(currentX(), currentY()) && !Wwalking && !Swimming && !u.uinwater)
+        if (is_pool(currentX(), currentY()) && !canYouWalkOnWater() && !Swimming && !u.uinwater)
             no_msg = drown();
 
         if (is_lava(currentX(), currentY())) {
@@ -4970,7 +4970,7 @@ lava_effects()
     if (likes_lava(youmonst.data))
         return FALSE;
 
-    usurvive = Fire_resistance || (Wwalking && dmg < u.uhp);
+    usurvive = Fire_resistance || (canYouWalkOnWater() && dmg < u.uhp);
     /*
      * A timely interrupt might manage to salvage your life
      * but not your gear.  For scrolls and potions this
@@ -4994,7 +4994,7 @@ lava_effects()
      * make the player sink into the lava. Assumption: water walking only
      * comes from boots.
      */
-    if (Wwalking && uarmf && is_organic(uarmf) && !uarmf->oerodeproof) {
+    if (canYouWalkOnWater() && uarmf && is_organic(uarmf) && !uarmf->oerodeproof) {
         obj = uarmf;
         pline("%s into flame!", Yobjnam2(obj, "burst"));
         iflags.in_lava_effects++; /* (see above) */
@@ -5004,7 +5004,7 @@ lava_effects()
     }
 
     if (!Fire_resistance) {
-        if (Wwalking) {
+        if (canYouWalkOnWater()) {
             pline_The("lava here burns you!");
             if (usurvive) {
                 losehp(dmg, lava_killer, KILLED_BY); /* lava damage */
@@ -5062,7 +5062,7 @@ lava_effects()
         }
         You("find yourself back on solid %s.", surface(currentX(), currentY()));
         return TRUE;
-    } else if (!Wwalking && (!u.utrap || u.utraptype != TT_LAVA)) {
+    } else if (!canYouWalkOnWater() && (!u.utrap || u.utraptype != TT_LAVA)) {
         boil_away = !Fire_resistance;
         /* if not fire resistant, sink_into_lava() will quickly be fatal;
            hero needs to escape immediately */

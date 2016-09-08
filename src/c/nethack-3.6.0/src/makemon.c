@@ -1189,7 +1189,7 @@ int mmflags;
             mtmp->mpeaceful = TRUE;
         break;
     case S_BAT:
-        if (Inhell && is_bat(ptr))
+        if (areYouInHell() && is_bat(ptr))
             mon_adjust_speed(mtmp, 2, (struct obj *) 0);
         break;
     }
@@ -1372,7 +1372,7 @@ int mndx;
         return TRUE;
     if (mvitals[mndx].mvflags & G_GONE)
         return TRUE;
-    if (Inhell)
+    if (areYouInHell())
         return (boolean) (mons[mndx].maligntyp > A_NEUTRAL);
     else
         return (boolean) ((mons[mndx].geno & G_HELL) != 0);
@@ -1467,7 +1467,7 @@ rndmonst()
                 continue;
             if (uncommon(mndx))
                 continue;
-            if (Inhell && (ptr->geno & G_NOHELL))
+            if (areYouInHell() && (ptr->geno & G_NOHELL))
                 continue;
             ct = (int) (ptr->geno & G_FREQ) + align_shift(ptr);
             if (ct < 0 || ct > 127)

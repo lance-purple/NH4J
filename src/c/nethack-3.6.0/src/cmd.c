@@ -1288,7 +1288,7 @@ walking_on_water()
 {
     if (u.uinwater || Levitation || Flying)
         return FALSE;
-    return (boolean) (Wwalking
+    return (boolean) (canYouWalkOnWater()
                       && (is_pool(currentX(), currentY()) || is_lava(currentX(), currentY())));
 }
 
@@ -1653,7 +1653,7 @@ int final;
     } else if (u.uinwater) {
         you_are(Swimming ? "swimming" : "in water", from_what(SWIMMING));
     } else if (walking_on_water()) {
-        /* show active Wwalking here, potential Wwalking elsewhere */
+        /* show active canYouWalkOnWater() here, potential canYouWalkOnWater() elsewhere */
         Sprintf(buf, "walking on %s",
                 is_pool(currentX(), currentY()) ? "water"
                 : is_lava(currentX(), currentY()) ? "lava"
@@ -2087,7 +2087,7 @@ int final;
         BFlying = save_BFly;
     }
     /* actively walking on water handled earlier as a status condition */
-    if (Wwalking && !walking_on_water())
+    if (canYouWalkOnWater() && !walking_on_water())
         you_can("walk on water", from_what(WWALKING));
     /* actively swimming (in water but not under it) handled earlier */
     if (Swimming && (Underwater || !u.uinwater))
@@ -4186,5 +4186,13 @@ dosuspend_core()
         Norep("Suspend command not available.");
     return 0;
 }
+
+/* Don't get wet, can't go under water; overrides others except levitation */
+/* canYouWalkOnWater() is meaningless on water level */
+boolean canYouWalkOnWater()
+{
+   return (u.uprops[WWALKING].extrinsic && !Is_waterlevel(&u.uz));
+}
+
 
 /*cmd.c*/

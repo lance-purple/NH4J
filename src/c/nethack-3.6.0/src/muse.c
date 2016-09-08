@@ -856,7 +856,7 @@ struct monst *mtmp;
             return 2;
         }
         m_flee(mtmp);
-        if (Inhell && mon_has_amulet(mtmp) && !rn2(4)
+        if (areYouInHell() && mon_has_amulet(mtmp) && !rn2(4)
             && (dunlev(&u.uz) < dunlevs_in_dungeon(&u.uz) - 3)) {
             if (vismon)
                 pline(

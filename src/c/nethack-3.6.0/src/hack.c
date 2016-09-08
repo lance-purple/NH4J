@@ -1826,7 +1826,7 @@ boolean newspot;             /* true if called by spoteffects */
             You("pop out of the water like a cork!");
         } else if (Flying) {
             You("fly out of the water.");
-        } else if (Wwalking) {
+        } else if (canYouWalkOnWater()) {
             You("slowly rise above the surface.");
         } else {
             still_inwater = TRUE;
@@ -1870,7 +1870,7 @@ boolean newspot;             /* true if called by spoteffects */
         if (is_lava(currentX(), currentY())) {
             if (lava_effects())
                 return TRUE;
-        } else if (!Wwalking
+        } else if (!canYouWalkOnWater()
                    && (newspot || !u.uinwater || !(Swimming || Amphibious))) {
             if (drown())
                 return TRUE;
@@ -2328,7 +2328,7 @@ dopickup()
         }
     }
     if (is_pool(currentX(), currentY())) {
-        if (Wwalking || is_floater(youmonst.data) || is_clinger(youmonst.data)
+        if (canYouWalkOnWater() || is_floater(youmonst.data) || is_clinger(youmonst.data)
             || (Flying && !Breathless)) {
             You("cannot dive into the water to pick things up.");
             return 0;
@@ -2338,7 +2338,7 @@ dopickup()
         }
     }
     if (is_lava(currentX(), currentY())) {
-        if (Wwalking || is_floater(youmonst.data) || is_clinger(youmonst.data)
+        if (canYouWalkOnWater() || is_floater(youmonst.data) || is_clinger(youmonst.data)
             || (Flying && !Breathless)) {
             You_cant("reach the bottom to pick things up.");
             return 0;
@@ -2464,7 +2464,7 @@ lookaround()
                  */
                 if (!Levitation && !Flying && !is_clinger(youmonst.data)
                     && x == currentX() + directionX() && y == currentY() + directionY())
-                    /* No Wwalking check; otherwise they'd be able
+                    /* No canYouWalkOnWater() check; otherwise they'd be able
                      * to test boots by trying to SHIFT-direction
                      * into a pool and seeing if the game allowed it
                      */

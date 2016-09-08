@@ -620,7 +620,7 @@ aligntyp resp_god;
 {
     int maxanger;
 
-    if (Inhell)
+    if (areYouInHell())
         resp_god = A_NONE;
     u.ublessed = 0;
 
@@ -1367,7 +1367,7 @@ dosacrifice()
                 adjalign(-5);
                 u.ugangr += 3;
                 (void) adjattrib(A_WIS, -1, TRUE);
-                if (!Inhell)
+                if (!areYouInHell())
                     angrygods(u.ualign.type);
                 change_luck(-5);
             } else
@@ -1429,7 +1429,7 @@ dosacrifice()
     if (otmp->otyp == AMULET_OF_YENDOR) {
         if (!highaltar) {
         too_soon:
-            if (altaralign == A_NONE && Inhell)
+            if (altaralign == A_NONE && areYouInHell())
                 /* hero has left Moloch's Sanctum so is in the process
                    of getting away with the Amulet (outside of Gehennom,
                    fall through to the "ashamed" feedback) */
@@ -1547,7 +1547,7 @@ dosacrifice()
         if (u.ualign.type != altaralign) {
             /* Is this a conversion ? */
             /* An unaligned altar in Gehennom will always elicit rejection. */
-            if (ugod_is_angry() || (altaralign == A_NONE && Inhell)) {
+            if (ugod_is_angry() || (altaralign == A_NONE && areYouInHell())) {
                 if (u.ualignbase[A_CURRENT] == u.ualignbase[A_ORIGINAL]
                     && altaralign != A_NONE) {
                     You("have a strong feeling that %s is angry...",
@@ -1566,7 +1566,7 @@ dosacrifice()
                     godvoice(altaralign, "Suffer, infidel!");
                     change_luck(-5);
                     (void) adjattrib(A_WIS, -2, TRUE);
-                    if (!Inhell)
+                    if (!areYouInHell())
                         angrygods(u.ualign.type);
                 }
                 return 1;
@@ -1759,14 +1759,14 @@ boolean praying; /* false means no messages should be given */
             p_type = 3;
     }
 
-    if (is_undead(youmonst.data) && !Inhell
+    if (is_undead(youmonst.data) && !areYouInHell()
         && (p_aligntyp == A_LAWFUL || (p_aligntyp == A_NEUTRAL && !rn2(10))))
         p_type = -1;
     /* Note:  when !praying, the random factor for neutrals makes the
        return value a non-deterministic approximation for enlightenment.
        This case should be uncommon enough to live with... */
 
-    return !praying ? (boolean) (p_type == 3 && !Inhell) : TRUE;
+    return !praying ? (boolean) (p_type == 3 && !areYouInHell()) : TRUE;
 }
 
 /* #pray commmand */
@@ -1800,7 +1800,7 @@ dopray()
     nomovemsg = "You finish your prayer.";
     afternmv = prayer_done;
 
-    if (p_type == 3 && !Inhell) {
+    if (p_type == 3 && !areYouInHell()) {
         /* if you've been true to your god you can't die while you pray */
         if (!Blind)
             You("are surrounded by a shimmering light.");
@@ -1829,7 +1829,7 @@ prayer_done() /* M. Stephenson (1.0.3b) */
         exercise(A_CON, FALSE);
         return 1;
     }
-    if (Inhell) {
+    if (areYouInHell()) {
         pline("Since you are in Gehennom, %s won't help you.",
               align_gname(alignment));
         /* haltingly aligned is least likely to anger */
@@ -1902,7 +1902,7 @@ doturn()
         exercise(A_WIS, FALSE);
         return 0;
     }
-    if (Inhell) {
+    if (areYouInHell()) {
         pline("Since you are in Gehennom, %s won't help you.", u_gname());
         aggravate();
         return 0;

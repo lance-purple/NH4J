@@ -1121,7 +1121,7 @@ boolean at_stairs, falling, portal;
      *   -2    5.21   4.17   0.0
      *   -3    2.08   0.0    0.0
      */
-    if (Inhell && up && u.uhave.amulet && !newdungeon && !portal
+    if (areYouInHell() && up && u.uhave.amulet && !newdungeon && !portal
         && (dunlev(&u.uz) < dunlevs_in_dungeon(&u.uz) - 3)) {
         if (!rn2(4)) {
             int odds = 3 + (int) u.ualign.type,   /* 2..4 */
@@ -1412,7 +1412,7 @@ boolean at_stairs, falling, portal;
     obj_delivery(TRUE);
 
     /* Check whether we just entered Gehennom. */
-    if (!In_hell(&u.uz0) && Inhell) {
+    if (!In_hell(&u.uz0) && areYouInHell()) {
         if (Is_valley(&u.uz)) {
             You("arrive at the Valley of the Dead...");
             pline_The("odor of burnt flesh and decay pervades the air.");
@@ -1425,7 +1425,7 @@ boolean at_stairs, falling, portal;
         u.uachieve.enter_gehennom = 1;
     }
     /* in case we've managed to bypass the Valley's stairway down */
-    if (Inhell && !Is_valley(&u.uz))
+    if (areYouInHell() && !Is_valley(&u.uz))
         u.uevent.gehennom_entered = 1;
 
     if (familiar) {

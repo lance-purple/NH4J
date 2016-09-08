@@ -225,7 +225,7 @@
 #define MAXECHARS 31  /* maximum of mapped effects characters */
 #define MAXEXPCHARS 9 /* number of explosion characters */
 
-#define DARKROOMSYM (Is_rogue_level(&u.uz) ? S_stone : S_darkroom)
+extern int DARKROOMSYM();
 
 struct symdef {
     uchar sym;
