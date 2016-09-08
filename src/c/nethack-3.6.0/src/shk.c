@@ -243,7 +243,7 @@ restshk(shkp, ghostly)
 struct monst *shkp;
 boolean ghostly;
 {
-    if (u.uz.dlevel) {
+    if (currentDungeonLevel()) {
         struct eshk *eshkp = ESHK(shkp);
 
         if (eshkp->bill_p != (struct bill_x *) -1000)

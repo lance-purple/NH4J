@@ -674,7 +674,7 @@ int ttyp;
                  * level exists and is in the present dungeon.
                  */
                 newlevel.dnum = u.uz.dnum;
-                newlevel.dlevel = u.uz.dlevel + 1;
+                newlevel.dlevel = currentDungeonLevel() + 1;
                 goto_level(&newlevel, FALSE, TRUE, FALSE);
                 /* messages for arriving in special rooms */
                 spoteffects(FALSE);

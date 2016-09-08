@@ -858,6 +858,8 @@ E char *FDECL(sitoa, (int));
 E int FDECL(sgn, (int));
 E int FDECL(rounddiv, (long, int));
 E int FDECL(dist2, (int, int, int, int));
+E int FDECL(currentDungeonLevel, ());
+E void FDECL(setCurrentDungeonLevel, (int));
 E int FDECL(currentX, ());
 E int FDECL(currentY, ());
 E void FDECL(setCurrentX, (int));

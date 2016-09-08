@@ -511,6 +511,16 @@ int x0, y0, x1, y1;
     return dx * dx + dy * dy;
 }
 
+/* your current dungeon level and number */
+
+int currentDungeonLevel() {
+    return u.uz.dlevel;
+}
+
+void setCurrentDungeonLevel(int level) {
+    u.uz.dlevel = level;
+}
+
 /* your current position */
 
 int currentX() {

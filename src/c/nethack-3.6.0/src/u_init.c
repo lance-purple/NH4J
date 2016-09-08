@@ -611,7 +611,7 @@ u_init()
     u.utotype = 0;
 #endif /* 0 */
 
-    u.uz.dlevel = 1;
+    setCurrentDungeonLevel(1);
     u.uz0.dlevel = 0;
     u.utolev = u.uz;
 

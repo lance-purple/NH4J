@@ -766,7 +766,7 @@ level_tele()
         /* set specific death location; this also suppresses bones */
         lsav = u.uz;   /* save current level, see below */
         u.uz.dnum = 0; /* main dungeon */
-        u.uz.dlevel = (newlev <= -10) ? -10 : 0; /* heaven or surface */
+        setCurrentDungeonLevel((newlev <= -10) ? -10 : 0); /* heaven or surface */
         done(DIED);
         /* can only get here via life-saving (or declining to die in
            explore|debug mode); the hero has now left the dungeon... */

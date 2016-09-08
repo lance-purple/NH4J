@@ -1324,7 +1324,7 @@ schar loc;
     case MIGR_STAIRS_UP:
     case MIGR_LADDER_UP:
         cc->x = u.uz.dnum;
-        cc->y = u.uz.dlevel + 1;
+        cc->y = currentDungeonLevel() + 1;
         break;
     case MIGR_SSTAIRS:
         cc->x = sstairs.tolev.dnum;
@@ -1599,7 +1599,7 @@ boolean near_hero;
 
     for (otmp = migrating_objs; otmp; otmp = otmp2) {
         otmp2 = otmp->nobj;
-        if (otmp->ox != u.uz.dnum || otmp->oy != u.uz.dlevel)
+        if (otmp->ox != u.uz.dnum || otmp->oy != currentDungeonLevel())
             continue;
 
         where = (int) (otmp->owornmask & 0x7fffL); /* destination code */

@@ -677,7 +677,7 @@ makelevel()
 
             Sprintf(fillname, "%s-fil", urole.filecode);
             Strcat(fillname,
-                   (u.uz.dlevel < loc_lev->dlevel.dlevel) ? "a" : "b");
+                   (currentDungeonLevel() < loc_lev->dlevel.dlevel) ? "a" : "b");
             makemaz(fillname);
             return;
         } else if (In_hell(&u.uz)
@@ -708,7 +708,7 @@ makelevel()
             croom++;
     }
 
-    if (u.uz.dlevel != 1) {
+    if (currentDungeonLevel() != 1) {
         xchar sx, sy;
         do {
             sx = somex(croom);

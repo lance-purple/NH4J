@@ -1226,11 +1226,11 @@ int how;
 
     } else if (!done_stopprint) {
         /* did not escape or ascend */
-        if (u.uz.dnum == 0 && u.uz.dlevel <= 0) {
+        if (u.uz.dnum == 0 && currentDungeonLevel() <= 0) {
             /* level teleported out of the dungeon; `how' is DIED,
                due to falling or to "arriving at heaven prematurely" */
             Sprintf(pbuf, "You %s beyond the confines of the dungeon",
-                    (u.uz.dlevel < 0) ? "passed away" : ends[how]);
+                    (currentDungeonLevel() < 0) ? "passed away" : ends[how]);
         } else {
             /* more conventional demise */
             const char *where = dungeons[u.uz.dnum].dname;

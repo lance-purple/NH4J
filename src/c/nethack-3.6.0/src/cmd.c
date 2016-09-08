@@ -897,7 +897,7 @@ wiz_map_levltyp(VOID_ARGS)
         char dsc[BUFSZ];
         s_level *slev = Is_special(&u.uz);
 
-        Sprintf(dsc, "D:%d,L:%d", u.uz.dnum, u.uz.dlevel);
+        Sprintf(dsc, "D:%d,L:%d", u.uz.dnum, currentDungeonLevel());
         /* [dungeon branch features currently omitted] */
         /* special level features */
         if (slev) {

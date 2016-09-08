@@ -845,7 +845,7 @@ restpriest(mtmp, ghostly)
 register struct monst *mtmp;
 boolean ghostly;
 {
-    if (u.uz.dlevel) {
+    if (currentDungeonLevel()) {
         if (ghostly)
             assign_level(&(EPRI(mtmp)->shrlevel), &u.uz);
     }

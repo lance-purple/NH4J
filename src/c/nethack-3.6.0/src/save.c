@@ -221,7 +221,8 @@ dosave0()
      * This also avoids at least one nasty core dump.
      */
     uz_save = u.uz;
-    u.uz.dnum = u.uz.dlevel = 0;
+    u.uz.dnum = 0;
+    setCurrentDungeonLevel(0);
     /* these pointers are no longer valid, and at least u.usteed
      * may mislead place_monster() on other levels
      */

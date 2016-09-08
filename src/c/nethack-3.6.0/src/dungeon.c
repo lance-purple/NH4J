@@ -1153,7 +1153,7 @@ boolean at_stairs;
         d_level newlevel;
 
         newlevel.dnum = u.uz.dnum;
-        newlevel.dlevel = u.uz.dlevel + 1;
+        newlevel.dlevel = currentDungeonLevel() + 1;
         goto_level(&newlevel, at_stairs, !at_stairs, FALSE);
     }
 }
@@ -1167,7 +1167,7 @@ boolean at_stairs;
         /* Taking an up dungeon branch. */
         /* KMH -- Upwards branches are okay if not level 1 */
         /* (Just make sure it doesn't go above depth 1) */
-        if (!u.uz.dnum && u.uz.dlevel == 1 && !u.uhave.amulet)
+        if (!u.uz.dnum && currentDungeonLevel() == 1 && !u.uhave.amulet)
             done(ESCAPED);
         else
             goto_level(&sstairs.tolev, at_stairs, FALSE, FALSE);
@@ -1175,7 +1175,7 @@ boolean at_stairs;
         /* Going up a stairs or rising through the ceiling. */
         d_level newlevel;
         newlevel.dnum = u.uz.dnum;
-        newlevel.dlevel = u.uz.dlevel - 1;
+        newlevel.dlevel = currentDungeonLevel() - 1;
         goto_level(&newlevel, at_stairs, FALSE, FALSE);
     }
 }
@@ -1351,7 +1351,7 @@ int levnum;
 
     if (levnum <= 0) {
         /* can only currently happen in endgame */
-        levnum = u.uz.dlevel;
+        levnum = currentDungeonLevel();
     } else if (levnum
                > dungeons[dgn].depth_start + dungeons[dgn].num_dunlevs - 1) {
         /* beyond end of dungeon, jump to last level */
@@ -1594,7 +1594,7 @@ level_difficulty()
            they were easier; adjust for the extra effort involved in
            going down to the entrance and then up to the location */
         if (builds_up(&u.uz))
-            res += 2 * (dungeons[u.uz.dnum].entry_lev - u.uz.dlevel + 1);
+            res += 2 * (dungeons[u.uz.dnum].entry_lev - currentDungeonLevel() + 1);
             /*
              * 'Proof' by example:  suppose the entrance to sokoban is
              * on dungeon level 9, leading up to bottom sokoban level

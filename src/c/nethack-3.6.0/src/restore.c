@@ -182,7 +182,7 @@ boolean ghostly;
             tmp_dam->when += (monstermoves - omoves);
         Strcpy(damaged_shops,
                in_rooms(tmp_dam->place.x, tmp_dam->place.y, SHOPBASE));
-        if (u.uz.dlevel) {
+        if (currentDungeonLevel()) {
             /* when restoring, there are two passes over the current
              * level.  the first time, u.uz isn't set, so neither is
              * shop_keeper().  just wait and process the damage on
@@ -623,7 +623,7 @@ unsigned int *stuckid, *steedid;
          */
         wiz1_level.dlevel = 0;
         u.uz.dnum = 0;
-        u.uz.dlevel = 1;
+        setCurrentDungeonLevel(1);
         /* revert to pre-restore option settings */
         iflags.deferred_X = FALSE;
         flags = newgameflags;
@@ -1108,7 +1108,7 @@ boolean ghostly;
             place_wsegs(mtmp);
 
         /* regenerate monsters while on another level */
-        if (!u.uz.dlevel)
+        if (!currentDungeonLevel())
             continue;
         if (ghostly) {
             /* reset peaceful/malign relative to new character;
@@ -1148,7 +1148,7 @@ boolean ghostly;
         }
 
         br = Is_branchlev(&u.uz);
-        if (br && u.uz.dlevel == 1) {
+        if (br && currentDungeonLevel() == 1) {
             d_level ltmp;
 
             if (on_level(&u.uz, &br->end1))

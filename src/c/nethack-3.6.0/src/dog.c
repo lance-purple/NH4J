@@ -240,7 +240,7 @@ losedogs()
 
     /* check for returning shk(s) */
     for (mtmp = migrating_mons; mtmp; mtmp = mtmp->nmon) {
-        if (mtmp->mux != u.uz.dnum || mtmp->muy != u.uz.dlevel)
+        if (mtmp->mux != u.uz.dnum || mtmp->muy != currentDungeonLevel())
             continue;
         if (mtmp->isshk) {
             if (ESHK(mtmp)->dismiss_kops) {
@@ -280,7 +280,7 @@ losedogs()
     /* time for migrating monsters to arrive */
     for (mtmp = migrating_mons; mtmp; mtmp = mtmp2) {
         mtmp2 = mtmp->nmon;
-        if (mtmp->mux == u.uz.dnum && mtmp->muy == u.uz.dlevel) {
+        if (mtmp->mux == u.uz.dnum && mtmp->muy == currentDungeonLevel()) {
             if (mtmp == migrating_mons)
                 migrating_mons = mtmp->nmon;
             else
