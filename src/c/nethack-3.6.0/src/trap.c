@@ -519,7 +519,7 @@ boolean td; /* td == TRUE : trap door or hole */
         find_hell(&dtmp);
     } else {
         int dist = newlevel - dunlev(&u.uz);
-        dtmp.dnum = u.uz.dnum;
+        dtmp.dnum = currentDungeonNumber();
         dtmp.dlevel = newlevel;
         if (dist > 1)
             You("fall down a %s%sshaft!", dist > 3 ? "very " : "",

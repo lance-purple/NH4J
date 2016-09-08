@@ -1395,7 +1395,7 @@ register struct permonst *ptr;
         lev = Is_special(&u.uz);
         oldmoves = moves;
     }
-    switch ((lev) ? lev->flags.align : dungeons[u.uz.dnum].flags.align) {
+    switch ((lev) ? lev->flags.align : dungeons[currentDungeonNumber()].flags.align) {
     default: /* just in case */
     case AM_NONE:
         alshift = 0;
@@ -1425,7 +1425,7 @@ rndmonst()
     register struct permonst *ptr;
     register int mndx, ct;
 
-    if (u.uz.dnum == quest_dnum && rn2(7) && (ptr = qt_montype()) != 0)
+    if (currentDungeonNumber() == quest_dnum && rn2(7) && (ptr = qt_montype()) != 0)
         return ptr;
 
     if (rndmonst_state.choice_count < 0) { /* need to recalculate */

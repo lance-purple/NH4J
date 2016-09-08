@@ -517,8 +517,16 @@ int currentDungeonLevel() {
     return u.uz.dlevel;
 }
 
+int currentDungeonNumber() {
+    return u.uz.dnum;
+}
+
 void setCurrentDungeonLevel(int level) {
     u.uz.dlevel = level;
+}
+
+void setCurrentDungeonNumber(int number) {
+    u.uz.dnum = number;
 }
 
 /* your current position */

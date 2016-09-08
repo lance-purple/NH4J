@@ -622,7 +622,7 @@ unsigned int *stuckid, *steedid;
          * uninitialized, so we only have to set it and not the other stuff.
          */
         wiz1_level.dlevel = 0;
-        u.uz.dnum = 0;
+        setCurrentDungeonNumber(0);
         setCurrentDungeonLevel(1);
         /* revert to pre-restore option settings */
         iflags.deferred_X = FALSE;
@@ -841,7 +841,7 @@ register int fd;
 #endif
     clear_nhwindow(WIN_MESSAGE);
     You("return to level %d in %s%s.", depth(&u.uz),
-        dungeons[u.uz.dnum].dname,
+        dungeons[currentDungeonNumber()].dname,
         flags.debug ? " while in debug mode"
                     : flags.explore ? " while in explore mode" : "");
     curs(WIN_MAP, 1, 1);

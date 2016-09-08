@@ -29,7 +29,7 @@ on_start()
     if (!Qstat(first_start)) {
         qt_pager(QT_FIRSTTIME);
         Qstat(first_start) = TRUE;
-    } else if ((u.uz0.dnum != u.uz.dnum) || (u.uz0.dlevel < currentDungeonLevel())) {
+    } else if ((u.uz0.dnum != currentDungeonNumber()) || (u.uz0.dlevel < currentDungeonLevel())) {
         if (Qstat(not_ready) <= 2)
             qt_pager(QT_NEXTTIME);
         else
@@ -173,7 +173,7 @@ boolean seal;
     int portal_flag;
 
     br = dungeon_branch("The Quest");
-    dest = (br->end1.dnum == u.uz.dnum) ? &br->end2 : &br->end1;
+    dest = (br->end1.dnum == currentDungeonNumber()) ? &br->end2 : &br->end1;
     portal_flag = u.uevent.qexpelled ? 0 /* returned via artifact? */
                                      : !seal ? 1 : -1;
     schedule_goto(dest, FALSE, FALSE, portal_flag, (char *) 0, (char *) 0);

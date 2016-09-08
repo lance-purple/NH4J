@@ -662,7 +662,7 @@ makelevel()
         if (slev && !Is_rogue_level(&u.uz)) {
             makemaz(slev->proto);
             return;
-        } else if (dungeons[u.uz.dnum].proto[0]) {
+        } else if (dungeons[currentDungeonNumber()].proto[0]) {
             makemaz("");
             return;
         } else if (In_mines(&u.uz)) {
@@ -681,7 +681,7 @@ makelevel()
             makemaz(fillname);
             return;
         } else if (In_hell(&u.uz)
-                   || (rn2(5) && u.uz.dnum == medusa_level.dnum
+                   || (rn2(5) && currentDungeonNumber() == medusa_level.dnum
                        && depth(&u.uz) > depth(&medusa_level))) {
             makemaz("");
             return;
@@ -1687,7 +1687,7 @@ xchar x, y;
     if (source->dnum < n_dgns || (rn2(3) && !wizard))
         return;
 
-    if (!(u.uz.dnum == oracle_level.dnum      /* in main dungeon */
+    if (!(currentDungeonNumber() == oracle_level.dnum      /* in main dungeon */
           && !at_dgn_entrance("The Quest")    /* but not Quest's entry */
           && (u_depth = depth(&u.uz)) > 10    /* beneath 10 */
           && u_depth < depth(&medusa_level))) /* and above Medusa */

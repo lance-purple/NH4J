@@ -270,7 +270,7 @@ char *buf;
 
     /* TODO:    Add in dungeon name */
     if (Is_knox(&u.uz))
-        Sprintf(buf, "%s ", dungeons[u.uz.dnum].dname);
+        Sprintf(buf, "%s ", dungeons[currentDungeonNumber()].dname);
     else if (In_quest(&u.uz))
         Sprintf(buf, "Home %d ", dunlev(&u.uz));
     else if (In_endgame(&u.uz))

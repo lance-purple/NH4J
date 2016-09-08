@@ -1086,7 +1086,7 @@ boolean at_stairs, falling, portal;
     int fd, l_idx;
     xchar new_ledger;
     boolean cant_go_back, up = (depth(newlevel) < depth(&u.uz)),
-                          newdungeon = (u.uz.dnum != newlevel->dnum),
+                          newdungeon = (currentDungeonNumber() != newlevel->dnum),
                           was_in_W_tower = In_W_tower(currentX(), currentY(), &u.uz),
                           familiar = FALSE;
     boolean new = FALSE; /* made a new level? */
@@ -1221,7 +1221,7 @@ boolean at_stairs, falling, portal;
     /* record this level transition as a potential seen branch unless using
      * some non-standard means of transportation (level teleport).
      */
-    if ((at_stairs || falling || portal) && (u.uz.dnum != newlevel->dnum))
+    if ((at_stairs || falling || portal) && (currentDungeonNumber() != newlevel->dnum))
         recbranch_mapseen(&u.uz, newlevel);
     assign_level(&u.uz0, &u.uz);
     assign_level(&u.uz, newlevel);

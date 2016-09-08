@@ -691,7 +691,7 @@ level_tele()
          * we let negative values requests fall into the "heaven" loop.
          */
         if (In_quest(&u.uz) && newlev > 0)
-            newlev = newlev + dungeons[u.uz.dnum].depth_start - 1;
+            newlev = newlev + dungeons[currentDungeonNumber()].depth_start - 1;
     } else { /* involuntary level tele */
     random_levtport:
         newlev = random_teleport_level();
@@ -715,7 +715,7 @@ level_tele()
             You_cant("get there from here.");
             return;
         }
-        newlevel.dnum = u.uz.dnum;
+        newlevel.dnum = currentDungeonNumber();
         newlevel.dlevel = llimit + newlev;
         schedule_goto(&newlevel, FALSE, FALSE, 0, (char *) 0, (char *) 0);
         return;
@@ -765,7 +765,7 @@ level_tele()
 
         /* set specific death location; this also suppresses bones */
         lsav = u.uz;   /* save current level, see below */
-        u.uz.dnum = 0; /* main dungeon */
+        setCurrentDungeonNumber(0); /* main dungeon */
         setCurrentDungeonLevel((newlev <= -10) ? -10 : 0); /* heaven or surface */
         done(DIED);
         /* can only get here via life-saving (or declining to die in
@@ -782,8 +782,8 @@ level_tele()
         /* [dlevel used to be set to 1, but it doesn't make sense to
             teleport out of the dungeon and float or fly down to the
             surface but then actually arrive back inside the dungeon] */
-    } else if (u.uz.dnum == medusa_level.dnum
-               && newlev >= dungeons[u.uz.dnum].depth_start
+    } else if (currentDungeonNumber() == medusa_level.dnum
+               && newlev >= dungeons[currentDungeonNumber()].depth_start
                                 + dunlevs_in_dungeon(&u.uz)) {
         if (!(wizard && force_dest))
             find_hell(&newlevel);
@@ -792,9 +792,9 @@ level_tele()
          * the last level of Gehennom is forbidden.
          */
         if (!wizard && areYouInHell() && !u.uevent.invoked
-            && newlev >= (dungeons[u.uz.dnum].depth_start
+            && newlev >= (dungeons[currentDungeonNumber()].depth_start
                           + dunlevs_in_dungeon(&u.uz) - 1)) {
-            newlev = dungeons[u.uz.dnum].depth_start
+            newlev = dungeons[currentDungeonNumber()].depth_start
                      + dunlevs_in_dungeon(&u.uz) - 2;
             pline("Sorry...");
         }
@@ -1283,12 +1283,12 @@ random_teleport_level()
            no one can randomly teleport past it */
         if (dunlev_reached(&u.uz) < qlocate_depth)
             bottom = qlocate_depth;
-        min_depth = dungeons[u.uz.dnum].depth_start;
-        max_depth = bottom + (dungeons[u.uz.dnum].depth_start - 1);
+        min_depth = dungeons[currentDungeonNumber()].depth_start;
+        max_depth = bottom + (dungeons[currentDungeonNumber()].depth_start - 1);
     } else {
         min_depth = 1;
         max_depth =
-            dunlevs_in_dungeon(&u.uz) + (dungeons[u.uz.dnum].depth_start - 1);
+            dunlevs_in_dungeon(&u.uz) + (dungeons[currentDungeonNumber()].depth_start - 1);
         /* can't reach Sanctum if the invocation hasn't been performed */
         if (areYouInHell() && !u.uevent.invoked)
             max_depth -= 1;

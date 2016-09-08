@@ -519,19 +519,19 @@ register const char *s;
             Sprintf(protofile, "%s-%d", s, rnd((int) sp->rndlevs));
         else
             Strcpy(protofile, s);
-    } else if (*(dungeons[u.uz.dnum].proto)) {
+    } else if (*(dungeons[currentDungeonNumber()].proto)) {
         if (dunlevs_in_dungeon(&u.uz) > 1) {
             if (sp && sp->rndlevs)
-                Sprintf(protofile, "%s%d-%d", dungeons[u.uz.dnum].proto,
+                Sprintf(protofile, "%s%d-%d", dungeons[currentDungeonNumber()].proto,
                         dunlev(&u.uz), rnd((int) sp->rndlevs));
             else
-                Sprintf(protofile, "%s%d", dungeons[u.uz.dnum].proto,
+                Sprintf(protofile, "%s%d", dungeons[currentDungeonNumber()].proto,
                         dunlev(&u.uz));
         } else if (sp && sp->rndlevs) {
-            Sprintf(protofile, "%s-%d", dungeons[u.uz.dnum].proto,
+            Sprintf(protofile, "%s-%d", dungeons[currentDungeonNumber()].proto,
                     rnd((int) sp->rndlevs));
         } else
-            Strcpy(protofile, dungeons[u.uz.dnum].proto);
+            Strcpy(protofile, dungeons[currentDungeonNumber()].proto);
 
     } else
         Strcpy(protofile, "");

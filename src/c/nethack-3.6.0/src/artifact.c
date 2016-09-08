@@ -1550,7 +1550,7 @@ struct obj *obj;
                 newlev.dlevel = dungeons[i].dunlev_ureached;
 
             if (u.uhave.amulet || In_endgame(&u.uz) || In_endgame(&newlev)
-                || newlev.dnum == u.uz.dnum || !next_to_u()) {
+                || newlev.dnum == currentDungeonNumber() || !next_to_u()) {
                 You_feel("very disoriented for a moment.");
             } else {
                 if (!Blind)

@@ -1226,14 +1226,14 @@ int how;
 
     } else if (!done_stopprint) {
         /* did not escape or ascend */
-        if (u.uz.dnum == 0 && currentDungeonLevel() <= 0) {
+        if (currentDungeonNumber() == 0 && currentDungeonLevel() <= 0) {
             /* level teleported out of the dungeon; `how' is DIED,
                due to falling or to "arriving at heaven prematurely" */
             Sprintf(pbuf, "You %s beyond the confines of the dungeon",
                     (currentDungeonLevel() < 0) ? "passed away" : ends[how]);
         } else {
             /* more conventional demise */
-            const char *where = dungeons[u.uz.dnum].dname;
+            const char *where = dungeons[currentDungeonNumber()].dname;
 
             if (Is_astralevel(&u.uz))
                 where = "The Astral Plane";

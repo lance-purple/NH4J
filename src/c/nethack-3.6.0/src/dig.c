@@ -673,7 +673,7 @@ int ttyp;
                 /* Earlier checks must ensure that the destination
                  * level exists and is in the present dungeon.
                  */
-                newlevel.dnum = u.uz.dnum;
+                newlevel.dnum = currentDungeonNumber();
                 newlevel.dlevel = currentDungeonLevel() + 1;
                 goto_level(&newlevel, FALSE, TRUE, FALSE);
                 /* messages for arriving in special rooms */

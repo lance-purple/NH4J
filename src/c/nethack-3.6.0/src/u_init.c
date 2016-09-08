@@ -607,7 +607,8 @@ u_init()
     u.uevent.udemigod = 0;              /* not a demi-god yet... */
     u.udg_cnt = 0;
     u.mh = u.mhmax = u.mtimedone = 0;
-    u.uz.dnum = u.uz0.dnum = 0;
+    setCurrentDungeonNumber(0);
+    u.uz0.dnum = 0;
     u.utotype = 0;
 #endif /* 0 */
 

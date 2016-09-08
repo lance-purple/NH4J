@@ -897,7 +897,7 @@ wiz_map_levltyp(VOID_ARGS)
         char dsc[BUFSZ];
         s_level *slev = Is_special(&u.uz);
 
-        Sprintf(dsc, "D:%d,L:%d", u.uz.dnum, currentDungeonLevel());
+        Sprintf(dsc, "D:%d,L:%d", currentDungeonNumber(), currentDungeonLevel());
         /* [dungeon branch features currently omitted] */
         /* special level features */
         if (slev) {
@@ -967,25 +967,25 @@ wiz_map_levltyp(VOID_ARGS)
         if (On_W_tower_level(&u.uz))
             Strcat(dsc, " tower");
         /* append a branch identifier for completeness' sake */
-        if (u.uz.dnum == 0)
+        if (currentDungeonNumber() == 0)
             Strcat(dsc, " dungeon");
-        else if (u.uz.dnum == mines_dnum)
+        else if (currentDungeonNumber() == mines_dnum)
             Strcat(dsc, " mines");
         else if (In_sokoban(&u.uz))
             Strcat(dsc, " sokoban");
-        else if (u.uz.dnum == quest_dnum)
+        else if (currentDungeonNumber() == quest_dnum)
             Strcat(dsc, " quest");
         else if (Is_knox(&u.uz))
             Strcat(dsc, " ludios");
-        else if (u.uz.dnum == 1)
+        else if (currentDungeonNumber() == 1)
             Strcat(dsc, " gehennom");
-        else if (u.uz.dnum == tower_dnum)
+        else if (currentDungeonNumber() == tower_dnum)
             Strcat(dsc, " vlad");
         else if (In_endgame(&u.uz))
             Strcat(dsc, " endgame");
         else {
             /* somebody's added a dungeon branch we're not expecting */
-            const char *brname = dungeons[u.uz.dnum].dname;
+            const char *brname = dungeons[currentDungeonNumber()].dname;
 
             if (!brname || !*brname)
                 brname = "unknown";

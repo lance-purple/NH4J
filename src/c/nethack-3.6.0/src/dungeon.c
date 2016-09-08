@@ -1152,7 +1152,7 @@ boolean at_stairs;
         /* Going down a stairs or jump in a trap door. */
         d_level newlevel;
 
-        newlevel.dnum = u.uz.dnum;
+        newlevel.dnum = currentDungeonNumber();
         newlevel.dlevel = currentDungeonLevel() + 1;
         goto_level(&newlevel, at_stairs, !at_stairs, FALSE);
     }
@@ -1167,14 +1167,14 @@ boolean at_stairs;
         /* Taking an up dungeon branch. */
         /* KMH -- Upwards branches are okay if not level 1 */
         /* (Just make sure it doesn't go above depth 1) */
-        if (!u.uz.dnum && currentDungeonLevel() == 1 && !u.uhave.amulet)
+        if (!currentDungeonNumber() && currentDungeonLevel() == 1 && !u.uhave.amulet)
             done(ESCAPED);
         else
             goto_level(&sstairs.tolev, at_stairs, FALSE, FALSE);
     } else {
         /* Going up a stairs or rising through the ceiling. */
         d_level newlevel;
-        newlevel.dnum = u.uz.dnum;
+        newlevel.dnum = currentDungeonNumber();
         newlevel.dlevel = currentDungeonLevel() - 1;
         goto_level(&newlevel, at_stairs, FALSE, FALSE);
     }
@@ -1347,7 +1347,7 @@ d_level *newlevel;
 int levnum;
 {
     branch *br;
-    xchar dgn = u.uz.dnum;
+    xchar dgn = currentDungeonNumber();
 
     if (levnum <= 0) {
         /* can only currently happen in endgame */
@@ -1500,7 +1500,7 @@ d_level *lev;
 
 boolean areYouInHell()
 {
-    return (boolean) (dungeons[u.uz.dnum].flags.hellish);
+    return (boolean) (dungeons[currentDungeonNumber()].flags.hellish);
 }
 
 /* sets *lev to be the gateway to Gehennom... */
@@ -1558,9 +1558,9 @@ int pct;
         if (rn2(100) < pct)
             return lev->flags.align;
 
-    if (dungeons[u.uz.dnum].flags.align)
+    if (dungeons[currentDungeonNumber()].flags.align)
         if (rn2(100) < pct)
-            return dungeons[u.uz.dnum].flags.align;
+            return dungeons[currentDungeonNumber()].flags.align;
 
     al = rn2(3) - 1;
     return Align2amask(al);
@@ -1594,7 +1594,7 @@ level_difficulty()
            they were easier; adjust for the extra effort involved in
            going down to the entrance and then up to the location */
         if (builds_up(&u.uz))
-            res += 2 * (dungeons[u.uz.dnum].entry_lev - currentDungeonLevel() + 1);
+            res += 2 * (dungeons[currentDungeonNumber()].entry_lev - currentDungeonLevel() + 1);
             /*
              * 'Proof' by example:  suppose the entrance to sokoban is
              * on dungeon level 9, leading up to bottom sokoban level
@@ -1648,11 +1648,11 @@ const char *nam;
     if ((slev = find_level(nam)) != 0) {
         dlev = slev->dlevel;
         idx = ledger_no(&dlev);
-        if ((dlev.dnum == u.uz.dnum
+        if ((dlev.dnum == currentDungeonNumber()
              /* within same branch, or else main dungeon <-> gehennom */
-             || (u.uz.dnum == valley_level.dnum
+             || (currentDungeonNumber() == valley_level.dnum
                  && dlev.dnum == medusa_level.dnum)
-             || (u.uz.dnum == medusa_level.dnum
+             || (currentDungeonNumber() == medusa_level.dnum
                  && dlev.dnum == valley_level.dnum))
             && (/* either wizard mode or else seen and not forgotten */
                 wizard
@@ -1674,7 +1674,7 @@ const char *nam;
                 || ((level_info[idx].flags & (FORGOTTEN | VISITED)) == VISITED
                     && (level_info[idxtoo].flags & (FORGOTTEN | VISITED))
                            == VISITED)) {
-                if (ledger_to_dnum(idxtoo) == u.uz.dnum)
+                if (ledger_to_dnum(idxtoo) == currentDungeonNumber())
                     idx = idxtoo;
                 dlev.dnum = ledger_to_dnum(idx);
                 dlev.dlevel = ledger_to_dlev(idx);
