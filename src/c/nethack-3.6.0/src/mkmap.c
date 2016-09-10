@@ -458,7 +458,7 @@ lev_init *init_lev;
     int i;
 
     if (lit < 0)
-        lit = (rnd(1 + abs(depth(&u.uz))) < 11 && rn2(77)) ? 1 : 0;
+        lit = (rnd(1 + abs(currentDepth())) < 11 && rn2(77)) ? 1 : 0;
 
     new_locations = (char *) alloc((WIDTH + 1) * HEIGHT);
 

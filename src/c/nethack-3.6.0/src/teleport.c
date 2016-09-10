@@ -695,7 +695,7 @@ level_tele()
     } else { /* involuntary level tele */
     random_levtport:
         newlev = random_teleport_level();
-        if (newlev == depth(&u.uz)) {
+        if (newlev == currentDepth()) {
             You1(shudder_for_moment);
             return;
         }
@@ -1144,7 +1144,7 @@ int in_sight;
                           (tt == HOLE) ? "hole" : "trap");
                 return 0;
             } else {
-                get_level(&tolevel, depth(&u.uz) + 1);
+                get_level(&tolevel, currentDepth() + 1);
             }
         } else if (tt == MAGIC_PORTAL) {
             if (In_endgame(&u.uz)
@@ -1168,7 +1168,7 @@ int in_sight;
                 return 0;
             }
             nlev = random_teleport_level();
-            if (nlev == depth(&u.uz)) {
+            if (nlev == currentDepth()) {
                 if (in_sight)
                     pline("%s shudders for a moment.", Monnam(mtmp));
                 return 0;
@@ -1250,7 +1250,7 @@ register struct obj *obj;
 int
 random_teleport_level()
 {
-    int nlev, max_depth, min_depth, cur_depth = (int) depth(&u.uz);
+    int nlev, max_depth, min_depth, cur_depth = (int) currentDepth();
 
     /* [the endgame case can only occur in wizard mode] */
     if (!rn2(5) || Is_knox(&u.uz) || In_endgame(&u.uz))

@@ -699,7 +699,7 @@ struct monst *mtmp;
                 return 2;
             }
             nlev = random_teleport_level();
-            if (nlev == depth(&u.uz)) {
+            if (nlev == currentDepth()) {
                 if (vismon)
                     pline("%s shudders for a moment.", Monnam(mtmp));
                 return 2;
@@ -1757,7 +1757,7 @@ struct monst *mtmp;
         mquaffmsg(mtmp, otmp);
         if (otmp->cursed) {
             if (Can_rise_up(mtmp->mx, mtmp->my, &u.uz)) {
-                register int tolev = depth(&u.uz) - 1;
+                register int tolev = currentDepth() - 1;
                 d_level tolevel;
 
                 get_level(&tolevel, tolev);

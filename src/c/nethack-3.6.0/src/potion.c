@@ -915,7 +915,7 @@ register struct obj *otmp;
                     You(riseup, ceiling(currentX(), currentY()));
                     goto_level(&earth_level, FALSE, FALSE, FALSE);
                 } else {
-                    register int newlev = depth(&u.uz) - 1;
+                    register int newlev = currentDepth() - 1;
                     d_level newlevel;
 
                     get_level(&newlevel, newlev);

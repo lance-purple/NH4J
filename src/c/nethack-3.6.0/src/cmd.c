@@ -3101,7 +3101,7 @@ wiz_migrate_mons()
         if (Is_stronghold(&u.uz))
             assign_level(&tolevel, &valley_level);
         else
-            get_level(&tolevel, depth(&u.uz) + 1);
+            get_level(&tolevel, currentDepth() + 1);
         ptr = rndmonst();
         mtmp = makemon(ptr, 0, 0, NO_MM_FLAGS);
         if (mtmp)

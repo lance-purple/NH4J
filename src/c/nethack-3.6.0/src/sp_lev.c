@@ -1087,7 +1087,7 @@ xchar rtype, rlit;
 
     /* is light state random ? */
     if (rlit == -1)
-        rlit = (rnd(1 + abs(depth(&u.uz))) < 11 && rn2(77)) ? TRUE : FALSE;
+        rlit = (rnd(1 + abs(currentDepth())) < 11 && rn2(77)) ? TRUE : FALSE;
 
     /*
      * Here we will try to create a room. If some parameters are
@@ -1268,7 +1268,7 @@ xchar rtype, rlit;
     if (rtype == -1)
         rtype = OROOM;
     if (rlit == -1)
-        rlit = (rnd(1 + abs(depth(&u.uz))) < 11 && rn2(77)) ? TRUE : FALSE;
+        rlit = (rnd(1 + abs(currentDepth())) < 11 && rn2(77)) ? TRUE : FALSE;
     add_subroom(proom, proom->lx + x, proom->ly + y, proom->lx + x + w - 1,
                 proom->ly + y + h - 1, rlit, rtype, FALSE);
     return TRUE;
@@ -2341,7 +2341,7 @@ boolean prefilled;
         case VAULT:
             for (x = croom->lx; x <= croom->hx; x++)
                 for (y = croom->ly; y <= croom->hy; y++)
-                    (void) mkgold((long) rn1(abs(depth(&u.uz)) * 100, 51),
+                    (void) mkgold((long) rn1(abs(currentDepth()) * 100, 51),
                                   x, y);
             break;
         case COURT:
@@ -4491,7 +4491,7 @@ struct sp_coder *coder;
 
     if (OV_i(rlit) < 0)
         OV_i(rlit) =
-            (rnd(1 + abs(depth(&u.uz))) < 11 && rn2(77)) ? TRUE : FALSE;
+            (rnd(1 + abs(currentDepth())) < 11 && rn2(77)) ? TRUE : FALSE;
 
     dx1 = SP_REGION_X1(OV_i(area));
     dy1 = SP_REGION_Y1(OV_i(area));

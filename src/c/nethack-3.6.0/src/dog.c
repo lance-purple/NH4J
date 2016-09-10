@@ -716,7 +716,7 @@ coord *cc;   /* optional destination coordinates */
     new_lev.dlevel = ledger_to_dlev((xchar) tolev);
     /* overload mtmp->[mx,my], mtmp->[mux,muy], and mtmp->mtrack[] as */
     /* destination codes (setup flag bits before altering mx or my) */
-    xyflags = (depth(&new_lev) < depth(&u.uz)); /* 1 => up */
+    xyflags = (depth(&new_lev) < currentDepth()); /* 1 => up */
     if (In_W_tower(mtmp->mx, mtmp->my, &u.uz))
         xyflags |= 2;
     mtmp->wormno = num_segs;

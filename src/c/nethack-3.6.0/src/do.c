@@ -1085,7 +1085,7 @@ boolean at_stairs, falling, portal;
 {
     int fd, l_idx;
     xchar new_ledger;
-    boolean cant_go_back, up = (depth(newlevel) < depth(&u.uz)),
+    boolean cant_go_back, up = (depth(newlevel) < currentDepth()),
                           newdungeon = (currentDungeonNumber() != newlevel->dnum),
                           was_in_W_tower = In_W_tower(currentX(), currentY(), &u.uz),
                           familiar = FALSE;

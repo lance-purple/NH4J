@@ -312,8 +312,8 @@ can_make_bones()
                 return FALSE;
     }
 
-    if (depth(&u.uz) <= 0                 /* bulletproofing for endgame */
-        || (!rn2(1 + (depth(&u.uz) >> 2)) /* fewer ghosts on low levels */
+    if (currentDepth() <= 0                 /* bulletproofing for endgame */
+        || (!rn2(1 + (currentDepth() >> 2)) /* fewer ghosts on low levels */
             && !wizard))
         return FALSE;
     /* don't let multiple restarts generate multiple copies of objects

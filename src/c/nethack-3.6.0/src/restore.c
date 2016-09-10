@@ -840,7 +840,7 @@ register int fd;
         clear_nhwindow(WIN_MAP);
 #endif
     clear_nhwindow(WIN_MESSAGE);
-    You("return to level %d in %s%s.", depth(&u.uz),
+    You("return to level %d in %s%s.", currentDepth(),
         dungeons[currentDungeonNumber()].dname,
         flags.debug ? " while in debug mode"
                     : flags.explore ? " while in explore mode" : "");

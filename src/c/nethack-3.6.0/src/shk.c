@@ -3719,7 +3719,7 @@ coord *mm;
                                      PM_KOP_LIEUTENANT, PM_KOP_KAPTAIN };
     int k_cnt[4], cnt, mndx, k;
 
-    k_cnt[0] = cnt = abs(depth(&u.uz)) + rnd(5);
+    k_cnt[0] = cnt = abs(currentDepth()) + rnd(5);
     k_cnt[1] = (cnt / 3) + 1; /* at least one sarge */
     k_cnt[2] = (cnt / 6);     /* maybe a lieutenant */
     k_cnt[3] = (cnt / 9);     /* and maybe a kaptain */

@@ -547,7 +547,7 @@ int trap_type;
 STATIC_OVL void
 make_niches()
 {
-    int ct = rnd((nroom >> 1) + 1), dep = depth(&u.uz);
+    int ct = rnd((nroom >> 1) + 1), dep = currentDepth();
     boolean ltptr = (!level.flags.noteleport && dep > 15),
             vamp = (dep > 5 && dep < 25);
 
@@ -682,7 +682,7 @@ makelevel()
             return;
         } else if (In_hell(&u.uz)
                    || (rn2(5) && currentDungeonNumber() == medusa_level.dnum
-                       && depth(&u.uz) > depth(&medusa_level))) {
+                       && currentDepth() > depth(&medusa_level))) {
             makemaz("");
             return;
         }
@@ -752,7 +752,7 @@ makelevel()
     }
 
     {
-        register int u_depth = depth(&u.uz);
+        register int u_depth = currentDepth();
 
         if (wizard && nh_getenv("SHOPTYPE"))
             mkroom(SHOPBASE);
@@ -824,7 +824,7 @@ skip0:
             mksink(croom);
         if (!rn2(60))
             mkaltar(croom);
-        x = 80 - (depth(&u.uz) * 2);
+        x = 80 - (currentDepth() * 2);
         if (x < 2)
             x = 2;
         if (!rn2(x))
@@ -845,7 +845,7 @@ skip0:
                              somey(croom), TRUE, FALSE);
 
         /* maybe make some graffiti */
-        if (!rn2(27 + 3 * abs(depth(&u.uz)))) {
+        if (!rn2(27 + 3 * abs(currentDepth()))) {
             char buf[BUFSZ];
             const char *mesg = random_engraving(buf);
             if (mesg) {
@@ -914,7 +914,7 @@ boolean skip_lvl_checks;
 
     /* basic level-related probabilities */
     if (goldprob < 0)
-        goldprob = 20 + depth(&u.uz) / 3;
+        goldprob = 20 + currentDepth() / 3;
     if (gemprob < 0)
         gemprob = goldprob / 4;
 
@@ -1689,7 +1689,7 @@ xchar x, y;
 
     if (!(currentDungeonNumber() == oracle_level.dnum      /* in main dungeon */
           && !at_dgn_entrance("The Quest")    /* but not Quest's entry */
-          && (u_depth = depth(&u.uz)) > 10    /* beneath 10 */
+          && (u_depth = currentDepth()) > 10    /* beneath 10 */
           && u_depth < depth(&medusa_level))) /* and above Medusa */
         return;
 

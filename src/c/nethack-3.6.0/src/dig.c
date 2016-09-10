@@ -704,7 +704,7 @@ int ttyp;
                             pline("%s avoids the trap.", Monnam(mtmp));
                         return;
                     } else {
-                        get_level(&tolevel, depth(&u.uz) + 1);
+                        get_level(&tolevel, currentDepth() + 1);
                     }
                     if (mtmp->isshk)
                         make_angry_shk(mtmp, 0, 0);

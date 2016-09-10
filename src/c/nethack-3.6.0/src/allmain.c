@@ -120,7 +120,7 @@ boolean resuming;
 
                     if (!rn2(u.uevent.udemigod
                                  ? 25
-                                 : (depth(&u.uz) > depth(&stronghold_level))
+                                 : (currentDepth() > depth(&stronghold_level))
                                        ? 50
                                        : 70))
                         (void) makemon((struct permonst *) 0, 0, 0,

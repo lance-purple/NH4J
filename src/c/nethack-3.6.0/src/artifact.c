@@ -1544,7 +1544,7 @@ struct obj *obj;
              * The closest level is either the entry or dunlev_ureached.
              */
             newlev.dnum = i;
-            if (dungeons[i].depth_start >= depth(&u.uz))
+            if (dungeons[i].depth_start >= currentDepth())
                 newlev.dlevel = dungeons[i].entry_lev;
             else
                 newlev.dlevel = dungeons[i].dunlev_ureached;

@@ -1823,7 +1823,7 @@ int style;
                         int newlev = random_teleport_level();
                         d_level dest;
 
-                        if (newlev == depth(&u.uz) || In_endgame(&u.uz))
+                        if (newlev == currentDepth() || In_endgame(&u.uz))
                             continue;
                         add_to_migration(singleobj);
                         get_level(&dest, newlev);

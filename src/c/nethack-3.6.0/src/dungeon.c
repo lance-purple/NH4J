@@ -1086,6 +1086,11 @@ d_level *lev;
     return (schar) (dungeons[lev->dnum].depth_start + lev->dlevel - 1);
 }
 
+schar currentDepth()
+{
+    return (schar) (dungeons[currentDungeonNumber()].depth_start + currentDungeonLevel() - 1);
+}
+
 /* are "lev1" and "lev2" actually the same? */
 boolean
 on_level(lev1, lev2)
@@ -1587,7 +1592,7 @@ level_difficulty()
     } else if (u.uhave.amulet) {
         res = deepest_lev_reached(FALSE);
     } else {
-        res = depth(&u.uz);
+        res = currentDepth();
         /* depth() is the number of elevation units (levels) below
            the theoretical surface; in a builds-up branch, that value
            ends up making the harder to reach levels be treated as if
