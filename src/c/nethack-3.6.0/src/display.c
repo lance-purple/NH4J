@@ -162,7 +162,7 @@ int show;
         /* Floor spaces are dark if unlit.  Corridors are dark if unlit. */
         if (lev->typ == ROOM && glyph == cmap_to_glyph(S_room))
             glyph = cmap_to_glyph((flags.dark_room && iflags.use_color)
-                                      ? (DARKROOMSYM)
+                                      ? (darkRoomSym())
                                       : S_stone);
         else if (lev->typ == CORR && glyph == cmap_to_glyph(S_litcorr))
             glyph = cmap_to_glyph(S_corr);
@@ -832,7 +832,7 @@ register int x, y;
             if (lev->glyph == cmap_to_glyph(S_litcorr) && lev->typ == CORR)
                 show_glyph(x, y, lev->glyph = cmap_to_glyph(S_corr));
             else if (lev->glyph == cmap_to_glyph(S_room) && lev->typ == ROOM)
-                show_glyph(x, y, lev->glyph = cmap_to_glyph(DARKROOMSYM));
+                show_glyph(x, y, lev->glyph = cmap_to_glyph(darkRoomSym()));
             else
                 goto show_mem;
         } else {
@@ -1763,7 +1763,7 @@ xchar x, y;
                 idx = S_corr;
             else if (idx == S_room)
                 idx = (flags.dark_room && iflags.use_color)
-                         ? DARKROOMSYM : S_stone;
+                         ? darkRoomSym() : S_stone;
         }
 
         if (idx != S_room)

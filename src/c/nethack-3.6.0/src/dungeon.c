@@ -2928,7 +2928,7 @@ boolean printdun;
     }
 }
 
-int DARKROOMSYM()
+int darkRoomSym()
 {
     return (Is_rogue_level(&u.uz) ? S_stone : S_darkroom);
 }

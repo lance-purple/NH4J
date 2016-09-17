@@ -225,7 +225,7 @@
 #define MAXECHARS 31  /* maximum of mapped effects characters */
 #define MAXEXPCHARS 9 /* number of explosion characters */
 
-extern int DARKROOMSYM();
+extern int darkRoomSym();
 
 struct symdef {
     uchar sym;
