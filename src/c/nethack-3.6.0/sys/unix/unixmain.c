@@ -616,6 +616,8 @@ port_help()
 boolean
 authorize_wizard_mode()
 {
+return TRUE;
+#if 0
     struct passwd *pw = get_unix_pw();
     if (pw && sysopt.wizards && sysopt.wizards[0]) {
         if (check_user_string(sysopt.wizards))
@@ -623,6 +625,7 @@ authorize_wizard_mode()
     }
     wiz_error_flag = TRUE; /* not being allowed into wizard mode */
     return FALSE;
+#endif
 }
 
 static void
