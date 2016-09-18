@@ -1091,6 +1091,13 @@ schar currentDepth()
     return (schar) (dungeons[currentDungeonNumber()].depth_start + currentDungeonLevel() - 1);
 }
 
+boolean areYouOnLevel(lev)
+d_level* lev;
+{
+    return (boolean) (lev->dnum == currentDungeonNumber()
+                      && lev->dlevel == currentDungeonLevel());
+}
+
 /* are "lev1" and "lev2" actually the same? */
 boolean
 on_level(lev1, lev2)
@@ -1494,6 +1501,8 @@ d_level *lev;
         impossible("No boundary for Wizard's Tower?");
     return FALSE;
 }
+
+
 
 /* are you in one of the Hell levels? */
 boolean
@@ -1926,8 +1935,8 @@ xchar *rdgn;
      * created by the level compiler (not the dungeon compiler) only exist
      * one per level (currently true, of course).
      */
-    else if (Is_earthlevel(&u.uz) || Is_waterlevel(&u.uz)
-             || Is_firelevel(&u.uz) || Is_airlevel(&u.uz)) {
+    else if (areYouOnEarthLevel() || areYouOnWaterLevel()
+             || areYouOnFireLevel() || areYouOnAirLevel()) {
         struct trap *trap;
         for (trap = ftrap; trap; trap = trap->ntrap)
             if (trap->ttyp == MAGIC_PORTAL)

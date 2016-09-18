@@ -343,7 +343,7 @@ char *buf, *monbuf;
             break;
         case S_cloud:
             Strcpy(buf,
-                   Is_airlevel(&u.uz) ? "cloudy area" : "fog/vapor cloud");
+                   areYouOnAirLevel() ? "cloudy area" : "fog/vapor cloud");
             break;
         case S_stone:
             if (!levl[x][y].seenv) {

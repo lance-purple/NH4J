@@ -2675,8 +2675,8 @@ struct obj *obj; /* wand or spell */
             else
                 destroy_drawbridge(xx, yy);
             disclose = TRUE;
-        } else if (striking && directionZ() < 0 && rn2(3) && !Is_airlevel(&u.uz)
-                   && !Is_waterlevel(&u.uz) && !Underwater
+        } else if (striking && directionZ() < 0 && rn2(3) && !areYouOnAirLevel()
+                   && !areYouOnWaterLevel() && !Underwater
                    && !Is_qstart(&u.uz)) {
             int dmg;
             /* similar to zap_dig() */
@@ -2724,7 +2724,7 @@ struct obj *obj; /* wand or spell */
         }
         break;
     case SPE_STONE_TO_FLESH:
-        if (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz) || Underwater
+        if (areYouOnAirLevel() || areYouOnWaterLevel() || Underwater
             || (Is_qstart(&u.uz) && directionZ() < 0)) {
             pline1(nothing_happens);
         } else if (directionZ() < 0) { /* we should do more... */
@@ -3995,10 +3995,10 @@ register int dx, dy;
             range--;
             if (range && isok(lsx, lsy) && cansee(lsx, lsy)) {
                     pline("%s %s!", The(fltxt),
-                          Is_airlevel(&u.uz)
+                          areYouOnAirLevel()
                           ? "vanishes into the aether"
                           : "bounces");
-                    if (Is_airlevel(&u.uz)) goto get_out_buzz;
+                    if (areYouOnAirLevel()) goto get_out_buzz;
             }
             if (!dx || !dy || !rn2(20)) {
                 dx = -dx;
@@ -4970,10 +4970,10 @@ retry:
 
     if (otmp != &zeroobj) {
         const char
-            *verb = ((Is_airlevel(&u.uz) || u.uinwater) ? "slip" : "drop"),
+            *verb = ((areYouOnAirLevel() || u.uinwater) ? "slip" : "drop"),
             *oops_msg = (u.uswallow
                          ? "Oops!  %s out of your reach!"
-                         : (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz)
+                         : (areYouOnAirLevel() || areYouOnWaterLevel()
                             || levl[currentX()][currentY()].typ < IRONBARS
                             || levl[currentX()][currentY()].typ >= ICE)
                             ? "Oops!  %s away from you!"

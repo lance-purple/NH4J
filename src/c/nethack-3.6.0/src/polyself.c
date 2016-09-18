@@ -1130,8 +1130,8 @@ dospinweb()
 {
     register struct trap *ttmp = t_at(currentX(), currentY());
 
-    if (Levitation || Is_airlevel(&u.uz) || Underwater
-        || Is_waterlevel(&u.uz)) {
+    if (Levitation || areYouOnAirLevel() || Underwater
+        || areYouOnWaterLevel()) {
         You("must be on the ground to spin a web.");
         return 0;
     }
@@ -1441,7 +1441,7 @@ dohide()
         return 0;
     }
     if ((is_hider(youmonst.data) && !Flying) /* floor hider */
-        && (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz))) {
+        && (areYouOnAirLevel() || areYouOnWaterLevel())) {
         There("is nowhere to hide beneath you.");
         u.uundetected = 0;
         return 0;

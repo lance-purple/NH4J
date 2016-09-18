@@ -1533,7 +1533,7 @@ int magic; /* 0=Physical, otherwise skill level */
         }
         You("cannot escape from %s!", mon_nam(u.ustuck));
         return 0;
-    } else if (Levitation || Is_airlevel(&u.uz) || Is_waterlevel(&u.uz)) {
+    } else if (Levitation || areYouOnAirLevel() || areYouOnWaterLevel()) {
         if (magic) {
             You("flail around a little.");
             return 1;
@@ -2085,7 +2085,7 @@ struct obj **optr;
         return;
     You("%s and it transforms.",
         (directionX() || directionY()) ? "set the figurine beside you"
-                       : (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz)
+                       : (areYouOnAirLevel() || areYouOnWaterLevel()
                           || is_pool(cc.x, cc.y))
                              ? "release the figurine"
                              : (directionZ() < 0 ? "toss the figurine into the air"
@@ -2323,7 +2323,7 @@ struct obj *otmp;
     else if (IS_FURNITURE(levtyp) || IS_ROCK(levtyp)
              || closed_door(currentX(), currentY()) || t_at(currentX(), currentY()))
         what = "here";
-    else if (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz))
+    else if (areYouOnAirLevel() || areYouOnWaterLevel())
         what = (levtyp == AIR)
                    ? "in midair"
                    : (levtyp == CLOUD)
@@ -2690,7 +2690,7 @@ struct obj *obj;
             }
         }
 
-    } else if (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz)) {
+    } else if (areYouOnAirLevel() || areYouOnWaterLevel()) {
         /* it must be air -- water checked above */
         You("snap your whip through thin air.");
 

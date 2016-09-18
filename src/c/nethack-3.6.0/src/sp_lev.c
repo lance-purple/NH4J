@@ -879,7 +879,7 @@ register int humidity;
 {
     register int typ;
 
-    if (Is_waterlevel(&u.uz))
+    if (areYouOnWaterLevel())
         return TRUE; /* accept any spot */
 
     /* TODO: Should perhaps check if wall is diggable/passwall? */

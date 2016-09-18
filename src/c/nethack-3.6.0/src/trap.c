@@ -1585,7 +1585,7 @@ struct trap *trap;
     }
     /* convert landmine into pit */
     if (trap) {
-        if (Is_waterlevel(&u.uz) || Is_airlevel(&u.uz)) {
+        if (areYouOnWaterLevel() || areYouOnAirLevel()) {
             /* no pits here */
             deltrap(trap);
         } else {
@@ -2742,7 +2742,7 @@ float_up()
             You("float up, only your %s is still stuck.", body_part(LEG));
         }
 #if 0
-    } else if (Is_waterlevel(&u.uz)) {
+    } else if (areYouOnWaterLevel()) {
         pline("It feels as though you've lost some weight.");
 #endif
     } else if (u.uinwater) {
@@ -2754,7 +2754,7 @@ float_up()
                                       : mon_nam(u.ustuck));
     } else if (Hallucination) {
         pline("Up, up, and awaaaay!  You're walking on air!");
-    } else if (Is_airlevel(&u.uz)) {
+    } else if (areYouOnAirLevel()) {
         You("gain control over your movements.");
     } else {
         You("start to float in the air!");
@@ -2864,9 +2864,9 @@ long hmask, emask; /* might cancel timeout */
     }
     if (!trap) {
         trap = t_at(currentX(), currentY());
-        if (Is_airlevel(&u.uz)) {
+        if (areYouOnAirLevel()) {
             You("begin to tumble in place.");
-        } else if (Is_waterlevel(&u.uz) && !no_msg) {
+        } else if (areYouOnWaterLevel() && !no_msg) {
             You_feel("heavier.");
         /* u.uinwater msgs already in spoteffects()/drown() */
         } else if (!u.uinwater && !no_msg) {
@@ -2917,7 +2917,7 @@ long hmask, emask; /* might cancel timeout */
                 dotrap(trap, 0);
         }
     }
-    if (!Is_airlevel(&u.uz) && !Is_waterlevel(&u.uz) && !u.uswallow
+    if (!areYouOnAirLevel() && !areYouOnWaterLevel() && !u.uswallow
         /* falling through trap door calls goto_level,
            and goto_level does its own pickup() call */
         && on_level(&u.uz, &current_dungeon_level))
@@ -3533,9 +3533,9 @@ drown()
     }
 
     if (!u.uinwater) {
-        You("%s into the water%c", Is_waterlevel(&u.uz) ? "plunge" : "fall",
+        You("%s into the water%c", areYouOnWaterLevel() ? "plunge" : "fall",
             Amphibious || Swimming ? '.' : '!');
-        if (!Swimming && !Is_waterlevel(&u.uz))
+        if (!Swimming && !areYouOnWaterLevel())
             You("sink like %s.", Hallucination ? "the Titanic" : "a rock");
     }
 
@@ -3563,7 +3563,7 @@ drown()
         if (Amphibious) {
             if (flags.verbose)
                 pline("But you aren't drowning.");
-            if (!Is_waterlevel(&u.uz)) {
+            if (!areYouOnWaterLevel()) {
                 if (Hallucination)
                     Your("keel hits the bottom.");
                 else
@@ -3628,7 +3628,7 @@ crawl:
     if (crawl_ok) {
         boolean lost = FALSE;
         /* time to do some strip-tease... */
-        boolean succ = Is_waterlevel(&u.uz) ? TRUE : emergency_disrobe(&lost);
+        boolean succ = areYouOnWaterLevel() ? TRUE : emergency_disrobe(&lost);
 
         You("try to crawl out of the water.");
         if (lost)
@@ -3662,7 +3662,7 @@ crawl:
     if (u.uinwater) {
         u.uinwater = 0;
         You("find yourself back %s.",
-            Is_waterlevel(&u.uz) ? "in an air bubble" : "on land");
+            areYouOnWaterLevel() ? "in an air bubble" : "on land");
     }
     return TRUE;
 }

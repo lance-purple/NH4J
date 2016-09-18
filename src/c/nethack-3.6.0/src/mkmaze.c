@@ -361,7 +361,7 @@ fixup_special()
         u.uinwater = 0;
         unsetup_waterlevel();
     }
-    if (Is_waterlevel(&u.uz) || Is_airlevel(&u.uz)) {
+    if (areYouOnWaterLevel() || areYouOnAirLevel()) {
         level.flags.hero_memory = 0;
         was_waterlevel = TRUE;
         /* water level is an odd beast - it has to be set up
@@ -809,7 +809,7 @@ bound_digging()
     boolean found, nonwall;
     int xmin, xmax, ymin, ymax;
 
-    if (Is_earthlevel(&u.uz))
+    if (areYouOnEarthLevel())
         return; /* everything diggable here */
 
     found = nonwall = FALSE;
@@ -973,7 +973,7 @@ movebubbles()
 
     vision_recalc(2);
 
-    if (Is_waterlevel(&u.uz)) {
+    if (areYouOnWaterLevel()) {
         /* keep attached ball&chain separate from bubble objects */
         if (Punished)
             unplacebc();
@@ -1067,7 +1067,7 @@ movebubbles()
                         block_point(x, y);
                     }
         }
-    } else if (Is_airlevel(&u.uz)) {
+    } else if (areYouOnAirLevel()) {
         for (x = 0; x < COLNO; x++)
             for (y = 0; y < ROWNO; y++) {
                 levl[x][y] = air_pos;
@@ -1089,7 +1089,7 @@ movebubbles()
     }
 
     /* put attached ball&chain back */
-    if (Is_waterlevel(&u.uz) && Punished)
+    if (areYouOnWaterLevel() && Punished)
         placebc();
     vision_full_recalc = 1;
 }
@@ -1135,7 +1135,7 @@ int fd, mode;
 {
     register struct bubble *b;
 
-    if (!Is_waterlevel(&u.uz) && !Is_airlevel(&u.uz))
+    if (!areYouOnWaterLevel() && !areYouOnAirLevel())
         return;
 
     if (perform_bwrite(mode)) {
@@ -1162,7 +1162,7 @@ register int fd;
     register int i;
     int n;
 
-    if (!Is_waterlevel(&u.uz) && !Is_airlevel(&u.uz))
+    if (!areYouOnWaterLevel() && !areYouOnAirLevel())
         return;
 
     set_wportal();
@@ -1209,7 +1209,7 @@ xchar x, y;
         return "ice";
     else if (ltyp == POOL)
         return "pool of water";
-    else if (ltyp == WATER || Is_waterlevel(&u.uz))
+    else if (ltyp == WATER || areYouOnWaterLevel())
         ; /* fall through to default return value */
     else if (Is_juiblex_level(&u.uz))
         return "swamp";
@@ -1248,11 +1248,11 @@ setup_waterlevel()
 
     for (x = xmin; x <= xmax; x++)
         for (y = ymin; y <= ymax; y++)
-            levl[x][y].glyph = Is_waterlevel(&u.uz) ? water_glyph : air_glyph;
+            levl[x][y].glyph = areYouOnWaterLevel() ? water_glyph : air_glyph;
 
     /* make bubbles */
 
-    if (Is_waterlevel(&u.uz)) {
+    if (areYouOnWaterLevel()) {
         xskip = 10 + rn2(10);
         yskip = 4 + rn2(4);
     } else {
@@ -1351,7 +1351,7 @@ register boolean ini;
     struct container *cons, *ctemp;
 
     /* clouds move slowly */
-    if (!Is_airlevel(&u.uz) || !rn2(6)) {
+    if (!areYouOnAirLevel() || !rn2(6)) {
         /* move bubble */
         if (dx < -1 || dx > 1 || dy < -1 || dy > 1) {
             /* pline("mv_bubble: dx = %d, dy = %d", dx, dy); */
@@ -1409,18 +1409,18 @@ register boolean ini;
     for (i = 0, x = b->x; i < (int) b->bm[0]; i++, x++)
         for (j = 0, y = b->y; j < (int) b->bm[1]; j++, y++)
             if (b->bm[j + 2] & (1 << i)) {
-                if (Is_waterlevel(&u.uz)) {
+                if (areYouOnWaterLevel()) {
                     levl[x][y].typ = AIR;
                     levl[x][y].lit = 1;
                     unblock_point(x, y);
-                } else if (Is_airlevel(&u.uz)) {
+                } else if (areYouOnAirLevel()) {
                     levl[x][y].typ = CLOUD;
                     levl[x][y].lit = 1;
                     block_point(x, y);
                 }
             }
 
-    if (Is_waterlevel(&u.uz)) {
+    if (areYouOnWaterLevel()) {
         /* replace contents of bubble */
         for (cons = b->cons; cons; cons = ctemp) {
             ctemp = cons->next;

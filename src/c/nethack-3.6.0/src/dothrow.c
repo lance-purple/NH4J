@@ -1017,7 +1017,7 @@ boolean
         && (Upolyd ? (u.mh < 5 && u.mh != u.mhmax)
                    : (u.uhp < 10 && u.uhp != u.uhpmax))
         && obj->owt > (unsigned) ((Upolyd ? u.mh : u.uhp) * 2)
-        && !Is_airlevel(&u.uz)) {
+        && !areYouOnAirLevel()) {
         You("have so little stamina, %s drops from your grasp.",
             the(xname(obj)));
         exercise(A_CON, FALSE);
@@ -1056,7 +1056,7 @@ boolean
         return;
 
     } else if (obj->otyp == BOOMERANG && !Underwater) {
-        if (Is_airlevel(&u.uz) || Levitation)
+        if (areYouOnAirLevel() || Levitation)
             hurtle(-directionX(), -directionY(), 1, TRUE);
         mon = boomhit(obj, directionX(), directionY());
         if (mon == &youmonst) { /* the thing was caught */
@@ -1103,7 +1103,7 @@ boolean
                 range /= 2;
         }
 
-        if (Is_airlevel(&u.uz) || Levitation) {
+        if (areYouOnAirLevel() || Levitation) {
             /* action, reaction... */
             urange -= range;
             if (urange < 1)
@@ -1129,7 +1129,7 @@ boolean
         thrownobj = obj; /* obj may be null now */
 
         /* have to do this after bhit() so currentX() & currentY() are correct */
-        if (Is_airlevel(&u.uz) || Levitation)
+        if (areYouOnAirLevel() || Levitation)
             hurtle(-directionX(), -directionY(), urange, TRUE);
 
         if (!obj)
@@ -1940,8 +1940,8 @@ struct obj *obj;
     }
 
     if (directionZ()) {
-        if (directionZ() < 0 && !Is_airlevel(&u.uz) && !Underwater
-            && !Is_waterlevel(&u.uz)) {
+        if (directionZ() < 0 && !areYouOnAirLevel() && !Underwater
+            && !areYouOnWaterLevel()) {
             pline_The("gold hits the %s, then falls back on top of your %s.",
                       ceiling(currentX(), currentY()), body_part(HEAD));
             /* some self damage? */

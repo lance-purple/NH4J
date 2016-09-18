@@ -738,7 +738,7 @@ register struct obj *otmp;
         if (Free_action) {
             You("stiffen momentarily.");
         } else {
-            if (Levitation || Is_airlevel(&u.uz) || Is_waterlevel(&u.uz))
+            if (Levitation || areYouOnAirLevel() || areYouOnWaterLevel())
                 You("are motionlessly suspended.");
             else if (u.usteed)
                 You("are frozen in place!");

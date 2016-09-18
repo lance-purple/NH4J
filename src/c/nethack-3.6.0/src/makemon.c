@@ -39,13 +39,13 @@ struct permonst *ptr;
     if (ptr->mlet == S_ELEMENTAL)
         switch (monsndx(ptr)) {
         case PM_AIR_ELEMENTAL:
-            return Is_airlevel(&u.uz);
+            return areYouOnAirLevel();
         case PM_FIRE_ELEMENTAL:
-            return Is_firelevel(&u.uz);
+            return areYouOnFireLevel();
         case PM_EARTH_ELEMENTAL:
-            return Is_earthlevel(&u.uz);
+            return areYouOnEarthLevel();
         case PM_WATER_ELEMENTAL:
-            return Is_waterlevel(&u.uz);
+            return areYouOnWaterLevel();
         }
     return FALSE;
 }
@@ -59,16 +59,16 @@ struct permonst *ptr;
 {
     if (ptr->mlet == S_ELEMENTAL) {
         return (boolean) !is_home_elemental(ptr);
-    } else if (Is_earthlevel(&u.uz)) {
+    } else if (areYouOnEarthLevel()) {
         /* no restrictions? */
-    } else if (Is_waterlevel(&u.uz)) {
+    } else if (areYouOnWaterLevel()) {
         /* just monsters that can swim */
         if (!is_swimmer(ptr))
             return TRUE;
-    } else if (Is_firelevel(&u.uz)) {
+    } else if (areYouOnFireLevel()) {
         if (!pm_resistance(ptr, MR_FIRE))
             return TRUE;
-    } else if (Is_airlevel(&u.uz)) {
+    } else if (areYouOnAirLevel()) {
         if (!(is_flyer(ptr) && ptr->mlet != S_TRAPPER) && !is_floater(ptr)
             && !amorphous(ptr) && !noncorporeal(ptr) && !is_whirly(ptr))
             return TRUE;
@@ -253,7 +253,7 @@ register struct monst *mtmp;
                 break;
             }
             if (mm == PM_ELVENKING) {
-                if (rn2(3) || (in_mklev && Is_earthlevel(&u.uz)))
+                if (rn2(3) || (in_mklev && areYouOnEarthLevel()))
                     (void) mongets(mtmp, PICK_AXE);
                 if (!rn2(50))
                     (void) mongets(mtmp, CRYSTAL_BALL);
@@ -641,7 +641,7 @@ register struct monst *mtmp;
         break;
     case S_GIANT:
         if (ptr == &mons[PM_MINOTAUR]) {
-            if (!rn2(3) || (in_mklev && Is_earthlevel(&u.uz)))
+            if (!rn2(3) || (in_mklev && areYouOnEarthLevel()))
                 (void) mongets(mtmp, WAN_DIGGING);
         } else if (is_giant(ptr)) {
             for (cnt = rn2((int) (mtmp->m_lev / 2)); cnt; cnt--) {
@@ -1220,7 +1220,7 @@ int mmflags;
     } else if (mndx == PM_WIZARD_OF_YENDOR) {
         mtmp->iswiz = TRUE;
         context.no_of_wizards++;
-        if (context.no_of_wizards == 1 && Is_earthlevel(&u.uz))
+        if (context.no_of_wizards == 1 && areYouOnEarthLevel())
             mitem = SPE_DIG;
     } else if (mndx == PM_GHOST && !(mmflags & MM_NONAME)) {
         mtmp = christen_monst(mtmp, rndghostname());

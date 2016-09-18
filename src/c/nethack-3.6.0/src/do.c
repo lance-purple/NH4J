@@ -51,7 +51,7 @@ boolean pushing;
 {
     if (!otmp || otmp->otyp != BOULDER) {
         impossible("Not a boulder?");
-    } else if (!Is_waterlevel(&u.uz) && is_pool_or_lava(rx, ry)) {
+    } else if (!areYouOnWaterLevel() && is_pool_or_lava(rx, ry)) {
         boolean lava = is_lava(rx, ry), fills_up;
         const char *what = waterbody_name(rx, ry);
         schar ltyp = levl[rx][ry].typ;
@@ -1381,9 +1381,9 @@ boolean at_stairs, falling, portal;
     }
 
     /* initial movement of bubbles just before vision_recalc */
-    if (Is_waterlevel(&u.uz) || Is_airlevel(&u.uz))
+    if (areYouOnWaterLevel() || areYouOnAirLevel())
         movebubbles();
-    else if (Is_firelevel(&u.uz))
+    else if (areYouOnFireLevel())
         fumaroles();
 
     if (level_info[new_ledger].flags & FORGOTTEN) {

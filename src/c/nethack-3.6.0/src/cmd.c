@@ -4191,7 +4191,7 @@ dosuspend_core()
 /* canYouWalkOnWater() is meaningless on water level */
 boolean canYouWalkOnWater()
 {
-   return (u.uprops[WWALKING].extrinsic && !Is_waterlevel(&u.uz));
+   return (u.uprops[WWALKING].extrinsic && !areYouOnWaterLevel());
 }
 
 

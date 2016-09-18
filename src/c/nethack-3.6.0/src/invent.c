@@ -2724,7 +2724,7 @@ boolean picked_some;
         dfeature = 0;
 
     if (Blind) {
-        boolean drift = Is_airlevel(&u.uz) || Is_waterlevel(&u.uz);
+        boolean drift = areYouOnAirLevel() || areYouOnWaterLevel();
 
         if (dfeature && !strncmp(dfeature, "altar ", 6)) {
             /* don't say "altar" twice, dfeature has more info */

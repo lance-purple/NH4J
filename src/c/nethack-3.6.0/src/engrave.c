@@ -155,8 +155,8 @@ boolean check_pit;
         && (t = t_at(currentX(), currentY())) != 0 && uteetering_at_seen_pit(t))
         return FALSE;
 
-    return (boolean) ((!Levitation || Is_airlevel(&u.uz)
-                       || Is_waterlevel(&u.uz))
+    return (boolean) ((!Levitation || areYouOnAirLevel()
+                       || areYouOnWaterLevel())
                       && (!u.uundetected || !is_hider(youmonst.data)
                           || u.umonnum == PM_TRAPPER));
 }
@@ -182,10 +182,10 @@ register int x, y;
 
     if (x == currentX() && y == currentY() && u.uswallow && is_animal(u.ustuck->data))
         return "maw";
-    else if (IS_AIR(lev->typ) && Is_airlevel(&u.uz))
+    else if (IS_AIR(lev->typ) && areYouOnAirLevel())
         return "air";
     else if (is_pool(x, y))
-        return (Underwater && !Is_waterlevel(&u.uz)) ? "bottom" : "water";
+        return (Underwater && !areYouOnWaterLevel()) ? "bottom" : "water";
     else if (is_ice(x, y))
         return "ice";
     else if (is_lava(x, y))
@@ -198,7 +198,7 @@ register int x, y;
         return "headstone";
     else if (IS_FOUNTAIN(levl[x][y].typ))
         return "fountain";
-    else if ((IS_ROOM(lev->typ) && !Is_earthlevel(&u.uz))
+    else if ((IS_ROOM(lev->typ) && !areYouOnEarthLevel())
              || IS_WALL(lev->typ) || IS_DOOR(lev->typ) || lev->typ == SDOOR)
         return "floor";
     else
@@ -221,14 +221,14 @@ register int x, y;
         what = "temple's ceiling";
     else if (*in_rooms(x, y, SHOPBASE))
         what = "shop's ceiling";
-    else if (Is_waterlevel(&u.uz))
+    else if (areYouOnWaterLevel())
         /* water plane has no surface; its air bubbles aren't below sky */
         what = "water above";
     else if (IS_AIR(lev->typ))
         what = "sky";
     else if (Underwater)
         what = "water's surface";
-    else if ((IS_ROOM(lev->typ) && !Is_earthlevel(&u.uz))
+    else if ((IS_ROOM(lev->typ) && !areYouOnEarthLevel())
              || IS_WALL(lev->typ) || IS_DOOR(lev->typ) || lev->typ == SDOOR)
         what = "ceiling";
     else
@@ -511,7 +511,7 @@ doengrave()
         You_cant("write on the %s!", surface(currentX(), currentY()));
         return 0;
     }
-    if (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz) /* in bubble */) {
+    if (areYouOnAirLevel() || areYouOnWaterLevel() /* in bubble */) {
         You_cant("write in thin air!");
         return 0;
     } else if (!accessible(currentX(), currentY())) {

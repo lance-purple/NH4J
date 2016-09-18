@@ -1203,7 +1203,7 @@ register struct attack *mattk;
                     boolean moat = (levl[mtmp->mx][mtmp->my].typ != POOL)
                                    && (levl[mtmp->mx][mtmp->my].typ != WATER)
                                    && !Is_medusa_level(&u.uz)
-                                   && !Is_waterlevel(&u.uz);
+                                   && !areYouOnWaterLevel();
 
                     pline("%s drowns you...", Monnam(mtmp));
                     killer.format = KILLED_BY_AN;

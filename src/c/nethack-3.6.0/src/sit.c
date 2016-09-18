@@ -115,8 +115,8 @@ dosit()
             You("sit down.");
             dotrap(trap, 0);
         }
-    } else if (Underwater || Is_waterlevel(&u.uz)) {
-        if (Is_waterlevel(&u.uz))
+    } else if (Underwater || areYouOnWaterLevel()) {
+        if (areYouOnWaterLevel())
             There("are no cushions floating nearby.");
         else
             You("sit down on the muddy bottom.");

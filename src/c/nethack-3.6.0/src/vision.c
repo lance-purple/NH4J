@@ -577,7 +577,7 @@ int control;
     } else {
         int has_night_vision = 1; /* hero has night vision */
 
-        if (Underwater && !Is_waterlevel(&u.uz)) {
+        if (Underwater && !areYouOnWaterLevel()) {
             /*
              * The hero is under water.  Only see surrounding locations if
              * they are also underwater.  This overrides night vision but
@@ -2762,7 +2762,7 @@ genericptr_t arg;
         /* vision doesn't pass through water or clouds, detection should
            [this probably ought to be an arg supplied by our caller...] */
         override_vision =
-            (Is_waterlevel(&u.uz) || Is_airlevel(&u.uz)) && detecting(func);
+            (areYouOnWaterLevel() || areYouOnAirLevel()) && detecting(func);
 
         if (range > MAX_RADIUS || range < 1)
             panic("do_clear_area:  illegal range %d", range);
