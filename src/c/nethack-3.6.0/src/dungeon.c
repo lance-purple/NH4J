@@ -1502,6 +1502,10 @@ d_level *lev;
     return FALSE;
 }
 
+boolean areYouOnAirLevel()   { return areYouOnLevel(&air_level);   }
+boolean areYouOnEarthLevel() { return areYouOnLevel(&earth_level); }
+boolean areYouOnFireLevel()  { return areYouOnLevel(&fire_level);  }
+boolean areYouOnWaterLevel() { return areYouOnLevel(&water_level); }
 
 
 /* are you in one of the Hell levels? */
