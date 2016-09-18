@@ -261,7 +261,7 @@ d_level *lev;
          * the branch location (to avoid putting branches in corridors).
          */
         if (rtype == LR_BRANCH && nroom) {
-            place_branch(Is_branchlev(&u.uz), 0, 0);
+            place_branch(areYouOnABranchLevel(), 0, 0);
             return;
         }
 
@@ -338,7 +338,7 @@ d_level *lev;
         mkstairs(x, y, (char) rtype, (struct mkroom *) 0);
         break;
     case LR_BRANCH:
-        place_branch(Is_branchlev(&u.uz), x, y);
+        place_branch(areYouOnABranchLevel(), x, y);
         break;
     }
     return TRUE;
@@ -426,12 +426,12 @@ fixup_special()
     }
 
     /* place dungeon branch if not placed above */
-    if (!added_branch && Is_branchlev(&u.uz)) {
+    if (!added_branch && areYouOnABranchLevel()) {
         place_lregion(0, 0, 0, 0, 0, 0, 0, 0, LR_BRANCH, (d_level *) 0);
     }
 
     /* Still need to add some stuff to level file */
-    if (Is_medusa_level(&u.uz)) {
+    if (areYouOnMedusaLevel()) {
         struct obj *otmp;
         int tryct;
 
@@ -463,11 +463,11 @@ fixup_special()
                 set_corpsenm(otmp, rndmonnum());
             }
         }
-    } else if (Is_wiz1_level(&u.uz)) {
+    } else if (areYouOnWizardLevel1()) {
         croom = search_special(MORGUE);
 
         create_secret_door(croom, W_SOUTH | W_EAST | W_WEST);
-    } else if (Is_knox(&u.uz)) {
+    } else if (areYouOnFortKnoxLevel()) {
         /* using an unfilled morgue for rm id */
         croom = search_special(MORGUE);
         /* avoid inappropriate morgue-related messages */
@@ -483,9 +483,9 @@ fixup_special()
     } else if (Role_if(PM_PRIEST) && In_quest(&u.uz)) {
         /* less chance for undead corpses (lured from lower morgues) */
         level.flags.graveyard = 1;
-    } else if (Is_stronghold(&u.uz)) {
+    } else if (areYouOnStrongholdLevel()) {
         level.flags.graveyard = 1;
-    } else if (Is_sanctum(&u.uz)) {
+    } else if (areYouOnSanctumLevel()) {
         croom = search_special(TEMPLE);
 
         create_secret_door(croom, W_ANY);
@@ -511,7 +511,7 @@ register const char *s;
 {
     int x, y;
     char protofile[20];
-    s_level *sp = Is_special(&u.uz);
+    s_level *sp = areYouOnASpecialLevel();
     coord mm;
 
     if (*s) {
@@ -641,7 +641,7 @@ register const char *s;
     }
 
     /* place branch stair or portal */
-    place_branch(Is_branchlev(&u.uz), 0, 0);
+    place_branch(areYouOnABranchLevel(), 0, 0);
 
     for (x = rn1(8, 11); x; x--) {
         mazexy(&mm);
@@ -1211,9 +1211,9 @@ xchar x, y;
         return "pool of water";
     else if (ltyp == WATER || areYouOnWaterLevel())
         ; /* fall through to default return value */
-    else if (Is_juiblex_level(&u.uz))
+    else if (areYouOnJuiblexLevel())
         return "swamp";
-    else if (ltyp == MOAT && !Is_medusa_level(&u.uz))
+    else if (ltyp == MOAT && !areYouOnMedusaLevel())
         return "moat";
 
     return "water";

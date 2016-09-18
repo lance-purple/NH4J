@@ -1108,6 +1108,17 @@ d_level *lev1, *lev2;
 }
 
 /* is this level referenced in the special level chain? */
+s_level* areYouOnASpecialLevel()
+{
+    s_level *levtmp;
+
+    for (levtmp = sp_levchn; levtmp; levtmp = levtmp->next)
+        if (areYouOnLevel(&levtmp->dlevel))
+            return levtmp;
+
+    return (s_level *) 0;
+}
+
 s_level *
 Is_special(lev)
 d_level *lev;
@@ -1125,6 +1136,18 @@ d_level *lev;
  * Is this a multi-dungeon branch level?  If so, return a pointer to the
  * branch.  Otherwise, return null.
  */
+branch * areYouOnABranchLevel()
+{
+    branch *curr;
+
+    for (curr = branches; curr; curr = curr->next) {
+        if (areYouOnLevel(&curr->end1) || areYouOnLevel(&curr->end2))
+            return curr;
+    }
+    return (branch *) 0;
+}
+
+
 branch *
 Is_branchlev(lev)
 d_level *lev;
@@ -1282,6 +1305,13 @@ xchar x, y;
                       || (x == xdnladder && y == ydnladder)
                       || (x == xupladder && y == yupladder)
                       || (x == sstairs.sx && y == sstairs.sy));
+}
+
+boolean areYouOnBottomLevel()
+{
+    return (boolean)
+        (currentDungeonLevel() ==
+         dungeons[currentDungeonNumber()].num_dunlevs);
 }
 
 boolean
@@ -1502,10 +1532,27 @@ d_level *lev;
     return FALSE;
 }
 
-boolean areYouOnAirLevel()   { return areYouOnLevel(&air_level);   }
-boolean areYouOnEarthLevel() { return areYouOnLevel(&earth_level); }
-boolean areYouOnFireLevel()  { return areYouOnLevel(&fire_level);  }
-boolean areYouOnWaterLevel() { return areYouOnLevel(&water_level); }
+boolean areYouOnAirLevel()     { return areYouOnLevel(&air_level);   }
+boolean areYouOnAstralLevel()  { return areYouOnLevel(&astral_level); }
+boolean areYouOnBigRoomLevel() { return areYouOnLevel(&bigroom_level); }
+boolean areYouOnEarthLevel()   { return areYouOnLevel(&earth_level); }
+boolean areYouOnFireLevel()    { return areYouOnLevel(&fire_level);  }
+boolean areYouOnFortKnoxLevel() { return areYouOnLevel(&knox_level);  }
+boolean areYouOnJuiblexLevel()  { return areYouOnLevel(&juiblex_level);  }
+boolean areYouOnMedusaLevel()  { return areYouOnLevel(&medusa_level);  }
+boolean areYouOnMineEndLevel()  { return areYouOnLevel(&mineend_level);  }
+boolean areYouOnOracleLevel()   { return areYouOnLevel(&oracle_level);  }
+boolean areYouOnQuestLocationLevel() { return areYouOnLevel(&qlocate_level);  }
+boolean areYouOnQuestNemesisLevel()  { return areYouOnLevel(&nemesis_level);  }
+boolean areYouOnQuestStartLevel() { return areYouOnLevel(&qstart_level);  }
+boolean areYouOnRogueLevel()      { return areYouOnLevel(&rogue_level); }
+boolean areYouOnSanctumLevel()    { return areYouOnLevel(&sanctum_level); }
+boolean areYouOnSokobanEndLevel() { return areYouOnLevel(&sokoend_level); }
+boolean areYouOnStrongholdLevel() { return areYouOnLevel(&stronghold_level); }
+boolean areYouOnValleyLevel()     { return areYouOnLevel(&valley_level); }
+boolean areYouOnWaterLevel()      { return areYouOnLevel(&water_level); }
+boolean areYouOnWizardLevel1()    { return areYouOnLevel(&wiz1_level); }
+
 
 
 /* are you in one of the Hell levels? */
@@ -1514,6 +1561,11 @@ In_hell(lev)
 d_level *lev;
 {
     return (boolean) (dungeons[lev->dnum].flags.hellish);
+}
+
+boolean areYouInEndgame()
+{
+    return (currentDungeonNumber() == astral_level.dnum);
 }
 
 boolean areYouInHell()
@@ -1569,7 +1621,7 @@ int
 induced_align(pct)
 int pct;
 {
-    s_level *lev = Is_special(&u.uz);
+    s_level *lev = areYouOnASpecialLevel();
     aligntyp al;
 
     if (lev && lev->flags.align)
@@ -1600,7 +1652,7 @@ level_difficulty()
 {
     int res;
 
-    if (In_endgame(&u.uz)) {
+    if (areYouInEndgame()) {
         res = depth(&sanctum_level) + u.ulevel / 2;
     } else if (u.uhave.amulet) {
         res = deepest_lev_reached(FALSE);
@@ -1728,7 +1780,7 @@ boolean unplaced;
 
     if (unplaced)
         return TRUE;
-    if (In_endgame(&u.uz) && !In_endgame(lvl_p))
+    if (areYouInEndgame() && !In_endgame(lvl_p))
         return TRUE;
     if ((dummy = find_level("dummy")) != 0 && on_level(lvl_p, &dummy->dlevel))
         return TRUE;
@@ -1840,7 +1892,7 @@ xchar *rdgn;
     }
 
     for (i = 0, dptr = dungeons; i < n_dgns; i++, dptr++) {
-        if (bymenu && In_endgame(&u.uz) && i != astral_level.dnum)
+        if (bymenu && areYouInEndgame() && i != astral_level.dnum)
             continue;
         unplaced = unplaced_floater(dptr);
         descr = unplaced ? "depth" : "level";
@@ -2242,7 +2294,7 @@ mapseen *mptr;
     /* when in the endgame, list all endgame levels visited, whether they
        have annotations or not, so that #overview doesn't become extremely
        sparse once the rest of the dungeon has been flagged as unreachable */
-    if (In_endgame(&u.uz))
+    if (areYouInEndgame())
         return (boolean) In_endgame(&mptr->lev);
     /* level is of interest if it has non-zero feature count or known bones
        or user annotation or known connection to another dungeon branch
@@ -2296,10 +2348,10 @@ recalc_mapseen()
     mptr->flags.sokosolved = In_sokoban(&u.uz) && !Sokoban;
     /* mptr->flags.bigroom retains previous value when hero can't see */
     if (!Blind)
-        mptr->flags.bigroom = Is_bigroom(&u.uz);
+        mptr->flags.bigroom = areYouOnBigRoomLevel();
     else if (mptr->flags.forgot)
         mptr->flags.bigroom = 0;
-    mptr->flags.roguelevel = Is_rogue_level(&u.uz);
+    mptr->flags.roguelevel = areYouOnRogueLevel();
     mptr->flags.oracle = 0; /* recalculated during room traversal below */
     mptr->flags.castletune = 0;
     /* flags.castle, flags.valley, flags.msanctum retain previous value */
@@ -2431,7 +2483,7 @@ recalc_mapseen()
                     mptr->feat.ngrave = count;
                 break;
             case ALTAR:
-                atmp = (Is_astralevel(&u.uz)
+                atmp = (areYouOnAstralLevel()
                         && (levl[x][y].seenv & SVALL) != SVALL)
                          ? MSA_NONE
                          : Amask2msa(levl[x][y].altarmask);
@@ -2460,9 +2512,9 @@ recalc_mapseen()
             /* else FALLTHRU */
             case DBWALL:
             case DRAWBRIDGE_DOWN:
-                if (Is_stronghold(&u.uz))
+                if (areYouOnStrongholdLevel())
                     mptr->flags.castle = 1, mptr->flags.castletune = 1;
-                else if (Is_knox(&u.uz))
+                else if (areYouOnFortKnoxLevel())
                     mptr->flags.ludios = 1;
                 break;
             default:
@@ -2503,9 +2555,9 @@ struct monst *priest UNUSED; /* currently unused; might be useful someday */
 {
     mapseen *mptr = find_mapseen(&u.uz);
 
-    if (Is_valley(&u.uz))
+    if (areYouOnValleyLevel())
         mptr->flags.valley = 1;
-    else if (Is_sanctum(&u.uz))
+    else if (areYouOnSanctumLevel())
         mptr->flags.msanctum = 1;
 }
 
@@ -2543,10 +2595,10 @@ int reason; /* how hero died; used when disclosing end-of-game level */
     win = create_nhwindow(NHW_MENU);
     /* show the endgame levels before the rest of the dungeon,
        so that the Planes (dnum 5-ish) come out above main dungeon (dnum 0) */
-    if (In_endgame(&u.uz))
+    if (areYouInEndgame())
         traverse_mapseenchn(TRUE, win, why, reason, &lastdun);
     /* if game is over or we're not in the endgame yet, show the dungeon */
-    if (why > 0 || !In_endgame(&u.uz))
+    if (why > 0 || !areYouInEndgame())
         traverse_mapseenchn(FALSE, win, why, reason, &lastdun);
     display_nhwindow(win, TRUE);
     destroy_nhwindow(win);
@@ -2943,7 +2995,7 @@ boolean printdun;
 
 int darkRoomSym()
 {
-    return (Is_rogue_level(&u.uz) ? S_stone : S_darkroom);
+    return (areYouOnRogueLevel() ? S_stone : S_darkroom);
 }
 
 /*dungeon.c*/

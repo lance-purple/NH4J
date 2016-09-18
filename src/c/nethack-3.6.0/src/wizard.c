@@ -435,7 +435,7 @@ pick_nasty()
      * We want monsters represented by uppercase on rogue level,
      * but we don't try very hard.
      */
-    if (Is_rogue_level(&u.uz)
+    if (areYouOnRogueLevel()
         && !('A' <= mons[res].mlet && mons[res].mlet <= 'Z'))
         res = nasties[rn2(SIZE(nasties))];
 
@@ -563,7 +563,7 @@ resurrect()
 void
 intervene()
 {
-    int which = Is_astralevel(&u.uz) ? rnd(4) : rn2(6);
+    int which = areYouOnAstralLevel() ? rnd(4) : rn2(6);
     /* cases 0 and 5 don't apply on the Astral level */
     switch (which) {
     case 0:

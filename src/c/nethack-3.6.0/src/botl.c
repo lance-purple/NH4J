@@ -269,12 +269,12 @@ char *buf;
     int ret = 1;
 
     /* TODO:    Add in dungeon name */
-    if (Is_knox(&u.uz))
+    if (areYouOnFortKnoxLevel())
         Sprintf(buf, "%s ", dungeons[currentDungeonNumber()].dname);
     else if (In_quest(&u.uz))
         Sprintf(buf, "Home %d ", dunlev(&u.uz));
-    else if (In_endgame(&u.uz))
-        Sprintf(buf, Is_astralevel(&u.uz) ? "Astral Plane " : "End Game ");
+    else if (areYouInEndgame())
+        Sprintf(buf, areYouOnAstralLevel() ? "Astral Plane " : "End Game ");
     else {
         /* ports with more room may expand this one */
         Sprintf(buf, "Dlvl:%-2d ", currentDepth());

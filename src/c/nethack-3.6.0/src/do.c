@@ -947,7 +947,7 @@ dodown()
         You("%s %s.", Flying ? "fly" : locomotion(youmonst.data, "jump"),
             trap->ttyp == HOLE ? "down the hole" : "through the trap door");
 
-    if (trap && Is_stronghold(&u.uz)) {
+    if (trap && areYouOnStrongholdLevel()) {
         goto_hell(FALSE, TRUE);
     } else {
         at_ladder = (boolean) (levl[currentX()][currentY()].typ == LADDER);
@@ -1213,7 +1213,7 @@ boolean at_stairs, falling, portal;
             remdun_mapseen(l_idx);
     }
 
-    if (Is_rogue_level(newlevel) || Is_rogue_level(&u.uz))
+    if (Is_rogue_level(newlevel) || areYouOnRogueLevel())
         assign_graphics(Is_rogue_level(newlevel) ? ROGUESET : PRIMARY);
 #ifdef USE_TILES
     substitute_tiles(newlevel);
@@ -1268,7 +1268,7 @@ boolean at_stairs, falling, portal;
     vision_full_recalc = 0; /* don't let that reenable vision yet */
     flush_screen(-1);       /* ensure all map flushes are postponed */
 
-    if (portal && !In_endgame(&u.uz)) {
+    if (portal && !areYouInEndgame()) {
         /* find the portal on the new level */
         register struct trap *ttrap;
 
@@ -1280,7 +1280,7 @@ boolean at_stairs, falling, portal;
             panic("goto_level: no corresponding portal!");
         seetrap(ttrap);
         u_on_newpos(ttrap->tx, ttrap->ty);
-    } else if (at_stairs && !In_endgame(&u.uz)) {
+    } else if (at_stairs && !areYouInEndgame()) {
         if (up) {
             if (at_ladder)
                 u_on_newpos(xdnladder, ydnladder);
@@ -1413,7 +1413,7 @@ boolean at_stairs, falling, portal;
 
     /* Check whether we just entered Gehennom. */
     if (!In_hell(&u.uz0) && areYouInHell()) {
-        if (Is_valley(&u.uz)) {
+        if (areYouOnValleyLevel()) {
             You("arrive at the Valley of the Dead...");
             pline_The("odor of burnt flesh and decay pervades the air.");
 #ifdef MICRO
@@ -1425,7 +1425,7 @@ boolean at_stairs, falling, portal;
         u.uachieve.enter_gehennom = 1;
     }
     /* in case we've managed to bypass the Valley's stairway down */
-    if (areYouInHell() && !Is_valley(&u.uz))
+    if (areYouInHell() && !areYouOnValleyLevel())
         u.uevent.gehennom_entered = 1;
 
     if (familiar) {
@@ -1456,7 +1456,7 @@ boolean at_stairs, falling, portal;
     }
 
     /* special location arrival messages/events */
-    if (In_endgame(&u.uz)) {
+    if (areYouInEndgame()) {
         if (new &&on_level(&u.uz, &astral_level))
             final_level(); /* guardian angel,&c */
         else if (newdungeon && u.uhave.amulet)
@@ -1466,7 +1466,7 @@ boolean at_stairs, falling, portal;
     } else if (In_V_tower(&u.uz)) {
         if (newdungeon && In_hell(&u.uz0))
             pline_The("heat and smoke are gone.");
-    } else if (Is_knox(&u.uz)) {
+    } else if (areYouOnFortKnoxLevel()) {
         /* alarm stops working once Croesus has died */
         if (new || !mvitals[PM_CROESUS].died) {
             You("have penetrated a high security area!");
@@ -1478,7 +1478,7 @@ boolean at_stairs, falling, portal;
             }
         }
     } else {
-        if (new && Is_rogue_level(&u.uz))
+        if (new && areYouOnRogueLevel())
             You("enter what seems to be an older, more primitive world.");
         /* main dungeon message from your quest leader */
         if (!In_quest(&u.uz0) && at_dgn_entrance("The Quest")

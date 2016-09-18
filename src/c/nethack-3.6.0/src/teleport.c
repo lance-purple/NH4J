@@ -594,7 +594,7 @@ level_tele()
     char buf[BUFSZ];
     boolean force_dest = FALSE;
 
-    if ((u.uhave.amulet || In_endgame(&u.uz) || In_sokoban(&u.uz))
+    if ((u.uhave.amulet || areYouInEndgame() || In_sokoban(&u.uz))
         && !wizard) {
         You_feel("very disoriented for a moment.");
         return;
@@ -634,7 +634,7 @@ level_tele()
 
                 newlevel.dnum = destdnum;
                 newlevel.dlevel = destlev;
-                if (In_endgame(&newlevel) && !In_endgame(&u.uz)) {
+                if (In_endgame(&newlevel) && !areYouInEndgame()) {
                     struct obj *amu;
 
                     if (!u.uhave.amulet
@@ -678,7 +678,7 @@ level_tele()
         /* if in Knox and the requested level > 0, stay put.
          * we let negative values requests fall into the "heaven" loop.
          */
-        if (Is_knox(&u.uz) && newlev > 0 && !force_dest) {
+        if (areYouOnFortKnoxLevel() && newlev > 0 && !force_dest) {
             You1(shudder_for_moment);
             return;
         }
@@ -708,7 +708,7 @@ level_tele()
         You1(shudder_for_moment);
         return;
     }
-    if (In_endgame(&u.uz)) { /* must already be wizard */
+    if (areYouInEndgame()) { /* must already be wizard */
         int llimit = dunlevs_in_dungeon(&u.uz);
 
         if (newlev >= 0 || newlev <= -llimit) {
@@ -840,7 +840,7 @@ register struct trap *ttmp;
      * the endgame, from accidently triggering the portal to the
      * next level, and thus losing the game
      */
-    if (In_endgame(&u.uz) && !u.uhave.amulet) {
+    if (areYouInEndgame() && !u.uhave.amulet) {
         You_feel("dizzy for a moment, but nothing happens...");
         return;
     }
@@ -855,7 +855,7 @@ void
 tele_trap(trap)
 struct trap *trap;
 {
-    if (In_endgame(&u.uz) || Antimagic) {
+    if (areYouInEndgame() || Antimagic) {
         if (Antimagic)
             shieldeff(currentX(), currentY());
         You_feel("a wrenching sensation.");
@@ -879,7 +879,7 @@ struct trap *trap;
     if (Antimagic) {
         shieldeff(currentX(), currentY());
     }
-    if (Antimagic || In_endgame(&u.uz)) {
+    if (Antimagic || areYouInEndgame()) {
         You_feel("a wrenching sensation.");
         return;
     }
@@ -1136,9 +1136,9 @@ int in_sight;
         int migrate_typ = MIGR_RANDOM;
 
         if ((tt == HOLE || tt == TRAPDOOR)) {
-            if (Is_stronghold(&u.uz)) {
+            if (areYouOnStrongholdLevel()) {
                 assign_level(&tolevel, &valley_level);
-            } else if (Is_botlevel(&u.uz)) {
+            } else if (areYouOnBottomLevel()) {
                 if (in_sight && trap->tseen)
                     pline("%s avoids the %s.", Monnam(mtmp),
                           (tt == HOLE) ? "hole" : "trap");
@@ -1147,7 +1147,7 @@ int in_sight;
                 get_level(&tolevel, currentDepth() + 1);
             }
         } else if (tt == MAGIC_PORTAL) {
-            if (In_endgame(&u.uz)
+            if (areYouInEndgame()
                 && (mon_has_amulet(mtmp) || is_home_elemental(mptr))) {
                 if (in_sight && mptr->mlet != S_ELEMENTAL) {
                     pline("%s seems to shimmer for a moment.", Monnam(mtmp));
@@ -1161,7 +1161,7 @@ int in_sight;
         } else { /* (tt == LEVEL_TELEP) */
             int nlev;
 
-            if (mon_has_amulet(mtmp) || In_endgame(&u.uz)) {
+            if (mon_has_amulet(mtmp) || areYouInEndgame()) {
                 if (in_sight)
                     pline("%s seems very disoriented for a moment.",
                           Monnam(mtmp));
@@ -1253,7 +1253,7 @@ random_teleport_level()
     int nlev, max_depth, min_depth, cur_depth = (int) currentDepth();
 
     /* [the endgame case can only occur in wizard mode] */
-    if (!rn2(5) || Is_knox(&u.uz) || In_endgame(&u.uz))
+    if (!rn2(5) || areYouOnFortKnoxLevel() || areYouInEndgame())
         return cur_depth;
 
     /* What I really want to do is as follows:
@@ -1303,7 +1303,7 @@ random_teleport_level()
     if (nlev > max_depth) {
         nlev = max_depth;
         /* teleport up if already on bottom */
-        if (Is_botlevel(&u.uz))
+        if (areYouOnBottomLevel())
             nlev -= rnd(3);
     }
     if (nlev < min_depth) {

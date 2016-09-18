@@ -226,7 +226,7 @@ moverock()
 
                     if (ttmp->ttyp == LEVEL_TELEP) {
                         newlev = random_teleport_level();
-                        if (newlev == currentDepth() || In_endgame(&u.uz))
+                        if (newlev == currentDepth() || areYouInEndgame())
                             /* trap didn't work; skip "disappears" message */
                             goto dopush;
                     }
@@ -701,7 +701,7 @@ int mode;
             return FALSE;
         } else {
             if (mode == DO_MOVE) {
-                if (Is_stronghold(&u.uz) && is_db_wall(x, y))
+                if (areYouOnStrongholdLevel() && is_db_wall(x, y))
                     pline_The("drawbridge is up!");
                 /* sokoban restriction stays even after puzzle is solved */
                 else if (Passes_walls && !may_passwall(x, y)
@@ -1820,7 +1820,7 @@ boolean newspot;             /* true if called by spoteffects */
             else
                 You("are on solid %s again.",
                     is_ice(currentX(), currentY()) ? "ice" : "land");
-        } else if (Is_waterlevel(&u.uz)) {
+        } else if (areYouOnWaterLevel()) {
             still_inwater = TRUE;
         } else if (Levitation) {
             You("pop out of the water like a cork!");
@@ -1832,7 +1832,7 @@ boolean newspot;             /* true if called by spoteffects */
             still_inwater = TRUE;
         }
         if (!still_inwater) {
-            boolean was_underwater = (Underwater && !Is_waterlevel(&u.uz));
+            boolean was_underwater = (Underwater && !areYouOnWaterLevel());
 
             u.uinwater = 0;       /* leave the water */
             if (was_underwater) { /* restore vision */
@@ -1855,7 +1855,7 @@ boolean newspot;             /* true if called by spoteffects */
             dismount_steed(Underwater ? DISMOUNT_FELL : DISMOUNT_GENERIC);
             /* dismount_steed() -> float_down() -> pickup()
                (float_down doesn't do autopickup on Air or Water) */
-            if (areYouOnAirLevel() || Is_waterlevel(&u.uz))
+            if (areYouOnAirLevel() || areYouOnWaterLevel())
                 return FALSE;
             /* even if we actually end up at same location, float_down()
                has already done spoteffect()'s trap and pickup actions */
@@ -2112,7 +2112,7 @@ boolean
 in_town(x, y)
 register int x, y;
 {
-    s_level *slev = Is_special(&u.uz);
+    s_level *slev = areYouOnASpecialLevel();
     register struct mkroom *sroom;
     boolean has_subrooms = FALSE;
 
@@ -2529,7 +2529,7 @@ int x, y;
         return FALSE;
     /* all rogue level doors are doorless but disallow diagonal access, so
        we treat them as if their non-existant doors were actually present */
-    if (Is_rogue_level(&u.uz))
+    if (areYouOnRogueLevel())
         return FALSE;
     return !(lev_p->doormask & ~(D_NODOOR | D_BROKEN));
 }

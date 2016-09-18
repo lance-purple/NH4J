@@ -894,7 +894,7 @@ register int fd;
 
     if (!wizard && !discover)
         (void) delete_savefile();
-    if (Is_rogue_level(&u.uz))
+    if (areYouOnRogueLevel())
         assign_graphics(ROGUESET);
 #ifdef USE_TILES
     substitute_tiles(&u.uz);
@@ -1147,7 +1147,7 @@ boolean ghostly;
             levl[cc.x][cc.y].typ = STAIRS;
         }
 
-        br = Is_branchlev(&u.uz);
+        br = areYouOnABranchLevel();
         if (br && currentDungeonLevel() == 1) {
             d_level ltmp;
 

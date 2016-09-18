@@ -96,9 +96,26 @@ typedef struct branch {
  * Depth corresponds to the number of floors below the surface.
  */
 extern boolean areYouOnAirLevel();
+extern boolean areYouOnAstralLevel();
+extern boolean areYouOnBigRoomLevel();
+extern boolean areYouOnBottomLevel();
 extern boolean areYouOnEarthLevel();
 extern boolean areYouOnFireLevel();
+extern boolean areYouOnFortKnoxLevel();
+extern boolean areYouOnJuiblexLevel();
+extern boolean areYouOnMedusaLevel();
+extern boolean areYouOnMineEndLevel();
+extern boolean areYouOnOracleLevel();
+extern boolean areYouOnQuestLocationLevel();
+extern boolean areYouOnQuestNemesisLevel();
+extern boolean areYouOnQuestStartLevel();
+extern boolean areYouOnRogueLevel();
+extern boolean areYouOnSanctumLevel();
+extern boolean areYouOnSokobanEndLevel();
+extern boolean areYouOnStrongholdLevel();
+extern boolean areYouOnValleyLevel();
 extern boolean areYouOnWaterLevel();
+extern boolean areYouOnWizardLevel1();
 
 #define Is_astralevel(x) (on_level(x, &astral_level))
 #define Is_earthlevel(x) (on_level(x, &earth_level))
@@ -129,6 +146,9 @@ extern boolean areYouOnWaterLevel();
 #define In_sokoban(x) ((x)->dnum == sokoban_dnum)
 #define In_endgame(x) ((x)->dnum == astral_level.dnum)
 
+extern branch* areYouOnABranchLevel();
+extern s_level* areYouOnASpecialLevel();
+extern boolean areYouInEndgame();
 extern boolean areYouInHell(); /* now gehennom */
 
 #define within_bounded_area(X, Y, LX, LY, HX, HY) \

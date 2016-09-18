@@ -515,7 +515,7 @@ boolean td; /* td == TRUE : trap door or hole */
 
     if (*u.ushops)
         shopdig(1);
-    if (Is_stronghold(&u.uz)) {
+    if (areYouOnStrongholdLevel()) {
         find_hell(&dtmp);
     } else {
         int dist = newlevel - dunlev(&u.uz);
@@ -1124,7 +1124,7 @@ unsigned trflags;
         }
         /* wumpus reference */
         if (Role_if(PM_RANGER) && !trap->madeby_u && !trap->once
-            && In_quest(&u.uz) && Is_qlocate(&u.uz)) {
+            && In_quest(&u.uz) && areYouOnQuestLocationLevel()) {
             pline("Fortunately it has a bottom after all...");
             trap->once = 1;
         } else if (u.umonnum == PM_PIT_VIPER || u.umonnum == PM_PIT_FIEND) {
@@ -1823,7 +1823,7 @@ int style;
                         int newlev = random_teleport_level();
                         d_level dest;
 
-                        if (newlev == currentDepth() || In_endgame(&u.uz))
+                        if (newlev == currentDepth() || areYouInEndgame())
                             continue;
                         add_to_migration(singleobj);
                         get_level(&dest, newlev);

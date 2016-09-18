@@ -233,7 +233,7 @@ boolean artif;
     int tprob, i, prob = rnd(1000);
 
     if (oclass == RANDOM_CLASS) {
-        const struct icp *iprobs = Is_rogue_level(&u.uz)
+        const struct icp *iprobs = areYouOnRogueLevel()
                                    ? (const struct icp *) rogueprobs
                                    : areYouInHell() ? (const struct icp *) hellprobs
                                             : (const struct icp *) mkobjprobs;

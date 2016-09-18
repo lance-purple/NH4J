@@ -405,9 +405,9 @@ encodeachieve()
         r |= 1L << 4;
     if (u.uachieve.amulet)
         r |= 1L << 5;
-    if (In_endgame(&u.uz))
+    if (areYouInEndgame())
         r |= 1L << 6;
-    if (Is_astralevel(&u.uz))
+    if (areYouOnAstralLevel())
         r |= 1L << 7;
     if (u.uachieve.ascended)
         r |= 1L << 8;

@@ -323,7 +323,7 @@ aligntyp atyp;
 {
     int tryct, pm;
 
-    for (tryct = !In_endgame(&u.uz) ? 20 : 0; tryct > 0; --tryct) {
+    for (tryct = !areYouInEndgame() ? 20 : 0; tryct > 0; --tryct) {
         pm = rn1(PM_DEMOGORGON + 1 - PM_ORCUS, PM_ORCUS);
         if (!(mvitals[pm].mvflags & G_GONE)
             && (atyp == A_NONE || sgn(mons[pm].maligntyp) == sgn(atyp)))
@@ -338,7 +338,7 @@ aligntyp atyp;
 {
     int tryct, pm;
 
-    for (tryct = !In_endgame(&u.uz) ? 20 : 0; tryct > 0; --tryct) {
+    for (tryct = !areYouInEndgame() ? 20 : 0; tryct > 0; --tryct) {
         pm = rn1(PM_YEENOGHU + 1 - PM_JUIBLEX, PM_JUIBLEX);
         if (!(mvitals[pm].mvflags & G_GONE)
             && (atyp == A_NONE || sgn(mons[pm].maligntyp) == sgn(atyp)))

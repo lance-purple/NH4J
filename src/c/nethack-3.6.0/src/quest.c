@@ -79,14 +79,14 @@ onquest()
 {
     if (u.uevent.qcompleted || Not_firsttime)
         return;
-    if (!Is_special(&u.uz))
+    if (!areYouOnASpecialLevel())
         return;
 
-    if (Is_qstart(&u.uz))
+    if (areYouOnQuestStartLevel())
         on_start();
-    else if (Is_qlocate(&u.uz))
+    else if (areYouOnQuestLocationLevel())
         on_locate();
-    else if (Is_nemesis(&u.uz))
+    else if (areYouOnQuestNemesisLevel())
         on_goal();
     return;
 }

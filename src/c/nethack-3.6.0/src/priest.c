@@ -330,7 +330,7 @@ char *pname; /* caller-supplied output buffer */
 
     Strcat(pname, what);
     /* same as distant_monnam(), more or less... */
-    if (do_hallu || !high_priest || !Is_astralevel(&u.uz)
+    if (do_hallu || !high_priest || !areYouOnAstralLevel()
         || distanceSquaredToYou(mon->mx, mon->my) <= 2 || program_state.gameover) {
         Strcat(pname, " of ");
         Strcat(pname, halu_gname(mon_aligntyp(mon)));
@@ -400,7 +400,7 @@ int roomno;
         epri_p = EPRI(priest);
         shrined = has_shrine(priest);
         sanctum = (priest->data == &mons[PM_HIGH_PRIEST]
-                   && (Is_sanctum(&u.uz) || In_endgame(&u.uz)));
+                   && (areYouOnSanctumLevel() || areYouInEndgame()));
         can_speak = (priest->mcanmove && !priest->msleeping);
         if (can_speak && !Deaf && moves >= epri_p->intone_time) {
             unsigned save_priest = priest->ispriest;
@@ -419,7 +419,7 @@ int roomno;
             epri_p->enter_time = 0L;
         }
         msg1 = msg2 = 0;
-        if (sanctum && Is_sanctum(&u.uz)) {
+        if (sanctum && areYouOnSanctumLevel()) {
             if (priest->mpeaceful) {
                 /* first time inside */
                 msg1 = "Infidel, you have entered Moloch's Sanctum!";

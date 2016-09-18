@@ -287,7 +287,7 @@ int force;
                         pline_The("kitchen sink falls into a chasm.");
                     goto do_pit;
                 case ALTAR:
-                    if (Is_astralevel(&u.uz) || Is_sanctum(&u.uz))
+                    if (areYouOnAstralLevel() || areYouOnSanctumLevel())
                         break;
 
                     if (cansee(x, y))
@@ -642,7 +642,7 @@ struct obj *instr;
         /* Check if there was the Stronghold drawbridge near
          * and if the tune conforms to what we're waiting for.
          */
-        if (Is_stronghold(&u.uz)) {
+        if (areYouOnStrongholdLevel()) {
             exercise(A_WIS, TRUE); /* just for trying */
             if (!strcmp(buf, tune)) {
                 /* Search for the drawbridge */

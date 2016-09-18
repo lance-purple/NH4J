@@ -414,7 +414,7 @@ int type;
 
         /* also done in roguecorr(); doing it here first prevents
            making mimics in place of trapped doors on rogue level */
-        if (Is_rogue_level(&u.uz))
+        if (areYouOnRogueLevel())
             levl[x][y].doormask = D_NODOOR;
 
         if (levl[x][y].doormask & D_TRAPPED) {
@@ -656,10 +656,10 @@ makelevel()
     clear_level_structures();
 
     {
-        register s_level *slev = Is_special(&u.uz);
+        register s_level *slev = areYouOnASpecialLevel();
 
         /* check for special levels */
-        if (slev && !Is_rogue_level(&u.uz)) {
+        if (slev && !areYouOnRogueLevel()) {
             makemaz(slev->proto);
             return;
         } else if (dungeons[currentDungeonNumber()].proto[0]) {
@@ -690,7 +690,7 @@ makelevel()
 
     /* otherwise, fall through - it's a "regular" level. */
 
-    if (Is_rogue_level(&u.uz)) {
+    if (areYouOnRogueLevel()) {
         makeroguerooms();
         makerogueghost();
     } else
@@ -699,7 +699,7 @@ makelevel()
 
     /* construct stairs (up and down in different rooms if possible) */
     croom = &rooms[rn2(nroom)];
-    if (!Is_botlevel(&u.uz))
+    if (!areYouOnBottomLevel())
         mkstairs(somex(croom), somey(croom), 0, croom); /* down */
     if (nroom > 1) {
         troom = croom;
@@ -717,10 +717,10 @@ makelevel()
         mkstairs(sx, sy, 1, croom); /* up */
     }
 
-    branchp = Is_branchlev(&u.uz);    /* possible dungeon branch */
+    branchp = areYouOnABranchLevel();    /* possible dungeon branch */
     room_threshold = branchp ? 4 : 3; /* minimum number of rooms needed
                                          to allow a random special room */
-    if (Is_rogue_level(&u.uz))
+    if (areYouOnRogueLevel())
         goto skip0;
     makecorridors();
     make_niches();
@@ -816,7 +816,7 @@ skip0:
             mktrap(0, 0, croom, (coord *) 0);
         if (!rn2(3))
             (void) mkgold(0L, somex(croom), somey(croom));
-        if (Is_rogue_level(&u.uz))
+        if (areYouOnRogueLevel())
             goto skip_nonrogue;
         if (!rn2(10))
             mkfount(0, croom);
@@ -895,7 +895,7 @@ boolean skip_lvl_checks;
         kelp_moat = 30;
 
     /* Place kelp, except on the plane of water */
-    if (!skip_lvl_checks && In_endgame(&u.uz))
+    if (!skip_lvl_checks && areYouInEndgame())
         return;
     for (x = 2; x < (COLNO - 2); x++)
         for (y = 1; y < (ROWNO - 1); y++)
@@ -906,9 +906,9 @@ boolean skip_lvl_checks;
     /* determine if it is even allowed;
        almost all special levels are excluded */
     if (!skip_lvl_checks
-        && (In_hell(&u.uz) || In_V_tower(&u.uz) || Is_rogue_level(&u.uz)
+        && (In_hell(&u.uz) || In_V_tower(&u.uz) || areYouOnRogueLevel()
             || level.flags.arboreal
-            || ((sp = Is_special(&u.uz)) != 0 && !Is_oracle_level(&u.uz)
+            || ((sp = areYouOnASpecialLevel()) != 0 && !areYouOnOracleLevel()
                 && (!In_mines(&u.uz) || sp->flags.town))))
         return;
 
@@ -1034,7 +1034,7 @@ struct mkroom *croom;
     if ((int) levl[lowx][lowy].roomno == roomno || croom->irregular)
         return;
 #ifdef SPECIALIZATION
-    if (Is_rogue_level(&u.uz))
+    if (areYouOnRogueLevel())
         do_ordinary = TRUE; /* vision routine helper */
     if ((rtype != OROOM) || do_ordinary)
 #endif
@@ -1261,7 +1261,7 @@ coord *tm;
 
     if (num > 0 && num < TRAPNUM) {
         kind = num;
-    } else if (Is_rogue_level(&u.uz)) {
+    } else if (areYouOnRogueLevel()) {
         switch (rn2(7)) {
         default:
             kind = BEAR_TRAP;
@@ -1678,7 +1678,7 @@ xchar x, y;
         source = &br->end2;
     } else {
         /* disallow Knox branch on a level with one branch already */
-        if (Is_branchlev(&u.uz))
+        if (areYouOnABranchLevel())
             return;
         source = &br->end1;
     }

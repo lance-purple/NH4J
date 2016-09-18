@@ -1121,7 +1121,7 @@ register const char *let, *word;
              /* suppress corpses on astral, amulets elsewhere */
              || (!strcmp(word, "sacrifice")
                  /* (!astral && amulet) || (astral && !amulet) */
-                 && (!Is_astralevel(&u.uz) ^ (otmp->oclass != AMULET_CLASS)))
+                 && (!areYouOnAstralLevel() ^ (otmp->oclass != AMULET_CLASS)))
              /* suppress container being stashed into */
              || (!strcmp(word, "stash") && !ck_bag(otmp))
              /* worn armor or accessory covered by cursed worn armor */
@@ -2638,7 +2638,7 @@ char *buf;
     else if (IS_ALTAR(ltyp)) {
         Sprintf(altbuf, "%saltar to %s (%s)",
                 ((lev->altarmask & AM_SHRINE)
-                 && (Is_astralevel(&u.uz) || Is_sanctum(&u.uz)))
+                 && (areYouOnAstralLevel() || areYouOnSanctumLevel()))
                     ? "high "
                     : "",
                 a_gname(),

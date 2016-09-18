@@ -673,7 +673,7 @@ register struct monst *mtmp;
             break;
         case AT_WEAP:
             if (range2) {
-                if (!Is_rogue_level(&u.uz))
+                if (!areYouOnRogueLevel())
                     thrwmu(mtmp);
             } else {
                 int hittmp = 0;
@@ -1202,7 +1202,7 @@ register struct attack *mattk;
                 if (is_pool(mtmp->mx, mtmp->my) && !Swimming && !Amphibious) {
                     boolean moat = (levl[mtmp->mx][mtmp->my].typ != POOL)
                                    && (levl[mtmp->mx][mtmp->my].typ != WATER)
-                                   && !Is_medusa_level(&u.uz)
+                                   && !areYouOnMedusaLevel()
                                    && !areYouOnWaterLevel();
 
                     pline("%s drowns you...", Monnam(mtmp));

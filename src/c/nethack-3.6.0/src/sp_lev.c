@@ -787,7 +787,7 @@ rndtrap()
             break;
         case ROLLING_BOULDER_TRAP:
         case ROCKTRAP:
-            if (In_endgame(&u.uz))
+            if (areYouInEndgame())
                 rtrap = NO_TRAP;
             break;
         }
@@ -1897,7 +1897,7 @@ struct mkroom *croom;
      * are not stone-resistant and have monster inventory.  They also lack
      * other contents, but that can be specified as an empty container.
      */
-    if (o->id == STATUE && Is_medusa_level(&u.uz) && o->corpsenm == NON_PM) {
+    if (o->id == STATUE && areYouOnMedusaLevel() && o->corpsenm == NON_PM) {
         struct monst *was;
         struct obj *obj;
         int wastyp;
@@ -1936,11 +1936,11 @@ struct mkroom *croom;
      * "prize" and then set record_achieve_special (maps to corpsenm)
      * for the object.  That field will later be checked to find out if
      * the player obtained the prize. */
-    if (otmp->otyp == LUCKSTONE && Is_mineend_level(&u.uz)) {
+    if (otmp->otyp == LUCKSTONE && areYouOnMineEndLevel()) {
         otmp->record_achieve_special = 1;
     } else if ((otmp->otyp == AMULET_OF_REFLECTION
                 || otmp->otyp == BAG_OF_HOLDING)
-               && Is_sokoend_level(&u.uz)) {
+               && areYouOnSokobanEndLevel()) {
         otmp->record_achieve_special = 1;
     }
 

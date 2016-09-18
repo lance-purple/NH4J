@@ -154,7 +154,7 @@ struct monst *mtmp;
             && !(mtmp->isshk || mtmp->isgd || !mtmp->mcansee
                  || mtmp->mpeaceful || mtmp->data->mlet == S_HUMAN
                  || mtmp->data == &mons[PM_MINOTAUR]
-                 || areYouInHell() || In_endgame(&u.uz)));
+                 || areYouInHell() || areYouInEndgame()));
 }
 
 
@@ -744,7 +744,7 @@ register int after;
     /* Not necessary if m_move called from this file, but necessary in
      * other calls of m_move (ex. leprechauns dodging)
      */
-    if (!Is_rogue_level(&u.uz))
+    if (!areYouOnRogueLevel())
         can_tunnel = tunnels(ptr);
     can_open = !(nohands(ptr) || verysmall(ptr));
     can_unlock =
@@ -869,7 +869,7 @@ not_special:
         }
     }
 
-    if ((!mtmp->mpeaceful || !rn2(10)) && (!Is_rogue_level(&u.uz))) {
+    if ((!mtmp->mpeaceful || !rn2(10)) && (!areYouOnRogueLevel())) {
         boolean in_line = (lined_up(mtmp)
                && (distmin(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy)
                    <= (throws_rocks(youmonst.data) ? 20 : ACURRSTR / 2 + 1)));
@@ -1399,7 +1399,7 @@ void
 dissolve_bars(x, y)
 register int x, y;
 {
-    levl[x][y].typ = (Is_special(&u.uz) || *in_rooms(x, y, 0)) ? ROOM : CORR;
+    levl[x][y].typ = (areYouOnASpecialLevel() || *in_rooms(x, y, 0)) ? ROOM : CORR;
     newsym(x, y);
 }
 

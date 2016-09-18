@@ -591,7 +591,7 @@ aligntyp resp_god;
             You("bask in its %s glow for a minute...", NH_BLACK);
             godvoice(resp_god, "I believe it not!");
         }
-        if (Is_astralevel(&u.uz) || Is_sanctum(&u.uz)) {
+        if (areYouOnAstralLevel() || areYouOnSanctumLevel()) {
             /* one more try for high altars */
             verbalize("Thou cannot escape my wrath, mortal!");
             summon_minion(resp_god, FALSE);
@@ -1266,7 +1266,7 @@ dosacrifice()
         You("are not standing on an altar.");
         return 0;
     }
-    highaltar = ((Is_astralevel(&u.uz) || Is_sanctum(&u.uz))
+    highaltar = ((areYouOnAstralLevel() || areYouOnSanctumLevel())
                  && (levl[currentX()][currentY()].altarmask & AM_SHRINE));
 
     otmp = floorfood("sacrifice", 1);

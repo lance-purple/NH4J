@@ -572,7 +572,7 @@ int control;
 
         /* skip the normal update loop */
         goto skip;
-    } else if (Is_rogue_level(&u.uz)) {
+    } else if (areYouOnRogueLevel()) {
         rogue_vision(next_array, next_rmin, next_rmax);
     } else {
         int has_night_vision = 1; /* hero has night vision */

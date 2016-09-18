@@ -980,7 +980,7 @@ boolean called;
             Strcat(buf, name);
             name_at_start = TRUE;
         }
-    } else if (is_mplayer(mdat) && !In_endgame(&u.uz)) {
+    } else if (is_mplayer(mdat) && !areYouInEndgame()) {
         char pbuf[BUFSZ];
 
         Strcpy(pbuf, rank_of((int) mtmp->m_lev, monsndx(mdat),
@@ -1141,7 +1141,7 @@ char *outbuf;
        unless you're adjacent (overridden for hallucination which does
        its own obfuscation) */
     if (mon->data == &mons[PM_HIGH_PRIEST] && !Hallucination
-        && Is_astralevel(&u.uz) && distanceSquaredToYou(mon->mx, mon->my) > 2) {
+        && areYouOnAstralLevel() && distanceSquaredToYou(mon->mx, mon->my) > 2) {
         Strcpy(outbuf, article == ARTICLE_THE ? "the " : "");
         Strcat(outbuf, mon->female ? "high priestess" : "high priest");
     } else {

@@ -253,7 +253,7 @@ struct monst *oracle;
        could push her onto a hole in the floor; at present, traps don't
        activate in such situation hence she won't fall to another level;
        however, that could change so be prepared to cope with such things */
-    if (!Is_oracle_level(&u.uz))
+    if (!areYouOnOracleLevel())
         return FALSE;
 
     oracle->mpeaceful = 1;
@@ -305,7 +305,7 @@ can_make_bones()
     if (u.uswallow) {
         return FALSE; /* no bones when swallowed */
     }
-    if (!Is_branchlev(&u.uz)) {
+    if (!areYouOnABranchLevel()) {
         /* no bones on non-branches with portals */
         for (ttmp = ftrap; ttmp; ttmp = ttmp->ntrap)
             if (ttmp->ttyp == MAGIC_PORTAL)

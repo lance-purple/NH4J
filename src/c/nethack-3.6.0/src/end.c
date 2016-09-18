@@ -1114,7 +1114,7 @@ int how;
     if (u.uhave.amulet) {
         Strcat(killer.name, " (with the Amulet)");
     } else if (how == ESCAPED) {
-        if (Is_astralevel(&u.uz)) /* offered Amulet to wrong deity */
+        if (areYouOnAstralLevel()) /* offered Amulet to wrong deity */
             Strcat(killer.name, " (in celestial disgrace)");
         else if (carrying(FAKE_AMULET_OF_YENDOR))
             Strcat(killer.name, " (with a fake Amulet)");
@@ -1235,10 +1235,10 @@ int how;
             /* more conventional demise */
             const char *where = dungeons[currentDungeonNumber()].dname;
 
-            if (Is_astralevel(&u.uz))
+            if (areYouOnAstralLevel())
                 where = "The Astral Plane";
             Sprintf(pbuf, "You %s in %s", ends[how], where);
-            if (!In_endgame(&u.uz) && !Is_knox(&u.uz))
+            if (!areYouInEndgame() && !areYouOnFortKnoxLevel())
                 Sprintf(eos(pbuf), " on dungeon level %d",
                         In_quest(&u.uz) ? dunlev(&u.uz) : currentDepth());
         }

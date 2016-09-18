@@ -2677,7 +2677,7 @@ struct obj *obj; /* wand or spell */
             disclose = TRUE;
         } else if (striking && directionZ() < 0 && rn2(3) && !areYouOnAirLevel()
                    && !areYouOnWaterLevel() && !Underwater
-                   && !Is_qstart(&u.uz)) {
+                   && !areYouOnQuestStartLevel()) {
             int dmg;
             /* similar to zap_dig() */
             pline("A rock is dislodged from the %s and falls on your %s.",
@@ -2725,7 +2725,7 @@ struct obj *obj; /* wand or spell */
         break;
     case SPE_STONE_TO_FLESH:
         if (areYouOnAirLevel() || areYouOnWaterLevel() || Underwater
-            || (Is_qstart(&u.uz) && directionZ() < 0)) {
+            || (areYouOnQuestStartLevel() && directionZ() < 0)) {
             pline1(nothing_happens);
         } else if (directionZ() < 0) { /* we should do more... */
             pline("Blood drips on your %s.", body_part(FACE));
@@ -4337,7 +4337,7 @@ short exploding_wand_typ;
         if (see_it)
             pline("%s %s reveals a secret door.",
                   yourzap ? "Your" : "The", zapverb);
-        else if (Is_rogue_level(&u.uz))
+        else if (areYouOnRogueLevel())
             draft_message(FALSE); /* "You feel a draft." (open doorway) */
     }
 

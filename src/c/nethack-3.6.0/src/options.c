@@ -531,7 +531,7 @@ reglyph_darkroom()
             struct rm *lev = &levl[x][y];
 
             if (!flags.dark_room || !iflags.use_color
-                || Is_rogue_level(&u.uz)) {
+                || areYouOnRogueLevel()) {
                 if (lev->glyph == cmap_to_glyph(S_darkroom))
                     lev->glyph = lev->waslit ? cmap_to_glyph(S_room)
                                              : cmap_to_glyph(S_stone);
@@ -1988,7 +1988,7 @@ boolean tinitial, tfrom_file;
                            op, SYMBOLS);
                 wait_synch();
             } else {
-                if (!initial && Is_rogue_level(&u.uz))
+                if (!initial && areYouOnRogueLevel())
                     assign_graphics(ROGUESET);
                 need_redraw = TRUE;
             }
@@ -3249,7 +3249,7 @@ boolean tinitial, tfrom_file;
                 wait_synch();
             } else {
                 switch_symbols(TRUE);
-                if (!initial && Is_rogue_level(&u.uz))
+                if (!initial && areYouOnRogueLevel())
                     assign_graphics(ROGUESET);
             }
         }
@@ -3278,7 +3278,7 @@ boolean tinitial, tfrom_file;
                 wait_synch();
             } else {
                 switch_symbols(TRUE);
-                if (!initial && Is_rogue_level(&u.uz))
+                if (!initial && areYouOnRogueLevel())
                     assign_graphics(ROGUESET);
             }
         }
@@ -4423,7 +4423,7 @@ boolean setinitial, setfromfile;
         if (ready_to_switch)
             switch_symbols(TRUE);
 
-        if (Is_rogue_level(&u.uz)) {
+        if (areYouOnRogueLevel()) {
             if (rogueflag)
                 assign_graphics(ROGUESET);
         } else if (!rogueflag)

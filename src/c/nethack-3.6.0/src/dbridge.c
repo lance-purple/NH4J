@@ -100,7 +100,7 @@ int x, y;
     if (!isok(x, y))
         return FALSE;
     ltyp = levl[x][y].typ;
-    if (!Is_juiblex_level(&u.uz)
+    if (!areYouOnJuiblexLevel()
         && (ltyp == MOAT
             || (ltyp == DRAWBRIDGE_UP
                 && (levl[x][y].drawbridgemask & DB_UNDER) == DB_MOAT)))
@@ -866,7 +866,7 @@ int x, y;
     newsym(x, y);
     newsym(x2, y2);
     unblock_point(x2, y2); /* vision */
-    if (Is_stronghold(&u.uz))
+    if (areYouOnStrongholdLevel())
         u.uevent.uopened_dbridge = TRUE;
 }
 
@@ -946,7 +946,7 @@ int x, y;
     newsym(x2, y2);
     if (!does_block(x2, y2, lev2))
         unblock_point(x2, y2); /* vision */
-    if (Is_stronghold(&u.uz))
+    if (areYouOnStrongholdLevel())
         u.uevent.uopened_dbridge = TRUE;
 
     set_entity(x2, y2, etmp2); /* currently only automissers can be here */

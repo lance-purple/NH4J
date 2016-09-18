@@ -130,7 +130,7 @@ register boolean special;
     if (MON_AT(x, y))
         (void) rloc(m_at(x, y), FALSE); /* insurance */
 
-    if (!In_endgame(&u.uz))
+    if (!areYouInEndgame())
         special = FALSE;
 
     if ((mtmp = makemon(ptr, x, y, NO_MM_FLAGS)) != 0) {

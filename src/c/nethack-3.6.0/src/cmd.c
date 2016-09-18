@@ -895,7 +895,7 @@ wiz_map_levltyp(VOID_ARGS)
 
     {
         char dsc[BUFSZ];
-        s_level *slev = Is_special(&u.uz);
+        s_level *slev = areYouOnASpecialLevel();
 
         Sprintf(dsc, "D:%d,L:%d", currentDungeonNumber(), currentDungeonLevel());
         /* [dungeon branch features currently omitted] */
@@ -975,13 +975,13 @@ wiz_map_levltyp(VOID_ARGS)
             Strcat(dsc, " sokoban");
         else if (currentDungeonNumber() == quest_dnum)
             Strcat(dsc, " quest");
-        else if (Is_knox(&u.uz))
+        else if (areYouOnFortKnoxLevel())
             Strcat(dsc, " ludios");
         else if (currentDungeonNumber() == 1)
             Strcat(dsc, " gehennom");
         else if (currentDungeonNumber() == tower_dnum)
             Strcat(dsc, " vlad");
-        else if (In_endgame(&u.uz))
+        else if (areYouInEndgame())
             Strcat(dsc, " endgame");
         else {
             /* somebody's added a dungeon branch we're not expecting */
@@ -3095,10 +3095,10 @@ wiz_migrate_mons()
     if (*inbuf == '\033')
         return 0;
     mcount = atoi(inbuf);
-    if (mcount < 0 || mcount > (COLNO * ROWNO) || Is_botlevel(&u.uz))
+    if (mcount < 0 || mcount > (COLNO * ROWNO) || areYouOnBottomLevel())
         return 0;
     while (mcount > 0) {
-        if (Is_stronghold(&u.uz))
+        if (areYouOnStrongholdLevel())
             assign_level(&tolevel, &valley_level);
         else
             get_level(&tolevel, currentDepth() + 1);

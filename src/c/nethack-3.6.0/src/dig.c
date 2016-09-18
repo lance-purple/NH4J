@@ -198,8 +198,8 @@ int x, y;
             pline_The("throne is too hard to break apart.");
         return FALSE;
     } else if (IS_ALTAR(levl[x][y].typ)
-               && (madeby != BY_OBJECT || Is_astralevel(&u.uz)
-                   || Is_sanctum(&u.uz))) {
+               && (madeby != BY_OBJECT || areYouOnAstralLevel()
+                   || areYouOnSanctumLevel())) {
         if (verbose)
             pline_The("altar is too hard to break apart.");
         return FALSE;
@@ -697,9 +697,9 @@ int ttyp;
                 if (teleport_pet(mtmp, FALSE)) {
                     d_level tolevel;
 
-                    if (Is_stronghold(&u.uz)) {
+                    if (areYouOnStrongholdLevel()) {
                         assign_level(&tolevel, &valley_level);
-                    } else if (Is_botlevel(&u.uz)) {
+                    } else if (areYouOnBottomLevel()) {
                         if (canseemon(mtmp))
                             pline("%s avoids the trap.", Monnam(mtmp));
                         return;

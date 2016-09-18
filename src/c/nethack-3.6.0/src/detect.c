@@ -1124,7 +1124,7 @@ struct rm *lev;
 {
     int newmask = lev->doormask & ~WM_MASK;
 
-    if (Is_rogue_level(&u.uz))
+    if (areYouOnRogueLevel())
         /* rogue didn't have doors, only doorways */
         newmask = D_NODOOR;
     else

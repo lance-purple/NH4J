@@ -170,7 +170,7 @@ register struct monst *mtmp;
     struct obj *otmp;
     int bias, spe2, w1, w2;
 
-    if (Is_rogue_level(&u.uz))
+    if (areYouOnRogueLevel())
         return;
     /*
      *  First a few special cases:
@@ -531,7 +531,7 @@ register struct monst *mtmp;
     register struct obj *otmp;
     register struct permonst *ptr = mtmp->data;
 
-    if (Is_rogue_level(&u.uz))
+    if (areYouOnRogueLevel())
         return;
     /*
      *  Soldiers get armour & rations - armour approximates their ac.
@@ -883,7 +883,7 @@ struct monst *mon;
         /* arbitrary; such monsters won't be involved in draining anyway */
         hp = 4 + rnd(4); /* 5..8 */
     } else if (ptr->mlet == S_DRAGON && monsndx(ptr) >= PM_GRAY_DRAGON) {
-        /* adult dragons; newmonhp() uses In_endgame(&u.uz) ? 8 : 4 + rnd(4)
+        /* adult dragons; newmonhp() uses areYouInEndgame() ? 8 : 4 + rnd(4)
          */
         hp = 4 + rn2(5); /* 4..8 */
     } else if (!mon->m_lev) {
@@ -918,7 +918,7 @@ int mndx;
     } else if (ptr->mlet == S_DRAGON && mndx >= PM_GRAY_DRAGON) {
         /* adult dragons */
         mon->mhpmax = mon->mhp =
-            (int) (In_endgame(&u.uz)
+            (int) (areYouInEndgame()
                        ? (8 * mon->m_lev)
                        : (4 * mon->m_lev + d((int) mon->m_lev, 4)));
     } else if (!mon->m_lev) {
@@ -1392,7 +1392,7 @@ register struct permonst *ptr;
     register int alshift;
 
     if (oldmoves != moves) {
-        lev = Is_special(&u.uz);
+        lev = areYouOnASpecialLevel();
         oldmoves = moves;
     }
     switch ((lev) ? lev->flags.align : dungeons[currentDungeonNumber()].flags.align) {
@@ -1450,8 +1450,8 @@ rndmonst()
         minmlev = zlevel / 6;
         /* determine the level of the strongest monster to make. */
         maxmlev = (zlevel + u.ulevel) / 2;
-        upper = Is_rogue_level(&u.uz);
-        elemlevel = In_endgame(&u.uz) && !Is_astralevel(&u.uz);
+        upper = areYouOnRogueLevel();
+        elemlevel = areYouInEndgame() && !areYouOnAstralLevel();
 
         /*
          * Find out how many monsters exist in the range we have selected.
@@ -2021,9 +2021,9 @@ register struct monst *mtmp;
                         || levl[mx - 1][my].typ == TDWALL
                         || levl[mx - 1][my].typ == CROSSWALL
                         || levl[mx - 1][my].typ == TUWALL))
-            appear = Is_rogue_level(&u.uz) ? S_hwall : S_hcdoor;
+            appear = areYouOnRogueLevel() ? S_hwall : S_hcdoor;
         else
-            appear = Is_rogue_level(&u.uz) ? S_vwall : S_vcdoor;
+            appear = areYouOnRogueLevel() ? S_vwall : S_vcdoor;
         if (!mtmp->minvis || See_invisible)
             block_point(mx, my); /* vision */
     } else if (level.flags.is_maze_lev && !In_sokoban(&u.uz) && rn2(2)) {

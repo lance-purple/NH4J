@@ -226,7 +226,7 @@ dosounds()
         return;
     }
     if (level.flags.has_temple && !rn2(200)
-        && !(Is_astralevel(&u.uz) || Is_sanctum(&u.uz))) {
+        && !(areYouOnAstralLevel() || areYouOnSanctumLevel())) {
         for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
             if (DEADMONSTER(mtmp))
                 continue;
@@ -274,7 +274,7 @@ dosounds()
             return;
         }
     }
-    if (Is_oracle_level(&u.uz) && !rn2(400)) {
+    if (areYouOnOracleLevel() && !rn2(400)) {
         /* make sure the Oracle is still here */
         for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
             if (DEADMONSTER(mtmp))
@@ -767,7 +767,7 @@ register struct monst *mtmp;
     /* else FALLTHRU */
     case MS_HUMANOID:
         if (!mtmp->mpeaceful) {
-            if (In_endgame(&u.uz) && is_mplayer(ptr))
+            if (areYouInEndgame() && is_mplayer(ptr))
                 mplayer_talk(mtmp);
             else
                 pline_msg = "threatens you.";

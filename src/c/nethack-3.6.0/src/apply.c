@@ -337,7 +337,7 @@ register struct obj *obj;
             cant_reach_floor(currentX(), currentY(), (directionZ() < 0), TRUE);
         else if (its_dead(currentX(), currentY(), &res))
             ; /* message already given */
-        else if (Is_stronghold(&u.uz))
+        else if (areYouOnStrongholdLevel())
             You_hear("the crackling of hellfire.");
         else
             pline_The("%s seems healthy enough.", surface(currentX(), currentY()));
