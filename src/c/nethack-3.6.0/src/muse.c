@@ -383,7 +383,7 @@ struct monst *mtmp;
                 m.has_defense = MUSE_DOWNSTAIRS;
         } else if (x == xupstair && y == yupstair) {
             /* don't let monster leave the dungeon with the Amulet */
-            if (ledger_no(&u.uz) != 1)
+            if (currentLevelLedgerNum() != 1)
                 m.has_defense = MUSE_UPSTAIRS;
         } else if (sstairs.sx && x == sstairs.sx && y == sstairs.sy) {
             if (sstairs.up || !is_floater(mtmp->data))
@@ -748,7 +748,7 @@ struct monst *mtmp;
             You_hear("%s crash through the %s.", something,
                      surface(mtmp->mx, mtmp->my));
         /* we made sure that there is a level for mtmp to go to */
-        migrate_to_level(mtmp, ledger_no(&u.uz) + 1, MIGR_RANDOM,
+        migrate_to_level(mtmp, currentLevelLedgerNum() + 1, MIGR_RANDOM,
                          (coord *) 0);
         return 2;
     }
@@ -837,7 +837,7 @@ struct monst *mtmp;
             worm_move(mtmp);
         newsym(trapx, trapy);
 
-        migrate_to_level(mtmp, ledger_no(&u.uz) + 1, MIGR_RANDOM,
+        migrate_to_level(mtmp, currentLevelLedgerNum() + 1, MIGR_RANDOM,
                          (coord *) 0);
         return 2;
     case MUSE_UPSTAIRS:
@@ -847,7 +847,7 @@ struct monst *mtmp;
          * which we cannot allow since that would leave the
          * player stranded.
          */
-        if (ledger_no(&u.uz) == 1) {
+        if (currentLevelLedgerNum() == 1) {
             if (mon_has_special(mtmp))
                 return 0;
             if (vismon)
@@ -866,12 +866,12 @@ struct monst *mtmp;
                the Wizard and he'll immediately go right to the
                upstairs, so there's not much point in having any
                chance for a random position on the current level */
-            migrate_to_level(mtmp, ledger_no(&u.uz) + 1, MIGR_RANDOM,
+            migrate_to_level(mtmp, currentLevelLedgerNum() + 1, MIGR_RANDOM,
                              (coord *) 0);
         } else {
             if (vismon)
                 pline("%s escapes upstairs!", Monnam(mtmp));
-            migrate_to_level(mtmp, ledger_no(&u.uz) - 1, MIGR_STAIRS_DOWN,
+            migrate_to_level(mtmp, currentLevelLedgerNum() - 1, MIGR_STAIRS_DOWN,
                              (coord *) 0);
         }
         return 2;
@@ -879,21 +879,21 @@ struct monst *mtmp;
         m_flee(mtmp);
         if (vismon)
             pline("%s escapes downstairs!", Monnam(mtmp));
-        migrate_to_level(mtmp, ledger_no(&u.uz) + 1, MIGR_STAIRS_UP,
+        migrate_to_level(mtmp, currentLevelLedgerNum() + 1, MIGR_STAIRS_UP,
                          (coord *) 0);
         return 2;
     case MUSE_UP_LADDER:
         m_flee(mtmp);
         if (vismon)
             pline("%s escapes up the ladder!", Monnam(mtmp));
-        migrate_to_level(mtmp, ledger_no(&u.uz) - 1, MIGR_LADDER_DOWN,
+        migrate_to_level(mtmp, currentLevelLedgerNum() - 1, MIGR_LADDER_DOWN,
                          (coord *) 0);
         return 2;
     case MUSE_DN_LADDER:
         m_flee(mtmp);
         if (vismon)
             pline("%s escapes down the ladder!", Monnam(mtmp));
-        migrate_to_level(mtmp, ledger_no(&u.uz) + 1, MIGR_LADDER_UP,
+        migrate_to_level(mtmp, currentLevelLedgerNum() + 1, MIGR_LADDER_UP,
                          (coord *) 0);
         return 2;
     case MUSE_SSTAIRS:

@@ -513,7 +513,7 @@ const char *const *nlp;
            use ledger_no rather than depth to keep mine town distinct. */
         int nseed = (int) ((long) ubirthday / 257L);
 
-        name_wanted = ledger_no(&u.uz) + (nseed % 13) - (nseed % 5);
+        name_wanted = currentLevelLedgerNum() + (nseed % 13) - (nseed % 5);
         if (name_wanted < 0)
             name_wanted += (13 + 5);
         shk->female = name_wanted & 1;

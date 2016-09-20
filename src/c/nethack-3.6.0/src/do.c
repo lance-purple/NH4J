@@ -993,7 +993,7 @@ doup()
              levl[currentX()][currentY()].typ == STAIRS ? "stairs" : "ladder");
         return 1;
     }
-    if (ledger_no(&u.uz) == 1) {
+    if (currentLevelLedgerNum() == 1) {
         if (yn("Beware, there will be no return! Still climb?") != 'y')
             return 0;
     }
@@ -1020,7 +1020,7 @@ currentlevel_rewrite()
      *  output (like "you fall through a trap door") */
     mark_synch();
 
-    fd = create_levelfile(ledger_no(&u.uz), whynot);
+    fd = create_levelfile(currentLevelLedgerNum(), whynot);
     if (fd < 0) {
         /*
          * This is not quite impossible: e.g., we may have
@@ -1034,9 +1034,9 @@ currentlevel_rewrite()
     }
 
 #ifdef MFLOPPY
-    if (!savelev(fd, ledger_no(&u.uz), COUNT_SAVE)) {
+    if (!savelev(fd, currentLevelLedgerNum(), COUNT_SAVE)) {
         (void) nhclose(fd);
-        delete_levelfile(ledger_no(&u.uz));
+        delete_levelfile(currentLevelLedgerNum());
         pline("NetHack is out of disk space for making levels!");
         You("can save, quit, or continue playing.");
         return -1;
@@ -1057,7 +1057,7 @@ save_currentstate()
         if (fd < 0)
             return;
         bufon(fd);
-        savelev(fd, ledger_no(&u.uz), WRITE_SAVE);
+        savelev(fd, currentLevelLedgerNum(), WRITE_SAVE);
         bclose(fd);
     }
 
@@ -1201,7 +1201,7 @@ boolean at_stairs, falling, portal;
         update_mlstmv(); /* current monsters are becoming inactive */
         bufon(fd);       /* use buffered output */
     }
-    savelev(fd, ledger_no(&u.uz),
+    savelev(fd, currentLevelLedgerNum(),
             cant_go_back ? FREE_SAVE : (WRITE_SAVE | FREE_SAVE));
     bclose(fd);
     if (cant_go_back) {
@@ -1375,7 +1375,7 @@ boolean at_stairs, falling, portal;
                 pline("(monster in hero's way)");
             if (!rloc(mtmp, TRUE))
                 /* no room to move it; send it away, to return later */
-                migrate_to_level(mtmp, ledger_no(&u.uz), MIGR_RANDOM,
+                migrate_to_level(mtmp, currentLevelLedgerNum(), MIGR_RANDOM,
                                  (coord *) 0);
         }
     }

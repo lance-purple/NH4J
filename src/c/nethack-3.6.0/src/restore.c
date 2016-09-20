@@ -815,7 +815,7 @@ register int fd;
 #ifdef INSURANCE
     savestateinlock();
 #endif
-    rtmp = restlevelfile(fd, ledger_no(&u.uz));
+    rtmp = restlevelfile(fd, currentLevelLedgerNum());
     if (rtmp < 2)
         return rtmp; /* dorecover called recursively */
 

@@ -298,7 +298,7 @@ can_make_bones()
 
     if (!flags.bones)
         return FALSE;
-    if (ledger_no(&u.uz) <= 0 || ledger_no(&u.uz) > maxledgerno())
+    if (currentLevelLedgerNum() <= 0 || currentLevelLedgerNum() > maxledgerno())
         return FALSE;
     if (no_bones_level(&u.uz))
         return FALSE; /* no bones for specific levels */
@@ -506,7 +506,7 @@ make_bones:
 
 #ifdef MFLOPPY /* check whether there is room */
     if (iflags.checkspace) {
-        savelev(fd, ledger_no(&u.uz), COUNT_SAVE);
+        savelev(fd, currentLevelLedgerNum(), COUNT_SAVE);
         /* savelev() initializes bytes_counted to 0, so it must come
          * first here even though it does not in the real save.  the
          * resulting extra bflush() at the end of savelev() may increase
@@ -540,7 +540,7 @@ make_bones:
     bwrite(fd, (genericptr_t) bonesid, (unsigned) c); /* DD.nnn */
     savefruitchn(fd, WRITE_SAVE | FREE_SAVE);
     update_mlstmv(); /* update monsters for eventual restoration */
-    savelev(fd, ledger_no(&u.uz), WRITE_SAVE | FREE_SAVE);
+    savelev(fd, currentLevelLedgerNum(), WRITE_SAVE | FREE_SAVE);
     bclose(fd);
     commit_bonesfile(&u.uz);
     compress_bonesfile();

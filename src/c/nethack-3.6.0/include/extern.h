@@ -545,6 +545,7 @@ E s_level *FDECL(Is_special, (d_level *));
 E branch *FDECL(Is_branchlev, (d_level *));
 E boolean FDECL(builds_up, (d_level *));
 E xchar FDECL(ledger_no, (d_level *));
+E xchar FDECL(currentLevelLedgerNum, ());
 E xchar NDECL(maxledgerno);
 E schar FDECL(depth, (d_level *));
 E schar FDECL(currentDepth, ());

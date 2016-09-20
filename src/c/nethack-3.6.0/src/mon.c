@@ -2411,7 +2411,7 @@ boolean move_other; /* make sure mtmp gets to x, y! so move m_at(x, y) */
             othermon->mx = oldx;
             othermon->my = oldy;
             mdrop_special_objs(othermon);
-            migrate_to_level(othermon, ledger_no(&u.uz), MIGR_APPROX_XY, NULL);
+            migrate_to_level(othermon, currentLevelLedgerNum(), MIGR_APPROX_XY, NULL);
         }
     }
 

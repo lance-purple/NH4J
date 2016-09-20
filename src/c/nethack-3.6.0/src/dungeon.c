@@ -1026,6 +1026,11 @@ boolean noquest;
 
 /* return a bookkeeping level number for purpose of comparisons and
    save/restore */
+xchar currentLevelLedgerNum()
+{
+    return (xchar) (currentDungeonLevel() + dungeons[currentDungeonNumber()].ledger_start);
+}
+
 xchar
 ledger_no(lev)
 d_level *lev;

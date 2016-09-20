@@ -665,7 +665,7 @@ boolean pets_only; /* true for ascension or final escape */
             /* we want to be able to find him when his next resurrection
                chance comes up, but have him resume his present location
                if player returns to this level before that time */
-            migrate_to_level(mtmp, ledger_no(&u.uz), MIGR_EXACT_XY,
+            migrate_to_level(mtmp, currentLevelLedgerNum(), MIGR_EXACT_XY,
                              (coord *) 0);
         } else if (mtmp->mleashed) {
             /* this can happen if your quest leader ejects you from the

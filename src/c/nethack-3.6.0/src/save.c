@@ -183,12 +183,12 @@ dosave0()
     if (iflags.checkspace) {
         long fds, needed;
 
-        savelev(fd, ledger_no(&u.uz), COUNT_SAVE);
+        savelev(fd, currentLevelLedgerNum(), COUNT_SAVE);
         savegamestate(fd, COUNT_SAVE);
         needed = bytes_counted;
 
         for (ltmp = 1; ltmp <= maxledgerno(); ltmp++)
-            if (ltmp != ledger_no(&u.uz) && level_info[ltmp].where)
+            if (ltmp != currentLevelLedgerNum() && level_info[ltmp].where)
                 needed += level_info[ltmp].size + (sizeof ltmp);
         fds = freediskspace(fq_save);
         if (needed > fds) {
@@ -212,7 +212,7 @@ dosave0()
     store_plname_in_file(fd);
     ustuck_id = (u.ustuck ? u.ustuck->m_id : 0);
     usteed_id = (u.usteed ? u.usteed->m_id : 0);
-    savelev(fd, ledger_no(&u.uz), WRITE_SAVE | FREE_SAVE);
+    savelev(fd, currentLevelLedgerNum(), WRITE_SAVE | FREE_SAVE);
     savegamestate(fd, WRITE_SAVE | FREE_SAVE);
 
     /* While copying level files around, zero out u.uz to keep
@@ -266,7 +266,7 @@ dosave0()
     u.uz = uz_save;
 
     /* get rid of current level --jgm */
-    delete_levelfile(ledger_no(&u.uz));
+    delete_levelfile(currentLevelLedgerNum());
     delete_levelfile(0);
     nh_compress(fq_save);
     /* this should probably come sooner... */
@@ -441,7 +441,7 @@ savestateinlock()
         }
         (void) write(fd, (genericptr_t) &hackpid, sizeof(hackpid));
         if (flags.ins_chkpt) {
-            int currlev = ledger_no(&u.uz);
+            int currlev = currentLevelLedgerNum();
 
             (void) write(fd, (genericptr_t) &currlev, sizeof(currlev));
             save_savefile_name(fd);

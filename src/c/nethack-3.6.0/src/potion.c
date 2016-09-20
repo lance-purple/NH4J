@@ -907,11 +907,11 @@ register struct obj *otmp;
         if (otmp->cursed) {
             unkn++;
             /* they went up a level */
-            if ((ledger_no(&u.uz) == 1 && u.uhave.amulet)
+            if ((currentLevelLedgerNum() == 1 && u.uhave.amulet)
                 || Can_rise_up(currentX(), currentY(), &u.uz)) {
                 const char *riseup = "rise up, through the %s!";
 
-                if (ledger_no(&u.uz) == 1) {
+                if (currentLevelLedgerNum() == 1) {
                     You(riseup, ceiling(currentX(), currentY()));
                     goto_level(&earth_level, FALSE, FALSE, FALSE);
                 } else {

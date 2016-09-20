@@ -777,7 +777,7 @@ int howmuch;
                 lastseentyp[zx][zy] = STONE;
             }
     /* forget overview data for this level */
-    forget_mapseen(ledger_no(&u.uz));
+    forget_mapseen(currentLevelLedgerNum());
 }
 
 /* Forget all traps on the level. */
@@ -812,7 +812,7 @@ int percent;
         return;
     }
 
-    this_lev = ledger_no(&u.uz);
+    this_lev = currentLevelLedgerNum();
     maxl = maxledgerno();
 
     /* count & save indices of non-forgotten visited levels */
