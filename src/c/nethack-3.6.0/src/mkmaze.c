@@ -593,7 +593,7 @@ register const char *s;
 
     mazexy(&mm);
     mkstairs(mm.x, mm.y, 1, (struct mkroom *) 0); /* up */
-    if (!Invocation_lev(&u.uz)) {
+    if (!areYouOnInvocationLevel()) {
         mazexy(&mm);
         mkstairs(mm.x, mm.y, 0, (struct mkroom *) 0); /* down */
     } else { /* choose "vibrating square" location */

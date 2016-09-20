@@ -729,7 +729,7 @@ struct monst *mtmp;
             pline_The("digging ray is ineffective.");
             return 2;
         }
-        if (!Can_dig_down(&u.uz) && !levl[mtmp->mx][mtmp->my].candig) {
+        if (!canYouDigDown() && !levl[mtmp->mx][mtmp->my].candig) {
             if (canseemon(mtmp))
                 pline_The("%s here is too hard to dig in.",
                           surface(mtmp->mx, mtmp->my));

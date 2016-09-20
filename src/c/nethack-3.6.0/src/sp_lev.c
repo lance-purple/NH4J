@@ -777,7 +777,7 @@ rndtrap()
             rtrap = NO_TRAP;
             break;
         case TRAPDOOR:
-            if (!Can_dig_down(&u.uz))
+            if (!canYouDigDown())
                 rtrap = NO_TRAP;
             break;
         case LEVEL_TELEP:

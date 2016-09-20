@@ -1321,6 +1321,13 @@ d_level *lev;
     return (boolean) (lev->dlevel == dungeons[lev->dnum].num_dunlevs);
 }
 
+boolean canYouDigDown()
+{
+    return (boolean) (!level.flags.hardfloor
+                      && !areYouOnBottomLevel()
+                      && !areYouOnInvocationLevel());
+}
+
 boolean
 Can_dig_down(lev)
 d_level *lev;
@@ -1635,6 +1642,13 @@ int pct;
     al = rn2(3) - 1;
     return Align2amask(al);
 }
+
+boolean areYouOnInvocationLevel()
+{
+    return (boolean) (areYouInHell()
+                      && currentDungeonLevel() == dungeons[currentDungeonNumber()].num_dunlevs - 1);
+}
+
 
 boolean
 Invocation_lev(lev)
@@ -1980,7 +1994,7 @@ xchar *rdgn;
     }
 
     /* I hate searching for the invocation pos while debugging. -dean */
-    if (Invocation_lev(&u.uz)) {
+    if (areYouOnInvocationLevel()) {
         putstr(win, 0, "");
         Sprintf(buf, "Invocation position @ (%d,%d), hero @ (%d,%d)",
                 inv_pos.x, inv_pos.y, currentX(), currentY());

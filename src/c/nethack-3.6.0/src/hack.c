@@ -652,7 +652,7 @@ boolean
 invocation_pos(x, y)
 xchar x, y;
 {
-    return (boolean) (Invocation_lev(&u.uz)
+    return (boolean) (areYouOnInvocationLevel()
                       && x == inv_pos.x && y == inv_pos.y);
 }
 

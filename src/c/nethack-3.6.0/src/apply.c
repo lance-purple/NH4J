@@ -3214,7 +3214,7 @@ struct obj *obj;
                     fillmsg = TRUE;
                 } else
                     digactualhole(x, y, BY_OBJECT, (rn2(obj->spe) < 3
-                                                    || (!Can_dig_down(&u.uz)
+                                                    || (!canYouDigDown()
                                                         && !levl[x][y].candig))
                                                       ? PIT
                                                       : HOLE);
