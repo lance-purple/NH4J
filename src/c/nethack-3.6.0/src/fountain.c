@@ -476,7 +476,7 @@ register struct obj *obj;
         if (FOUNTAIN_IS_LOOTED(currentX(), currentY()))
             break;
         SET_FOUNTAIN_LOOTED(currentX(), currentY());
-        (void) mkgold((long) (rnd((dunlevs_in_dungeon(&u.uz) - dunlev(&u.uz)
+        (void) mkgold((long) (rnd((levelsInCurrentDungeon() - dunlev(&u.uz)
                                    + 1) * 2) + 5),
                       currentX(), currentY());
         if (!Blind)

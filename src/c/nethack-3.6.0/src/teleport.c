@@ -709,7 +709,7 @@ level_tele()
         return;
     }
     if (areYouInEndgame()) { /* must already be wizard */
-        int llimit = dunlevs_in_dungeon(&u.uz);
+        int llimit = levelsInCurrentDungeon();
 
         if (newlev >= 0 || newlev <= -llimit) {
             You_cant("get there from here.");
@@ -784,7 +784,7 @@ level_tele()
             surface but then actually arrive back inside the dungeon] */
     } else if (currentDungeonNumber() == medusa_level.dnum
                && newlev >= dungeons[currentDungeonNumber()].depth_start
-                                + dunlevs_in_dungeon(&u.uz)) {
+                                + levelsInCurrentDungeon()) {
         if (!(wizard && force_dest))
             find_hell(&newlevel);
     } else {
@@ -793,9 +793,9 @@ level_tele()
          */
         if (!wizard && areYouInHell() && !u.uevent.invoked
             && newlev >= (dungeons[currentDungeonNumber()].depth_start
-                          + dunlevs_in_dungeon(&u.uz) - 1)) {
+                          + levelsInCurrentDungeon() - 1)) {
             newlev = dungeons[currentDungeonNumber()].depth_start
-                     + dunlevs_in_dungeon(&u.uz) - 2;
+                     + levelsInCurrentDungeon() - 2;
             pline("Sorry...");
         }
         /* no teleporting out of quest dungeon */
@@ -1276,7 +1276,7 @@ random_teleport_level()
      * Also prevent monsters reaching the Sanctum prior to invocation.
      */
     if (In_quest(&u.uz)) {
-        int bottom = dunlevs_in_dungeon(&u.uz),
+        int bottom = levelsInCurrentDungeon(),
             qlocate_depth = qlocate_level.dlevel;
 
         /* if hero hasn't reached the middle locate level yet,
@@ -1288,7 +1288,7 @@ random_teleport_level()
     } else {
         min_depth = 1;
         max_depth =
-            dunlevs_in_dungeon(&u.uz) + (dungeons[currentDungeonNumber()].depth_start - 1);
+            levelsInCurrentDungeon() + (dungeons[currentDungeonNumber()].depth_start - 1);
         /* can't reach Sanctum if the invocation hasn't been performed */
         if (areYouInHell() && !u.uevent.invoked)
             max_depth -= 1;

@@ -520,7 +520,7 @@ register const char *s;
         else
             Strcpy(protofile, s);
     } else if (*(dungeons[currentDungeonNumber()].proto)) {
-        if (dunlevs_in_dungeon(&u.uz) > 1) {
+        if (levelsInCurrentDungeon() > 1) {
             if (sp && sp->rndlevs)
                 Sprintf(protofile, "%s%d-%d", dungeons[currentDungeonNumber()].proto,
                         dunlev(&u.uz), rnd((int) sp->rndlevs));

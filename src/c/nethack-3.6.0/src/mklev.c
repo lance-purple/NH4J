@@ -1385,7 +1385,7 @@ struct mkroom *croom;
      * has an up or down stair specified in its description file.
      */
     if ((dunlev(&u.uz) == 1 && up)
-        || (dunlev(&u.uz) == dunlevs_in_dungeon(&u.uz) && !up))
+        || (dunlev(&u.uz) == levelsInCurrentDungeon() && !up))
         return;
 
     if (up) {

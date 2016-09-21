@@ -551,6 +551,7 @@ E schar FDECL(depth, (d_level *));
 E schar FDECL(currentDepth, ());
 E xchar FDECL(dunlev, (d_level *));
 E xchar FDECL(dunlevs_in_dungeon, (d_level *));
+E xchar FDECL(levelsInCurrentDungeon, ());
 E xchar FDECL(ledger_to_dnum, (XCHAR_P));
 E xchar FDECL(ledger_to_dlev, (XCHAR_P));
 E xchar FDECL(deepest_lev_reached, (BOOLEAN_P));

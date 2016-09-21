@@ -980,6 +980,11 @@ d_level *lev;
 }
 
 /* return the lowest level number for *this* dungeon */
+xchar levelsInCurrentDungeon()
+{
+    return dungeons[currentDungeonNumber()].num_dunlevs;
+}
+
 xchar
 dunlevs_in_dungeon(lev)
 d_level *lev;

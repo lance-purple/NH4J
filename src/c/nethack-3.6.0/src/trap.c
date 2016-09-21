@@ -462,7 +462,7 @@ boolean td; /* td == TRUE : trap door or hole */
     if (Blind && Levitation && !Sokoban)
         return;
 
-    bottom = dunlevs_in_dungeon(&u.uz);
+    bottom = levelsInCurrentDungeon();
     /* when in the upper half of the quest, don't fall past the
        middle "quest locate" level if hero hasn't been there yet */
     if (In_quest(&u.uz)) {
