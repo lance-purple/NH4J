@@ -472,7 +472,7 @@ boolean td; /* td == TRUE : trap door or hole */
         if (dunlev_reached(&u.uz) < qlocate_depth)
             bottom = qlocate_depth; /* early cut-off */
     }
-    newlevel = dunlev(&u.uz); /* current level */
+    newlevel = currentDungeonLevel(); /* current level */
     do {
         newlevel++;
     } while (!rn2(4) && newlevel < bottom);
@@ -518,7 +518,7 @@ boolean td; /* td == TRUE : trap door or hole */
     if (areYouOnStrongholdLevel()) {
         find_hell(&dtmp);
     } else {
-        int dist = newlevel - dunlev(&u.uz);
+        int dist = newlevel - currentDungeonLevel();
         dtmp.dnum = currentDungeonNumber();
         dtmp.dlevel = newlevel;
         if (dist > 1)

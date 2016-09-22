@@ -1028,7 +1028,7 @@ dokick()
                 maploc->looted = T_LOOTED;
                 return 1;
             } else if (!rn2(4)) {
-                if (dunlev(&u.uz) < levelsInCurrentDungeon()) {
+                if (currentDungeonLevel() < levelsInCurrentDungeon()) {
                     fall_through(FALSE);
                     return 1;
                 } else

@@ -960,7 +960,7 @@ boolean skip_lvl_checks;
                     }
                 }
                 if (rn2(1000) < gemprob) {
-                    for (cnt = rnd(2 + dunlev(&u.uz) / 3); cnt > 0; cnt--)
+                    for (cnt = rnd(2 + currentDungeonLevel() / 3); cnt > 0; cnt--)
                         if ((otmp = mkobj(GEM_CLASS, FALSE)) != 0) {
                             if (otmp->otyp == ROCK) {
                                 dealloc_obj(otmp); /* discard it */
@@ -1384,8 +1384,8 @@ struct mkroom *croom;
      * attempt can happen when a special level is placed at an end and
      * has an up or down stair specified in its description file.
      */
-    if ((dunlev(&u.uz) == 1 && up)
-        || (dunlev(&u.uz) == levelsInCurrentDungeon() && !up))
+    if ((currentDungeonLevel() == 1 && up)
+        || (currentDungeonLevel() == levelsInCurrentDungeon() && !up))
         return;
 
     if (up) {

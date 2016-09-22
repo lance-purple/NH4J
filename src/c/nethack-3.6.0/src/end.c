@@ -1240,7 +1240,7 @@ int how;
             Sprintf(pbuf, "You %s in %s", ends[how], where);
             if (!areYouInEndgame() && !areYouOnFortKnoxLevel())
                 Sprintf(eos(pbuf), " on dungeon level %d",
-                        areYouInTheQuestDungeon() ? dunlev(&u.uz) : currentDepth());
+                        areYouInTheQuestDungeon() ? currentDungeonLevel() : currentDepth());
         }
 
         Sprintf(eos(pbuf), " with %ld point%s,", u.urexp, plur(u.urexp));

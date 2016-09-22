@@ -523,10 +523,10 @@ register const char *s;
         if (levelsInCurrentDungeon() > 1) {
             if (sp && sp->rndlevs)
                 Sprintf(protofile, "%s%d-%d", dungeons[currentDungeonNumber()].proto,
-                        dunlev(&u.uz), rnd((int) sp->rndlevs));
+                        currentDungeonLevel(), rnd((int) sp->rndlevs));
             else
                 Sprintf(protofile, "%s%d", dungeons[currentDungeonNumber()].proto,
-                        dunlev(&u.uz));
+                        currentDungeonLevel());
         } else if (sp && sp->rndlevs) {
             Sprintf(protofile, "%s-%d", dungeons[currentDungeonNumber()].proto,
                     rnd((int) sp->rndlevs));
