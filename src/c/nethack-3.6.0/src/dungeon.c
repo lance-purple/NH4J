@@ -1449,6 +1449,11 @@ int levnum;
 }
 
 /* are you in the quest dungeon? */
+boolean areYouInTheQuestDungeon()
+{
+    return (boolean) (currentDungeonNumber() == quest_dnum);
+}
+
 boolean
 In_quest(lev)
 d_level *lev;
@@ -2355,7 +2360,7 @@ recalc_mapseen()
     /* reset most flags; some level-specific ones are left as-is */
     if (mptr->flags.unreachable) {
         mptr->flags.unreachable = 0; /* reached it; Eye of the Aethiopica? */
-        if (In_quest(&u.uz)) {
+        if (areYouInTheQuestDungeon()) {
             mapseen *mptrtmp = mapseenchn;
 
             /* when quest was unreachable due to ejection and portal removal,

@@ -668,7 +668,7 @@ makelevel()
         } else if (In_mines(&u.uz)) {
             makemaz("minefill");
             return;
-        } else if (In_quest(&u.uz)) {
+        } else if (areYouInTheQuestDungeon()) {
             char fillname[9];
             s_level *loc_lev;
 
@@ -923,7 +923,7 @@ boolean skip_lvl_checks;
         if (In_mines(&u.uz)) {
             goldprob *= 2;
             gemprob *= 3;
-        } else if (In_quest(&u.uz)) {
+        } else if (areYouInTheQuestDungeon()) {
             goldprob /= 4;
             gemprob /= 6;
         }

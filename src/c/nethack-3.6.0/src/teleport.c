@@ -690,7 +690,7 @@ level_tele()
          *
          * we let negative values requests fall into the "heaven" loop.
          */
-        if (In_quest(&u.uz) && newlev > 0)
+        if (areYouInTheQuestDungeon() && newlev > 0)
             newlev = newlev + dungeons[currentDungeonNumber()].depth_start - 1;
     } else { /* involuntary level tele */
     random_levtport:
@@ -799,7 +799,7 @@ level_tele()
             pline("Sorry...");
         }
         /* no teleporting out of quest dungeon */
-        if (In_quest(&u.uz) && newlev < depth(&qstart_level))
+        if (areYouInTheQuestDungeon() && newlev < depth(&qstart_level))
             newlev = depth(&qstart_level);
         /* the player thinks of levels purely in logical terms, so
          * we must translate newlev to a number relative to the
@@ -1275,7 +1275,7 @@ random_teleport_level()
      * monsters sometimes level teleporting out of it into main dungeon.
      * Also prevent monsters reaching the Sanctum prior to invocation.
      */
-    if (In_quest(&u.uz)) {
+    if (areYouInTheQuestDungeon()) {
         int bottom = levelsInCurrentDungeon(),
             qlocate_depth = qlocate_level.dlevel;
 

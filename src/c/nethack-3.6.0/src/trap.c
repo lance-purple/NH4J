@@ -465,7 +465,7 @@ boolean td; /* td == TRUE : trap door or hole */
     bottom = levelsInCurrentDungeon();
     /* when in the upper half of the quest, don't fall past the
        middle "quest locate" level if hero hasn't been there yet */
-    if (In_quest(&u.uz)) {
+    if (areYouInTheQuestDungeon()) {
         int qlocate_depth = qlocate_level.dlevel;
 
         /* deepest reached < qlocate implies current < qlocate */
@@ -1124,7 +1124,7 @@ unsigned trflags;
         }
         /* wumpus reference */
         if (Role_if(PM_RANGER) && !trap->madeby_u && !trap->once
-            && In_quest(&u.uz) && areYouOnQuestLocationLevel()) {
+            && areYouInTheQuestDungeon() && areYouOnQuestLocationLevel()) {
             pline("Fortunately it has a bottom after all...");
             trap->once = 1;
         } else if (u.umonnum == PM_PIT_VIPER || u.umonnum == PM_PIT_FIEND) {
@@ -3089,7 +3089,7 @@ domagictrap()
                 You("suddenly yearn for %s.",
                     Hallucination
                         ? "Cleveland"
-                        : (In_quest(&u.uz) || at_dgn_entrance("The Quest"))
+                        : (areYouInTheQuestDungeon() || at_dgn_entrance("The Quest"))
                               ? "your nearby homeland"
                               : "your distant homeland");
             break;

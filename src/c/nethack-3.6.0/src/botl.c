@@ -271,7 +271,7 @@ char *buf;
     /* TODO:    Add in dungeon name */
     if (areYouOnFortKnoxLevel())
         Sprintf(buf, "%s ", dungeons[currentDungeonNumber()].dname);
-    else if (In_quest(&u.uz))
+    else if (areYouInTheQuestDungeon())
         Sprintf(buf, "Home %d ", dunlev(&u.uz));
     else if (areYouInEndgame())
         Sprintf(buf, areYouOnAstralLevel() ? "Astral Plane " : "End Game ");

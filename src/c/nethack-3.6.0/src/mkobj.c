@@ -960,7 +960,7 @@ boolean artif;
                 otmp = mk_artifact(otmp, (aligntyp) A_NONE);
             /* simulate lacquered armor for samurai */
             if (Role_if(PM_SAMURAI) && otmp->otyp == SPLINT_MAIL
-                && (moves <= 1 || In_quest(&u.uz))) {
+                && (moves <= 1 || areYouInTheQuestDungeon())) {
 #ifdef UNIXPC
                 /* optimizer bitfield bug */
                 otmp->oerodeproof = 1;

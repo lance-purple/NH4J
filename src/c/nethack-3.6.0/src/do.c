@@ -1461,7 +1461,7 @@ boolean at_stairs, falling, portal;
             final_level(); /* guardian angel,&c */
         else if (newdungeon && u.uhave.amulet)
             resurrect(); /* force confrontation with Wizard */
-    } else if (In_quest(&u.uz)) {
+    } else if (areYouInTheQuestDungeon()) {
         onquest(); /* might be reaching locate|goal level */
     } else if (In_V_tower(&u.uz)) {
         if (newdungeon && In_hell(&u.uz0))
