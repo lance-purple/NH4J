@@ -148,6 +148,7 @@ extern boolean areYouOnWizardLevel1();
 
 extern branch* areYouOnABranchLevel();
 extern s_level* areYouOnASpecialLevel();
+extern boolean areYouOnASokobanLevel();
 extern boolean areYouInEndgame();
 extern boolean areYouInHell(); /* now gehennom */
 

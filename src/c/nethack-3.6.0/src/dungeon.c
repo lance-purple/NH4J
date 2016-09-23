@@ -1469,6 +1469,11 @@ d_level *lev;
     return (boolean) (lev->dnum == mines_dnum);
 }
 
+boolean areYouOnASokobanLevel()
+{
+    return (currentDungeonNumber() == sokoban_dnum);
+}
+
 /*
  * Return the branch for the given dungeon.
  *
@@ -2325,7 +2330,7 @@ mapseen *mptr;
        climb out on the far side on the first Sokoban level; also, wizard
        mode overrides teleport restrictions) */
     if (In_sokoban(&mptr->lev)
-        && (In_sokoban(&u.uz) || !mptr->flags.sokosolved))
+        && (areYouOnASokobanLevel() || !mptr->flags.sokosolved))
         return TRUE;
     /* when in the endgame, list all endgame levels visited, whether they
        have annotations or not, so that #overview doesn't become extremely
@@ -2381,7 +2386,7 @@ recalc_mapseen()
         }
     }
     mptr->flags.knownbones = 0;
-    mptr->flags.sokosolved = In_sokoban(&u.uz) && !Sokoban;
+    mptr->flags.sokosolved = areYouOnASokobanLevel() && !Sokoban;
     /* mptr->flags.bigroom retains previous value when hero can't see */
     if (!Blind)
         mptr->flags.bigroom = areYouOnBigRoomLevel();

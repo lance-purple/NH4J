@@ -594,7 +594,7 @@ level_tele()
     char buf[BUFSZ];
     boolean force_dest = FALSE;
 
-    if ((u.uhave.amulet || areYouInEndgame() || In_sokoban(&u.uz))
+    if ((u.uhave.amulet || areYouInEndgame() || areYouOnASokobanLevel())
         && !wizard) {
         You_feel("very disoriented for a moment.");
         return;

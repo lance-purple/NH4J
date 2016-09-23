@@ -971,7 +971,7 @@ wiz_map_levltyp(VOID_ARGS)
             Strcat(dsc, " dungeon");
         else if (currentDungeonNumber() == mines_dnum)
             Strcat(dsc, " mines");
-        else if (In_sokoban(&u.uz))
+        else if (areYouOnASokobanLevel())
             Strcat(dsc, " sokoban");
         else if (currentDungeonNumber() == quest_dnum)
             Strcat(dsc, " quest");

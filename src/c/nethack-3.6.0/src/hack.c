@@ -705,7 +705,7 @@ int mode;
                     pline_The("drawbridge is up!");
                 /* sokoban restriction stays even after puzzle is solved */
                 else if (Passes_walls && !may_passwall(x, y)
-                         && In_sokoban(&u.uz))
+                         && areYouOnASokobanLevel())
                     pline_The("Sokoban walls resist your ability.");
                 else if (iflags.mention_walls)
                     pline("It's a wall.");
