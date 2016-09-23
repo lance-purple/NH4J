@@ -567,7 +567,7 @@ E void NDECL(u_on_dnstairs);
 E boolean FDECL(On_stairs, (XCHAR_P, XCHAR_P));
 E void FDECL(get_level, (d_level *, int));
 E boolean FDECL(Is_botlevel, (d_level *));
-E boolean FDECL(Can_fall_thru, (d_level *));
+E boolean FDECL(canYouFallThroughThisLevel, ());
 E boolean FDECL(Can_dig_down, (d_level *));
 E boolean FDECL(canYouDigDown, ());
 E boolean FDECL(Can_rise_up, (int, int, d_level *));

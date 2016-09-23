@@ -4316,7 +4316,7 @@ struct opvar *ov;
     }
 
     /* try to make a hole or a trapdoor */
-    if (Can_fall_thru(&u.uz)) {
+    if (canYouFallThroughCurrentLevel()) {
         opvar_free(ov3);
         ov3 = opvar_clone(ov2);
         while (selection_rndcoord(ov3, &x, &y, TRUE)) {

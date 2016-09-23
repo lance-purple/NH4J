@@ -490,10 +490,10 @@ boolean td; /* td == TRUE : trap door or hole */
     } else
         pline_The("%s opens up under you!", surface(currentX(), currentY()));
 
-    if (Sokoban && Can_fall_thru(&u.uz))
+    if (Sokoban && canYouFallThroughCurrentLevel())
         ; /* KMH -- You can't escape the Sokoban level traps */
     else if (Levitation || u.ustuck
-             || (!Can_fall_thru(&u.uz) && !levl[currentX()][currentY()].candig) || Flying
+             || (!canYouFallThroughCurrentLevel() && !levl[currentX()][currentY()].candig) || Flying
              || is_clinger(youmonst.data)
              || (areYouInHell() && !u.uevent.invoked && newlevel == bottom)) {
         dont_fall = "don't fall in.";
@@ -1183,7 +1183,7 @@ unsigned trflags;
 
     case HOLE:
     case TRAPDOOR:
-        if (!Can_fall_thru(&u.uz)) {
+        if (!canYouFallThroughCurrentLevel()) {
             seetrap(trap); /* normally done in fall_through */
             impossible("dotrap: %ss cannot exist on this level.",
                        defsyms[trap_to_defsym(ttype)].explanation);
@@ -2367,7 +2367,7 @@ register struct monst *mtmp;
             break;
         case HOLE:
         case TRAPDOOR:
-            if (!Can_fall_thru(&u.uz)) {
+            if (!canYouFallThroughCurrentLevel()) {
                 impossible("mintrap: %ss cannot exist on this level.",
                            defsyms[trap_to_defsym(tt)].explanation);
                 break; /* don't activate it after all */
@@ -2909,7 +2909,7 @@ long hmask, emask; /* might cancel timeout */
             break;
         case HOLE:
         case TRAPDOOR:
-            if (!Can_fall_thru(&u.uz) || u.ustuck)
+            if (!canYouFallThroughCurrentLevel() || u.ustuck)
                 break;
             /*FALLTHRU*/
         default:

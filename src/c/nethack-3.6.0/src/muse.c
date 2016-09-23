@@ -439,7 +439,7 @@ struct monst *mtmp;
             if ((t->ttyp == TRAPDOOR || t->ttyp == HOLE)
                 && !is_floater(mtmp->data)
                 && !mtmp->isshk && !mtmp->isgd && !mtmp->ispriest
-                && Can_fall_thru(&u.uz)) {
+                && canYouFallThroughCurrentLevel()) {
                 trapx = xx;
                 trapy = yy;
                 m.has_defense = MUSE_TRAPDOOR;

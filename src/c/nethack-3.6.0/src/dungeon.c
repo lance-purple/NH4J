@@ -1353,10 +1353,9 @@ d_level *lev;
  * both digging and falling.
  */
 boolean
-Can_fall_thru(lev)
-d_level *lev;
+canYouFallThroughCurrentLevel()
 {
-    return (boolean) (Can_dig_down(lev) || Is_stronghold(lev));
+    return (boolean) (Can_dig_down(&u.uz) || areYouOnStrongholdLevel());
 }
 
 /*

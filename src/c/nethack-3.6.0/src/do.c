@@ -912,7 +912,7 @@ dodown()
             dotrap(trap, TOOKPLUNGE);
             return 1;
         } else if (!trap || (trap->ttyp != TRAPDOOR && trap->ttyp != HOLE)
-                   || !Can_fall_thru(&u.uz) || !trap->tseen) {
+                   || !canYouFallThroughCurrentLevel() || !trap->tseen) {
             if (flags.autodig && !context.nopick && uwep && is_pick(uwep)) {
                 return use_pick_axe2(uwep);
             } else {

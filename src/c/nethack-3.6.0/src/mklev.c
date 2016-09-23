@@ -503,7 +503,7 @@ int trap_type;
                 rm->typ = SCORR;
                 if (trap_type) {
                     if ((trap_type == HOLE || trap_type == TRAPDOOR)
-                        && !Can_fall_thru(&u.uz))
+                        && !canYouFallThroughCurrentLevel())
                         trap_type = ROCKTRAP;
                     ttmp = maketrap(xx, yy + dy, trap_type);
                     if (ttmp) {
@@ -1342,7 +1342,7 @@ coord *tm;
         } while (kind == NO_TRAP);
     }
 
-    if ((kind == TRAPDOOR || kind == HOLE) && !Can_fall_thru(&u.uz))
+    if ((kind == TRAPDOOR || kind == HOLE) && !canYouFallThroughCurrentLevel())
         kind = ROCKTRAP;
 
     if (tm)
