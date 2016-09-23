@@ -585,6 +585,8 @@ E boolean FDECL(In_W_tower, (int, int, d_level *));
 E void FDECL(find_hell, (d_level *));
 E void FDECL(goto_hell, (BOOLEAN_P, BOOLEAN_P));
 E void FDECL(assign_level, (d_level *, d_level *));
+E void FDECL(assignFromCurrentLevel, (d_level *));
+E void FDECL(setCurrentLevelTo, (d_level *));
 E void FDECL(assign_rnd_level, (d_level *, d_level *, int));
 E int FDECL(induced_align, (int));
 E boolean FDECL(Invocation_lev, (d_level *));

@@ -1627,6 +1627,22 @@ boolean at_stairs, falling;
     goto_level(&lev, at_stairs, falling, FALSE);
 }
 
+void
+assignFromCurrentLevel(lev)
+d_level *lev;
+{
+    lev->dnum = currentDungeonNumber();
+    lev->dlevel = currentDungeonLevel();
+}
+
+void
+setCurrentLevelTo(lev)
+d_level *lev;
+{
+    setCurrentDungeonNumber(lev->dnum);
+    setCurrentDungeonLevel(lev->dlevel);
+}
+
 /* equivalent to dest = source */
 void
 assign_level(dest, src)

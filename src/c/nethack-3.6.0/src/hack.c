@@ -374,7 +374,7 @@ xchar x, y;
         context.digging.warned = FALSE;
         context.digging.pos.x = x;
         context.digging.pos.y = y;
-        assign_level(&context.digging.level, &u.uz);
+        assignFromCurrentLevel(&context.digging.level);
         /* solid rock takes more work & time to dig through */
         context.digging.effort =
             (IS_ROCK(lev->typ) && !IS_TREE(lev->typ) ? 30 : 60) + u.udaminc;

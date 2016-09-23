@@ -1133,8 +1133,9 @@ boolean at_stairs, falling, portal;
                 if (was_in_W_tower && !On_W_tower_level(newlevel))
                     diff = 0;
             }
-            if (diff == 0)
-                assign_level(newlevel, &u.uz);
+            if (diff == 0) {
+                assignFromCurrentLevel(newlevel);
+            }
 
             new_ledger = ledger_no(newlevel);
 
@@ -1223,8 +1224,8 @@ boolean at_stairs, falling, portal;
      */
     if ((at_stairs || falling || portal) && (currentDungeonNumber() != newlevel->dnum))
         recbranch_mapseen(&u.uz, newlevel);
-    assign_level(&u.uz0, &u.uz);
-    assign_level(&u.uz, newlevel);
+    assignFromCurrentLevel(&u.uz0);
+    setCurrentLevelTo(newlevel);
     assign_level(&u.utolev, newlevel);
     u.utotype = 0;
     if (!builds_up(&u.uz)) { /* usual case */
@@ -1493,7 +1494,7 @@ boolean at_stairs, falling, portal;
         }
     }
 
-    assign_level(&u.uz0, &u.uz); /* reset u.uz0 */
+    assignFromCurrentLevel(&u.uz0); /* reset u.uz0 */
 #ifdef INSURANCE
     save_currentstate();
 #endif

@@ -251,7 +251,7 @@ boolean ghostly;
         /* shoplevel can change as dungeons move around */
         /* savebones guarantees that non-homed shk's will be gone */
         if (ghostly) {
-            assign_level(&eshkp->shoplevel, &u.uz);
+            assignFromCurrentLevel(&eshkp->shoplevel);
             if (ANGRY(shkp) && strncmpi(eshkp->customer, plname, PL_NSIZ))
                 pacify_shk(shkp);
         }
