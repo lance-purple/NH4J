@@ -1257,7 +1257,7 @@ int upflag;
      * place_lregion(xTELE) -> put_lregion_here(xTELE) -> u_on_newpos()
      * Unspecified region (.lx == 0) defaults to entire level.
      */
-    if (was_in_W_tower && On_W_tower_level(&u.uz))
+    if (was_in_W_tower && areYouOnAWizardTowerLevel())
         /* Stay inside the Wizard's tower when feasible.
            We use the W Tower's exclusion region for the
            destination instead of its enclosing region.
@@ -1521,6 +1521,13 @@ In_V_tower(lev)
 d_level *lev;
 {
     return (boolean) (lev->dnum == tower_dnum);
+}
+
+boolean areYouOnAWizardTowerLevel()
+{
+    return (boolean) (Is_wiz1_level(&u.uz)
+                      || Is_wiz2_level(&u.uz)
+                      || Is_wiz3_level(&u.uz));
 }
 
 /* is `lev' a level containing the Wizard's tower? */

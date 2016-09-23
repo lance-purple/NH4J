@@ -964,7 +964,7 @@ wiz_map_levltyp(VOID_ARGS)
            checks (extra stairs and magic portals) here */
         if (areYouOnInvocationLevel())
             Strcat(dsc, " invoke");
-        if (On_W_tower_level(&u.uz))
+        if (areYouOnAWizardTowerLevel())
             Strcat(dsc, " tower");
         /* append a branch identifier for completeness' sake */
         if (currentDungeonNumber() == 0)

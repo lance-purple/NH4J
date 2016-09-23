@@ -579,6 +579,7 @@ E boolean FDECL(at_dgn_entrance, (const char *));
 E boolean FDECL(In_hell, (d_level *));
 E boolean FDECL(In_V_tower, (d_level *));
 E boolean FDECL(On_W_tower_level, (d_level *));
+E boolean FDECL(areYouOnAWizardTowerLevel, ());
 E boolean FDECL(In_W_tower, (int, int, d_level *));
 E void FDECL(find_hell, (d_level *));
 E void FDECL(goto_hell, (BOOLEAN_P, BOOLEAN_P));

@@ -438,7 +438,7 @@ struct obj *scroll;
     if (!Blinded)
         make_blinded(0L, FALSE);
 
-    if ((u.uhave.amulet || On_W_tower_level(&u.uz)) && !rn2(3)) {
+    if ((u.uhave.amulet || areYouOnAWizardTowerLevel()) && !rn2(3)) {
         You_feel("disoriented for a moment.");
         if (!wizard || yn("Override?") != 'y')
             return FALSE;
@@ -913,7 +913,7 @@ struct monst *mtmp;
     yy = mtmp->my;
     if (!xx) {
         /* no current location (migrating monster arrival) */
-        if (dndest.nlx && On_W_tower_level(&u.uz))
+        if (dndest.nlx && areYouOnAWizardTowerLevel())
             return (((yy & 2) != 0)
                     /* inside xor not within */
                     ^ !within_bounded_area(x, y, dndest.nlx, dndest.nly,
@@ -1219,7 +1219,7 @@ register struct obj *obj;
                                                 dndest.nhx, dndest.nhy))))
              /* on the Wizard Tower levels, objects inside should
                 stay inside and objects outside should stay outside */
-             || (dndest.nlx && On_W_tower_level(&u.uz)
+             || (dndest.nlx && areYouOnAWizardTowerLevel()
                  && within_bounded_area(tx, ty, dndest.nlx, dndest.nly,
                                         dndest.nhx, dndest.nhy)
                     != within_bounded_area(otx, oty, dndest.nlx, dndest.nly,

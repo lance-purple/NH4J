@@ -659,7 +659,7 @@ struct monst *mtmp;
                 mtmp->mtrapseen |= (1 << (TELEP_TRAP - 1));
             return 2;
         }
-        if ((mon_has_amulet(mtmp) || On_W_tower_level(&u.uz)) && !rn2(3)) {
+        if ((mon_has_amulet(mtmp) || areYouOnAWizardTowerLevel()) && !rn2(3)) {
             if (vismon)
                 pline("%s seems disoriented for a moment.", Monnam(mtmp));
             return 2;
