@@ -191,7 +191,7 @@ struct monst *mtmp;
 
     /* [BUG: some of this should be done on the shop level */
     /*       even when the shk dies on a different level.] */
-    if (on_level(&eshk->shoplevel, &u.uz)) {
+    if (areYouOnLevel(&eshk->shoplevel)) {
         remove_damage(mtmp, TRUE);
         sroom->resident = (struct monst *) 0;
         if (!search_special(ANY_SHOP))
@@ -749,7 +749,7 @@ register struct monst *mtmp;
     struct eshk *eshkp = ESHK(mtmp);
 
     return (index(in_rooms(mtmp->mx, mtmp->my, SHOPBASE), eshkp->shoproom)
-            && on_level(&eshkp->shoplevel, &u.uz));
+            && areYouOnLevel(&eshkp->shoplevel));
 }
 
 struct monst *
@@ -1047,7 +1047,7 @@ register boolean silentkops;
         boolean vanished = canseemon(shkp);
 
         Strcpy(shk_nam, mon_nam(shkp));
-        if (on_level(&eshkp->shoplevel, &u.uz)) {
+        if (areYouOnLevel(&eshkp->shoplevel)) {
             home_shk(shkp, FALSE);
             /* didn't disappear if shk can still be seen */
             if (canseemon(shkp))
@@ -1625,7 +1625,7 @@ int croaked; /* -1: escaped dungeon; 0: quit; 1: died */
          mtmp = next_shkp(mtmp2, FALSE)) {
         mtmp2 = mtmp->nmon;
         eshkp = ESHK(mtmp);
-        local = on_level(&eshkp->shoplevel, &u.uz);
+        local = areYouOnLevel(&eshkp->shoplevel);
         if (local && index(u.ushops, eshkp->shoproom)) {
             /* inside this shk's shop [there might be more than one
                resident shk if hero is standing in a breech of a shared
@@ -1662,7 +1662,7 @@ int croaked; /* -1: escaped dungeon; 0: quit; 1: died */
          mtmp = next_shkp(mtmp2, FALSE)) {
         mtmp2 = mtmp->nmon;
         eshkp = ESHK(mtmp);
-        local = on_level(&eshkp->shoplevel, &u.uz);
+        local = areYouOnLevel(&eshkp->shoplevel);
         if (mtmp != firstshk) {
             numsk++;
             taken |= inherits(mtmp, numsk, croaked);

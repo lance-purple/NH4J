@@ -9,7 +9,7 @@
 #include "quest.h"
 #include "qtext.h"
 
-#define Not_firsttime (on_level(&u.uz0, &u.uz))
+#define Not_firsttime (areYouOnLevel( &u.uz))
 #define Qstat(x) (quest_status.x)
 
 STATIC_DCL void NDECL(on_start);
@@ -273,7 +273,7 @@ chat_with_leader()
 
         /* the quest leader might have passed through the portal into
            the regular dungeon; none of the remaining make sense there */
-        if (!on_level(&u.uz, &qstart_level))
+        if (!areYouOnLevel(&qstart_level))
             return;
 
         if (not_capable()) {
@@ -312,7 +312,7 @@ struct monst *mtmp;
     }
     /* the quest leader might have passed through the portal into the
        regular dungeon; if so, mustn't perform "backwards expulsion" */
-    if (!on_level(&u.uz, &qstart_level))
+    if (!areYouOnLevel(&qstart_level))
         return;
 
     if (Qstat(pissed_off)) {

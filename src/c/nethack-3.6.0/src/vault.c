@@ -48,7 +48,7 @@ boolean forceshow;
     struct trap *trap;
     struct rm *lev;
 
-    if (!on_level(&egrd->gdlevel, &u.uz))
+    if (!areYouOnLevel(&egrd->gdlevel))
         return TRUE;
 
     while ((fcbeg = egrd->fcbeg) < egrd->fcend) {

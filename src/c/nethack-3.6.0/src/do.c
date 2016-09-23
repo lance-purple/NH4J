@@ -928,7 +928,7 @@ dodown()
                                              : "engulfed");
         return 1;
     }
-    if (on_level(&valley_level, &u.uz) && !u.uevent.gehennom_entered) {
+    if (areYouOnLevel(&valley_level) && !u.uevent.gehennom_entered) {
         You("are standing at the gate to Gehennom.");
         pline("Unspeakable cruelty and harm lurk down there.");
         if (yn("Are you sure you want to enter?") != 'y')
@@ -1139,7 +1139,7 @@ boolean at_stairs, falling, portal;
             new_ledger = ledger_no(newlevel);
 
             pline("A mysterious force momentarily surrounds you...");
-            if (on_level(newlevel, &u.uz)) {
+            if (areYouOnLevel(newlevel)) {
                 (void) safe_teleds(FALSE);
                 (void) next_to_u();
                 return;
@@ -1151,12 +1151,12 @@ boolean at_stairs, falling, portal;
     /* Prevent the player from going past the first quest level unless
      * (s)he has been given the go-ahead by the leader.
      */
-    if (on_level(&u.uz, &qstart_level) && !newdungeon && !ok_to_quest()) {
+    if (areYouOnLevel(&qstart_level) && !newdungeon && !ok_to_quest()) {
         pline("A mysterious force prevents you from descending.");
         return;
     }
 
-    if (on_level(newlevel, &u.uz))
+    if (areYouOnLevel(newlevel))
         return; /* this can happen */
 
     /* tethered movement makes level change while trapped feasible */
@@ -1457,7 +1457,7 @@ boolean at_stairs, falling, portal;
 
     /* special location arrival messages/events */
     if (areYouInEndgame()) {
-        if (new &&on_level(&u.uz, &astral_level))
+        if (new && areYouOnLevel(&astral_level))
             final_level(); /* guardian angel,&c */
         else if (newdungeon && u.uhave.amulet)
             resurrect(); /* force confrontation with Wizard */
@@ -1562,7 +1562,7 @@ const char *pre_msg, *post_msg;
 void
 deferred_goto()
 {
-    if (!on_level(&u.uz, &u.utolev)) {
+    if (!areYouOnLevel(&u.utolev)) {
         d_level dest;
         int typmask = u.utotype; /* save it; goto_level zeroes u.utotype */
 

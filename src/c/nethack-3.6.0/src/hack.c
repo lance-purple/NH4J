@@ -368,7 +368,7 @@ xchar x, y;
         nomul(0);
         return 1;
     } else if (context.digging.pos.x != x || context.digging.pos.y != y
-               || !on_level(&context.digging.level, &u.uz)) {
+               || !areYouOnLevel(&context.digging.level)) {
         context.digging.down = FALSE;
         context.digging.chew = TRUE;
         context.digging.warned = FALSE;
@@ -1906,7 +1906,7 @@ boolean pick;
     spotloc.x = currentX(), spotloc.y = currentY();
 
     /* moving onto different terrain might cause Levitation to toggle */
-    if (spotterrain != levl[originalX()][originalY()].typ || !on_level(&u.uz, &u.uz0))
+    if (spotterrain != levl[originalX()][originalY()].typ || !areYouOnLevel(&u.uz0))
         switch_terrain();
 
     if (pooleffects(TRUE))

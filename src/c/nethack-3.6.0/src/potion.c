@@ -919,7 +919,7 @@ register struct obj *otmp;
                     d_level newlevel;
 
                     get_level(&newlevel, newlev);
-                    if (on_level(&newlevel, &u.uz)) {
+                    if (areYouOnLevel(&newlevel)) {
                         pline("It tasted bad.");
                         break;
                     } else

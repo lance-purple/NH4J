@@ -246,7 +246,7 @@ dig(VOID_ARGS)
     /* perhaps a nymph stole your pick-axe while you were busy digging */
     /* or perhaps you teleported away */
     if (u.uswallow || !uwep || (!ispick && !is_axe(uwep))
-        || !on_level(&context.digging.level, &u.uz)
+        || !areYouOnLevel(&context.digging.level)
         || ((context.digging.down ? (dpx != currentX() || dpy != currentY())
                                   : (distanceSquaredToYou(dpx, dpy) > 2))))
         return 0;
@@ -1113,7 +1113,7 @@ struct obj *obj;
             did_dig_msg = FALSE;
             context.digging.quiet = FALSE;
             if (context.digging.pos.x != rx || context.digging.pos.y != ry
-                || !on_level(&context.digging.level, &u.uz)
+                || !areYouOnLevel(&context.digging.level)
                 || context.digging.down) {
                 if (flags.autodig && dig_target == DIGTYP_ROCK
                     && !context.digging.down && context.digging.pos.x == currentX()
@@ -1164,7 +1164,7 @@ struct obj *obj;
         u_wipe_engr(3);
     } else {
         if (context.digging.pos.x != currentX() || context.digging.pos.y != currentY()
-            || !on_level(&context.digging.level, &u.uz)
+            || !areYouOnLevel(&context.digging.level)
             || !context.digging.down) {
             context.digging.chew = FALSE;
             context.digging.down = TRUE;

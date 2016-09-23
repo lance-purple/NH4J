@@ -1151,7 +1151,7 @@ boolean ghostly;
         if (br && currentDungeonLevel() == 1) {
             d_level ltmp;
 
-            if (on_level(&u.uz, &br->end1))
+            if (areYouOnLevel(&br->end1))
                 assign_level(&ltmp, &br->end2);
             else
                 assign_level(&ltmp, &br->end1);

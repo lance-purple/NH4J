@@ -2647,7 +2647,7 @@ struct obj *obj; /* wand or spell */
         } else if (directionZ() > 0 && (x == xdnstair && y == ydnstair) &&
                    /* can't use the stairs down to quest level 2 until
                       leader "unlocks" them; give feedback if you try */
-                   on_level(&u.uz, &qstart_level) && !ok_to_quest()) {
+                   areYouOnLevel(&qstart_level) && !ok_to_quest()) {
             pline_The("stairs seem to ripple momentarily.");
             disclose = TRUE;
         }

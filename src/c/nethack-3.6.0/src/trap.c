@@ -2920,7 +2920,7 @@ long hmask, emask; /* might cancel timeout */
     if (!areYouOnAirLevel() && !areYouOnWaterLevel() && !u.uswallow
         /* falling through trap door calls goto_level,
            and goto_level does its own pickup() call */
-        && on_level(&u.uz, &current_dungeon_level))
+        && areYouOnLevel(&current_dungeon_level))
         (void) pickup(1);
     return 1;
 }
@@ -3079,7 +3079,7 @@ domagictrap()
                                    : "distant howling.");
             break;
         case 15:
-            if (on_level(&u.uz, &qstart_level))
+            if (areYouOnLevel(&qstart_level))
                 You_feel(
                     "%slike the prodigal son.",
                     (flags.female || (Upolyd && is_neuter(youmonst.data)))

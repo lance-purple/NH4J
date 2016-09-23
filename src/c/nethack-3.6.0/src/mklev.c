@@ -1150,7 +1150,7 @@ xchar x, y; /* location */
         br_room = pos_to_room(x, y);
     }
 
-    if (on_level(&br->end1, &u.uz)) {
+    if (areYouOnLevel(&br->end1)) {
         /* we're on end1 */
         make_stairs = br->type != BR_NO_END1;
         dest = &br->end2;
@@ -1166,7 +1166,7 @@ xchar x, y; /* location */
         sstairs.sx = x;
         sstairs.sy = y;
         sstairs.up =
-            (char) on_level(&br->end1, &u.uz) ? br->end1_up : !br->end1_up;
+            (char) areYouOnLevel(&br->end1) ? br->end1_up : !br->end1_up;
         assign_level(&sstairs.tolev, dest);
         sstairs_room = br_room;
 

@@ -247,7 +247,7 @@ boolean sanctum; /* is it the seat of the high priest? */
 
         /* now his/her goodies... */
         if (sanctum && EPRI(priest)->shralign == A_NONE
-            && on_level(&sanctum_level, &u.uz)) {
+            && areYouOnLevel(&sanctum_level)) {
             (void) mongets(priest, AMULET_OF_YENDOR);
         }
         /* 2 to 4 spellbooks */
