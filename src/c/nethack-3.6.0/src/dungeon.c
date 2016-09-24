@@ -2126,12 +2126,11 @@ d_level *dest;
 }
 
 char *
-get_annotation(lev)
-d_level *lev;
+currentLevelAnnotation()
 {
     mapseen *mptr;
 
-    if ((mptr = find_mapseen(lev)))
+    if ((mptr = find_mapseen(&u.uz)))
         return mptr->custom;
     return NULL;
 }

@@ -1502,7 +1502,7 @@ boolean at_stairs, falling, portal;
     save_currentstate();
 #endif
 
-    if ((annotation = get_annotation(&u.uz)))
+    if ((annotation = currentLevelAnnotation()))
         You("remember this level as %s.", annotation);
 
     /* assume this will always return TRUE when changing level */
