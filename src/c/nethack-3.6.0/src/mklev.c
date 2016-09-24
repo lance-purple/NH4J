@@ -680,7 +680,7 @@ makelevel()
                    (currentDungeonLevel() < loc_lev->dlevel.dlevel) ? "a" : "b");
             makemaz(fillname);
             return;
-        } else if (In_hell(&u.uz)
+        } else if (areYouInHell()
                    || (rn2(5) && currentDungeonNumber() == medusa_level.dnum
                        && currentDepth() > depth(&medusa_level))) {
             makemaz("");
@@ -906,7 +906,7 @@ boolean skip_lvl_checks;
     /* determine if it is even allowed;
        almost all special levels are excluded */
     if (!skip_lvl_checks
-        && (In_hell(&u.uz) || areYouOnAVladsTowerLevel() || areYouOnRogueLevel()
+        && (areYouInHell() || areYouOnAVladsTowerLevel() || areYouOnRogueLevel()
             || level.flags.arboreal
             || ((sp = areYouOnASpecialLevel()) != 0 && !areYouOnOracleLevel()
                 && (!areYouInTheMines() || sp->flags.town))))
