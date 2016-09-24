@@ -9,7 +9,7 @@
 #include "quest.h"
 #include "qtext.h"
 
-#define Not_firsttime (areYouOnLevel( &u.uz))
+static boolean Not_firsttime() { return areYouOnLevel(&u.uz0); }
 #define Qstat(x) (quest_status.x)
 
 STATIC_DCL void NDECL(on_start);
