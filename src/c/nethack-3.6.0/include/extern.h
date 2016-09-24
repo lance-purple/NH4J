@@ -602,7 +602,7 @@ E int NDECL(donamelevel);
 E int NDECL(dooverview);
 E void FDECL(show_overview, (int, int));
 E void FDECL(forget_mapseen, (int));
-E void FDECL(init_mapseen, (d_level *));
+E void FDECL(initCurrentLevelMapSeen, ());
 E void NDECL(recalc_mapseen);
 E void FDECL(mapseen_temple, (struct monst *));
 E void FDECL(room_discovered, (int));

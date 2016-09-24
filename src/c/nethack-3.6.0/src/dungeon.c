@@ -2298,9 +2298,10 @@ int dnum;
 }
 
 void
-init_mapseen(lev)
-d_level *lev;
+initCurrentLevelMapSeen()
 {
+    d_level *lev = &u.uz;
+
     /* Create a level and insert in "sorted" order.  This is an insertion
      * sort first by dungeon (in order of discovery) and then by level number.
      */

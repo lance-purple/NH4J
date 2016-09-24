@@ -982,7 +982,7 @@ mklev()
     struct mkroom *croom;
     int ridx;
 
-    init_mapseen(&u.uz);
+    initCurrentLevelMapSeen();
     if (getbones())
         return;
 
