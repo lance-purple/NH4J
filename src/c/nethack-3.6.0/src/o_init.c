@@ -5,7 +5,8 @@
 #include "hack.h"
 #include "lev.h" /* save & restore info */
 
-STATIC_DCL void FDECL(setgemprobs, (d_level *));
+STATIC_DCL void FDECL(setDefaultGemProbabilities, ());
+STATIC_DCL void FDECL(setCurrentLevelGemProbabilities, ());
 STATIC_DCL void FDECL(shuffle, (int, int, BOOLEAN_P));
 STATIC_DCL void NDECL(shuffle_all);
 STATIC_DCL boolean FDECL(interesting_to_discover, (int));
@@ -41,9 +42,29 @@ shuffle_tiles()
 #endif /* USE_TILES */
 
 STATIC_OVL void
-setgemprobs(dlev)
-d_level *dlev;
+setDefaultGemProbabilities()
 {
+    int j, first;
+
+    first = bases[GEM_CLASS];
+
+    for (j = 0; j < 3; j++)
+        objects[first + j].oc_prob = 0;
+    first += j;
+    if (first > LAST_GEM || objects[first].oc_class != GEM_CLASS
+        || OBJ_NAME(objects[first]) == (char *) 0) {
+        raw_printf("Not enough gems? - first=%d j=%d LAST_GEM=%d", first, j,
+                   LAST_GEM);
+        wait_synch();
+    }
+    for (j = first; j <= LAST_GEM; j++)
+        objects[j].oc_prob = (171 + j - first) / (LAST_GEM + 1 - first);
+}
+
+STATIC_OVL void
+setCurrentLevelGemProbabilities()
+{
+    d_level *dlev = &u.uz;
     int j, first, lev;
 
     if (dlev)
@@ -138,7 +159,7 @@ init_objects()
         bases[(int) oclass] = first;
 
         if (oclass == GEM_CLASS) {
-            setgemprobs((d_level *) 0);
+            setDefaultGemProbabilities();
 
             if (rn2(2)) { /* change turquoise from green to blue? */
                 COPY_OBJ_DESCR(objects[TURQUOISE], objects[SAPPHIRE]);
@@ -283,7 +304,7 @@ find_skates()
 void
 oinit()
 {
-    setgemprobs(&u.uz);
+    setCurrentLevelGemProbabilities();
 }
 
 void
