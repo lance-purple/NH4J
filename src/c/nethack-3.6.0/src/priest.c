@@ -217,12 +217,12 @@ register struct monst *priest;
 
 /* exclusively for mktemple() */
 void
-priestini(lvl, sroom, sx, sy, sanctum)
-d_level *lvl;
+initPriestOnCurrentLevel(sroom, sx, sy, sanctum)
 struct mkroom *sroom;
 int sx, sy;
 boolean sanctum; /* is it the seat of the high priest? */
 {
+    d_level *lvl = &u.uz;
     struct monst *priest;
     struct obj *otmp;
     int cnt;

@@ -1889,7 +1889,7 @@ E int FDECL(move_special, (struct monst *, BOOLEAN_P, SCHAR_P, BOOLEAN_P,
 E char FDECL(temple_occupied, (char *));
 E boolean FDECL(inhistemple, (struct monst *));
 E int FDECL(pri_move, (struct monst *));
-E void FDECL(priestini, (d_level *, struct mkroom *, int, int, BOOLEAN_P));
+E void FDECL(initPriestOnCurrentLevel, (struct mkroom *, int, int, BOOLEAN_P));
 E aligntyp FDECL(mon_aligntyp, (struct monst *));
 E char *FDECL(priestname, (struct monst *, char *));
 E boolean FDECL(p_coaligned, (struct monst *));

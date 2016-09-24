@@ -2015,7 +2015,7 @@ struct mkroom *croom;
         return;
 
     if (a->shrine) { /* Is it a shrine  or sanctum? */
-        priestini(&u.uz, croom, x, y, (a->shrine > 1));
+        initPriestOnCurrentLevel(croom, x, y, (a->shrine > 1));
         levl[x][y].altarmask |= AM_SHRINE;
         level.flags.has_temple = TRUE;
     }
