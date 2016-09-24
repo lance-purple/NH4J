@@ -222,7 +222,7 @@ set_residency(shkp, zero_out)
 register struct monst *shkp;
 register boolean zero_out;
 {
-    if (on_level(&(ESHK(shkp)->shoplevel), &u.uz))
+    if (areYouOnLevel(&(ESHK(shkp)->shoplevel)))
         rooms[ESHK(shkp)->shoproom - ROOMOFFSET].resident =
             (zero_out) ? (struct monst *) 0 : shkp;
 }

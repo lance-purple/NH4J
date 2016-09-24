@@ -152,7 +152,7 @@ register xchar x, y;
 {
     return (boolean) (priest && priest->ispriest
                       && (EPRI(priest)->shroom == *in_rooms(x, y, TEMPLE))
-                      && on_level(&(EPRI(priest)->shrlevel), &u.uz));
+                      && areYouOnLevel(&(EPRI(priest)->shrlevel)));
 }
 
 boolean
@@ -834,7 +834,7 @@ clearpriests()
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
         if (DEADMONSTER(mtmp))
             continue;
-        if (mtmp->ispriest && !on_level(&(EPRI(mtmp)->shrlevel), &u.uz))
+        if (mtmp->ispriest && !areYouOnLevel(&(EPRI(mtmp)->shrlevel)))
             mongone(mtmp);
     }
 }
