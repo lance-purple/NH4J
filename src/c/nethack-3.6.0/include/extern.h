@@ -548,6 +548,8 @@ E boolean FDECL(currentDungeonBuildsUpward, ());
 E xchar FDECL(ledger_no, (d_level *));
 E xchar FDECL(currentLevelLedgerNum, ());
 E xchar NDECL(maxledgerno);
+E xchar FDECL(deepestLevelReachedInCurrentDungeon, ());
+E void FDECL(setDeepestLevelReachedInCurrentDungeon, (xchar));
 E schar FDECL(depth, (d_level *));
 E schar FDECL(currentDepth, ());
 E xchar FDECL(dunlev, (d_level *));

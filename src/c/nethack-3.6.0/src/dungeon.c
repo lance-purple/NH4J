@@ -971,6 +971,17 @@ init_dungeons()
 #endif
 }
 
+xchar deepestLevelReachedInCurrentDungeon()
+{
+    return dungeons[currentDungeonNumber()].dunlev_ureached;
+}
+
+void setDeepestLevelReachedInCurrentDungeon(level)
+xchar level;
+{
+    dungeons[currentDungeonNumber()].dunlev_ureached = level;
+}
+
 /* return the level number for lev in *this* dungeon */
 xchar
 dunlev(lev)

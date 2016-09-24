@@ -1281,7 +1281,7 @@ random_teleport_level()
 
         /* if hero hasn't reached the middle locate level yet,
            no one can randomly teleport past it */
-        if (dunlev_reached(&u.uz) < qlocate_depth)
+        if (deepestLevelReachedInCurrentDungeon() < qlocate_depth)
             bottom = qlocate_depth;
         min_depth = dungeons[currentDungeonNumber()].depth_start;
         max_depth = bottom + (dungeons[currentDungeonNumber()].depth_start - 1);

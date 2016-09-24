@@ -1230,12 +1230,14 @@ boolean at_stairs, falling, portal;
     assign_level(&u.utolev, newlevel);
     u.utotype = 0;
     if (!currentDungeonBuildsUpward()) { /* usual case */
-        if (currentDungeonLevel() > dunlev_reached(&u.uz))
-            dunlev_reached(&u.uz) = currentDungeonLevel();
+        if (currentDungeonLevel() > deepestLevelReachedInCurrentDungeon()) {
+            setDeepestLevelReachedInCurrentDungeon(currentDungeonLevel());
+        }
     } else {
-        if (dunlev_reached(&u.uz) == 0
-            || currentDungeonLevel() < dunlev_reached(&u.uz))
-            dunlev_reached(&u.uz) = currentDungeonLevel();
+        if (deepestLevelReachedInCurrentDungeon() == 0
+            || currentDungeonLevel() < deepestLevelReachedInCurrentDungeon()) {
+            setDeepestLevelReachedInCurrentDungeon(currentDungeonLevel());
+        }
     }
     reset_rndmonst(NON_PM); /* u.uz change affects monster generation */
 

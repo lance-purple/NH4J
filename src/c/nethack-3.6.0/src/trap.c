@@ -469,7 +469,7 @@ boolean td; /* td == TRUE : trap door or hole */
         int qlocate_depth = qlocate_level.dlevel;
 
         /* deepest reached < qlocate implies current < qlocate */
-        if (dunlev_reached(&u.uz) < qlocate_depth)
+        if (deepestLevelReachedInCurrentDungeon() < qlocate_depth)
             bottom = qlocate_depth; /* early cut-off */
     }
     newlevel = currentDungeonLevel(); /* current level */
