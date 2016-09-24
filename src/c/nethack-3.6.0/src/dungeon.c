@@ -2072,22 +2072,20 @@ xchar *rdgn;
  * teleport or via the Eye.
  */
 void
-recbranch_mapseen(source, dest)
-d_level *source;
 d_level *dest;
 {
     mapseen *mptr;
     branch *br;
 
     /* not a branch */
-    if (source->dnum == dest->dnum)
+    if (currentDungeonNumber() == dest->dnum)
         return;
 
     /* we only care about forward branches */
     for (br = branches; br; br = br->next) {
-        if (on_level(source, &br->end1) && on_level(dest, &br->end2))
+        if (areYouOnLevel(&br->end1) && on_level(dest, &br->end2))
             break;
-        if (on_level(source, &br->end2) && on_level(dest, &br->end1))
+        if (areYouOnLevel(&br->end2) && on_level(dest, &br->end1))
             return;
     }
 
@@ -2095,13 +2093,12 @@ d_level *dest;
     if (!br)
         return;
 
-    if ((mptr = find_mapseen(source)) != 0) {
+    if ((mptr = find_mapseen(&u.uz)) != 0) {
         if (mptr->br && br != mptr->br)
             impossible("Two branches on the same level?");
         mptr->br = br;
     } else {
         impossible("Can't note branch for unseen level (%d, %d)",
-                   source->dnum, source->dlevel);
     }
 }
 

@@ -1222,8 +1222,9 @@ boolean at_stairs, falling, portal;
     /* record this level transition as a potential seen branch unless using
      * some non-standard means of transportation (level teleport).
      */
-    if ((at_stairs || falling || portal) && (currentDungeonNumber() != newlevel->dnum))
-        recbranch_mapseen(&u.uz, newlevel);
+    if ((at_stairs || falling || portal) && (currentDungeonNumber() != newlevel->dnum)) {
+        setBranchSeenFromCurrentLevel(newlevel);
+    }
     assignFromCurrentLevel(&u.uz0);
     setCurrentLevelTo(newlevel);
     assign_level(&u.utolev, newlevel);

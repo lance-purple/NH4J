@@ -603,7 +603,7 @@ E void FDECL(init_mapseen, (d_level *));
 E void NDECL(recalc_mapseen);
 E void FDECL(mapseen_temple, (struct monst *));
 E void FDECL(room_discovered, (int));
-E void FDECL(recbranch_mapseen, (d_level *, d_level *));
+E void FDECL(setBranchSeenFromCurrentLevel, (d_level *));
 E void FDECL(remdun_mapseen, (int));
 
 /* ### eat.c ### */
