@@ -982,7 +982,7 @@ register struct obj *otmp;
                     || (xupladder && currentX() == xupladder
                         && currentY() == yupladder)) {
                     (void) doup();
-                } else if (has_ceiling(&u.uz)) {
+                } else if (currentLevelHasCeiling()) {
                     int dmg = uarmh ? 1 : rnd(10);
 
                     You("hit your %s on the %s.", body_part(HEAD),

@@ -1402,11 +1402,10 @@ int x, y;
 }
 
 boolean
-has_ceiling(lev)
-d_level *lev;
+currentLevelHasCeiling()
 {
     /* [what about level 1 of the quest?] */
-    return (boolean) (!Is_airlevel(lev) && !Is_waterlevel(lev));
+    return (boolean) (!areYouOnAirLevel() && !areYouOnWaterLevel());
 }
 
 /*
