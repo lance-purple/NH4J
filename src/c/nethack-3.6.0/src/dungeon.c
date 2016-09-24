@@ -2072,6 +2072,7 @@ xchar *rdgn;
  * teleport or via the Eye.
  */
 void
+setBranchSeenFromCurrentLevel(dest)
 d_level *dest;
 {
     mapseen *mptr;
@@ -2099,6 +2100,7 @@ d_level *dest;
         mptr->br = br;
     } else {
         impossible("Can't note branch for unseen level (%d, %d)",
+                   currentDungeonNumber(), currentDungeonLevel());
     }
 }
 
