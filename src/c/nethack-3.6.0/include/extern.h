@@ -577,7 +577,7 @@ E boolean FDECL(CanYouRiseUp, (int, int));
 E boolean FDECL(currentLevelHasCeiling, ());
 E boolean FDECL(In_quest, (d_level *));
 E boolean FDECL(areYouInTheQuestDungeon, ());
-E boolean FDECL(In_mines, (d_level *));
+E boolean FDECL(areYouInTheMines, ());
 E branch *FDECL(dungeon_branch, (const char *));
 E boolean FDECL(at_dgn_entrance, (const char *));
 E boolean FDECL(In_hell, (d_level *));

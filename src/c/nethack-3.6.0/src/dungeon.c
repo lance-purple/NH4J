@@ -1482,10 +1482,9 @@ d_level *lev;
 
 /* are you in the mines dungeon? */
 boolean
-In_mines(lev)
-d_level *lev;
+areYouInTheMines()
 {
-    return (boolean) (lev->dnum == mines_dnum);
+    return (boolean) (currentDungeonNumber() == mines_dnum);
 }
 
 boolean areYouOnASokobanLevel()

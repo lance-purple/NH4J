@@ -665,7 +665,7 @@ makelevel()
         } else if (dungeons[currentDungeonNumber()].proto[0]) {
             makemaz("");
             return;
-        } else if (In_mines(&u.uz)) {
+        } else if (areYouInTheMines()) {
             makemaz("minefill");
             return;
         } else if (areYouInTheQuestDungeon()) {
@@ -909,7 +909,7 @@ boolean skip_lvl_checks;
         && (In_hell(&u.uz) || areYouOnAVladsTowerLevel() || areYouOnRogueLevel()
             || level.flags.arboreal
             || ((sp = areYouOnASpecialLevel()) != 0 && !areYouOnOracleLevel()
-                && (!In_mines(&u.uz) || sp->flags.town))))
+                && (!areYouInTheMines() || sp->flags.town))))
         return;
 
     /* basic level-related probabilities */
@@ -920,7 +920,7 @@ boolean skip_lvl_checks;
 
     /* mines have ***MORE*** goodies - otherwise why mine? */
     if (!skip_lvl_checks) {
-        if (In_mines(&u.uz)) {
+        if (areYouInTheMines()) {
             goldprob *= 2;
             gemprob *= 3;
         } else if (areYouInTheQuestDungeon()) {
