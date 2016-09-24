@@ -1020,7 +1020,7 @@ boolean suppress_impossible;
     }
 
     if (mtmp->iswiz && mtmp->mx) { /* Wizard, not just arriving */
-        if (!In_W_tower(currentX(), currentY(), &u.uz))
+        if (!areYouInsideWizardTower(currentX(), currentY()))
             x = xupstair, y = yupstair;
         else if (!xdnladder) /* bottom level of tower */
             x = xupladder, y = yupladder;

@@ -320,7 +320,7 @@ register struct monst *mtmp;
         /* if wounded, hole up on or near the stairs (to block them) */
         /* unless, of course, there are no stairs (e.g. endlevel) */
         mtmp->mavenge = 1; /* covetous monsters attack while fleeing */
-        if (In_W_tower(mtmp->mx, mtmp->my, &u.uz)
+        if (areYouInsideWizardTower(mtmp->mx, mtmp->my)
             || (mtmp->iswiz && !xupstair && !mon_has_amulet(mtmp))) {
             if (!rn2(3 + mtmp->mhp / 10))
                 (void) rloc(mtmp, TRUE);

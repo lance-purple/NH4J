@@ -717,7 +717,7 @@ coord *cc;   /* optional destination coordinates */
     /* overload mtmp->[mx,my], mtmp->[mux,muy], and mtmp->mtrack[] as */
     /* destination codes (setup flag bits before altering mx or my) */
     xyflags = (depth(&new_lev) < currentDepth()); /* 1 => up */
-    if (In_W_tower(mtmp->mx, mtmp->my, &u.uz))
+    if (areYouInsideWizardTower(mtmp->mx, mtmp->my))
         xyflags |= 2;
     mtmp->wormno = num_segs;
     mtmp->mlstmv = monstermoves;

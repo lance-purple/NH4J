@@ -1087,7 +1087,7 @@ boolean at_stairs, falling, portal;
     xchar new_ledger;
     boolean cant_go_back, up = (depth(newlevel) < currentDepth()),
                           newdungeon = (currentDungeonNumber() != newlevel->dnum),
-                          was_in_W_tower = In_W_tower(currentX(), currentY(), &u.uz),
+                          was_in_W_tower = areYouInsideWizardTower(currentX(), currentY()),
                           familiar = FALSE;
     boolean new = FALSE; /* made a new level? */
     struct monst *mtmp;

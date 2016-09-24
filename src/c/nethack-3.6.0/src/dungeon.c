@@ -1371,7 +1371,7 @@ int x, y;
     /* can't rise up from inside the top of the Wizard's tower */
     /* KMH -- or in sokoban */
     if (areYouInEndgame() || areYouOnASokobanLevel()
-        || (Is_wiz1_level(&u.uz) && In_W_tower(x, y, &u.uz)))
+        || (Is_wiz1_level(&u.uz) && areYouInsideWizardTower(x, y)))
         return FALSE;
     return (boolean) (currentDungeonLevel() > 1
                       || (dungeons[currentDungeonNumber()].entry_lev == 1
@@ -1543,13 +1543,12 @@ d_level *lev;
                       || Is_wiz3_level(lev));
 }
 
-/* is <x,y> of `lev' inside the Wizard's tower? */
+/* is <x,y> inside the Wizard's tower? */
 boolean
-In_W_tower(x, y, lev)
+areYouInsideWizardTower(x, y)
 int x, y;
-d_level *lev;
 {
-    if (!On_W_tower_level(lev))
+    if (!areYouOnAWizardTowerLevel())
         return FALSE;
     /*
      * Both of the exclusion regions for arriving via level teleport
