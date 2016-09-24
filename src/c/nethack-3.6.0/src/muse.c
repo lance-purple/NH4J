@@ -1756,7 +1756,7 @@ struct monst *mtmp;
     case MUSE_POT_GAIN_LEVEL:
         mquaffmsg(mtmp, otmp);
         if (otmp->cursed) {
-            if (Can_rise_up(mtmp->mx, mtmp->my, &u.uz)) {
+            if (canYouRiseUp(mtmp->mx, mtmp->my)) {
                 register int tolev = currentDepth() - 1;
                 d_level tolevel;
 

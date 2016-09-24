@@ -570,7 +570,7 @@ E boolean FDECL(Is_botlevel, (d_level *));
 E boolean FDECL(canYouFallThroughThisLevel, ());
 E boolean FDECL(Can_dig_down, (d_level *));
 E boolean FDECL(canYouDigDown, ());
-E boolean FDECL(Can_rise_up, (int, int, d_level *));
+E boolean FDECL(CanYouRiseUp, (int, int));
 E boolean FDECL(has_ceiling, (d_level *));
 E boolean FDECL(In_quest, (d_level *));
 E boolean FDECL(areYouInTheQuestDungeon, ());

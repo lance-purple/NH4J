@@ -1365,18 +1365,17 @@ canYouFallThroughCurrentLevel()
  * Checks for amulets and such must be done elsewhere.
  */
 boolean
-Can_rise_up(x, y, lev)
+canYouRiseUp(x, y)
 int x, y;
-d_level *lev;
 {
     /* can't rise up from inside the top of the Wizard's tower */
     /* KMH -- or in sokoban */
-    if (In_endgame(lev) || In_sokoban(lev)
-        || (Is_wiz1_level(lev) && In_W_tower(x, y, lev)))
+    if (areYouInEndgame() || areYouOnASokobanLevel()
+        || (Is_wiz1_level(&u.uz) && In_W_tower(x, y, &u.uz)))
         return FALSE;
-    return (boolean) (lev->dlevel > 1
-                      || (dungeons[lev->dnum].entry_lev == 1
-                          && ledger_no(lev) != 1
+    return (boolean) (currentDungeonLevel() > 1
+                      || (dungeons[currentDungeonNumber()].entry_lev == 1
+                          && currentLevelLedgerNum() != 1
                           && sstairs.sx && sstairs.up));
 }
 
