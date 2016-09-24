@@ -222,7 +222,6 @@ struct mkroom *sroom;
 int sx, sy;
 boolean sanctum; /* is it the seat of the high priest? */
 {
-    d_level *lvl = &u.uz;
     struct monst *priest;
     struct obj *otmp;
     int cnt;
@@ -237,7 +236,7 @@ boolean sanctum; /* is it the seat of the high priest? */
         EPRI(priest)->shralign = Amask2align(levl[sx][sy].altarmask);
         EPRI(priest)->shrpos.x = sx;
         EPRI(priest)->shrpos.y = sy;
-        assign_level(&(EPRI(priest)->shrlevel), lvl);
+        assignFromCurrentLevel(&(EPRI(priest)->shrlevel));
         priest->mtrapseen = ~0; /* traps are known */
         priest->mpeaceful = 1;
         priest->ispriest = 1;
@@ -847,7 +846,7 @@ boolean ghostly;
 {
     if (currentDungeonLevel()) {
         if (ghostly)
-            assign_level(&(EPRI(mtmp)->shrlevel), &u.uz);
+            assignFromCurrentLevel(&(EPRI(mtmp)->shrlevel));
     }
 }
 

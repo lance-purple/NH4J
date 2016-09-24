@@ -64,14 +64,10 @@ setDefaultGemProbabilities()
 STATIC_OVL void
 setCurrentLevelGemProbabilities()
 {
-    d_level *dlev = &u.uz;
     int j, first, lev;
 
-    if (dlev)
-        lev = (ledger_no(dlev) > maxledgerno()) ? maxledgerno()
-                                                : ledger_no(dlev);
-    else
-        lev = 0;
+    lev = (currentLevelLedgerNum() > maxledgerno()) ?
+              maxledgerno() : currentLevelLedgerNum();
     first = bases[GEM_CLASS];
 
     for (j = 0; j < 9 - lev / 3; j++)

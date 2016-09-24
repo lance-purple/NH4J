@@ -328,7 +328,7 @@ invault()
         EGD(guard)->gddone = 0;
         EGD(guard)->ogx = x;
         EGD(guard)->ogy = y;
-        assign_level(&(EGD(guard)->gdlevel), &u.uz);
+        assignFromCurrentLevel(&(EGD(guard)->gdlevel));
         EGD(guard)->vroom = vaultroom;
         EGD(guard)->warncnt = 0;
 
