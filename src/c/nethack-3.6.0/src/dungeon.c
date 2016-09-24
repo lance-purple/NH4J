@@ -1651,12 +1651,12 @@ d_level *dest, *src;
 
 /* dest = src + rn1(range) */
 void
-assign_rnd_level(dest, src, range)
-d_level *dest, *src;
+assignRandomLevelFromCurrentDungeon(dest, range)
+d_level *dest;
 int range;
 {
-    dest->dnum = src->dnum;
-    dest->dlevel = src->dlevel + ((range > 0) ? rnd(range) : -rnd(-range));
+    dest->dnum = currentDungeonNumber();
+    dest->dlevel = currentDungeonLevel() + ((range > 0) ? rnd(range) : -rnd(-range));
 
     if (dest->dlevel > dunlevs_in_dungeon(dest))
         dest->dlevel = dunlevs_in_dungeon(dest);

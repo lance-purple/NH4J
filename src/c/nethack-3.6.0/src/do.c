@@ -1128,7 +1128,7 @@ boolean at_stairs, falling, portal;
                 diff = odds <= 1 ? 0 : rn2(odds); /* paranoia */
 
             if (diff != 0) {
-                assign_rnd_level(newlevel, &u.uz, diff);
+                assignRandomLevelFromCurrentDungeon(newlevel, diff);
                 /* if inside the tower, stay inside */
                 if (was_in_W_tower && !On_W_tower_level(newlevel))
                     diff = 0;

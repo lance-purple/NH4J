@@ -587,7 +587,7 @@ E void FDECL(goto_hell, (BOOLEAN_P, BOOLEAN_P));
 E void FDECL(assign_level, (d_level *, d_level *));
 E void FDECL(assignFromCurrentLevel, (d_level *));
 E void FDECL(setCurrentLevelTo, (d_level *));
-E void FDECL(assign_rnd_level, (d_level *, d_level *, int));
+E void FDECL(assignRandomLevelFromCurrentDungeon, (d_level *, int));
 E int FDECL(induced_align, (int));
 E boolean FDECL(Invocation_lev, (d_level *));
 E boolean FDECL(areYouOnInvocationLevel, ());
