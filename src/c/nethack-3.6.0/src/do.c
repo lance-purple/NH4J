@@ -1229,7 +1229,7 @@ boolean at_stairs, falling, portal;
     setCurrentLevelTo(newlevel);
     assign_level(&u.utolev, newlevel);
     u.utotype = 0;
-    if (!builds_up(&u.uz)) { /* usual case */
+    if (!currentDungeonBuildsUpward()) { /* usual case */
         if (currentDungeonLevel() > dunlev_reached(&u.uz))
             dunlev_reached(&u.uz) = currentDungeonLevel();
     } else {

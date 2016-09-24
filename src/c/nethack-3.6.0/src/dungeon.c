@@ -1172,6 +1172,17 @@ d_level *lev;
 }
 
 /* returns True iff the branch 'lev' is in a branch which builds up */
+boolean currentDungeonBuildsUpward()
+{
+    /*
+     * FIXME:  this misclassifies a single level branch reached via stairs
+     * from below.  Saving grace is that no such branches currently exist.
+     */
+    dungeon *dptr = &dungeons[currentDungeonNumber()];
+    return (boolean) (dptr->num_dunlevs > 1
+                      && dptr->entry_lev == dptr->num_dunlevs);
+}
+
 boolean
 builds_up(lev)
 d_level *lev;
@@ -1717,7 +1728,7 @@ level_difficulty()
            ends up making the harder to reach levels be treated as if
            they were easier; adjust for the extra effort involved in
            going down to the entrance and then up to the location */
-        if (builds_up(&u.uz))
+        if (currentDungeonBuildsUpward())
             res += 2 * (dungeons[currentDungeonNumber()].entry_lev - currentDungeonLevel() + 1);
             /*
              * 'Proof' by example:  suppose the entrance to sokoban is
