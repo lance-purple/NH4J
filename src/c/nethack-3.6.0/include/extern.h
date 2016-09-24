@@ -581,7 +581,7 @@ E boolean FDECL(In_mines, (d_level *));
 E branch *FDECL(dungeon_branch, (const char *));
 E boolean FDECL(at_dgn_entrance, (const char *));
 E boolean FDECL(In_hell, (d_level *));
-E boolean FDECL(In_V_tower, (d_level *));
+E boolean FDECL(areYouOnAVladsTowerLevel, ());
 E boolean FDECL(On_W_tower_level, (d_level *));
 E boolean FDECL(areYouOnAWizardTowerLevel, ());
 E boolean FDECL(areYouInsideWizardTower, (int, int));

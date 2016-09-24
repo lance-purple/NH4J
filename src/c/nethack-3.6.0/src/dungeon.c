@@ -1542,10 +1542,9 @@ const char *s;
 
 /* is `lev' part of Vlad's tower? */
 boolean
-In_V_tower(lev)
-d_level *lev;
+areYouOnAVladsTowerLevel()
 {
-    return (boolean) (lev->dnum == tower_dnum);
+    return (boolean) (currentDungeonNumber() == tower_dnum);
 }
 
 boolean areYouOnAWizardTowerLevel()
@@ -1785,7 +1784,7 @@ const char *nam;
     /* hell is the old name, and wouldn't match; gehennom would match its
        branch, yielding the castle level instead of the valley of the dead */
     if (!strcmpi(nam, "gehennom") || !strcmpi(nam, "hell")) {
-        if (In_V_tower(&u.uz))
+        if (areYouOnAVladsTowerLevel())
             nam = " to Vlad's tower"; /* branch to... */
         else
             nam = "valley";

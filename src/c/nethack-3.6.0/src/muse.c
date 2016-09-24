@@ -511,7 +511,7 @@ struct monst *mtmp;
             && !(areYouOnBottomLevel() || areYouInEndgame())
             && !(is_ice(x, y) || is_pool(x, y) || is_lava(x, y))
             && !(mtmp->data == &mons[PM_VLAD_THE_IMPALER]
-                 && In_V_tower(&u.uz))) {
+                 && areYouOnAVladsTowerLevel())) {
             m.defensive = obj;
             m.has_defense = MUSE_WAN_DIGGING;
         }
