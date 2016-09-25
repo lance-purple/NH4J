@@ -61,7 +61,7 @@ STATIC_DCL void FDECL(print_branch, (winid, int, int, int, BOOLEAN_P,
                                      struct lchoice *));
 STATIC_DCL mapseen *FDECL(load_mapseen, (int));
 STATIC_DCL void FDECL(save_mapseen, (int, mapseen *));
-STATIC_DCL mapseen *FDECL(find_mapseen, (d_level *));
+STATIC_DCL mapseen *FDECL(findMapSeenOnCurrentLevel, ());
 STATIC_DCL void FDECL(print_mapseen, (winid, mapseen *, int, int, BOOLEAN_P));
 STATIC_DCL boolean FDECL(interest_mapseen, (mapseen *));
 STATIC_DCL void FDECL(traverse_mapseenchn, (BOOLEAN_P, winid,
@@ -2113,7 +2113,7 @@ d_level *dest;
     if (!br)
         return;
 
-    if ((mptr = find_mapseen(&u.uz)) != 0) {
+    if ((mptr = findMapSeenOnCurrentLevel()) != 0) {
         if (mptr->br && br != mptr->br)
             impossible("Two branches on the same level?");
         mptr->br = br;
@@ -2128,7 +2128,7 @@ currentLevelAnnotation()
 {
     mapseen *mptr;
 
-    if ((mptr = find_mapseen(&u.uz)))
+    if ((mptr = findMapSeenOnCurrentLevel()))
         return mptr->custom;
     return NULL;
 }
@@ -2140,7 +2140,7 @@ donamelevel()
     mapseen *mptr;
     char nbuf[BUFSZ]; /* Buffer for response */
 
-    if (!(mptr = find_mapseen(&u.uz)))
+    if (!(mptr = findMapSeenOnCurrentLevel()))
         return 0;
 
     if (mptr->custom) {
@@ -2170,13 +2170,12 @@ donamelevel()
 
 /* find the particular mapseen object in the chain; may return null */
 STATIC_OVL mapseen *
-find_mapseen(lev)
-d_level *lev;
+findMapSeenOnCurrentLevel()
 {
     mapseen *mptr;
 
     for (mptr = mapseenchn; mptr; mptr = mptr->next)
-        if (on_level(&(mptr->lev), lev))
+        if (areYouOnLevel(&(mptr->lev)))
             break;
 
     return mptr;
@@ -2393,9 +2392,9 @@ recalc_mapseen()
      * of being booted from the quest.  The mapseen object gets
      * removed during the expulsion but prior to leaving the level
      * [Since quest expulsion no longer deletes quest mapseen data,
-     * null return from find_mapseen() should now be impossible.]
+     * null return from findMapSeenOnCurrentLevel() should now be impossible.]
      */
-    if (!(mptr = find_mapseen(&u.uz)))
+    if (!(mptr = findMapSeenOnCurrentLevel()))
         return;
 
     /* reset all features; mptr->feat.* = 0; */
@@ -2625,7 +2624,7 @@ void
 mapseen_temple(priest)
 struct monst *priest UNUSED; /* currently unused; might be useful someday */
 {
-    mapseen *mptr = find_mapseen(&u.uz);
+    mapseen *mptr = findMapSeenOnCurrentLevel();
 
     if (areYouOnValleyLevel())
         mptr->flags.valley = 1;
@@ -2638,7 +2637,7 @@ void
 room_discovered(roomno)
 int roomno;
 {
-    mapseen *mptr = find_mapseen(&u.uz);
+    mapseen *mptr = findMapSeenOnCurrentLevel();
 
     mptr->msrooms[roomno].seen = 1;
 }

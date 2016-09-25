@@ -897,7 +897,7 @@ register int fd;
     if (areYouOnRogueLevel())
         assign_graphics(ROGUESET);
 #ifdef USE_TILES
-    substitute_tiles(&u.uz);
+    substituteCurrentLevelTiles();
 #endif
 #ifdef MFLOPPY
     gameDiskPrompt();
