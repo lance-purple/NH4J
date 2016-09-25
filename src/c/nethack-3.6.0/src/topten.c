@@ -58,7 +58,7 @@ struct toptenentry {
 
 STATIC_DCL void FDECL(topten_print, (const char *));
 STATIC_DCL void FDECL(topten_print_bold, (const char *));
-STATIC_DCL xchar FDECL(observable_depth, (d_level *));
+STATIC_DCL xchar FDECL(observableDepth, ());
 STATIC_DCL void NDECL(outheader);
 STATIC_DCL void FDECL(outentry, (int, struct toptenentry *, BOOLEAN_P));
 STATIC_DCL void FDECL(discardexcess, (FILE *));
@@ -141,28 +141,27 @@ const char *x;
 }
 
 STATIC_OVL xchar
-observable_depth(lev)
-d_level *lev;
+observableDepth()
 {
 #if 0
     /* if we ever randomize the order of the elemental planes, we
        must use a constant external representation in the record file */
-    if (In_endgame(lev)) {
-        if (Is_astralevel(lev))
+    if (areYouInEndgame()) {
+        if (areYouOnAstralLevel())
             return -5;
-        else if (Is_waterlevel(lev))
+        else if (areYouOnWaterLevel())
             return -4;
-        else if (Is_firelevel(lev))
+        else if (areYouOnFireLevel())
             return -3;
-        else if (Is_airlevel(lev))
+        else if (areYouOnAirLevel())
             return -2;
-        else if (Is_earthlevel(lev))
+        else if (areYouOnEarthLevel())
             return -1;
         else
             return 0; /* ? */
     } else
 #endif
-    return depth(lev);
+    return currentDepth();
 }
 
 /* throw away characters until current record has been entirely consumed */
@@ -501,7 +500,7 @@ time_t when;
      * as well (which also seems reasonable since that's all the player
      * sees on the screen anyway)
      */
-    t0->deathlev = observable_depth(&u.uz);
+    t0->deathlev = observableDepth();
     t0->maxlvl = deepest_lev_reached(TRUE);
     t0->hp = u.uhp;
     t0->maxhp = u.uhpmax;
