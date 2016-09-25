@@ -215,12 +215,12 @@ dosave0()
     savelev(fd, currentLevelLedgerNum(), WRITE_SAVE | FREE_SAVE);
     savegamestate(fd, WRITE_SAVE | FREE_SAVE);
 
-    /* While copying level files around, zero out u.uz to keep
+    /* While copying level files around, zero out current level to keep
      * parts of the restore code from completely initializing all
      * in-core data structures, since all we're doing is copying.
      * This also avoids at least one nasty core dump.
      */
-    uz_save = u.uz;
+    assignFromCurrentLevel(&uz_save);
     setCurrentDungeonNumber(0);
     setCurrentDungeonLevel(0);
     /* these pointers are no longer valid, and at least u.usteed
@@ -263,7 +263,7 @@ dosave0()
     }
     bclose(fd);
 
-    u.uz = uz_save;
+    setCurrentLevelTo(&uz_save);
 
     /* get rid of current level --jgm */
     delete_levelfile(currentLevelLedgerNum());

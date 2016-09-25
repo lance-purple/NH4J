@@ -614,7 +614,7 @@ u_init()
 
     setCurrentDungeonLevel(1);
     u.uz0.dlevel = 0;
-    u.utolev = u.uz;
+    assignFromCurrentLevel(&u.utolev);
 
     u.umoved = FALSE;
     u.umortality = 0;

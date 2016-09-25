@@ -764,14 +764,14 @@ level_tele()
         d_level lsav;
 
         /* set specific death location; this also suppresses bones */
-        lsav = u.uz;   /* save current level, see below */
+        assignFromCurrentLevel(&lsav); /* save current level, see below */
         setCurrentDungeonNumber(0); /* main dungeon */
         setCurrentDungeonLevel((newlev <= -10) ? -10 : 0); /* heaven or surface */
         done(DIED);
         /* can only get here via life-saving (or declining to die in
            explore|debug mode); the hero has now left the dungeon... */
         escape_by_flying = "find yourself back on the surface";
-        u.uz = lsav; /* restore u.uz so escape code works */
+        setCurrentLevelTo(&lsav); /* restore u.uz so escape code works */
     }
 
     /* calls done(ESCAPED) if newlevel==0 */
