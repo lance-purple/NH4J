@@ -10,30 +10,29 @@ extern char bones[]; /* from files.c */
 extern long bytes_counted;
 #endif
 
-STATIC_DCL boolean FDECL(no_bones_level, (d_level *));
+STATIC_DCL boolean FDECL(noBonesOnCurrentLevel, ());
 STATIC_DCL void FDECL(goodfruit, (int));
 STATIC_DCL void FDECL(resetobjs, (struct obj *, BOOLEAN_P));
 STATIC_DCL boolean FDECL(fixuporacle, (struct monst *));
 
 STATIC_OVL boolean
-no_bones_level(lev)
-d_level *lev;
+noBonesOnCurrentLevel()
 {
     extern d_level save_dlevel; /* in do.c */
     s_level *sptr;
 
     if (ledger_no(&save_dlevel))
-        assign_level(lev, &save_dlevel);
+        assignFromCurrentLevel(&save_dlevel);
 
-    return (boolean) (((sptr = Is_special(lev)) != 0 && !sptr->boneid)
-                      || !dungeons[lev->dnum].boneid
+    return (boolean) (((sptr = areYouOnASpecialLevel()) != 0 && !sptr->boneid)
+                      || !dungeons[currentDungeonNumber()].boneid
                       /* no bones on the last or multiway branch levels
                          in any dungeon (level 1 isn't multiway) */
-                      || Is_botlevel(lev)
-                      || (Is_branchlev(lev) && lev->dlevel > 1)
+                      || areYouOnBottomLevel()
+                      || (areYouOnABranchLevel() && currentDungeonLevel() > 1)
                       /* no bones in the invocation level */
-                      || (In_hell(lev)
-                          && lev->dlevel == dunlevs_in_dungeon(lev) - 1));
+                      || (areYouInHell()
+                          && currentDungeonLevel() == levelsInCurrentDungeon() - 1));
 }
 
 /* Call this function for each fruit object saved in the bones level: it marks
@@ -300,7 +299,7 @@ can_make_bones()
         return FALSE;
     if (currentLevelLedgerNum() <= 0 || currentLevelLedgerNum() > maxledgerno())
         return FALSE;
-    if (no_bones_level(&u.uz))
+    if (noBonesOnCurrentLevel())
         return FALSE; /* no bones for specific levels */
     if (u.uswallow) {
         return FALSE; /* no bones when swallowed */
@@ -562,7 +561,7 @@ getbones()
     if (rn2(3) /* only once in three times do we find bones */
         && !wizard)
         return 0;
-    if (no_bones_level(&u.uz))
+    if (noBonesOnCurrentLevel())
         return 0;
     fd = open_bonesfile(&u.uz, &bonesid);
     if (fd < 0)
