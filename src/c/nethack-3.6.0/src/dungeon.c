@@ -1360,24 +1360,15 @@ boolean canYouDigDown()
                       && !areYouOnInvocationLevel());
 }
 
-boolean
-Can_dig_down(lev)
-d_level *lev;
-{
-    return (boolean) (!level.flags.hardfloor
-                      && !Is_botlevel(lev)
-                      && !Invocation_lev(lev));
-}
-
 /*
- * Like Can_dig_down (above), but also allows falling through on the
+ * Like canYouDigDown (above), but also allows falling through on the
  * stronghold level.  Normally, the bottom level of a dungeon resists
  * both digging and falling.
  */
 boolean
 canYouFallThroughCurrentLevel()
 {
-    return (boolean) (Can_dig_down(&u.uz) || areYouOnStrongholdLevel());
+    return (boolean) (canYouDigDown() || areYouOnStrongholdLevel());
 }
 
 /*
