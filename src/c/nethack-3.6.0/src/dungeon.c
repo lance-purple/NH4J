@@ -1393,7 +1393,7 @@ int x, y;
     /* can't rise up from inside the top of the Wizard's tower */
     /* KMH -- or in sokoban */
     if (areYouInEndgame() || areYouOnASokobanLevel()
-        || (Is_wiz1_level(&u.uz) && areYouInsideWizardTower(x, y)))
+        || (areYouOnWizardTowerLevel1() && areYouInsideWizardTower(x, y)))
         return FALSE;
     return (boolean) (currentDungeonLevel() > 1
                       || (dungeons[currentDungeonNumber()].entry_lev == 1
@@ -1547,9 +1547,9 @@ areYouOnAVladsTowerLevel()
 
 boolean areYouOnAWizardTowerLevel()
 {
-    return (boolean) (Is_wiz1_level(&u.uz)
-                      || Is_wiz2_level(&u.uz)
-                      || Is_wiz3_level(&u.uz));
+    return (boolean) (areYouOnWizardTowerLevel1() ||
+                      areYouOnWizardTowerLevel2() ||
+                      areYouOnWizardTowerLevel3());
 }
 
 /* is `lev' a level containing the Wizard's tower? */
@@ -1561,6 +1561,10 @@ d_level *lev;
                       || Is_wiz2_level(lev)
                       || Is_wiz3_level(lev));
 }
+
+boolean areYouOnWizardTowerLevel1() { return areYouOnLevel(&wiz1_level); }
+boolean areYouOnWizardTowerLevel2() { return areYouOnLevel(&wiz2_level); }
+boolean areYouOnWizardTowerLevel3() { return areYouOnLevel(&wiz3_level); }
 
 /* is <x,y> inside the Wizard's tower? */
 boolean
@@ -2299,8 +2303,6 @@ int dnum;
 void
 initCurrentLevelMapSeen()
 {
-    d_level *lev = &u.uz;
-
     /* Create a level and insert in "sorted" order.  This is an insertion
      * sort first by dungeon (in order of discovery) and then by level number.
      */
@@ -2316,8 +2318,8 @@ initCurrentLevelMapSeen()
        previous level's data */
     (void) memset((genericptr_t) lastseentyp, 0, sizeof lastseentyp);
 
-    init->lev.dnum = lev->dnum;
-    init->lev.dlevel = lev->dlevel;
+    init->lev.dnum = currentDungeonNumber();
+    init->lev.dlevel = currentDungeonLevel();
 
     /* walk until we get to the place where we should insert init */
     for (mptr = mapseenchn, prev = 0; mptr; prev = mptr, mptr = mptr->next)
