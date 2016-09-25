@@ -173,7 +173,7 @@ extern int n_dgns; /* from dungeon.c */
 #ifdef SELECTSAVED
 STATIC_PTR int FDECL(CFDECLSPEC strcmp_wrap, (const void *, const void *));
 #endif
-STATIC_DCL char *FDECL(set_bonesfile_name, (char *, d_level *));
+STATIC_DCL char *FDECL(setBonesFileNameForCurrentLevel, (char *));
 STATIC_DCL char *NDECL(set_bonestemp_name);
 #ifdef COMPRESS
 STATIC_DCL void FDECL(redirect, (const char *, const char *, FILE *,
@@ -688,23 +688,19 @@ int fd;
  * bonesid to be read/written in the bones file.
  */
 STATIC_OVL char *
-set_bonesfile_name(file, lev)
+setBonesFileNameForCurrentLevel(file)
 char *file;
-d_level *lev;
 {
     s_level *sptr;
     char *dptr;
 
-    Sprintf(file, "bon%c%s", dungeons[lev->dnum].boneid,
-            In_quest(lev) ? urole.filecode : "0");
+    Sprintf(file, "bon%c%s", dungeons[currentDungeonNumber()].boneid,
+            areYouInTheQuestDungeon() ? urole.filecode : "0");
     dptr = eos(file);
-    if ((sptr = Is_special(lev)) != 0)
+    if ((sptr = areYouOnASpecialLevel()) != 0)
         Sprintf(dptr, ".%c", sptr->boneid);
     else
-        Sprintf(dptr, ".%d", lev->dlevel);
-#ifdef VMS
-    Strcat(dptr, ";1");
-#endif
+        Sprintf(dptr, ".%d", currentDungeonLevel());
     return (dptr - 2);
 }
 
@@ -734,13 +730,12 @@ createBonesFileForCurrentLevel(bonesid, errbuf)
 char **bonesid;
 char errbuf[];
 {
-    d_level *lev = &u.uz;
     const char *file;
     int fd;
 
     if (errbuf)
         *errbuf = '\0';
-    *bonesid = set_bonesfile_name(bones, lev);
+    *bonesid = setBonesFileNameForCurrentLevel(bones);
     file = set_bonestemp_name();
     file = fqname(file, BONESPREFIX, 0);
 
@@ -792,11 +787,10 @@ cancel_bonesfile()
 void
 commitBonesFileForCurrentLevel()
 {
-    d_level *lev = &u.uz;
     const char *fq_bones, *tempname;
     int ret;
 
-    (void) set_bonesfile_name(bones, lev);
+    (void) setBonesFileNameForCurrentLevel(bones);
     fq_bones = fqname(bones, BONESPREFIX, 0);
     tempname = set_bonestemp_name();
     tempname = fqname(tempname, BONESPREFIX, 1);
@@ -819,11 +813,10 @@ int
 openBonesFileForCurrentLevel(bonesid)
 char **bonesid;
 {
-    d_level *lev = &u.uz;
     const char *fq_bones;
     int fd;
 
-    *bonesid = set_bonesfile_name(bones, lev);
+    *bonesid = setBonesFileNameForCurrentLevel(bones);
     fq_bones = fqname(bones, BONESPREFIX, 0);
     nh_uncompress(fq_bones); /* no effect if nonexistent */
 #ifdef MAC
@@ -837,8 +830,7 @@ char **bonesid;
 int
 deleteBonesFileForCurrentLevel()
 {
-    d_level *lev = &u.uz;
-    (void) set_bonesfile_name(bones, lev);
+    (void) setBonesFileNameForCurrentLevel(bones);
     return !(unlink(fqname(bones, BONESPREFIX, 0)) < 0);
 }
 
