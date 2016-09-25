@@ -730,11 +730,11 @@ set_bonestemp_name()
 }
 
 int
-create_bonesfile(lev, bonesid, errbuf)
-d_level *lev;
+createBonesFileForCurrentLevel(bonesid, errbuf)
 char **bonesid;
 char errbuf[];
 {
+    d_level *lev = &u.uz;
     const char *file;
     int fd;
 
@@ -790,9 +790,9 @@ cancel_bonesfile()
 
 /* move completed bones file to proper name */
 void
-commit_bonesfile(lev)
-d_level *lev;
+commitBonesFileForCurrentLevel()
 {
+    d_level *lev = &u.uz;
     const char *fq_bones, *tempname;
     int ret;
 
@@ -816,10 +816,10 @@ d_level *lev;
 }
 
 int
-open_bonesfile(lev, bonesid)
-d_level *lev;
+openBonesFileForCurrentLevel(bonesid)
 char **bonesid;
 {
+    d_level *lev = &u.uz;
     const char *fq_bones;
     int fd;
 
@@ -835,9 +835,9 @@ char **bonesid;
 }
 
 int
-delete_bonesfile(lev)
-d_level *lev;
+deleteBonesFileForCurrentLevel()
 {
+    d_level *lev = &u.uz;
     (void) set_bonesfile_name(bones, lev);
     return !(unlink(fqname(bones, BONESPREFIX, 0)) < 0);
 }

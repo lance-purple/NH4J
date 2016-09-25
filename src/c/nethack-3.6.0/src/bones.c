@@ -341,12 +341,12 @@ struct obj *corpse;
     /* caller has already checked `can_make_bones()' */
 
     clear_bypasses();
-    fd = open_bonesfile(&u.uz, &bonesid);
+    fd = openBonesFileForCurrentLevel(&bonesid);
     if (fd >= 0) {
         (void) nhclose(fd);
         if (wizard) {
             if (yn("Bones file already exists.  Replace it?") == 'y') {
-                if (delete_bonesfile(&u.uz))
+                if (deleteBonesFileForCurrentLevel())
                     goto make_bones;
                 else
                     pline("Cannot unlink old bones.");
@@ -491,7 +491,7 @@ make_bones:
     if (wizard)
         level.flags.wizard_bones = 1;
 
-    fd = create_bonesfile(&u.uz, &bonesid, whynot);
+    fd = createBonesFileForCurrentLevel(&bonesid, whynot);
     if (fd < 0) {
         if (wizard)
             pline1(whynot);
@@ -541,7 +541,7 @@ make_bones:
     update_mlstmv(); /* update monsters for eventual restoration */
     savelev(fd, currentLevelLedgerNum(), WRITE_SAVE | FREE_SAVE);
     bclose(fd);
-    commit_bonesfile(&u.uz);
+    commitBonesFileForCurrentLevel();
     compress_bonesfile();
 }
 
@@ -563,7 +563,7 @@ getbones()
         return 0;
     if (noBonesOnCurrentLevel())
         return 0;
-    fd = open_bonesfile(&u.uz, &bonesid);
+    fd = openBonesFileForCurrentLevel(&bonesid);
     if (fd < 0)
         return 0;
 
@@ -631,7 +631,7 @@ getbones()
             return ok;
         }
     }
-    if (!delete_bonesfile(&u.uz)) {
+    if (!deleteBonesFileForCurrentLevel()) {
         /* When N games try to simultaneously restore the same
          * bones file, N-1 of them will fail to delete it
          * (the first N-1 under AmigaDOS, the last N-1 under UNIX).

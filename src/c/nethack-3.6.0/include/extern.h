@@ -735,13 +735,13 @@ E int FDECL(create_levelfile, (int, char *));
 E int FDECL(open_levelfile, (int, char *));
 E void FDECL(delete_levelfile, (int));
 E void NDECL(clearlocks);
-E int FDECL(create_bonesfile, (d_level *, char **, char *));
+E int FDECL(createBonesFileForCurrenrtLevel, (char **, char *));
 #ifdef MFLOPPY
 E void NDECL(cancel_bonesfile);
 #endif
-E void FDECL(commit_bonesfile, (d_level *));
-E int FDECL(open_bonesfile, (d_level *, char **));
-E int FDECL(delete_bonesfile, (d_level *));
+E void FDECL(commitBonesFileForCurrentLevel, ());
+E int FDECL(openBonesFileForCurrentLevel, (char **));
+E int FDECL(deleteBonesFileForCurrentLevel, ());
 E void NDECL(compress_bonesfile);
 E void FDECL(set_savefile_name, (BOOLEAN_P));
 #ifdef INSURANCE
