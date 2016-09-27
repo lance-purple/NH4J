@@ -1694,7 +1694,7 @@ xchar x, y;
         return;
 
     /* Adjust source to be current level and re-insert branch. */
-    *source = u.uz;
+    assignFromCurrentLevel(source);
     insert_branch(br, TRUE);
 
     debugpline0("Made knox portal.");

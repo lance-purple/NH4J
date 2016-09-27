@@ -771,7 +771,7 @@ level_tele()
         /* can only get here via life-saving (or declining to die in
            explore|debug mode); the hero has now left the dungeon... */
         escape_by_flying = "find yourself back on the surface";
-        setCurrentLevelTo(&lsav); /* restore u.uz so escape code works */
+        setCurrentLevelTo(&lsav); /* restore currentLevel so escape code works */
     }
 
     /* calls done(ESCAPED) if newlevel==0 */

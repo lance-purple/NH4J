@@ -184,7 +184,7 @@ boolean ghostly;
                in_rooms(tmp_dam->place.x, tmp_dam->place.y, SHOPBASE));
         if (currentDungeonLevel()) {
             /* when restoring, there are two passes over the current
-             * level.  the first time, u.uz isn't set, so neither is
+             * level.  the first time, currentLevel isn't set, so neither is
              * shop_keeper().  just wait and process the damage on
              * the second pass.
              */

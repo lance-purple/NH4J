@@ -1624,7 +1624,7 @@ int class;
     return first;
 }
 
-/* adjust strength of monsters based on u.uz and u.ulevel */
+/* adjust strength of monsters based on currentLevel and u.ulevel */
 int
 adj_lev(ptr)
 register struct permonst *ptr;
@@ -1645,7 +1645,7 @@ register struct permonst *ptr;
         return 50; /* "special" demons/devils */
     tmp2 = (level_difficulty() - tmp);
     if (tmp2 < 0)
-        tmp--; /* if mlevel > u.uz decrement tmp */
+        tmp--; /* if mlevel > currentrLevel decrement tmp */
     else
         tmp += (tmp2 / 5); /* else increment 1 per five diff */
 

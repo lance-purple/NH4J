@@ -2866,7 +2866,7 @@ print_mapseen(win, mptr, final, how, printdun)
 winid win;
 mapseen *mptr;
 int final; /* 0: not final; 1: game over, alive; 2: game over, dead */
-int how;   /* cause of death; only used if final==2 and mptr->lev==u.uz */
+int how;   /* cause of death; only used if final==2 and mptr->lev==currentLevel */
 boolean printdun;
 {
     char buf[BUFSZ], tmpbuf[BUFSZ];

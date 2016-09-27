@@ -377,7 +377,7 @@ fixup_special()
         case LR_PORTAL:
             if (*r->rname.str >= '0' && *r->rname.str <= '9') {
                 /* "chutes and ladders" */
-                lev = u.uz;
+                assignFromCurrentLevel(&lev);
                 lev.dlevel = atoi(r->rname.str);
             } else {
                 s_level *sp = find_level(r->rname.str);

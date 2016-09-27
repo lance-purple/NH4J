@@ -1239,7 +1239,7 @@ boolean at_stairs, falling, portal;
             setDeepestLevelReachedInCurrentDungeon(currentDungeonLevel());
         }
     }
-    reset_rndmonst(NON_PM); /* u.uz change affects monster generation */
+    reset_rndmonst(NON_PM); /* currentLevel change affects monster generation */
 
     /* set default level change destination areas */
     /* the special level code may override these */
