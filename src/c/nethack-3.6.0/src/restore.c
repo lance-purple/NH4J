@@ -574,6 +574,9 @@ unsigned int *stuckid, *steedid;
     setCurrentDungeonNumber(read_int(fd));
     setCurrentDungeonLevel(read_int(fd));
 
+    setPreviousDungeonNumber(read_int(fd));
+    setPreviousDungeonLevel(read_int(fd));
+
     setCurrentX(read_int(fd));
     setCurrentY(read_int(fd));
 
@@ -636,7 +639,8 @@ unsigned int *stuckid, *steedid;
         return FALSE;
     }
     /* in case hangup save occurred in midst of level change */
-    assignFromCurrentLevel(&u.uz0);
+    setPreviousDungeonNumber(currentDungeonNumber());
+    setPreviousDungeonLevel(currentDungeonLevel());
 
     /* this stuff comes after potential aborted restore attempts */
     restore_killers(fd);

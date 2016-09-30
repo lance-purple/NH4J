@@ -608,12 +608,13 @@ u_init()
     u.udg_cnt = 0;
     u.mh = u.mhmax = u.mtimedone = 0;
     setCurrentDungeonNumber(0);
-    u.uz0.dnum = 0;
+    setPreviousDungeonNumber(0);
     u.utotype = 0;
 #endif /* 0 */
 
     setCurrentDungeonLevel(1);
-    u.uz0.dlevel = 0;
+    setPreviousDungeonLevel(0);
+
     assignFromCurrentLevel(&u.utolev);
 
     u.umoved = FALSE;

@@ -4,7 +4,10 @@ public class PlayerCharacter {
 
 	private static int currentDungeonNumber;
 	private static int currentDungeonLevel;
-	
+
+	private static int previousDungeonNumber;
+	private static int previousDungeonLevel;
+
 	private static int currentX;
 	private static int currentY;
 
@@ -42,6 +45,22 @@ public class PlayerCharacter {
 
 	public static void setCurrentDungeonLevel(int x) {
 		currentDungeonLevel = x;
+	}
+
+	public static int previousDungeonNumber() {
+		return previousDungeonNumber;
+	}
+	
+	public static int previousDungeonLevel() {
+		return previousDungeonLevel;
+	}
+
+	public static void setPreviousDungeonNumber(int x) {
+		previousDungeonNumber = x;
+	}
+
+	public static void setPreviousDungeonLevel(int x) {
+		previousDungeonLevel = x;
 	}
 
 	public static int currentX() {

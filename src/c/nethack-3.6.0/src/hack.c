@@ -1906,8 +1906,9 @@ boolean pick;
     spotloc.x = currentX(), spotloc.y = currentY();
 
     /* moving onto different terrain might cause Levitation to toggle */
-    if (spotterrain != levl[originalX()][originalY()].typ || !areYouOnLevel(&u.uz0))
+    if (spotterrain != levl[originalX()][originalY()].typ || notOnTheSameLevelAsLastTurn()) {
         switch_terrain();
+    }
 
     if (pooleffects(TRUE))
         goto spotdone;

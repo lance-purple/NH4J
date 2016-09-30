@@ -537,6 +537,32 @@ void setCurrentDungeonNumber(int number) {
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, number);
 }
 
+/* the previous turn current dungeon level and number */
+
+int previousDungeonNumber() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "previousDungeonNumber", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+}
+
+int previousDungeonLevel() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "previousDungeonLevel", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+}
+
+void setPreviousDungeonNumber(int number) {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setPreviousDungeonNumber", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, number);
+}
+
+void setPreviousDungeonLevel(int level) {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setPreviousDungeonLevel", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, level);
+}
+
 /* your current position */
 
 int currentX() {

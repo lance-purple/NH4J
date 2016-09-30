@@ -831,8 +831,9 @@ register struct trap *ttmp;
 
     /* if landed from another portal, do nothing */
     /* problem: level teleport landing escapes the check */
-    if (!areYouOnLevel(&u.uz0))
+    if (notOnTheSameLevelAsLastTurn()) {
         return;
+    }
 
     You("activated a magic portal!");
 

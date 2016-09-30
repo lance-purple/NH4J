@@ -151,6 +151,7 @@ extern s_level* areYouOnASpecialLevel();
 extern boolean areYouOnASokobanLevel();
 extern boolean areYouInEndgame();
 extern boolean areYouInHell(); /* now gehennom */
+extern boolean wereYouInHellLastTurn(); /* now gehennom */
 
 #define within_bounded_area(X, Y, LX, LY, HX, HY) \
     ((X) >= (LX) && (X) <= (HX) && (Y) >= (LY) && (Y) <= (HY))

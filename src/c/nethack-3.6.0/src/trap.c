@@ -2900,7 +2900,7 @@ long hmask, emask; /* might cancel timeout */
         }
     }
 
-    /* can't rely on u.uz0 for detecting trap door-induced level change;
+    /* can't rely on previousDungeon for detecting trap door-induced level change;
        it gets changed to reflect the new level before we can check it */
     assignFromCurrentLevel(&current_dungeon_level);
     if (trap) {

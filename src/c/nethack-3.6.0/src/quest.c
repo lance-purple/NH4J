@@ -9,7 +9,7 @@
 #include "quest.h"
 #include "qtext.h"
 
-static boolean Not_firsttime() { return areYouOnLevel(&u.uz0); }
+static boolean Not_firsttime() { return onSameLevelAsLastTurn(); }
 #define Qstat(x) (quest_status.x)
 
 STATIC_DCL void NDECL(on_start);
@@ -29,7 +29,8 @@ on_start()
     if (!Qstat(first_start)) {
         qt_pager(QT_FIRSTTIME);
         Qstat(first_start) = TRUE;
-    } else if ((u.uz0.dnum != currentDungeonNumber()) || (u.uz0.dlevel < currentDungeonLevel())) {
+    } else if ((previousDungeonNumber() != currentDungeonNumber()) ||
+               (previousDungeonLevel() < currentDungeonLevel())) {
         if (Qstat(not_ready) <= 2)
             qt_pager(QT_NEXTTIME);
         else
@@ -42,7 +43,7 @@ on_locate()
 {
     /* the locate messages are phrased in a manner such that they only
        make sense when arriving on the level from above */
-    boolean from_above = (u.uz0.dlevel < currentDungeonLevel());
+    boolean from_above = (previousDungeonLevel() < currentDungeonLevel());
 
     if (Qstat(killed_nemesis)) {
         return;

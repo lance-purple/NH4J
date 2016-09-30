@@ -1225,7 +1225,9 @@ boolean at_stairs, falling, portal;
     if ((at_stairs || falling || portal) && (currentDungeonNumber() != newlevel->dnum)) {
         setBranchSeenFromCurrentLevel(newlevel);
     }
-    assignFromCurrentLevel(&u.uz0);
+    setPreviousDungeonNumber(currentDungeonNumber());
+    setPreviousDungeonLevel(currentDungeonLevel());
+
     setCurrentLevelTo(newlevel);
     assign_level(&u.utolev, newlevel);
     u.utotype = 0;
@@ -1416,7 +1418,7 @@ boolean at_stairs, falling, portal;
     obj_delivery(TRUE);
 
     /* Check whether we just entered Gehennom. */
-    if (!In_hell(&u.uz0) && areYouInHell()) {
+    if (!wereYouInHellLastTurn() && areYouInHell()) {
         if (areYouOnValleyLevel()) {
             You("arrive at the Valley of the Dead...");
             pline_The("odor of burnt flesh and decay pervades the air.");
@@ -1468,7 +1470,7 @@ boolean at_stairs, falling, portal;
     } else if (areYouInTheQuestDungeon()) {
         onquest(); /* might be reaching locate|goal level */
     } else if (areYouOnAVladsTowerLevel()) {
-        if (newdungeon && In_hell(&u.uz0))
+        if (newdungeon && wereYouInHellLastTurn())
             pline_The("heat and smoke are gone.");
     } else if (areYouOnFortKnoxLevel()) {
         /* alarm stops working once Croesus has died */
@@ -1485,7 +1487,7 @@ boolean at_stairs, falling, portal;
         if (new && areYouOnRogueLevel())
             You("enter what seems to be an older, more primitive world.");
         /* main dungeon message from your quest leader */
-        if (!In_quest(&u.uz0) && at_dgn_entrance("The Quest")
+        if (!wereYouInTheQuestDungeonLastTurn() && at_dgn_entrance("The Quest")
             && !(u.uevent.qcompleted || u.uevent.qexpelled
                  || quest_status.leader_is_dead)) {
             if (!u.uevent.qcalled) {
@@ -1497,7 +1499,8 @@ boolean at_stairs, falling, portal;
         }
     }
 
-    assignFromCurrentLevel(&u.uz0); /* reset u.uz0 */
+    setPreviousDungeonNumber(currentDungeonNumber());
+    setPreviousDungeonLevel(currentDungeonLevel());
 #ifdef INSURANCE
     save_currentstate();
 #endif

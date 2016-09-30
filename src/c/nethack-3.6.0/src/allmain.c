@@ -77,7 +77,7 @@ boolean resuming;
     }
     initrack();
 
-    u.uz0.dlevel = currentDungeonLevel();
+    setPreviousDungeonLevel(currentDungeonLevel());
     youmonst.movement = NORMAL_SPEED; /* give the hero some movement points */
     context.move = 0;
 
