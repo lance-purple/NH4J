@@ -300,6 +300,9 @@ register int fd, mode;
     bwrite(fd, (genericptr_t) &u, sizeof(struct you));
 
     /* save former 'you' fields that are now stored in Java */
+    write_int(fd, currentDungeonNumber());
+    write_int(fd, currentDungeonLevel());
+
     write_int(fd, currentX());
     write_int(fd, currentY());
 

@@ -2,6 +2,9 @@ package rec.games.roguelike.nh4j;
 
 public class PlayerCharacter {
 
+	private static int currentDungeonNumber;
+	private static int currentDungeonLevel;
+	
 	private static int currentX;
 	private static int currentY;
 
@@ -24,6 +27,22 @@ public class PlayerCharacter {
 
 	private static NHAttributeSet attributesAsMonster = new NHAttributeSet();
 	private static NHAttributeSet maximumAttributesAsMonster = new NHAttributeSet();
+
+	public static int currentDungeonNumber() {
+		return currentDungeonNumber;
+	}
+	
+	public static int currentDungeonLevel() {
+		return currentDungeonLevel;
+	}
+
+	public static void setCurrentDungeonNumber(int x) {
+		currentDungeonNumber = x;
+	}
+
+	public static void setCurrentDungeonLevel(int x) {
+		currentDungeonLevel = x;
+	}
 
 	public static int currentX() {
 		return currentX;

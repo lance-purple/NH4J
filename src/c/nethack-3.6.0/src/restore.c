@@ -571,6 +571,9 @@ unsigned int *stuckid, *steedid;
     mread(fd, (genericptr_t) &u, sizeof(struct you));
 
     /* read former 'you' fields that are now stored in Java */
+    setCurrentDungeonNumber(read_int(fd));
+    setCurrentDungeonLevel(read_int(fd));
+
     setCurrentX(read_int(fd));
     setCurrentY(read_int(fd));
 
