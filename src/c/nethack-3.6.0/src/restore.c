@@ -577,6 +577,9 @@ unsigned int *stuckid, *steedid;
     setPreviousDungeonNumber(read_int(fd));
     setPreviousDungeonLevel(read_int(fd));
 
+    setSentToDungeonNumber(read_int(fd));
+    setSentToDungeonLevel(read_int(fd));
+
     setCurrentX(read_int(fd));
     setCurrentY(read_int(fd));
 

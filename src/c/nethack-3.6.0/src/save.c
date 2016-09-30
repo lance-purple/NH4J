@@ -306,6 +306,9 @@ register int fd, mode;
     write_int(fd, previousDungeonNumber());
     write_int(fd, previousDungeonLevel());
 
+    write_int(fd, sentToDungeonNumber());
+    write_int(fd, sentToDungeonLevel());
+
     write_int(fd, currentX());
     write_int(fd, currentY());
 

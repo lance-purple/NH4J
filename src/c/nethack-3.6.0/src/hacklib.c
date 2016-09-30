@@ -563,6 +563,32 @@ void setPreviousDungeonLevel(int level) {
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, level);
 }
 
+/* dungeon level you are being sent to, or current */
+
+int sentToDungeonNumber() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "sentToDungeonNumber", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+}
+
+int sentToDungeonLevel() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "sentToDungeonLevel", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+}
+
+void setSentToDungeonNumber(int number) {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setSentToDungeonNumber", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, number);
+}
+
+void setSentToDungeonLevel(int level) {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setSentToDungeonLevel", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, level);
+}
+
 /* your current position */
 
 int currentX() {

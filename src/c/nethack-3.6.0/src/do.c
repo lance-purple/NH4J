@@ -1229,7 +1229,10 @@ boolean at_stairs, falling, portal;
     setPreviousDungeonLevel(currentDungeonLevel());
 
     setCurrentLevelTo(newlevel);
-    assign_level(&u.utolev, newlevel);
+
+    setSentToDungeonNumber(newlevel->dnum);
+    setSentToDungeonLevel(newlevel->dlevel);
+
     u.utotype = 0;
     if (!currentDungeonBuildsUpward()) { /* usual case */
         if (currentDungeonLevel() > deepestLevelReachedInCurrentDungeon()) {
@@ -1557,7 +1560,9 @@ const char *pre_msg, *post_msg;
         typmask |= 0200; /* flag for portal removal */
     u.utotype = typmask;
     /* destination level */
-    assign_level(&u.utolev, tolev);
+
+    setSentToDungeonNumber(tolev->dnum);
+    setSentToDungeonLevel(tolev->dlevel);
 
     if (pre_msg)
         dfr_pre_msg = dupstr(pre_msg);
@@ -1569,11 +1574,13 @@ const char *pre_msg, *post_msg;
 void
 deferred_goto()
 {
-    if (!areYouOnLevel(&u.utolev)) {
+    if (!areYouBeingSentToSameLevel()) {
         d_level dest;
         int typmask = u.utotype; /* save it; goto_level zeroes u.utotype */
 
-        assign_level(&dest, &u.utolev);
+        dest.dnum = sentToDungeonNumber();
+        dest.dlevel = sentToDungeonLevel();
+
         if (dfr_pre_msg)
             pline1(dfr_pre_msg);
         goto_level(&dest, !!(typmask & 1), !!(typmask & 2), !!(typmask & 4));
