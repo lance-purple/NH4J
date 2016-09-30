@@ -1119,6 +1119,23 @@ d_level* lev;
                       && lev->dlevel == currentDungeonLevel());
 }
 
+boolean areYouBeingSentToSameLevel()
+{
+    return (boolean) (sentToDungeonNumber() == currentDungeonNumber()
+                      && sentToDungeonLevel() == currentDungeonLevel());
+}
+
+boolean onTheSameLevelAsLastTurn()
+{
+    return (boolean) (previousDungeonNumber() == currentDungeonNumber())
+                      && (previousDungeonLevel() == currentDungeonLevel());
+}
+
+boolean notOnTheSameLevelAsLastTurn()
+{
+    return ! onTheSameLevelAsLastTurn();
+}
+
 /* are "lev1" and "lev2" actually the same? */
 boolean
 on_level(lev1, lev2)
@@ -1261,7 +1278,7 @@ int x, y;
         u.usteed->mx = currentX(), u.usteed->my = currentY();
     /* when changing levels, don't leave old position set with
        stale values from previous level */
-    if (!areYouOnLevel(&u.uz0)) {
+    if (notOnTheSameLevelAsLastTurn()) {
         setOriginalX(currentX());
         setOriginalY(currentY());
     }
@@ -1464,6 +1481,10 @@ boolean areYouInTheQuestDungeon()
     return (boolean) (currentDungeonNumber() == quest_dnum);
 }
 
+boolean wereYouInTheQuestDungeonLastTurn()
+{
+    return (boolean) (previousDungeonNumber() == quest_dnum);
+}
 boolean
 In_quest(lev)
 d_level *lev;
@@ -1616,6 +1637,11 @@ boolean areYouInEndgame()
 boolean areYouInHell()
 {
     return (boolean) (dungeons[currentDungeonNumber()].flags.hellish);
+}
+
+boolean wereYouInHellLastTurn()
+{
+    return (boolean) (dungeons[previousDungeonNumber()].flags.hellish);
 }
 
 /* sets *lev to be the gateway to Gehennom... */
