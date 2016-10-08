@@ -729,6 +729,18 @@ void setYouMoved(m) boolean m; {
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, m);
 }
 
+int lastTurningDirection() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "lastTurningDirection", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+} 
+
+void setLastTurningDirection(d) int d; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setLastTurningDirection", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, d);
+}
+
 /* square of euclidean distance from pt to your current position */
 int
 distanceSquaredToYou(x, y)

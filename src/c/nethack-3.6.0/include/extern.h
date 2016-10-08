@@ -914,6 +914,8 @@ E boolean FDECL(pmatchi, (const char *, const char *));
 E boolean FDECL(pmatchz, (const char *, const char *));
 E boolean FDECL(youMoved, ());
 E void FDECL(setYouMoved, (boolean));
+E int FDECL(lastTurningDirection, ());
+E void FDECL(setLastTurningDirection, (int));
 #ifndef STRNCMPI
 E int FDECL(strncmpi, (const char *, const char *, int));
 #endif

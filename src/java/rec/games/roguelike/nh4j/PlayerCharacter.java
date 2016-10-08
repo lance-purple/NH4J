@@ -26,6 +26,7 @@ public class PlayerCharacter {
 	private static int destinationY;
 
 	private static boolean youMoved;
+	private static int lastTurningDirection;
 	
 	private static NHAttributeSet currentAttributes = new NHAttributeSet();
 	private static NHAttributeSet maximumAttributes = new NHAttributeSet();
@@ -171,6 +172,14 @@ public class PlayerCharacter {
 	
 	public static void setYouMoved(boolean moved) {
 		youMoved = moved;
+	}
+	
+	public static int lastTurningDirection() {
+		return lastTurningDirection;
+	}
+
+	public static void setLastTurningDirection(int d) {
+		lastTurningDirection = d;
 	}
 
 	public static int currentAttribute(int attrIndex) {

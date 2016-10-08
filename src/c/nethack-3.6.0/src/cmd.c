@@ -3381,9 +3381,10 @@ register char *cmd;
         return;
     } else if (do_rush) {
         if (firsttime) {
-            if (!multi)
+            if (!multi) {
                 multi = max(COLNO, ROWNO);
-            u.last_str_turn = 0;
+            }
+            setLastTurningDirection(0);
         }
         context.mv = TRUE;
         domove();

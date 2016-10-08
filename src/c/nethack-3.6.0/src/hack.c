@@ -2510,9 +2510,9 @@ lookaround()
                 i = -1; /* half turn left */
         }
 
-        i += u.last_str_turn;
+        i += lastTurningDirection();
         if (i <= 2 && i >= -2) {
-            u.last_str_turn = i;
+            setLastTurningDirection(i);
             setDirectionX(x0 - currentX());
             setDirectionY(y0 - currentY());
         }
