@@ -818,7 +818,7 @@ struct obj *obj;
                 You(look_str, hcolor((char *) 0));
             else if (Sick)
                 You(look_str, "peaked");
-            else if (u.uhs >= WEAK)
+            else if (currentHungerState() >= WEAK)
                 You(look_str, "undernourished");
             else
                 You("look as %s as ever.", uvisage);
@@ -1807,7 +1807,7 @@ struct obj *obj;
             continue;
         val_limit = yourAttrMax(idx);
         /* don't recover strength lost from hunger */
-        if (idx == A_STR && u.uhs >= WEAK)
+        if (idx == A_STR && currentHungerState() >= WEAK)
             val_limit--;
         if (Fixed_abil) {
             /* potion/spell of restore ability override sustain ability

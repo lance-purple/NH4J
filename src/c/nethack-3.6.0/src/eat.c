@@ -106,7 +106,7 @@ void
 init_uhunger()
 {
     setCurrentNutrition(900);
-    u.uhs = NOT_HUNGRY;
+    setCurrentHungerState(NOT_HUNGRY);
 }
 
 /* tin types [SPINACH_TIN = -1, overrides corpsenm, nut==600] */
@@ -224,7 +224,7 @@ choke(food)
 struct obj *food;
 {
     /* only happens if you were satiated */
-    if (u.uhs != SATIATED) {
+    if (currentHungerState() != SATIATED) {
         if (!food || food->otyp != AMULET_OF_STRANGULATION)
             return;
     } else if (Role_if(PM_KNIGHT) && u.ualign.type == A_LAWFUL) {
@@ -2403,7 +2403,7 @@ doeat()
         context.victual.o_id = otmp->o_id;
         /* Don't split it, we don't need to if it's 1 move */
         context.victual.usedtime = 0;
-        context.victual.canchoke = (u.uhs == SATIATED);
+        context.victual.canchoke = (currentHungerState() == SATIATED);
         /* Note: gold weighs 1 pt. for each 1000 pieces (see
            pickup.c) so gold and non-gold is consistent. */
         if (otmp->oclass == COIN_CLASS)
@@ -2463,7 +2463,7 @@ doeat()
          * they were able to choke before, if they lost food it's possible
          * they shouldn't be able to choke now.
          */
-        if (u.uhs != SATIATED)
+        if (currentHungerState() != SATIATED)
             context.victual.canchoke = FALSE;
         context.victual.o_id = 0;
         context.victual.piece = touchfood(otmp);
@@ -2572,7 +2572,7 @@ doeat()
                                  / context.victual.reqtime);
     else
         context.victual.nmod = context.victual.reqtime % otmp->oeaten;
-    context.victual.canchoke = (u.uhs == SATIATED);
+    context.victual.canchoke = (currentHungerState() == SATIATED);
 
     if (!dont_start)
         start_eating(otmp);
@@ -2731,8 +2731,9 @@ int
 unfaint(VOID_ARGS)
 {
     (void) Hear_again();
-    if (u.uhs > FAINTING)
-        u.uhs = FAINTING;
+    if (currentHungerState() > FAINTING) {
+        setCurrentHungerState(FAINTING);
+    }
     stop_occupation();
     context.botl = 1;
     return 0;
@@ -2741,7 +2742,7 @@ unfaint(VOID_ARGS)
 boolean
 is_fainted()
 {
-    return (boolean) (u.uhs == FAINTED);
+    return (boolean) (currentHungerState() == FAINTED);
 }
 
 /* call when a faint must be prematurely terminated */
@@ -2791,14 +2792,14 @@ boolean incr;
      */
     if (occupation == eatfood || force_save_hs) {
         if (!saved_hs) {
-            save_hs = u.uhs;
+            save_hs = currentHungerState();
             saved_hs = TRUE;
         }
-        u.uhs = newhs;
+        setCurrentHungerState(newhs);
         return;
     } else {
         if (saved_hs) {
-            u.uhs = save_hs;
+            setCurrentHungerState(save_hs);
             saved_hs = FALSE;
         }
     }
@@ -2806,7 +2807,7 @@ boolean incr;
     if (newhs == FAINTING) {
         if (is_fainted())
             newhs = FAINTED;
-        if (u.uhs <= WEAK || rn2(20 - currentNutrition() / 10) >= 19) {
+        if (currentHungerState() <= WEAK || rn2(20 - currentNutrition() / 10) >= 19) {
             if (!is_fainted() && multi >= 0 /* %% */) {
                 int duration = 10 - (currentNutrition() / 10);
 
@@ -2823,7 +2824,7 @@ boolean incr;
                 newhs = FAINTED;
             }
         } else if (currentNutrition() < -(int) (200 + 20 * ACURR(A_CON))) {
-            u.uhs = STARVED;
+            setCurrentHungerState(STARVED);
             context.botl = 1;
             bot();
             You("die from starvation.");
@@ -2835,10 +2836,10 @@ boolean incr;
         }
     }
 
-    if (newhs != u.uhs) {
-        if (newhs >= WEAK && u.uhs < WEAK)
+    if (newhs != currentHungerState()) {
+        if (newhs >= WEAK && currentHungerState() < WEAK)
             losestr(1); /* this may kill you -- see below */
-        else if (newhs < WEAK && u.uhs >= WEAK)
+        else if (newhs < WEAK && currentHungerState() >= WEAK)
             losestr(-1);
         switch (newhs) {
         case HUNGRY:
@@ -2876,7 +2877,7 @@ boolean incr;
             context.travel = context.travel1 = context.mv = context.run = 0;
             break;
         }
-        u.uhs = newhs;
+        setCurrentHungerState(newhs);
         context.botl = 1;
         bot();
         if ((Upolyd ? u.mh : u.uhp) < 1) {

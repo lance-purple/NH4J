@@ -565,7 +565,7 @@ register struct obj *otmp;
             i = rn2(A_MAX); /* start at a random point */
             for (ii = 0; ii < A_MAX; ii++) {
                 lim = yourAttrMax(i);
-                if (i == A_STR && u.uhs >= 3)
+                if (i == A_STR && currentHungerState() >= 3)
                     --lim; /* WEAK */
                 if (yourCurrentAttr(i) < lim) {
                     setYourCurrentAttr(i, lim);

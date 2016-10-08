@@ -102,9 +102,9 @@ bot2()
 
     if (flags.time)
         Sprintf(nb = eos(nb), " T:%ld", moves);
-    if (strcmp(hu_stat[u.uhs], "        ")) {
+    if (strcmp(hu_stat[currentHungerState()], "        ")) {
         Sprintf(nb = eos(nb), " ");
-        Strcat(newbot2, hu_stat[u.uhs]);
+        Strcat(newbot2, hu_stat[currentHungerState()]);
     }
     if (Confusion)
         Sprintf(nb = eos(nb), " Conf");
@@ -522,10 +522,10 @@ bot()
 
     /* Hunger */
 
-    blstats[idx][BL_HUNGER].a.a_uint = u.uhs;
+    blstats[idx][BL_HUNGER].a.a_uint = currentHungerState();
     *(blstats[idx][BL_HUNGER].val) = '\0';
-    if (strcmp(hu_stat[u.uhs], "        ") != 0)
-        Strcpy(blstats[idx][BL_HUNGER].val, hu_stat[u.uhs]);
+    if (strcmp(hu_stat[currentHungerState()], "        ") != 0)
+        Strcpy(blstats[idx][BL_HUNGER].val, hu_stat[currentHungerState()]);
     valset[BL_HUNGER] = TRUE;
 
     /* Carrying capacity */

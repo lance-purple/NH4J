@@ -613,6 +613,7 @@ unsigned int *stuckid, *steedid;
     }
 
     setCurrentNutrition(read_int(fd));
+    setCurrentHungerState(read_int(fd));
 
     setCurrentExperienceLevel(read_int(fd));
     setHighestExperienceLevelSoFar(read_int(fd));

@@ -933,6 +933,9 @@ E void FDECL(setCurrentNutrition, (int));
 E void FDECL(increaseCurrentNutrition, (int));
 E void FDECL(decreaseCurrentNutrition, (int));
 
+E int FDECL(currentHungerState, ());
+E void FDECL(setCurrentHungerState, (int));
+
 #ifndef STRNCMPI
 E int FDECL(strncmpi, (const char *, const char *, int));
 #endif

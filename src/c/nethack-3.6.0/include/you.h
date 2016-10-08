@@ -263,8 +263,6 @@ struct you {
     char ushops_entered[5]; /* ditto, shops entered this turn */
     char ushops_left[5];    /* ditto, shops exited this turn */
 
-    unsigned uhs; /* hunger state - see eat.c */
-
     struct prop uprops[LAST_PROP + 1];
 
     unsigned umconf;

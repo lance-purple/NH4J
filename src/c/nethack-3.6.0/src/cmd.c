@@ -1800,7 +1800,7 @@ int final;
             enl_msg(You_, "hunger", "hungered", " rapidly",
                     from_what(HUNGER));
     }
-    Strcpy(buf, hu_stat[u.uhs]); /* hunger status; omitted if "normal" */
+    Strcpy(buf, hu_stat[currentHungerState()]); /* hunger status; omitted if "normal" */
     mungspaces(buf);             /* strip trailing spaces */
     if (*buf) {
         *buf = lowc(*buf); /* override capitalization */

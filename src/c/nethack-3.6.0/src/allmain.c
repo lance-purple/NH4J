@@ -495,7 +495,7 @@ stop_occupation()
         if (!maybe_finished_meal(TRUE))
             You("stop %s.", occtxt);
         occupation = 0;
-        context.botl = 1; /* in case u.uhs changed */
+        context.botl = 1; /* in case hungerState changed */
         nomul(0);
         pushch(0);
     }

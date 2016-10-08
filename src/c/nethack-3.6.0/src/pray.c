@@ -173,7 +173,7 @@ in_trouble()
         return TROUBLE_LAVA;
     if (Sick)
         return TROUBLE_SICK;
-    if (u.uhs >= WEAK)
+    if (currentHungerState() >= WEAK)
         return TROUBLE_STARVING;
     if (region_danger())
         return TROUBLE_REGION;
@@ -238,7 +238,7 @@ in_trouble()
             return TROUBLE_POISONED;
     if (Wounded_legs && !u.usteed)
         return TROUBLE_WOUNDED_LEGS;
-    if (u.uhs >= HUNGRY)
+    if (currentHungerState() >= HUNGRY)
         return TROUBLE_HUNGRY;
     if (HStun & TIMEOUT)
         return TROUBLE_STUNNED;

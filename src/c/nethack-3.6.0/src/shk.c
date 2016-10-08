@@ -3123,8 +3123,8 @@ boolean shk_buying;
     switch (obj->oclass) {
     case FOOD_CLASS:
         /* simpler hunger check, (2-4)*cost */
-        if (u.uhs >= HUNGRY && !shk_buying)
-            tmp *= (long) u.uhs;
+        if (currentHungerState() >= HUNGRY && !shk_buying)
+            tmp *= (long) currentHungerState();
         if (obj->oeaten)
             tmp = 0L;
         break;

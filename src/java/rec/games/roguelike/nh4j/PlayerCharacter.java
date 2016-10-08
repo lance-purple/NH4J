@@ -44,6 +44,7 @@ public class PlayerCharacter {
 	private static NHAttributeSet attributesAsMonster = new NHAttributeSet();
 	private static NHAttributeSet maximumAttributesAsMonster = new NHAttributeSet();
 
+	private static HungerState currentHungerState = HungerState.NOT_HUNGRY;
 	private static int currentNutrition;
 	
 	public static int currentDungeonNumber() {
@@ -356,6 +357,14 @@ public class PlayerCharacter {
 
 	public static final void setCurrentNutrition(int n) {
 		currentNutrition = n;
+	}
+
+	public static final int currentHungerState() {
+	    return (null != currentHungerState) ? currentHungerState.key() : 0;	
+	}
+
+	public static final void setCurrentHungerState(int key) {
+		currentHungerState = HungerState.byKey(key);
 	}
 
 }

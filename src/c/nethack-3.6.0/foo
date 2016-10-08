@@ -1,0 +1,1 @@
+vi src/allmain.c src/apply.c src/botl.c src/cmd.c src/eat.c src/potion.c src/pray.c src/shk.c

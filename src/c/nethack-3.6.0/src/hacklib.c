@@ -800,6 +800,12 @@ int currentNutrition() {
     return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
 } 
 
+int currentHungerState() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "currentHungerState", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+} 
+
 void setCurrentNutrition(n) int n; {
     jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
     jmethodID method = getStaticMethod(you_class, "setCurrentNutrition", "(I)V");
@@ -812,6 +818,12 @@ void increaseCurrentNutrition(n) int n; {
 
 void decreaseCurrentNutrition(n) int n; {
     setCurrentNutrition(currentNutrition() - n);
+}
+
+void setCurrentHungerState(s) int s; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setCurrentHungerState", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, s);
 }
 
 /* square of euclidean distance from pt to your current position */
