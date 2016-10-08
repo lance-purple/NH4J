@@ -347,8 +347,9 @@ boolean resuming;
                         if (++multi == 0) { /* finished yet? */
                             unmul((char *) 0);
                             /* if unmul caused a level change, take it now */
-                            if (u.utotype)
+                            if (0 != typeOfLevelYouWereSentTo()) {
                                 deferred_goto();
+                            }
                         }
                     }
                 }
@@ -464,8 +465,9 @@ boolean resuming;
 #endif
             rhack((char *) 0);
         }
-        if (u.utotype)       /* change dungeon level */
+        if (0 != typeOfLevelYouWereSentTo()) {       /* change dungeon level */
             deferred_goto(); /* after rhack() */
+        }
         /* !context.move here: multiple movement command stopped */
         else if (flags.time && (!context.move || !context.mv))
             context.botl = 1;

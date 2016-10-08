@@ -10,6 +10,7 @@ public class PlayerCharacter {
 
 	private static int sentToDungeonNumber;
 	private static int sentToDungeonLevel;
+	private static int typeOfLevelYouWereSentTo;
 	
 	private static int currentX;
 	private static int currentY;
@@ -82,6 +83,13 @@ public class PlayerCharacter {
 		sentToDungeonLevel = x;
 	}
 
+	public static int typeOfLevelYouWereSentTo() {
+		return typeOfLevelYouWereSentTo;
+	}	
+
+	public static void setTypeOfLevelYouWereSentTo(int x) {
+		typeOfLevelYouWereSentTo = x;
+	}
 
 	public static int currentX() {
 		return currentX;

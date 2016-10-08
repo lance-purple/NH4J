@@ -635,7 +635,7 @@ movemon()
 
     for (mtmp = fmon; mtmp; mtmp = nmtmp) {
         /* end monster movement early if hero is flagged to leave the level */
-        if (u.utotype
+        if ((0 != typeOfLevelYouWereSentTo())
 #ifdef SAFERHANGUP
             /* or if the program has lost contact with the user */
             || program_state.done_hup
@@ -719,7 +719,7 @@ movemon()
     dmonsfree();
 
     /* a monster may have levteleported player -dlc */
-    if (u.utotype) {
+    if (0 != typeOfLevelYouWereSentTo()) {
         deferred_goto();
         /* changed levels, so these monsters are dormant */
         somebody_can_move = FALSE;

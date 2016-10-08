@@ -609,7 +609,7 @@ u_init()
     u.mh = u.mhmax = u.mtimedone = 0;
     setCurrentDungeonNumber(0);
     setPreviousDungeonNumber(0);
-    u.utotype = 0;
+    setTypeOfLevelYouWereSentTo(0);
 #endif /* 0 */
 
     setCurrentDungeonLevel(1);

@@ -811,8 +811,9 @@ level_tele()
     schedule_goto(&newlevel, FALSE, FALSE, 0, (char *) 0, (char *) 0);
     /* in case player just read a scroll and is about to be asked to
        call it something, we can't defer until the end of the turn */
-    if (u.utotype && !context.mon_moving)
+    if ((0 != typeOfLevelYouWereSentTo()) && !context.mon_moving) {
         deferred_goto();
+    }
 }
 
 void
