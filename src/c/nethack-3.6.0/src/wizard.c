@@ -462,7 +462,7 @@ struct monst *mcast;
         count = msummon((struct monst *) 0); /* summons like WoY */
     } else {
         count = 0;
-        tmp = (u.ulevel > 3) ? u.ulevel / 3 : 1; /* just in case -- rph */
+        tmp = (currentExperienceLevel() > 3) ? currentExperienceLevel() / 3 : 1; /* just in case -- rph */
         /* if we don't have a casting monster, the nasties appear around you
          */
         bypos.x = currentX();

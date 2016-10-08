@@ -220,24 +220,24 @@ boolean resuming;
                     } else if (u.uhp < u.uhpmax
                                && (wtcap < MOD_ENCUMBER || (! youMoved())
                                    || Regeneration)) {
-                        if (u.ulevel > 9 && !(moves % 3)) {
+                        if (currentExperienceLevel() > 9 && !(moves % 3)) {
                             int heal, Con = (int) ACURR(A_CON);
 
                             if (Con <= 12) {
                                 heal = 1;
                             } else {
                                 heal = rnd(Con);
-                                if (heal > u.ulevel - 9)
-                                    heal = u.ulevel - 9;
+                                if (heal > currentExperienceLevel() - 9)
+                                    heal = currentExperienceLevel() - 9;
                             }
                             context.botl = 1;
                             u.uhp += heal;
                             if (u.uhp > u.uhpmax)
                                 u.uhp = u.uhpmax;
                         } else if (Regeneration
-                                   || (u.ulevel <= 9
+                                   || (currentExperienceLevel() <= 9
                                        && !(moves
-                                            % ((MAXULEV + 12) / (u.ulevel + 2)
+                                            % ((MAXULEV + 12) / (currentExperienceLevel() + 2)
                                                + 1)))) {
                             context.botl = 1;
                             u.uhp++;
@@ -262,7 +262,7 @@ boolean resuming;
 
                     if ((u.uen < u.uenmax)
                         && ((wtcap < MOD_ENCUMBER
-                             && (!(moves % ((MAXULEV + 8 - u.ulevel)
+                             && (!(moves % ((MAXULEV + 8 - currentExperienceLevel())
                                             * (Role_if(PM_WIZARD) ? 3 : 4)
                                             / 6)))) || Energy_regeneration)) {
                         u.uen += rn1(

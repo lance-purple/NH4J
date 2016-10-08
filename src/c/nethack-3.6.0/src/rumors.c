@@ -478,7 +478,7 @@ doconsult(oracl)
 struct monst *oracl;
 {
     long umoney;
-    int u_pay, minor_cost = 50, major_cost = 500 + 50 * u.ulevel;
+    int u_pay, minor_cost = 50, major_cost = 500 + 50 * currentExperienceLevel();
     int add_xpts;
     char qbuf[QBUFSZ];
 

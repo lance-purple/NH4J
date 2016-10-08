@@ -44,7 +44,7 @@ newpw()
 {
     int en = 0, enrnd, enfix;
 
-    if (u.ulevel == 0) {
+    if (currentExperienceLevel() == 0) {
         en = urole.enadv.infix + urace.enadv.infix;
         if (urole.enadv.inrnd > 0)
             en += rnd(urole.enadv.inrnd);
@@ -52,7 +52,7 @@ newpw()
             en += rnd(urace.enadv.inrnd);
     } else {
         enrnd = (int) ACURR(A_WIS) / 2;
-        if (u.ulevel < urole.xlev) {
+        if (currentExperienceLevel() < urole.xlev) {
             enrnd += urole.enadv.lornd + urace.enadv.lornd;
             enfix = urole.enadv.lofix + urace.enadv.lofix;
         } else {
@@ -63,8 +63,8 @@ newpw()
     }
     if (en <= 0)
         en = 1;
-    if (u.ulevel < MAXULEV)
-        u.ueninc[u.ulevel] = (xchar) en;
+    if (currentExperienceLevel() < MAXULEV)
+        u.ueninc[currentExperienceLevel()] = (xchar) en;
     return en;
 }
 
@@ -195,10 +195,11 @@ const char *drainer; /* cause of death, if drain should be fatal */
     else if (resists_drli(&youmonst))
         return;
 
-    if (u.ulevel > 1) {
-        pline("%s level %d.", Goodbye(), u.ulevel--);
+    if (currentExperienceLevel() > 1) {
+        pline("%s level %d.", Goodbye(), currentExperienceLevel());
+        setCurrentExperienceLevel(currentExperienceLevel() - 1);
         /* remove intrinsic abilities */
-        adjabil(u.ulevel + 1, u.ulevel);
+        adjabil(currentExperienceLevel() + 1, currentExperienceLevel());
         reset_rndmonst(NON_PM); /* new monster selection */
     } else {
         if (drainer) {
@@ -210,7 +211,7 @@ const char *drainer; /* cause of death, if drain should be fatal */
         /* no drainer or lifesaved */
         u.uexp = 0;
     }
-    num = (int) u.uhpinc[u.ulevel];
+    num = (int) u.uhpinc[currentExperienceLevel()];
     u.uhpmax -= num;
     if (u.uhpmax < 1)
         u.uhpmax = 1;
@@ -220,7 +221,7 @@ const char *drainer; /* cause of death, if drain should be fatal */
     else if (u.uhp > u.uhpmax)
         u.uhp = u.uhpmax;
 
-    num = (int) u.ueninc[u.ulevel];
+    num = (int) u.ueninc[currentExperienceLevel()];
     u.uenmax -= num;
     if (u.uenmax < 0)
         u.uenmax = 0;
@@ -231,7 +232,7 @@ const char *drainer; /* cause of death, if drain should be fatal */
         u.uen = u.uenmax;
 
     if (u.uexp > 0)
-        u.uexp = newuexp(u.ulevel) - 1;
+        u.uexp = newuexp(currentExperienceLevel()) - 1;
 
     if (Upolyd) {
         num = monhp_per_lvl(&youmonst);
@@ -253,7 +254,7 @@ const char *drainer; /* cause of death, if drain should be fatal */
 void
 newexplevel()
 {
-    if (u.ulevel < MAXULEV && u.uexp >= newuexp(u.ulevel))
+    if (currentExperienceLevel() < MAXULEV && u.uexp >= newuexp(currentExperienceLevel()))
         pluslvl(TRUE);
 }
 
@@ -283,21 +284,21 @@ boolean incr; /* true iff via incremental experience growth */
     u.uen += eninc;
 
     /* increase level (unless already maxxed) */
-    if (u.ulevel < MAXULEV) {
+    if (currentExperienceLevel() < MAXULEV) {
         /* increase experience points to reflect new level */
         if (incr) {
-            long tmp = newuexp(u.ulevel + 1);
+            long tmp = newuexp(currentExperienceLevel() + 1);
             if (u.uexp >= tmp)
                 u.uexp = tmp - 1;
         } else {
-            u.uexp = newuexp(u.ulevel);
+            u.uexp = newuexp(currentExperienceLevel());
         }
-        ++u.ulevel;
-        if (highestExperienceLevelSoFar() < u.ulevel) {
-            setHighestExperienceLevelSoFar(u.ulevel);
+        setCurrentExperienceLevel(currentExperienceLevel() + 1);
+        if (highestExperienceLevelSoFar() < currentExperienceLevel()) {
+            setHighestExperienceLevelSoFar(currentExperienceLevel());
         }
-        pline("Welcome to experience level %d.", u.ulevel);
-        adjabil(u.ulevel - 1, u.ulevel); /* give new intrinsics */
+        pline("Welcome to experience level %d.", currentExperienceLevel());
+        adjabil(currentExperienceLevel() - 1, currentExperienceLevel()); /* give new intrinsics */
         reset_rndmonst(NON_PM);          /* new monster selection */
     }
     context.botl = 1;
@@ -312,8 +313,8 @@ boolean gaining; /* gaining XP via potion vs setting XP for polyself */
 {
     long minexp, maxexp, diff, factor, result;
 
-    minexp = (u.ulevel == 1) ? 0L : newuexp(u.ulevel - 1);
-    maxexp = newuexp(u.ulevel);
+    minexp = (currentExperienceLevel() == 1) ? 0L : newuexp(currentExperienceLevel() - 1);
+    maxexp = newuexp(currentExperienceLevel());
     diff = maxexp - minexp, factor = 1L;
     /* make sure that `diff' is an argument which rn2() can handle */
     while (diff >= (long) LARGEST_INT)
@@ -323,7 +324,7 @@ boolean gaining; /* gaining XP via potion vs setting XP for polyself */
        points rather than to threshold needed to reach the current
        level; otherwise blessed potions of gain level can result
        in lowering the experience points instead of raising them */
-    if (u.ulevel == MAXULEV && gaining) {
+    if (currentExperienceLevel() == MAXULEV && gaining) {
         result += (u.uexp - minexp);
         /* avoid wrapping (over 400 blessed potions needed for that...) */
         if (result < u.uexp)

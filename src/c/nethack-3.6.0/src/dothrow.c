@@ -1364,7 +1364,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
      * Distance and monster size affect chance to hit.
      */
     tmp = -1 + Luck + find_mac(mon) + u.uhitinc
-          + maybe_polyd(youmonst.data->mlevel, u.ulevel);
+          + maybe_polyd(youmonst.data->mlevel, currentExperienceLevel());
     if (ACURR(A_DEX) < 4)
         tmp -= 3;
     else if (ACURR(A_DEX) < 6)

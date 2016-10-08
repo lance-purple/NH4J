@@ -628,13 +628,13 @@ u_init()
     u.ulycn = NON_PM;
     set_uasmon();
 
-    u.ulevel = 0; /* set up some of the initial attributes */
+    setCurrentExperienceLevel(0); /* set up some of the initial attributes */
     u.uhp = u.uhpmax = newhp();
     u.uen = u.uenmax = newpw();
     u.uspellprot = 0;
     adjabil(0, 1);
     setHighestExperienceLevelSoFar(1);
-    u.ulevel = 1;
+    setCurrentExperienceLevel(1);
 
     init_uhunger();
     for (i = 0; i <= MAXSPELL; i++)

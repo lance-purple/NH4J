@@ -72,7 +72,7 @@ dosit()
         obj = level.objects[currentX()][currentY()];
         if (youmonst.data->mlet == S_DRAGON && obj->oclass == COIN_CLASS) {
             You("coil up around your %shoard.",
-                (obj->quan + money_cnt(invent) < u.ulevel * 1000) ? "meager "
+                (obj->quan + money_cnt(invent) < currentExperienceLevel() * 1000) ? "meager "
                                                                   : "");
         } else {
             You("sit on %s.", the(xname(obj)));

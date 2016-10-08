@@ -111,11 +111,11 @@ boolean only_if_injured; /* determines whether maxhp <= 5 matters */
        (golden glow cuts off at 11+5*lvl, nurse interaction at 25*lvl; this
        ought to use monster hit dice--and a smaller multiplier--rather than
        ulevel when polymorphed, but polyself doesn't maintain that) */
-    hplim = 15 * u.ulevel;
+    hplim = 15 * currentExperienceLevel();
     if (maxhp > hplim)
         maxhp = hplim;
     /* 7 used to be the unconditional divisor */
-    switch (xlev_to_rank(u.ulevel)) { /* maps 1..30 into 0..8 */
+    switch (xlev_to_rank(currentExperienceLevel())) { /* maps 1..30 into 0..8 */
     case 0:
     case 1:
         divisor = 5;
@@ -369,7 +369,7 @@ int trouble;
                 u.mhmax = 5 + 1;
             u.mh = u.mhmax;
         }
-        if (u.uhpmax < u.ulevel * 5 + 11)
+        if (u.uhpmax < currentExperienceLevel() * 5 + 11)
             u.uhpmax += rnd(5);
         if (u.uhpmax <= 5)
             u.uhpmax = 5 + 1;
@@ -1034,7 +1034,7 @@ aligntyp g_align;
                 You("are surrounded by %s glow.", an(hcolor(NH_GOLDEN)));
             /* if any levels have been lost (and not yet regained),
                treat this effect like blessed full healing */
-            if (u.ulevel < highestExperienceLevelSoFar()) {
+            if (currentExperienceLevel() < highestExperienceLevelSoFar()) {
                 setHighestExperienceLevelSoFar(highestExperienceLevelSoFar() - 1); /* see potion.c */
                 pluslvl(FALSE);
             } else {
@@ -1114,7 +1114,7 @@ aligntyp g_align;
             } /* else FALLTHRU */
         case 6: {
             struct obj *otmp;
-            int sp_no, trycnt = u.ulevel + 1;
+            int sp_no, trycnt = currentExperienceLevel() + 1;
 
             /* not yet known spells given preference over already known ones
              */
@@ -1574,7 +1574,7 @@ dosacrifice()
                 consume_offering(otmp);
                 You("sense a conflict between %s and %s.", u_gname(),
                     a_gname());
-                if (rn2(8 + u.ulevel) > 5) {
+                if (rn2(8 + currentExperienceLevel()) > 5) {
                     struct monst *pri;
                     You_feel("the power of %s increase.", u_gname());
                     exercise(A_WIS, TRUE);
@@ -1593,7 +1593,7 @@ dosacrifice()
                                                ? NH_BLACK
                                                : (const char *) "gray"));
 
-                    if (rnl(u.ulevel) > 6 && u.ualign.record > 0
+                    if (rnl(currentExperienceLevel()) > 6 && u.ualign.record > 0
                         && rnd(u.ualign.record) > (3 * ALIGNLIM) / 4)
                         summon_minion(altaralign, TRUE);
                     /* anger priest; test handles bones files */
@@ -1605,7 +1605,7 @@ dosacrifice()
                           u_gname());
                     change_luck(-1);
                     exercise(A_WIS, FALSE);
-                    if (rnl(u.ulevel) > 6 && u.ualign.record > 0
+                    if (rnl(currentExperienceLevel()) > 6 && u.ualign.record > 0
                         && rnd(u.ualign.record) > (7 * ALIGNLIM) / 8)
                         summon_minion(altaralign, TRUE);
                 }
@@ -1676,7 +1676,7 @@ dosacrifice()
             /* you were already in pretty good standing */
             /* The player can gain an artifact */
             /* The chance goes down as the number of artifacts goes up */
-            if (u.ulevel > 2 && u.uluck >= 0
+            if (currentExperienceLevel() > 2 && u.uluck >= 0
                 && !rn2(10 + (2 * u.ugifts * nartifacts))) {
                 otmp = mk_artifact((struct obj *) 0, a_align(currentX(), currentY()));
                 if (otmp) {
@@ -1911,7 +1911,7 @@ doturn()
     exercise(A_WIS, TRUE);
 
     /* note: does not perform unturn_dead() on victims' inventories */
-    range = BOLT_LIM + (u.ulevel / 5); /* 5 to 11 */
+    range = BOLT_LIM + (currentExperienceLevel() / 5); /* 5 to 11 */
     range *= range;
     once = 0;
     for (mtmp = fmon; mtmp; mtmp = mtmp2) {
@@ -1924,7 +1924,7 @@ doturn()
 
         if (!mtmp->mpeaceful
             && (is_undead(mtmp->data) || is_vampshifter(mtmp)
-                || (is_demon(mtmp->data) && (u.ulevel > (MAXULEV / 2))))) {
+                || (is_demon(mtmp->data) && (currentExperienceLevel() > (MAXULEV / 2))))) {
             mtmp->msleeping = 0;
             if (Confusion) {
                 if (!once++)
@@ -1948,7 +1948,7 @@ doturn()
                 case S_MUMMY:
                     xlev += 2; /*FALLTHRU*/
                 case S_ZOMBIE:
-                    if (u.ulevel >= xlev && !resist(mtmp, '\0', 0, NOTELL)) {
+                    if (currentExperienceLevel() >= xlev && !resist(mtmp, '\0', 0, NOTELL)) {
                         if (u.ualign.type == A_CHAOTIC) {
                             mtmp->mpeaceful = 1;
                             set_malign(mtmp);

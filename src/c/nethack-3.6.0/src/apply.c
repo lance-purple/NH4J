@@ -804,7 +804,7 @@ struct obj *obj;
                     else
                         pline("Yikes!  You've frozen yourself!");
                     if (!Hallucination || !rn2(4)) {
-                        nomul(-rnd(MAXULEV + 6 - u.ulevel));
+                        nomul(-rnd(MAXULEV + 6 - currentExperienceLevel()));
                         multi_reason = "gazing into a mirror";
                     }
                     nomovemsg = 0; /* default, "you can move again" */

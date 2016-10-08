@@ -357,7 +357,7 @@ register struct obj *obj;
 
     /* Don't grant Excalibur when there's more than one object.  */
     /* (quantity could be > 1 if merged daggers got polymorphed) */
-    if (obj->otyp == LONG_SWORD && obj->quan == 1L && u.ulevel >= 5 && !rn2(6)
+    if (obj->otyp == LONG_SWORD && obj->quan == 1L && currentExperienceLevel() >= 5 && !rn2(6)
         && !obj->oartifact
         && !exist_artifact(LONG_SWORD, artiname(ART_EXCALIBUR))) {
         if (u.ualign.type != A_LAWFUL) {

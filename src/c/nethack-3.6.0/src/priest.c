@@ -591,7 +591,7 @@ register struct monst *priest;
             verbalize("Thou shalt regret thine action!");
             if (coaligned)
                 adjalign(-1);
-        } else if (offer < (u.ulevel * 200)) {
+        } else if (offer < (currentExperienceLevel() * 200)) {
             if (money_cnt(invent) > (offer * 2L)) {
                 verbalize("Cheapskate.");
             } else {
@@ -599,7 +599,7 @@ register struct monst *priest;
                 /* give player some token */
                 exercise(A_WIS, TRUE);
             }
-        } else if (offer < (u.ulevel * 400)) {
+        } else if (offer < (currentExperienceLevel() * 400)) {
             verbalize("Thou art indeed a pious individual.");
             if (money_cnt(invent) < (offer * 2L)) {
                 if (coaligned && u.ualign.record <= ALGN_SINNED)
@@ -607,7 +607,7 @@ register struct monst *priest;
                 verbalize("I bestow upon thee a blessing.");
                 incr_itimeout(&HClairvoyant, rn1(500, 500));
             }
-        } else if (offer < (u.ulevel * 600)
+        } else if (offer < (currentExperienceLevel() * 600)
                    /* u.ublessed is only active when Protection is
                       enabled via something other than worn gear
                       (theft by gremlin clears the intrinsic but not

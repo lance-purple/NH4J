@@ -2523,7 +2523,7 @@ wake_nearby()
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
         if (DEADMONSTER(mtmp))
             continue;
-        if (distanceSquaredToYou(mtmp->mx, mtmp->my) < u.ulevel * 20) {
+        if (distanceSquaredToYou(mtmp->mx, mtmp->my) < currentExperienceLevel() * 20) {
             mtmp->msleeping = 0;
             if (!unique_corpstat(mtmp->data))
                 mtmp->mstrategy &= ~STRAT_WAITMASK;

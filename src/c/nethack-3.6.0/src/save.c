@@ -339,6 +339,7 @@ register int fd, mode;
         write_int(fd, yourAttrMaxAsMonster(i));
     }
 
+    write_int(fd, currentExperienceLevel());
     write_int(fd, highestExperienceLevelSoFar());
 
     bwrite(fd, yyyymmddhhmmss(ubirthday), 14);

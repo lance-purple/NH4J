@@ -433,7 +433,7 @@ make_bones:
         m_dowear(mtmp, TRUE);
     }
     if (mtmp) {
-        mtmp->m_lev = (u.ulevel ? u.ulevel : 1);
+        mtmp->m_lev = (currentExperienceLevel() ? currentExperienceLevel() : 1);
         mtmp->mhp = mtmp->mhpmax = u.uhpmax;
         mtmp->female = flags.female;
         mtmp->msleeping = 1;

@@ -1969,7 +1969,7 @@ register struct monst *shkp; /* if angry, impose a surcharge */
     }
     if (uarmh && uarmh->otyp == DUNCE_CAP)
         multiplier *= 4L, divisor *= 3L;
-    else if ((Role_if(PM_TOURIST) && u.ulevel < (MAXULEV / 2))
+    else if ((Role_if(PM_TOURIST) && currentExperienceLevel() < (MAXULEV / 2))
              || (uarmu && !uarm && !uarmc)) /* touristy shirt visible */
         multiplier *= 4L, divisor *= 3L;
 
@@ -2142,7 +2142,7 @@ register struct monst *shkp;
 
     if (uarmh && uarmh->otyp == DUNCE_CAP)
         divisor *= 3L;
-    else if ((Role_if(PM_TOURIST) && u.ulevel < (MAXULEV / 2))
+    else if ((Role_if(PM_TOURIST) && currentExperienceLevel() < (MAXULEV / 2))
              || (uarmu && !uarm && !uarmc)) /* touristy shirt visible */
         divisor *= 3L;
     else

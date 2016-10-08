@@ -375,7 +375,7 @@ register struct obj *gold;
                     umoney = money_cnt(invent);
                     if (value
                         > goldreqd
-                              + (umoney + u.ulevel * rn2(5)) / ACURR(A_CHA))
+                              + (umoney + currentExperienceLevel() * rn2(5)) / ACURR(A_CHA))
                         mtmp->mpeaceful = TRUE;
                 }
             }

@@ -1324,7 +1324,7 @@ unsigned trflags;
            hero with magic resistance takes damage instead;
            possibly non-intuitive but useful for play balance */
         if (!Antimagic) {
-            drain_en(rnd(u.ulevel) + 1);
+            drain_en(rnd(currentExperienceLevel()) + 1);
         } else {
             int dmgval2 = rnd(4), hp = Upolyd ? u.mh : u.uhp;
 
@@ -3017,7 +3017,7 @@ struct obj *box; /* null for floor trap */
             u.mhmax -= rn2(min(u.mhmax, num + 1)), context.botl = 1;
     } else {
         num = d(2, 4);
-        if (u.uhpmax > u.ulevel)
+        if (u.uhpmax > currentExperienceLevel())
             u.uhpmax -= rn2(min(u.uhpmax, num + 1)), context.botl = 1;
     }
     if (!num)
@@ -3676,7 +3676,7 @@ int n;
         You_feel("momentarily lethargic.");
     } else {
         /* throttle further loss a bit when there's not much left to lose */
-        if (n > u.uenmax || n > u.ulevel)
+        if (n > u.uenmax || n > currentExperienceLevel())
             n = rnd(n);
 
         You_feel("your magical energy drain away%c", (n > u.uen) ? '!' : '.');
@@ -3736,7 +3736,7 @@ struct trap *ttmp;
     if (ttmp && ttmp->madeby_u)
         chance--;
     if (Role_if(PM_ROGUE)) {
-        if (rn2(2 * MAXULEV) < u.ulevel)
+        if (rn2(2 * MAXULEV) < currentExperienceLevel())
             chance--;
         if (u.uhave.questart && chance > 1)
             chance--;
@@ -4273,7 +4273,7 @@ boolean force;
 
                     if ((otmp->otrapped
                          && (force || (!confused
-                                       && rn2(MAXULEV + 1 - u.ulevel) < 10)))
+                                       && rn2(MAXULEV + 1 - currentExperienceLevel()) < 10)))
                         || (!force && confused && !rn2(3))) {
                         You("find a trap on %s!", the(xname(otmp)));
                         if (!confused)
@@ -4289,7 +4289,7 @@ boolean force;
 
                         if (otmp->otrapped) {
                             exercise(A_DEX, TRUE);
-                            ch = ACURR(A_DEX) + u.ulevel;
+                            ch = ACURR(A_DEX) + currentExperienceLevel();
                             if (Role_if(PM_ROGUE))
                                 ch *= 2;
                             if (!force && (confused || Fumbling
@@ -4339,14 +4339,14 @@ boolean force;
     }
 
     if ((levl[x][y].doormask & D_TRAPPED
-         && (force || (!confused && rn2(MAXULEV - u.ulevel + 11) < 10)))
+         && (force || (!confused && rn2(MAXULEV - currentExperienceLevel() + 11) < 10)))
         || (!force && confused && !rn2(3))) {
         You("find a trap on the door!");
         exercise(A_WIS, TRUE);
         if (ynq("Disarm it?") != 'y')
             return 1;
         if (levl[x][y].doormask & D_TRAPPED) {
-            ch = 15 + (Role_if(PM_ROGUE) ? u.ulevel * 3 : u.ulevel);
+            ch = 15 + (Role_if(PM_ROGUE) ? currentExperienceLevel() * 3 : currentExperienceLevel());
             exercise(A_DEX, TRUE);
             if (!force && (confused || Fumbling
                            || rnd(75 + level_difficulty() / 2) > ch)) {

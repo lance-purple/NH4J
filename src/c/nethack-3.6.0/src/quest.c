@@ -127,7 +127,7 @@ ok_to_quest()
 STATIC_OVL boolean
 not_capable()
 {
-    return (boolean) (u.ulevel < MIN_QUEST_LEVEL);
+    return (boolean) (currentExperienceLevel() < MIN_QUEST_LEVEL);
 }
 
 STATIC_OVL int

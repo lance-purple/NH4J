@@ -542,7 +542,7 @@ ustatusline()
                                                   ? "nominally "
                                                   : "insufficiently ",
           align_str(u.ualign.type),
-          Upolyd ? mons[u.umonnum].mlevel : u.ulevel, Upolyd ? u.mh : u.uhp,
+          Upolyd ? mons[u.umonnum].mlevel : currentExperienceLevel(), Upolyd ? u.mh : u.uhp,
           Upolyd ? u.mhmax : u.uhpmax, u.uac, info);
 }
 

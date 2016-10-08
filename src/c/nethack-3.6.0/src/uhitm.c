@@ -246,7 +246,7 @@ int *attk_count, *role_roll_penalty;
     *role_roll_penalty = 0; /* default is `none' */
 
     tmp = 1 + Luck + abon() + find_mac(mtmp) + u.uhitinc
-          + maybe_polyd(youmonst.data->mlevel, u.ulevel);
+          + maybe_polyd(youmonst.data->mlevel, currentExperienceLevel());
 
     /* some actions should occur only once during multiple attacks */
     if (!(*attk_count)++) {
@@ -277,7 +277,7 @@ int *attk_count, *role_roll_penalty;
         if (uarm)
             tmp -= (*role_roll_penalty = urole.spelarmr);
         else if (!uwep && !uarms)
-            tmp += (u.ulevel / 3) + 2;
+            tmp += (currentExperienceLevel() / 3) + 2;
     }
     if (is_orc(mtmp->data)
         && maybe_polyd(is_elf(youmonst.data), Race_if(PM_ELF)))
@@ -649,7 +649,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                            /* multi-shot throwing is too powerful here */
                            && hand_to_hand) {
                     You("strike %s from behind!", mon_nam(mon));
-                    tmp += rnd(u.ulevel);
+                    tmp += rnd(currentExperienceLevel());
                     hittxt = TRUE;
                 } else if (dieroll == 2 && obj == uwep
                            && obj->oclass == WEAPON_CLASS

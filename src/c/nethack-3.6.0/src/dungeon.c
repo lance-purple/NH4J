@@ -1747,7 +1747,7 @@ level_difficulty()
     int res;
 
     if (areYouInEndgame()) {
-        res = depth(&sanctum_level) + u.ulevel / 2;
+        res = depth(&sanctum_level) + currentExperienceLevel() / 2;
     } else if (u.uhave.amulet) {
         res = deepest_lev_reached(FALSE);
     } else {

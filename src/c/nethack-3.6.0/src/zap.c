@@ -2860,7 +2860,7 @@ struct obj *obj;
         if (otyp == WAN_DIGGING || otyp == SPE_DIG)
             zap_dig();
         else if (otyp >= SPE_MAGIC_MISSILE && otyp <= SPE_FINGER_OF_DEATH)
-            buzz(otyp - SPE_MAGIC_MISSILE + 10, u.ulevel / 2 + 1, currentX(), currentY(),
+            buzz(otyp - SPE_MAGIC_MISSILE + 10, currentExperienceLevel() / 2 + 1, currentX(), currentY(),
                  directionX(), directionY());
         else if (otyp >= WAN_MAGIC_MISSILE && otyp <= WAN_LIGHTNING)
             buzz(otyp - WAN_MAGIC_MISSILE,
@@ -2891,11 +2891,11 @@ int dmg; /* base amount to be adjusted by bonus or penalty */
            (if dmg is 0 for some reason, we're careful to leave it there) */
         if (dmg > 1)
             dmg = (dmg <= 3) ? 1 : dmg - 3;
-    } else if (intell <= 13 || u.ulevel < 5)
+    } else if (intell <= 13 || currentExperienceLevel() < 5)
         ; /* no bonus or penalty; dmg remains same */
     else if (intell <= 18)
         dmg += 1;
-    else if (intell <= 24 || u.ulevel < 14)
+    else if (intell <= 24 || currentExperienceLevel() < 14)
         dmg += 2;
     else
         dmg += 3; /* Int 25 */
@@ -4829,7 +4829,7 @@ int damage, tell;
         alev = 5;
         break;
     default:
-        alev = u.ulevel;
+        alev = currentExperienceLevel();
         break; /* spell */
     }
     /* defense level */
@@ -4837,7 +4837,7 @@ int damage, tell;
     if (dlev > 50)
         dlev = 50;
     else if (dlev < 1)
-        dlev = is_mplayer(mtmp->data) ? u.ulevel : 1;
+        dlev = is_mplayer(mtmp->data) ? currentExperienceLevel() : 1;
 
     resisted = rn2(100 + alev - dlev) < mtmp->data->mr;
     if (resisted) {

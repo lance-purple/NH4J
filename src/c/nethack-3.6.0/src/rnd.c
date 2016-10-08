@@ -111,14 +111,14 @@ register int n, x;
     return tmp; /* Alea iacta est. -- J.C. */
 }
 
-/* 1 <= rne(x) <= max(u.ulevel/3,5) */
+/* 1 <= rne(x) <= max(currentExperienceLevel()/3,5) */
 int
 rne(x)
 register int x;
 {
     register int tmp, utmp;
 
-    utmp = (u.ulevel < 15) ? 5 : u.ulevel / 3;
+    utmp = (currentExperienceLevel() < 15) ? 5 : currentExperienceLevel() / 3;
     tmp = 1;
     while (tmp < utmp && !rn2(x))
         tmp++;
@@ -128,7 +128,7 @@ register int x;
      *  tmp = 1;
      *  while (!rn2(x))
      *    tmp++;
-     *  return min(tmp, (u.ulevel < 15) ? 5 : u.ulevel / 3);
+     *  return min(tmp, (currentExperienceLevel() < 15) ? 5 : currentExperienceLevel() / 3);
      * which is clearer but less efficient and stands a vanishingly
      * small chance of overflowing tmp
      */

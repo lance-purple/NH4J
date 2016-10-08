@@ -700,28 +700,28 @@ wiz_level_change(VOID_ARGS)
         pline1(Never_mind);
         return 0;
     }
-    if (newlevel == u.ulevel) {
+    if (newlevel == currentExperienceLevel()) {
         You("are already that experienced.");
-    } else if (newlevel < u.ulevel) {
-        if (u.ulevel == 1) {
+    } else if (newlevel < currentExperienceLevel()) {
+        if (currentExperienceLevel() == 1) {
             You("are already as inexperienced as you can get.");
             return 0;
         }
         if (newlevel < 1)
             newlevel = 1;
-        while (u.ulevel > newlevel)
+        while (currentExperienceLevel() > newlevel)
             losexp("#levelchange");
     } else {
-        if (u.ulevel >= MAXULEV) {
+        if (currentExperienceLevel() >= MAXULEV) {
             You("are already as experienced as you can get.");
             return 0;
         }
         if (newlevel > MAXULEV)
             newlevel = MAXULEV;
-        while (u.ulevel < newlevel)
+        while (currentExperienceLevel() < newlevel)
             pluslvl(FALSE);
     }
-    setHighestExperienceLevelSoFar(u.ulevel);
+    setHighestExperienceLevelSoFar(currentExperienceLevel());
     return 0;
 }
 
@@ -1387,7 +1387,7 @@ int final;
        to access hero's saved gender-as-human/elf/&c rather than current one */
     innategend = (Upolyd ? u.mfemale : flags.female) ? 1 : 0;
     role_titl = (innategend && urole.name.f) ? urole.name.f : urole.name.m;
-    rank_titl = rank_of(u.ulevel, Role_switch, innategend);
+    rank_titl = rank_of(currentExperienceLevel(), Role_switch, innategend);
 
     putstr(en_win, 0, ""); /* separator after title */
     putstr(en_win, 0, "Background:");
@@ -1421,10 +1421,10 @@ int final;
         Strcpy(buf, "actually "); /* "You are actually a ..." */
     if (!strcmpi(rank_titl, role_titl)) {
         /* omit role when rank title matches it */
-        Sprintf(eos(buf), "%s, level %d %s%s", an(rank_titl), u.ulevel,
+        Sprintf(eos(buf), "%s, level %d %s%s", an(rank_titl), currentExperienceLevel(),
                 tmpbuf, urace.noun);
     } else {
-        Sprintf(eos(buf), "%s, a level %d %s%s %s", an(rank_titl), u.ulevel,
+        Sprintf(eos(buf), "%s, a level %d %s%s %s", an(rank_titl), currentExperienceLevel(),
                 tmpbuf, urace.adj, role_titl);
     }
     you_are(buf, "");

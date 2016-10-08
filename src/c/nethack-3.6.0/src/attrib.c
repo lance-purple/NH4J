@@ -706,7 +706,7 @@ long frommask;
         }
 
     while (abil && abil->ability) {
-        if ((abil->ability == ability) && (u.ulevel >= abil->ulevel))
+        if ((abil->ability == ability) && (currentExperienceLevel() >= abil->ulevel))
             return abil;
         abil++;
     }
@@ -925,7 +925,7 @@ newhp()
 {
     int hp, conplus;
 
-    if (u.ulevel == 0) {
+    if (currentExperienceLevel() == 0) {
         /* Initialize hit points */
         hp = urole.hpadv.infix + urace.hpadv.infix;
         if (urole.hpadv.inrnd > 0)
@@ -939,7 +939,7 @@ newhp()
         }
         /* no Con adjustment for initial hit points */
     } else {
-        if (u.ulevel < urole.xlev) {
+        if (currentExperienceLevel() < urole.xlev) {
             hp = urole.hpadv.lofix + urace.hpadv.lofix;
             if (urole.hpadv.lornd > 0)
                 hp += rnd(urole.hpadv.lornd);
@@ -970,8 +970,8 @@ newhp()
     }
     if (hp <= 0)
         hp = 1;
-    if (u.ulevel < MAXULEV)
-        u.uhpinc[u.ulevel] = (xchar) hp;
+    if (currentExperienceLevel() < MAXULEV)
+        u.uhpinc[currentExperienceLevel()] = (xchar) hp;
     return hp;
 }
 

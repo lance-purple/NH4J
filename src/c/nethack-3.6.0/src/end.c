@@ -700,7 +700,7 @@ STATIC_OVL void
 savelife(how)
 int how;
 {
-    int uhpmin = max(2 * u.ulevel, 10);
+    int uhpmin = max(2 * currentExperienceLevel(), 10);
 
     if (u.uhpmax < uhpmin)
         u.uhpmax = uhpmin;
@@ -1255,7 +1255,7 @@ int how;
     if (!done_stopprint) {
         Sprintf(pbuf,
             "You were level %d with a maximum of %d hit point%s when you %s.",
-                u.ulevel, u.uhpmax, plur(u.uhpmax), ends[how]);
+                currentExperienceLevel(), u.uhpmax, plur(u.uhpmax), ends[how]);
         putstr(endwin, 0, pbuf);
         putstr(endwin, 0, "");
     }

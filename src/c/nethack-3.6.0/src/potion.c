@@ -955,7 +955,7 @@ register struct obj *otmp;
         You_feel("completely healed.");
         healup(400, 4 + 4 * bcsign(otmp), !otmp->cursed, TRUE);
         /* Restore one lost level if blessed */
-        if (otmp->blessed && u.ulevel < highestExperienceLevelSoFar()) {
+        if (otmp->blessed && currentExperienceLevel() < highestExperienceLevelSoFar()) {
             /* when multiple levels have been lost, drinking
                multiple potions will only get half of them back */
             setHighestExperienceLevelSoFar(highestExperienceLevelSoFar() - 1);

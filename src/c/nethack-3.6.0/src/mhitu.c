@@ -1369,7 +1369,7 @@ register struct attack *mattk;
                 u.uhp += rnd(7);
                 if (!rn2(7)) {
                     /* hard upper limit via nurse care: 25 * ulevel */
-                    if (u.uhpmax < 5 * u.ulevel + d(2 * u.ulevel, 10))
+                    if (u.uhpmax < 5 * currentExperienceLevel() + d(2 * currentExperienceLevel(), 10))
                         u.uhpmax++;
                     if (!rn2(13))
                         goaway = TRUE;
@@ -1577,20 +1577,20 @@ register struct attack *mattk;
              * Never reduces hpmax below 1 hit point per level.
              */
             permdmg = rn2(dmg / 2 + 1);
-            if (Upolyd || u.uhpmax > 25 * u.ulevel)
+            if (Upolyd || u.uhpmax > 25 * currentExperienceLevel())
                 permdmg = dmg;
-            else if (u.uhpmax > 10 * u.ulevel)
+            else if (u.uhpmax > 10 * currentExperienceLevel())
                 permdmg += dmg / 2;
-            else if (u.uhpmax > 5 * u.ulevel)
+            else if (u.uhpmax > 5 * currentExperienceLevel())
                 permdmg += dmg / 4;
 
             if (Upolyd) {
                 hpmax_p = &u.mhmax;
                 /* [can't use youmonst.m_lev] */
-                lowerlimit = min((int) youmonst.data->mlevel, u.ulevel);
+                lowerlimit = min((int) youmonst.data->mlevel, currentExperienceLevel());
             } else {
                 hpmax_p = &u.uhpmax;
-                lowerlimit = u.ulevel;
+                lowerlimit = currentExperienceLevel();
             }
             if (*hpmax_p - permdmg > lowerlimit)
                 *hpmax_p -= permdmg;
@@ -1929,7 +1929,7 @@ boolean ufound;
             not_affected = resists_blnd(&youmonst);
             if (!not_affected) {
                 /* sometimes you're affected even if it's invisible */
-                if (mon_visible(mtmp) || (rnd(tmp /= 2) > u.ulevel)) {
+                if (mon_visible(mtmp) || (rnd(tmp /= 2) > currentExperienceLevel())) {
                     You("are blinded by a blast of light!");
                     make_blinded((long) tmp, FALSE);
                     if (!Blind)

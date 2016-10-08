@@ -516,7 +516,7 @@ register struct obj *spellbook;
             } else {
                 /* uncursed - chance to fail */
                 int read_ability =
-                    ACURR(A_INT) + 4 + u.ulevel / 2
+                    ACURR(A_INT) + 4 + currentExperienceLevel() / 2
                     - 2 * objects[booktype].oc_level
                     + ((ublindf && ublindf->otyp == LENSES) ? 2 : 0);
                 /* only wizards know if a spell is too difficult */
@@ -744,13 +744,13 @@ int booktype;
 STATIC_OVL void
 cast_protection()
 {
-    int l = u.ulevel, loglev = 0,
+    int l = currentExperienceLevel(), loglev = 0,
         gain, natac = u.uac + u.uspellprot;
     /* note: u.uspellprot is subtracted when find_ac() factors it into u.uac,
        so adding here factors it back out
        (versions prior to 3.6 had this backwards) */
 
-    /* loglev=log2(u.ulevel)+1 (1..5) */
+    /* loglev=log2(currentExperienceLevel())+1 (1..5) */
     while (l) {
         loglev++;
         l /= 2;
@@ -1023,7 +1023,7 @@ boolean atme;
                     } else {
                         explode(directionX(), directionY(),
                                 pseudo->otyp - SPE_MAGIC_MISSILE + 10,
-                                spell_damage_bonus(u.ulevel / 2 + 1), 0,
+                                spell_damage_bonus(currentExperienceLevel() / 2 + 1), 0,
                                 (pseudo->otyp == SPE_CONE_OF_COLD)
                                    ? EXPL_FROSTY
                                    : EXPL_FIERY);
@@ -1643,7 +1643,7 @@ int spell;
     skill = P_SKILL(spell_skilltype(spellid(spell)));
     skill = max(skill, P_UNSKILLED) - 1; /* unskilled => 0 */
     difficulty =
-        (spellev(spell) - 1) * 4 - ((skill * 6) + (u.ulevel / 3) + 1);
+        (spellev(spell) - 1) * 4 - ((skill * 6) + (currentExperienceLevel() / 3) + 1);
 
     if (difficulty > 0) {
         /* Player is too low level or unskilled. */

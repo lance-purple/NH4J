@@ -101,14 +101,14 @@ register int x, y, n;
 
     cnttmp = cnt;
     debugpline4("init group call <%d,%d>, n=%d, cnt=%d.", x, y, n, cnt);
-    cntdiv = ((u.ulevel < 3) ? 4 : (u.ulevel < 5) ? 2 : 1);
+    cntdiv = ((currentExperienceLevel() < 3) ? 4 : (currentExperienceLevel() < 5) ? 2 : 1);
 #endif
     /* Tuning: cut down on swarming at low character levels [mrs] */
-    cnt /= (u.ulevel < 3) ? 4 : (u.ulevel < 5) ? 2 : 1;
+    cnt /= (currentExperienceLevel() < 3) ? 4 : (currentExperienceLevel() < 5) ? 2 : 1;
 #if defined(__GNUC__) && (defined(HPUX) || defined(DGUX))
     if (cnt != (cnttmp / cntdiv)) {
         pline("cnt=%d using %d, cnttmp=%d, cntdiv=%d", cnt,
-              (u.ulevel < 3) ? 4 : (u.ulevel < 5) ? 2 : 1, cnttmp, cntdiv);
+              (currentExperienceLevel() < 3) ? 4 : (currentExperienceLevel() < 5) ? 2 : 1, cnttmp, cntdiv);
     }
 #endif
     if (!cnt)
@@ -1449,7 +1449,7 @@ rndmonst()
         /* determine the level of the weakest monster to make. */
         minmlev = zlevel / 6;
         /* determine the level of the strongest monster to make. */
-        maxmlev = (zlevel + u.ulevel) / 2;
+        maxmlev = (zlevel + currentExperienceLevel()) / 2;
         upper = areYouOnRogueLevel();
         elemlevel = areYouInEndgame() && !areYouOnAstralLevel();
 
@@ -1583,7 +1583,7 @@ int spc;
         if (mk_gen_ok(first, G_GONE, mask)) {
             /* skew towards lower value monsters at lower exp. levels */
             num -= mons[first].geno & G_FREQ;
-            if (num && adj_lev(&mons[first]) > (u.ulevel * 2)) {
+            if (num && adj_lev(&mons[first]) > (currentExperienceLevel() * 2)) {
                 /* but not when multiple monsters are same level */
                 if (mons[first].mlevel != mons[first + 1].mlevel)
                     num--;
@@ -1624,7 +1624,7 @@ int class;
     return first;
 }
 
-/* adjust strength of monsters based on currentLevel and u.ulevel */
+/* adjust strength of monsters based on currentLevel and currentExperienceLevel() */
 int
 adj_lev(ptr)
 register struct permonst *ptr;
@@ -1649,7 +1649,7 @@ register struct permonst *ptr;
     else
         tmp += (tmp2 / 5); /* else increment 1 per five diff */
 
-    tmp2 = (u.ulevel - ptr->mlevel); /* adjust vs. the player */
+    tmp2 = (currentExperienceLevel() - ptr->mlevel); /* adjust vs. the player */
     if (tmp2 > 0)
         tmp += (tmp2 / 4); /* level as well */
 

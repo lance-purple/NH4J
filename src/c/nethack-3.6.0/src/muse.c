@@ -349,7 +349,7 @@ struct monst *mtmp;
         }
     }
 
-    fraction = u.ulevel < 10 ? 5 : u.ulevel < 14 ? 4 : 3;
+    fraction = currentExperienceLevel() < 10 ? 5 : currentExperienceLevel() < 14 ? 4 : 3;
     if (mtmp->mhp >= mtmp->mhpmax
         || (mtmp->mhp >= 10 && mtmp->mhp * fraction >= mtmp->mhpmax))
         return FALSE;

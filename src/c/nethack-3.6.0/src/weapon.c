@@ -765,7 +765,7 @@ abon()
 
     /* Game tuning kludge: make it a bit easier for a low level character to
      * hit */
-    sbon += (u.ulevel < 3) ? 1 : 0;
+    sbon += (currentExperienceLevel() < 3) ? 1 : 0;
 
     if (dex < 4)
         return (sbon - 3);
@@ -1046,7 +1046,7 @@ enhance_weapon_skill()
             if (eventually_advance > 0) {
                 Sprintf(buf, "(Skill%s flagged by \"*\" may be enhanced %s.)",
                         plur(eventually_advance),
-                        (u.ulevel < MAXULEV)
+                        (currentExperienceLevel() < MAXULEV)
                             ? "when you're more experienced"
                             : "if skill slots become available");
                 add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE, buf,

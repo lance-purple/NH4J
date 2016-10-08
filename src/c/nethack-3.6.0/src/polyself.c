@@ -261,7 +261,7 @@ newman()
 {
     int i, oldlvl, newlvl, hpmax, enmax;
 
-    oldlvl = u.ulevel;
+    oldlvl = currentExperienceLevel();
     newlvl = oldlvl + rn1(5, -2);     /* new = old + {-2,-1,0,+1,+2} */
     if (newlvl > 127 || newlvl < 1) { /* level went below 0? */
         goto dead; /* old level is still intact (in case of lifesaving) */
@@ -280,12 +280,12 @@ newman()
     if (highestExperienceLevelSoFar() < newlvl) {
         setHighestExperienceLevelSoFar(newlvl);
     }
-    u.ulevel = newlvl;
+    setCurrentExperienceLevel(newlvl);
 
     if (sex_change_ok && !rn2(10))
         change_sex();
 
-    adjabil(oldlvl, (int) u.ulevel);
+    adjabil(oldlvl, (int) currentExperienceLevel());
     reset_rndmonst(NON_PM); /* new monster generation criteria */
 
     /* random experience points for the new experience level */
@@ -313,10 +313,12 @@ newman()
         hpmax -= (int) u.uhpinc[i];
     /* hpmax * rn1(4,8) / 10; 0.95*hpmax on average */
     hpmax = rounddiv((long) hpmax * (long) rn1(4, 8), 10);
-    for (i = 0; (u.ulevel = i) < newlvl; i++)
+    for (i = 0; (setCurrentExperienceLevel(i), i < newlvl); i++) {
         hpmax += newhp();
-    if (hpmax < u.ulevel)
-        hpmax = u.ulevel; /* min of 1 HP per level */
+    }
+    if (hpmax < currentExperienceLevel()) {
+        hpmax = currentExperienceLevel(); /* min of 1 HP per level */
+    }
     /* retain same proportion for current HP; u.uhp * hpmax / u.uhpmax */
     u.uhp = rounddiv((long) u.uhp * (long) hpmax, u.uhpmax);
     u.uhpmax = hpmax;
@@ -327,10 +329,12 @@ newman()
     for (i = 0; i < oldlvl; i++)
         enmax -= (int) u.ueninc[i];
     enmax = rounddiv((long) enmax * (long) rn1(4, 8), 10);
-    for (i = 0; (u.ulevel = i) < newlvl; i++)
+    for (i = 0; (setCurrentExperienceLevel(i), i < newlvl); i++) {
         enmax += newpw();
-    if (enmax < u.ulevel)
-        enmax = u.ulevel;
+    }
+    if (enmax < currentExperienceLevel()) {
+        enmax = currentExperienceLevel();
+    }
     u.uen = rounddiv((long) u.uen * (long) enmax,
                      ((u.uenmax < 1) ? 1 : u.uenmax));
     u.uenmax = enmax;
@@ -716,15 +720,15 @@ int mntmp;
     }
     u.mh = u.mhmax;
 
-    if (u.ulevel < mlvl) {
+    if (currentExperienceLevel() < mlvl) {
         /* Low level characters can't become high level monsters for long */
 #ifdef DUMB
         /* DRS/NS 2.2.6 messes up -- Peter Kendell */
-        int mtd = u.mtimedone, ulv = u.ulevel;
+        int mtd = u.mtimedone, ulv = currentExperienceLevel();
 
         u.mtimedone = mtd * ulv / mlvl;
 #else
-        u.mtimedone = u.mtimedone * u.ulevel / mlvl;
+        u.mtimedone = u.mtimedone * currentExperienceLevel() / mlvl;
 #endif
     }
 
@@ -1337,7 +1341,7 @@ dogaze()
                               Monnam(mtmp));
                     mtmp->mconf = 1;
                 } else if (adtyp == AD_FIRE) {
-                    int dmg = d(2, 6), lev = (int) u.ulevel;
+                    int dmg = d(2, 6), lev = (int) currentExperienceLevel();
 
                     You("attack %s with a fiery gaze!", mon_nam(mtmp));
                     if (resists_fire(mtmp)) {
@@ -1365,7 +1369,7 @@ dogaze()
                     if (!Free_action) {
                         You("are frozen by %s gaze!",
                             s_suffix(mon_nam(mtmp)));
-                        nomul((u.ulevel > 6 || rn2(4))
+                        nomul((currentExperienceLevel() > 6 || rn2(4))
                                   ? -d((int) mtmp->m_lev + 1,
                                        (int) mtmp->data->mattk[0].damd)
                                   : -200);

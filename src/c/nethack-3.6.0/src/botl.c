@@ -96,9 +96,9 @@ bot2()
     if (Upolyd)
         Sprintf(nb = eos(nb), " HD:%d", mons[u.umonnum].mlevel);
     else if (flags.showexp)
-        Sprintf(nb = eos(nb), " Xp:%u/%-1ld", u.ulevel, u.uexp);
+        Sprintf(nb = eos(nb), " Xp:%u/%-1ld", currentExperienceLevel(), u.uexp);
     else
-        Sprintf(nb = eos(nb), " Exp:%u", u.ulevel);
+        Sprintf(nb = eos(nb), " Exp:%u", currentExperienceLevel());
 
     if (flags.time)
         Sprintf(nb = eos(nb), " T:%ld", moves);
@@ -193,7 +193,7 @@ boolean female;
 STATIC_OVL const char *
 rank()
 {
-    return rank_of(u.ulevel, Role_switch, flags.female);
+    return rank_of(currentExperienceLevel(), Role_switch, flags.female);
 }
 
 int
@@ -513,7 +513,7 @@ bot()
 
     /* Experience */
 
-    blstats[idx][BL_XP].a.a_int = u.ulevel;
+    blstats[idx][BL_XP].a.a_int = currentExperienceLevel();
     blstats[idx][BL_EXP].a.a_int = u.uexp;
 
     /* Time (moves) */
