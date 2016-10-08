@@ -618,7 +618,7 @@ u_init()
     setSentToDungeonNumber(currentDungeonNumber());
     setSentToDungeonLevel(currentDungeonLevel());
 
-    u.umoved = FALSE;
+    setYouMoved(FALSE);
     u.umortality = 0;
     u.ugrave_arise = NON_PM;
 

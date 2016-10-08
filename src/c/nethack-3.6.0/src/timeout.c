@@ -401,7 +401,7 @@ nh_timeout()
             case FUMBLING:
                 /* call this only when a move took place.  */
                 /* otherwise handle fumbling msgs locally. */
-                if (u.umoved && !Levitation) {
+                if (youMoved() && !Levitation) {
                     slip_or_trip();
                     nomul(-2);
                     multi_reason = "fumbling";

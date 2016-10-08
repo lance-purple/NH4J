@@ -3793,7 +3793,7 @@ struct trap *ttmp;
         setOriginalY(currentY());
         setCurrentX(x);
         setCurrentY(y);
-        u.umoved = TRUE;
+        setYouMoved(TRUE);
         newsym(originalX(), originalY());
         vision_recalc(1);
         check_leash(originalX(), originalY());
@@ -5108,7 +5108,7 @@ sink_into_lava()
             You("sink below the surface and die.");
             burn_away_slime(); /* add insult to injury? */
             done(DISSOLVED);
-        } else if (!u.umoved) {
+        } else if (! youMoved()) {
             /* can't fully turn into slime while in lava, but might not
                have it be burned away until you've come awfully close */
             if (Slimed && rnd(10 - 1) >= (int) (Slimed & TIMEOUT)) {

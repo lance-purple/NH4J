@@ -255,7 +255,6 @@ extern const struct Align aligns[]; /* table of available alignments */
 
 /*** Information about the player ***/
 struct you {
-    boolean umoved;    /* changed map location (post-move) */
     int last_str_turn; /* 0: none, 1: half turn, 2: full turn */
                        /* +: turn right, -: turn left */
     int ulevel;        /* 1 to MAXULEV */

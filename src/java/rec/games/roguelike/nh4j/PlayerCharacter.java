@@ -25,6 +25,8 @@ public class PlayerCharacter {
 	private static int destinationX;
 	private static int destinationY;
 
+	private static boolean youMoved;
+	
 	private static NHAttributeSet currentAttributes = new NHAttributeSet();
 	private static NHAttributeSet maximumAttributes = new NHAttributeSet();
 	private static NHAttributeSet attributeBonuses = new NHAttributeSet();
@@ -161,6 +163,14 @@ public class PlayerCharacter {
 
 	public static void setDestinationY(int y) {
 		destinationY = y;
+	}
+	
+	public static boolean youMoved() {
+		return youMoved;
+	}
+	
+	public static void setYouMoved(boolean moved) {
+		youMoved = moved;
 	}
 
 	public static int currentAttribute(int attrIndex) {

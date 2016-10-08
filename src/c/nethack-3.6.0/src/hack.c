@@ -1124,7 +1124,7 @@ struct trap *desttrap; /* nonnull if another trap at <x,y> */
                     You("pull yourself to the edge of the lava.");
             }
         }
-        u.umoved = TRUE;
+        setYouMoved(TRUE);
         break;
     case TT_INFLOOR:
     case TT_BURIEDBALL:
@@ -1680,7 +1680,7 @@ domove()
     check_leash(originalX(), originalY());
 
     if ((originalX() != currentX()) || (originalY() != currentY())) {
-        u.umoved = TRUE;
+        setYouMoved(TRUE);
         /* Clean old position -- vision_recalc() will print our new one. */
         newsym(originalX(), originalY());
         /* Since the hero has moved, adjust what can be seen/unseen. */

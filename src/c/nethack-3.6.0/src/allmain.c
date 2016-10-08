@@ -127,7 +127,7 @@ boolean resuming;
                                        NO_MM_FLAGS);
 
                     /* calculate how much time passed. */
-                    if (u.usteed && u.umoved) {
+                    if (u.usteed && youMoved()) {
                         /* your speed doesn't augment steed's speed */
                         moveamt = mcalcmove(u.usteed);
                     } else {
@@ -218,7 +218,7 @@ boolean resuming;
                             u.mh++;
                         }
                     } else if (u.uhp < u.uhpmax
-                               && (wtcap < MOD_ENCUMBER || !u.umoved
+                               && (wtcap < MOD_ENCUMBER || (! youMoved())
                                    || Regeneration)) {
                         if (u.ulevel > 9 && !(moves % 3)) {
                             int heal, Con = (int) ACURR(A_CON);
@@ -245,7 +245,7 @@ boolean resuming;
                     }
 
                     /* moving around while encumbered is hard work */
-                    if (wtcap > MOD_ENCUMBER && u.umoved) {
+                    if (wtcap > MOD_ENCUMBER && youMoved()) {
                         if (!(wtcap < EXT_ENCUMBER ? moves % 30
                                                    : moves % 10)) {
                             if (Upolyd && u.mh > 1) {
@@ -368,7 +368,7 @@ boolean resuming;
             if (u.utrap && u.utraptype == TT_LAVA)
                 sink_into_lava();
             /* when/if hero escapes from lava, he can't just stay there */
-            else if (!u.umoved)
+            else if (! youMoved())
                 (void) pooleffects(FALSE);
 
         } /* actual time passed */
@@ -439,7 +439,7 @@ boolean resuming;
         cliparound(currentX(), currentY());
 #endif
 
-        u.umoved = FALSE;
+        setYouMoved(FALSE);
 
         if (multi > 0) {
             lookaround();

@@ -912,6 +912,8 @@ E boolean FDECL(linedUpWithYou, (int, int));
 E boolean FDECL(pmatch, (const char *, const char *));
 E boolean FDECL(pmatchi, (const char *, const char *));
 E boolean FDECL(pmatchz, (const char *, const char *));
+E boolean FDECL(youMoved, ());
+E void FDECL(setYouMoved, (boolean));
 #ifndef STRNCMPI
 E int FDECL(strncmpi, (const char *, const char *, int));
 #endif
