@@ -342,6 +342,8 @@ register int fd, mode;
         write_int(fd, yourAttrMaxAsMonster(i));
     }
 
+    write_int(fd, currentNutrition());
+
     write_int(fd, currentExperienceLevel());
     write_int(fd, highestExperienceLevelSoFar());
 

@@ -1047,8 +1047,9 @@ aligntyp g_align;
             if (Upolyd)
                 u.mh = u.mhmax;
             setYourCurrentAttr(A_STR, yourAttrMax(A_STR));
-            if (u.uhunger < 900)
+            if (currentNutrition() < 900) {
                 init_uhunger();
+            }
             if (u.uluck < 0)
                 u.uluck = 0;
             make_blinded(0L, TRUE);

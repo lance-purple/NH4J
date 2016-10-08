@@ -535,7 +535,7 @@ dotele()
             }
         }
 
-        if (u.uhunger <= 100 || ACURR(A_STR) < 6) {
+        if (currentNutrition() <= 100 || ACURR(A_STR) < 6) {
             if (!wizard) {
                 You("lack the strength %s.",
                     castit ? "for a teleport spell" : "to teleport");

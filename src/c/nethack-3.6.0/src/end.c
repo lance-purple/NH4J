@@ -706,8 +706,8 @@ int how;
         u.uhpmax = uhpmin;
     u.uhp = u.uhpmax;
     u.uswldtim = 0;
-    if (u.uhunger < 500) {
-        u.uhunger = 500;
+    if (currentNutrition() < 500) {
+        setCurrentNutrition(500);
         newuhs(FALSE);
     }
     /* cure impending doom of sickness hero won't have time to fix */

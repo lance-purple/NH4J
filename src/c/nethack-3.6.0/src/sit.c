@@ -292,7 +292,7 @@ dosit()
                       ? "You may think you are a platypus, but a male still"
                       : "Males");
             return 0;
-        } else if (u.uhunger < (int) objects[EGG].oc_nutrition) {
+        } else if (currentNutrition() < (int) objects[EGG].oc_nutrition) {
             You("don't have enough energy to lay an egg.");
             return 0;
         }

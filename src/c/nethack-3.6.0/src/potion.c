@@ -589,7 +589,7 @@ register struct obj *otmp;
     case POT_WATER:
         if (!otmp->blessed && !otmp->cursed) {
             pline("This tastes like water.");
-            u.uhunger += rnd(10);
+            increaseCurrentNutrition(rnd(10));
             newuhs(FALSE);
             break;
         }
@@ -647,7 +647,7 @@ register struct obj *otmp;
         /* the whiskey makes us feel better */
         if (!otmp->odiluted)
             healup(1, 0, FALSE, FALSE);
-        u.uhunger += 10 * (2 + bcsign(otmp));
+        increaseCurrentNutrition(10 * (2 + bcsign(otmp)));
         newuhs(FALSE);
         exercise(A_WIS, FALSE);
         if (otmp->cursed) {
@@ -711,7 +711,7 @@ register struct obj *otmp;
                     : "This tastes like %s%s.",
                 otmp->odiluted ? "reconstituted " : "", fruitname(TRUE));
         if (otmp->otyp == POT_FRUIT_JUICE) {
-            u.uhunger += (otmp->odiluted ? 5 : 10) * (2 + bcsign(otmp));
+            increaseCurrentNutrition((otmp->odiluted ? 5 : 10) * (2 + bcsign(otmp)));
             newuhs(FALSE);
             break;
         }

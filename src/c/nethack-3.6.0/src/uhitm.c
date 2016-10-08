@@ -1876,7 +1876,7 @@ register struct attack *mattk;
     if (!engulf_target(&youmonst, mdef))
         return 0;
 
-    if (u.uhunger < 1500 && !u.uswallow) {
+    if (currentNutrition() < 1500 && !u.uswallow) {
         for (otmp = mdef->minvent; otmp; otmp = otmp->nobj)
             (void) snuff_lit(otmp);
 
@@ -1932,7 +1932,7 @@ register struct attack *mattk;
                     if (corpse_chance(mdef, &youmonst, TRUE)
                         && !(mvitals[monsndx(pd)].mvflags & G_NOCORPSE)) {
                         /* nutrition only if there can be a corpse */
-                        u.uhunger += (pd->cnutrit + 1) / 2;
+                        increaseCurrentNutrition((pd->cnutrit + 1) / 2);
                     } else
                         tmp = 0;
                     Sprintf(msgbuf, "You totally digest %s.", mon_nam(mdef));

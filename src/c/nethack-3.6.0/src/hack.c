@@ -413,7 +413,7 @@ xchar x, y;
 
     /* Okay, you've chewed through something */
     u.uconduct.food++;
-    u.uhunger += rnd(20);
+    increaseCurrentNutrition(rnd(20));
 
     if (boulder) {
         delobj(boulder);         /* boulder goes bye-bye */

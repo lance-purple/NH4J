@@ -340,7 +340,7 @@ newman()
     u.uenmax = enmax;
     /* [should alignment record be tweaked too?] */
 
-    u.uhunger = rn1(500, 500);
+    setCurrentNutrition(rn1(500, 500));
     if (Sick)
         make_sick(0L, (char *) 0, FALSE, SICK_ALL);
     if (Stoned)

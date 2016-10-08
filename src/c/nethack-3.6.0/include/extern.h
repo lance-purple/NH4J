@@ -927,6 +927,12 @@ E int FDECL(currentExperienceLevel, ());
 E void FDECL(setCurrentExperienceLevel, (int));
 E int FDECL(highestExperienceLevelSoFar, ());
 E void FDECL(setHighestExperienceLevelSoFar, (int));
+
+E int FDECL(currentNutrition, ());
+E void FDECL(setCurrentNutrition, (int));
+E void FDECL(increaseCurrentNutrition, (int));
+E void FDECL(decreaseCurrentNutrition, (int));
+
 #ifndef STRNCMPI
 E int FDECL(strncmpi, (const char *, const char *, int));
 #endif

@@ -612,6 +612,8 @@ unsigned int *stuckid, *steedid;
         setYourAttrMaxAsMonster(i, read_int(fd));
     }
 
+    setCurrentNutrition(read_int(fd));
+
     setCurrentExperienceLevel(read_int(fd));
     setHighestExperienceLevelSoFar(read_int(fd));
 

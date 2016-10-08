@@ -44,6 +44,8 @@ public class PlayerCharacter {
 	private static NHAttributeSet attributesAsMonster = new NHAttributeSet();
 	private static NHAttributeSet maximumAttributesAsMonster = new NHAttributeSet();
 
+	private static int currentNutrition;
+	
 	public static int currentDungeonNumber() {
 		return currentDungeonNumber;
 	}
@@ -346,6 +348,14 @@ public class PlayerCharacter {
 
 	public static void decreaseMaximumAttributeAsMonster(int attrIndex, int delta) {
 		maximumAttributesAsMonster.decrease(attrIndex, delta);
+	}
+
+	public static final int currentNutrition() {
+		return currentNutrition;
+	}
+
+	public static final void setCurrentNutrition(int n) {
+		currentNutrition = n;
 	}
 
 }

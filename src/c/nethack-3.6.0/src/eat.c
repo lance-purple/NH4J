@@ -105,7 +105,7 @@ register struct obj *obj;
 void
 init_uhunger()
 {
-    u.uhunger = 900;
+    setCurrentNutrition(900);
     u.uhs = NOT_HUNGRY;
 }
 
@@ -1704,10 +1704,10 @@ struct obj *otmp;
 {
     switch (otmp->otyp) {
     case FOOD_RATION:
-        if (u.uhunger <= 200)
+        if (currentNutrition() <= 200)
             pline(Hallucination ? "Oh wow, like, superior, man!"
                                 : "That food really hit the spot!");
-        else if (u.uhunger <= 700)
+        else if (currentNutrition() <= 700)
             pline("That satiated your %s!", body_part(STOMACH));
         break;
     case TRIPE_RATION:
@@ -2585,7 +2585,7 @@ doeat()
 STATIC_OVL int
 bite()
 {
-    if (context.victual.canchoke && u.uhunger >= 2000) {
+    if (context.victual.canchoke && currentNutrition() >= 2000) {
         choke(context.victual.piece);
         return 1;
     }
@@ -2617,40 +2617,49 @@ gethungry()
 
     if ((!u.usleep || !rn2(10)) /* slow metabolic rate while asleep */
         && (carnivorous(youmonst.data) || herbivorous(youmonst.data))
-        && !Slow_digestion)
-        u.uhunger--; /* ordinary food consumption */
+        && !Slow_digestion) {
+        decreaseCurrentNutrition(1); /* ordinary food consumption */
+    }
 
     if (moves % 2) { /* odd turns */
         /* Regeneration uses up food, unless due to an artifact */
         if ((HRegeneration & ~FROMFORM)
-            || (ERegeneration & ~(W_ARTI | W_WEP)))
-            u.uhunger--;
-        if (near_capacity() > SLT_ENCUMBER)
-            u.uhunger--;
+            || (ERegeneration & ~(W_ARTI | W_WEP))) {
+            decreaseCurrentNutrition(1);
+        }
+        if (near_capacity() > SLT_ENCUMBER) {
+            decreaseCurrentNutrition(1);
+        }
     } else { /* even turns */
-        if (Hunger)
-            u.uhunger--;
-        /* Conflict uses up food too */
-        if (HConflict || (EConflict & (~W_ARTI)))
-            u.uhunger--;
+        if (Hunger) {
+            decreaseCurrentNutrition(1);
+        }
+        /* Conflict uses up food too */ 
+        if (HConflict || (EConflict & (~W_ARTI))) {
+            decreaseCurrentNutrition(1);
+        }
         /* +0 charged rings don't do anything, so don't affect hunger */
         /* Slow digestion still uses ring hunger */
         switch ((int) (moves % 20)) { /* note: use even cases only */
         case 4:
-            if (uleft && (uleft->spe || !objects[uleft->otyp].oc_charged))
-                u.uhunger--;
+            if (uleft && (uleft->spe || !objects[uleft->otyp].oc_charged)) {
+                decreaseCurrentNutrition(1);
+            }
             break;
         case 8:
-            if (uamul)
-                u.uhunger--;
+            if (uamul) {
+                decreaseCurrentNutrition(1);
+            }
             break;
         case 12:
-            if (uright && (uright->spe || !objects[uright->otyp].oc_charged))
-                u.uhunger--;
+            if (uright && (uright->spe || !objects[uright->otyp].oc_charged)) {
+                decreaseCurrentNutrition(1);
+            }
             break;
         case 16:
-            if (u.uhave.amulet)
-                u.uhunger--;
+            if (u.uhave.amulet) {
+                decreaseCurrentNutrition(1);
+            }
             break;
         default:
             break;
@@ -2664,7 +2673,7 @@ void
 morehungry(num)
 int num;
 {
-    u.uhunger -= num;
+    decreaseCurrentNutrition(num);
     newuhs(TRUE);
 }
 
@@ -2677,8 +2686,8 @@ int num;
     boolean iseating = (occupation == eatfood) || force_save_hs;
 
     debugpline1("lesshungry(%d)", num);
-    u.uhunger += num;
-    if (u.uhunger >= 2000) {
+    increaseCurrentNutrition(num);
+    if (currentNutrition() >= 2000) {
         if (!iseating || context.victual.canchoke) {
             if (iseating) {
                 choke(context.victual.piece);
@@ -2692,7 +2701,7 @@ int num;
         /* Have lesshungry() report when you're nearly full so all eating
          * warns when you're about to choke.
          */
-        if (u.uhunger >= 1500) {
+        if (currentNutrition() >= 1500) {
             if (!context.victual.eating
                 || (context.victual.eating && !context.victual.fullwarn)) {
                 pline("You're having a hard time getting all of it down.");
@@ -2751,7 +2760,7 @@ boolean incr;
     unsigned newhs;
     static unsigned save_hs;
     static boolean saved_hs = FALSE;
-    int h = u.uhunger;
+    int h = currentNutrition();
 
     newhs = (h > 1000)
                 ? SATIATED
@@ -2797,9 +2806,9 @@ boolean incr;
     if (newhs == FAINTING) {
         if (is_fainted())
             newhs = FAINTED;
-        if (u.uhs <= WEAK || rn2(20 - u.uhunger / 10) >= 19) {
+        if (u.uhs <= WEAK || rn2(20 - currentNutrition() / 10) >= 19) {
             if (!is_fainted() && multi >= 0 /* %% */) {
-                int duration = 10 - (u.uhunger / 10);
+                int duration = 10 - (currentNutrition() / 10);
 
                 /* stop what you're doing, then faint */
                 stop_occupation();
@@ -2813,7 +2822,7 @@ boolean incr;
                 afternmv = unfaint;
                 newhs = FAINTED;
             }
-        } else if (u.uhunger < -(int) (200 + 20 * ACURR(A_CON))) {
+        } else if (currentNutrition() < -(int) (200 + 20 * ACURR(A_CON))) {
             u.uhs = STARVED;
             context.botl = 1;
             bot();
@@ -2838,7 +2847,7 @@ boolean incr;
                             : "are getting the munchies.");
             } else
                 You((!incr) ? "only feel hungry now."
-                            : (u.uhunger < 145)
+                            : (currentNutrition() < 145)
                                   ? "feel hungry."
                                   : "are beginning to feel hungry.");
             if (incr && occupation
@@ -2859,7 +2868,7 @@ boolean incr;
             else
                 You((!incr)
                         ? "feel weak now."
-                        : (u.uhunger < 45) ? "feel weak."
+                        : (currentNutrition() < 45) ? "feel weak."
                                            : "are beginning to feel weak.");
             if (incr && occupation
                 && (occupation != eatfood && occupation != opentin))

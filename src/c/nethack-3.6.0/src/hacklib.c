@@ -794,6 +794,25 @@ void setHighestExperienceLevelSoFar(e) int e; {
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, e);
 }
 
+int currentNutrition() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "currentNutrition", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+} 
+
+void setCurrentNutrition(n) int n; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setCurrentNutrition", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, n);
+}
+
+void increaseCurrentNutrition(n) int n; {
+    setCurrentNutrition(currentNutrition() + n);
+}
+
+void decreaseCurrentNutrition(n) int n; {
+    setCurrentNutrition(currentNutrition() - n);
+}
 
 /* square of euclidean distance from pt to your current position */
 int
