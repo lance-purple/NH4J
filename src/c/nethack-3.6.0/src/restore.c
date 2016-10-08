@@ -618,6 +618,8 @@ unsigned int *stuckid, *steedid;
     setCurrentExperienceLevel(read_int(fd));
     setHighestExperienceLevelSoFar(read_int(fd));
 
+    setAbilityToConfuseMonsters(read_int(fd));
+
 #define ReadTimebuf(foo)                   \
     mread(fd, (genericptr_t) timebuf, 14); \
     timebuf[14] = '\0';                    \

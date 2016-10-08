@@ -936,6 +936,11 @@ E void FDECL(decreaseCurrentNutrition, (int));
 E int FDECL(currentHungerState, ());
 E void FDECL(setCurrentHungerState, (int));
 
+E int FDECL(abilityToConfuseMonsters, ());
+E void FDECL(setAbilityToConfuseMonsters, (int));
+E void FDECL(increaseAbilityToConfuseMonsters, (int));
+E void FDECL(decreaseAbilityToConfuseMonsters, (int));
+
 #ifndef STRNCMPI
 E int FDECL(strncmpi, (const char *, const char *, int));
 #endif

@@ -2017,8 +2017,9 @@ int final;
         you_have("infravision", from_what(INFRAVISION));
     if (Detect_monsters)
         you_are("sensing the presence of monsters", "");
-    if (u.umconf)
+    if (abilityToConfuseMonsters()) {
         you_are("going to confuse monsters", "");
+    }
 
     /*** Appearance and behavior ***/
     if (Adornment) {

@@ -348,6 +348,8 @@ register int fd, mode;
     write_int(fd, currentExperienceLevel());
     write_int(fd, highestExperienceLevelSoFar());
 
+    write_int(fd, abilityToConfuseMonsters());
+
     bwrite(fd, yyyymmddhhmmss(ubirthday), 14);
     bwrite(fd, (genericptr_t) &urealtime.realtime,
            sizeof(urealtime.realtime));

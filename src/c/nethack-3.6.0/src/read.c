@@ -1164,21 +1164,23 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
                 Your("%s%s %s%s.", makeplural(body_part(HAND)),
                      Blind ? "" : " begin to glow",
                      Blind ? (const char *) "tingle" : hcolor(NH_RED),
-                     u.umconf ? " even more" : "");
-                u.umconf++;
+                     abilityToConfuseMonsters() ? " even more" : "");
+                increaseAbilityToConfuseMonsters(1);
             } else {
                 if (Blind)
                     Your("%s tingle %s sharply.", makeplural(body_part(HAND)),
-                         u.umconf ? "even more" : "very");
+                         abilityToConfuseMonsters() ? "even more" : "very");
                 else
                     Your("%s glow a%s brilliant %s.",
                          makeplural(body_part(HAND)),
-                         u.umconf ? "n even more" : "", hcolor(NH_RED));
+                         abilityToConfuseMonsters() ? "n even more" : "", hcolor(NH_RED));
                 /* after a while, repeated uses become less effective */
-                if (u.umconf >= 40)
-                    u.umconf++;
-                else
-                    u.umconf += rn1(8, 2);
+                if (abilityToConfuseMonsters() >= 40) {
+                    increaseAbilityToConfuseMonsters(1);
+                }
+                else {
+                    increaseAbilityToConfuseMonsters(rn1(8, 2));
+                }
             }
         }
         break;

@@ -47,6 +47,8 @@ public class PlayerCharacter {
 	private static HungerState currentHungerState = HungerState.NOT_HUNGRY;
 	private static int currentNutrition;
 	
+	private static int abilityToConfuseMonsters;
+	
 	public static int currentDungeonNumber() {
 		return currentDungeonNumber;
 	}
@@ -365,6 +367,14 @@ public class PlayerCharacter {
 
 	public static final void setCurrentHungerState(int key) {
 		currentHungerState = HungerState.byKey(key);
+	}
+	
+	public static final int abilityToConfuseMonsters() {
+		return abilityToConfuseMonsters;
+	}
+
+	public static final void setAbilityToConfuseMonsters(int a) {
+		abilityToConfuseMonsters = a;
 	}
 
 }

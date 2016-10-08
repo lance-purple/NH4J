@@ -1147,7 +1147,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
     } else if (destroyed) {
         if (!already_killed)
             killed(mon); /* takes care of most messages */
-    } else if (u.umconf && hand_to_hand) {
+    } else if (abilityToConfuseMonsters() && hand_to_hand) {
         nohandglow(mon);
         if (!mon->mconf && !resist(mon, SPBOOK_CLASS, 0, NOTELL)) {
             mon->mconf = 1;
@@ -2615,20 +2615,22 @@ struct monst *mon;
 {
     char *hands = makeplural(body_part(HAND));
 
-    if (!u.umconf || mon->mconf)
+    if (!abilityToConfuseMonsters() || mon->mconf)
         return;
-    if (u.umconf == 1) {
-        if (Blind)
+    if (abilityToConfuseMonsters() == 1) {
+        if (Blind) {
             Your("%s stop tingling.", hands);
-        else
+        }
+        else {
             Your("%s stop glowing %s.", hands, hcolor(NH_RED));
+        }
     } else {
         if (Blind)
             pline_The("tingling in your %s lessens.", hands);
         else
             Your("%s no longer glow so brightly %s.", hands, hcolor(NH_RED));
     }
-    u.umconf--;
+    decreaseAbilityToConfuseMonsters(1);
 }
 
 int
