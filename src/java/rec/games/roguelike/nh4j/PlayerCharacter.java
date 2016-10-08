@@ -28,6 +28,9 @@ public class PlayerCharacter {
 	private static boolean youMoved;
 	private static int lastTurningDirection;
 	
+	private static int currentExperienceLevel;
+	private static int highestExperienceLevelSoFar;
+	
 	private static NHAttributeSet currentAttributes = new NHAttributeSet();
 	private static NHAttributeSet maximumAttributes = new NHAttributeSet();
 	private static NHAttributeSet attributeBonuses = new NHAttributeSet();
@@ -180,6 +183,22 @@ public class PlayerCharacter {
 
 	public static void setLastTurningDirection(int d) {
 		lastTurningDirection = d;
+	}
+
+	public static int currentExperienceLevel() {
+		return currentExperienceLevel;
+	}
+
+	public static void setCurrentExperienceLevel(int level) {
+		currentExperienceLevel = level;
+	}
+
+	public static int highestExperienceLevelSoFar() {
+		return highestExperienceLevelSoFar;
+	}
+
+	public static void setHighestExperienceLevelSoFar(int level) {
+		highestExperienceLevelSoFar = level;
 	}
 
 	public static int currentAttribute(int attrIndex) {

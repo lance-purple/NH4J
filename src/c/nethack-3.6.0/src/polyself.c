@@ -274,10 +274,12 @@ newman()
        goes up, your peak level does *not* undergo the same
        adjustment; you might end up losing out on the chance
        to regain some levels previously lost to other causes. */
-    if (newlvl < oldlvl)
-        u.ulevelmax -= (oldlvl - newlvl);
-    if (u.ulevelmax < newlvl)
-        u.ulevelmax = newlvl;
+    if (newlvl < oldlvl) {
+        setHighestExperienceLevelSoFar(oldlvl - newlvl);
+    }
+    if (highestExperienceLevelSoFar() < newlvl) {
+        setHighestExperienceLevelSoFar(newlvl);
+    }
     u.ulevel = newlvl;
 
     if (sex_change_ok && !rn2(10))

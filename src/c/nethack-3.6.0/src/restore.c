@@ -579,6 +579,7 @@ unsigned int *stuckid, *steedid;
 
     setSentToDungeonNumber(read_int(fd));
     setSentToDungeonLevel(read_int(fd));
+    setTypeOfLevelYouWereSentTo(read_int(fd));
 
     setCurrentX(read_int(fd));
     setCurrentY(read_int(fd));
@@ -587,11 +588,14 @@ unsigned int *stuckid, *steedid;
     setDirectionY(read_int(fd));
     setDirectionZ(read_int(fd));
 
+    setLastTurningDirection(read_int(fd));
+
     setOriginalX(read_int(fd));
     setOriginalY(read_int(fd));
 
     setDestinationX(read_int(fd));
     setDestinationY(read_int(fd));
+    setYouMoved(read_int(fd) ? TRUE : FALSE);
 
     int i;
     for (i = 0; i < A_MAX; i++) {
@@ -604,6 +608,8 @@ unsigned int *stuckid, *steedid;
         setYourAttrAsMonster(i, read_int(fd));
         setYourAttrMaxAsMonster(i, read_int(fd));
     }
+
+    setHighestExperienceLevelSoFar(read_int(fd));
 
 #define ReadTimebuf(foo)                   \
     mread(fd, (genericptr_t) timebuf, 14); \

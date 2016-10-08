@@ -308,6 +308,7 @@ register int fd, mode;
 
     write_int(fd, sentToDungeonNumber());
     write_int(fd, sentToDungeonLevel());
+    write_int(fd, typeOfLevelYouWereSentTo());
 
     write_int(fd, currentX());
     write_int(fd, currentY());
@@ -316,11 +317,15 @@ register int fd, mode;
     write_int(fd, directionY());
     write_int(fd, directionZ());
 
+    write_int(fd, lastTurningDirection());
+
     write_int(fd, originalX());
     write_int(fd, originalY());
 
     write_int(fd, destinationX());
     write_int(fd, destinationY());
+
+    write_int(fd, youMoved());
 
     int i;
     for (i = 0; i < A_MAX; i++) {
@@ -333,6 +338,8 @@ register int fd, mode;
         write_int(fd, yourAttrAsMonster(i));
         write_int(fd, yourAttrMaxAsMonster(i));
     }
+
+    write_int(fd, highestExperienceLevelSoFar());
 
     bwrite(fd, yyyymmddhhmmss(ubirthday), 14);
     bwrite(fd, (genericptr_t) &urealtime.realtime,

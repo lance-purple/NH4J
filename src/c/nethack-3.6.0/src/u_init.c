@@ -633,7 +633,8 @@ u_init()
     u.uen = u.uenmax = newpw();
     u.uspellprot = 0;
     adjabil(0, 1);
-    u.ulevel = u.ulevelmax = 1;
+    setHighestExperienceLevelSoFar(1);
+    u.ulevel = 1;
 
     init_uhunger();
     for (i = 0; i <= MAXSPELL; i++)

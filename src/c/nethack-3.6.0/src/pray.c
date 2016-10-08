@@ -1034,8 +1034,8 @@ aligntyp g_align;
                 You("are surrounded by %s glow.", an(hcolor(NH_GOLDEN)));
             /* if any levels have been lost (and not yet regained),
                treat this effect like blessed full healing */
-            if (u.ulevel < u.ulevelmax) {
-                u.ulevelmax -= 1; /* see potion.c */
+            if (u.ulevel < highestExperienceLevelSoFar()) {
+                setHighestExperienceLevelSoFar(highestExperienceLevelSoFar() - 1); /* see potion.c */
                 pluslvl(FALSE);
             } else {
                 u.uhpmax += 5;

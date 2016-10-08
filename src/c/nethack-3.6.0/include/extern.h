@@ -916,6 +916,9 @@ E boolean FDECL(youMoved, ());
 E void FDECL(setYouMoved, (boolean));
 E int FDECL(lastTurningDirection, ());
 E void FDECL(setLastTurningDirection, (int));
+
+E int FDECL(highestExperienceLevelSoFar, ());
+E void FDECL(setHighestExperienceLevelSoFar, (int));
 #ifndef STRNCMPI
 E int FDECL(strncmpi, (const char *, const char *, int));
 #endif

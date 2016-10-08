@@ -721,7 +721,7 @@ wiz_level_change(VOID_ARGS)
         while (u.ulevel < newlevel)
             pluslvl(FALSE);
     }
-    u.ulevelmax = u.ulevel;
+    setHighestExperienceLevelSoFar(u.ulevel);
     return 0;
 }
 

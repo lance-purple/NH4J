@@ -256,7 +256,6 @@ extern const struct Align aligns[]; /* table of available alignments */
 /*** Information about the player ***/
 struct you {
     int ulevel;        /* 1 to MAXULEV */
-    int ulevelmax;
     unsigned utrap;     /* trap timeout */
     unsigned utraptype; /* defined if utrap nonzero */
 #define TT_BEARTRAP 0

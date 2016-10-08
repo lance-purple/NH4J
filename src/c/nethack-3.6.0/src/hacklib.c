@@ -741,6 +741,19 @@ void setLastTurningDirection(d) int d; {
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, d);
 }
 
+int highestExperienceLevelSoFar() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "highestExperienceLevelSoFar", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+} 
+
+void setHighestExperienceLevelSoFar(e) int e; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setHighestExperienceLevelSoFar", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, e);
+}
+
+
 /* square of euclidean distance from pt to your current position */
 int
 distanceSquaredToYou(x, y)
