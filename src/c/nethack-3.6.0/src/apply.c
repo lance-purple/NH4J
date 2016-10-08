@@ -1025,7 +1025,7 @@ struct obj **optr;
             if (uchain) {
                 unpunish();
                 res = 1;
-            } else if (u.utrap && u.utraptype == TT_BURIEDBALL) {
+            } else if (currentlyTrapped() && (currentTrapType() == TT_BURIEDBALL)) {
                 buried_ball_to_freedom();
                 res = 1;
             }
@@ -1560,7 +1560,7 @@ int magic; /* 0=Physical, otherwise skill level */
                                                                   : "",
                  bp, (wl == BOTH_SIDES) ? "are" : "is");
         return 0;
-    } else if (u.usteed && u.utrap) {
+    } else if (u.usteed && currentlyTrapped()) {
         pline("%s is stuck in a trap.", Monnam(u.usteed));
         return 0;
     }
@@ -1578,8 +1578,8 @@ int magic; /* 0=Physical, otherwise skill level */
         coord uc;
         int range, temp;
 
-        if (u.utrap)
-            switch (u.utraptype) {
+        if (currentlyTrapped()) {
+            switch (currentTrapType()) {
             case TT_BEARTRAP: {
                 long side = rn2(3) ? LEFT_SIDE : RIGHT_SIDE;
 
@@ -1598,19 +1598,20 @@ int magic; /* 0=Physical, otherwise skill level */
                 break;
             case TT_LAVA:
                 You("pull yourself above the lava!");
-                u.utrap = 0;
+                setCurrentTrapTimeout(0);
                 return 1;
             case TT_BURIEDBALL:
             case TT_INFLOOR:
                 You("strain your %s, but you're still %s.",
                     makeplural(body_part(LEG)),
-                    (u.utraptype == TT_INFLOOR)
+                    (currentTrapType() == TT_INFLOOR)
                         ? "stuck in the floor"
                         : "attached to the buried ball");
                 set_wounded_legs(LEFT_SIDE, rn1(10, 11));
                 set_wounded_legs(RIGHT_SIDE, rn1(10, 11));
                 return 1;
             }
+        }
 
         /*
          * Check the path from uc to cc, calling hurtle_step at each
@@ -2529,7 +2530,7 @@ struct obj *obj;
         pline_The("bullwhip slips out of your %s.", body_part(HAND));
         dropx(obj);
 
-    } else if (u.utrap && u.utraptype == TT_PIT) {
+    } else if (currentlyTrapped() && (currentTrapType() == TT_PIT)) {
         /*
          * Assumptions:
          *
@@ -2574,7 +2575,7 @@ struct obj *obj;
                 if (!mtmp || enexto(&cc, rx, ry, youmonst.data)) {
                     You("yank yourself out of the pit!");
                     teleds(cc.x, cc.y, TRUE);
-                    u.utrap = 0;
+                    setCurrentTrapTimeout(0);
                     vision_full_recalc = 1;
                 }
             } else {

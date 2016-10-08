@@ -1674,10 +1674,10 @@ register struct attack *mattk;
         stop_occupation();
         reset_occupations(); /* behave as if you had moved */
 
-        if (u.utrap) {
+        if (currentlyTrapped()) {
             You("are released from the %s!",
-                u.utraptype == TT_WEB ? "web" : "trap");
-            u.utrap = 0;
+                currentTrapType() == TT_WEB ? "web" : "trap");
+            setCurrentTrapTimeout(0);
         }
 
         i = number_leashed();

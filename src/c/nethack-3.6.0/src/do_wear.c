@@ -1654,14 +1654,14 @@ boolean noisy;
                       c_boots); /* makeplural(body_part(FOOT)) yields
                                    "rear hooves" which sounds odd */
             err++;
-        } else if (u.utrap
-                   && (u.utraptype == TT_BEARTRAP || u.utraptype == TT_INFLOOR
-                       || u.utraptype == TT_LAVA
-                       || u.utraptype == TT_BURIEDBALL)) {
-            if (u.utraptype == TT_BEARTRAP) {
+        } else if (currentlyTrapped()
+                   && (currentTrapType() == TT_BEARTRAP || currentTrapType() == TT_INFLOOR
+                       || currentTrapType() == TT_LAVA
+                       || currentTrapType() == TT_BURIEDBALL)) {
+            if (currentTrapType() == TT_BEARTRAP) {
                 if (noisy)
                     Your("%s is trapped!", body_part(FOOT));
-            } else if (u.utraptype == TT_INFLOOR || u.utraptype == TT_LAVA) {
+            } else if (currentTrapType() == TT_INFLOOR || currentTrapType() == TT_LAVA) {
                 if (noisy)
                     Your("%s are stuck in the %s!",
                          makeplural(body_part(FOOT)), surface(currentX(), currentY()));
@@ -2203,11 +2203,11 @@ register struct obj *otmp;
     }
     /* special boot checks */
     if (otmp == uarmf) {
-        if (u.utrap && u.utraptype == TT_BEARTRAP) {
+        if (currentlyTrapped() && currentTrapType() == TT_BEARTRAP) {
             pline_The("bear trap prevents you from pulling your %s out.",
                       body_part(FOOT));
             return 0;
-        } else if (u.utrap && u.utraptype == TT_INFLOOR) {
+        } else if (currentlyTrapped() && currentTrapType() == TT_INFLOOR) {
             You("are stuck in the %s, and cannot pull your %s out.",
                 surface(currentX(), currentY()), makeplural(body_part(FOOT)));
             return 0;

@@ -2910,10 +2910,11 @@ int corpsecheck; /* 0, no check, 1, corpses, 2, tinnable corpses */
                be a chance to becoming trapped?  Probably not, because
                then the trap would just get eaten on the _next_ turn... */
             Sprintf(qbuf, "There is a bear trap here (%s); eat it?",
-                    (u.utrap && u.utraptype == TT_BEARTRAP) ? "holding you"
+                    (currentlyTrapped() && currentTrapType() == TT_BEARTRAP) ? "holding you"
                                                             : "armed");
             if ((c = yn_function(qbuf, ynqchars, 'n')) == 'y') {
-                u.utrap = u.utraptype = 0;
+                setCurrentTrapType(0);
+                setCurrentTrapTimeout(0);
                 deltrap(ttmp);
                 return mksobj(BEARTRAP, TRUE, FALSE);
             } else if (c == 'q') {

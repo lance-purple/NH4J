@@ -1283,7 +1283,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
         }
         if (Punished && !confused)
             unpunish();
-        if (u.utrap && u.utraptype == TT_BURIEDBALL) {
+        if (currentlyTrapped() && currentTrapType() == TT_BURIEDBALL) {
             buried_ball_to_freedom();
             pline_The("clasp on your %s vanishes.", body_part(LEG));
         }

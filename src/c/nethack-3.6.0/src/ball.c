@@ -704,9 +704,9 @@ xchar x, y;
         struct trap *t;
         const char *pullmsg = "The ball pulls you out of the %s!";
 
-        if (u.utrap && u.utraptype != TT_INFLOOR
-            && u.utraptype != TT_BURIEDBALL) {
-            switch (u.utraptype) {
+        if (currentlyTrapped() && (currentTrapType() != TT_INFLOOR)
+            && (currentTrapType() != TT_BURIEDBALL)) {
+            switch (currentTrapType()) {
             case TT_PIT:
                 pline(pullmsg, "pit");
                 break;
@@ -733,13 +733,13 @@ xchar x, y;
                 break;
             }
             }
-            u.utrap = 0;
+            setCurrentTrapTimeout(0);
             fill_pit(currentX(), currentY());
         }
 
         setOriginalX(currentX());
         setOriginalY(currentY());
-        if (!Levitation && !MON_AT(x, y) && !u.utrap
+        if (!Levitation && !MON_AT(x, y) && !currentlyTrapped()
             && (is_pool(x, y)
                 || ((t = t_at(x, y))
                     && (t->ttyp == PIT || t->ttyp == SPIKED_PIT

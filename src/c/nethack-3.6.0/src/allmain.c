@@ -360,16 +360,20 @@ boolean resuming;
             /* once-per-hero-took-time things go here */
             /******************************************/
 
-            if (context.bypasses)
+            if (context.bypasses) {
                 clear_bypasses();
+            }
             if ((u.uhave.amulet || Clairvoyant) && !areYouInEndgame()
-                && !BClairvoyant && !(moves % 15) && !rn2(2))
+                && !BClairvoyant && !(moves % 15) && !rn2(2)) {
                 do_vicinity_map();
-            if (u.utrap && u.utraptype == TT_LAVA)
+            }
+            if (currentlyTrapped() && (currentTrapType() == TT_LAVA)) {
                 sink_into_lava();
+            }
             /* when/if hero escapes from lava, he can't just stay there */
-            else if (! youMoved())
+            else if (! youMoved()) {
                 (void) pooleffects(FALSE);
+            }
 
         } /* actual time passed */
 

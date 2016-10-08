@@ -286,8 +286,9 @@ int *attk_count, *role_roll_penalty;
     /* encumbrance: with a lot of luggage, your agility diminishes */
     if ((tmp2 = near_capacity()) != 0)
         tmp -= (tmp2 * 2) - 1;
-    if (u.utrap)
+    if (currentlyTrapped()) {
         tmp -= 3;
+    }
 
     /*
      * hitval applies if making a weapon attack while wielding a weapon;

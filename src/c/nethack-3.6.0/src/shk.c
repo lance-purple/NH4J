@@ -3648,7 +3648,7 @@ register int fall;
 
     if (!fall) {
         if (lang == 2) {
-            if (u.utraptype == TT_PIT)
+            if (currentTrapType() == TT_PIT)
                 verbalize(
                     "Be careful, %s, or you might fall through the floor.",
                     flags.female ? "madam" : "sir");

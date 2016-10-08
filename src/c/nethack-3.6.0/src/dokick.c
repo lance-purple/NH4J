@@ -791,9 +791,9 @@ dokick()
     } else if (u.uinwater && !rn2(2)) {
         Your("slow motion kick doesn't hit anything.");
         no_kick = TRUE;
-    } else if (u.utrap) {
+    } else if (currentlyTrapped()) {
         no_kick = TRUE;
-        switch (u.utraptype) {
+        switch (currentTrapType()) {
         case TT_PIT:
             if (!Passes_walls)
                 pline("There's not enough room to kick down here.");
@@ -845,7 +845,7 @@ dokick()
             break;
         }
         return 1;
-    } else if (u.utrap && u.utraptype == TT_PIT) {
+    } else if (currentlyTrapped() && currentTrapType() == TT_PIT) {
         /* must be Passes_walls */
         You("kick at the side of the pit.");
         return 1;

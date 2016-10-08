@@ -723,8 +723,9 @@ int how;
         multi = 0;
     else
         multi = -1;
-    if (u.utrap && u.utraptype == TT_LAVA)
-        u.utrap = 0;
+    if (currentlyTrapped() && currentTrapType() == TT_LAVA) {
+        setCurrentTrapTimeout(0);
+    }
     context.botl = 1;
     u.ugrave_arise = NON_PM;
     HUnchanging = 0L;

@@ -1062,10 +1062,11 @@ struct trap *desttrap; /* nonnull if another trap at <x,y> */
     const char *predicament, *culprit;
     char *steedname = !u.usteed ? (char *) 0 : y_monnam(u.usteed);
 
-    if (!u.utrap)
+    if (!currentlyTrapped()) {
         return TRUE; /* sanity check */
+    }
 
-    switch (u.utraptype) {
+    switch (currentTrapType()) {
     case TT_BEARTRAP:
         if (flags.verbose) {
             predicament = "caught in a bear trap";
@@ -1075,8 +1076,9 @@ struct trap *desttrap; /* nonnull if another trap at <x,y> */
                 Norep("You are %s.", predicament);
         }
         /* [why does diagonal movement give quickest escape?] */
-        if ((directionX() && directionY()) || !rn2(5))
-            u.utrap--;
+        if ((directionX() && directionY()) || !rn2(5)) {
+            setCurrentTrapTimeout(currentTrapTimeout() - 1);
+        }
         break;
     case TT_PIT:
         if (desttrap && desttrap->tseen
@@ -1087,17 +1089,20 @@ struct trap *desttrap; /* nonnull if another trap at <x,y> */
         break;
     case TT_WEB:
         if (uwep && uwep->oartifact == ART_STING) {
-            u.utrap = 0;
+            setCurrentTrapTimeout(0);
             pline("Sting cuts through the web!");
             break; /* escape trap but don't move */
         }
-        if (--u.utrap) {
+        setCurrentTrapTimeout(currentTrapTimeout() - 1);
+        if (currentlyTrapped()) {
             if (flags.verbose) {
                 predicament = "stuck to the web";
-                if (u.usteed)
+                if (u.usteed) {
                     Norep("%s is %s.", upstart(steedname), predicament);
-                else
+                }
+                else {
                     Norep("You are %s.", predicament);
+                }
             }
         } else {
             if (u.usteed)
@@ -1115,20 +1120,22 @@ struct trap *desttrap; /* nonnull if another trap at <x,y> */
                 Norep("You are %s.", predicament);
         }
         if (!is_lava(x, y)) {
-            u.utrap--;
-            if ((u.utrap & 0xff) == 0) {
-                u.utrap = 0;
-                if (u.usteed)
+            setCurrentTrapTimeout(currentTrapTimeout() - 1);
+            if ((currentlyTrapped() & 0xff) == 0) {
+                setCurrentTrapTimeout(0);
+                if (u.usteed) {
                     You("lead %s to the edge of the lava.", steedname);
-                else
+                }
+                else {
                     You("pull yourself to the edge of the lava.");
+                }
             }
         }
         setYouMoved(TRUE);
         break;
     case TT_INFLOOR:
     case TT_BURIEDBALL:
-        anchored = (u.utraptype == TT_BURIEDBALL);
+        anchored = (currentTrapType() == TT_BURIEDBALL);
         if (anchored) {
             coord cc;
 
@@ -1146,7 +1153,8 @@ struct trap *desttrap; /* nonnull if another trap at <x,y> */
                 return TRUE;
             }
         }
-        if (--u.utrap) {
+        setCurrentTrapTimeout(currentTrapTimeout() - 1);
+        if (currentlyTrapped()) {
             if (flags.verbose) {
                 if (anchored) {
                     predicament = "chained to the";
@@ -1178,7 +1186,7 @@ struct trap *desttrap; /* nonnull if another trap at <x,y> */
         break;
     default:
         impossible("trapmove: stuck in unknown trap? (%d)",
-                   (int) u.utraptype);
+                   (int) currentTrapType());
         break;
     }
     return FALSE;
@@ -1513,7 +1521,7 @@ domove()
     if (u_rooted())
         return;
 
-    if (u.utrap) {
+    if (currentlyTrapped()) {
         if (!trapmove(x, y, trap))
             return;
     }

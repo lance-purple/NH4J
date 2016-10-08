@@ -596,7 +596,7 @@ int control;
                 }
 
         /* if in a pit, just update for immediate locations */
-        } else if (u.utrap && u.utraptype == TT_PIT) {
+        } else if (currentlyTrapped() && currentTrapType() == TT_PIT) {
             for (row = currentY() - 1; row <= currentY() + 1; row++) {
                 if (row < 0)
                     continue;

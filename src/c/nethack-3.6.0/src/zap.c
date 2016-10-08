@@ -2345,7 +2345,7 @@ boolean ordinary;
             learn_it = TRUE;
             unpunish();
         }
-        if (u.utrap) { /* escape web or bear trap */
+        if (currentlyTrapped()) { /* escape web or bear trap */
             (void) openholdingtrap(&youmonst, &learn_it);
         } else { /* trigger previously escaped trapdoor */
             (void) openfallingtrap(&youmonst, TRUE, &learn_it);
@@ -2353,7 +2353,7 @@ boolean ordinary;
         break;
     case WAN_LOCKING:
     case SPE_WIZARD_LOCK:
-        if (!u.utrap) {
+        if (!currentlyTrapped()) {
             (void) closeholdingtrap(&youmonst, &learn_it);
         }
         break;
@@ -2652,10 +2652,10 @@ struct obj *obj; /* wand or spell */
             disclose = TRUE;
         }
         /* down will release you from bear trap or web */
-        if (directionZ() > 0 && u.utrap) {
+        if (directionZ() > 0 && currentlyTrapped()) {
             (void) openholdingtrap(&youmonst, &disclose);
             /* down will trigger trapdoor, hole, or [spiked-] pit */
-        } else if (directionZ() > 0 && !u.utrap) {
+        } else if (directionZ() > 0 && !currentlyTrapped()) {
             (void) openfallingtrap(&youmonst, FALSE, &disclose);
         }
         break;
@@ -4247,13 +4247,13 @@ short exploding_wand_typ;
                         u.uundetected = 0;
                         docrt();
                         vision_full_recalc = 1;
-                    } else if (u.utrap && u.utraptype == TT_LAVA) {
+                    } else if (currentlyTrapped() && currentTrapType() == TT_LAVA) {
                         if (Passes_walls) {
-                            u.utrap = 0;
+                            setCurrentTrapTimeout(0);
                             You("pass through the now-solid rock.");
                         } else {
-                            u.utrap = rn1(50, 20);
-                            u.utraptype = TT_INFLOOR;
+                            setCurrentTrapType(TT_INFLOOR);
+                            setCurrentTrapTimeout(rn1(50, 20));
                             You("are firmly stuck in the cooling rock.");
                         }
                     }

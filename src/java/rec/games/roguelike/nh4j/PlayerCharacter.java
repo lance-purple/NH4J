@@ -28,6 +28,9 @@ public class PlayerCharacter {
 	private static boolean youMoved;
 	private static int lastTurningDirection;
 	
+	private static TrapType currentTrapType;
+	private static int currentTrapTimeout;
+	
 	private static int currentExperienceLevel;
 	private static int highestExperienceLevelSoFar;
 	
@@ -183,6 +186,22 @@ public class PlayerCharacter {
 
 	public static void setLastTurningDirection(int d) {
 		lastTurningDirection = d;
+	}
+
+	public static int currentTrapType() {
+	    return (null != currentTrapType) ? currentTrapType.key() : 0;	
+	}
+	
+	public static void setCurrentTrapType(int key) {
+	    currentTrapType = TrapType.byKey(key);	
+	}
+	
+	public static int currentTrapTimeout() {
+		return currentTrapTimeout;
+	}
+
+	public static void setCurrentTrapTimeout(int timeout) {
+		currentTrapTimeout = timeout;
 	}
 
 	public static int currentExperienceLevel() {

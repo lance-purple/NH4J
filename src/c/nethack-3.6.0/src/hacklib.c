@@ -741,6 +741,35 @@ void setLastTurningDirection(d) int d; {
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, d);
 }
 
+int currentTrapType() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "currentTrapType", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+}
+
+int currentTrapTimeout() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "currentTrapTimeout", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+}
+
+
+boolean currentlyTrapped() {
+    return (currentTrapTimeout() > 0);
+}
+
+void setCurrentTrapType(type) int type; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setCurrentTrapType", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, type);
+}
+
+void setCurrentTrapTimeout(timeout) int timeout; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setCurrentTrapTimeout", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, timeout);
+}
+
 int currentExperienceLevel() {
     jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
     jmethodID method = getStaticMethod(you_class, "currentExperienceLevel", "()I");

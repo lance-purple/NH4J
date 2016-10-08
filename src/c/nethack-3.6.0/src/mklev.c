@@ -1540,10 +1540,11 @@ mkinvokearea()
     display_nhwindow(WIN_MESSAGE, TRUE);
 
     /* any trap hero is stuck in will be going away now */
-    if (u.utrap) {
-        u.utrap = 0;
-        if (u.utraptype == TT_BURIEDBALL)
+    if (currentlyTrapped()) {
+        setCurrentTrapTimeout(0);
+        if (currentTrapType() == TT_BURIEDBALL) {
             buried_ball_to_punishment();
+        }
     }
     mkinvpos(xmin, ymin, 0); /* middle, before placing stairs */
 

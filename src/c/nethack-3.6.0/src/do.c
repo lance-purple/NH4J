@@ -149,7 +149,7 @@ const char *verb;
              && (t->ttyp == PIT || t->ttyp == SPIKED_PIT
                  || t->ttyp == TRAPDOOR || t->ttyp == HOLE)) {
         if (((mtmp = m_at(x, y)) && mtmp->mtrapped)
-            || (u.utrap && currentX() == x && currentY() == y)) {
+            || (currentlyTrapped() && currentX() == x && currentY() == y)) {
             if (*verb)
                 pline_The("boulder %s into the pit%s.",
                           vtense((const char *) 0, verb),
@@ -165,8 +165,9 @@ const char *verb;
                     losehp(Maybe_Half_Phys(rnd(15)),
                            "squished under a boulder", NO_KILLER_PREFIX);
                     return FALSE; /* player remains trapped */
-                } else
-                    u.utrap = 0;
+                } else {
+                    setCurrentTrapTimeout(0);
+                }
             }
         }
         if (*verb) {
@@ -965,7 +966,7 @@ doup()
         return 1;
 
     /* "up" to get out of a pit... */
-    if (u.utrap && u.utraptype == TT_PIT) {
+    if (currentlyTrapped() && currentTrapType() == TT_PIT) {
         climb_pit();
         return 1;
     }
@@ -1161,7 +1162,7 @@ boolean at_stairs, falling, portal;
         return; /* this can happen */
 
     /* tethered movement makes level change while trapped feasible */
-    if (u.utrap && u.utraptype == TT_BURIEDBALL)
+    if (currentlyTrapped() && currentTrapType() == TT_BURIEDBALL)
         buried_ball_to_punishment(); /* (before we save/leave old level) */
 
     fd = currentlevel_rewrite();
@@ -1174,7 +1175,7 @@ boolean at_stairs, falling, portal;
     check_special_room(TRUE); /* probably was a trap door */
     if (Punished)
         unplacebc();
-    u.utrap = 0; /* needed in level_tele */
+    setCurrentTrapTimeout(0); /* needed in level_tele */
     fill_pit(currentX(), currentY());
     u.ustuck = 0; /* idem */
     u.uinwater = 0;

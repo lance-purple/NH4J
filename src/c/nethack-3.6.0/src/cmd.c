@@ -1721,14 +1721,14 @@ int final;
         }
         you_are(buf, "");
     }
-    if (u.utrap) {
+    if (currentlyTrapped()) {
         char predicament[BUFSZ];
         struct trap *t;
-        boolean anchored = (u.utraptype == TT_BURIEDBALL);
+        boolean anchored = (currentTrapType() == TT_BURIEDBALL);
 
         if (anchored) {
             Strcpy(predicament, "tethered to something buried");
-        } else if (u.utraptype == TT_INFLOOR || u.utraptype == TT_LAVA) {
+        } else if (currentTrapType() == TT_INFLOOR || currentTrapType() == TT_LAVA) {
             Sprintf(predicament, "stuck in %s", the(surface(currentX(), currentY())));
         } else {
             Strcpy(predicament, "trapped");
@@ -1743,7 +1743,7 @@ int final;
                     (anchored ? "were " : "was "), predicament, "");
         } else
             you_are(predicament, "");
-    } /* (u.utrap) */
+    } /* (currentlyTrapped()) */
     if (u.uswallow) {
         Sprintf(buf, "swallowed by %s", a_monnam(u.ustuck));
         if (wizard)
@@ -2466,7 +2466,7 @@ int msgflag;          /* for variant message phrasing */
             Sprintf(bp, " on the %s", ceiling(currentX(), currentY()));
         } else {
             /* on floor; is_hider() but otherwise not special: 'trapper' */
-            if (u.utrap && u.utraptype == TT_PIT) {
+            if (currentlyTrapped() && currentTrapType() == TT_PIT) {
                 struct trap *t = t_at(currentX(), currentY());
 
                 Sprintf(bp, " in a %spit",

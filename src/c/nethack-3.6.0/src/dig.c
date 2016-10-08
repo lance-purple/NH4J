@@ -313,7 +313,7 @@ dig(VOID_ARGS)
                          || ttmp->ttyp == SPIKED_PIT))) {
             return 1;
         } else if (ttmp && (ttmp->ttyp == LANDMINE
-                            || (ttmp->ttyp == BEAR_TRAP && !u.utrap))) {
+                            || (ttmp->ttyp == BEAR_TRAP && !currentlyTrapped()))) {
             /* digging onto a set object trap triggers it;
                hero should have used #untrap first */
             dotrap(ttmp, FORCETRAP);
@@ -321,7 +321,7 @@ dig(VOID_ARGS)
             (void) memset((genericptr_t) &context.digging, 0,
                           sizeof context.digging);
             return 0;
-        } else if (ttmp && ttmp->ttyp == BEAR_TRAP && u.utrap) {
+        } else if (ttmp && ttmp->ttyp == BEAR_TRAP && currentlyTrapped()) {
             if (rnl(7) > (Fumbling ? 1 : 4)) {
                 char kbuf[BUFSZ];
                 int dmg = dmgval(uwep, &youmonst) + dbon();
@@ -337,7 +337,7 @@ dig(VOID_ARGS)
             } else {
                 You("destroy the bear trap with %s.",
                     yobjnam(uwep, (const char *) 0));
-                u.utrap = 0; /* release from trap */
+                setCurrentTrapTimeout(0); /* release from trap */
                 deltrap(ttmp);
             }
             /* we haven't made any progress toward a pit yet */
@@ -551,11 +551,13 @@ int ttyp;
     boolean at_u = (x == currentX()) && (y == currentY());
     boolean wont_fall = Levitation || Flying;
 
-    if (at_u && u.utrap) {
-        if (u.utraptype == TT_BURIEDBALL)
+    if (at_u && currentlyTrapped()) {
+        if (currentTrapType() == TT_BURIEDBALL) {
             buried_ball_to_punishment();
-        else if (u.utraptype == TT_INFLOOR)
-            u.utrap = 0;
+        }
+        else if (currentTrapType() == TT_INFLOOR) {
+            setCurrentTrapTimeout(0);
+        }
     }
 
     /* these furniture checks were in dighole(), but wand
@@ -617,11 +619,12 @@ int ttyp;
 
         if (at_u) {
             if (!wont_fall) {
-                u.utrap = rn1(4, 2);
-                u.utraptype = TT_PIT;
+                setCurrentTrapType(TT_PIT);
+                setCurrentTrapTimeout(rn1(4, 2));
                 vision_full_recalc = 1; /* vision limits change */
-            } else
-                u.utrap = 0;
+            } else {
+                setCurrentTrapTimeout(0); 
+            }
             if (oldobjs != newobjs) /* something unearthed */
                 (void) pickup(1);   /* detects pit */
         } else if (mtmp) {
@@ -960,7 +963,7 @@ struct obj *obj;
     ispick = is_pick(obj);
     verb = ispick ? "dig" : "chop";
 
-    if (u.utrap && u.utraptype == TT_WEB) {
+    if (currentlyTrapped() && currentTrapType() == TT_WEB) {
         pline("%s you can't %s while entangled in a web.",
               /* res==0 => no prior message;
                  res==1 => just got "You now wield a pick-axe." message */
@@ -1082,7 +1085,7 @@ struct obj *obj;
                 if (vibrate)
                     losehp(Maybe_Half_Phys(2), "axing a hard object",
                            KILLED_BY);
-            } else if (u.utrap && u.utraptype == TT_PIT && trap
+            } else if (currentlyTrapped() && currentTrapType() == TT_PIT && trap
                        && (trap_with_u = t_at(currentX(), currentY()))
                        && (trap->ttyp == PIT || trap->ttyp == SPIKED_PIT)
                        && !conjoined_pits(trap, trap_with_u, FALSE)) {
@@ -1098,7 +1101,7 @@ struct obj *obj;
                     trap->conjoined |= (1 << adjidx);
                     pline("You clear some debris from between the pits.");
                 }
-            } else if (u.utrap && u.utraptype == TT_PIT
+            } else if (currentlyTrapped() && currentTrapType() == TT_PIT
                        && (trap_with_u = t_at(currentX(), currentY()))) {
                 You("swing %s, but the rubble has no place to go.",
                     yobjnam(obj, (char *) 0));
@@ -1152,7 +1155,7 @@ struct obj *obj;
                && uteetering_at_seen_pit(trap)) {
         dotrap(trap, FORCEBUNGLE);
         /* might escape trap and still be teetering at brink */
-        if (!u.utrap)
+        if (!currentlyTrapped())
             cant_reach_floor(currentX(), currentY(), FALSE, TRUE);
     } else if (!ispick
                /* can only dig down with an axe when doing so will
@@ -1430,7 +1433,7 @@ zap_dig()
     maze_dig = level.flags.is_maze_lev && !areYouOnEarthLevel();
     zx = currentX() + directionX();
     zy = currentY() + directionY();
-    if (u.utrap && u.utraptype == TT_PIT
+    if (currentlyTrapped() && currentTrapType() == TT_PIT
         && (trap_with_u = t_at(currentX(), currentY()))) {
         pitdig = TRUE;
         for (diridx = 0; diridx < 8; diridx++) {
@@ -1711,7 +1714,7 @@ coord *cc;
     xchar check_x, check_y;
     struct obj *otmp, *otmp2;
 
-    if (u.utraptype == TT_BURIEDBALL)
+    if (currentTrapType() == TT_BURIEDBALL)
         for (otmp = level.buriedobjlist; otmp; otmp = otmp2) {
             otmp2 = otmp->nobj;
             if (otmp->otyp != HEAVY_IRON_BALL)
@@ -1756,8 +1759,8 @@ buried_ball_to_punishment()
             (void) stop_timer(RUST_METAL, obj_to_any(ball));
 #endif
         punish(ball); /* use ball as flag for unearthed buried ball */
-        u.utrap = 0;
-        u.utraptype = 0;
+        setCurrentTrapType(0);
+        setCurrentTrapTimeout(0);
         del_engr_at(cc.x, cc.y);
         newsym(cc.x, cc.y);
     }
@@ -1780,8 +1783,8 @@ buried_ball_to_freedom()
 #endif
         place_object(ball, cc.x, cc.y);
         stackobj(ball);
-        u.utrap = 0;
-        u.utraptype = 0;
+        setCurrentTrapType(0);
+        setCurrentTrapTimeout(0);
         del_engr_at(cc.x, cc.y);
         newsym(cc.x, cc.y);
     }
@@ -1802,8 +1805,8 @@ boolean *dealloced;
         *dealloced = FALSE;
     if (otmp == uball) {
         unpunish();
-        u.utrap = rn1(50, 20);
-        u.utraptype = TT_BURIEDBALL;
+        setCurrentTrapType(TT_BURIEDBALL);
+        setCurrentTrapTimeout(rn1(50, 20));
         pline_The("iron ball gets buried!");
     }
     /* after unpunish(), or might get deallocated chain */
@@ -1890,7 +1893,7 @@ int x, y;
     for (otmp = level.buriedobjlist; otmp; otmp = otmp2) {
         otmp2 = otmp->nobj;
         if (otmp->ox == x && otmp->oy == y) {
-            if (bball && otmp == bball && u.utraptype == TT_BURIEDBALL) {
+            if (bball && otmp == bball && currentTrapType() == TT_BURIEDBALL) {
                 buried_ball_to_punishment();
             } else {
                 obj_extract_self(otmp);

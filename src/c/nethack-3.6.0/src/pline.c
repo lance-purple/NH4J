@@ -509,7 +509,7 @@ ustatusline()
     }
     if (Glib)
         Sprintf(eos(info), ", slippery %s", makeplural(body_part(HAND)));
-    if (u.utrap)
+    if (currentlyTrapped())
         Strcat(info, ", trapped");
     if (Fast)
         Strcat(info, Very_fast ? ", very fast" : ", fast");

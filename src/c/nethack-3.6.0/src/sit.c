@@ -79,37 +79,38 @@ dosit()
             if (!(Is_box(obj) || objects[obj->otyp].oc_material == CLOTH))
                 pline("It's not very comfortable...");
         }
-    } else if (trap != 0 || (u.utrap && (u.utraptype >= TT_LAVA))) {
-        if (u.utrap) {
+    } else if (trap != 0 || (currentlyTrapped() && (currentTrapType() >= TT_LAVA))) {
+        if (currentlyTrapped()) {
             exercise(A_WIS, FALSE); /* you're getting stuck longer */
-            if (u.utraptype == TT_BEARTRAP) {
+            if (currentTrapType() == TT_BEARTRAP) {
                 You_cant("sit down with your %s in the bear trap.",
                          body_part(FOOT));
-                u.utrap++;
-            } else if (u.utraptype == TT_PIT) {
+                setCurrentTrapTimeout(currentTrapTimeout() + 1);
+            } else if (currentTrapType() == TT_PIT) {
                 if (trap && trap->ttyp == SPIKED_PIT) {
                     You("sit down on a spike.  Ouch!");
                     losehp(Half_physical_damage ? rn2(2) : 1,
                            "sitting on an iron spike", KILLED_BY);
                     exercise(A_STR, FALSE);
-                } else
+                } else {
                     You("sit down in the pit.");
-                u.utrap += rn2(5);
-            } else if (u.utraptype == TT_WEB) {
+                }
+                setCurrentTrapTimeout(currentTrapTimeout() + rn2(5));
+            } else if (currentTrapType() == TT_WEB) {
                 You("sit in the spider web and get entangled further!");
-                u.utrap += rn1(10, 5);
-            } else if (u.utraptype == TT_LAVA) {
+                setCurrentTrapTimeout(currentTrapTimeout() + rn1(10, 5));
+            } else if (currentTrapType() == TT_LAVA) {
                 /* Must have fire resistance or they'd be dead already */
                 You("sit in the lava!");
                 if (Slimed)
                     burn_away_slime();
-                u.utrap += rnd(4);
+                setCurrentTrapTimeout(currentTrapTimeout() + rnd(4));
                 losehp(d(2, 10), "sitting in lava",
                        KILLED_BY); /* lava damage */
-            } else if (u.utraptype == TT_INFLOOR
-                       || u.utraptype == TT_BURIEDBALL) {
+            } else if (currentTrapType() == TT_INFLOOR
+                       || currentTrapType() == TT_BURIEDBALL) {
                 You_cant("maneuver to sit!");
-                u.utrap++;
+                setCurrentTrapTimeout(currentTrapTimeout() + 1);
             }
         } else {
             You("sit down.");

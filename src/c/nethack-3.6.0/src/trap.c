@@ -329,12 +329,12 @@ register int x, y, typ;
         if (ttmp->ttyp == MAGIC_PORTAL || ttmp->ttyp == VIBRATING_SQUARE)
             return (struct trap *) 0;
         oldplace = TRUE;
-        if (u.utrap && x == currentX() && y == currentY()
-            && ((u.utraptype == TT_BEARTRAP && typ != BEAR_TRAP)
-                || (u.utraptype == TT_WEB && typ != WEB)
-                || (u.utraptype == TT_PIT && typ != PIT
+        if (currentlyTrapped() && x == currentX() && y == currentY()
+            && ((currentTrapType() == TT_BEARTRAP && typ != BEAR_TRAP)
+                || (currentTrapType() == TT_WEB && typ != WEB)
+                || (currentTrapType() == TT_PIT && typ != PIT
                     && typ != SPIKED_PIT)))
-            u.utrap = 0;
+            setCurrentTrapTimeout(0);
         /* old <tx,ty> remain valid */
     } else if (IS_FURNITURE(levl[x][y].typ)) {
         /* no trap on top of furniture (caller usually screens the
@@ -993,13 +993,13 @@ unsigned trflags;
                   A_Your[trap->madeby_u]);
             break;
         }
-        u.utrap = rn1(4, 4);
-        u.utraptype = TT_BEARTRAP;
+        setCurrentTrapType(TT_BEARTRAP);
+        setCurrentTrapTimeout(currentTrapTimeout() + rn1(4, 4));
         if (u.usteed) {
             pline("%s bear trap closes on %s %s!", A_Your[trap->madeby_u],
                   s_suffix(mon_nam(u.usteed)), mbodypart(u.usteed, FOOT));
             if (thitm(0, u.usteed, (struct obj *) 0, dmg, FALSE))
-                u.utrap = 0; /* steed died, hero not trapped */
+                setCurrentTrapTimeout(0); /* steed died, hero not trapped */
         } else {
             pline("%s bear trap closes on your %s!", A_Your[trap->madeby_u],
                   body_part(FOOT));
@@ -1141,8 +1141,8 @@ unsigned trflags;
             } else
                 You("%s %s!", adj_pit ? "step" : "land", predicament);
         }
-        u.utrap = rn1(6, 2);
-        u.utraptype = TT_PIT;
+        setCurrentTrapTimeout(currentTrapTimeout() + rn1(6, 2));
+        setCurrentTrapType(TT_PIT);
         if (!steedintrap(trap, (struct obj *) 0)) {
             if (ttype == SPIKED_PIT) {
                 oldumort = u.umortality;
@@ -1243,7 +1243,7 @@ unsigned trflags;
             }
             You("%s %s spider web!", verbbuf, a_your[trap->madeby_u]);
         }
-        u.utraptype = TT_WEB;
+        setCurrentTrapType(TT_WEB);
 
         /* Time stuck in the web depends on your/steed strength. */
         {
@@ -1274,24 +1274,32 @@ unsigned trflags;
 
                 webmsgok = FALSE; /* mintrap printed the messages */
             }
-            if (str <= 3)
-                u.utrap = rn1(6, 6);
-            else if (str < 6)
-                u.utrap = rn1(6, 4);
-            else if (str < 9)
-                u.utrap = rn1(4, 4);
-            else if (str < 12)
-                u.utrap = rn1(4, 2);
-            else if (str < 15)
-                u.utrap = rn1(2, 2);
-            else if (str < 18)
-                u.utrap = rnd(2);
-            else if (str < 69)
-                u.utrap = 1;
+            if (str <= 3) {
+                setCurrentTrapTimeout(rn1(6, 6));
+            }
+            else if (str < 6) {
+                setCurrentTrapTimeout(rn1(6, 4));
+            }
+            else if (str < 9) {
+                setCurrentTrapTimeout(rn1(4, 4));
+            }
+            else if (str < 12) {
+                setCurrentTrapTimeout(rn1(4, 2));
+            }
+            else if (str < 15) {
+                setCurrentTrapTimeout(rn1(2, 2));
+            }
+            else if (str < 18) {
+                setCurrentTrapTimeout(rnd(2));
+            }
+            else if (str < 69) {
+                setCurrentTrapTimeout(1);
+            }
             else {
-                u.utrap = 0;
-                if (webmsgok)
+                setCurrentTrapTimeout(0);
+                if (webmsgok) {
                     You("tear through %s web!", a_your[trap->madeby_u]);
+                }
                 deltrap(trap);
                 newsym(currentX(), currentY()); /* get rid of trap symbol */
             }
@@ -2729,13 +2737,13 @@ boolean byplayer;
 void
 float_up()
 {
-    if (u.utrap) {
-        if (u.utraptype == TT_PIT) {
-            u.utrap = 0;
+    if (currentlyTrapped()) {
+        if (currentTrapType() == TT_PIT) {
+            setCurrentTrapTimeout(0);
             You("float up, out of the pit!");
             vision_full_recalc = 1; /* vision limits change */
             fill_pit(currentX(), currentY());
-        } else if (u.utraptype == TT_INFLOOR) {
+        } else if (currentTrapType() == TT_INFLOOR) {
             Your("body pulls upward, but your %s are still stuck.",
                  makeplural(body_part(LEG)));
         } else {
@@ -2913,8 +2921,9 @@ long hmask, emask; /* might cancel timeout */
                 break;
             /*FALLTHRU*/
         default:
-            if (!u.utrap) /* not already in the trap */
+            if (!currentlyTrapped()) { /* not already in the trap */
                 dotrap(trap, 0);
+            }
         }
     }
     if (!areYouOnAirLevel() && !areYouOnWaterLevel() && !u.uswallow
@@ -2929,13 +2938,13 @@ long hmask, emask; /* might cancel timeout */
 void
 climb_pit()
 {
-    if (!u.utrap || u.utraptype != TT_PIT)
+    if (!currentlyTrapped() || currentTrapType() != TT_PIT)
         return;
 
     if (Passes_walls) {
         /* marked as trapped so they can pick things up */
         You("ascend from the pit.");
-        u.utrap = 0;
+        setCurrentTrapTimeout(0);
         fill_pit(currentX(), currentY());
         vision_full_recalc = 1; /* vision limits change */
     } else if (!rn2(2) && sobj_at(BOULDER, currentX(), currentY())) {
@@ -2947,10 +2956,10 @@ climb_pit()
         /* eg fell in pit, then poly'd to a flying monster;
            or used '>' to deliberately enter it */
         You("%s from the pit.", Flying ? "fly" : "climb");
-        u.utrap = 0;
+        setCurrentTrapTimeout(0);
         fill_pit(currentX(), currentY());
         vision_full_recalc = 1; /* vision limits change */
-    } else if (!(--u.utrap)) {
+    } else if (!(setCurrentTrapTimeout(currentTrapTimeout() - 1), currentlyTrapped())) {
         You("%s to the edge of the pit.",
             (Sokoban && Levitation)
                 ? "struggle against the air currents and float"
@@ -3771,8 +3780,9 @@ boolean bury_it;
         stackobj(otmp);
     }
     newsym(ttmp->tx, ttmp->ty);
-    if (u.utrap && ttmp->tx == currentX() && ttmp->ty == currentY())
-        u.utrap = 0;
+    if (currentlyTrapped() && ttmp->tx == currentX() && ttmp->ty == currentY()) {
+        setCurrentTrapTimeout(0);
+    }
     deltrap(ttmp);
 }
 
@@ -3873,7 +3883,7 @@ boolean force_failure;
                             pline_The(
                                 "webbing sticks to you. You're caught too!");
                             dotrap(ttmp2, NOWEBMSG);
-                            if (u.usteed && u.utrap) {
+                            if (u.usteed && currentlyTrapped()) {
                                 /* you, not steed, are trapped */
                                 dismount_steed(DISMOUNT_FELL);
                             }
@@ -4196,7 +4206,7 @@ boolean force;
             if (boxcnt) {
                 if (ttmp->ttyp == PIT || ttmp->ttyp == SPIKED_PIT) {
                     You_cant("do much about %s%s.", the_trap,
-                             u.utrap ? " that you're stuck in"
+                             currentlyTrapped() ? " that you're stuck in"
                                      : " while standing on the edge of it");
                     trap_skipped = TRUE;
                     deal_with_floor_trap = FALSE;
@@ -4217,7 +4227,7 @@ boolean force;
                 }
             }
             if (deal_with_floor_trap) {
-                if (u.utrap) {
+                if (currentlyTrapped()) {
                     You("cannot deal with %s while trapped%s!", the_trap,
                         (x == currentX() && y == currentY()) ? " in it" : "");
                     return 1;
@@ -4395,12 +4405,13 @@ boolean *noticed; /* set to true iff hero notices the effect; */
                      : index(vowels, *trapdescr) ? "an" : "a";
 
     if (ishero) {
-        if (!u.utrap)
+        if (!currentlyTrapped()) {
             return FALSE;
-        u.utrap = 0; /* released regardless of type */
+        }
+        setCurrentTrapTimeout(0); /* released regardless of type */
         *noticed = TRUE;
         /* give message only if trap was the expected type */
-        if (u.utraptype == TT_BEARTRAP || u.utraptype == TT_WEB) {
+        if (currentTrapType() == TT_BEARTRAP || currentTrapType() == TT_WEB) {
             if (u.usteed)
                 Sprintf(buf, "%s is", noit_Monnam(u.usteed));
             else
@@ -4449,7 +4460,7 @@ boolean *noticed; /* set to true iff hero notices the effect; */
         return FALSE;
 
     if (ishero) {
-        if (u.utrap)
+        if (currentlyTrapped())
             return FALSE; /* already trapped */
         *noticed = TRUE;
         dotrapflags = FORCETRAP;
@@ -4459,7 +4470,7 @@ boolean *noticed; /* set to true iff hero notices the effect; */
         ++force_mintrap;
         dotrap(t, dotrapflags);
         --force_mintrap;
-        result = (u.utrap != 0);
+        result = (currentlyTrapped() != 0);
     } else {
         if (mon->mtrapped)
             return FALSE; /* already trapped */
@@ -4495,11 +4506,11 @@ boolean *noticed; /* set to true iff hero notices the effect; */
         return FALSE;
 
     if (ishero) {
-        if (u.utrap)
+        if (currentlyTrapped())
             return FALSE; /* already trapped */
         *noticed = TRUE;
         dotrap(t, FORCETRAP);
-        result = (u.utrap != 0);
+        result = (currentlyTrapped() != 0);
     } else {
         if (mon->mtrapped)
             return FALSE; /* already trapped */
@@ -4757,7 +4768,7 @@ boolean u_entering_trap2;
     if (!isok(trap2->tx, trap2->ty) || !isok(trap1->tx, trap1->ty)
         || !(trap2->ttyp == PIT || trap2->ttyp == SPIKED_PIT)
         || !(trap1->ttyp == PIT || trap1->ttyp == SPIKED_PIT)
-        || (u_entering_trap2 && !(u.utrap && u.utraptype == TT_PIT)))
+        || (u_entering_trap2 && !(currentlyTrapped() && currentTrapType() == TT_PIT)))
         return FALSE;
     dx = sgn(trap2->tx - trap1->tx);
     dy = sgn(trap2->ty - trap1->ty);
@@ -4834,7 +4845,7 @@ boolean
 uteetering_at_seen_pit(trap)
 struct trap *trap;
 {
-    if (trap && trap->tseen && (!u.utrap || u.utraptype != TT_PIT)
+    if (trap && trap->tseen && (!currentlyTrapped() || currentTrapType() != TT_PIT)
         && (trap->ttyp == PIT || trap->ttyp == SPIKED_PIT))
         return TRUE;
     else
@@ -4857,8 +4868,8 @@ register struct trap *ttmp;
         register struct monst *mtmp;
 
         if (ttmp->tx == currentX() && ttmp->ty == currentY()) {
-            u.utrap = 0;
-            u.utraptype = 0;
+            setCurrentTrapType(0);
+            setCurrentTrapTimeout(0);
         } else if ((mtmp = m_at(ttmp->tx, ttmp->ty)) != 0) {
             mtmp->mtrapped = 0;
         }
@@ -5062,12 +5073,12 @@ lava_effects()
         }
         You("find yourself back on solid %s.", surface(currentX(), currentY()));
         return TRUE;
-    } else if (!canYouWalkOnWater() && (!u.utrap || u.utraptype != TT_LAVA)) {
+    } else if (!canYouWalkOnWater() && (!currentlyTrapped() || currentTrapType() != TT_LAVA)) {
         boil_away = !Fire_resistance;
         /* if not fire resistant, sink_into_lava() will quickly be fatal;
            hero needs to escape immediately */
-        u.utrap = rn1(4, 4) + ((boil_away ? 2 : rn1(4, 12)) << 8);
-        u.utraptype = TT_LAVA;
+        setCurrentTrapTimeout(rn1(4, 4) + ((boil_away ? 2 : rn1(4, 12)) << 8));
+        setCurrentTrapType(TT_LAVA);
         You("sink into the lava%s!", !boil_away
                                          ? ", but it only burns slightly"
                                          : " and are about to be immolated");
@@ -5089,20 +5100,20 @@ sink_into_lava()
 {
     static const char sink_deeper[] = "You sink deeper into the lava.";
 
-    if (!u.utrap || u.utraptype != TT_LAVA) {
+    if (!currentlyTrapped() || currentTrapType() != TT_LAVA) {
         ; /* do nothing; this shouldn't happen */
     } else if (!is_lava(currentX(), currentY())) {
-        u.utrap = 0; /* this shouldn't happen either */
+        setCurrentTrapTimeout(0); /* this shouldn't happen either */
     } else if (!u.uinvulnerable) {
         /* ordinarily we'd have to be fire resistant to survive long
            enough to become stuck in lava, but it can happen without
            resistance if water walking boots allow survival and then
-           get burned up; u.utrap time will be quite short in that case */
+           get burned up; currentTrapTimeout() time will be quite short in that case */
         if (!Fire_resistance)
             u.uhp = (u.uhp + 2) / 3;
 
-        u.utrap -= (1 << 8);
-        if (u.utrap < (1 << 8)) {
+        setCurrentTrapTimeout(currentTrapTimeout() - (1 << 8));
+        if (currentTrapTimeout() < (1 << 8)) {
             killer.format = KILLED_BY;
             Strcpy(killer.name, "molten lava");
             You("sink below the surface and die.");
@@ -5117,7 +5128,7 @@ sink_into_lava()
             } else {
                 Norep(sink_deeper);
             }
-            u.utrap += rnd(4);
+            setCurrentTrapTimeout(currentTrapTimeout() + rnd(4));
         }
     }
 }

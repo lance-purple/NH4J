@@ -169,7 +169,7 @@ in_trouble()
         return TROUBLE_SLIMED;
     if (Strangled)
         return TROUBLE_STRANGLED;
-    if (u.utrap && u.utraptype == TT_LAVA)
+    if (currentlyTrapped() && currentTrapType() == TT_LAVA)
         return TROUBLE_LAVA;
     if (Sick)
         return TROUBLE_SICK;
@@ -216,7 +216,7 @@ in_trouble()
     /*
      * minor troubles
      */
-    if (Punished || (u.utrap && u.utraptype == TT_BURIEDBALL))
+    if (Punished || (currentlyTrapped() && currentTrapType() == TT_BURIEDBALL))
         return TROUBLE_PUNISHED;
     if (Cursed_obj(uarmg, GAUNTLETS_OF_FUMBLING)
         || Cursed_obj(uarmf, FUMBLE_BOOTS))
@@ -339,8 +339,9 @@ int trouble;
         /* teleport should always succeed, but if not,
          * just untrap them.
          */
-        if (!safe_teleds(FALSE))
-            u.utrap = 0;
+        if (!safe_teleds(FALSE)) {
+            setCurrentTrapTimeout(0);
+        }
         break;
     case TROUBLE_STARVING:
         losestr(-1);
@@ -438,7 +439,7 @@ int trouble;
      */
     case TROUBLE_PUNISHED:
         Your("chain disappears.");
-        if (u.utrap && u.utraptype == TT_BURIEDBALL)
+        if (currentlyTrapped() && currentTrapType() == TT_BURIEDBALL)
             buried_ball_to_freedom();
         else
             unpunish();

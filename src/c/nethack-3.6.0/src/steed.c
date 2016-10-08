@@ -234,10 +234,10 @@ boolean force;      /* Quietly force this animal */
         pline("I see nobody there.");
         return (FALSE);
     }
-    if (u.uswallow || u.ustuck || u.utrap || Punished
+    if (u.uswallow || u.ustuck || currentlyTrapped() || Punished
         || !test_move(currentX(), currentY(), mtmp->mx - currentX(), mtmp->my - currentY(),
                       TEST_MOVE)) {
-        if (Punished || !(u.uswallow || u.ustuck || u.utrap))
+        if (Punished || !(u.uswallow || u.ustuck || currentlyTrapped()))
             You("are unable to swing your %s over.", body_part(LEG));
         else
             You("are stuck here for now.");
@@ -461,7 +461,7 @@ int reason; /* Player was thrown off etc. */
     coord cc;
     const char *verb = "fall";
     boolean repair_leg_damage = (Wounded_legs != 0L);
-    unsigned save_utrap = u.utrap;
+    unsigned save_utrap = currentlyTrapped();
     boolean have_spot = landing_spot(&cc, reason, 0);
 
     mtmp = u.usteed; /* make a copy of steed pointer */
@@ -583,7 +583,7 @@ int reason; /* Player was thrown off etc. */
             /* [ALI] No need to move the player if the steed died. */
             if (mtmp->mhp > 0) {
                 /* Keep steed here, move the player to cc;
-                 * teleds() clears u.utrap
+                 * teleds() clears currentlyTrapped()
                  */
                 in_steed_dismounting = TRUE;
                 teleds(cc.x, cc.y, TRUE);

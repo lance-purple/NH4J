@@ -379,24 +379,24 @@ int force;
                                 pline("A chasm opens up under you!");
                                 You("don't fall in!");
                             }
-                        } else if (!tu_pit || !u.utrap
-                                   || (u.utrap && u.utraptype != TT_PIT)) {
+                        } else if (!tu_pit || !currentlyTrapped()
+                                   || (currentlyTrapped() && currentTrapType() != TT_PIT)) {
                             /* no pit here previously, or you were
                                not in it even it there was */
                             You("fall into a chasm!");
-                            u.utrap = rn1(6, 2);
-                            u.utraptype = TT_PIT;
+                            setCurrentTrapType(TT_PIT);
+                            setCurrentTrapTimeout(rn1(6, 2));
                             losehp(Maybe_Half_Phys(rnd(6)),
                                    "fell into a chasm", NO_KILLER_PREFIX);
                             selftouch("Falling, you");
-                        } else if (u.utrap && u.utraptype == TT_PIT) {
+                        } else if (currentlyTrapped() && currentTrapType() == TT_PIT) {
                             boolean keepfooting =
                                 ((Fumbling && !rn2(5))
                                  || (!rnl(Role_if(PM_ARCHEOLOGIST) ? 3 : 9))
                                  || ((ACURR(A_DEX) > 7) && rn2(5)));
                             You("are jostled around violently!");
-                            u.utrap = rn1(6, 2);
-                            u.utraptype = TT_PIT; /* superfluous */
+                            setCurrentTrapTimeout(rn1(6, 2));
+                            setCurrentTrapType(TT_PIT); /* superfluous */
                             losehp(Maybe_Half_Phys(rnd(keepfooting ? 2 : 4)),
                                    "hurt in a chasm", NO_KILLER_PREFIX);
                             if (keepfooting)

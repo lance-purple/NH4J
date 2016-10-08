@@ -248,7 +248,7 @@ boolean allow_drag;
 {
     boolean ball_active, ball_still_in_range;
 
-    if (u.utraptype == TT_BURIEDBALL) {
+    if (currentTrapType() == TT_BURIEDBALL) {
         /* unearth it */
         buried_ball_to_punishment();
     }
@@ -284,7 +284,7 @@ boolean allow_drag;
             }
         }
     }
-    u.utrap = 0;
+    setCurrentTrapTimeout(0);
     u.ustuck = 0;
     setOriginalX(currentX());
     setOriginalY(currentY());
@@ -701,7 +701,7 @@ level_tele()
         }
     }
 
-    if (u.utrap && u.utraptype == TT_BURIEDBALL)
+    if (currentlyTrapped() && currentTrapType() == TT_BURIEDBALL)
         buried_ball_to_punishment();
 
     if (!next_to_u() && !force_dest) {
@@ -822,7 +822,7 @@ register struct trap *ttmp;
 {
     struct d_level target_level;
 
-    if (u.utrap && u.utraptype == TT_BURIEDBALL)
+    if (currentlyTrapped() && currentTrapType() == TT_BURIEDBALL)
         buried_ball_to_punishment();
 
     if (!next_to_u()) {

@@ -203,8 +203,8 @@ const char *fmt, *arg;
     if (u.twoweap && !could_twoweap(youmonst.data))
         untwoweapon();
 
-    if (u.utraptype == TT_PIT && u.utrap) {
-        u.utrap = rn1(6, 2); /* time to escape resets */
+    if (currentlyTrapped() && currentTrapType() == TT_PIT) {
+        setCurrentTrapTimeout(rn1(6, 2)); /* time to escape resets */
     }
     if (was_blind && !Blind) { /* reverting from eyeless */
         Blinded = 1L;
@@ -738,8 +738,8 @@ int mntmp;
     drop_weapon(1);
     (void) hideunder(&youmonst);
 
-    if (u.utraptype == TT_PIT && u.utrap) {
-        u.utrap = rn1(6, 2); /* time to escape resets */
+    if (currentlyTrapped() && currentTrapType() == TT_PIT) {
+        setCurrentTrapTimeout(rn1(6, 2)); /* time to escape resets */
     }
     if (was_blind && !Blind) { /* previous form was eyeless */
         Blinded = 1L;
@@ -807,18 +807,18 @@ int mntmp;
     if ((!Levitation && !u.ustuck && !Flying && is_pool_or_lava(currentX(), currentY()))
         || (Underwater && !Swimming))
         spoteffects(TRUE);
-    if (Passes_walls && u.utrap
-        && (u.utraptype == TT_INFLOOR || u.utraptype == TT_BURIEDBALL)) {
-        u.utrap = 0;
-        if (u.utraptype == TT_INFLOOR)
+    if (Passes_walls && currentlyTrapped()
+        && (currentTrapType() == TT_INFLOOR || currentTrapType() == TT_BURIEDBALL)) {
+        setCurrentTrapTimeout(0);
+        if (currentTrapType() == TT_INFLOOR)
             pline_The("rock seems to no longer trap you.");
         else {
             pline_The("buried ball is no longer bound to you.");
             buried_ball_to_freedom();
         }
-    } else if (likes_lava(youmonst.data) && u.utrap
-               && u.utraptype == TT_LAVA) {
-        u.utrap = 0;
+    } else if (likes_lava(youmonst.data) && currentlyTrapped()
+               && currentTrapType() == TT_LAVA) {
+        setCurrentTrapTimeout(0);
         pline_The("lava now feels soothing.");
     }
     if (amorphous(youmonst.data) || is_whirly(youmonst.data)
@@ -826,23 +826,23 @@ int mntmp;
         if (Punished) {
             You("slip out of the iron chain.");
             unpunish();
-        } else if (u.utrap && u.utraptype == TT_BURIEDBALL) {
+        } else if (currentlyTrapped() && currentTrapType() == TT_BURIEDBALL) {
             You("slip free of the buried ball and chain.");
             buried_ball_to_freedom();
         }
     }
-    if (u.utrap && (u.utraptype == TT_WEB || u.utraptype == TT_BEARTRAP)
+    if (currentlyTrapped() && (currentTrapType() == TT_WEB || currentTrapType() == TT_BEARTRAP)
         && (amorphous(youmonst.data) || is_whirly(youmonst.data)
             || unsolid(youmonst.data) || (youmonst.data->msize <= MZ_SMALL
-                                          && u.utraptype == TT_BEARTRAP))) {
+                                          && currentTrapType() == TT_BEARTRAP))) {
         You("are no longer stuck in the %s.",
-            u.utraptype == TT_WEB ? "web" : "bear trap");
+            currentTrapType() == TT_WEB ? "web" : "bear trap");
         /* probably should burn webs too if PM_FIRE_ELEMENTAL */
-        u.utrap = 0;
+        setCurrentTrapTimeout(0);
     }
-    if (webmaker(youmonst.data) && u.utrap && u.utraptype == TT_WEB) {
+    if (webmaker(youmonst.data) && currentlyTrapped() && currentTrapType() == TT_WEB) {
         You("orient yourself on the web.");
-        u.utrap = 0;
+        setCurrentTrapTimeout(0);
     }
     check_strangling(TRUE); /* maybe start strangling */
     (void) polysense(youmonst.data);
@@ -1119,7 +1119,7 @@ int
 doremove()
 {
     if (!Punished) {
-        if (u.utrap && u.utraptype == TT_BURIEDBALL) {
+        if (currentlyTrapped() && currentTrapType() == TT_BURIEDBALL) {
             pline_The("ball and chain are buried firmly in the %s.",
                       surface(currentX(), currentY()));
             return 0;
@@ -1177,7 +1177,7 @@ dospinweb()
         pline_The("web dissolves into %s.", mon_nam(u.ustuck));
         return 0;
     }
-    if (u.utrap) {
+    if (currentlyTrapped()) {
         You("cannot spin webs while stuck in a trap.");
         return 0;
     }
@@ -1410,7 +1410,7 @@ dohide()
 
     /* can't hide while being held (or holding) or while trapped
        (except for floor hiders [trapper or mimic] in pits) */
-    if (u.ustuck || (u.utrap && (u.utraptype != TT_PIT || on_ceiling))) {
+    if (u.ustuck || (currentlyTrapped() && (currentTrapType() != TT_PIT || on_ceiling))) {
         You_cant("hide while you're %s.",
                  !u.ustuck ? "trapped" : !sticks(youmonst.data)
                                              ? "being held"

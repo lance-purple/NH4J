@@ -707,15 +707,15 @@ boolean verbose;
         You_feel("a tug from the iron ball.");
         nomul(0);
         return;
-    } else if (u.utrap) {
+    } else if (currentlyTrapped()) {
         You("are anchored by the %s.",
-            u.utraptype == TT_WEB
+            currentTrapType() == TT_WEB
                 ? "web"
-                : u.utraptype == TT_LAVA
+                : currentTrapType() == TT_LAVA
                       ? "lava"
-                      : u.utraptype == TT_INFLOOR
+                      : currentTrapType() == TT_INFLOOR
                             ? surface(currentX(), currentY())
-                            : u.utraptype == TT_BURIEDBALL ? "buried ball"
+                            : currentTrapType() == TT_BURIEDBALL ? "buried ball"
                                                            : "trap");
         nomul(0);
         return;
@@ -1117,7 +1117,7 @@ boolean
             range = 20; /* you must be giant */
         else if (obj->oartifact == ART_MJOLLNIR)
             range = (range + 1) / 2; /* it's heavy */
-        else if (obj == uball && u.utrap && u.utraptype == TT_INFLOOR)
+        else if (obj == uball && currentlyTrapped() && currentTrapType() == TT_INFLOOR)
             range = 1;
 
         if (Underwater)

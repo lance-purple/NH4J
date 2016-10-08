@@ -7,6 +7,13 @@
 #ifndef TRAP_H
 #define TRAP_H
 
+#define TT_BEARTRAP 0
+#define TT_PIT 1
+#define TT_WEB 2
+#define TT_LAVA 3
+#define TT_INFLOOR 4
+#define TT_BURIEDBALL 5
+
 union vlaunchinfo {
     short v_launch_otyp; /* type of object to be triggered */
     coord v_launch2;     /* secondary launch point (for boulders) */

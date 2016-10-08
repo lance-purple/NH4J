@@ -379,7 +379,7 @@ struct obj *pick;
     } else { /* pick the lock in a door */
         struct monst *mtmp;
 
-        if (u.utrap && u.utraptype == TT_PIT) {
+        if (currentlyTrapped() && currentTrapType() == TT_PIT) {
             You_cant("reach over the edge of the pit.");
             return PICKLOCK_LEARNED_SOMETHING;
         }
@@ -569,7 +569,7 @@ int x, y;
         return 0;
     }
 
-    if (u.utrap && u.utraptype == TT_PIT) {
+    if (currentlyTrapped() && currentTrapType() == TT_PIT) {
         You_cant("reach over the edge of the pit.");
         return 0;
     }
@@ -708,7 +708,7 @@ doclose()
         return 0;
     }
 
-    if (u.utrap && u.utraptype == TT_PIT) {
+    if (currentlyTrapped() && currentTrapType() == TT_PIT) {
         You_cant("reach over the edge of the pit.");
         return 0;
     }

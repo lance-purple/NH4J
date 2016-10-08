@@ -2678,7 +2678,7 @@ struct monst *mtmp;
 
     if (mtmp == u.ustuck) {
         ; /* can't hide if holding you or held by you */
-    } else if (is_u ? (u.utrap && u.utraptype != TT_PIT)
+    } else if (is_u ? (currentlyTrapped() && currentTrapType() != TT_PIT)
                     : (mtmp->mtrapped && (t = t_at(x, y)) != 0
                        && !(t->ttyp == PIT || t->ttyp == SPIKED_PIT))) {
         ; /* can't hide while stuck in a non-pit trap */

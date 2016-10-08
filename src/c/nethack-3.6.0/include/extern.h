@@ -917,6 +917,12 @@ E void FDECL(setYouMoved, (boolean));
 E int FDECL(lastTurningDirection, ());
 E void FDECL(setLastTurningDirection, (int));
 
+E boolean FDECL(currentlyTrapped, ());
+E int FDECL(currentTrapType, ());
+E void FDECL(setCurrentTrapType, (int));
+E int FDECL(currentTrapTimeout, ());
+E void FDECL(setCurrentTrapTimeout, (int));
+
 E int FDECL(currentExperienceLevel, ());
 E void FDECL(setCurrentExperienceLevel, (int));
 E int FDECL(highestExperienceLevelSoFar, ());

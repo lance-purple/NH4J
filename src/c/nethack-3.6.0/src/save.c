@@ -327,6 +327,9 @@ register int fd, mode;
 
     write_int(fd, youMoved());
 
+    write_int(fd, currentTrapType());
+    write_int(fd, currentTrapTimeout());
+
     int i;
     for (i = 0; i < A_MAX; i++) {
         write_int(fd, yourCurrentAttr(i));
