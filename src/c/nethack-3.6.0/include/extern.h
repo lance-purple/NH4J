@@ -936,6 +936,12 @@ E void FDECL(decreaseCurrentNutrition, (int));
 E int FDECL(currentHungerState, ());
 E void FDECL(setCurrentHungerState, (int));
 
+E boolean FDECL(sickWithFoodPoisoning, ());
+E void FDECL(setSickWithFoodPoisoning, (boolean));
+
+E boolean FDECL(sickWithIllness, ());
+E void FDECL(setSickWithIllness, (boolean));
+
 E int FDECL(abilityToConfuseMonsters, ());
 E void FDECL(setAbilityToConfuseMonsters, (int));
 E void FDECL(increaseAbilityToConfuseMonsters, (int));

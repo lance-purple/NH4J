@@ -350,6 +350,9 @@ register int fd, mode;
 
     write_int(fd, abilityToConfuseMonsters());
 
+    write_int(fd, sickWithFoodPoisoning());
+    write_int(fd, sickWithIllness());
+
     bwrite(fd, yyyymmddhhmmss(ubirthday), 14);
     bwrite(fd, (genericptr_t) &urealtime.realtime,
            sizeof(urealtime.realtime));

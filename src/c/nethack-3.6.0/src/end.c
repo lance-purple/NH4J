@@ -712,7 +712,8 @@ int how;
     }
     /* cure impending doom of sickness hero won't have time to fix */
     if ((Sick & TIMEOUT) == 1L) {
-        u.usick_type = 0;
+        setSickWithFoodPoisoning(FALSE);
+        setSickWithIllness(FALSE);
         set_itimeout(&Sick, 0L);
     }
     if (how == CHOKING)

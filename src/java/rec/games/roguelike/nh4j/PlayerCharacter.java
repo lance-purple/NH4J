@@ -48,6 +48,9 @@ public class PlayerCharacter {
 	private static int currentNutrition;
 	
 	private static int abilityToConfuseMonsters;
+
+	private static boolean sickWithFoodPoisoning;
+	private static boolean sickWithIllness;
 	
 	public static int currentDungeonNumber() {
 		return currentDungeonNumber;
@@ -375,6 +378,22 @@ public class PlayerCharacter {
 
 	public static final void setAbilityToConfuseMonsters(int a) {
 		abilityToConfuseMonsters = a;
+	}
+
+	public static final boolean sickWithFoodPoisoning() {
+		return sickWithFoodPoisoning;
+	}
+
+	public static final boolean sickWithIllness() {
+		return sickWithIllness;
+	}
+
+	public static final void setSickWithFoodPoisoning(boolean p) {
+		sickWithFoodPoisoning = p;
+	}
+
+	public static final void setSickWithIllness(boolean i) {
+		sickWithIllness = i;
 	}
 
 }

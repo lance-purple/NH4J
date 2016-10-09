@@ -109,9 +109,9 @@ bot2()
     if (Confusion)
         Sprintf(nb = eos(nb), " Conf");
     if (Sick) {
-        if (u.usick_type & SICK_VOMITABLE)
+        if (sickWithFoodPoisoning())
             Sprintf(nb = eos(nb), " FoodPois");
-        if (u.usick_type & SICK_NONVOMITABLE)
+        if (sickWithIllness())
             Sprintf(nb = eos(nb), " Ill");
     }
     if (Blind)
@@ -548,12 +548,12 @@ bot()
     else
         blstats[idx][BL_CONDITION].a.a_ulong &= ~BL_MASK_CONF;
 
-    if (Sick && u.usick_type & SICK_VOMITABLE)
+    if (Sick && sickWithFoodPoisoning())
         blstats[idx][BL_CONDITION].a.a_ulong |= BL_MASK_FOODPOIS;
     else
         blstats[idx][BL_CONDITION].a.a_ulong &= ~BL_MASK_FOODPOIS;
 
-    if (Sick && u.usick_type & SICK_NONVOMITABLE)
+    if (Sick && sickWithIllness())
         blstats[idx][BL_CONDITION].a.a_ulong |= BL_MASK_ILL;
     else
         blstats[idx][BL_CONDITION].a.a_ulong &= ~BL_MASK_ILL;

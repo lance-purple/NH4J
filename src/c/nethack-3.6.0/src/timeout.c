@@ -315,7 +315,8 @@ nh_timeout()
                         killer.format = KILLED_BY;
                     }
                 }
-                u.usick_type = 0;
+                setSickWithFoodPoisoning(FALSE);
+                setSickWithIllness(FALSE);
                 done(POISONING);
                 break;
             case FAST:

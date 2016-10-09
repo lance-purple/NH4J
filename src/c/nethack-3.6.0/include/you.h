@@ -253,6 +253,10 @@ struct Align {
 
 extern const struct Align aligns[]; /* table of available alignments */
 
+#define SICK_VOMITABLE 0x01
+#define SICK_NONVOMITABLE 0x02
+#define SICK_ALL 0x03
+
 /*** Information about the player ***/
 struct you {
     char urooms[5];         /* rooms (roomno + 3) occupied now */
@@ -264,11 +268,6 @@ struct you {
     char ushops_left[5];    /* ditto, shops exited this turn */
 
     struct prop uprops[LAST_PROP + 1];
-
-    Bitfield(usick_type, 2);
-#define SICK_VOMITABLE 0x01
-#define SICK_NONVOMITABLE 0x02
-#define SICK_ALL 0x03
 
     /* These ranges can never be more than MAX_RANGE (vision.h). */
     int nv_range;   /* current night vision range */

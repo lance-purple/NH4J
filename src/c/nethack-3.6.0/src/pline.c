@@ -472,11 +472,13 @@ ustatusline()
     info[0] = '\0';
     if (Sick) {
         Strcat(info, ", dying from");
-        if (u.usick_type & SICK_VOMITABLE)
+        if (sickWithFoodPoisoning()) {
             Strcat(info, " food poisoning");
-        if (u.usick_type & SICK_NONVOMITABLE) {
-            if (u.usick_type & SICK_VOMITABLE)
+        }
+        if (sickWithIllness()) {
+            if (sickWithFoodPoisoning()) {
                 Strcat(info, " and");
+            }
             Strcat(info, " illness");
         }
     }

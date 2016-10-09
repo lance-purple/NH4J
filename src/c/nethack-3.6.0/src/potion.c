@@ -106,12 +106,14 @@ boolean talk;
 }
 
 void
-make_sick(xtime, cause, talk, type)
+make_sick(xtime, cause, talk, mask)
 long xtime;
 const char *cause; /* sickness cause */
 boolean talk;
-int type;
+int mask;
 {
+    boolean foodPoisoning = (mask & SICK_VOMITABLE);
+    boolean illness       = (mask & SICK_NONVOMITABLE);
     long old = Sick;
 
 #if 0
@@ -126,18 +128,28 @@ int type;
             You_feel("deathly sick.");
         } else {
             /* already sick */
-            if (talk)
+            if (talk) {
                 You_feel("%s worse.", xtime <= Sick / 2L ? "much" : "even");
+            }
         }
         set_itimeout(&Sick, xtime);
-        u.usick_type |= type;
+
+        setSickWithFoodPoisoning(foodPoisoning);
+        setSickWithIllness(illness);
+
         context.botl = TRUE;
-    } else if (old && (type & u.usick_type)) {
+    } else if (old && ((foodPoisoning != sickWithFoodPoisoning()) || (illness != sickWithIllness()))) {
         /* was sick, now not */
-        u.usick_type &= ~type;
-        if (u.usick_type) { /* only partly cured */
-            if (talk)
+        if (sickWithFoodPoisoning() && !foodPoisoning) {
+            setSickWithFoodPoisoning(FALSE);
+        }
+        if (sickWithIllness() && !illness) {
+            setSickWithIllness(FALSE);
+        }
+        if (sickWithFoodPoisoning() || sickWithIllness()) { /* only partly cured */
+            if (talk) {
                 You_feel("somewhat better.");
+            }
             set_itimeout(&Sick, Sick * 2); /* approximation */
         } else {
             if (talk)

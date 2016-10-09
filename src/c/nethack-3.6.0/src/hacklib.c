@@ -846,6 +846,30 @@ void decreaseAbilityToConfuseMonsters(a) int a; {
     setAbilityToConfuseMonsters(abilityToConfuseMonsters() - a);
 }
 
+boolean sickWithFoodPoisoning() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "sickWithFoodPoisoning", "()Z");
+    return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method);
+} 
+
+void setSickWithFoodPoisoning(p) boolean p; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setSickWithFoodPoisoning", "(Z)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, p);
+}
+
+boolean sickWithIllness() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "sickWithIllness", "()Z");
+    return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method);
+} 
+
+void setSickWithIllness(i) boolean i; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setSickWithIllness", "(Z)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, i);
+}
+
 /* square of euclidean distance from pt to your current position */
 int
 distanceSquaredToYou(x, y)

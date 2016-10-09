@@ -1680,9 +1680,9 @@ int final;
     }
     if (Sick) {
         /* prayer lumps these together; botl puts Ill before FoodPois */
-        if (u.usick_type & SICK_NONVOMITABLE)
+        if (sickWithFoodPoisoning())
             you_are("terminally sick from illness", "");
-        if (u.usick_type & SICK_VOMITABLE)
+        if (sickWithIllness())
             you_are("terminally sick from food poisoning", "");
     }
     if (Vomiting)

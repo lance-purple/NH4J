@@ -620,6 +620,9 @@ unsigned int *stuckid, *steedid;
 
     setAbilityToConfuseMonsters(read_int(fd));
 
+    setSickWithFoodPoisoning(read_int(fd) ? TRUE : FALSE);
+    setSickWithIllness(read_int(fd) ? TRUE : FALSE);
+
 #define ReadTimebuf(foo)                   \
     mread(fd, (genericptr_t) timebuf, 14); \
     timebuf[14] = '\0';                    \
