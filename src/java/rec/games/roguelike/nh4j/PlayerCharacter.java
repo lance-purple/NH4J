@@ -48,6 +48,9 @@ public class PlayerCharacter {
 	private static int currentNutrition;
 	
 	private static int abilityToConfuseMonsters;
+	
+	private static int nightVisionRange;
+	private static int xRayVisionRange;
 
 	private static boolean sickWithFoodPoisoning;
 	private static boolean sickWithIllness;
@@ -378,6 +381,22 @@ public class PlayerCharacter {
 
 	public static final void setAbilityToConfuseMonsters(int a) {
 		abilityToConfuseMonsters = a;
+	}
+
+	public static final int nightVisionRange() {
+		return nightVisionRange;
+	}
+
+	public static final void setNightVisionRange(int r) {
+		nightVisionRange = r;
+	}
+
+	public static final int xRayVisionRange() {
+		return xRayVisionRange;
+	}
+
+	public static final void setXRayVisionRange(int r) {
+		xRayVisionRange = r;
 	}
 
 	public static final boolean sickWithFoodPoisoning() {

@@ -846,6 +846,30 @@ void decreaseAbilityToConfuseMonsters(a) int a; {
     setAbilityToConfuseMonsters(abilityToConfuseMonsters() - a);
 }
 
+int nightVisionRange() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "nightVisionRange", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+} 
+
+int xRayVisionRange() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "xRayVisionRange", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+} 
+
+void setNightVisionRange(r) int r; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setNightVisionRange", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, r);
+}
+
+void setXRayVisionRange(r) int r; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setXRayVisionRange", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, r);
+}
+
 boolean sickWithFoodPoisoning() {
     jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
     jmethodID method = getStaticMethod(you_class, "sickWithFoodPoisoning", "()Z");

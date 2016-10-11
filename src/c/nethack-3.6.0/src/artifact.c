@@ -600,10 +600,12 @@ long wp_mask;
     }
     if (spfx & SPFX_XRAY) {
         /* this assumes that no one else is using xray_range */
-        if (on)
-            u.xray_range = 3;
-        else
-            u.xray_range = -1;
+        if (on) {
+            setXRayVisionRange(3);
+        }
+        else {
+            setXRayVisionRange(-1);
+        }
         vision_full_recalc = 1;
     }
     if ((spfx & SPFX_REFLECT) && (wp_mask & W_WEP)) {

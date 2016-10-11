@@ -620,6 +620,9 @@ unsigned int *stuckid, *steedid;
 
     setAbilityToConfuseMonsters(read_int(fd));
 
+    setNightVisionRange(read_int(fd));
+    setXRayVisionRange(read_int(fd));
+
     setSickWithFoodPoisoning(read_int(fd) ? TRUE : FALSE);
     setSickWithIllness(read_int(fd) ? TRUE : FALSE);
 

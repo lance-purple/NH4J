@@ -618,11 +618,11 @@ int control;
         /*
          * Set the IN_SIGHT bit for xray and night vision.
          */
-        if (u.xray_range >= 0) {
-            if (u.xray_range) {
-                ranges = circle_ptr(u.xray_range);
+        if (xRayVisionRange() >= 0) {
+            if (xRayVisionRange()) {
+                ranges = circle_ptr(xRayVisionRange());
 
-                for (row = currentY() - u.xray_range; row <= currentY() + u.xray_range;
+                for (row = currentY() - xRayVisionRange(); row <= currentY() + xRayVisionRange();
                      row++) {
                     if (row < 0)
                         continue;
@@ -656,16 +656,16 @@ int control;
             }
         }
 
-        if (has_night_vision && u.xray_range < u.nv_range) {
-            if (!u.nv_range) { /* range is 0 */
+        if (has_night_vision && xRayVisionRange() < nightVisionRange()) {
+            if (!nightVisionRange()) { /* range is 0 */
                 next_array[currentY()][currentX()] |= IN_SIGHT;
                 levl[currentX()][currentY()].seenv = SVALL;
                 next_rmin[currentY()] = min(currentX(), next_rmin[currentY()]);
                 next_rmax[currentY()] = max(currentX(), next_rmax[currentY()]);
-            } else if (u.nv_range > 0) {
-                ranges = circle_ptr(u.nv_range);
+            } else if (nightVisionRange() > 0) {
+                ranges = circle_ptr(nightVisionRange());
 
-                for (row = currentY() - u.nv_range; row <= currentY() + u.nv_range;
+                for (row = currentY() - nightVisionRange(); row <= currentY() + nightVisionRange();
                      row++) {
                     if (row < 0)
                         continue;
@@ -2792,7 +2792,7 @@ howmonseen(mon)
 struct monst *mon;
 {
     boolean useemon = (boolean) canseemon(mon);
-    int xraydist = (u.xray_range < 0) ? -1 : (u.xray_range * u.xray_range);
+    int xraydist = (xRayVisionRange() < 0) ? -1 : (xRayVisionRange() * xRayVisionRange());
     unsigned how_seen = 0; /* result */
 
     /* normal vision;

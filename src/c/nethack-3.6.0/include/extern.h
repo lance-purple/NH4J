@@ -947,6 +947,11 @@ E void FDECL(setAbilityToConfuseMonsters, (int));
 E void FDECL(increaseAbilityToConfuseMonsters, (int));
 E void FDECL(decreaseAbilityToConfuseMonsters, (int));
 
+E int FDECL(nightVisionRange, ());
+E int FDECL(xRayVisionRange, ());
+E void FDECL(setNightVisionRange, (int));
+E void FDECL(setXRayVisionRange, (int));
+
 #ifndef STRNCMPI
 E int FDECL(strncmpi, (const char *, const char *, int));
 #endif

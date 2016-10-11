@@ -653,8 +653,8 @@ u_init()
      *  For now, everyone starts out with a night vision range of 1 and
      *  their xray range disabled.
      */
-    u.nv_range = 1;
-    u.xray_range = -1;
+    setNightVisionRange(1);
+    setXRayVisionRange(-1);
 
     /*** Role-specific initializations ***/
     switch (Role_switch) {

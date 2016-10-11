@@ -350,6 +350,9 @@ register int fd, mode;
 
     write_int(fd, abilityToConfuseMonsters());
 
+    write_int(fd, nightVisionRange());
+    write_int(fd, xRayVisionRange());
+
     write_int(fd, sickWithFoodPoisoning());
     write_int(fd, sickWithIllness());
 
