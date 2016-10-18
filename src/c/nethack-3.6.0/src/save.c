@@ -353,6 +353,9 @@ register int fd, mode;
     write_int(fd, nightVisionRange());
     write_int(fd, xRayVisionRange());
 
+    write_int(fd, glyphUnderBall());
+    write_int(fd, glyphUnderChain());
+
     write_int(fd, sickWithFoodPoisoning());
     write_int(fd, sickWithIllness());
 

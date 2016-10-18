@@ -870,6 +870,30 @@ void setXRayVisionRange(r) int r; {
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, r);
 }
 
+int glyphUnderBall() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "glyphUnderBall", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+} 
+
+int glyphUnderChain() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "glyphUnderChain", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+} 
+
+void setGlyphUnderBall(g) int g; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setGlyphUnderBall", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, g);
+}
+
+void setGlyphUnderChain(g) int g; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setGlyphUnderChain", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, g);
+}
+
 boolean sickWithFoodPoisoning() {
     jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
     jmethodID method = getStaticMethod(you_class, "sickWithFoodPoisoning", "()Z");

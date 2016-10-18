@@ -952,6 +952,11 @@ E int FDECL(xRayVisionRange, ());
 E void FDECL(setNightVisionRange, (int));
 E void FDECL(setXRayVisionRange, (int));
 
+E int FDECL(glyphUnderBall, ());
+E int FDECL(glyphUnderChain, ());
+E void FDECL(setGlyphUnderBall, (int));
+E void FDECL(setGlyphUnderChain, (int));
+
 #ifndef STRNCMPI
 E int FDECL(strncmpi, (const char *, const char *, int));
 #endif

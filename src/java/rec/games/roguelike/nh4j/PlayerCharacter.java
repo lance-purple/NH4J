@@ -1,3 +1,4 @@
+
 package rec.games.roguelike.nh4j;
 
 public class PlayerCharacter {
@@ -51,7 +52,10 @@ public class PlayerCharacter {
 	
 	private static int nightVisionRange;
 	private static int xRayVisionRange;
-
+	
+	private static int glyphUnderBall;
+	private static int glyphUnderChain;
+	
 	private static boolean sickWithFoodPoisoning;
 	private static boolean sickWithIllness;
 	
@@ -397,6 +401,22 @@ public class PlayerCharacter {
 
 	public static final void setXRayVisionRange(int r) {
 		xRayVisionRange = r;
+	}
+
+	public static final int glyphUnderBall() {
+		return glyphUnderBall;
+	}
+
+	public static final void setGlyphUnderBall(int g) {
+		glyphUnderBall = g;
+	}
+
+	public static final int glyphUnderChain() {
+		return glyphUnderChain;
+	}
+
+	public static final void setGlyphUnderChain(int g) {
+		glyphUnderChain = g;
 	}
 
 	public static final boolean sickWithFoodPoisoning() {

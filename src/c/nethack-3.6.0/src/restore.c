@@ -623,6 +623,9 @@ unsigned int *stuckid, *steedid;
     setNightVisionRange(read_int(fd));
     setXRayVisionRange(read_int(fd));
 
+    setGlyphUnderBall(read_int(fd));
+    setGlyphUnderChain(read_int(fd));
+
     setSickWithFoodPoisoning(read_int(fd) ? TRUE : FALSE);
     setSickWithIllness(read_int(fd) ? TRUE : FALSE);
 
