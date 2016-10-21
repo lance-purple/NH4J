@@ -894,6 +894,18 @@ void setGlyphUnderChain(g) int g; {
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, g);
 }
 
+int ballAndChainOrder() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "ballAndChainOrder", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+} 
+
+void setBallAndChainOrder(bc) int bc; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setBallAndChainOrder", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, bc);
+}
+
 boolean sickWithFoodPoisoning() {
     jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
     jmethodID method = getStaticMethod(you_class, "sickWithFoodPoisoning", "()Z");

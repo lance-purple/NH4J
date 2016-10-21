@@ -274,7 +274,6 @@ struct you {
  */
 #define BC_BALL 0x01  /* bit mask for ball  in 'bc_felt' below */
 #define BC_CHAIN 0x02 /* bit mask for chain in 'bc_felt' below */
-    int bc_order;     /* ball & chain order [see bc_order() in ball.c] */
     int bc_felt;      /* mask for ball/chain being felt */
 
     int umonster; /* hero's "real" monster num */

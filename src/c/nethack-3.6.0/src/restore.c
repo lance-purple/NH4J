@@ -625,6 +625,7 @@ unsigned int *stuckid, *steedid;
 
     setGlyphUnderBall(read_int(fd));
     setGlyphUnderChain(read_int(fd));
+    setBallAndChainOrder(read_int(fd));
 
     setSickWithFoodPoisoning(read_int(fd) ? TRUE : FALSE);
     setSickWithIllness(read_int(fd) ? TRUE : FALSE);

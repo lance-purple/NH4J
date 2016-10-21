@@ -55,6 +55,7 @@ public class PlayerCharacter {
 	
 	private static int glyphUnderBall;
 	private static int glyphUnderChain;
+	private static int ballAndChainOrder;
 	
 	private static boolean sickWithFoodPoisoning;
 	private static boolean sickWithIllness;
@@ -418,6 +419,15 @@ public class PlayerCharacter {
 	public static final void setGlyphUnderChain(int g) {
 		glyphUnderChain = g;
 	}
+
+	public static final int ballAndChainOrder() {
+		return ballAndChainOrder;
+	}
+
+	public static final void setBallAndChainOrder(int bc) {
+		ballAndChainOrder = bc;
+	}
+
 
 	public static final boolean sickWithFoodPoisoning() {
 		return sickWithFoodPoisoning;

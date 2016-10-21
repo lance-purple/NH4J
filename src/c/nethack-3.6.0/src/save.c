@@ -355,6 +355,7 @@ register int fd, mode;
 
     write_int(fd, glyphUnderBall());
     write_int(fd, glyphUnderChain());
+    write_int(fd, ballAndChainOrder());
 
     write_int(fd, sickWithFoodPoisoning());
     write_int(fd, sickWithIllness());

@@ -80,14 +80,12 @@ ballfall()
  *      int u.bc_felt           mask for ball/chain being felt
  *      #define BC_BALL  0x01   bit mask in u.bc_felt for ball
  *      #define BC_CHAIN 0x02   bit mask in u.bc_felt for chain
- *      int u.bc_order          ball & chain order
  *
  * u.bc_felt is also manipulated in display.c and read.c, the others only
  * in this file.  None of these variables are valid unless the player is
  * Blind.
  */
 
-/* values for u.bc_order */
 #define BCPOS_DIFFER 0 /* ball & chain at different positions */
 #define BCPOS_CHAIN 1  /* chain on top of ball */
 #define BCPOS_BALL 2   /* ball on top of chain */
@@ -110,13 +108,14 @@ placebc()
 
     (void) flooreffects(uchain, currentX(), currentY(), ""); /* chain might rust */
 
-    if (carried(uball)) /* the ball is carried */
-        u.bc_order = BCPOS_DIFFER;
+    if (carried(uball)) { /* the ball is carried */
+        setBallAndChainOrder(BCPOS_DIFFER);
+    }
     else {
         /* ball might rust -- already checked when carried */
         (void) flooreffects(uball, currentX(), currentY(), "");
         place_object(uball, currentX(), currentY());
-        u.bc_order = BCPOS_CHAIN;
+        setBallAndChainOrder(BCPOS_CHAIN);
     }
 
     place_object(uchain, currentX(), currentY());
@@ -195,7 +194,7 @@ int already_blind;
 {
     int ball_on_floor = !carried(uball);
 
-    u.bc_order = bc_order(); /* get the order */
+    setBallAndChainOrder(bc_order()); /* get the order */
     u.bc_felt = ball_on_floor ? BC_BALL | BC_CHAIN : BC_CHAIN; /* felt */
 
     if (already_blind || u.uswallow) {
@@ -216,7 +215,7 @@ int already_blind;
     newsym(uchain->ox, uchain->oy);
     setGlyphUnderChain(levl[uchain->ox][uchain->oy].glyph);
 
-    if (u.bc_order == BCPOS_DIFFER) { /* different locations */
+    if (ballAndChainOrder() == BCPOS_DIFFER) { /* different locations */
         place_object(uchain, uchain->ox, uchain->oy);
         newsym(uchain->ox, uchain->oy);
         if (ball_on_floor) {
@@ -227,7 +226,7 @@ int already_blind;
         }
     } else {
         setGlyphUnderBall(glyphUnderChain());
-        if (u.bc_order == BCPOS_CHAIN) {
+        if (ballAndChainOrder() == BCPOS_CHAIN) {
             place_object(uball, uball->ox, uball->oy);
             place_object(uchain, uchain->ox, uchain->oy);
         } else {
@@ -283,9 +282,9 @@ xchar ballx, bally, chainx, chainy; /* only matter !before */
                 movobj(uchain, chainx, chainy);
             } else if (control & BC_BALL) {
                 if (u.bc_felt & BC_BALL) {
-                    if (u.bc_order == BCPOS_DIFFER) { /* ball by itself */
+                    if (ballAndChainOrder() == BCPOS_DIFFER) { /* ball by itself */
                         levl[uball->ox][uball->oy].glyph = glyphUnderBall();
-                    } else if (u.bc_order == BCPOS_BALL) {
+                    } else if (ballAndChainOrder() == BCPOS_BALL) {
                         if (u.bc_felt & BC_CHAIN) { /* know chain is there */
                             map_object(uchain, 0);
                         } else {
@@ -303,9 +302,9 @@ xchar ballx, bally, chainx, chainy; /* only matter !before */
                 movobj(uball, ballx, bally);
             } else if (control & BC_CHAIN) {
                 if (u.bc_felt & BC_CHAIN) {
-                    if (u.bc_order == BCPOS_DIFFER) {
+                    if (ballAndChainOrder() == BCPOS_DIFFER) {
                         levl[uchain->ox][uchain->oy].glyph = glyphUnderChain();
-                    } else if (u.bc_order == BCPOS_CHAIN) {
+                    } else if (ballAndChainOrder() == BCPOS_CHAIN) {
                         if (u.bc_felt & BC_BALL) {
                             map_object(uball, 0);
                         } else {
@@ -322,7 +321,7 @@ xchar ballx, bally, chainx, chainy; /* only matter !before */
                 movobj(uchain, chainx, chainy);
             }
 
-            u.bc_order = bc_order(); /* reset the order */
+            setBallAndChainOrder(bc_order()); /* reset the order */
         }
 
     } else {
@@ -335,10 +334,10 @@ xchar ballx, bally, chainx, chainy; /* only matter !before */
             if (!control) {
                 /*
                  * Neither ball nor chain is moving, so remember which was
-                 * on top until !before.  Use the variable u.bc_order
+                 * on top until !before.  Use ballAndChainOrder()
                  * since it is only valid when blind.
                  */
-                u.bc_order = bc_order();
+                setBallAndChainOrder(bc_order());
             }
 
             remove_object(uchain);
@@ -351,7 +350,8 @@ xchar ballx, bally, chainx, chainy; /* only matter !before */
             int on_floor = !carried(uball);
 
             if ((control & BC_CHAIN)
-                || (!control && u.bc_order == BCPOS_CHAIN)) {
+                || (!control && ballAndChainOrder() == BCPOS_CHAIN)) {
+ 
                 /* If the chain moved or nothing moved & chain on top. */
                 if (on_floor)
                     place_object(uball, ballx, bally);
@@ -695,9 +695,9 @@ xchar x, y;
 {
     if (Blind) {
         /* get the order */
-        u.bc_order = bc_order();
+        setBallAndChainOrder(bc_order());
         /* pick up glyph */
-        setGlyphUnderBall((u.bc_order) ? glyphUnderChain() : levl[x][y].glyph);
+        setGlyphUnderBall((ballAndChainOrder()) ? glyphUnderChain() : levl[x][y].glyph);
     }
 
     if (x != currentX() || y != currentY()) {
@@ -758,11 +758,11 @@ xchar x, y;
                 levl[uchain->ox][uchain->oy].glyph = glyphUnderChain();
             u.bc_felt = 0; /* feel nothing */
             /* pick up new glyph */
-            setGlyphUnderChain((u.bc_order) ? glyphUnderBall() : levl[currentX()][currentY()].glyph);
+            setGlyphUnderChain((ballAndChainOrder()) ? glyphUnderBall() : levl[currentX()][currentY()].glyph);
         }
         movobj(uchain, currentX(), currentY()); /* has a newsym */
         if (Blind) {
-            u.bc_order = bc_order();
+            setBallAndChainOrder(bc_order());
         }
         newsym(originalX(), originalY()); /* clean up old position */
         if ((originalX() != currentX()) || (originalX() != currentY())) {

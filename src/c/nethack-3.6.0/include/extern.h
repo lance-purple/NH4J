@@ -956,6 +956,8 @@ E int FDECL(glyphUnderBall, ());
 E int FDECL(glyphUnderChain, ());
 E void FDECL(setGlyphUnderBall, (int));
 E void FDECL(setGlyphUnderChain, (int));
+E int FDECL(ballAndChainOrder, ());
+E void FDECL(setBallAndChainOrder, (int));
 
 #ifndef STRNCMPI
 E int FDECL(strncmpi, (const char *, const char *, int));
