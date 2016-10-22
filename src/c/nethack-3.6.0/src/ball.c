@@ -75,16 +75,8 @@ ballfall()
  *  under the hero when she is expelled.
  */
 
-/*
- * from you.h
- *      int u.bc_felt           mask for ball/chain being felt
- *      #define BC_BALL  0x01   bit mask in u.bc_felt for ball
- *      #define BC_CHAIN 0x02   bit mask in u.bc_felt for chain
- *
- * u.bc_felt is also manipulated in display.c and read.c, the others only
- * in this file.  None of these variables are valid unless the player is
- * Blind.
- */
+#define BC_BALL  0x01
+#define BC_CHAIN 0x02
 
 #define BCPOS_DIFFER 0 /* ball & chain at different positions */
 #define BCPOS_CHAIN 1  /* chain on top of ball */
@@ -145,17 +137,20 @@ unplacebc()
 
     if (!carried(uball)) {
         obj_extract_self(uball);
-        if (Blind && (u.bc_felt & BC_BALL)) /* drop glyph */
+        if (Blind && feltBall()) { /* drop glyph */
             levl[uball->ox][uball->oy].glyph = glyphUnderBall();
+        }
 
         newsym(uball->ox, uball->oy);
     }
     obj_extract_self(uchain);
-    if (Blind && (u.bc_felt & BC_CHAIN)) /* drop glyph */
+    if (Blind && feltChain()) { /* drop glyph */
         levl[uchain->ox][uchain->oy].glyph = glyphUnderChain();
+    }
 
     newsym(uchain->ox, uchain->oy);
-    u.bc_felt = 0; /* feel nothing */
+    setFeltBall(FALSE);
+    setFeltChain(FALSE); /* feel nothing */
 }
 
 /*
@@ -195,8 +190,9 @@ int already_blind;
     int ball_on_floor = !carried(uball);
 
     setBallAndChainOrder(bc_order()); /* get the order */
-    u.bc_felt = ball_on_floor ? BC_BALL | BC_CHAIN : BC_CHAIN; /* felt */
-
+    setFeltChain(TRUE);
+    setFeltBall(ball_on_floor);
+    
     if (already_blind || u.uswallow) {
         setGlyphUnderBall(levl[currentX()][currentY()].glyph);
         setGlyphUnderChain(levl[currentX()][currentY()].glyph);
@@ -268,11 +264,14 @@ xchar ballx, bally, chainx, chainy; /* only matter !before */
                 /*
                  *  Both ball and chain moved.  If felt, drop glyph.
                  */
-                if (u.bc_felt & BC_BALL)
+                if (feltBall()) {
                     levl[uball->ox][uball->oy].glyph = glyphUnderBall();
-                if (u.bc_felt & BC_CHAIN)
+                }
+                if (feltChain()) {
                     levl[uchain->ox][uchain->oy].glyph = glyphUnderChain();
-                u.bc_felt = 0;
+                }
+                setFeltBall(FALSE);
+                setFeltChain(FALSE);
 
                 /* Pick up glyph at new location. */
                 setGlyphUnderBall(levl[ballx][bally].glyph);
@@ -281,17 +280,17 @@ xchar ballx, bally, chainx, chainy; /* only matter !before */
                 movobj(uball, ballx, bally);
                 movobj(uchain, chainx, chainy);
             } else if (control & BC_BALL) {
-                if (u.bc_felt & BC_BALL) {
+                if (feltBall()) {
                     if (ballAndChainOrder() == BCPOS_DIFFER) { /* ball by itself */
                         levl[uball->ox][uball->oy].glyph = glyphUnderBall();
                     } else if (ballAndChainOrder() == BCPOS_BALL) {
-                        if (u.bc_felt & BC_CHAIN) { /* know chain is there */
+                        if (feltChain()) { /* know chain is there */
                             map_object(uchain, 0);
                         } else {
                             levl[uball->ox][uball->oy].glyph = glyphUnderBall();
                         }
                     }
-                    u.bc_felt &= ~BC_BALL; /* no longer feel the ball */
+                    setFeltBall(FALSE); /* no longer feel the ball */
                 }
 
                 /* Pick up glyph at new position. */
@@ -301,17 +300,17 @@ xchar ballx, bally, chainx, chainy; /* only matter !before */
 
                 movobj(uball, ballx, bally);
             } else if (control & BC_CHAIN) {
-                if (u.bc_felt & BC_CHAIN) {
+                if (feltChain()) {
                     if (ballAndChainOrder() == BCPOS_DIFFER) {
                         levl[uchain->ox][uchain->oy].glyph = glyphUnderChain();
                     } else if (ballAndChainOrder() == BCPOS_CHAIN) {
-                        if (u.bc_felt & BC_BALL) {
+                        if (feltBall()) {
                             map_object(uball, 0);
                         } else {
                             levl[uchain->ox][uchain->oy].glyph = glyphUnderChain();
                         }
                     }
-                    u.bc_felt &= ~BC_CHAIN;
+                    setFeltChain(FALSE);
                 }
                 /* Pick up glyph at new position. */
                 setGlyphUnderChain((ballx != chainx || bally != chainy)
@@ -754,9 +753,12 @@ xchar x, y;
 
         if (Blind) {
             /* drop glyph under the chain */
-            if (u.bc_felt & BC_CHAIN)
+            if (feltChain()) {
                 levl[uchain->ox][uchain->oy].glyph = glyphUnderChain();
-            u.bc_felt = 0; /* feel nothing */
+            }
+            setFeltBall(FALSE);
+            setFeltChain(FALSE); /* feel nothing */
+
             /* pick up new glyph */
             setGlyphUnderChain((ballAndChainOrder()) ? glyphUnderBall() : levl[currentX()][currentY()].glyph);
         }

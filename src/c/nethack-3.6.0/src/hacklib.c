@@ -870,6 +870,30 @@ void setXRayVisionRange(r) int r; {
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, r);
 }
 
+boolean feltBall() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "feltBall", "()Z");
+    return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method);
+}
+
+void setFeltBall(f) boolean f; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setFeltBall", "(Z)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, f);
+}
+
+boolean feltChain() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "feltChain", "()Z");
+    return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method);
+}
+
+void setFeltChain(f) boolean f; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setFeltChain", "(Z)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, f);
+}
+
 int glyphUnderBall() {
     jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
     jmethodID method = getStaticMethod(you_class, "glyphUnderBall", "()I");

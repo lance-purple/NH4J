@@ -353,6 +353,8 @@ register int fd, mode;
     write_int(fd, nightVisionRange());
     write_int(fd, xRayVisionRange());
 
+    write_int(fd, feltBall());
+    write_int(fd, feltChain());
     write_int(fd, glyphUnderBall());
     write_int(fd, glyphUnderChain());
     write_int(fd, ballAndChainOrder());

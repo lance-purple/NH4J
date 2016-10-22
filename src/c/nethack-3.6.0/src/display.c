@@ -636,16 +636,20 @@ xchar x, y;
              * the wrong glyph.
              */
             if (uchain->ox == x && uchain->oy == y) {
-                if (level.objects[x][y] == uchain)
-                    u.bc_felt |= BC_CHAIN;
-                else
-                    u.bc_felt &= ~BC_CHAIN; /* do not feel the chain */
+                if (level.objects[x][y] == uchain) {
+                    setFeltChain(TRUE);
+                }
+                else {
+                    setFeltChain(FALSE); /* do not feel the chain */
+                }
             }
             if (!carried(uball) && uball->ox == x && uball->oy == y) {
-                if (level.objects[x][y] == uball)
-                    u.bc_felt |= BC_BALL;
-                else
-                    u.bc_felt &= ~BC_BALL; /* do not feel the ball */
+                if (level.objects[x][y] == uball) {
+                    setFeltBall(TRUE);
+                }
+                else {
+                    setFeltBall(FALSE);
+                }
             }
         }
 

@@ -952,6 +952,10 @@ E int FDECL(xRayVisionRange, ());
 E void FDECL(setNightVisionRange, (int));
 E void FDECL(setXRayVisionRange, (int));
 
+E boolean FDECL(feltBall, ());
+E boolean FDECL(feltChain, ());
+E void FDECL(setFeltBall, (boolean));
+E void FDECL(setFeltChain, (boolean));
 E int FDECL(glyphUnderBall, ());
 E int FDECL(glyphUnderChain, ());
 E void FDECL(setGlyphUnderBall, (int));

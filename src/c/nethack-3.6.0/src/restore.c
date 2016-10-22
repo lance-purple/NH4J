@@ -623,6 +623,8 @@ unsigned int *stuckid, *steedid;
     setNightVisionRange(read_int(fd));
     setXRayVisionRange(read_int(fd));
 
+    setFeltBall(read_int(fd) ? TRUE : FALSE);
+    setFeltChain(read_int(fd) ? TRUE : FALSE);
     setGlyphUnderBall(read_int(fd));
     setGlyphUnderChain(read_int(fd));
     setBallAndChainOrder(read_int(fd));

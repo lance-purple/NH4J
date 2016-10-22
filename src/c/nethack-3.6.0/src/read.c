@@ -861,8 +861,10 @@ STATIC_OVL void
 forget(howmuch)
 int howmuch;
 {
-    if (Punished)
-        u.bc_felt = 0; /* forget felt ball&chain */
+    if (Punished) {
+        setFeltBall(FALSE);
+        setFeltChain(FALSE);
+    }
 
     forget_map(howmuch);
     forget_traps();

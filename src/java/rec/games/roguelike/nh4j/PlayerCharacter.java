@@ -53,6 +53,9 @@ public class PlayerCharacter {
 	private static int nightVisionRange;
 	private static int xRayVisionRange;
 	
+	private static boolean feltBall;
+	private static boolean feltChain;
+	
 	private static int glyphUnderBall;
 	private static int glyphUnderChain;
 	private static int ballAndChainOrder;
@@ -402,6 +405,22 @@ public class PlayerCharacter {
 
 	public static final void setXRayVisionRange(int r) {
 		xRayVisionRange = r;
+	}
+	
+	public static final boolean feltBall() {
+		return feltBall;
+	}
+
+	public static final void setFeltBall(boolean f) {
+		feltBall = f;
+	}
+
+	public static final boolean feltChain() {
+		return feltChain;
+	}
+
+	public static final void setFeltChain(boolean f) {
+		feltChain = f;
 	}
 
 	public static final int glyphUnderBall() {
