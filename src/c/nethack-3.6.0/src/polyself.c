@@ -157,7 +157,7 @@ const char *fmt, *arg;
             setYourCurrentAttr(i, yourAttrAsMonster(i));
             setYourAttrMax    (i, yourAttrMaxAsMonster(i));
         } 
-        u.umonnum = u.umonster;
+        u.umonnum = originalMonsterNumber();
         flags.female = u.mfemale;
     }
     set_uasmon();
@@ -221,7 +221,7 @@ const char *fmt, *arg;
 void
 change_sex()
 {
-    /* setting u.umonster for caveman/cavewoman or priest/priestess
+    /* setting originalMonsterNumber() for caveman/cavewoman or priest/priestess
        swap unintentionally makes `areYouPolymorphed()' appear to be true */
     boolean already_polyd = (boolean) areYouPolymorphed();
 
@@ -242,12 +242,12 @@ change_sex()
         Strcpy(pl_character, urole.name.f);
     else
         Strcpy(pl_character, urole.name.m);
-    u.umonster = ((already_polyd ? u.mfemale : flags.female)
+    setOriginalMonsterNumber( ((already_polyd ? u.mfemale : flags.female)
                   && urole.femalenum != NON_PM)
                      ? urole.femalenum
-                     : urole.malenum;
+                     : urole.malenum );
     if (!already_polyd) {
-        u.umonnum = u.umonster;
+        u.umonnum = originalMonsterNumber();
     } else if (u.umonnum == PM_SUCCUBUS || u.umonnum == PM_INCUBUS) {
         flags.female = !flags.female;
         /* change monster type to match new sex */

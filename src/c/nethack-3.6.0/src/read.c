@@ -2108,7 +2108,7 @@ int how;
     const char *which;
 
     if (how & PLAYER) {
-        mndx = u.umonster; /* non-polymorphed mon num */
+        mndx = originalMonsterNumber(); /* non-polymorphed mon num */
         ptr = &mons[mndx];
         Strcpy(buf, ptr->mname);
         killplayer++;

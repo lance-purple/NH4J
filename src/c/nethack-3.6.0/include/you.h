@@ -269,7 +269,6 @@ struct you {
 
     struct prop uprops[LAST_PROP + 1];
 
-    int umonster; /* hero's "real" monster num */
     int umonnum;  /* current monster number */
 
     int mh, mhmax, mtimedone; /* for polymorph-self */
@@ -336,7 +335,5 @@ struct you {
     boolean twoweap; /* KMH -- Using two-weapon combat */
 
 }; /* end of `struct you' */
-
-#define Upolyd (u.umonnum != u.umonster)
 
 #endif /* YOU_H */

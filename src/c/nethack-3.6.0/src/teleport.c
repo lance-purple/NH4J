@@ -126,7 +126,7 @@ unsigned entflags;
     if (!mdat) {
         debugpline0("enexto() called with null mdat");
         /* default to player's original monster type */
-        mdat = &mons[u.umonster];
+        mdat = &mons[originalMonsterNumber()];
     }
     fakemon.data = mdat; /* set up for goodpos */
     good_ptr = good;

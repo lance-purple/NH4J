@@ -612,6 +612,8 @@ unsigned int *stuckid, *steedid;
         setYourAttrMaxAsMonster(i, read_int(fd));
     }
 
+    setOriginalMonsterNumber(read_int(fd));
+
     setCurrentNutrition(read_int(fd));
     setCurrentHungerState(read_int(fd));
 

@@ -44,6 +44,9 @@ public class PlayerCharacter {
 
 	private static NHAttributeSet attributesAsMonster = new NHAttributeSet();
 	private static NHAttributeSet maximumAttributesAsMonster = new NHAttributeSet();
+	
+	private static int originalMonsterNumber;
+	private static int currentMonsterNumber;
 
 	private static HungerState currentHungerState = HungerState.NOT_HUNGRY;
 	private static int currentNutrition;
@@ -365,6 +368,22 @@ public class PlayerCharacter {
 
 	public static void decreaseMaximumAttributeAsMonster(int attrIndex, int delta) {
 		maximumAttributesAsMonster.decrease(attrIndex, delta);
+	}
+	
+	public static final int originalMonsterNumber() {
+		return originalMonsterNumber;
+	}
+
+	public static final int currentMonsterNumber() {
+		return currentMonsterNumber;
+	}
+	
+	public static final void setOriginalMonsterNumber(int n) {
+		originalMonsterNumber = n;
+	}
+
+	public static final void setCurrentMonsterNumber(int n) {
+		currentMonsterNumber = n;
 	}
 
 	public static final int currentNutrition() {

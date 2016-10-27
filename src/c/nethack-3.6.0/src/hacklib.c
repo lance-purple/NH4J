@@ -794,8 +794,20 @@ void setHighestExperienceLevelSoFar(e) int e; {
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, e);
 }
 
+int originalMonsterNumber() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "originalMonsterNumber", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+} 
+
+void setOriginalMonsterNumber(n) int n; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setOriginalMonsterNumber", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, n);
+}
+
 boolean areYouPolymorphed() {
-    return (u.umonnum != u.umonster);
+    return (u.umonnum != originalMonsterNumber());
 }
 
 int currentNutrition() {
