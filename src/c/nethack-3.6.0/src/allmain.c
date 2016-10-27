@@ -197,7 +197,7 @@ boolean resuming;
                     if (u.uinvulnerable) {
                         /* for the moment at least, you're in tiptop shape */
                         wtcap = UNENCUMBERED;
-                    } else if (Upolyd && youmonst.data->mlet == S_EEL
+                    } else if (areYouPolymorphed() && youmonst.data->mlet == S_EEL
                                && !is_pool(currentX(), currentY())
                                && !areYouOnWaterLevel()) {
                         /* eel out of water loses hp, same as for monsters;
@@ -209,7 +209,7 @@ boolean resuming;
                             context.botl = 1;
                         } else if (u.mh < 1)
                             rehumanize();
-                    } else if (Upolyd && u.mh < u.mhmax) {
+                    } else if (areYouPolymorphed() && u.mh < u.mhmax) {
                         if (u.mh < 1)
                             rehumanize();
                         else if (Regeneration
@@ -248,9 +248,9 @@ boolean resuming;
                     if (wtcap > MOD_ENCUMBER && youMoved()) {
                         if (!(wtcap < EXT_ENCUMBER ? moves % 30
                                                    : moves % 10)) {
-                            if (Upolyd && u.mh > 1) {
+                            if (areYouPolymorphed() && u.mh > 1) {
                                 u.mh--;
-                            } else if (!Upolyd && u.uhp > 1) {
+                            } else if (!areYouPolymorphed() && u.uhp > 1) {
                                 u.uhp--;
                             } else {
                                 You("pass out from exertion!");
@@ -292,7 +292,7 @@ boolean resuming;
                             change = 0;
                         if (Polymorph && !rn2(100))
                             change = 1;
-                        else if (u.ulycn >= LOW_PM && !Upolyd
+                        else if (u.ulycn >= LOW_PM && !areYouPolymorphed()
                                  && !rn2(80 - (20 * night())))
                             change = 2;
                         if (change && !Unchanging) {
@@ -617,7 +617,7 @@ welcome(new_game)
 boolean new_game; /* false => restoring an old game */
 {
     char buf[BUFSZ];
-    boolean currentgend = Upolyd ? u.mfemale : flags.female;
+    boolean currentgend = areYouPolymorphed() ? u.mfemale : flags.female;
 
     /*
      * The "welcome back" message always describes your innate form

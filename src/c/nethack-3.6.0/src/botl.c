@@ -31,7 +31,7 @@ bot1()
     newbot1[10] = 0;
     Sprintf(nb = eos(newbot1), " the ");
 
-    if (Upolyd) {
+    if (areYouPolymorphed()) {
         char mbot[BUFSZ];
         int k = 0;
 
@@ -83,8 +83,8 @@ bot2()
     int hp, hpmax;
     int cap = near_capacity();
 
-    hp = Upolyd ? u.mh : u.uhp;
-    hpmax = Upolyd ? u.mhmax : u.uhpmax;
+    hp = areYouPolymorphed() ? u.mh : u.uhp;
+    hpmax = areYouPolymorphed() ? u.mhmax : u.uhpmax;
 
     if (hp < 0)
         hp = 0;
@@ -93,7 +93,7 @@ bot2()
             encglyph(objnum_to_glyph(GOLD_PIECE)), money_cnt(invent), hp,
             hpmax, u.uen, u.uenmax, u.uac);
 
-    if (Upolyd)
+    if (areYouPolymorphed())
         Sprintf(nb = eos(nb), " HD:%d", mons[u.umonnum].mlevel);
     else if (flags.showexp)
         Sprintf(nb = eos(nb), " Xp:%u/%-1ld", currentExperienceLevel(), u.uexp);
@@ -406,7 +406,7 @@ bot()
         buf[0] += 'A' - 'a';
     buf[10] = 0;
     Sprintf(nb = eos(buf), " the ");
-    if (Upolyd) {
+    if (areYouPolymorphed()) {
         char mbot[BUFSZ];
         int k = 0;
 
@@ -464,8 +464,8 @@ bot()
 #endif
     /*  Hit points  */
 
-    blstats[idx][BL_HP].a.a_int = Upolyd ? u.mh : u.uhp;
-    blstats[idx][BL_HPMAX].a.a_int = Upolyd ? u.mhmax : u.uhpmax;
+    blstats[idx][BL_HP].a.a_int = areYouPolymorphed() ? u.mh : u.uhp;
+    blstats[idx][BL_HPMAX].a.a_int = areYouPolymorphed() ? u.mhmax : u.uhpmax;
     if (blstats[idx][BL_HP].a.a_int < 0)
         blstats[idx][BL_HP].a.a_int = 0;
 
@@ -504,9 +504,9 @@ bot()
 
     blstats[idx][BL_AC].a.a_int = u.uac;
 
-    /* Monster level (if Upolyd) */
+    /* Monster level (if areYouPolymorphed()) */
 
-    if (Upolyd)
+    if (areYouPolymorphed())
         blstats[idx][BL_HD].a.a_int = mons[u.umonnum].mlevel;
     else
         blstats[idx][BL_HD].a.a_int = 0;
@@ -580,8 +580,8 @@ bot()
         if (((i == BL_SCORE) && !flags.showscore)
             || ((i == BL_EXP) && !flags.showexp)
             || ((i == BL_TIME) && !flags.time)
-            || ((i == BL_HD) && !Upolyd)
-            || ((i == BL_XP || i == BL_EXP) && Upolyd))
+            || ((i == BL_HD) && !areYouPolymorphed())
+            || ((i == BL_XP || i == BL_EXP) && areYouPolymorphed()))
             continue;
         anytype = blstats[idx][i].anytype;
         curr = &blstats[idx][i];
@@ -715,7 +715,7 @@ boolean
             fieldfmt = " Xp:%s";
             fieldname = "experience-level";
             status_enablefield(fld, fieldname, fieldfmt,
-                                   (Upolyd) ? FALSE : TRUE);
+                                   (areYouPolymorphed()) ? FALSE : TRUE);
             break;
         case BL_AC:
             fieldfmt = " AC:%s";
@@ -726,7 +726,7 @@ boolean
             fieldfmt = " HD:%s";
             fieldname = "HD";
             status_enablefield(fld, fieldname, fieldfmt,
-                                   (!Upolyd) ? FALSE : TRUE);
+                                   (!areYouPolymorphed()) ? FALSE : TRUE);
             break;
         case BL_TIME:
             fieldfmt = " T:%s";
@@ -758,7 +758,7 @@ boolean
             fieldfmt = "/%s";
             fieldname = "experience";
             status_enablefield(fld, fieldname, fieldfmt,
-                                  (!flags.showexp || Upolyd) ? FALSE : TRUE);
+                                  (!flags.showexp || areYouPolymorphed()) ? FALSE : TRUE);
             break;
         case BL_CONDITION:
             fieldfmt = "%S";

@@ -273,7 +273,7 @@ int *attk_count, *role_roll_penalty;
     }
 
     /* role/race adjustments */
-    if (Role_if(PM_MONK) && !Upolyd) {
+    if (Role_if(PM_MONK) && !areYouPolymorphed()) {
         if (uarm)
             tmp -= (*role_roll_penalty = urole.spelarmr);
         else if (!uwep && !uarms)
@@ -371,7 +371,7 @@ register struct monst *mtmp;
     if (attack_checks(mtmp, uwep))
         return TRUE;
 
-    if (Upolyd && noattacks(youmonst.data)) {
+    if (areYouPolymorphed() && noattacks(youmonst.data)) {
         /* certain "pacifist" monsters don't attack */
         You("have no way to attack monsters physically.");
         mtmp->mstrategy &= ~STRAT_WAITMASK;
@@ -411,7 +411,7 @@ register struct monst *mtmp;
             || mtmp->my != currentY() + directionY())) /* it moved */
         return FALSE;
 
-    if (Upolyd)
+    if (areYouPolymorphed())
         (void) hmonas(mtmp);
     else
         (void) hitum(mtmp, youmonst.data->mattk);
@@ -646,7 +646,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                 valid_weapon_attack = (tmp > 1);
                 if (!valid_weapon_attack || mon == u.ustuck || u.twoweap) {
                     ; /* no special bonuses */
-                } else if (mon->mflee && Role_if(PM_ROGUE) && !Upolyd
+                } else if (mon->mflee && Role_if(PM_ROGUE) && !areYouPolymorphed()
                            /* multi-shot throwing is too powerful here */
                            && hand_to_hand) {
                     You("strike %s from behind!", mon_nam(mon));
@@ -1044,7 +1044,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                 already_killed = TRUE;
         }
         hittxt = TRUE;
-    } else if (unarmed && tmp > 1 && !thrown && !obj && !Upolyd) {
+    } else if (unarmed && tmp > 1 && !thrown && !obj && !areYouPolymorphed()) {
         /* VERY small chance of stunning opponent if unarmed. */
         if (rnd(100) < P_SKILL(P_BARE_HANDED_COMBAT) && !bigmonst(mdat)
             && !thick_skinned(mdat)) {
@@ -1351,7 +1351,7 @@ struct attack *mattk;
     }
 
     while ((otmp = mdef->minvent) != 0) {
-        if (!Upolyd)
+        if (!areYouPolymorphed())
             break; /* no longer have ability to steal */
         /* take the object away from the monster */
         obj_extract_self(otmp);
@@ -2256,7 +2256,7 @@ register struct monst *mon;
             (void) passive(mon, sum[i], 1, mattk->aatyp, FALSE);
             nsum |= sum[i];
         }
-        if (!Upolyd)
+        if (!areYouPolymorphed())
             break; /* No extra attacks if no longer a monster */
         if (multi < 0)
             break; /* If paralyzed while attacking, i.e. floating eye */

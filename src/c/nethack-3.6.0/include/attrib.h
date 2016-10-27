@@ -39,7 +39,7 @@ extern void decreaseYourAttrChangeFromExercise(int index, xchar delta);
 #define ACURR(x) (acurr(x))
 #define ACURRSTR (acurrstr())
 /* should be: */
-/* #define ACURR(x) (ABON(x) + ATEMP(x) + (Upolyd  ? MBASE(x) : ABASE(x)) */
+/* #define ACURR(x) (ABON(x) + ATEMP(x) + (areYouPolymorphed()  ? MBASE(x) : ABASE(x)) */
 
 extern xchar yourAttrAsMonster(int index);
 extern void setYourAttrAsMonster(int index, xchar value);
@@ -70,7 +70,7 @@ struct attribs {
 };
 
 #define ATTRMAX(x)                                        \
-    ((x == A_STR && Upolyd && strongmonst(youmonst.data)) \
+    ((x == A_STR && areYouPolymorphed() && strongmonst(youmonst.data)) \
          ? STR18(100)                                     \
          : urace.attrmax[x])
 #define ATTRMIN(x) (urace.attrmin[x])

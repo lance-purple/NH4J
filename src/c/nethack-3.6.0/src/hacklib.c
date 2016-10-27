@@ -794,6 +794,10 @@ void setHighestExperienceLevelSoFar(e) int e; {
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, e);
 }
 
+boolean areYouPolymorphed() {
+    return (u.umonnum != u.umonster);
+}
+
 int currentNutrition() {
     jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
     jmethodID method = getStaticMethod(you_class, "currentNutrition", "()I");

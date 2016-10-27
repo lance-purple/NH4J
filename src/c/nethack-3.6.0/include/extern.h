@@ -928,6 +928,8 @@ E void FDECL(setCurrentExperienceLevel, (int));
 E int FDECL(highestExperienceLevelSoFar, ());
 E void FDECL(setHighestExperienceLevelSoFar, (int));
 
+E boolean FDECL(areYouPolymorphed, ());
+
 E int FDECL(currentNutrition, ());
 E void FDECL(setCurrentNutrition, (int));
 E void FDECL(increaseCurrentNutrition, (int));

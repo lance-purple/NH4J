@@ -520,7 +520,7 @@ domonability(VOID_ARGS)
             aggravate();
     } else if (youmonst.data->mlet == S_VAMPIRE)
         return dopoly();
-    else if (Upolyd)
+    else if (areYouPolymorphed())
         pline("Any special ability you may have is purely reflexive.");
     else
         You("don't have a special ability in your normal form!");
@@ -1341,7 +1341,7 @@ int final; /* ENL_GAMEINPROGRESS:0, ENL_GAMEOVERALIVE, ENL_GAMEOVERDEAD */
     /* as in background_enlightenment, when poly'd we need to use the saved
        gender in u.mfemale rather than the current you-as-monster gender */
     Sprintf(buf, "%s the %s's attributes:", tmpbuf,
-            ((Upolyd ? u.mfemale : flags.female) && urole.name.f)
+            ((areYouPolymorphed() ? u.mfemale : flags.female) && urole.name.f)
                 ? urole.name.f
                 : urole.name.m);
 
@@ -1385,7 +1385,7 @@ int final;
 
     /* note that if poly'd, we need to use u.mfemale instead of flags.female
        to access hero's saved gender-as-human/elf/&c rather than current one */
-    innategend = (Upolyd ? u.mfemale : flags.female) ? 1 : 0;
+    innategend = (areYouPolymorphed() ? u.mfemale : flags.female) ? 1 : 0;
     role_titl = (innategend && urole.name.f) ? urole.name.f : urole.name.m;
     rank_titl = rank_of(currentExperienceLevel(), Role_switch, innategend);
 
@@ -1398,7 +1398,7 @@ int final;
        told about lycanthropy) or "you are polymorphed into <a foo>"
        (with countdown timer appended for wizard mode); we really want
        the player to know he's not a samurai at the moment... */
-    if (Upolyd) {
+    if (areYouPolymorphed()) {
         struct permonst *uasmon = youmonst.data;
 
         tmpbuf[0] = '\0';
@@ -1417,7 +1417,7 @@ int final;
             || innategend != flags.initgend))
         Sprintf(tmpbuf, "%s ", genders[innategend].adj);
     buf[0] = '\0';
-    if (Upolyd)
+    if (areYouPolymorphed())
         Strcpy(buf, "actually "); /* "You are actually a ..." */
     if (!strcmpi(rank_titl, role_titl)) {
         /* omit role when rank title matches it */
@@ -1517,7 +1517,7 @@ int mode, final, attrindx;
        cursed, hero could take them off to check underlying values
        and we show those in such case so that player doesn't need
        to actually resort to doing that */
-    if (Upolyd) {
+    if (areYouPolymorphed()) {
         hide_innate_value = TRUE;
     } else if (Fixed_abil) {
         if (stuck_ring(uleft, RIN_SUSTAIN_ABILITY)
@@ -1553,7 +1553,7 @@ int mode, final, attrindx;
         return; /* impossible */
     };
     /* note: final disclosure includes MAGICENLIGHTENTMENT */
-    if ((mode & MAGICENLIGHTENMENT) && !Upolyd)
+    if ((mode & MAGICENLIGHTENMENT) && !areYouPolymorphed())
         hide_innate_value = FALSE;
 
     acurrent = ACURR(attrindx);
@@ -1630,7 +1630,7 @@ int final;
     Strcpy(youtoo, You_);
     /* not a traditional status but inherently obvious to player; more
        detail given below (attributes section) for magic enlightenment */
-    if (Upolyd)
+    if (areYouPolymorphed())
         you_are("transformed", "");
     /* not a trouble, but we want to display riding status before maybe
        reporting steed as trapped or hero stuck to cursed saddle */
@@ -1660,7 +1660,7 @@ int final;
                   : surface(currentX(), currentY())); /* catchall; shouldn't happen */
         you_are(buf, from_what(WWALKING));
     }
-    if (Upolyd && (u.uundetected || youmonst.m_ap_type != M_AP_NOTHING))
+    if (areYouPolymorphed() && (u.uundetected || youmonst.m_ap_type != M_AP_NOTHING))
         youhiding(TRUE, final);
 
     /* internal troubles, mostly in the order that prayer ranks them */
@@ -1751,7 +1751,7 @@ int final;
         you_are(buf, "");
     } else if (u.ustuck) {
         Sprintf(buf, "%s %s",
-                (Upolyd && sticks(youmonst.data)) ? "holding" : "held by",
+                (areYouPolymorphed() && sticks(youmonst.data)) ? "holding" : "held by",
                 a_monnam(u.ustuck));
         you_are(buf, "");
     }
@@ -2143,7 +2143,7 @@ int final;
     if (Unchanging) {
         const char *what = 0;
 
-        if (!Upolyd) /* Upolyd handled below after current form */
+        if (!areYouPolymorphed()) /* areYouPolymorphed() handled below after current form */
             you_can("not change from your current form",
                     from_what(UNCHANGING));
         /* blocked shape changes */
@@ -2162,14 +2162,14 @@ int final;
     }
     if (Polymorph_control)
         you_have("polymorph control", from_what(POLYMORPH_CONTROL));
-    if (Upolyd && u.umonnum != u.ulycn) {
+    if (areYouPolymorphed() && u.umonnum != u.ulycn) {
         /* foreign shape (except were-form which is handled below) */
         Sprintf(buf, "polymorphed into %s", an(youmonst.data->mname));
         if (wizard)
             Sprintf(eos(buf), " (%d)", u.mtimedone);
         you_are(buf, "");
     }
-    if (lays_eggs(youmonst.data) && flags.female) /* Upolyd */
+    if (lays_eggs(youmonst.data) && flags.female) /* areYouPolymorphed() */
         you_can("lay eggs", "");
     if (u.ulycn >= LOW_PM) {
         /* "you are a werecreature [in beast form]" */
@@ -2181,7 +2181,7 @@ int final;
         }
         you_are(buf, "");
     }
-    if (Unchanging && Upolyd) /* !Upolyd handled above */
+    if (Unchanging && areYouPolymorphed()) /* !areYouPolymorphed() handled above */
         you_can("not change from your current form", from_what(UNCHANGING));
     if (Hate_silver)
         you_are("harmed by silver", "");
@@ -2355,9 +2355,9 @@ minimal_enlightenment()
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, "", FALSE);
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, iflags.menu_headings,
              "Current", FALSE);
-    Sprintf(buf, fmtstr, "race", Upolyd ? youmonst.data->mname : urace.noun);
+    Sprintf(buf, fmtstr, "race", areYouPolymorphed() ? youmonst.data->mname : urace.noun);
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
-    if (Upolyd) {
+    if (areYouPolymorphed()) {
         Sprintf(buf, fmtstr, "role (base)",
                 (u.mfemale && urole.name.f) ? urole.name.f
                                             : urole.name.m);
@@ -2372,7 +2372,7 @@ minimal_enlightenment()
     genidx = is_neuter(youmonst.data) ? 2 : flags.female;
     Sprintf(buf, fmtstr, "gender", genders[genidx].adj);
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
-    if (Upolyd && (int) u.mfemale != genidx) {
+    if (areYouPolymorphed() && (int) u.mfemale != genidx) {
         Sprintf(buf, fmtstr, "gender (base)", genders[u.mfemale].adj);
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
     }

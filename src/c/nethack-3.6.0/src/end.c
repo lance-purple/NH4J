@@ -1026,7 +1026,7 @@ int how;
         && !(mvitals[u.umonnum].mvflags & G_NOCORPSE)) {
         int mnum = u.umonnum;
 
-        if (!Upolyd) {
+        if (!areYouPolymorphed()) {
             /* Base corpse on race when not poly'd since original
              * u.umonnum is based on role, and all role monsters
              * are human.

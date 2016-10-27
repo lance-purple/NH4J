@@ -1610,7 +1610,7 @@ boolean noisy;
             if (noisy)
                 already_wearing(an(helm_simple_name(uarmh)));
             err++;
-        } else if (Upolyd && has_horns(youmonst.data) && !is_flimsy(otmp)) {
+        } else if (areYouPolymorphed() && has_horns(youmonst.data) && !is_flimsy(otmp)) {
             /* (flimsy exception matches polyself handling) */
             if (noisy)
                 pline_The("%s won't fit over your horn%s.",
@@ -1642,11 +1642,11 @@ boolean noisy;
             if (noisy)
                 already_wearing(c_boots);
             err++;
-        } else if (Upolyd && slithy(youmonst.data)) {
+        } else if (areYouPolymorphed() && slithy(youmonst.data)) {
             if (noisy)
                 You("have no feet..."); /* not body_part(FOOT) */
             err++;
-        } else if (Upolyd && youmonst.data->mlet == S_CENTAUR) {
+        } else if (areYouPolymorphed() && youmonst.data->mlet == S_CENTAUR) {
             /* break_armor() pushes boots off for centaurs,
                so don't let dowear() put them back on... */
             if (noisy)

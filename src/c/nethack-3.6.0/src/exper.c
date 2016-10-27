@@ -234,7 +234,7 @@ const char *drainer; /* cause of death, if drain should be fatal */
     if (u.uexp > 0)
         u.uexp = newuexp(currentExperienceLevel()) - 1;
 
-    if (Upolyd) {
+    if (areYouPolymorphed()) {
         num = monhp_per_lvl(&youmonst);
         u.mhmax -= num;
         u.mh -= num;
@@ -269,7 +269,7 @@ boolean incr; /* true iff via incremental experience growth */
 
     /* increase hit points (when polymorphed, do monster form first
        in order to retain normal human/whatever increase for later) */
-    if (Upolyd) {
+    if (areYouPolymorphed()) {
         hpinc = monhp_per_lvl(&youmonst);
         u.mhmax += hpinc;
         u.mh += hpinc;

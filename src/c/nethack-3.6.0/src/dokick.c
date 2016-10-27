@@ -187,7 +187,7 @@ xchar x, y;
      * normally, getting all your attacks _including_ all your kicks.
      * If you have >1 kick attack, you get all of them.
      */
-    if (Upolyd && attacktype(youmonst.data, AT_KICK)) {
+    if (areYouPolymorphed() && attacktype(youmonst.data, AT_KICK)) {
         struct attack *uattk;
         int sum, kickdieroll, armorpenalty,
             attknum = 0,

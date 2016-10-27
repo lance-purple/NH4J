@@ -20,7 +20,7 @@
  * intrinsic conferred by being polymorphed.]
  */
 
-#define maybe_polyd(if_so, if_not) (Upolyd ? (if_so) : (if_not))
+#define maybe_polyd(if_so, if_not) (areYouPolymorphed() ? (if_so) : (if_not))
 
 /*** Resistances to troubles ***/
 /* With intrinsics and extrinsics */

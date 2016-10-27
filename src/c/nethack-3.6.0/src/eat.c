@@ -617,9 +617,9 @@ boolean allowmsg;
            and also shouldn't eat current species when polymorphed
            (even if having the form of something which doesn't care
            about cannibalism--hero's innate traits aren't altered) */
-        && (your_race(fptr) || (Upolyd && same_race(youmonst.data, fptr)))) {
+        && (your_race(fptr) || (areYouPolymorphed() && same_race(youmonst.data, fptr)))) {
         if (allowmsg) {
-            if (Upolyd && your_race(fptr))
+            if (areYouPolymorphed() && your_race(fptr))
                 You("have a bad feeling deep inside.");
             You("cannibal!  You will regret this!");
         }
@@ -943,7 +943,7 @@ register int pm;
         u.ulycn = PM_WEREWOLF;
         break;
     case PM_NURSE:
-        if (Upolyd)
+        if (areYouPolymorphed())
             u.mh = u.mhmax;
         else
             u.uhp = u.uhpmax;
@@ -992,7 +992,7 @@ register int pm;
                     Hallucination
                        ? "You suddenly dread being peeled and mimic %s again!"
                        : "You now prefer mimicking %s again.",
-                    an(Upolyd ? youmonst.data->mname : urace.noun));
+                    an(areYouPolymorphed() ? youmonst.data->mname : urace.noun));
             eatmbuf = dupstr(buf);
             nomovemsg = eatmbuf;
             afternmv = eatmdone;
@@ -1943,7 +1943,7 @@ struct obj *otmp;
             break;
         case AMULET_OF_UNCHANGING:
             /* un-change: it's a pun */
-            if (!Unchanging && Upolyd) {
+            if (!Unchanging && areYouPolymorphed()) {
                 accessory_has_effect(otmp);
                 makeknown(typ);
                 rehumanize();
@@ -2085,7 +2085,7 @@ struct obj *otmp;
     case LUMP_OF_ROYAL_JELLY:
         /* This stuff seems to be VERY healthy! */
         gainstr(otmp, 1, TRUE);
-        if (Upolyd) {
+        if (areYouPolymorphed()) {
             u.mh += otmp->cursed ? -rnd(20) : rnd(20);
             if (u.mh > u.mhmax) {
                 if (!rn2(17))
@@ -2271,7 +2271,7 @@ struct obj *otmp;
         else
             return 2;
     }
-    if (Upolyd && u.umonnum == PM_RUST_MONSTER && is_metallic(otmp)
+    if (areYouPolymorphed() && u.umonnum == PM_RUST_MONSTER && is_metallic(otmp)
         && otmp->oerodeproof) {
         Sprintf(buf, "%s disgusting to you right now. %s", foodsmell,
                 eat_it_anyway);
@@ -2880,7 +2880,7 @@ boolean incr;
         setCurrentHungerState(newhs);
         context.botl = 1;
         bot();
-        if ((Upolyd ? u.mh : u.uhp) < 1) {
+        if ((areYouPolymorphed() ? u.mh : u.uhp) < 1) {
             You("die from hunger and exhaustion.");
             killer.format = KILLED_BY;
             Strcpy(killer.name, "exhaustion");

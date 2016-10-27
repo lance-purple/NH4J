@@ -551,10 +551,10 @@ register struct monst *mtmp;
         /* vampire messages are varied by tameness, peacefulness, and time of
          * night */
         boolean isnight = night();
-        boolean kindred = (Upolyd && (u.umonnum == PM_VAMPIRE
+        boolean kindred = (areYouPolymorphed() && (u.umonnum == PM_VAMPIRE
                                       || u.umonnum == PM_VAMPIRE_LORD));
         boolean nightchild =
-            (Upolyd && (u.umonnum == PM_WOLF || u.umonnum == PM_WINTER_WOLF
+            (areYouPolymorphed() && (u.umonnum == PM_WOLF || u.umonnum == PM_WINTER_WOLF
                         || u.umonnum == PM_WINTER_WOLF_CUB));
         const char *racenoun =
             (flags.female && urace.individual.f)
@@ -613,7 +613,7 @@ register struct monst *mtmp;
                     verbl_msg = verbuf;
                 } else if (vampindex == 1) {
                     Sprintf(verbuf, vampmsg[vampindex],
-                            Upolyd ? an(mons[u.umonnum].mname)
+                            areYouPolymorphed() ? an(mons[u.umonnum].mname)
                                    : an(racenoun));
                     verbl_msg = verbuf;
                 } else

@@ -806,7 +806,7 @@ register struct monst *mtmp;
     boolean ignore_boulders;
 
     /* hero concealment usually trumps monst awareness of being lined up */
-    if (Upolyd && rn2(25)
+    if (areYouPolymorphed() && rn2(25)
         && (u.uundetected || (youmonst.m_ap_type != M_AP_NOTHING
                               && youmonst.m_ap_type != M_AP_MONSTER)))
         return FALSE;

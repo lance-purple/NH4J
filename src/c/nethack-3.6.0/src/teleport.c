@@ -73,7 +73,7 @@ unsigned gpflags;
                 return (Levitation || Flying
                         || (Fire_resistance && canYouWalkOnWater() && uarmf
                             && uarmf->oerodeproof)
-                        || (Upolyd && likes_lava(youmonst.data)));
+                        || (areYouPolymorphed() && likes_lava(youmonst.data)));
             else
                 return (is_floater(mdat) || is_flyer(mdat)
                         || likes_lava(mdat));

@@ -2024,7 +2024,7 @@ do_class_genocide()
                     kill_genocided_monsters();
                     update_inventory(); /* eggs & tins */
                     pline("Wiped out all %s.", nam);
-                    if (Upolyd && i == u.umonnum) {
+                    if (areYouPolymorphed() && i == u.umonnum) {
                         u.mh = -1;
                         if (Unchanging) {
                             if (!feel_dead++)
@@ -2040,7 +2040,7 @@ do_class_genocide()
                        share same monster class. */
                     if (i == urole.malenum || i == urace.malenum) {
                         u.uhp = -1;
-                        if (Upolyd) {
+                        if (areYouPolymorphed()) {
                             if (!feel_dead++)
                                 You_feel("dead inside.");
                         } else {
@@ -2173,7 +2173,7 @@ int how;
 
     which = "all ";
     if (Hallucination) {
-        if (Upolyd)
+        if (areYouPolymorphed())
             Strcpy(buf, youmonst.data->mname);
         else {
             Strcpy(buf, (flags.female && urole.name.f) ? urole.name.f
@@ -2218,7 +2218,7 @@ int how;
             /* Polymorphed characters will die as soon as they're rehumanized.
              */
             /* KMH -- Unchanging prevents rehumanization */
-            if (Upolyd && ptr != youmonst.data) {
+            if (areYouPolymorphed() && ptr != youmonst.data) {
                 delayed_killer(POLYMORPH, killer.format, killer.name);
                 You_feel("dead inside.");
             } else

@@ -319,7 +319,7 @@ extern void display_self();
 /* The hero's glyph when seen as a monster.
  */
 #define hero_glyph                                                    \
-    monnum_to_glyph((Upolyd || !flags.showrace)                       \
+    monnum_to_glyph((areYouPolymorphed() || !flags.showrace)          \
                         ? u.umonnum                                   \
                         : (flags.female && urace.femalenum != NON_PM) \
                               ? urace.femalenum                       \

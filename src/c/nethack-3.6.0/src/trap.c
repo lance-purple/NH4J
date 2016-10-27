@@ -726,7 +726,7 @@ int *fail_reason;
     delobj(statue);
 
     /* avoid hiding under nothing */
-    if (x == currentX() && y == currentY() && Upolyd && hides_under(youmonst.data)
+    if (x == currentX() && y == currentY() && areYouPolymorphed() && hides_under(youmonst.data)
         && !OBJ_AT(x, y))
         u.uundetected = 0;
 
@@ -1334,7 +1334,7 @@ unsigned trflags;
         if (!Antimagic) {
             drain_en(rnd(currentExperienceLevel()) + 1);
         } else {
-            int dmgval2 = rnd(4), hp = Upolyd ? u.mh : u.uhp;
+            int dmgval2 = rnd(4), hp = areYouPolymorphed() ? u.mh : u.uhp;
 
             /* Half_XXX_damage has opposite its usual effect (approx)
                but isn't cumulative if hero has more than one */
@@ -3001,7 +3001,7 @@ struct obj *box; /* null for floor trap */
     if (Fire_resistance) {
         shieldeff(currentX(), currentY());
         num = rn2(2);
-    } else if (Upolyd) {
+    } else if (areYouPolymorphed()) {
         num = d(2, 4);
         switch (u.umonnum) {
         case PM_PAPER_GOLEM:
@@ -3091,7 +3091,7 @@ domagictrap()
             if (areYouOnLevel(&qstart_level))
                 You_feel(
                     "%slike the prodigal son.",
-                    (flags.female || (Upolyd && is_neuter(youmonst.data)))
+                    (flags.female || (areYouPolymorphed() && is_neuter(youmonst.data)))
                         ? "oddly "
                         : "");
             else
@@ -3615,7 +3615,7 @@ drown()
     if (is_fainted())
         reset_faint();
     /* can't crawl if unable to move (crawl_ok flag stays false) */
-    if (multi < 0 || (Upolyd && !youmonst.data->mmove))
+    if (multi < 0 || (areYouPolymorphed() && !youmonst.data->mmove))
         goto crawl;
     /* look around for a place to crawl to */
     for (i = 0; i < 100; i++) {

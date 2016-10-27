@@ -523,7 +523,7 @@ const char *drop_fmt, *drop_arg, *hold_msg;
         /* place_object may change these */
         boolean crysknife = (obj->otyp == CRYSKNIFE);
         int oerode = obj->oerodeproof;
-        boolean wasUpolyd = Upolyd;
+        boolean wereYouPolymorphed = areYouPolymorphed();
 
         /* in case touching this object turns out to be fatal */
         place_object(obj, currentX(), currentY());
@@ -532,7 +532,7 @@ const char *drop_fmt, *drop_arg, *hold_msg;
             obj_extract_self(obj); /* remove it from the floor */
             dropy(obj);            /* now put it back again :-) */
             return obj;
-        } else if (wasUpolyd && !Upolyd) {
+        } else if (wereYouPolymorphed && !areYouPolymorphed()) {
             /* loose your grip if you revert your form */
             if (drop_fmt)
                 pline(drop_fmt, drop_arg);

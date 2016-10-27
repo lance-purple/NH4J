@@ -208,7 +208,7 @@ unsigned *ospecial;
 #ifdef TEXTCOLOR
             /* special case the hero for `showrace' option */
             if (iflags.use_color && x == currentX() && y == currentY()
-                && flags.showrace && !Upolyd)
+                && flags.showrace && !areYouPolymorphed())
                 color = HI_DOMESTIC;
 #endif
         }

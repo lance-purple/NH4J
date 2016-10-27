@@ -2577,7 +2577,7 @@ boolean youattack, allow_cancel_kill, self_cancel;
 
     /* now handle special cases */
     if (youdefend) {
-        if (Upolyd) {
+        if (areYouPolymorphed()) {
             if ((u.umonnum == PM_CLAY_GOLEM) && !Blind)
                 pline(writing_vanishes, your);
 

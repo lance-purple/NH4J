@@ -1009,7 +1009,7 @@ const struct permonst *
 raceptr(mtmp)
 struct monst *mtmp;
 {
-    if (mtmp == &youmonst && !Upolyd)
+    if (mtmp == &youmonst && !areYouPolymorphed())
         return &mons[urace.malenum];
     else
         return mtmp->data;

@@ -885,7 +885,7 @@ register struct obj *obj;
     if (mtmp == u.ustuck) {
         if (u.uswallow)
             expels(mtmp, mtmp->data, TRUE);
-        else if (!(Upolyd && sticks(youmonst.data)))
+        else if (!(areYouPolymorphed() && sticks(youmonst.data)))
             unstuck(mtmp);
     }
 

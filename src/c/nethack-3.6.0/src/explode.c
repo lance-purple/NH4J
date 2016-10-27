@@ -456,15 +456,15 @@ int expltype;
 
         ugolemeffects((int) adtyp, damu);
         if (uhurt == 2) {
-            if (Upolyd)
+            if (areYouPolymorphed())
                 u.mh -= damu;
             else
                 u.uhp -= damu;
             context.botl = 1;
         }
 
-        if (u.uhp <= 0 || (Upolyd && u.mh <= 0)) {
-            if (Upolyd) {
+        if (u.uhp <= 0 || (areYouPolymorphed() && u.mh <= 0)) {
+            if (areYouPolymorphed()) {
                 rehumanize();
             } else {
                 if (olet == MON_EXPLODE) {

@@ -650,7 +650,7 @@ unsigned int *stuckid, *steedid;
 #ifdef CLIPPING
     cliparound(currentX(), currentY());
 #endif
-    if (u.uhp <= 0 && (!Upolyd || u.mh <= 0)) {
+    if (u.uhp <= 0 && (!areYouPolymorphed() || u.mh <= 0)) {
         setCurrentX(0);
         setCurrentY(0); /* affects pline() [hence You()] */
         You("were not healthy enough to survive restoration.");

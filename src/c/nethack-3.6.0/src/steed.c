@@ -217,7 +217,7 @@ boolean force;      /* Quietly force this animal */
             return (FALSE);
     }
 
-    if (Upolyd && (!humanoid(youmonst.data) || verysmall(youmonst.data)
+    if (areYouPolymorphed() && (!humanoid(youmonst.data) || verysmall(youmonst.data)
                    || bigmonst(youmonst.data) || slithy(youmonst.data))) {
         You("won't fit on a saddle.");
         return (FALSE);

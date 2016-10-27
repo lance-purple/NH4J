@@ -177,7 +177,7 @@ dosit()
                 break;
             case 4:
                 You_feel("much, much better!");
-                if (Upolyd) {
+                if (areYouPolymorphed()) {
                     if (u.mh >= (u.mhmax - 5))
                         u.mhmax += 4;
                     u.mh = u.mhmax;

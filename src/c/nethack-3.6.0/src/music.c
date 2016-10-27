@@ -403,7 +403,7 @@ int force;
                                 exercise(A_DEX, TRUE);
                             else
                                 selftouch(
-                                    (Upolyd && (slithy(youmonst.data)
+                                    (areYouPolymorphed() && (slithy(youmonst.data)
                                                 || nolimbs(youmonst.data)))
                                         ? "Shaken, you"
                                         : "Falling down, you");

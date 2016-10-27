@@ -102,8 +102,8 @@ boolean
 critically_low_hp(only_if_injured)
 boolean only_if_injured; /* determines whether maxhp <= 5 matters */
 {
-    int divisor, hplim, curhp = Upolyd ? u.mh : u.uhp,
-                        maxhp = Upolyd ? u.mhmax : u.uhpmax;
+    int divisor, hplim, curhp = areYouPolymorphed() ? u.mh : u.uhp,
+                        maxhp = areYouPolymorphed() ? u.mhmax : u.uhpmax;
 
     if (only_if_injured && !(curhp < maxhp))
         return FALSE;
@@ -206,7 +206,7 @@ in_trouble()
            otherwise "fix all troubles" would get stuck in a loop */
         if (welded(uwep))
             return TROUBLE_UNUSEABLE_HANDS;
-        if (Upolyd && nohands(youmonst.data)
+        if (areYouPolymorphed() && nohands(youmonst.data)
             && (!Unchanging || ((otmp = unchanger()) != 0 && otmp->cursed)))
             return TROUBLE_UNUSEABLE_HANDS;
     }
@@ -364,7 +364,7 @@ int trouble;
            5 or less hit points, so make sure they're always
            boosted to be more than that */
         You_feel("much better.");
-        if (Upolyd) {
+        if (areYouPolymorphed()) {
             u.mhmax += rnd(5);
             if (u.mhmax <= 5)
                 u.mhmax = 5 + 1;
@@ -417,7 +417,7 @@ int trouble;
             otmp = uwep;
             goto decurse;
         }
-        if (Upolyd && nohands(youmonst.data)) {
+        if (areYouPolymorphed() && nohands(youmonst.data)) {
             if (!Unchanging) {
                 Your("shape becomes uncertain.");
                 rehumanize(); /* "You return to {normal} form." */
@@ -1040,11 +1040,11 @@ aligntyp g_align;
                 pluslvl(FALSE);
             } else {
                 u.uhpmax += 5;
-                if (Upolyd)
+                if (areYouPolymorphed())
                     u.mhmax += 5;
             }
             u.uhp = u.uhpmax;
-            if (Upolyd)
+            if (areYouPolymorphed())
                 u.mh = u.mhmax;
             setYourCurrentAttr(A_STR, yourAttrMax(A_STR));
             if (currentNutrition() < 900) {

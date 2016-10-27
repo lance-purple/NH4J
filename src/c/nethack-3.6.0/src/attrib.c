@@ -181,7 +181,7 @@ register int num;
     while (ustr < 3) {
         ++ustr;
         --num;
-        if (Upolyd) {
+        if (areYouPolymorphed()) {
             u.mh -= 6;
             u.mhmax -= 6;
         } else {
@@ -359,7 +359,7 @@ boolean inc_or_dec;
         return; /* can't exercise these */
 
     /* no physical exercise while polymorphed; the body's temporary */
-    if (Upolyd && i != A_WIS)
+    if (areYouPolymorphed() && i != A_WIS)
         return;
 
     if (abs(yourAttrChangeFromExercise(i)) < AVAL) {
@@ -504,7 +504,7 @@ exerchk()
                 goto nextattrib;
             /* can't exercise non-Wisdom while polymorphed; previous
                exercise/abuse gradually wears off without impact then */
-            if (Upolyd && i != A_WIS)
+            if (areYouPolymorphed() && i != A_WIS)
                 goto nextattrib;
 
             debugpline2("exerchk: testing %s (%d).",

@@ -913,7 +913,7 @@ boolean hitsroof;
         dmg = Maybe_Half_Phys(dmg);
 
         if (uarmh) {
-            if (less_damage && dmg < (Upolyd ? u.mh : u.uhp)) {
+            if (less_damage && dmg < (areYouPolymorphed() ? u.mh : u.uhp)) {
                 if (!artimsg)
                     pline("Fortunately, you are wearing a hard helmet.");
                 /* helmet definitely protects you when it blocks petrification
@@ -1014,9 +1014,9 @@ boolean
 
     if ((directionX() || directionY() || (directionZ() < 1))
         && calc_capacity((int) obj->owt) > SLT_ENCUMBER
-        && (Upolyd ? (u.mh < 5 && u.mh != u.mhmax)
+        && (areYouPolymorphed() ? (u.mh < 5 && u.mh != u.mhmax)
                    : (u.uhp < 10 && u.uhp != u.uhpmax))
-        && obj->owt > (unsigned) ((Upolyd ? u.mh : u.uhp) * 2)
+        && obj->owt > (unsigned) ((areYouPolymorphed() ? u.mh : u.uhp) * 2)
         && !areYouOnAirLevel()) {
         You("have so little stamina, %s drops from your grasp.",
             the(xname(obj)));
@@ -1472,7 +1472,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
                  * Polymorphing won't make you a bow expert.
                  */
                 if ((Race_if(PM_ELF) || Role_if(PM_SAMURAI))
-                    && (!Upolyd || your_race(youmonst.data))
+                    && (!areYouPolymorphed() || your_race(youmonst.data))
                     && objects[uwep->otyp].oc_skill == P_BOW) {
                     tmp++;
                     if (Race_if(PM_ELF) && uwep->otyp == ELVEN_BOW)

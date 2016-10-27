@@ -769,7 +769,7 @@ struct monst *mtmp;
     } else if (weap->spfx & SPFX_DFLAG2) {
         return ((ptr->mflags2 & weap->mtype)
                 || (yours
-                    && ((!Upolyd && (urace.selfmask & weap->mtype))
+                    && ((!areYouPolymorphed() && (urace.selfmask & weap->mtype))
                         || ((weap->mtype & M2_WERE) && u.ulycn >= LOW_PM))));
     } else if (weap->spfx & SPFX_DALIGN) {
         return yours ? (u.ualign.type != weap->alignment)
@@ -1275,7 +1275,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                  * value to the damage so that this reduction in
                  * damage does not prevent death.
                  */
-                *dmgptr = 2 * (Upolyd ? u.mh : u.uhp) + FATAL_DAMAGE_MODIFIER;
+                *dmgptr = 2 * (areYouPolymorphed() ? u.mh : u.uhp) + FATAL_DAMAGE_MODIFIER;
                 pline("%s cuts you in half!", wepdesc);
                 otmp->dknown = TRUE;
                 return TRUE;
@@ -1321,7 +1321,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                           body_part(NECK));
                     return TRUE;
                 }
-                *dmgptr = 2 * (Upolyd ? u.mh : u.uhp) + FATAL_DAMAGE_MODIFIER;
+                *dmgptr = 2 * (areYouPolymorphed() ? u.mh : u.uhp) + FATAL_DAMAGE_MODIFIER;
                 pline(behead_msg[rn2(SIZE(behead_msg))], wepdesc, "you");
                 otmp->dknown = TRUE;
                 /* Should amulets fall off? */
@@ -1444,14 +1444,14 @@ struct obj *obj;
             int healamt = (u.uhpmax + 1 - u.uhp) / 2;
             long creamed = (long) u.ucreamed;
 
-            if (Upolyd)
+            if (areYouPolymorphed())
                 healamt = (u.mhmax + 1 - u.mh) / 2;
             if (healamt || Sick || Slimed || Blinded > creamed)
                 You_feel("better.");
             else
                 goto nothing_special;
             if (healamt > 0) {
-                if (Upolyd)
+                if (areYouPolymorphed())
                     u.mh += healamt;
                 else
                     u.uhp += healamt;

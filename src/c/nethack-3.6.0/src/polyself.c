@@ -150,7 +150,7 @@ const char *fmt, *arg;
             was_mimicking = (youmonst.m_ap_type == M_AP_OBJECT);
     boolean was_blind = !!Blind;
 
-    if (Upolyd) {
+    if (areYouPolymorphed()) {
         /* restore old attribs */
         int i;
         for (i = 0; i < A_MAX; i++) {
@@ -222,8 +222,8 @@ void
 change_sex()
 {
     /* setting u.umonster for caveman/cavewoman or priest/priestess
-       swap unintentionally makes `Upolyd' appear to be true */
-    boolean already_polyd = (boolean) Upolyd;
+       swap unintentionally makes `areYouPolymorphed()' appear to be true */
+    boolean already_polyd = (boolean) areYouPolymorphed();
 
     /* Some monsters are always of one sex and their sex can't be changed;
      * Succubi/incubi can change, but are handled below.
@@ -447,7 +447,7 @@ int psflags;
                     You_cant("polymorph into any of those.");
             } else if (iswere && (were_beastie(mntmp) == u.ulycn
                                   || mntmp == counter_were(u.ulycn)
-                                  || (Upolyd && mntmp == PM_HUMAN))) {
+                                  || (areYouPolymorphed() && mntmp == PM_HUMAN))) {
                 goto do_shift;
                 /* Note:  humans are illegal as monsters, but an
                  * illegal monster forces newman(), which is what we
@@ -524,7 +524,7 @@ int psflags;
             }
         } else if (iswere) {
         do_shift:
-            if (Upolyd && were_beastie(mntmp) != u.ulycn)
+            if (areYouPolymorphed() && were_beastie(mntmp) != u.ulycn)
                 mntmp = PM_HUMAN; /* Illegal; force newman() */
             else
                 mntmp = u.ulycn;
@@ -609,7 +609,7 @@ int mntmp;
     exercise(A_CON, FALSE);
     exercise(A_WIS, TRUE);
 
-    if (!Upolyd) {
+    if (!areYouPolymorphed()) {
         /* Human to monster; save human stats */
         int i;
         for (i = 0; i < A_MAX; i++) {

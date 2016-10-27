@@ -623,7 +623,7 @@ register struct obj *otmp;
             } else if (otmp->cursed) {
                 You_feel("quite proud of yourself.");
                 healup(d(2, 6), 0, 0, 0);
-                if (u.ulycn >= LOW_PM && !Upolyd)
+                if (u.ulycn >= LOW_PM && !areYouPolymorphed())
                     you_were();
                 exercise(A_CON, TRUE);
             }
@@ -643,7 +643,7 @@ register struct obj *otmp;
                            KILLED_BY_AN);
                 } else
                     You_feel("full of dread.");
-                if (u.ulycn >= LOW_PM && !Upolyd)
+                if (u.ulycn >= LOW_PM && !areYouPolymorphed())
                     you_were();
                 exercise(A_CON, FALSE);
             }
@@ -1102,7 +1102,7 @@ int nhp, nxtra;
 register boolean curesick, cureblind;
 {
     if (nhp) {
-        if (Upolyd) {
+        if (areYouPolymorphed()) {
             u.mh += nhp;
             if (u.mh > u.mhmax)
                 u.mh = (u.mhmax += nxtra);
@@ -1539,19 +1539,19 @@ register struct obj *obj;
         }
         break;
     case POT_FULL_HEALING:
-        if (Upolyd && u.mh < u.mhmax)
+        if (areYouPolymorphed() && u.mh < u.mhmax)
             u.mh++, context.botl = 1;
         if (u.uhp < u.uhpmax)
             u.uhp++, context.botl = 1;
         /*FALLTHRU*/
     case POT_EXTRA_HEALING:
-        if (Upolyd && u.mh < u.mhmax)
+        if (areYouPolymorphed() && u.mh < u.mhmax)
             u.mh++, context.botl = 1;
         if (u.uhp < u.uhpmax)
             u.uhp++, context.botl = 1;
         /*FALLTHRU*/
     case POT_HEALING:
-        if (Upolyd && u.mh < u.mhmax)
+        if (areYouPolymorphed() && u.mh < u.mhmax)
             u.mh++, context.botl = 1;
         if (u.uhp < u.uhpmax)
             u.uhp++, context.botl = 1;
@@ -1559,7 +1559,7 @@ register struct obj *obj;
         break;
     case POT_SICKNESS:
         if (!Role_if(PM_HEALER)) {
-            if (Upolyd) {
+            if (areYouPolymorphed()) {
                 if (u.mh <= 5)
                     u.mh = 1;
                 else
@@ -1636,7 +1636,7 @@ register struct obj *obj;
                transformation but won't cure lycanthropy */
             if (obj->blessed && youmonst.data == &mons[u.ulycn])
                 you_unwere(FALSE);
-            else if (obj->cursed && !Upolyd)
+            else if (obj->cursed && !areYouPolymorphed())
                 you_were();
         }
         break;

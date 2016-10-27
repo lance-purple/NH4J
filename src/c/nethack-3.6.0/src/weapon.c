@@ -748,7 +748,7 @@ abon()
     int sbon;
     int str = ACURR(A_STR), dex = ACURR(A_DEX);
 
-    if (Upolyd)
+    if (areYouPolymorphed())
         return (adj_lev(&mons[u.umonnum]) - 3);
     if (str < 6)
         sbon = -2;
@@ -785,7 +785,7 @@ dbon()
 {
     int str = ACURR(A_STR);
 
-    if (Upolyd)
+    if (areYouPolymorphed())
         return 0;
 
     if (str < 6)

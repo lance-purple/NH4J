@@ -486,7 +486,7 @@ register struct monst *mtmp;
             char buf[BUFSZ];
 
             Sprintf(buf, "You appear to be %s again.",
-                    Upolyd ? (const char *) an(youmonst.data->mname)
+                    areYouPolymorphed() ? (const char *) an(youmonst.data->mname)
                            : (const char *) "yourself");
             unmul(buf); /* immediately stop mimicking */
         }
@@ -1347,7 +1347,7 @@ register struct attack *mattk;
     case AD_HEAL:
         /* a cancelled nurse is just an ordinary monster,
          * nurses don't heal those that cause petrification */
-        if (mtmp->mcan || (Upolyd && touch_petrifies(youmonst.data))) {
+        if (mtmp->mcan || (areYouPolymorphed() && touch_petrifies(youmonst.data))) {
             hitmsg(mtmp, mattk);
             break;
         }
@@ -1355,7 +1355,7 @@ register struct attack *mattk;
             && !uarmf) {
             boolean goaway = FALSE;
             pline("%s hits!  (I hope you don't mind.)", Monnam(mtmp));
-            if (Upolyd) {
+            if (areYouPolymorphed()) {
                 u.mh += rnd(7);
                 if (!rn2(7)) {
                     /* no upper limit necessary; effect is temporary */
@@ -1577,14 +1577,14 @@ register struct attack *mattk;
              * Never reduces hpmax below 1 hit point per level.
              */
             permdmg = rn2(dmg / 2 + 1);
-            if (Upolyd || u.uhpmax > 25 * currentExperienceLevel())
+            if (areYouPolymorphed() || u.uhpmax > 25 * currentExperienceLevel())
                 permdmg = dmg;
             else if (u.uhpmax > 10 * currentExperienceLevel())
                 permdmg += dmg / 2;
             else if (u.uhpmax > 5 * currentExperienceLevel())
                 permdmg += dmg / 4;
 
-            if (Upolyd) {
+            if (areYouPolymorphed()) {
                 hpmax_p = &u.mhmax;
                 /* [can't use youmonst.m_lev] */
                 lowerlimit = min((int) youmonst.data->mlevel, currentExperienceLevel());
@@ -2188,7 +2188,7 @@ register struct monst *mtmp;
 register int n;
 {
     context.botl = 1;
-    if (Upolyd) {
+    if (areYouPolymorphed()) {
         u.mh -= n;
         if (u.mh < 1)
             rehumanize();
@@ -2465,7 +2465,7 @@ register struct monst *mon;
         case 4:
             You_feel("restored to health!");
             u.uhp = u.uhpmax;
-            if (Upolyd)
+            if (areYouPolymorphed())
                 u.mh = u.mhmax;
             exercise(A_STR, TRUE);
             context.botl = 1;
@@ -2622,7 +2622,7 @@ register struct attack *mattk;
     default:
         break;
     }
-    if (!Upolyd)
+    if (!areYouPolymorphed())
         return 1;
 
     /* These affect the enemy only if you are still a monster */

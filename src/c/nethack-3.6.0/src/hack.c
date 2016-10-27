@@ -1230,7 +1230,7 @@ domove()
 
     if (((wtcap = near_capacity()) >= OVERLOADED
          || (wtcap > SLT_ENCUMBER
-             && (Upolyd ? (u.mh < 5 && u.mh != u.mhmax)
+             && (areYouPolymorphed() ? (u.mh < 5 && u.mh != u.mhmax)
                         : (u.uhp < 10 && u.uhp != u.uhpmax))))
         && !areYouOnAirLevel()) {
         if (wtcap < OVERLOADED) {
@@ -1438,7 +1438,7 @@ domove()
         /* remembered an 'I' && didn't use a move command */
         || (glyph_is_invisible(levl[x][y].glyph) && !context.nopick)) {
         struct obj *boulder = 0;
-        boolean explo = (Upolyd && attacktype(youmonst.data, AT_EXPL)),
+        boolean explo = (areYouPolymorphed() && attacktype(youmonst.data, AT_EXPL)),
                 solid = !accessible(x, y);
         int glyph = glyph_at(x, y); /* might be monster */
         char buf[BUFSZ];
@@ -1735,7 +1735,7 @@ overexertion()
        execute if you decline to attack a peaceful monster */
     gethungry();
     if ((moves % 3L) != 0L && near_capacity() >= HVY_ENCUMBER) {
-        int *hp = (!Upolyd ? &u.uhp : &u.mh);
+        int *hp = (!areYouPolymorphed() ? &u.uhp : &u.mh);
 
         if (*hp > 1) {
             *hp -= 1;
@@ -2670,7 +2670,7 @@ register int n;
 register const char *knam;
 boolean k_format;
 {
-    if (Upolyd) {
+    if (areYouPolymorphed()) {
         u.mh -= n;
         if (u.mhmax < u.mh)
             u.mhmax = u.mh;
@@ -2703,7 +2703,7 @@ weight_cap()
     register long carrcap;
 
     carrcap = 25 * (ACURRSTR + ACURR(A_CON)) + 50;
-    if (Upolyd) {
+    if (areYouPolymorphed()) {
         /* consistent with can_carry() in mon.c */
         if (youmonst.data->mlet == S_NYMPH)
             carrcap = MAX_CARR_CAP;
