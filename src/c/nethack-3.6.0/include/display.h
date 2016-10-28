@@ -320,7 +320,7 @@ extern void display_self();
  */
 #define hero_glyph                                                    \
     monnum_to_glyph((areYouPolymorphed() || !flags.showrace)          \
-                        ? u.umonnum                                   \
+                        ? currentMonsterNumber()                      \
                         : (flags.female && urace.femalenum != NON_PM) \
                               ? urace.femalenum                       \
                               : urace.malenum)

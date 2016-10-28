@@ -551,11 +551,11 @@ register struct monst *mtmp;
         /* vampire messages are varied by tameness, peacefulness, and time of
          * night */
         boolean isnight = night();
-        boolean kindred = (areYouPolymorphed() && (u.umonnum == PM_VAMPIRE
-                                      || u.umonnum == PM_VAMPIRE_LORD));
+        boolean kindred = (areYouPolymorphed() && (currentMonsterNumber() == PM_VAMPIRE
+                                      || currentMonsterNumber() == PM_VAMPIRE_LORD));
         boolean nightchild =
-            (areYouPolymorphed() && (u.umonnum == PM_WOLF || u.umonnum == PM_WINTER_WOLF
-                        || u.umonnum == PM_WINTER_WOLF_CUB));
+            (areYouPolymorphed() && (currentMonsterNumber() == PM_WOLF || currentMonsterNumber() == PM_WINTER_WOLF
+                        || currentMonsterNumber() == PM_WINTER_WOLF_CUB));
         const char *racenoun =
             (flags.female && urace.individual.f)
                 ? urace.individual.f
@@ -613,7 +613,7 @@ register struct monst *mtmp;
                     verbl_msg = verbuf;
                 } else if (vampindex == 1) {
                     Sprintf(verbuf, vampmsg[vampindex],
-                            areYouPolymorphed() ? an(mons[u.umonnum].mname)
+                            areYouPolymorphed() ? an(mons[currentMonsterNumber()].mname)
                                    : an(racenoun));
                     verbl_msg = verbuf;
                 } else
@@ -1032,7 +1032,7 @@ dochat()
          * It raises all sorts of questions: can you wear
          * 2 helmets, 2 amulets, 3 pairs of gloves or 6 rings as a marilith,
          * etc...  --KAA
-        if (u.umonnum == PM_ETTIN) {
+        if (currentMonsterNumber() == PM_ETTIN) {
             You("discover that your other head makes boring conversation.");
             return 1;
         }

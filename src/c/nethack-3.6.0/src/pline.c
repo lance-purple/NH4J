@@ -544,7 +544,7 @@ ustatusline()
                                                   ? "nominally "
                                                   : "insufficiently ",
           align_str(u.ualign.type),
-          areYouPolymorphed() ? mons[u.umonnum].mlevel : currentExperienceLevel(), areYouPolymorphed() ? u.mh : u.uhp,
+          areYouPolymorphed() ? mons[currentMonsterNumber()].mlevel : currentExperienceLevel(), areYouPolymorphed() ? u.mh : u.uhp,
           areYouPolymorphed() ? u.mhmax : u.uhpmax, u.uac, info);
 }
 

@@ -92,7 +92,7 @@ register struct obj *obj;
         && (youmonst.data != &mons[PM_RUST_MONSTER] || is_rustprone(obj)))
         return TRUE;
 
-    if (u.umonnum == PM_GELATINOUS_CUBE && is_organic(obj)
+    if (currentMonsterNumber() == PM_GELATINOUS_CUBE && is_organic(obj)
         /* [g.cubes can eat containers and retain all contents
             as engulfed items, but poly'd player can't do that] */
         && !Has_contents(obj))
@@ -1619,7 +1619,7 @@ struct obj *otmp;
     } else if ((mnum == PM_COCKATRICE || mnum == PM_CHICKATRICE)
                && (Stone_resistance || Hallucination)) {
         pline("This tastes just like chicken!");
-    } else if (mnum == PM_FLOATING_EYE && u.umonnum == PM_RAVEN) {
+    } else if (mnum == PM_FLOATING_EYE && currentMonsterNumber() == PM_RAVEN) {
         You("peck the eyeball with delight.");
     } else {
         /* [is this right?  omnivores end up always disliking the taste] */
@@ -1634,7 +1634,7 @@ struct obj *otmp;
                  ? "" : the_unique_pm(&mons[mnum]) ? "The " : "This ",
               food_xname(otmp, FALSE),
               Hallucination
-                  ? (yummy ? ((u.umonnum == PM_TIGER) ? "is gr-r-reat"
+                  ? (yummy ? ((currentMonsterNumber() == PM_TIGER) ? "is gr-r-reat"
                                                       : "is gnarly")
                            : "is grody")
                   : (yummy ? "is delicious" : "tastes terrible"));
@@ -2271,7 +2271,7 @@ struct obj *otmp;
         else
             return 2;
     }
-    if (areYouPolymorphed() && u.umonnum == PM_RUST_MONSTER && is_metallic(otmp)
+    if (areYouPolymorphed() && currentMonsterNumber() == PM_RUST_MONSTER && is_metallic(otmp)
         && otmp->oerodeproof) {
         Sprintf(buf, "%s disgusting to you right now. %s", foodsmell,
                 eat_it_anyway);
@@ -2364,7 +2364,7 @@ doeat()
         You_cant("eat %s you're wearing.", something);
         return 0;
     }
-    if (is_metallic(otmp) && u.umonnum == PM_RUST_MONSTER
+    if (is_metallic(otmp) && currentMonsterNumber() == PM_RUST_MONSTER
         && otmp->oerodeproof) {
         otmp->rknown = TRUE;
         if (otmp->quan > 1L) {

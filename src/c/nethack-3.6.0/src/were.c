@@ -174,7 +174,7 @@ you_were()
     char qbuf[QBUFSZ];
     boolean controllable_poly = Polymorph_control && !(Stunned || Unaware);
 
-    if (Unchanging || (u.umonnum == u.ulycn))
+    if (Unchanging || (currentMonsterNumber() == u.ulycn))
         return;
     if (controllable_poly) {
         /* `+4' => skip "were" prefix to get name of beast */

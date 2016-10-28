@@ -795,7 +795,7 @@ struct obj *obj;
         if (!useeit) {
             You_cant("see your %s %s.", uvisage, body_part(FACE));
         } else {
-            if (u.umonnum == PM_FLOATING_EYE) {
+            if (currentMonsterNumber() == PM_FLOATING_EYE) {
                 if (Free_action) {
                     You("stiffen momentarily under your gaze.");
                 } else {
@@ -811,7 +811,7 @@ struct obj *obj;
                 }
             } else if (youmonst.data->mlet == S_VAMPIRE)
                 You("don't have a reflection.");
-            else if (u.umonnum == PM_UMBER_HULK) {
+            else if (currentMonsterNumber() == PM_UMBER_HULK) {
                 pline("Huh?  That doesn't look like you!");
                 make_confused(HConfusion + d(3, 4), FALSE);
             } else if (Hallucination)

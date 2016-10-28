@@ -346,7 +346,7 @@ register struct monst *mtmp;
         if (!canspotmon(mtmp))
             map_invisible(mtmp->mx, mtmp->my);
         u.uundetected = 0;
-        if (is_hider(youmonst.data) && u.umonnum != PM_TRAPPER) {
+        if (is_hider(youmonst.data) && currentMonsterNumber() != PM_TRAPPER) {
             /* ceiling hider */
             coord cc; /* maybe we need a unexto() function? */
             struct obj *obj;
@@ -418,7 +418,7 @@ register struct monst *mtmp;
                  */
                 struct obj *obj = level.objects[currentX()][currentY()];
 
-                if (obj || u.umonnum == PM_TRAPPER
+                if (obj || currentMonsterNumber() == PM_TRAPPER
                     || (youmonst.data->mlet == S_EEL
                         && is_pool(currentX(), currentY()))) {
                     int save_spe = 0; /* suppress warning */
@@ -429,7 +429,7 @@ register struct monst *mtmp;
                             obj->spe = 0;
                     }
                     if (youmonst.data->mlet == S_EEL
-                        || u.umonnum == PM_TRAPPER)
+                        || currentMonsterNumber() == PM_TRAPPER)
                         pline(
                              "Wait, %s!  There's a hidden %s named %s there!",
                               m_monnam(mtmp), youmonst.data->mname, plname);
@@ -480,7 +480,7 @@ register struct monst *mtmp;
                                            : "disturbs you");
         else
             pline("Wait, %s!  That %s is really %s named %s!", m_monnam(mtmp),
-                  mimic_obj_name(&youmonst), an(mons[u.umonnum].mname),
+                  mimic_obj_name(&youmonst), an(mons[currentMonsterNumber()].mname),
                   plname);
         if (multi < 0) { /* this should always be the case */
             char buf[BUFSZ];
@@ -943,8 +943,8 @@ register struct attack *mattk;
                 if (tmp < 1)
                     tmp = 1;
                 if (u.mh - tmp > 1 && objects[otmp->otyp].oc_material == IRON
-                    && (u.umonnum == PM_BLACK_PUDDING
-                        || u.umonnum == PM_BROWN_PUDDING)) {
+                    && (currentMonsterNumber() == PM_BLACK_PUDDING
+                        || currentMonsterNumber() == PM_BROWN_PUDDING)) {
                     if (tmp > 1)
                         exercise(A_STR, FALSE);
                     /* inflict damage now; we know it can't be fatal */
@@ -1318,7 +1318,7 @@ register struct attack *mattk;
         hitmsg(mtmp, mattk);
         if (mtmp->mcan)
             break;
-        if (u.umonnum == PM_IRON_GOLEM) {
+        if (currentMonsterNumber() == PM_IRON_GOLEM) {
             You("rust!");
             /* KMH -- this is okay with unchanging */
             rehumanize();
@@ -1336,7 +1336,7 @@ register struct attack *mattk;
         hitmsg(mtmp, mattk);
         if (mtmp->mcan)
             break;
-        if (u.umonnum == PM_WOOD_GOLEM || u.umonnum == PM_LEATHER_GOLEM) {
+        if (currentMonsterNumber() == PM_WOOD_GOLEM || currentMonsterNumber() == PM_LEATHER_GOLEM) {
             You("rot!");
             /* KMH -- this is okay with unchanging */
             rehumanize();
@@ -1414,7 +1414,7 @@ register struct attack *mattk;
                 else
                     pline("%s chuckles.", Monnam(mtmp));
             }
-            if (u.umonnum == PM_CLAY_GOLEM) {
+            if (currentMonsterNumber() == PM_CLAY_GOLEM) {
                 pline("Some writing vanishes from your head!");
                 /* KMH -- this is okay with unchanging */
                 rehumanize();
@@ -1940,8 +1940,8 @@ boolean ufound;
             break;
 
         case AD_HALU:
-            not_affected |= Blind || (u.umonnum == PM_BLACK_LIGHT
-                                      || u.umonnum == PM_VIOLET_FUNGUS
+            not_affected |= Blind || (currentMonsterNumber() == PM_BLACK_LIGHT
+                                      || currentMonsterNumber() == PM_VIOLET_FUNGUS
                                       || dmgtype(youmonst.data, AD_STUN));
             if (!not_affected) {
                 boolean chg;
@@ -2478,7 +2478,7 @@ register struct monst *mon;
     else if (rn2(20) < ACURR(A_CHA)) {
         pline("%s demands that you pay %s, but you refuse...",
               noit_Monnam(mon), Blind ? (fem ? "her" : "him") : mhim(mon));
-    } else if (u.umonnum == PM_LEPRECHAUN)
+    } else if (currentMonsterNumber() == PM_LEPRECHAUN)
         pline("%s tries to take your money, but fails...", noit_Monnam(mon));
     else {
         long cost;
@@ -2639,7 +2639,7 @@ register struct attack *mattk;
         case AD_PLYS: /* Floating eye */
             if (tmp > 127)
                 tmp = 127;
-            if (u.umonnum == PM_FLOATING_EYE) {
+            if (currentMonsterNumber() == PM_FLOATING_EYE) {
                 if (!rn2(4))
                     tmp = 127;
                 if (mtmp->mcansee && haseyes(mtmp->data) && rn2(3)

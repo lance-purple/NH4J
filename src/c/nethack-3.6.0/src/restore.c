@@ -613,6 +613,7 @@ unsigned int *stuckid, *steedid;
     }
 
     setOriginalMonsterNumber(read_int(fd));
+    setCurrentMonsterNumber(read_int(fd));
 
     setCurrentNutrition(read_int(fd));
     setCurrentHungerState(read_int(fd));

@@ -932,6 +932,8 @@ E boolean FDECL(areYouPolymorphed, ());
 
 E int FDECL(originalMonsterNumber, ());
 E void FDECL(setOriginalMonsterNumber, (int));
+E int FDECL(currentMonsterNumber, ());
+E void FDECL(setCurrentMonsterNumber, (int));
 
 E int FDECL(currentNutrition, ());
 E void FDECL(setCurrentNutrition, (int));

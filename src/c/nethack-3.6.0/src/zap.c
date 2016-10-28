@@ -2381,7 +2381,7 @@ boolean ordinary;
         struct obj *otmp, *onxt;
         boolean didmerge;
 
-        if (u.umonnum == PM_STONE_GOLEM) {
+        if (currentMonsterNumber() == PM_STONE_GOLEM) {
             learn_it = TRUE;
             (void) polymon(PM_FLESH_GOLEM);
         }
@@ -2578,7 +2578,7 @@ boolean youattack, allow_cancel_kill, self_cancel;
     /* now handle special cases */
     if (youdefend) {
         if (areYouPolymorphed()) {
-            if ((u.umonnum == PM_CLAY_GOLEM) && !Blind)
+            if ((currentMonsterNumber() == PM_CLAY_GOLEM) && !Blind)
                 pline(writing_vanishes, your);
 
             if (Unchanging)

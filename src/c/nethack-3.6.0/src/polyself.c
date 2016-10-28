@@ -41,7 +41,7 @@ STATIC_VAR int sex_change_ok = 0;
 void
 set_uasmon()
 {
-    struct permonst *mdat = &mons[u.umonnum];
+    struct permonst *mdat = &mons[currentMonsterNumber()];
 
     set_mon_data(&youmonst, mdat, 0);
 
@@ -157,7 +157,7 @@ const char *fmt, *arg;
             setYourCurrentAttr(i, yourAttrAsMonster(i));
             setYourAttrMax    (i, yourAttrMaxAsMonster(i));
         } 
-        u.umonnum = originalMonsterNumber();
+        setCurrentMonsterNumber(originalMonsterNumber());
         flags.female = u.mfemale;
     }
     set_uasmon();
@@ -247,11 +247,11 @@ change_sex()
                      ? urole.femalenum
                      : urole.malenum );
     if (!already_polyd) {
-        u.umonnum = originalMonsterNumber();
-    } else if (u.umonnum == PM_SUCCUBUS || u.umonnum == PM_INCUBUS) {
+        setCurrentMonsterNumber(originalMonsterNumber());
+    } else if (currentMonsterNumber() == PM_SUCCUBUS || currentMonsterNumber() == PM_INCUBUS) {
         flags.female = !flags.female;
         /* change monster type to match new sex */
-        u.umonnum = (u.umonnum == PM_SUCCUBUS) ? PM_INCUBUS : PM_SUCCUBUS;
+        setCurrentMonsterNumber((currentMonsterNumber() == PM_SUCCUBUS) ? PM_INCUBUS : PM_SUCCUBUS );
         set_uasmon();
     }
 }
@@ -651,13 +651,13 @@ int mntmp;
     if (dochange) {
         flags.female = !flags.female;
         You("%s %s%s!",
-            (u.umonnum != mntmp) ? "turn into a" : "feel like a new",
+            (currentMonsterNumber() != mntmp) ? "turn into a" : "feel like a new",
             (is_male(&mons[mntmp]) || is_female(&mons[mntmp]))
                 ? ""
                 : flags.female ? "female " : "male ",
             mons[mntmp].mname);
     } else {
-        if (u.umonnum != mntmp)
+        if (currentMonsterNumber() != mntmp)
             You("turn into %s!", an(mons[mntmp].mname));
         else
             You_feel("like a new %s!", mons[mntmp].mname);
@@ -669,7 +669,7 @@ int mntmp;
     }
 
     u.mtimedone = rn1(500, 500);
-    u.umonnum = mntmp;
+    setCurrentMonsterNumber(mntmp);
     set_uasmon();
 
     /* New stats for monster, to last only as long as polymorphed.
@@ -782,7 +782,7 @@ int mntmp;
             pline(use_thec, monsterc, "summon help");
         if (webmaker(youmonst.data))
             pline(use_thec, monsterc, "spin a web");
-        if (u.umonnum == PM_GREMLIN)
+        if (currentMonsterNumber() == PM_GREMLIN)
             pline(use_thec, monsterc, "multiply in a fountain");
         if (is_unicorn(youmonst.data))
             pline(use_thec, monsterc, "use your horn");
@@ -799,9 +799,9 @@ int mntmp;
 
     /* you now know what an egg of your type looks like */
     if (lays_eggs(youmonst.data)) {
-        learn_egg_type(u.umonnum);
+        learn_egg_type(currentMonsterNumber());
         /* make queen bees recognize killer bee eggs */
-        learn_egg_type(egg_type_from_parent(u.umonnum, TRUE));
+        learn_egg_type(egg_type_from_parent(currentMonsterNumber(), TRUE));
     }
     find_ac();
     if ((!Levitation && !u.ustuck && !Flying && is_pool_or_lava(currentX(), currentY()))
@@ -1731,15 +1731,15 @@ int damtype, dam;
      * have a monster-specific slow/haste so there is no way to
      * restore the old velocity once they are back to human.
      */
-    if (u.umonnum != PM_FLESH_GOLEM && u.umonnum != PM_IRON_GOLEM)
+    if (currentMonsterNumber() != PM_FLESH_GOLEM && currentMonsterNumber() != PM_IRON_GOLEM)
         return;
     switch (damtype) {
     case AD_ELEC:
-        if (u.umonnum == PM_FLESH_GOLEM)
+        if (currentMonsterNumber() == PM_FLESH_GOLEM)
             heal = (dam + 5) / 6; /* Approx 1 per die */
         break;
     case AD_FIRE:
-        if (u.umonnum == PM_IRON_GOLEM)
+        if (currentMonsterNumber() == PM_IRON_GOLEM)
             heal = dam;
         break;
     }

@@ -1004,7 +1004,7 @@ unsigned trflags;
             pline("%s bear trap closes on your %s!", A_Your[trap->madeby_u],
                   body_part(FOOT));
             set_wounded_legs(rn2(2) ? RIGHT_SIDE : LEFT_SIDE, rn1(10, 10));
-            if (u.umonnum == PM_OWLBEAR || u.umonnum == PM_BUGBEAR)
+            if (currentMonsterNumber() == PM_OWLBEAR || currentMonsterNumber() == PM_BUGBEAR)
                 You("howl in anger!");
             losehp(Maybe_Half_Phys(dmg), "bear trap", KILLED_BY_AN);
         }
@@ -1067,13 +1067,13 @@ unsigned trflags;
         }
         update_inventory();
 
-        if (u.umonnum == PM_IRON_GOLEM) {
+        if (currentMonsterNumber() == PM_IRON_GOLEM) {
             int dam = u.mhmax;
 
             pline("%s you!", A_gush_of_water_hits);
             You("are covered with rust!");
             losehp(Maybe_Half_Phys(dam), "rusting away", KILLED_BY);
-        } else if (u.umonnum == PM_GREMLIN && rn2(3)) {
+        } else if (currentMonsterNumber() == PM_GREMLIN && rn2(3)) {
             pline("%s you!", A_gush_of_water_hits);
             (void) split_mon(&youmonst, (struct monst *) 0);
         }
@@ -1127,7 +1127,7 @@ unsigned trflags;
             && areYouInTheQuestDungeon() && areYouOnQuestLocationLevel()) {
             pline("Fortunately it has a bottom after all...");
             trap->once = 1;
-        } else if (u.umonnum == PM_PIT_VIPER || u.umonnum == PM_PIT_FIEND) {
+        } else if (currentMonsterNumber() == PM_PIT_VIPER || currentMonsterNumber() == PM_PIT_FIEND) {
             pline("How pitiful.  Isn't that the pits?");
         }
         if (ttype == SPIKED_PIT) {
@@ -1206,11 +1206,11 @@ unsigned trflags;
         feeltrap(trap);
         if (amorphous(youmonst.data) || is_whirly(youmonst.data)
             || unsolid(youmonst.data)) {
-            if (acidic(youmonst.data) || u.umonnum == PM_GELATINOUS_CUBE
-                || u.umonnum == PM_FIRE_ELEMENTAL) {
+            if (acidic(youmonst.data) || currentMonsterNumber() == PM_GELATINOUS_CUBE
+                || currentMonsterNumber() == PM_FIRE_ELEMENTAL) {
                 if (webmsgok)
                     You("%s %s spider web!",
-                        (u.umonnum == PM_FIRE_ELEMENTAL) ? "burn"
+                        (currentMonsterNumber() == PM_FIRE_ELEMENTAL) ? "burn"
                                                          : "dissolve",
                         a_your[trap->madeby_u]);
                 deltrap(trap);
@@ -3003,7 +3003,7 @@ struct obj *box; /* null for floor trap */
         num = rn2(2);
     } else if (areYouPolymorphed()) {
         num = d(2, 4);
-        switch (u.umonnum) {
+        switch (currentMonsterNumber()) {
         case PM_PAPER_GOLEM:
             alt = u.mhmax;
             break;
@@ -3022,7 +3022,7 @@ struct obj *box; /* null for floor trap */
         }
         if (alt > num)
             num = alt;
-        if (u.mhmax > mons[u.umonnum].mlevel)
+        if (u.mhmax > mons[currentMonsterNumber()].mlevel)
             u.mhmax -= rn2(min(u.mhmax, num + 1)), context.botl = 1;
     } else {
         num = d(2, 4);
@@ -3550,9 +3550,9 @@ drown()
 
     water_damage_chain(invent, FALSE);
 
-    if (u.umonnum == PM_GREMLIN && rn2(3))
+    if (currentMonsterNumber() == PM_GREMLIN && rn2(3))
         (void) split_mon(&youmonst, (struct monst *) 0);
-    else if (u.umonnum == PM_IRON_GOLEM) {
+    else if (currentMonsterNumber() == PM_IRON_GOLEM) {
         You("rust!");
         i = Maybe_Half_Phys(d(2, 6));
         if (u.mhmax > i)
@@ -5055,9 +5055,9 @@ lava_effects()
         iflags.in_lava_effects--;
 
         /* s/he died... */
-        boil_away = (u.umonnum == PM_WATER_ELEMENTAL
-                     || u.umonnum == PM_STEAM_VORTEX
-                     || u.umonnum == PM_FOG_CLOUD);
+        boil_away = (currentMonsterNumber() == PM_WATER_ELEMENTAL
+                     || currentMonsterNumber() == PM_STEAM_VORTEX
+                     || currentMonsterNumber() == PM_FOG_CLOUD);
         for (;;) {
             u.uhp = -1;
             /* killer format and name are reconstructed every iteration

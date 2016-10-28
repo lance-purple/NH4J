@@ -1023,12 +1023,12 @@ int how;
     /* grave creation should be after disclosure so it doesn't have
        this grave in the current level's features for #overview */
     if (bones_ok && u.ugrave_arise == NON_PM
-        && !(mvitals[u.umonnum].mvflags & G_NOCORPSE)) {
-        int mnum = u.umonnum;
+        && !(mvitals[currentMonsterNumber()].mvflags & G_NOCORPSE)) {
+        int mnum = currentMonsterNumber();
 
         if (!areYouPolymorphed()) {
             /* Base corpse on race when not poly'd since original
-             * u.umonnum is based on role, and all role monsters
+             * currentMonsterNumber() is based on role, and all role monsters
              * are human.
              */
             mnum = (flags.female && urace.femalenum != NON_PM)

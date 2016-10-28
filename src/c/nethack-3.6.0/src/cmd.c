@@ -503,7 +503,7 @@ domonability(VOID_ARGS)
         return dohide();
     else if (is_mind_flayer(youmonst.data))
         return domindblast();
-    else if (u.umonnum == PM_GREMLIN) {
+    else if (currentMonsterNumber() == PM_GREMLIN) {
         if (IS_FOUNTAIN(levl[currentX()][currentY()].typ)) {
             if (split_mon(&youmonst, (struct monst *) 0))
                 dryup(currentX(), currentY(), TRUE);
@@ -2162,7 +2162,7 @@ int final;
     }
     if (Polymorph_control)
         you_have("polymorph control", from_what(POLYMORPH_CONTROL));
-    if (areYouPolymorphed() && u.umonnum != u.ulycn) {
+    if (areYouPolymorphed() && currentMonsterNumber() != u.ulycn) {
         /* foreign shape (except were-form which is handled below) */
         Sprintf(buf, "polymorphed into %s", an(youmonst.data->mname));
         if (wizard)
@@ -2174,7 +2174,7 @@ int final;
     if (u.ulycn >= LOW_PM) {
         /* "you are a werecreature [in beast form]" */
         Strcpy(buf, an(mons[u.ulycn].mname));
-        if (u.umonnum == u.ulycn) {
+        if (currentMonsterNumber() == u.ulycn) {
             Strcat(buf, " in beast form");
             if (wizard)
                 Sprintf(eos(buf), " (%d)", u.mtimedone);
@@ -3497,7 +3497,7 @@ char sym;
     setDirectionY(ydir[dp - Cmd.dirchars]);
     setDirectionZ(zdir[dp - Cmd.dirchars]);
 #if 0 /* now handled elsewhere */
-    if (directionX() && directionY() && NODIAG(u.umonnum)) {
+    if (directionX() && directionY() && NODIAG(currentMonsterNumber())) {
         setDirectionX(0);
         setDirectionY(0);
         return 0;
@@ -3510,7 +3510,7 @@ char sym;
 int
 dxdy_moveok()
 {
-    if (directionX() && directionY() && NODIAG(u.umonnum)) {
+    if (directionX() && directionY() && NODIAG(currentMonsterNumber())) {
         setDirectionX(0);
         setDirectionY(0);
     }
@@ -3649,7 +3649,7 @@ const char *msg;
             putstr(win, 0, "");
         }
     }
-    if (NODIAG(u.umonnum)) {
+    if (NODIAG(currentMonsterNumber())) {
         putstr(win, 0, "Valid direction keys in your current form are:");
         Sprintf(buf, "             %c   ", Cmd.move_N);
         putstr(win, 0, buf);
@@ -3690,7 +3690,7 @@ const char *msg;
 void
 confdir()
 {
-    register int x = NODIAG(u.umonnum) ? 2 * rn2(4) : rn2(8);
+    register int x = NODIAG(currentMonsterNumber()) ? 2 * rn2(4) : rn2(8);
 
     setDirectionX(xdir[x]);
     setDirectionY(ydir[x]);

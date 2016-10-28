@@ -35,7 +35,7 @@ bot1()
         char mbot[BUFSZ];
         int k = 0;
 
-        Strcpy(mbot, mons[u.umonnum].mname);
+        Strcpy(mbot, mons[currentMonsterNumber()].mname);
         while (mbot[k] != 0) {
             if ((k == 0 || (k > 0 && mbot[k - 1] == ' ')) && 'a' <= mbot[k]
                 && mbot[k] <= 'z')
@@ -94,7 +94,7 @@ bot2()
             hpmax, u.uen, u.uenmax, u.uac);
 
     if (areYouPolymorphed())
-        Sprintf(nb = eos(nb), " HD:%d", mons[u.umonnum].mlevel);
+        Sprintf(nb = eos(nb), " HD:%d", mons[currentMonsterNumber()].mlevel);
     else if (flags.showexp)
         Sprintf(nb = eos(nb), " Xp:%u/%-1ld", currentExperienceLevel(), u.uexp);
     else
@@ -410,7 +410,7 @@ bot()
         char mbot[BUFSZ];
         int k = 0;
 
-        Strcpy(mbot, mons[u.umonnum].mname);
+        Strcpy(mbot, mons[currentMonsterNumber()].mname);
         while (mbot[k] != 0) {
             if ((k == 0 || (k > 0 && mbot[k - 1] == ' ')) && 'a' <= mbot[k]
                 && mbot[k] <= 'z')
@@ -507,7 +507,7 @@ bot()
     /* Monster level (if areYouPolymorphed()) */
 
     if (areYouPolymorphed())
-        blstats[idx][BL_HD].a.a_int = mons[u.umonnum].mlevel;
+        blstats[idx][BL_HD].a.a_int = mons[currentMonsterNumber()].mlevel;
     else
         blstats[idx][BL_HD].a.a_int = 0;
 

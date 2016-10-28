@@ -992,8 +992,8 @@ int x;
 #endif
     } else if (x == A_CHA) {
         if (tmp < 18
-            && (youmonst.data->mlet == S_NYMPH || u.umonnum == PM_SUCCUBUS
-                || u.umonnum == PM_INCUBUS))
+            && (youmonst.data->mlet == S_NYMPH || currentMonsterNumber() == PM_SUCCUBUS
+                || currentMonsterNumber() == PM_INCUBUS))
             return (schar) 18;
     } else if (x == A_INT || x == A_WIS) {
         /* yes, this may raise int/wis if player is sufficiently

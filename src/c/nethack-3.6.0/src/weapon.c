@@ -749,7 +749,7 @@ abon()
     int str = ACURR(A_STR), dex = ACURR(A_DEX);
 
     if (areYouPolymorphed())
-        return (adj_lev(&mons[u.umonnum]) - 3);
+        return (adj_lev(&mons[currentMonsterNumber()]) - 3);
     if (str < 6)
         sbon = -2;
     else if (str < 8)

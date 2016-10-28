@@ -800,14 +800,26 @@ int originalMonsterNumber() {
     return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
 } 
 
+int currentMonsterNumber() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "currentMonsterNumber", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+} 
+
 void setOriginalMonsterNumber(n) int n; {
     jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
     jmethodID method = getStaticMethod(you_class, "setOriginalMonsterNumber", "(I)V");
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, n);
 }
 
+void setCurrentMonsterNumber(n) int n; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setCurrentMonsterNumber", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, n);
+}
+
 boolean areYouPolymorphed() {
-    return (u.umonnum != originalMonsterNumber());
+    return (currentMonsterNumber() != originalMonsterNumber());
 }
 
 int currentNutrition() {

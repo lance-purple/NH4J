@@ -390,7 +390,7 @@ make_bones:
         struct obj *otmp;
 
         /* embed your possessions in your statue */
-        otmp = mk_named_object(STATUE, &mons[u.umonnum], currentX(), currentY(), plname);
+        otmp = mk_named_object(STATUE, &mons[currentMonsterNumber()], currentX(), currentY(), plname);
 
         drop_upon_death((struct monst *) 0, otmp, currentX(), currentY());
         if (!otmp)

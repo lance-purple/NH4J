@@ -1629,7 +1629,7 @@ register struct obj *obj;
             Your1(vision_clears);
         break;
     case POT_WATER:
-        if (u.umonnum == PM_GREMLIN) {
+        if (currentMonsterNumber() == PM_GREMLIN) {
             (void) split_mon(&youmonst, (struct monst *) 0);
         } else if (u.ulycn >= LOW_PM) {
             /* vapor from [un]holy water will trigger

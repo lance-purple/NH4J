@@ -1962,7 +1962,7 @@ doputon()
 void
 find_ac()
 {
-    int uac = mons[u.umonnum].ac; /* base armor class for current form */
+    int uac = mons[currentMonsterNumber()].ac; /* base armor class for current form */
 
     /* armor class from worn gear */
     if (uarm)

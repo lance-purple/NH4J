@@ -158,7 +158,7 @@ boolean check_pit;
     return (boolean) ((!Levitation || areYouOnAirLevel()
                        || areYouOnWaterLevel())
                       && (!u.uundetected || !is_hider(youmonst.data)
-                          || u.umonnum == PM_TRAPPER));
+                          || currentMonsterNumber() == PM_TRAPPER));
 }
 
 /* give a message after caller has determined that hero can't reach */

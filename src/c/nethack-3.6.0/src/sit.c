@@ -41,7 +41,7 @@ dosit()
         You("are already sitting on %s.", mon_nam(u.usteed));
         return 0;
     }
-    if (u.uundetected && is_hider(youmonst.data) && u.umonnum != PM_TRAPPER)
+    if (u.uundetected && is_hider(youmonst.data) && currentMonsterNumber() != PM_TRAPPER)
         u.uundetected = 0; /* no longer on the ceiling */
 
     if (!can_reach_floor(FALSE)) {
@@ -302,7 +302,7 @@ dosit()
         uegg->quan = 1L;
         uegg->owt = weight(uegg);
         /* this sets hatch timers if appropriate */
-        set_corpsenm(uegg, egg_type_from_parent(u.umonnum, FALSE));
+        set_corpsenm(uegg, egg_type_from_parent(currentMonsterNumber(), FALSE));
         uegg->known = uegg->dknown = 1;
         You("lay an egg.");
         dropy(uegg);

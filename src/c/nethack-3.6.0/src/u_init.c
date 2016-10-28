@@ -622,9 +622,9 @@ u_init()
     u.umortality = 0;
     u.ugrave_arise = NON_PM;
 
-    u.umonnum = (flags.female && urole.femalenum != NON_PM)
+    setCurrentMonsterNumber((flags.female && urole.femalenum != NON_PM)
                                  ? urole.femalenum
-                                 : urole.malenum;
+                                 : urole.malenum);
     setOriginalMonsterNumber( (flags.female && urole.femalenum != NON_PM)
                                  ? urole.femalenum
                                  : urole.malenum );

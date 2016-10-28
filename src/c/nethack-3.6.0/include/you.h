@@ -269,8 +269,6 @@ struct you {
 
     struct prop uprops[LAST_PROP + 1];
 
-    int umonnum;  /* current monster number */
-
     int mh, mhmax, mtimedone; /* for polymorph-self */
     int ulycn;                /* lycanthrope type */
 

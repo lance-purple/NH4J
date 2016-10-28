@@ -863,7 +863,7 @@ boolean guess;
 {
     /* if travel to adjacent, reachable location, use normal movement rules */
     if (!guess && context.travel1 && distmin(currentX(), currentY(), destinationX(), destinationY()) == 1
-        && !(currentX() != destinationX() && currentY() != destinationY() && NODIAG(u.umonnum))) {
+        && !(currentX() != destinationX() && currentY() != destinationY() && NODIAG(currentMonsterNumber()))) {
         context.run = 0;
         if (test_move(currentX(), currentY(), destinationX() - currentX(), destinationY() - currentY(), TEST_MOVE)) {
             setDirectionX(destinationX() - currentX());
@@ -914,7 +914,7 @@ boolean guess;
                 int y = travelstepy[set][i];
                 static int ordered[] = { 0, 2, 4, 6, 1, 3, 5, 7 };
                 /* no diagonal movement for grid bugs */
-                int dirmax = NODIAG(u.umonnum) ? 4 : 8;
+                int dirmax = NODIAG(currentMonsterNumber()) ? 4 : 8;
 
                 for (dir = 0; dir < dirmax; ++dir) {
                     int nx = x + xdir[ordered[dir]];
@@ -2400,7 +2400,7 @@ lookaround()
 
     /* Grid bugs stop if trying to move diagonal, even if blind.  Maybe */
     /* they polymorphed while in the middle of a long move. */
-    if (u.umonnum == PM_GRID_BUG && directionX() && directionY()) {
+    if (currentMonsterNumber() == PM_GRID_BUG && directionX() && directionY()) {
         nomul(0);
         return;
     }
@@ -2412,7 +2412,7 @@ lookaround()
             if (!isok(x, y))
                 continue;
 
-            if (u.umonnum == PM_GRID_BUG && x != currentX() && y != currentY())
+            if (currentMonsterNumber() == PM_GRID_BUG && x != currentX() && y != currentY())
                 continue;
 
             if (x == currentX() && y == currentY())
@@ -2557,7 +2557,7 @@ int x, y;
         return TRUE;
 
     /* diagonal movement has some restrictions */
-    if (NODIAG(u.umonnum))
+    if (NODIAG(currentMonsterNumber()))
         return FALSE; /* poly'd into a grid bug... */
     if (Passes_walls)
         return TRUE; /* or a xorn... */

@@ -1401,8 +1401,8 @@ register struct attack *mattk;
     negated = !(rn2(10) >= 3 * armpro);
 
     if (is_demon(youmonst.data) && !rn2(13) && !uwep
-        && u.umonnum != PM_SUCCUBUS && u.umonnum != PM_INCUBUS
-        && u.umonnum != PM_BALROG) {
+        && currentMonsterNumber() != PM_SUCCUBUS && currentMonsterNumber() != PM_INCUBUS
+        && currentMonsterNumber() != PM_BALROG) {
         demonpet();
         return 0;
     }
@@ -2185,7 +2185,7 @@ register struct monst *mon;
             else if (!sticks(mon->data) && !u.uswallow) {
                 if (mon == u.ustuck) {
                     pline("%s is being %s.", Monnam(mon),
-                          u.umonnum == PM_ROPE_GOLEM ? "choked" : "crushed");
+                          currentMonsterNumber() == PM_ROPE_GOLEM ? "choked" : "crushed");
                     sum[i] = damageum(mon, mattk);
                 } else if (i >= 2 && sum[i - 1] && sum[i - 2]) {
                     You("grab %s!", mon_nam(mon));
