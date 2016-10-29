@@ -183,7 +183,7 @@ register int num;
         --num;
         if (areYouPolymorphed()) {
             u.mh -= 6;
-            u.mhmax -= 6;
+            decreaseMaximumHitPointsAsMonster(6);
         } else {
             u.uhp -= 6;
             u.uhpmax -= 6;

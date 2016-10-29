@@ -162,7 +162,8 @@ const char *fmt, *arg;
     }
     set_uasmon();
 
-    u.mh = u.mhmax = 0;
+    u.mh = 0;
+    setMaximumHitPointsAsMonster(0);
     u.mtimedone = 0;
     skinback(FALSE);
     u.uundetected = 0;
@@ -707,18 +708,18 @@ int mntmp;
      */
     mlvl = (int) mons[mntmp].mlevel;
     if (youmonst.data->mlet == S_DRAGON && mntmp >= PM_GRAY_DRAGON) {
-        u.mhmax = areYouInEndgame() ? (8 * mlvl) : (4 * mlvl + d(mlvl, 4));
+        setMaximumHitPointsAsMonster(areYouInEndgame() ? (8 * mlvl) : (4 * mlvl + d(mlvl, 4)));
     } else if (is_golem(youmonst.data)) {
-        u.mhmax = golemhp(mntmp);
+        setMaximumHitPointsAsMonster(golemhp(mntmp));
     } else {
         if (!mlvl)
-            u.mhmax = rnd(4);
+            setMaximumHitPointsAsMonster(rnd(4));
         else
-            u.mhmax = d(mlvl, 8);
+            setMaximumHitPointsAsMonster(d(mlvl, 8));
         if (is_home_elemental(&mons[mntmp]))
-            u.mhmax *= 3;
+            multiplyMaximumHitPointsAsMonster(3);
     }
-    u.mh = u.mhmax;
+    u.mh = maximumHitPointsAsMonster();
 
     if (currentExperienceLevel() < mlvl) {
         /* Low level characters can't become high level monsters for long */
@@ -1743,10 +1744,10 @@ int damtype, dam;
             heal = dam;
         break;
     }
-    if (heal && (u.mh < u.mhmax)) {
+    if (heal && (u.mh < maximumHitPointsAsMonster())) {
         u.mh += heal;
-        if (u.mh > u.mhmax)
-            u.mh = u.mhmax;
+        if (u.mh > maximumHitPointsAsMonster())
+            u.mh = maximumHitPointsAsMonster();
         context.botl = 1;
         pline("Strangely, you feel better than before.");
         exercise(A_STR, TRUE);

@@ -606,7 +606,9 @@ u_init()
     u.uevent.uopened_dbridge = 0;
     u.uevent.udemigod = 0;              /* not a demi-god yet... */
     u.udg_cnt = 0;
-    u.mh = u.mhmax = u.mtimedone = 0;
+    u.mh = 0;
+    setMaximumHitPointsAsMonster(0);
+    u.mtimedone = 0;
     setCurrentDungeonNumber(0);
     setPreviousDungeonNumber(0);
     setTypeOfLevelYouWereSentTo(0);

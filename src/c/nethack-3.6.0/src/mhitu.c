@@ -1359,12 +1359,12 @@ register struct attack *mattk;
                 u.mh += rnd(7);
                 if (!rn2(7)) {
                     /* no upper limit necessary; effect is temporary */
-                    u.mhmax++;
+                    increaseMaximumHitPointsAsMonster(1);
                     if (!rn2(13))
                         goaway = TRUE;
                 }
-                if (u.mh > u.mhmax)
-                    u.mh = u.mhmax;
+                if (u.mh > maximumHitPointsAsMonster())
+                    u.mh = maximumHitPointsAsMonster();
             } else {
                 u.uhp += rnd(7);
                 if (!rn2(7)) {
@@ -1566,7 +1566,7 @@ register struct attack *mattk;
             dmg = (dmg + 1) / 2;
 
         if (permdmg) { /* Death's life force drain */
-            int lowerlimit, *hpmax_p;
+            int lowerlimit;
             /*
              * Apply some of the damage to permanent hit points:
              *  polymorphed         100% against poly'd hpmax
@@ -1585,17 +1585,20 @@ register struct attack *mattk;
                 permdmg += dmg / 4;
 
             if (areYouPolymorphed()) {
-                hpmax_p = &u.mhmax;
                 /* [can't use youmonst.m_lev] */
                 lowerlimit = min((int) youmonst.data->mlevel, currentExperienceLevel());
+                if (maximumHitPointsAsMonster() - permdmg > lowerlimit) {
+                    decreaseMaximumHitPointsAsMonster(permdmg);
+                } else if (maximumHitPointsAsMonster() > lowerlimit) {
+                    setMaximumHitPointsAsMonster(lowerlimit);
+                }
             } else {
-                hpmax_p = &u.uhpmax;
                 lowerlimit = currentExperienceLevel();
+                if (u.uhpmax - permdmg > lowerlimit)
+                    u.uhpmax -= permdmg;
+                else if (u.uhpmax > lowerlimit)
+                    u.uhpmax = lowerlimit;
             }
-            if (*hpmax_p - permdmg > lowerlimit)
-                *hpmax_p -= permdmg;
-            else if (*hpmax_p > lowerlimit)
-                *hpmax_p = lowerlimit;
             /* else unlikely...
              * already at or below minimum threshold; do nothing */
             context.botl = 1;
@@ -2466,7 +2469,7 @@ register struct monst *mon;
             You_feel("restored to health!");
             u.uhp = u.uhpmax;
             if (areYouPolymorphed())
-                u.mh = u.mhmax;
+                u.mh = maximumHitPointsAsMonster();
             exercise(A_STR, TRUE);
             context.botl = 1;
             break;
@@ -2672,9 +2675,10 @@ register struct attack *mattk;
             }
             pline("%s is suddenly very cold!", Monnam(mtmp));
             u.mh += tmp / 2;
-            if (u.mhmax < u.mh)
-                u.mhmax = u.mh;
-            if (u.mhmax > ((youmonst.data->mlevel + 1) * 8))
+            if (maximumHitPointsAsMonster() < u.mh) {
+                setMaximumHitPointsAsMonster(u.mh);
+            }
+            if (maximumHitPointsAsMonster() > ((youmonst.data->mlevel + 1) * 8))
                 (void) split_mon(&youmonst, mtmp);
             break;
         case AD_STUN: /* Yellow mold */
@@ -2740,7 +2744,7 @@ cloneu()
     mon = christen_monst(mon, plname);
     initedog(mon);
     mon->m_lev = youmonst.data->mlevel;
-    mon->mhpmax = u.mhmax;
+    mon->mhpmax = maximumHitPointsAsMonster();
     mon->mhp = u.mh / 2;
     u.mh -= mon->mhp;
     context.botl = 1;

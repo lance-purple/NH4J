@@ -45,6 +45,8 @@ public class PlayerCharacter {
 	private static NHAttributeSet attributesAsMonster = new NHAttributeSet();
 	private static NHAttributeSet maximumAttributesAsMonster = new NHAttributeSet();
 	
+	private static int maximumHitPointsAsMonster;
+	
 	private static int originalMonsterNumber;
 	private static int currentMonsterNumber;
 
@@ -384,6 +386,26 @@ public class PlayerCharacter {
 
 	public static final void setCurrentMonsterNumber(int n) {
 		currentMonsterNumber = n;
+	}
+	
+	public static final int maximumHitPointsAsMonster() {
+		return maximumHitPointsAsMonster;
+	}
+
+	public static final void setMaximumHitPointsAsMonster(int m) {
+		maximumHitPointsAsMonster = m;
+	}
+
+	public static final void increaseMaximumHitPointsAsMonster(int m) {
+		maximumHitPointsAsMonster += m;
+	}
+
+	public static final void decreaseMaximumHitPointsAsMonster(int m) {
+		maximumHitPointsAsMonster -= m;
+	}
+
+	public static final void multiplyMaximumHitPointsAsMonster(int m) {
+		maximumHitPointsAsMonster *= m;
 	}
 
 	public static final int currentNutrition() {

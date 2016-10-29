@@ -1230,7 +1230,7 @@ domove()
 
     if (((wtcap = near_capacity()) >= OVERLOADED
          || (wtcap > SLT_ENCUMBER
-             && (areYouPolymorphed() ? (u.mh < 5 && u.mh != u.mhmax)
+             && (areYouPolymorphed() ? (u.mh < 5 && u.mh != maximumHitPointsAsMonster())
                         : (u.uhp < 10 && u.uhp != u.uhpmax))))
         && !areYouOnAirLevel()) {
         if (wtcap < OVERLOADED) {
@@ -2672,12 +2672,12 @@ boolean k_format;
 {
     if (areYouPolymorphed()) {
         u.mh -= n;
-        if (u.mhmax < u.mh)
-            u.mhmax = u.mh;
+        if (maximumHitPointsAsMonster() < u.mh)
+            setMaximumHitPointsAsMonster(u.mh);
         context.botl = 1;
         if (u.mh < 1)
             rehumanize();
-        else if (n > 0 && u.mh * 10 < u.mhmax && Unchanging)
+        else if (n > 0 && u.mh * 10 < maximumHitPointsAsMonster() && Unchanging)
             maybe_wail();
         return;
     }

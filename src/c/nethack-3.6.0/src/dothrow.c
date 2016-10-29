@@ -1014,7 +1014,7 @@ boolean
 
     if ((directionX() || directionY() || (directionZ() < 1))
         && calc_capacity((int) obj->owt) > SLT_ENCUMBER
-        && (areYouPolymorphed() ? (u.mh < 5 && u.mh != u.mhmax)
+        && (areYouPolymorphed() ? (u.mh < 5 && u.mh != maximumHitPointsAsMonster())
                    : (u.uhp < 10 && u.uhp != u.uhpmax))
         && obj->owt > (unsigned) ((areYouPolymorphed() ? u.mh : u.uhp) * 2)
         && !areYouOnAirLevel()) {

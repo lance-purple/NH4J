@@ -1445,7 +1445,7 @@ struct obj *obj;
             long creamed = (long) u.ucreamed;
 
             if (areYouPolymorphed())
-                healamt = (u.mhmax + 1 - u.mh) / 2;
+                healamt = (maximumHitPointsAsMonster() + 1 - u.mh) / 2;
             if (healamt || Sick || Slimed || Blinded > creamed)
                 You_feel("better.");
             else

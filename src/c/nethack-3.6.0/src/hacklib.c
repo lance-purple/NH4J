@@ -818,6 +818,36 @@ void setCurrentMonsterNumber(n) int n; {
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, n);
 }
 
+int maximumHitPointsAsMonster() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "maximumHitPointsAsMonster", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+} 
+
+void setMaximumHitPointsAsMonster(m) int m; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setMaximumHitPointsAsMonster", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, m);
+}
+
+void increaseMaximumHitPointsAsMonster(m) int m; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "increaseMaximumHitPointsAsMonster", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, m);
+}
+
+void decreaseMaximumHitPointsAsMonster(m) int m; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "decreaseMaximumHitPointsAsMonster", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, m);
+}
+
+void multiplyMaximumHitPointsAsMonster(m) int m; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "multiplyMaximumHitPointsAsMonster", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, m);
+}
+
 boolean areYouPolymorphed() {
     return (currentMonsterNumber() != originalMonsterNumber());
 }

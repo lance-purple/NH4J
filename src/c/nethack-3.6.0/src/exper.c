@@ -236,7 +236,7 @@ const char *drainer; /* cause of death, if drain should be fatal */
 
     if (areYouPolymorphed()) {
         num = monhp_per_lvl(&youmonst);
-        u.mhmax -= num;
+        decreaseMaximumHitPointsAsMonster(num);
         u.mh -= num;
         if (u.mh <= 0)
             rehumanize();
@@ -271,7 +271,7 @@ boolean incr; /* true iff via incremental experience growth */
        in order to retain normal human/whatever increase for later) */
     if (areYouPolymorphed()) {
         hpinc = monhp_per_lvl(&youmonst);
-        u.mhmax += hpinc;
+        increaseMaximumHitPointsAsMonster(hpinc);
         u.mh += hpinc;
     }
     hpinc = newhp();

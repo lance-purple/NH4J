@@ -209,7 +209,7 @@ boolean resuming;
                             context.botl = 1;
                         } else if (u.mh < 1)
                             rehumanize();
-                    } else if (areYouPolymorphed() && u.mh < u.mhmax) {
+                    } else if (areYouPolymorphed() && u.mh < maximumHitPointsAsMonster()) {
                         if (u.mh < 1)
                             rehumanize();
                         else if (Regeneration

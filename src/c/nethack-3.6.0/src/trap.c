@@ -1068,7 +1068,7 @@ unsigned trflags;
         update_inventory();
 
         if (currentMonsterNumber() == PM_IRON_GOLEM) {
-            int dam = u.mhmax;
+            int dam = maximumHitPointsAsMonster();
 
             pline("%s you!", A_gush_of_water_hits);
             You("are covered with rust!");
@@ -3005,16 +3005,16 @@ struct obj *box; /* null for floor trap */
         num = d(2, 4);
         switch (currentMonsterNumber()) {
         case PM_PAPER_GOLEM:
-            alt = u.mhmax;
+            alt = maximumHitPointsAsMonster();
             break;
         case PM_STRAW_GOLEM:
-            alt = u.mhmax / 2;
+            alt = maximumHitPointsAsMonster() / 2;
             break;
         case PM_WOOD_GOLEM:
-            alt = u.mhmax / 4;
+            alt = maximumHitPointsAsMonster() / 4;
             break;
         case PM_LEATHER_GOLEM:
-            alt = u.mhmax / 8;
+            alt = maximumHitPointsAsMonster() / 8;
             break;
         default:
             alt = 0;
@@ -3022,8 +3022,10 @@ struct obj *box; /* null for floor trap */
         }
         if (alt > num)
             num = alt;
-        if (u.mhmax > mons[currentMonsterNumber()].mlevel)
-            u.mhmax -= rn2(min(u.mhmax, num + 1)), context.botl = 1;
+        if (maximumHitPointsAsMonster() > mons[currentMonsterNumber()].mlevel) {
+            decreaseMaximumHitPointsAsMonster(rn2(min(maximumHitPointsAsMonster(), num + 1)));
+            context.botl = 1;
+        }
     } else {
         num = d(2, 4);
         if (u.uhpmax > currentExperienceLevel())
@@ -3555,8 +3557,8 @@ drown()
     else if (currentMonsterNumber() == PM_IRON_GOLEM) {
         You("rust!");
         i = Maybe_Half_Phys(d(2, 6));
-        if (u.mhmax > i)
-            u.mhmax -= i;
+        if (maximumHitPointsAsMonster() > i)
+            decreaseMaximumHitPointsAsMonster(i);
         losehp(i, "rusting away", KILLED_BY);
     }
     if (inpool_ok)

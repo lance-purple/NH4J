@@ -944,7 +944,7 @@ register int pm;
         break;
     case PM_NURSE:
         if (areYouPolymorphed())
-            u.mh = u.mhmax;
+            u.mh = maximumHitPointsAsMonster();
         else
             u.uhp = u.uhpmax;
         context.botl = 1;
@@ -2087,10 +2087,10 @@ struct obj *otmp;
         gainstr(otmp, 1, TRUE);
         if (areYouPolymorphed()) {
             u.mh += otmp->cursed ? -rnd(20) : rnd(20);
-            if (u.mh > u.mhmax) {
+            if (u.mh > maximumHitPointsAsMonster()) {
                 if (!rn2(17))
-                    u.mhmax++;
-                u.mh = u.mhmax;
+                    increaseMaximumHitPointsAsMonster(1);
+                u.mh = maximumHitPointsAsMonster();
             } else if (u.mh <= 0) {
                 rehumanize();
             }

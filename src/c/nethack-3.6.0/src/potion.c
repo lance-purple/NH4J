@@ -1104,8 +1104,10 @@ register boolean curesick, cureblind;
     if (nhp) {
         if (areYouPolymorphed()) {
             u.mh += nhp;
-            if (u.mh > u.mhmax)
-                u.mh = (u.mhmax += nxtra);
+            if (u.mh > maximumHitPointsAsMonster()) {
+                increaseMaximumHitPointsAsMonster(nxtra);
+                u.mh = maximumHitPointsAsMonster();
+            }
         } else {
             u.uhp += nhp;
             if (u.uhp > u.uhpmax)
@@ -1539,19 +1541,19 @@ register struct obj *obj;
         }
         break;
     case POT_FULL_HEALING:
-        if (areYouPolymorphed() && u.mh < u.mhmax)
+        if (areYouPolymorphed() && u.mh < maximumHitPointsAsMonster())
             u.mh++, context.botl = 1;
         if (u.uhp < u.uhpmax)
             u.uhp++, context.botl = 1;
         /*FALLTHRU*/
     case POT_EXTRA_HEALING:
-        if (areYouPolymorphed() && u.mh < u.mhmax)
+        if (areYouPolymorphed() && u.mh < maximumHitPointsAsMonster())
             u.mh++, context.botl = 1;
         if (u.uhp < u.uhpmax)
             u.uhp++, context.botl = 1;
         /*FALLTHRU*/
     case POT_HEALING:
-        if (areYouPolymorphed() && u.mh < u.mhmax)
+        if (areYouPolymorphed() && u.mh < maximumHitPointsAsMonster())
             u.mh++, context.botl = 1;
         if (u.uhp < u.uhpmax)
             u.uhp++, context.botl = 1;
@@ -2234,8 +2236,8 @@ struct monst *mon,  /* monster being split */
     if (mon == &youmonst) {
         mtmp2 = cloneu();
         if (mtmp2) {
-            mtmp2->mhpmax = u.mhmax / 2;
-            u.mhmax -= mtmp2->mhpmax;
+            mtmp2->mhpmax = maximumHitPointsAsMonster() / 2;
+            decreaseMaximumHitPointsAsMonster(mtmp2->mhpmax);
             context.botl = 1;
             You("multiply%s!", reason);
         }

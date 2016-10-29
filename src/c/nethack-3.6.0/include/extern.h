@@ -935,6 +935,12 @@ E void FDECL(setOriginalMonsterNumber, (int));
 E int FDECL(currentMonsterNumber, ());
 E void FDECL(setCurrentMonsterNumber, (int));
 
+E int FDECL(maximumHitPointsAsMonster, ());
+E void FDECL(setMaximumHitPointsAsMonster, (int));
+E void FDECL(increaseMaximumHitPointsAsMonster, (int));
+E void FDECL(decreaseMaximumHitPointsAsMonster, (int));
+E void FDECL(multiplyMaximumHitPointsAsMonster, (int));
+
 E int FDECL(currentNutrition, ());
 E void FDECL(setCurrentNutrition, (int));
 E void FDECL(increaseCurrentNutrition, (int));
