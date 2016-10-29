@@ -203,19 +203,19 @@ boolean resuming;
                         /* eel out of water loses hp, same as for monsters;
                            as hp gets lower, rate of further loss slows down
                            */
-                        if (u.mh > 1 && rn2(u.mh) > rn2(8)
+                        if (currentHitPointsAsMonster() > 1 && rn2(currentHitPointsAsMonster()) > rn2(8)
                             && (!Half_physical_damage || !(moves % 2L))) {
-                            u.mh--;
+                            decreaseCurrentHitPointsAsMonster(1);
                             context.botl = 1;
-                        } else if (u.mh < 1)
+                        } else if (currentHitPointsAsMonster() < 1)
                             rehumanize();
-                    } else if (areYouPolymorphed() && u.mh < maximumHitPointsAsMonster()) {
-                        if (u.mh < 1)
+                    } else if (areYouPolymorphed() && currentHitPointsAsMonster() < maximumHitPointsAsMonster()) {
+                        if (currentHitPointsAsMonster() < 1)
                             rehumanize();
                         else if (Regeneration
                                  || (wtcap < MOD_ENCUMBER && !(moves % 20))) {
                             context.botl = 1;
-                            u.mh++;
+                            increaseCurrentHitPointsAsMonster(1);
                         }
                     } else if (u.uhp < u.uhpmax
                                && (wtcap < MOD_ENCUMBER || (! youMoved())
@@ -248,8 +248,8 @@ boolean resuming;
                     if (wtcap > MOD_ENCUMBER && youMoved()) {
                         if (!(wtcap < EXT_ENCUMBER ? moves % 30
                                                    : moves % 10)) {
-                            if (areYouPolymorphed() && u.mh > 1) {
-                                u.mh--;
+                            if (areYouPolymorphed() && currentHitPointsAsMonster() > 1) {
+                                decreaseCurrentHitPointsAsMonster(1);
                             } else if (!areYouPolymorphed() && u.uhp > 1) {
                                 u.uhp--;
                             } else {

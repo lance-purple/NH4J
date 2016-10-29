@@ -1103,10 +1103,10 @@ register boolean curesick, cureblind;
 {
     if (nhp) {
         if (areYouPolymorphed()) {
-            u.mh += nhp;
-            if (u.mh > maximumHitPointsAsMonster()) {
+            increaseCurrentHitPointsAsMonster(nhp);
+            if (currentHitPointsAsMonster() > maximumHitPointsAsMonster()) {
                 increaseMaximumHitPointsAsMonster(nxtra);
-                u.mh = maximumHitPointsAsMonster();
+                setCurrentHitPointsAsMonster(maximumHitPointsAsMonster());
             }
         } else {
             u.uhp += nhp;
@@ -1541,20 +1541,26 @@ register struct obj *obj;
         }
         break;
     case POT_FULL_HEALING:
-        if (areYouPolymorphed() && u.mh < maximumHitPointsAsMonster())
-            u.mh++, context.botl = 1;
+        if (areYouPolymorphed() && currentHitPointsAsMonster() < maximumHitPointsAsMonster()) {
+            increaseCurrentHitPointsAsMonster(1);
+            context.botl = 1;
+        }
         if (u.uhp < u.uhpmax)
             u.uhp++, context.botl = 1;
         /*FALLTHRU*/
     case POT_EXTRA_HEALING:
-        if (areYouPolymorphed() && u.mh < maximumHitPointsAsMonster())
-            u.mh++, context.botl = 1;
+        if (areYouPolymorphed() && currentHitPointsAsMonster() < maximumHitPointsAsMonster()) {
+            increaseCurrentHitPointsAsMonster(1);
+            context.botl = 1;
+        }
         if (u.uhp < u.uhpmax)
             u.uhp++, context.botl = 1;
         /*FALLTHRU*/
     case POT_HEALING:
-        if (areYouPolymorphed() && u.mh < maximumHitPointsAsMonster())
-            u.mh++, context.botl = 1;
+        if (areYouPolymorphed() && currentHitPointsAsMonster() < maximumHitPointsAsMonster()) {
+            increaseCurrentHitPointsAsMonster(1);
+            context.botl = 1;
+        }
         if (u.uhp < u.uhpmax)
             u.uhp++, context.botl = 1;
         exercise(A_CON, TRUE);
@@ -1562,10 +1568,10 @@ register struct obj *obj;
     case POT_SICKNESS:
         if (!Role_if(PM_HEALER)) {
             if (areYouPolymorphed()) {
-                if (u.mh <= 5)
-                    u.mh = 1;
+                if (currentHitPointsAsMonster() <= 5)
+                    setCurrentHitPointsAsMonster(1);
                 else
-                    u.mh -= 5;
+                    decreaseCurrentHitPointsAsMonster(5);
             } else {
                 if (u.uhp <= 5)
                     u.uhp = 1;

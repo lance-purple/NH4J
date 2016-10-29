@@ -178,9 +178,10 @@ dosit()
             case 4:
                 You_feel("much, much better!");
                 if (areYouPolymorphed()) {
-                    if (u.mh >= (maximumHitPointsAsMonster() - 5))
+                    if (currentHitPointsAsMonster() >= (maximumHitPointsAsMonster() - 5)) {
                         increaseMaximumHitPointsAsMonster(4);
-                    u.mh = maximumHitPointsAsMonster();
+                    }
+                    setCurrentHitPointsAsMonster(maximumHitPointsAsMonster());
                 }
                 if (u.uhp >= (u.uhpmax - 5))
                     u.uhpmax += 4;

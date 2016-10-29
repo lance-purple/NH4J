@@ -615,6 +615,7 @@ unsigned int *stuckid, *steedid;
     setOriginalMonsterNumber(read_int(fd));
     setCurrentMonsterNumber(read_int(fd));
 
+    setCurrentHitPointsAsMonster(read_int(fd));
     setMaximumHitPointsAsMonster(read_int(fd));
 
     setCurrentNutrition(read_int(fd));
@@ -655,7 +656,7 @@ unsigned int *stuckid, *steedid;
 #ifdef CLIPPING
     cliparound(currentX(), currentY());
 #endif
-    if (u.uhp <= 0 && (!areYouPolymorphed() || u.mh <= 0)) {
+    if (u.uhp <= 0 && (!areYouPolymorphed() || currentHitPointsAsMonster() <= 0)) {
         setCurrentX(0);
         setCurrentY(0); /* affects pline() [hence You()] */
         You("were not healthy enough to survive restoration.");

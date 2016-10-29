@@ -630,7 +630,7 @@ long wp_mask;
 }
 
 /* touch_artifact()'s return value isn't sufficient to tell whether it
-   dished out damage, and tracking changes to u.uhp, u.mh, Lifesaved
+   dished out damage, and tracking changes to u.uhp, currentHitPointsAsMonster, Lifesaved
    when trying to avoid second wounding is too cumbersome */
 STATIC_VAR boolean touch_blasted; /* for retouch_object() */
 
@@ -1275,7 +1275,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                  * value to the damage so that this reduction in
                  * damage does not prevent death.
                  */
-                *dmgptr = 2 * (areYouPolymorphed() ? u.mh : u.uhp) + FATAL_DAMAGE_MODIFIER;
+                *dmgptr = 2 * (areYouPolymorphed() ? currentHitPointsAsMonster() : u.uhp) + FATAL_DAMAGE_MODIFIER;
                 pline("%s cuts you in half!", wepdesc);
                 otmp->dknown = TRUE;
                 return TRUE;
@@ -1321,7 +1321,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                           body_part(NECK));
                     return TRUE;
                 }
-                *dmgptr = 2 * (areYouPolymorphed() ? u.mh : u.uhp) + FATAL_DAMAGE_MODIFIER;
+                *dmgptr = 2 * (areYouPolymorphed() ? currentHitPointsAsMonster() : u.uhp) + FATAL_DAMAGE_MODIFIER;
                 pline(behead_msg[rn2(SIZE(behead_msg))], wepdesc, "you");
                 otmp->dknown = TRUE;
                 /* Should amulets fall off? */
@@ -1445,14 +1445,14 @@ struct obj *obj;
             long creamed = (long) u.ucreamed;
 
             if (areYouPolymorphed())
-                healamt = (maximumHitPointsAsMonster() + 1 - u.mh) / 2;
+                healamt = (maximumHitPointsAsMonster() + 1 - currentHitPointsAsMonster()) / 2;
             if (healamt || Sick || Slimed || Blinded > creamed)
                 You_feel("better.");
             else
                 goto nothing_special;
             if (healamt > 0) {
                 if (areYouPolymorphed())
-                    u.mh += healamt;
+                    increaseCurrentHitPointsAsMonster(healamt);
                 else
                     u.uhp += healamt;
             }

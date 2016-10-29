@@ -1230,7 +1230,7 @@ domove()
 
     if (((wtcap = near_capacity()) >= OVERLOADED
          || (wtcap > SLT_ENCUMBER
-             && (areYouPolymorphed() ? (u.mh < 5 && u.mh != maximumHitPointsAsMonster())
+             && (areYouPolymorphed() ? (currentHitPointsAsMonster() < 5 && currentHitPointsAsMonster() != maximumHitPointsAsMonster())
                         : (u.uhp < 10 && u.uhp != u.uhpmax))))
         && !areYouOnAirLevel()) {
         if (wtcap < OVERLOADED) {
@@ -1503,7 +1503,7 @@ domove()
         nomul(0);
         if (explo) {
             wake_nearby();
-            u.mh = -1; /* dead in the current form */
+            decreaseCurrentHitPointsAsMonster(1); /* dead in the current form */
             rehumanize();
         }
         return;
@@ -1735,10 +1735,15 @@ overexertion()
        execute if you decline to attack a peaceful monster */
     gethungry();
     if ((moves % 3L) != 0L && near_capacity() >= HVY_ENCUMBER) {
-        int *hp = (!areYouPolymorphed() ? &u.uhp : &u.mh);
 
-        if (*hp > 1) {
-            *hp -= 1;
+        int currHP = (!areYouPolymorphed() ? u.uhp : currentHitPointsAsMonster());
+
+        if (currHP > 1) {
+            if (!areYouPolymorphed()) {
+                u.uhp -= 1;
+            } else {
+               decreaseCurrentHitPointsAsMonster(1);
+            }
         } else {
             You("pass out from exertion!");
             exercise(A_CON, FALSE);
@@ -2671,13 +2676,13 @@ register const char *knam;
 boolean k_format;
 {
     if (areYouPolymorphed()) {
-        u.mh -= n;
-        if (maximumHitPointsAsMonster() < u.mh)
-            setMaximumHitPointsAsMonster(u.mh);
+        decreaseCurrentHitPointsAsMonster(n);
+        if (maximumHitPointsAsMonster() < currentHitPointsAsMonster())
+            setMaximumHitPointsAsMonster(currentHitPointsAsMonster());
         context.botl = 1;
-        if (u.mh < 1)
+        if (currentHitPointsAsMonster() < 1)
             rehumanize();
-        else if (n > 0 && u.mh * 10 < maximumHitPointsAsMonster() && Unchanging)
+        else if (n > 0 && currentHitPointsAsMonster() * 10 < maximumHitPointsAsMonster() && Unchanging)
             maybe_wail();
         return;
     }

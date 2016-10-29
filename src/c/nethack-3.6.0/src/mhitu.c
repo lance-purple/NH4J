@@ -942,13 +942,13 @@ register struct attack *mattk;
                     tmp -= rnd(-u.uac);
                 if (tmp < 1)
                     tmp = 1;
-                if (u.mh - tmp > 1 && objects[otmp->otyp].oc_material == IRON
+                if (currentHitPointsAsMonster() - tmp > 1 && objects[otmp->otyp].oc_material == IRON
                     && (currentMonsterNumber() == PM_BLACK_PUDDING
                         || currentMonsterNumber() == PM_BROWN_PUDDING)) {
                     if (tmp > 1)
                         exercise(A_STR, FALSE);
                     /* inflict damage now; we know it can't be fatal */
-                    u.mh -= tmp;
+                    decreaseCurrentHitPointsAsMonster(tmp);
                     context.botl = 1;
                     dmg = 0; /* don't inflict more damage below */
                     if (cloneu())
@@ -1356,15 +1356,15 @@ register struct attack *mattk;
             boolean goaway = FALSE;
             pline("%s hits!  (I hope you don't mind.)", Monnam(mtmp));
             if (areYouPolymorphed()) {
-                u.mh += rnd(7);
+                increaseCurrentHitPointsAsMonster(rnd(7));
                 if (!rn2(7)) {
                     /* no upper limit necessary; effect is temporary */
                     increaseMaximumHitPointsAsMonster(1);
                     if (!rn2(13))
                         goaway = TRUE;
                 }
-                if (u.mh > maximumHitPointsAsMonster())
-                    u.mh = maximumHitPointsAsMonster();
+                if (currentHitPointsAsMonster() > maximumHitPointsAsMonster())
+                    setCurrentHitPointsAsMonster(maximumHitPointsAsMonster());
             } else {
                 u.uhp += rnd(7);
                 if (!rn2(7)) {
@@ -2192,8 +2192,8 @@ register int n;
 {
     context.botl = 1;
     if (areYouPolymorphed()) {
-        u.mh -= n;
-        if (u.mh < 1)
+        decreaseCurrentHitPointsAsMonster(n);
+        if (currentHitPointsAsMonster() < 1)
             rehumanize();
     } else {
         u.uhp -= n;
@@ -2469,7 +2469,7 @@ register struct monst *mon;
             You_feel("restored to health!");
             u.uhp = u.uhpmax;
             if (areYouPolymorphed())
-                u.mh = maximumHitPointsAsMonster();
+                setCurrentHitPointsAsMonster(maximumHitPointsAsMonster());
             exercise(A_STR, TRUE);
             context.botl = 1;
             break;
@@ -2674,9 +2674,9 @@ register struct attack *mattk;
                 break;
             }
             pline("%s is suddenly very cold!", Monnam(mtmp));
-            u.mh += tmp / 2;
-            if (maximumHitPointsAsMonster() < u.mh) {
-                setMaximumHitPointsAsMonster(u.mh);
+            increaseCurrentHitPointsAsMonster(tmp / 2);
+            if (maximumHitPointsAsMonster() < currentHitPointsAsMonster()) {
+                setMaximumHitPointsAsMonster(currentHitPointsAsMonster());
             }
             if (maximumHitPointsAsMonster() > ((youmonst.data->mlevel + 1) * 8))
                 (void) split_mon(&youmonst, mtmp);
@@ -2733,7 +2733,7 @@ cloneu()
     register struct monst *mon;
     int mndx = monsndx(youmonst.data);
 
-    if (u.mh <= 1)
+    if (currentHitPointsAsMonster() <= 1)
         return (struct monst *) 0;
     if (mvitals[mndx].mvflags & G_EXTINCT)
         return (struct monst *) 0;
@@ -2745,8 +2745,8 @@ cloneu()
     initedog(mon);
     mon->m_lev = youmonst.data->mlevel;
     mon->mhpmax = maximumHitPointsAsMonster();
-    mon->mhp = u.mh / 2;
-    u.mh -= mon->mhp;
+    mon->mhp = currentHitPointsAsMonster() / 2;
+    decreaseCurrentHitPointsAsMonster(mon->mhp);
     context.botl = 1;
     return mon;
 }

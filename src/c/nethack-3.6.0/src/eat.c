@@ -944,7 +944,7 @@ register int pm;
         break;
     case PM_NURSE:
         if (areYouPolymorphed())
-            u.mh = maximumHitPointsAsMonster();
+            setCurrentHitPointsAsMonster(maximumHitPointsAsMonster());
         else
             u.uhp = u.uhpmax;
         context.botl = 1;
@@ -2086,12 +2086,12 @@ struct obj *otmp;
         /* This stuff seems to be VERY healthy! */
         gainstr(otmp, 1, TRUE);
         if (areYouPolymorphed()) {
-            u.mh += otmp->cursed ? -rnd(20) : rnd(20);
-            if (u.mh > maximumHitPointsAsMonster()) {
+            increaseCurrentHitPointsAsMonster(otmp->cursed ? -rnd(20) : rnd(20));
+            if (currentHitPointsAsMonster() > maximumHitPointsAsMonster()) {
                 if (!rn2(17))
                     increaseMaximumHitPointsAsMonster(1);
-                u.mh = maximumHitPointsAsMonster();
-            } else if (u.mh <= 0) {
+                setCurrentHitPointsAsMonster(maximumHitPointsAsMonster());
+            } else if (currentHitPointsAsMonster() <= 0) {
                 rehumanize();
             }
         } else {
@@ -2880,7 +2880,7 @@ boolean incr;
         setCurrentHungerState(newhs);
         context.botl = 1;
         bot();
-        if ((areYouPolymorphed() ? u.mh : u.uhp) < 1) {
+        if ((areYouPolymorphed() ? currentHitPointsAsMonster() : u.uhp) < 1) {
             You("die from hunger and exhaustion.");
             killer.format = KILLED_BY;
             Strcpy(killer.name, "exhaustion");

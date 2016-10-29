@@ -102,7 +102,7 @@ boolean
 critically_low_hp(only_if_injured)
 boolean only_if_injured; /* determines whether maxhp <= 5 matters */
 {
-    int divisor, hplim, curhp = areYouPolymorphed() ? u.mh : u.uhp,
+    int divisor, hplim, curhp = areYouPolymorphed() ? currentHitPointsAsMonster() : u.uhp,
                         maxhp = areYouPolymorphed() ? maximumHitPointsAsMonster() : u.uhpmax;
 
     if (only_if_injured && !(curhp < maxhp))
@@ -368,7 +368,7 @@ int trouble;
             increaseMaximumHitPointsAsMonster(rnd(5));
             if (maximumHitPointsAsMonster() <= 5)
                 setMaximumHitPointsAsMonster(5 + 1);
-            u.mh = maximumHitPointsAsMonster();
+            setCurrentHitPointsAsMonster(maximumHitPointsAsMonster());
         }
         if (u.uhpmax < currentExperienceLevel() * 5 + 11)
             u.uhpmax += rnd(5);
@@ -1045,7 +1045,7 @@ aligntyp g_align;
             }
             u.uhp = u.uhpmax;
             if (areYouPolymorphed())
-                u.mh = maximumHitPointsAsMonster();
+                setCurrentHitPointsAsMonster(maximumHitPointsAsMonster());
             setYourCurrentAttr(A_STR, yourAttrMax(A_STR));
             if (currentNutrition() < 900) {
                 init_uhunger();

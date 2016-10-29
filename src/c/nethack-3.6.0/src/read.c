@@ -2025,7 +2025,7 @@ do_class_genocide()
                     update_inventory(); /* eggs & tins */
                     pline("Wiped out all %s.", nam);
                     if (areYouPolymorphed() && i == currentMonsterNumber()) {
-                        u.mh = -1;
+                        decreaseCurrentHitPointsAsMonster(1);
                         if (Unchanging) {
                             if (!feel_dead++)
                                 You("die.");

@@ -932,8 +932,14 @@ E boolean FDECL(areYouPolymorphed, ());
 
 E int FDECL(originalMonsterNumber, ());
 E void FDECL(setOriginalMonsterNumber, (int));
+
 E int FDECL(currentMonsterNumber, ());
 E void FDECL(setCurrentMonsterNumber, (int));
+
+E int FDECL(currentHitPointsAsMonster, ());
+E void FDECL(setCurrentHitPointsAsMonster, (int));
+E void FDECL(increaseCurrentHitPointsAsMonster, (int));
+E void FDECL(decreaseCurrentHitPointsAsMonster, (int));
 
 E int FDECL(maximumHitPointsAsMonster, ());
 E void FDECL(setMaximumHitPointsAsMonster, (int));

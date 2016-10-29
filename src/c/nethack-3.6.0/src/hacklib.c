@@ -818,6 +818,31 @@ void setCurrentMonsterNumber(n) int n; {
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, n);
 }
 
+int currentHitPointsAsMonster() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "currentHitPointsAsMonster", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+} 
+
+void setCurrentHitPointsAsMonster(m) int m; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setCurrentHitPointsAsMonster", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, m);
+}
+
+void increaseCurrentHitPointsAsMonster(m) int m; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "increaseCurrentHitPointsAsMonster", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, m);
+}
+
+void decreaseCurrentHitPointsAsMonster(m) int m; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "decreaseCurrentHitPointsAsMonster", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, m);
+}
+
+
 int maximumHitPointsAsMonster() {
     jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
     jmethodID method = getStaticMethod(you_class, "maximumHitPointsAsMonster", "()I");

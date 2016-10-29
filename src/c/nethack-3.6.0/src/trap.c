@@ -1334,7 +1334,7 @@ unsigned trflags;
         if (!Antimagic) {
             drain_en(rnd(currentExperienceLevel()) + 1);
         } else {
-            int dmgval2 = rnd(4), hp = areYouPolymorphed() ? u.mh : u.uhp;
+            int dmgval2 = rnd(4), hp = areYouPolymorphed() ? currentHitPointsAsMonster() : u.uhp;
 
             /* Half_XXX_damage has opposite its usual effect (approx)
                but isn't cumulative if hero has more than one */

@@ -457,13 +457,13 @@ int expltype;
         ugolemeffects((int) adtyp, damu);
         if (uhurt == 2) {
             if (areYouPolymorphed())
-                u.mh -= damu;
+                decreaseCurrentHitPointsAsMonster(damu);
             else
                 u.uhp -= damu;
             context.botl = 1;
         }
 
-        if (u.uhp <= 0 || (areYouPolymorphed() && u.mh <= 0)) {
+        if (u.uhp <= 0 || (areYouPolymorphed() && currentHitPointsAsMonster() <= 0)) {
             if (areYouPolymorphed()) {
                 rehumanize();
             } else {

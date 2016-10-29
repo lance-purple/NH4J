@@ -345,6 +345,7 @@ register int fd, mode;
     write_int(fd, originalMonsterNumber());
     write_int(fd, currentMonsterNumber());
 
+    write_int(fd, currentHitPointsAsMonster());
     write_int(fd, maximumHitPointsAsMonster());
 
     write_int(fd, currentNutrition());

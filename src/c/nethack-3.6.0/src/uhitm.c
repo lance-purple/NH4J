@@ -2246,7 +2246,7 @@ register struct monst *mon;
             impossible("strange attack of yours (%d)", mattk->aatyp);
         }
         if (dhit == -1) {
-            u.mh = -1; /* dead in the current form */
+            decreaseCurrentHitPointsAsMonster(1); /* dead in the current form */
             rehumanize();
         }
         if (sum[i] == 2)

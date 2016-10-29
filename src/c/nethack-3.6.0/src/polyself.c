@@ -162,7 +162,7 @@ const char *fmt, *arg;
     }
     set_uasmon();
 
-    u.mh = 0;
+    setCurrentHitPointsAsMonster(0);
     setMaximumHitPointsAsMonster(0);
     u.mtimedone = 0;
     skinback(FALSE);
@@ -719,7 +719,7 @@ int mntmp;
         if (is_home_elemental(&mons[mntmp]))
             multiplyMaximumHitPointsAsMonster(3);
     }
-    u.mh = maximumHitPointsAsMonster();
+    setCurrentHitPointsAsMonster(maximumHitPointsAsMonster());
 
     if (currentExperienceLevel() < mlvl) {
         /* Low level characters can't become high level monsters for long */
@@ -1027,7 +1027,7 @@ void
 rehumanize()
 {
     /* You can't revert back while unchanging */
-    if (Unchanging && (u.mh < 1)) {
+    if (Unchanging && (currentHitPointsAsMonster() < 1)) {
         killer.format = NO_KILLER_PREFIX;
         Strcpy(killer.name, "killed while stuck in creature form");
         done(DIED);
@@ -1039,7 +1039,7 @@ rehumanize()
 
     if (u.uhp < 1) {
         /* can only happen if some bit of code reduces u.uhp
-           instead of u.mh while poly'd */
+           instead of currentHitPointsAsMonster() while poly'd */
         Your("old form was not healthy enough to survive.");
         Sprintf(killer.name, "reverting to unhealthy %s form", urace.adj);
         killer.format = KILLED_BY;
@@ -1744,10 +1744,10 @@ int damtype, dam;
             heal = dam;
         break;
     }
-    if (heal && (u.mh < maximumHitPointsAsMonster())) {
-        u.mh += heal;
-        if (u.mh > maximumHitPointsAsMonster())
-            u.mh = maximumHitPointsAsMonster();
+    if (heal && (currentHitPointsAsMonster() < maximumHitPointsAsMonster())) {
+        increaseCurrentHitPointsAsMonster(heal);
+        if (currentHitPointsAsMonster() > maximumHitPointsAsMonster())
+            setCurrentHitPointsAsMonster(maximumHitPointsAsMonster());
         context.botl = 1;
         pline("Strangely, you feel better than before.");
         exercise(A_STR, TRUE);
