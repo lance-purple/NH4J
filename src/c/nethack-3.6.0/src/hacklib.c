@@ -818,6 +818,36 @@ void setCurrentMonsterNumber(n) int n; {
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, n);
 }
 
+int timeRemainingAsMonster() {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "timeRemainingAsMonster", "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+} 
+
+void setTimeRemainingAsMonster(t) int t; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "setTimeRemainingAsMonster", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, t);
+}
+
+void increaseTimeRemainingAsMonster(t) int t; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "increaseTimeRemainingAsMonster", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, t);
+}
+
+void decreaseTimeRemainingAsMonster(t) int t; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "decreaseTimeRemainingAsMonster", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, t);
+}
+
+void multiplyTimeRemainingAsMonster(t) int t; {
+    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
+    jmethodID method = getStaticMethod(you_class, "multiplyTimeRemainingAsMonster", "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, t);
+}
+
 int currentHitPointsAsMonster() {
     jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
     jmethodID method = getStaticMethod(you_class, "currentHitPointsAsMonster", "()I");

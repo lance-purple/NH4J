@@ -936,6 +936,12 @@ E void FDECL(setOriginalMonsterNumber, (int));
 E int FDECL(currentMonsterNumber, ());
 E void FDECL(setCurrentMonsterNumber, (int));
 
+E int FDECL(timeRemainingAsMonster, ());
+E void FDECL(setTimeRemainingAsMonster, (int));
+E void FDECL(increaseTimeRemainingAsMonster, (int));
+E void FDECL(decreaseTimeRemainingAsMonster, (int));
+E void FDECL(multiplyTimeRemainingAsMonster, (int));
+
 E int FDECL(currentHitPointsAsMonster, ());
 E void FDECL(setCurrentHitPointsAsMonster, (int));
 E void FDECL(increaseCurrentHitPointsAsMonster, (int));

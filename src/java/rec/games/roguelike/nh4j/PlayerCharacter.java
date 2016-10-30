@@ -50,6 +50,7 @@ public class PlayerCharacter {
 	
 	private static int originalMonsterNumber;
 	private static int currentMonsterNumber;
+	private static int timeRemainingAsMonster;
 
 	private static HungerState currentHungerState = HungerState.NOT_HUNGRY;
 	private static int currentNutrition;
@@ -391,6 +392,26 @@ public class PlayerCharacter {
 
 	public static final int currentHitPointsAsMonster() {
 		return currentHitPointsAsMonster;
+	}
+	
+	public static final int timeRemainingAsMonster() {
+		return timeRemainingAsMonster;
+	}
+
+	public static final void setTimeRemainingAsMonster(int t) {
+		timeRemainingAsMonster = t;
+	}
+
+	public static final void increaseTimeRemainingAsMonster(int t) {
+		timeRemainingAsMonster += t;
+	}
+
+	public static final void decreaseTimeRemainingAsMonster(int t) {
+		timeRemainingAsMonster -= t;
+	}
+
+	public static final void multiplyTimeRemainingAsMonster(int t) {
+		timeRemainingAsMonster *= t;
 	}
 
 	public static final void setCurrentHitPointsAsMonster(int m) {

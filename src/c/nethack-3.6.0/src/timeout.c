@@ -238,11 +238,15 @@ nh_timeout()
         vomiting_dialogue();
     if (Strangled)
         choke_dialogue();
-    if (u.mtimedone && !--u.mtimedone) {
-        if (Unchanging)
-            u.mtimedone = rnd(100 * youmonst.data->mlevel + 1);
-        else
-            rehumanize();
+    if (timeRemainingAsMonster() > 0) {
+        decreaseTimeRemainingAsMonster(1);
+        if (0 == timeRemainingAsMonster()) {
+            if (Unchanging) {
+                setTimeRemainingAsMonster(rnd(100 * youmonst.data->mlevel + 1));
+            } else {
+                rehumanize();
+            }
+        }
     }
     if (u.ucreamed)
         u.ucreamed--;

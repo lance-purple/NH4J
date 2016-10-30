@@ -608,7 +608,7 @@ u_init()
     u.udg_cnt = 0;
     setCurrentHitPointsAsMonster(0);
     setMaximumHitPointsAsMonster(0);
-    u.mtimedone = 0;
+    setTimeRemainingAsMonster(0);
     setCurrentDungeonNumber(0);
     setPreviousDungeonNumber(0);
     setTypeOfLevelYouWereSentTo(0);

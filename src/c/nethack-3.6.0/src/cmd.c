@@ -2166,7 +2166,7 @@ int final;
         /* foreign shape (except were-form which is handled below) */
         Sprintf(buf, "polymorphed into %s", an(youmonst.data->mname));
         if (wizard)
-            Sprintf(eos(buf), " (%d)", u.mtimedone);
+            Sprintf(eos(buf), " (%d)", timeRemainingAsMonster());
         you_are(buf, "");
     }
     if (lays_eggs(youmonst.data) && flags.female) /* areYouPolymorphed() */
@@ -2177,7 +2177,7 @@ int final;
         if (currentMonsterNumber() == u.ulycn) {
             Strcat(buf, " in beast form");
             if (wizard)
-                Sprintf(eos(buf), " (%d)", u.mtimedone);
+                Sprintf(eos(buf), " (%d)", timeRemainingAsMonster());
         }
         you_are(buf, "");
     }

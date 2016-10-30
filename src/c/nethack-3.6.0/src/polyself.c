@@ -164,7 +164,7 @@ const char *fmt, *arg;
 
     setCurrentHitPointsAsMonster(0);
     setMaximumHitPointsAsMonster(0);
-    u.mtimedone = 0;
+    setTimeRemainingAsMonster(0);
     skinback(FALSE);
     u.uundetected = 0;
 
@@ -669,7 +669,7 @@ int mntmp;
         make_stoned(0L, "You turn to stone!", 0, (char *) 0);
     }
 
-    u.mtimedone = rn1(500, 500);
+    setTimeRemainingAsMonster(rn1(500, 500));
     setCurrentMonsterNumber(mntmp);
     set_uasmon();
 
@@ -725,11 +725,13 @@ int mntmp;
         /* Low level characters can't become high level monsters for long */
 #ifdef DUMB
         /* DRS/NS 2.2.6 messes up -- Peter Kendell */
-        int mtd = u.mtimedone, ulv = currentExperienceLevel();
+        int mtd = timeRemainingAsMonster();
+        int ulv = currentExperienceLevel();
 
-        u.mtimedone = mtd * ulv / mlvl;
+
+        setTimeRemainingAsMonster(mtd * ulv / mlvl);
 #else
-        u.mtimedone = u.mtimedone * currentExperienceLevel() / mlvl;
+        multiplyTimeRemainingAsMonster(currentExperienceLevel() / mlvl);
 #endif
     }
 
