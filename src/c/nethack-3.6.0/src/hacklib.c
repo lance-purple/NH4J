@@ -65,6 +65,8 @@
 #define Static static
 #endif
 
+#define PLAYER_CHARACTER_CLASS "rec/games/roguelike/nh4j/PlayerCharacter"
+
 jclass getJavaClass(const char* className) {
     jclass javaClass = (*jni_env)->FindClass(jni_env, className);
     if ((*jni_env)->ExceptionCheck(jni_env)) {
@@ -79,6 +81,30 @@ jmethodID getStaticMethod(jclass javaClass, const char* methodName, const char* 
         (*jni_env)->ExceptionDescribe(jni_env);
     }
     return method;
+}
+
+int javaGetInt(const char* classname, const char* methodname) {
+    jclass you_class = getJavaClass(classname);
+    jmethodID method = getStaticMethod(you_class, methodname, "()I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+}
+
+int javaGetBoolean(const char* classname, const char* methodname) {
+    jclass you_class = getJavaClass(classname);
+    jmethodID method = getStaticMethod(you_class, methodname, "()Z");
+    return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method);
+}
+
+void javaSetInt(const char* classname, const char* methodname, int v) {
+    jclass you_class = getJavaClass(classname);
+    jmethodID method = getStaticMethod(you_class, methodname, "(I)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, v);
+}
+
+void javaSetBoolean(const char* classname, const char* methodname, boolean v) {
+    jclass you_class = getJavaClass(classname);
+    jmethodID method = getStaticMethod(you_class, methodname, "(Z)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, v);
 }
 
 static boolean FDECL(pmatch_internal, (const char *, const char *,
@@ -514,243 +540,167 @@ int x0, y0, x1, y1;
 /* your current dungeon level and number */
 
 int currentDungeonLevel() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "currentDungeonLevel", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "currentDungeonLevel");
 }
 
 int currentDungeonNumber() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "currentDungeonNumber", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "currentDungeonNumber");
 }
 
 void setCurrentDungeonLevel(int level) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setCurrentDungeonLevel", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, level);
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setCurrentDungeonLevel", level);
 }
 
 void setCurrentDungeonNumber(int number) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setCurrentDungeonNumber", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, number);
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setCurrentDungeonNumber", number);
 }
 
 /* the previous turn current dungeon level and number */
 
 int previousDungeonNumber() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "previousDungeonNumber", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "previousDungeonNumber");
 }
 
 int previousDungeonLevel() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "previousDungeonLevel", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "previousDungeonLevel");
 }
 
 void setPreviousDungeonNumber(int number) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setPreviousDungeonNumber", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, number);
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setPreviousDungeonNumber", number);
 }
 
 void setPreviousDungeonLevel(int level) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setPreviousDungeonLevel", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, level);
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setPreviousDungeonLevel", level);
 }
 
 /* dungeon level you are being sent to, or current */
 
 int sentToDungeonNumber() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "sentToDungeonNumber", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "sentToDungeonNumber");
 }
 
 int sentToDungeonLevel() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "sentToDungeonLevel", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "sentToDungeonLevel");
 }
 
 void setSentToDungeonNumber(int number) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setSentToDungeonNumber", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, number);
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setSentToDungeonNumber", number);
 }
 
 void setSentToDungeonLevel(int level) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setSentToDungeonLevel", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, level);
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setSentToDungeonLevel", level);
 }
 
 int typeOfLevelYouWereSentTo() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "typeOfLevelYouWereSentTo", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "typeOfLevelYouWereSentTo");
 }
 
 void setTypeOfLevelYouWereSentTo(int mask) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setTypeOfLevelYouWereSentTo", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, mask);
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setTypeOfLevelYouWereSentTo", mask);
 }
 
 /* your current position */
 
 int currentX() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "currentX", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "currentX");
 }
 
 int currentY() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "currentY", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "currentY");
 }
 
-void setCurrentX(x) int x; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setCurrentX", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, x);
+void setCurrentX(int x) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setCurrentX", x);
 }
 
-void setCurrentY(y) int y; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setCurrentY", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, y);
+void setCurrentY(int y) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setCurrentY", y);
 }
 
 /* your direction of movement (or spellcasting etc.) */
 
 int directionX() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "directionX", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "directionX");
 }
 
 int directionY() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "directionY", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "directionY");
 }
 
 int directionZ() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "directionZ", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "directionZ");
 }
 
-void setDirectionX(x) int x; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setDirectionX", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, x);
+void setDirectionX(int x) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setDirectionX", x);
 }
 
-void setDirectionY(y) int y; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setDirectionY", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, y);
+void setDirectionY(int y) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setDirectionY", y);
 }
 
-void setDirectionZ(z) int z; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setDirectionZ", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, z);
+void setDirectionZ(int z) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setDirectionZ", z);
 }
 
 /* your original position */
 
 int originalX() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "originalX", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "originalX");
 }
 
 int originalY() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "originalY", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "originalY");
 }
 
-void setOriginalX(x) int x; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setOriginalX", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, x);
+void setOriginalX(int x) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setOriginalX", x);
 }
 
-void setOriginalY(y) int y; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setOriginalY", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, y);
+void setOriginalY(int y) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setOriginalY", y);
 }
 
 /* your travel destination */
 
 int destinationX() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "destinationX", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "destinationX");
 }
 
 int destinationY() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "destinationY", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "destinationY");
 }
 
-void setDestinationX(x) int x; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setDestinationX", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, x);
+void setDestinationX(int x) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setDestinationX", x);
 }
 
-void setDestinationY(y) int y; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setDestinationY", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, y);
+void setDestinationY(int y) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setDestinationY", y);
 }
 
 boolean youMoved() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "youMoved", "()Z");
-    return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method);
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "youMoved");
 } 
 
-void setYouMoved(m) boolean m; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setYouMoved", "(Z)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, m);
+void setYouMoved(boolean m) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setYouMoved", m);
 }
 
 int lastTurningDirection() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "lastTurningDirection", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "lastTurningDirection");
 } 
 
-void setLastTurningDirection(d) int d; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setLastTurningDirection", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, d);
+void setLastTurningDirection(int d) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setLastTurningDirection", d);
 }
 
 int currentTrapType() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "currentTrapType", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "currentTrapType");
 }
 
 int currentTrapTimeout() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "currentTrapTimeout", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "currentTrapTimeout");
 }
 
 
@@ -758,149 +708,101 @@ boolean currentlyTrapped() {
     return (currentTrapTimeout() > 0);
 }
 
-void setCurrentTrapType(type) int type; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setCurrentTrapType", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, type);
+void setCurrentTrapType(int type) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setCurrentTrapType", type);
 }
 
-void setCurrentTrapTimeout(timeout) int timeout; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setCurrentTrapTimeout", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, timeout);
+void setCurrentTrapTimeout(int timeout) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setCurrentTrapTimeout", timeout);
 }
 
 int currentExperienceLevel() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "currentExperienceLevel", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "currentExperienceLevel");
 } 
 
 int highestExperienceLevelSoFar() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "highestExperienceLevelSoFar", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "highestExperienceLevelSoFar");
 } 
 
-void setCurrentExperienceLevel(e) int e; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setCurrentExperienceLevel", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, e);
+void setCurrentExperienceLevel(int e) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setCurrentExperienceLevel", e);
 }
 
-void setHighestExperienceLevelSoFar(e) int e; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setHighestExperienceLevelSoFar", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, e);
+void setHighestExperienceLevelSoFar(int e) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setHighestExperienceLevelSoFar", e);
 }
 
 int originalMonsterNumber() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "originalMonsterNumber", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "originalMonsterNumber");
 } 
 
 int currentMonsterNumber() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "currentMonsterNumber", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "currentMonsterNumber");
 } 
 
-void setOriginalMonsterNumber(n) int n; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setOriginalMonsterNumber", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, n);
+void setOriginalMonsterNumber(int n) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setOriginalMonsterNumber", n);
 }
 
-void setCurrentMonsterNumber(n) int n; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setCurrentMonsterNumber", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, n);
+void setCurrentMonsterNumber(int n) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setCurrentMonsterNumber", n);
 }
 
 int timeRemainingAsMonster() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "timeRemainingAsMonster", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "timeRemainingAsMonster");
 } 
 
-void setTimeRemainingAsMonster(t) int t; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setTimeRemainingAsMonster", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, t);
+void setTimeRemainingAsMonster(int t) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setTimeRemainingAsMonster", t);
 }
 
-void increaseTimeRemainingAsMonster(t) int t; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "increaseTimeRemainingAsMonster", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, t);
+void increaseTimeRemainingAsMonster(int t) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "increaseTimeRemainingAsMonster", t);
 }
 
-void decreaseTimeRemainingAsMonster(t) int t; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "decreaseTimeRemainingAsMonster", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, t);
+void decreaseTimeRemainingAsMonster(int t) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseTimeRemainingAsMonster", t);
 }
 
-void multiplyTimeRemainingAsMonster(t) int t; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "multiplyTimeRemainingAsMonster", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, t);
+void multiplyTimeRemainingAsMonster(int t) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "multiplyTimeRemainingAsMonster", t);
 }
 
 int currentHitPointsAsMonster() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "currentHitPointsAsMonster", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "currentHitPointsAsMonster");
 } 
 
-void setCurrentHitPointsAsMonster(m) int m; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setCurrentHitPointsAsMonster", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, m);
+void setCurrentHitPointsAsMonster(int m) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setCurrentHitPointsAsMonster", m);
 }
 
-void increaseCurrentHitPointsAsMonster(m) int m; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "increaseCurrentHitPointsAsMonster", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, m);
+void increaseCurrentHitPointsAsMonster(int m) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "increaseCurrentHitPointsAsMonster", m);
 }
 
-void decreaseCurrentHitPointsAsMonster(m) int m; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "decreaseCurrentHitPointsAsMonster", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, m);
+void decreaseCurrentHitPointsAsMonster(int m) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseCurrentHitPointsAsMonster", m);
 }
 
 
 int maximumHitPointsAsMonster() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "maximumHitPointsAsMonster", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "maximumHitPointsAsMonster");
 } 
 
-void setMaximumHitPointsAsMonster(m) int m; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setMaximumHitPointsAsMonster", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, m);
+void setMaximumHitPointsAsMonster(int m) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setMaximumHitPointsAsMonster", m);
 }
 
-void increaseMaximumHitPointsAsMonster(m) int m; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "increaseMaximumHitPointsAsMonster", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, m);
+void increaseMaximumHitPointsAsMonster(int m) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "increaseMaximumHitPointsAsMonster", m);
 }
 
-void decreaseMaximumHitPointsAsMonster(m) int m; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "decreaseMaximumHitPointsAsMonster", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, m);
+void decreaseMaximumHitPointsAsMonster(int m) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseMaximumHitPointsAsMonster", m);
 }
 
-void multiplyMaximumHitPointsAsMonster(m) int m; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "multiplyMaximumHitPointsAsMonster", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, m);
+void multiplyMaximumHitPointsAsMonster(int m) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "multiplyMaximumHitPointsAsMonster", m);
 }
 
 boolean areYouPolymorphed() {
@@ -908,47 +810,35 @@ boolean areYouPolymorphed() {
 }
 
 int currentNutrition() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "currentNutrition", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "currentNutrition");
 } 
 
 int currentHungerState() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "currentHungerState", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "currentHungerState");
 } 
 
-void setCurrentNutrition(n) int n; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setCurrentNutrition", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, n);
+void setCurrentNutrition(int n) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setCurrentNutrition", n);
 }
 
-void increaseCurrentNutrition(n) int n; {
+void increaseCurrentNutrition(int n) {
     setCurrentNutrition(currentNutrition() + n);
 }
 
-void decreaseCurrentNutrition(n) int n; {
+void decreaseCurrentNutrition(int n) {
     setCurrentNutrition(currentNutrition() - n);
 }
 
-void setCurrentHungerState(s) int s; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setCurrentHungerState", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, s);
+void setCurrentHungerState(int s) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setCurrentHungerState", s);
 }
 
 int abilityToConfuseMonsters() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "abilityToConfuseMonsters", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "abilityToConfuseMonsters");
 } 
 
-void setAbilityToConfuseMonsters(a) int a; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setAbilityToConfuseMonsters", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, a);
+void setAbilityToConfuseMonsters(int a) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setAbilityToConfuseMonsters", a);
 }
 
 void increaseAbilityToConfuseMonsters(a) int a; {
@@ -960,111 +850,75 @@ void decreaseAbilityToConfuseMonsters(a) int a; {
 }
 
 int nightVisionRange() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "nightVisionRange", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "nightVisionRange");
 } 
 
 int xRayVisionRange() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "xRayVisionRange", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "xRayVisionRange");
 } 
 
-void setNightVisionRange(r) int r; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setNightVisionRange", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, r);
+void setNightVisionRange(int r) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setNightVisionRange", r);
 }
 
-void setXRayVisionRange(r) int r; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setXRayVisionRange", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, r);
+void setXRayVisionRange(int r) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setXRayVisionRange", r);
 }
 
 boolean feltBall() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "feltBall", "()Z");
-    return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method);
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "feltBall");
 }
 
-void setFeltBall(f) boolean f; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setFeltBall", "(Z)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, f);
+void setFeltBall(boolean f) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setFeltBall", f);
 }
 
 boolean feltChain() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "feltChain", "()Z");
-    return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method);
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "feltChain");
 }
 
-void setFeltChain(f) boolean f; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setFeltChain", "(Z)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, f);
+void setFeltChain(boolean f) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setFeltChain", f);
 }
 
 int glyphUnderBall() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "glyphUnderBall", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "glyphUnderBall");
 } 
 
 int glyphUnderChain() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "glyphUnderChain", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "glyphUnderChain");
 } 
 
-void setGlyphUnderBall(g) int g; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setGlyphUnderBall", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, g);
+void setGlyphUnderBall(int g) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setGlyphUnderBall", g);
 }
 
-void setGlyphUnderChain(g) int g; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setGlyphUnderChain", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, g);
+void setGlyphUnderChain(int g) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setGlyphUnderChain", g);
 }
 
 int ballAndChainOrder() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "ballAndChainOrder", "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "ballAndChainOrder");
 } 
 
-void setBallAndChainOrder(bc) int bc; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setBallAndChainOrder", "(I)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, bc);
+void setBallAndChainOrder(int bc) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setBallAndChainOrder", bc);
 }
 
 boolean sickWithFoodPoisoning() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "sickWithFoodPoisoning", "()Z");
-    return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method);
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "sickWithFoodPoisoning");
 } 
 
-void setSickWithFoodPoisoning(p) boolean p; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setSickWithFoodPoisoning", "(Z)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, p);
+void setSickWithFoodPoisoning(boolean p) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setSickWithFoodPoisoning", p);
 }
 
 boolean sickWithIllness() {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "sickWithIllness", "()Z");
-    return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method);
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "sickWithIllness");
 } 
 
-void setSickWithIllness(i) boolean i; {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setSickWithIllness", "(Z)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, i);
+void setSickWithIllness(boolean i) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setSickWithIllness", i);
 }
 
 /* square of euclidean distance from pt to your current position */
