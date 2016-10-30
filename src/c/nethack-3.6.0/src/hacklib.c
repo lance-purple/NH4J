@@ -748,6 +748,14 @@ void setCurrentMonsterNumber(int n) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "setCurrentMonsterNumber", n);
 }
 
+int lycanthropeType() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "lycanthropeType");
+} 
+
+void setLycanthropeType(int t) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setLycanthropeType", t);
+}
+
 int timeRemainingAsMonster() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "timeRemainingAsMonster");
 } 

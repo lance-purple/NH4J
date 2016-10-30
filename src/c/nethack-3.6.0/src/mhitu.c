@@ -1224,11 +1224,11 @@ register struct attack *mattk;
         break;
     case AD_WERE:
         hitmsg(mtmp, mattk);
-        if (uncancelled && !rn2(4) && u.ulycn == NON_PM
+        if (uncancelled && !rn2(4) && lycanthropeType() == NON_PM
             && !Protection_from_shape_changers && !defends(AD_WERE, uwep)) {
             You_feel("feverish.");
             exercise(A_CON, FALSE);
-            u.ulycn = monsndx(mdat);
+            setLycanthropeType(monsndx(mdat));
             retouch_equipment(2);
         }
         break;

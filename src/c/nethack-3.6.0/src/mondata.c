@@ -88,7 +88,7 @@ struct monst *mon;
 
     if (is_undead(ptr) || is_demon(ptr) || is_were(ptr)
         /* is_were() doesn't handle hero in human form */
-        || (mon == &youmonst && u.ulycn >= LOW_PM)
+        || (mon == &youmonst && lycanthropeType() >= LOW_PM)
         || ptr == &mons[PM_DEATH] || is_vampshifter(mon))
         return TRUE;
     wep = (mon == &youmonst) ? uwep : MON_WEP(mon);

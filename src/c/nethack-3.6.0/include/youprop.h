@@ -362,6 +362,6 @@ extern boolean canYouWalkOnWater();
    redundant but allows the function calls to be skipped most of the time */
 #define Unaware (multi < 0 && (unconscious() || is_fainted()))
 
-#define Hate_silver (u.ulycn >= LOW_PM || hates_silver(youmonst.data))
+#define Hate_silver (lycanthropeType() >= LOW_PM || hates_silver(youmonst.data))
 
 #endif /* YOUPROP_H */

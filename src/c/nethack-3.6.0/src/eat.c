@@ -932,15 +932,15 @@ register int pm;
         break;
     case PM_HUMAN_WERERAT:
         catch_lycanthropy = TRUE;
-        u.ulycn = PM_WERERAT;
+        setLycanthropeType(PM_WERERAT);
         break;
     case PM_HUMAN_WEREJACKAL:
         catch_lycanthropy = TRUE;
-        u.ulycn = PM_WEREJACKAL;
+        setLycanthropeType(PM_WEREJACKAL);
         break;
     case PM_HUMAN_WEREWOLF:
         catch_lycanthropy = TRUE;
-        u.ulycn = PM_WEREWOLF;
+        setLycanthropeType(PM_WEREWOLF);
         break;
     case PM_NURSE:
         if (areYouPolymorphed())
@@ -2069,7 +2069,7 @@ struct obj *otmp;
 {
     switch (otmp->otyp) {
     case SPRIG_OF_WOLFSBANE:
-        if (u.ulycn >= LOW_PM || is_were(youmonst.data))
+        if (lycanthropeType() >= LOW_PM || is_were(youmonst.data))
             you_unwere(TRUE);
         break;
     case CARROT:

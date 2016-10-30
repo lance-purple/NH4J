@@ -174,16 +174,16 @@ you_were()
     char qbuf[QBUFSZ];
     boolean controllable_poly = Polymorph_control && !(Stunned || Unaware);
 
-    if (Unchanging || (currentMonsterNumber() == u.ulycn))
+    if (Unchanging || (currentMonsterNumber() == lycanthropeType()))
         return;
     if (controllable_poly) {
         /* `+4' => skip "were" prefix to get name of beast */
         Sprintf(qbuf, "Do you want to change into %s?",
-                an(mons[u.ulycn].mname + 4));
+                an(mons[lycanthropeType()].mname + 4));
         if (yn(qbuf) == 'n')
             return;
     }
-    (void) polymon(u.ulycn);
+    (void) polymon(lycanthropeType());
 }
 
 void
@@ -194,7 +194,7 @@ boolean purify;
 
     if (purify) {
         You_feel("purified.");
-        u.ulycn = NON_PM; /* cure lycanthropy */
+        setLycanthropeType(NON_PM); /* cure lycanthropy */
     }
     if (!Unchanging && is_were(youmonst.data)
         && (!controllable_poly || yn("Remain in beast form?") == 'n'))

@@ -51,6 +51,7 @@ public class PlayerCharacter {
 	private static int originalMonsterNumber;
 	private static int currentMonsterNumber;
 	private static int timeRemainingAsMonster;
+	private static int lycanthropeType;
 
 	private static HungerState currentHungerState = HungerState.NOT_HUNGRY;
 	private static int currentNutrition;
@@ -388,6 +389,14 @@ public class PlayerCharacter {
 
 	public static final void setCurrentMonsterNumber(int n) {
 		currentMonsterNumber = n;
+	}
+	
+	public static int lycanthropeType() {
+		return lycanthropeType;
+	}
+
+	public static void setLycanthropeType(int t) {
+		lycanthropeType = t;
 	}
 
 	public static final int currentHitPointsAsMonster() {

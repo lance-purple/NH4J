@@ -611,19 +611,19 @@ register struct obj *otmp;
             if (otmp->blessed) {
                 pline("This burns like acid!");
                 exercise(A_CON, FALSE);
-                if (u.ulycn >= LOW_PM) {
+                if (lycanthropeType() >= LOW_PM) {
                     Your("affinity to %s disappears!",
-                         makeplural(mons[u.ulycn].mname));
-                    if (youmonst.data == &mons[u.ulycn])
+                         makeplural(mons[lycanthropeType()].mname));
+                    if (youmonst.data == &mons[lycanthropeType()])
                         you_unwere(FALSE);
-                    u.ulycn = NON_PM; /* cure lycanthropy */
+                    setLycanthropeType(NON_PM); /* cure lycanthropy */
                 }
                 losehp(Maybe_Half_Phys(d(2, 6)), "potion of holy water",
                        KILLED_BY_AN);
             } else if (otmp->cursed) {
                 You_feel("quite proud of yourself.");
                 healup(d(2, 6), 0, 0, 0);
-                if (u.ulycn >= LOW_PM && !areYouPolymorphed())
+                if (lycanthropeType() >= LOW_PM && !areYouPolymorphed())
                     you_were();
                 exercise(A_CON, TRUE);
             }
@@ -633,7 +633,7 @@ register struct obj *otmp;
                 make_sick(0L, (char *) 0, TRUE, SICK_ALL);
                 exercise(A_WIS, TRUE);
                 exercise(A_CON, TRUE);
-                if (u.ulycn >= LOW_PM)
+                if (lycanthropeType() >= LOW_PM)
                     you_unwere(TRUE); /* "Purified" */
                 /* make_confused(0L, TRUE); */
             } else {
@@ -643,7 +643,7 @@ register struct obj *otmp;
                            KILLED_BY_AN);
                 } else
                     You_feel("full of dread.");
-                if (u.ulycn >= LOW_PM && !areYouPolymorphed())
+                if (lycanthropeType() >= LOW_PM && !areYouPolymorphed())
                     you_were();
                 exercise(A_CON, FALSE);
             }
@@ -1639,10 +1639,10 @@ register struct obj *obj;
     case POT_WATER:
         if (currentMonsterNumber() == PM_GREMLIN) {
             (void) split_mon(&youmonst, (struct monst *) 0);
-        } else if (u.ulycn >= LOW_PM) {
+        } else if (lycanthropeType() >= LOW_PM) {
             /* vapor from [un]holy water will trigger
                transformation but won't cure lycanthropy */
-            if (obj->blessed && youmonst.data == &mons[u.ulycn])
+            if (obj->blessed && youmonst.data == &mons[lycanthropeType()])
                 you_unwere(FALSE);
             else if (obj->cursed && !areYouPolymorphed())
                 you_were();

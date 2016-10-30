@@ -2149,7 +2149,7 @@ int final;
         /* blocked shape changes */
         if (Polymorph)
             what = !final ? "polymorph" : "have polymorphed";
-        else if (u.ulycn >= LOW_PM)
+        else if (lycanthropeType() >= LOW_PM)
             what = !final ? "change shape" : "have changed shape";
         if (what) {
             Sprintf(buf, "would %s periodically", what);
@@ -2162,7 +2162,7 @@ int final;
     }
     if (Polymorph_control)
         you_have("polymorph control", from_what(POLYMORPH_CONTROL));
-    if (areYouPolymorphed() && currentMonsterNumber() != u.ulycn) {
+    if (areYouPolymorphed() && currentMonsterNumber() != lycanthropeType()) {
         /* foreign shape (except were-form which is handled below) */
         Sprintf(buf, "polymorphed into %s", an(youmonst.data->mname));
         if (wizard)
@@ -2171,10 +2171,10 @@ int final;
     }
     if (lays_eggs(youmonst.data) && flags.female) /* areYouPolymorphed() */
         you_can("lay eggs", "");
-    if (u.ulycn >= LOW_PM) {
+    if (lycanthropeType() >= LOW_PM) {
         /* "you are a werecreature [in beast form]" */
-        Strcpy(buf, an(mons[u.ulycn].mname));
-        if (currentMonsterNumber() == u.ulycn) {
+        Strcpy(buf, an(mons[lycanthropeType()].mname));
+        if (currentMonsterNumber() == lycanthropeType()) {
             Strcat(buf, " in beast form");
             if (wizard)
                 Sprintf(eos(buf), " (%d)", timeRemainingAsMonster());

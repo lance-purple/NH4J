@@ -391,7 +391,7 @@ int psflags;
     int old_light, new_light, mntmp, class, tryct;
     boolean forcecontrol = (psflags == 1), monsterpoly = (psflags == 2),
             draconian = (uarm && Is_dragon_armor(uarm)),
-            iswere = (u.ulycn >= LOW_PM), isvamp = is_vampire(youmonst.data),
+            iswere = (lycanthropeType() >= LOW_PM), isvamp = is_vampire(youmonst.data),
             controllable_poly = Polymorph_control && !(Stunned || Unaware);
 
     if (Unchanging) {
@@ -446,8 +446,8 @@ int psflags;
                     pline("I've never heard of such monsters.");
                 else
                     You_cant("polymorph into any of those.");
-            } else if (iswere && (were_beastie(mntmp) == u.ulycn
-                                  || mntmp == counter_were(u.ulycn)
+            } else if (iswere && (were_beastie(mntmp) == lycanthropeType()
+                                  || mntmp == counter_were(lycanthropeType())
                                   || (areYouPolymorphed() && mntmp == PM_HUMAN))) {
                 goto do_shift;
                 /* Note:  humans are illegal as monsters, but an
@@ -525,10 +525,10 @@ int psflags;
             }
         } else if (iswere) {
         do_shift:
-            if (areYouPolymorphed() && were_beastie(mntmp) != u.ulycn)
+            if (areYouPolymorphed() && were_beastie(mntmp) != lycanthropeType())
                 mntmp = PM_HUMAN; /* Illegal; force newman() */
             else
-                mntmp = u.ulycn;
+                mntmp = lycanthropeType();
         } else if (isvamp) {
         do_vampyr:
             if (mntmp < LOW_PM || (mons[mntmp].geno & G_UNIQ))
@@ -645,7 +645,7 @@ int mntmp;
     } else if (is_female(&mons[mntmp])) {
         if (!flags.female)
             dochange = TRUE;
-    } else if (!is_neuter(&mons[mntmp]) && mntmp != u.ulycn) {
+    } else if (!is_neuter(&mons[mntmp]) && mntmp != lycanthropeType()) {
         if (sex_change_ok && !rn2(10))
             dochange = TRUE;
     }

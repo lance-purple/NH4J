@@ -288,11 +288,11 @@ boolean resuming;
                         }
                         /* delayed change may not be valid anymore */
                         if ((change == 1 && !Polymorph)
-                            || (change == 2 && u.ulycn == NON_PM))
+                            || (change == 2 && lycanthropeType() == NON_PM))
                             change = 0;
                         if (Polymorph && !rn2(100))
                             change = 1;
-                        else if (u.ulycn >= LOW_PM && !areYouPolymorphed()
+                        else if (lycanthropeType() >= LOW_PM && !areYouPolymorphed()
                                  && !rn2(80 - (20 * night())))
                             change = 2;
                         if (change && !Unchanging) {

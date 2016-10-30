@@ -630,7 +630,7 @@ u_init()
     setOriginalMonsterNumber( (flags.female && urole.femalenum != NON_PM)
                                  ? urole.femalenum
                                  : urole.malenum );
-    u.ulycn = NON_PM;
+    setLycanthropeType(NON_PM);
     set_uasmon();
 
     setCurrentExperienceLevel(0); /* set up some of the initial attributes */

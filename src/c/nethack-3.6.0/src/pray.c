@@ -179,7 +179,7 @@ in_trouble()
         return TROUBLE_REGION;
     if (critically_low_hp(FALSE))
         return TROUBLE_HIT;
-    if (u.ulycn >= LOW_PM)
+    if (lycanthropeType() >= LOW_PM)
         return TROUBLE_LYCANTHROPE;
     if (near_capacity() >= EXT_ENCUMBER && yourAttrMax(A_STR) - yourCurrentAttr(A_STR) > 3)
         return TROUBLE_COLLAPSING;

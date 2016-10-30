@@ -269,9 +269,6 @@ struct you {
 
     struct prop uprops[LAST_PROP + 1];
 
-    int mtimedone; /* for polymorph-self */
-    int ulycn;                /* lycanthrope type */
-
     unsigned ucreamed;
     unsigned uswldtim; /* time you have been swallowed */
 

@@ -770,7 +770,7 @@ struct monst *mtmp;
         return ((ptr->mflags2 & weap->mtype)
                 || (yours
                     && ((!areYouPolymorphed() && (urace.selfmask & weap->mtype))
-                        || ((weap->mtype & M2_WERE) && u.ulycn >= LOW_PM))));
+                        || ((weap->mtype & M2_WERE) && lycanthropeType() >= LOW_PM))));
     } else if (weap->spfx & SPFX_DALIGN) {
         return yours ? (u.ualign.type != weap->alignment)
                      : (ptr->maligntyp == A_NONE
