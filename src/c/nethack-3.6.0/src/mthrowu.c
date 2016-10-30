@@ -470,7 +470,7 @@ struct obj *obj;         /* missile (or stack providing it) */
     tmp_at(DISP_END, 0);
 
     if (blindinc) {
-        u.ucreamed += blindinc;
+        increaseCreamed(blindinc);
         make_blinded(Blinded + (long) blindinc, FALSE);
         if (!Blind)
             Your1(vision_clears);

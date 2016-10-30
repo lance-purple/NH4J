@@ -494,8 +494,8 @@ ustatusline()
         Strcat(info, ", confused");
     if (Blind) {
         Strcat(info, ", blind");
-        if (u.ucreamed) {
-            if ((long) u.ucreamed < Blinded || Blindfolded
+        if (creamed()) {
+            if ((long) creamed() < Blinded || Blindfolded
                 || !haseyes(youmonst.data))
                 Strcat(info, ", cover");
             Strcat(info, "ed by sticky goop");

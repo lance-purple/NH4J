@@ -205,7 +205,7 @@ struct obj *obj; /* aatyp == AT_WEAP, AT_SPIT */
                 return FALSE;
         } else if (obj && (obj->otyp == BLINDING_VENOM)) {
             /* all ublindf, including LENSES, protect, cream-pies too */
-            if (is_you && (ublindf || u.ucreamed))
+            if (is_you && (ublindf || creamed()))
                 return FALSE;
             check_visor = TRUE;
         } else if (obj && (obj->otyp == POT_BLINDNESS)) {
@@ -217,7 +217,7 @@ struct obj *obj; /* aatyp == AT_WEAP, AT_SPIT */
         break;
 
     case AT_ENGL:
-        if (is_you && (Blindfolded || Unaware || u.ucreamed))
+        if (is_you && (Blindfolded || Unaware || creamed()))
             return FALSE;
         if (!is_you && mdef->msleeping)
             return FALSE;

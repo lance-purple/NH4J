@@ -58,6 +58,8 @@ public class PlayerCharacter {
 	
 	private static int abilityToConfuseMonsters;
 	
+	private static int creamed;
+	
 	private static int nightVisionRange;
 	private static int xRayVisionRange;
 	
@@ -477,6 +479,22 @@ public class PlayerCharacter {
 
 	public static final void setAbilityToConfuseMonsters(int a) {
 		abilityToConfuseMonsters = a;
+	}
+
+	public static final int creamed() {
+		return creamed;
+	}
+
+	public static final void setCreamed(int c) {
+		creamed = c;
+	}
+
+	public static final void increaseCreamed(int c) {
+		creamed += c;
+	}
+
+	public static final void decreaseCreamed(int c) {
+		creamed -= c;
 	}
 
 	public static final int nightVisionRange() {

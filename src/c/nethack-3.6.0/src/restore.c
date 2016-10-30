@@ -628,6 +628,8 @@ unsigned int *stuckid, *steedid;
 
     setAbilityToConfuseMonsters(read_int(fd));
 
+    setCreamed(read_int(fd));
+
     setNightVisionRange(read_int(fd));
     setXRayVisionRange(read_int(fd));
 

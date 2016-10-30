@@ -269,7 +269,6 @@ struct you {
 
     struct prop uprops[LAST_PROP + 1];
 
-    unsigned ucreamed;
     unsigned uswldtim; /* time you have been swallowed */
 
     Bitfield(uswallow, 1);      /* true if swallowed */

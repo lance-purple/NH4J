@@ -248,8 +248,8 @@ nh_timeout()
             }
         }
     }
-    if (u.ucreamed)
-        u.ucreamed--;
+    if (creamed())
+        decreaseCreamed(1);
 
     /* Dissipate spell-based protection. */
     if (u.usptime) {

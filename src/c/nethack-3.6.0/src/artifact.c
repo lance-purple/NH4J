@@ -1442,11 +1442,10 @@ struct obj *obj;
         }
         case HEALING: {
             int healamt = (u.uhpmax + 1 - u.uhp) / 2;
-            long creamed = (long) u.ucreamed;
 
             if (areYouPolymorphed())
                 healamt = (maximumHitPointsAsMonster() + 1 - currentHitPointsAsMonster()) / 2;
-            if (healamt || Sick || Slimed || Blinded > creamed)
+            if (healamt || Sick || Slimed || Blinded > creamed())
                 You_feel("better.");
             else
                 goto nothing_special;
@@ -1460,8 +1459,8 @@ struct obj *obj;
                 make_sick(0L, (char *) 0, FALSE, SICK_ALL);
             if (Slimed)
                 make_slimed(0L, (char *) 0);
-            if (Blinded > creamed)
-                make_blinded(creamed, FALSE);
+            if (Blinded > creamed())
+                make_blinded(creamed(), FALSE);
             context.botl = 1;
             break;
         }

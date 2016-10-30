@@ -110,11 +110,11 @@ struct obj *obj;
             return 1;
         case 1:
             if (!ublindf) {
-                old = u.ucreamed;
-                u.ucreamed += rn1(10, 3);
+                old = creamed();
+                increaseCreamed(rn1(10, 3));
                 pline("Yecch! Your %s %s gunk on it!", body_part(FACE),
                       (old ? "has more" : "now has"));
-                make_blinded(Blinded + (long) u.ucreamed - old, TRUE);
+                make_blinded(Blinded + (long) creamed() - old, TRUE);
             } else {
                 const char *what;
 
@@ -146,9 +146,9 @@ struct obj *obj;
         if (is_wet_towel(obj))
             dry_a_towel(obj, -1, drying_feedback);
         return 1;
-    } else if (u.ucreamed) {
-        Blinded -= u.ucreamed;
-        u.ucreamed = 0;
+    } else if (creamed()) {
+        Blinded -= creamed();
+        setCreamed(0);
         if (!Blinded) {
             pline("You've got the glop off.");
             if (!gulp_blnd_check()) {
@@ -1784,7 +1784,7 @@ struct obj *obj;
     /* collect property troubles */
     if (TimedTrouble(Sick))
         prop_trouble(SICK);
-    if (TimedTrouble(Blinded) > (long) u.ucreamed
+    if (TimedTrouble(Blinded) > (long) creamed()
         && !(u.uswallow
              && attacktype_fordmg(u.ustuck->data, AT_ENGL, AD_BLND)))
         prop_trouble(BLINDED);
@@ -1859,7 +1859,6 @@ struct obj *obj;
             did_prop++;
             break;
         case prop2trbl(BLINDED):
-            make_blinded((long) u.ucreamed, TRUE);
             did_prop++;
             break;
         case prop2trbl(HALLUC):
@@ -2886,7 +2885,7 @@ use_cream_pie(obj)
 struct obj *obj;
 {
     boolean wasblind = Blind;
-    boolean wascreamed = u.ucreamed;
+    boolean wascreamed = creamed();
     boolean several = FALSE;
 
     if (obj->quan > 1L) {
@@ -2901,7 +2900,7 @@ struct obj *obj;
               several ? makeplural(the(xname(obj))) : the(xname(obj)));
     if (can_blnd((struct monst *) 0, &youmonst, AT_WEAP, obj)) {
         int blindinc = rnd(25);
-        u.ucreamed += blindinc;
+        increaseCreamed(blindinc);
         make_blinded(Blinded + (long) blindinc, FALSE);
         if (!Blind || (Blind && wasblind))
             pline("There's %ssticky goop all over your %s.",

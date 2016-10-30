@@ -89,7 +89,7 @@ int javaGetInt(const char* classname, const char* methodname) {
     return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
 }
 
-int javaGetBoolean(const char* classname, const char* methodname) {
+boolean javaGetBoolean(const char* classname, const char* methodname) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "()Z");
     return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method);
@@ -855,6 +855,22 @@ void increaseAbilityToConfuseMonsters(a) int a; {
 
 void decreaseAbilityToConfuseMonsters(a) int a; {
     setAbilityToConfuseMonsters(abilityToConfuseMonsters() - a);
+}
+
+int creamed() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "creamed");
+} 
+
+void setCreamed(int c) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setCreamed", c);
+}
+
+void increaseCreamed(int c) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "increaseCreamed", c);
+}
+
+void decreaseCreamed(int c) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseCreamed", c);
 }
 
 int nightVisionRange() {

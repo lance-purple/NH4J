@@ -875,7 +875,7 @@ boolean hitsroof;
             if (blindinc) {
                 if (otyp == BLINDING_VENOM && !Blind)
                     pline("It blinds you!");
-                u.ucreamed += blindinc;
+                increaseCreamed(blindinc);
                 make_blinded(Blinded + (long) blindinc, FALSE);
                 if (!Blind)
                     Your1(vision_clears);

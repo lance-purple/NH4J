@@ -1754,23 +1754,23 @@ donull()
 STATIC_PTR int
 wipeoff(VOID_ARGS)
 {
-    if (u.ucreamed < 4)
-        u.ucreamed = 0;
+    if (creamed() < 4)
+        setCreamed(0);
     else
-        u.ucreamed -= 4;
+        decreaseCreamed(4);
     if (Blinded < 4)
         Blinded = 0;
     else
         Blinded -= 4;
     if (!Blinded) {
         pline("You've got the glop off.");
-        u.ucreamed = 0;
+        setCreamed(0);
         if (!gulp_blnd_check()) {
             Blinded = 1;
             make_blinded(0L, TRUE);
         }
         return 0;
-    } else if (!u.ucreamed) {
+    } else if (!creamed()) {
         Your("%s feels clean now.", body_part(FACE));
         return 0;
     }
@@ -1780,7 +1780,7 @@ wipeoff(VOID_ARGS)
 int
 dowipe()
 {
-    if (u.ucreamed) {
+    if (creamed()) {
         static NEARDATA char buf[39];
 
         Sprintf(buf, "wiping off your %s", body_part(FACE));

@@ -493,7 +493,7 @@ int trouble;
         if (eyecount(youmonst.data) != 1)
             eyes = makeplural(eyes);
         Your("%s %s better.", eyes, vtense(eyes, "feel"));
-        u.ucreamed = 0;
+        setCreamed(0);
         make_blinded(0L, FALSE);
         break;
     }

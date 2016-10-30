@@ -358,6 +358,8 @@ register int fd, mode;
 
     write_int(fd, abilityToConfuseMonsters());
 
+    write_int(fd, creamed());
+
     write_int(fd, nightVisionRange());
     write_int(fd, xRayVisionRange());
 
