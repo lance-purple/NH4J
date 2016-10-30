@@ -1859,6 +1859,7 @@ struct obj *obj;
             did_prop++;
             break;
         case prop2trbl(BLINDED):
+            make_blinded((long) creamed(), TRUE);
             did_prop++;
             break;
         case prop2trbl(HALLUC):

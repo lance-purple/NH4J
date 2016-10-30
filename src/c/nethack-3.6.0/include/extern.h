@@ -970,6 +970,11 @@ E void FDECL(setSickWithFoodPoisoning, (boolean));
 E boolean FDECL(sickWithIllness, ());
 E void FDECL(setSickWithIllness, (boolean));
 
+E int FDECL(creamed, ());
+E void FDECL(setCreamed, (int));
+E void FDECL(increaseCreamed, (int));
+E void FDECL(decreaseCreamed, (int));
+
 E int FDECL(abilityToConfuseMonsters, ());
 E void FDECL(setAbilityToConfuseMonsters, (int));
 E void FDECL(increaseAbilityToConfuseMonsters, (int));
