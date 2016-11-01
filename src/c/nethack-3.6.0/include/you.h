@@ -269,8 +269,6 @@ struct you {
 
     struct prop uprops[LAST_PROP + 1];
 
-    unsigned uswldtim; /* time you have been swallowed */
-
     Bitfield(uswallow, 1);      /* true if swallowed */
     Bitfield(uinwater, 1);      /* if you're currently in water (only
                                    underwater possible currently) */

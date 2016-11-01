@@ -2079,7 +2079,7 @@ struct monst *mtmp;
             setCurrentX(mtmp->mx);
             setCurrentY(mtmp->my);
             u.uswallow = 0;
-            u.uswldtim = 0;
+            setTimeSinceBeingSwallowed(0);
             if (Punished && uchain->where != OBJ_FLOOR)
                 placebc();
             vision_full_recalc = 1;

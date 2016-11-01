@@ -703,7 +703,6 @@ int currentTrapTimeout() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "currentTrapTimeout");
 }
 
-
 boolean currentlyTrapped() {
     return (currentTrapTimeout() > 0);
 }
@@ -714,6 +713,22 @@ void setCurrentTrapType(int type) {
 
 void setCurrentTrapTimeout(int timeout) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "setCurrentTrapTimeout", timeout);
+}
+
+int timeSinceBeingSwallowed() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "timeSinceBeingSwallowed");
+}
+
+void setTimeSinceBeingSwallowed(int t) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setTimeSinceBeingSwallowed", t);
+}
+
+void increaseTimeSinceBeingSwallowed(int t) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "increaseTimeSinceBeingSwallowed", t);
+}
+
+void decreaseTimeSinceBeingSwallowed(int t) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseTimeSinceBeingSwallowed", t);
 }
 
 int currentExperienceLevel() {

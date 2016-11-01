@@ -295,7 +295,8 @@ boolean allow_drag;
     }
 
     if (u.uswallow) {
-        u.uswldtim = u.uswallow = 0;
+        u.uswallow = 0;
+        setTimeSinceBeingSwallowed(0);
         if (Punished && !ball_active) {
             /* ensure ball placement, like unstuck */
             ball_active = TRUE;

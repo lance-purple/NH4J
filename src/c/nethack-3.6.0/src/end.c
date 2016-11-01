@@ -705,7 +705,7 @@ int how;
     if (u.uhpmax < uhpmin)
         u.uhpmax = uhpmin;
     u.uhp = u.uhpmax;
-    u.uswldtim = 0;
+    setTimeSinceBeingSwallowed(0);
     if (currentNutrition() < 500) {
         setCurrentNutrition(500);
         newuhs(FALSE);

@@ -1626,7 +1626,7 @@ gulp_blnd_check()
     if (!Blinded && u.uswallow
         && (mattk = attacktype_fordmg(u.ustuck->data, AT_ENGL, AD_BLND))
         && can_blnd(u.ustuck, &youmonst, mattk->aatyp, (struct obj *) 0)) {
-        ++u.uswldtim; /* compensate for gulpmu change */
+        increaseTimeSinceBeingSwallowed(1); /* compensate for gulpmu change */
         (void) gulpmu(u.ustuck, mattk);
         return TRUE;
     }
@@ -1724,8 +1724,8 @@ register struct attack *mattk;
             /* higher level attacker takes longer to eject hero */
             tim_tmp = rnd((int) mtmp->m_lev + 10 / 2);
         }
-        /* u.uswldtim always set > 1 */
-        u.uswldtim = (unsigned) ((tim_tmp < 2) ? 2 : tim_tmp);
+        /* timeSinceBeingSwallowed always set > 1 */
+        setTimeSinceBeingSwallowed((unsigned) ((tim_tmp < 2) ? 2 : tim_tmp));
         swallowed(1);
         for (otmp2 = invent; otmp2; otmp2 = otmp2->nobj)
             (void) snuff_lit(otmp2);
@@ -1733,25 +1733,25 @@ register struct attack *mattk;
 
     if (mtmp != u.ustuck)
         return 0;
-    if (u.uswldtim > 0)
-        u.uswldtim -= 1;
+    if (timeSinceBeingSwallowed() > 0)
+        decreaseTimeSinceBeingSwallowed(1);
 
     switch (mattk->adtyp) {
     case AD_DGST:
         physical_damage = TRUE;
         if (Slow_digestion) {
             /* Messages are handled below */
-            u.uswldtim = 0;
+            setTimeSinceBeingSwallowed(0);
             tmp = 0;
-        } else if (u.uswldtim == 0) {
+        } else if (timeSinceBeingSwallowed() == 0) {
             pline("%s totally digests you!", Monnam(mtmp));
             tmp = u.uhp;
             if (Half_physical_damage)
                 tmp *= 2; /* sorry */
         } else {
             pline("%s%s digests you!", Monnam(mtmp),
-                  (u.uswldtim == 2) ? " thoroughly"
-                                    : (u.uswldtim == 1) ? " utterly" : "");
+                  (timeSinceBeingSwallowed() == 2) ? " thoroughly"
+                                    : (timeSinceBeingSwallowed() == 1) ? " utterly" : "");
             exercise(A_STR, FALSE);
         }
         break;
@@ -1864,7 +1864,7 @@ register struct attack *mattk;
         pline("%s very hurriedly %s you!", Monnam(mtmp),
               is_animal(mtmp->data) ? "regurgitates" : "expels");
         expels(mtmp, mtmp->data, FALSE);
-    } else if (!u.uswldtim || youmonst.data->msize >= MZ_HUGE) {
+    } else if (!timeSinceBeingSwallowed() || youmonst.data->msize >= MZ_HUGE) {
         You("get %s!", is_animal(mtmp->data) ? "regurgitated" : "expelled");
         if (flags.verbose
             && (is_animal(mtmp->data)

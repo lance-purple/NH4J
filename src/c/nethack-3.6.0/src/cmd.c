@@ -1747,7 +1747,7 @@ int final;
     if (u.uswallow) {
         Sprintf(buf, "swallowed by %s", a_monnam(u.ustuck));
         if (wizard)
-            Sprintf(eos(buf), " (%u)", u.uswldtim);
+            Sprintf(eos(buf), " (%u)", timeSinceBeingSwallowed());
         you_are(buf, "");
     } else if (u.ustuck) {
         Sprintf(buf, "%s %s",

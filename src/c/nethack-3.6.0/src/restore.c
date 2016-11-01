@@ -600,6 +600,8 @@ unsigned int *stuckid, *steedid;
     setCurrentTrapType(read_int(fd));
     setCurrentTrapTimeout(read_int(fd));
 
+    setTimeSinceBeingSwallowed(read_int(fd));
+
     int i;
     for (i = 0; i < A_MAX; i++) {
         setYourCurrentAttr(i, read_int(fd));

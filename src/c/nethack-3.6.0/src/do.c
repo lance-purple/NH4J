@@ -1181,8 +1181,10 @@ boolean at_stairs, falling, portal;
     u.uinwater = 0;
     u.uundetected = 0; /* not hidden, even if means are available */
     keepdogs(FALSE);
-    if (u.uswallow) /* idem */
-        u.uswldtim = u.uswallow = 0;
+    if (u.uswallow) { /* idem */
+        setTimeSinceBeingSwallowed(0);
+        u.uswallow = 0;
+    }
     recalc_mapseen(); /* recalculate map overview before we leave the level */
     /*
      *  We no longer see anything on the level.  Make sure that this

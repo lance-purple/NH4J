@@ -32,6 +32,8 @@ public class PlayerCharacter {
 	private static TrapType currentTrapType;
 	private static int currentTrapTimeout;
 	
+	private static int timeSinceBeingSwallowed;
+	
 	private static int currentExperienceLevel;
 	private static int highestExperienceLevelSoFar;
 	
@@ -224,7 +226,23 @@ public class PlayerCharacter {
 	public static void setCurrentTrapType(int key) {
 	    currentTrapType = TrapType.byKey(key);	
 	}
-	
+
+	public static int timeSinceBeingSwallowed() {
+		return timeSinceBeingSwallowed;
+	}
+
+	public static void setTimeSinceBeingSwallowed(int t) {
+		timeSinceBeingSwallowed = t;
+	}
+
+	public static void increaseTimeSinceBeingSwallowed(int t) {
+		timeSinceBeingSwallowed += t;
+	}
+
+	public static void decreaseTimeSinceBeingSwallowed(int t) {
+		timeSinceBeingSwallowed -= t;
+	}
+
 	public static int currentTrapTimeout() {
 		return currentTrapTimeout;
 	}

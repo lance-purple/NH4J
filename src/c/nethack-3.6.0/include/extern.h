@@ -923,6 +923,11 @@ E void FDECL(setCurrentTrapType, (int));
 E int FDECL(currentTrapTimeout, ());
 E void FDECL(setCurrentTrapTimeout, (int));
 
+E int FDECL(timeSinceBeingSwallowed, ());
+E void FDECL(setTimeSinceBeingSwallowed, (int));
+E void FDECL(increaseTimeSinceBeingSwallowed, (int));
+E void FDECL(decreaseTimeSinceBeingSwallowed, (int));
+
 E int FDECL(currentExperienceLevel, ());
 E void FDECL(setCurrentExperienceLevel, (int));
 E int FDECL(highestExperienceLevelSoFar, ());
