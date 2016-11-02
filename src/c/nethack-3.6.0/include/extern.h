@@ -928,6 +928,11 @@ E void FDECL(setTimeSinceBeingSwallowed, (int));
 E void FDECL(increaseTimeSinceBeingSwallowed, (int));
 E void FDECL(decreaseTimeSinceBeingSwallowed, (int));
 
+E int FDECL(timeSinceBecomingADemigod, ());
+E void FDECL(setTimeSinceBecomingADemigod, (int));
+E void FDECL(increaseTimeSinceBecomingADemigod, (int));
+E void FDECL(decreaseTimeSinceBecomingADemigod, (int));
+
 E int FDECL(currentExperienceLevel, ());
 E void FDECL(setCurrentExperienceLevel, (int));
 E int FDECL(highestExperienceLevelSoFar, ());

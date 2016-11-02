@@ -731,6 +731,22 @@ void decreaseTimeSinceBeingSwallowed(int t) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseTimeSinceBeingSwallowed", t);
 }
 
+int timeSinceBecomingADemigod() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "timeSinceBecomingADemigod");
+}
+
+void setTimeSinceBecomingADemigod(int t) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setTimeSinceBecomingADemigod", t);
+}
+
+void increaseTimeSinceBecomingADemigod(int t) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "increaseTimeSinceBecomingADemigod", t);
+}
+
+void decreaseTimeSinceBecomingADemigod(int t) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseTimeSinceBecomingADemigod", t);
+}
+
 int currentExperienceLevel() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "currentExperienceLevel");
 } 

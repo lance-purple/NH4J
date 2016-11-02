@@ -259,8 +259,9 @@ struct obj *book2;
             /* in case you haven't killed the Wizard yet, behave as if
                you just did */
             u.uevent.udemigod = 1; /* wizdead() */
-            if (!u.udg_cnt || u.udg_cnt > soon)
-                u.udg_cnt = soon;
+            if (!timeSinceBecomingADemigod() || timeSinceBecomingADemigod() > soon) {
+                setTimeSinceBecomingADemigod(soon);
+            }
         } else { /* at least one artifact not prepared properly */
             You("have a feeling that %s is amiss...", something);
             goto raise_dead;

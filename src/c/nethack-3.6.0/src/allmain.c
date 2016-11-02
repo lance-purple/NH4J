@@ -323,11 +323,11 @@ boolean resuming;
                     if (!rn2(40 + (int) (ACURR(A_DEX) * 3)))
                         u_wipe_engr(rnd(3));
                     if (u.uevent.udemigod && !u.uinvulnerable) {
-                        if (u.udg_cnt)
-                            u.udg_cnt--;
-                        if (!u.udg_cnt) {
+                        if (timeSinceBecomingADemigod())
+                            decreaseTimeSinceBecomingADemigod(1);
+                        if (!timeSinceBecomingADemigod()) {
                             intervene();
-                            u.udg_cnt = rn1(200, 50);
+                            setTimeSinceBecomingADemigod(rn1(200, 50));
                         }
                     }
                     restore_attrib();

@@ -601,6 +601,7 @@ unsigned int *stuckid, *steedid;
     setCurrentTrapTimeout(read_int(fd));
 
     setTimeSinceBeingSwallowed(read_int(fd));
+    setTimeSinceBecomingADemigod(read_int(fd));
 
     int i;
     for (i = 0; i < A_MAX; i++) {

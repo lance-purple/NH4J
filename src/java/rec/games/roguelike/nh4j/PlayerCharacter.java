@@ -33,6 +33,7 @@ public class PlayerCharacter {
 	private static int currentTrapTimeout;
 	
 	private static int timeSinceBeingSwallowed;
+	private static int timeSinceBecomingADemigod;
 	
 	private static int currentExperienceLevel;
 	private static int highestExperienceLevelSoFar;
@@ -243,6 +244,21 @@ public class PlayerCharacter {
 		timeSinceBeingSwallowed -= t;
 	}
 
+	public static int timeSinceBecomingADemigod() {
+		return timeSinceBecomingADemigod;
+	}
+
+	public static void setTimeSinceBecomingADemigod(int t) {
+		timeSinceBecomingADemigod = t;
+	}
+
+	public static void increaseTimeSinceBecomingADemigod(int t) {
+		timeSinceBecomingADemigod += t;
+	}
+
+	public static void decreaseTimeSinceBecomingADemigod(int t) {
+		timeSinceBecomingADemigod -= t;
+	}
 	public static int currentTrapTimeout() {
 		return currentTrapTimeout;
 	}

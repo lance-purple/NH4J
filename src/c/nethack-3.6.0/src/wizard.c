@@ -593,7 +593,7 @@ wizdead()
     context.no_of_wizards--;
     if (!u.uevent.udemigod) {
         u.uevent.udemigod = TRUE;
-        u.udg_cnt = rn1(250, 50);
+        setTimeSinceBecomingADemigod(rn1(250, 50));
     }
 }
 

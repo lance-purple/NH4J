@@ -605,7 +605,7 @@ u_init()
     u.uevent.uheard_tune = 0;
     u.uevent.uopened_dbridge = 0;
     u.uevent.udemigod = 0;              /* not a demi-god yet... */
-    u.udg_cnt = 0;
+    setTimeSinceBecomingADemigod(0);
     setCurrentHitPointsAsMonster(0);
     setMaximumHitPointsAsMonster(0);
     setTimeRemainingAsMonster(0);
