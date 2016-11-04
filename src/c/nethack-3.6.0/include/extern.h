@@ -938,6 +938,11 @@ E void FDECL(setCurrentExperienceLevel, (int));
 E int FDECL(highestExperienceLevelSoFar, ());
 E void FDECL(setHighestExperienceLevelSoFar, (int));
 
+E int FDECL(currentLuck, ());
+E void FDECL(setCurrentLuck, (int));
+E void FDECL(increaseCurrentLuck, (int));
+E void FDECL(decreaseCurrentLuck, (int));
+
 E boolean FDECL(areYouPolymorphed, ());
 
 E int FDECL(originalMonsterNumber, ());
