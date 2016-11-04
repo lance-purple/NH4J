@@ -279,7 +279,6 @@ struct you {
     Bitfield(uedibility, 1); /* blessed food detection; sense unsafe food */
     /* 1 free bit! */
 
-    unsigned udg_cnt;          /* how long you have been demigod */
     struct u_achieve uachieve; /* achievements */
     struct u_event uevent;     /* certain events have happened */
     struct u_have uhave;       /* you're carrying special objects */
@@ -291,11 +290,13 @@ struct you {
 #define A_ORIGINAL 1
 #define A_CURRENT 0
     aligntyp ualignbase[CONVERT]; /* for ualign conversion record */
-    schar uluck, moreluck;        /* luck and luck bonus */
-#define Luck (u.uluck + u.moreluck)
+
+    schar moreluck;        /* luck bonus */
+#define Luck (currentLuck() + u.moreluck)
 #define LUCKADD 3 /* added value when carrying luck stone */
 #define LUCKMAX 10
 #define LUCKMIN (-10)
+
     schar uhitinc;
     schar udaminc;
     schar uac;

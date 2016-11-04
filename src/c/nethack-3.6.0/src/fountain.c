@@ -221,8 +221,8 @@ drinkfountain()
         return;
     }
 
-    if (mgkftn && u.uluck >= 0 && fate >= 10) {
-        int i, ii, littleluck = (u.uluck < 4);
+    if (mgkftn && currentLuck() >= 0 && fate >= 10) {
+        int i, ii, littleluck = (currentLuck() < 4);
 
         pline("Wow!  This makes you feel great!");
         /* blessed restore ability */

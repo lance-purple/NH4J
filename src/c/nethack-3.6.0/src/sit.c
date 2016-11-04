@@ -195,7 +195,7 @@ dosit()
                 take_gold();
                 break;
             case 6:
-                if (u.uluck + rn2(5) < 0) {
+                if (currentLuck() + rn2(5) < 0) {
                     You_feel("your luck is changing.");
                     change_luck(1);
                 } else

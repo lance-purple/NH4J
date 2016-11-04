@@ -38,6 +38,9 @@ public class PlayerCharacter {
 	private static int currentExperienceLevel;
 	private static int highestExperienceLevelSoFar;
 	
+	private static int currentLuck;
+	private static int luckBonus;
+	
 	private static NHAttributeSet currentAttributes = new NHAttributeSet();
 	private static NHAttributeSet maximumAttributes = new NHAttributeSet();
 	private static NHAttributeSet attributeBonuses = new NHAttributeSet();
@@ -281,6 +284,22 @@ public class PlayerCharacter {
 
 	public static void setHighestExperienceLevelSoFar(int level) {
 		highestExperienceLevelSoFar = level;
+	}
+
+	public static int currentLuck() {
+		return currentLuck;
+	}
+
+	public static void setCurrentLuck(int luck) {
+		currentLuck = luck;
+	}
+
+	public static void increaseCurrentLuck(int luck) {
+		currentLuck += luck;
+	}
+
+	public static void decreaseCurrentLuck(int luck) {
+		currentLuck -= luck;
 	}
 
 	public static int currentAttribute(int attrIndex) {

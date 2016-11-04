@@ -286,11 +286,11 @@ void
 change_luck(n)
 register schar n;
 {
-    u.uluck += n;
-    if (u.uluck < 0 && u.uluck < LUCKMIN)
-        u.uluck = LUCKMIN;
-    if (u.uluck > 0 && u.uluck > LUCKMAX)
-        u.uluck = LUCKMAX;
+    increaseCurrentLuck(n);
+    if (currentLuck() < 0 && currentLuck() < LUCKMIN)
+        setCurrentLuck(LUCKMIN);
+    if (currentLuck() > 0 && currentLuck() > LUCKMAX)
+        setCurrentLuck(LUCKMAX);
 }
 
 int

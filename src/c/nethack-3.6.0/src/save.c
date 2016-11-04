@@ -359,6 +359,8 @@ register int fd, mode;
     write_int(fd, currentExperienceLevel());
     write_int(fd, highestExperienceLevelSoFar());
 
+    write_int(fd, currentLuck());
+
     write_int(fd, abilityToConfuseMonsters());
 
     write_int(fd, creamed());

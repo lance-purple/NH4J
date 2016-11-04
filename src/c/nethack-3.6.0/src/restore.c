@@ -629,6 +629,8 @@ unsigned int *stuckid, *steedid;
     setCurrentExperienceLevel(read_int(fd));
     setHighestExperienceLevelSoFar(read_int(fd));
 
+    setCurrentLuck(read_int(fd));
+
     setAbilityToConfuseMonsters(read_int(fd));
 
     setCreamed(read_int(fd));

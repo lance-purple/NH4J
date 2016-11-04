@@ -592,7 +592,8 @@ u_init()
 
 #if 0  /* documentation of more zero values as desirable */
     u.usick_cause[0] = 0;
-    u.uluck  = u.moreluck = 0;
+    setCurrentLuck(0);
+    u.moreluck = 0;
     uarmu = 0;
     uarm = uarmc = uarmh = uarms = uarmg = uarmf = 0;
     uwep = uball = uchain = uleft = uright = 0;

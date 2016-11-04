@@ -625,7 +625,7 @@ aligntyp resp_god;
         resp_god = A_NONE;
     u.ublessed = 0;
 
-    /* changed from tmp = u.ugangr + abs (u.uluck) -- rph */
+    /* changed from tmp = u.ugangr + abs (currentLuck()) -- rph */
     /* added test for alignment diff -dlc */
     if (resp_god != u.ualign.type)
         maxanger = u.ualign.record / 2 + (Luck > 0 ? -Luck / 3 : -Luck);
@@ -1050,8 +1050,8 @@ aligntyp g_align;
             if (currentNutrition() < 900) {
                 init_uhunger();
             }
-            if (u.uluck < 0)
-                u.uluck = 0;
+            if (currentLuck() < 0)
+                setCurrentLuck(0);
             make_blinded(0L, TRUE);
             context.botl = 1;
             break;
@@ -1543,7 +1543,7 @@ dosacrifice()
     } else {
         int saved_anger = u.ugangr;
         int saved_cnt = u.ublesscnt;
-        int saved_luck = u.uluck;
+        int saved_luck = currentLuck();
 
         /* Sacrificing at an altar of a different alignment */
         if (u.ualign.type != altaralign) {
@@ -1627,15 +1627,15 @@ dosacrifice()
                     pline("%s seems %s.", u_gname(),
                           Hallucination ? "groovy" : "slightly mollified");
 
-                    if ((int) u.uluck < 0)
+                    if (currentLuck() < 0)
                         change_luck(1);
                 } else {
                     pline("%s seems %s.", u_gname(),
                           Hallucination ? "cosmic (not a new fact)"
                                         : "mollified");
 
-                    if ((int) u.uluck < 0)
-                        u.uluck = 0;
+                    if (currentLuck() < 0)
+                        setCurrentLuck(0);
                 }
             } else { /* not satisfied yet */
                 if (Hallucination)
@@ -1661,15 +1661,15 @@ dosacrifice()
                         You("realize that the gods are not like you and I.");
                     else
                         You("have a hopeful feeling.");
-                    if ((int) u.uluck < 0)
+                    if (currentLuck() < 0)
                         change_luck(1);
                 } else {
                     if (Hallucination)
                         pline("Overall, there is a smell of fried onions.");
                     else
                         You("have a feeling of reconciliation.");
-                    if ((int) u.uluck < 0)
-                        u.uluck = 0;
+                    if (currentLuck() < 0)
+                        setCurrentLuck(0);
                 }
             }
         } else {
@@ -1678,7 +1678,7 @@ dosacrifice()
             /* you were already in pretty good standing */
             /* The player can gain an artifact */
             /* The chance goes down as the number of artifacts goes up */
-            if (currentExperienceLevel() > 2 && u.uluck >= 0
+            if (currentExperienceLevel() > 2 && currentLuck() >= 0
                 && !rn2(10 + (2 * u.ugifts * nartifacts))) {
                 otmp = mk_artifact((struct obj *) 0, a_align(currentX(), currentY()));
                 if (otmp) {
@@ -1704,9 +1704,9 @@ dosacrifice()
                 }
             }
             change_luck((value * LUCKMAX) / (MAXVALUE * 2));
-            if ((int) u.uluck < 0)
-                u.uluck = 0;
-            if (u.uluck != saved_luck) {
+            if (currentLuck() < 0)
+                setCurrentLuck(0);
+            if (currentLuck() != saved_luck) {
                 if (Blind)
                     You("think %s brushed your %s.", something,
                         body_part(FOOT));
@@ -1788,8 +1788,8 @@ dopray()
     if (wizard && p_type >= 0) {
         if (yn("Force the gods to be pleased?") == 'y') {
             u.ublesscnt = 0;
-            if (u.uluck < 0)
-                u.uluck = 0;
+            if (currentLuck() < 0)
+                setCurrentLuck(0);
             if (u.ualign.record <= 0)
                 u.ualign.record = 1;
             u.ugangr = 0;

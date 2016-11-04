@@ -213,7 +213,7 @@ nh_timeout()
     if (flags.friday13)
         baseluck -= 1;
 
-    if (u.uluck != baseluck
+    if (currentLuck() != baseluck
         && moves % (u.uhave.amulet || u.ugangr ? 300 : 600) == 0) {
         /* Cursed luckstones stop bad luck from timing out; blessed luckstones
          * stop good luck from timing out; normal luckstones stop both;
@@ -223,10 +223,10 @@ nh_timeout()
         register int time_luck = stone_luck(FALSE);
         boolean nostone = !carrying(LUCKSTONE) && !stone_luck(TRUE);
 
-        if (u.uluck > baseluck && (nostone || time_luck < 0))
-            u.uluck--;
-        else if (u.uluck < baseluck && (nostone || time_luck > 0))
-            u.uluck++;
+        if (currentLuck() > baseluck && (nostone || time_luck < 0))
+            decreaseCurrentLuck(1);
+        else if (currentLuck() < baseluck && (nostone || time_luck > 0))
+            increaseCurrentLuck(1);
     }
     if (u.uinvulnerable)
         return; /* things past this point could kill you */

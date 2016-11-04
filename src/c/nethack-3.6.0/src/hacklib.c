@@ -763,6 +763,22 @@ void setHighestExperienceLevelSoFar(int e) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "setHighestExperienceLevelSoFar", e);
 }
 
+int currentLuck() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "currentLuck");
+} 
+
+void setCurrentLuck(int c) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setCurrentLuck", c);
+}
+
+void increaseCurrentLuck(int c) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "increaseCurrentLuck", c);
+}
+
+void decreaseCurrentLuck(int c) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseCurrentLuck", c);
+}
+
 int originalMonsterNumber() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "originalMonsterNumber");
 } 
