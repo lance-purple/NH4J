@@ -296,8 +296,6 @@ struct you {
 #define LUCKMAX 10
 #define LUCKMIN (-10)
 
-    uchar usptime;    /* #moves until spellProtection-- */
-    uchar uspmtime;   /* #moves between spellProtection-- */
     int uhp, uhpmax;
     int uen, uenmax; /* magical energy - M. Stephenson */
     xchar uhpinc[MAXULEV], ueninc[MAXULEV]; /* increases from level gain */

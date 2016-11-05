@@ -636,6 +636,8 @@ unsigned int *stuckid, *steedid;
     setDamageBonus(read_int(fd));
     setArmorClass(read_int(fd));
     setArmorBonusFromProtectionSpell(read_int(fd));
+    setProtectionSpellPointDuration(read_int(fd));
+    setProtectionSpellPointCountdown(read_int(fd));
 
     setAbilityToConfuseMonsters(read_int(fd));
 
