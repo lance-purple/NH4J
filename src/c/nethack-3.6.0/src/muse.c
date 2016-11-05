@@ -1214,7 +1214,7 @@ register struct obj *otmp;
             if (Antimagic) {
                 shieldeff(currentX(), currentY());
                 pline("Boing!");
-            } else if (rnd(20) < 10 + u.uac) {
+            } else if (rnd(20) < 10 + armorClass()) {
                 pline_The("wand hits you!");
                 tmp = d(2, 12);
                 if (Half_spell_damage)

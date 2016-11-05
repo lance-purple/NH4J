@@ -545,7 +545,7 @@ ustatusline()
                                                   : "insufficiently ",
           align_str(u.ualign.type),
           areYouPolymorphed() ? mons[currentMonsterNumber()].mlevel : currentExperienceLevel(), areYouPolymorphed() ? currentHitPointsAsMonster() : u.uhp,
-          areYouPolymorphed() ? maximumHitPointsAsMonster() : u.uhpmax, u.uac, info);
+          areYouPolymorphed() ? maximumHitPointsAsMonster() : u.uhpmax, armorClass(), info);
 }
 
 void

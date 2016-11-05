@@ -44,6 +44,8 @@ public class PlayerCharacter {
 	private static int toHitModifier;
 	private static int damageBonus;
 	
+	private static int armorClass;
+	
 	private static NHAttributeSet currentAttributes = new NHAttributeSet();
 	private static NHAttributeSet maximumAttributes = new NHAttributeSet();
 	private static NHAttributeSet attributeBonuses = new NHAttributeSet();
@@ -343,6 +345,14 @@ public class PlayerCharacter {
 
 	public static void decreaseDamageBonus(int bonus) {
 		damageBonus -= bonus;
+	}
+
+	public static int armorClass() {
+		return armorClass;
+	}
+
+	public static void setArmorClass(int ac) {
+		armorClass = ac;
 	}
 
 	public static int currentAttribute(int attrIndex) {

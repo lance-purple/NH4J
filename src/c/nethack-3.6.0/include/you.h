@@ -296,7 +296,6 @@ struct you {
 #define LUCKMAX 10
 #define LUCKMIN (-10)
 
-    schar uac;
     uchar uspellprot; /* protection by SPE_PROTECTION */
     uchar usptime;    /* #moves until uspellprot-- */
     uchar uspmtime;   /* #moves between uspellprot-- */

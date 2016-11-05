@@ -955,6 +955,9 @@ E void FDECL(setDamageBonus, (int));
 E void FDECL(increaseDamageBonus, (int));
 E void FDECL(decreaseDamageBonus, (int));
 
+E int FDECL(armorClass, ());
+E void FDECL(setArmorClass, (int));
+
 E boolean FDECL(areYouPolymorphed, ());
 
 E int FDECL(originalMonsterNumber, ());

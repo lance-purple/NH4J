@@ -1995,12 +1995,12 @@ find_ac()
      * one less character.]
      */
     if (uac < -128)
-        uac = -128; /* u.uac is an schar */
+        uac = -128; /* armorClass() is an schar */
     else if (uac > 127)
         uac = 127; /* for completeness */
 
-    if (uac != u.uac) {
-        u.uac = uac;
+    if (uac != armorClass()) {
+        setArmorClass(uac);
         context.botl = 1;
     }
 }

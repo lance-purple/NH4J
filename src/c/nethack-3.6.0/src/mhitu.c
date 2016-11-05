@@ -494,7 +494,7 @@ register struct monst *mtmp;
     }
 
     /*  Work out the armor class differential   */
-    tmp = AC_VALUE(u.uac) + 10; /* tmp ~= 0 - 20 */
+    tmp = AC_VALUE(armorClass()) + 10; /* tmp ~= 0 - 20 */
     tmp += mtmp->m_lev;
     if (multi < 0)
         tmp += 4;
@@ -938,8 +938,8 @@ register struct attack *mattk;
                    to take the damage _before_ being cloned;
                    need to have at least 2 hp left to split */
                 tmp = dmg;
-                if (u.uac < 0)
-                    tmp -= rnd(-u.uac);
+                if (armorClass() < 0)
+                    tmp -= rnd(-1 * armorClass());
                 if (tmp < 1)
                     tmp = 1;
                 if (currentHitPointsAsMonster() - tmp > 1 && objects[otmp->otyp].oc_material == IRON
@@ -1551,8 +1551,8 @@ register struct attack *mattk;
     /*  Negative armor class reduces damage done instead of fully protecting
      *  against hits.
      */
-    if (dmg && u.uac < 0) {
-        dmg -= rnd(-u.uac);
+    if (dmg && armorClass() < 0) {
+        dmg -= rnd(-1 * armorClass());
         if (dmg < 1)
             dmg = 1;
     }
@@ -1719,7 +1719,7 @@ register struct attack *mattk;
             /* having good armor & high constitution makes
                it take longer for you to be digested, but
                you'll end up trapped inside for longer too */
-            tim_tmp += -u.uac + 10 + (ACURR(A_CON) / 3 - 1);
+            tim_tmp += (-1 * armorClass()) + 10 + (ACURR(A_CON) / 3 - 1);
         } else {
             /* higher level attacker takes longer to eject hero */
             tim_tmp = rnd((int) mtmp->m_lev + 10 / 2);

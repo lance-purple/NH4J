@@ -2001,7 +2001,7 @@ boolean pick;
             else if (uarmh && is_metallic(uarmh))
                 pline("Its blow glances off your %s.",
                       helm_simple_name(uarmh));
-            else if (u.uac + 3 <= rnd(20))
+            else if (armorClass() + 3 <= rnd(20))
                 You("are almost hit by %s!",
                     x_monnam(mtmp, ARTICLE_A, "falling", 0, TRUE));
             else {

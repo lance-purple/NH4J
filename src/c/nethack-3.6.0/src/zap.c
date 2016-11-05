@@ -3955,7 +3955,7 @@ register int dx, dy;
             if (u.usteed && !rn2(3) && !mon_reflects(u.usteed, (char *) 0)) {
                 mon = u.usteed;
                 goto buzzmonst;
-            } else if (zap_hit((int) u.uac, 0)) {
+            } else if (zap_hit((int) armorClass(), 0)) {
                 range -= 2;
                 pline("%s hits you!", The(fltxt));
                 if (Reflecting) {

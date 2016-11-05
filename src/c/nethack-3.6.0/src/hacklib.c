@@ -819,6 +819,14 @@ void decreaseDamageBonus(int c) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseDamageBonus", c);
 }
 
+int armorClass() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "armorClass");
+} 
+
+void setArmorClass(int c) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setArmorClass", c);
+}
+
 int originalMonsterNumber() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "originalMonsterNumber");
 } 

@@ -53,7 +53,7 @@ const char *name; /* if null, then format `obj' */
                                                        : an(name);
     is_acid = (obj && obj->otyp == ACID_VENOM);
 
-    if (u.uac + tlev <= rnd(20)) {
+    if (armorClass() + tlev <= rnd(20)) {
         if (Blind || !flags.verbose)
             pline("It misses.");
         else

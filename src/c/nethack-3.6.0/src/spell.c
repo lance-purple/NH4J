@@ -746,8 +746,8 @@ STATIC_OVL void
 cast_protection()
 {
     int l = currentExperienceLevel(), loglev = 0,
-        gain, natac = u.uac + u.uspellprot;
-    /* note: u.uspellprot is subtracted when find_ac() factors it into u.uac,
+        gain, natac = armorClass() + u.uspellprot;
+    /* note: u.uspellprot is subtracted when find_ac() factors it into armorClass(),
        so adding here factors it back out
        (versions prior to 3.6 had this backwards) */
 

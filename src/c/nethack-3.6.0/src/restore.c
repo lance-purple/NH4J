@@ -634,6 +634,7 @@ unsigned int *stuckid, *steedid;
 
     setToHitModifier(read_int(fd));
     setDamageBonus(read_int(fd));
+    setArmorClass(read_int(fd));
 
     setAbilityToConfuseMonsters(read_int(fd));
 
