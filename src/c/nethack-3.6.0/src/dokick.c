@@ -94,7 +94,7 @@ register boolean clumsy;
         dmg += rnd(4);
     if (uarmf)
         dmg += uarmf->spe;
-    dmg += u.udaminc; /* add ring(s) of increase damage */
+    dmg += damageBonus(); /* add ring(s) of increase damage */
     if (dmg > 0)
         mon->mhp -= dmg;
     if (mon->mhp > 0 && martial() && !bigmonst(mon->data) && !rn2(3)

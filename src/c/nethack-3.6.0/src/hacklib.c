@@ -787,6 +787,38 @@ void setLuckBonus(int c) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "setLuckBonus", c);
 }
 
+int toHitModifier() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "toHitModifier");
+} 
+
+void setToHitModifier(int c) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setToHitModifier", c);
+}
+
+void increaseToHitModifier(int c) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "increaseToHitModifier", c);
+}
+
+void decreaseToHitModifier(int c) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseToHitModifier", c);
+}
+
+int damageBonus() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "damageBonus");
+} 
+
+void setDamageBonus(int c) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setDamageBonus", c);
+}
+
+void increaseDamageBonus(int c) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "increaseDamageBonus", c);
+}
+
+void decreaseDamageBonus(int c) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseDamageBonus", c);
+}
+
 int originalMonsterNumber() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "originalMonsterNumber");
 } 

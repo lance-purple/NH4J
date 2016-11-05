@@ -41,6 +41,9 @@ public class PlayerCharacter {
 	private static int currentLuck;
 	private static int luckBonus;
 	
+	private static int toHitModifier;
+	private static int damageBonus;
+	
 	private static NHAttributeSet currentAttributes = new NHAttributeSet();
 	private static NHAttributeSet maximumAttributes = new NHAttributeSet();
 	private static NHAttributeSet attributeBonuses = new NHAttributeSet();
@@ -308,6 +311,38 @@ public class PlayerCharacter {
 
 	public static void setLuckBonus(int bonus) {
 		luckBonus = bonus;
+	}
+
+	public static int toHitModifier() {
+		return toHitModifier;
+	}
+
+	public static void setToHitModifier(int mod) {
+		toHitModifier = mod;
+	}
+
+	public static void increaseToHitModifier(int mod) {
+		toHitModifier += mod;
+	}
+
+	public static void decreaseToHitModifier(int mod) {
+		toHitModifier -= mod;
+	}
+
+	public static int damageBonus() {
+		return damageBonus;
+	}
+
+	public static void setDamageBonus(int bonus) {
+		damageBonus = bonus;
+	}
+
+	public static void increaseDamageBonus(int bonus) {
+		damageBonus += bonus;
+	}
+
+	public static void decreaseDamageBonus(int bonus) {
+		damageBonus -= bonus;
 	}
 
 	public static int currentAttribute(int attrIndex) {

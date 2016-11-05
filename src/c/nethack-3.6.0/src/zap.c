@@ -928,11 +928,11 @@ register struct obj *obj;
         break;
     case RIN_INCREASE_ACCURACY:
         if ((obj->owornmask & W_RING) && u_ring)
-            u.uhitinc -= obj->spe;
+            decreaseToHitModifier(obj->spe);
         break;
     case RIN_INCREASE_DAMAGE:
         if ((obj->owornmask & W_RING) && u_ring)
-            u.udaminc -= obj->spe;
+            decreaseDamageBonus(obj->spe);
         break;
     case GAUNTLETS_OF_DEXTERITY:
         if ((obj->owornmask & W_ARMG) && (obj == uarmg)) {
@@ -1044,11 +1044,11 @@ register struct obj *obj;
         break;
     case RIN_INCREASE_ACCURACY:
         if ((obj->owornmask & W_RING) && u_ring)
-            u.uhitinc--;
+            decreaseToHitModifier(1);
         break;
     case RIN_INCREASE_DAMAGE:
         if ((obj->owornmask & W_RING) && u_ring)
-            u.udaminc--;
+            decreaseDamageBonus(1);
         break;
     case HELM_OF_BRILLIANCE:
         if ((obj->owornmask & W_ARMH) && (obj == uarmh)) {

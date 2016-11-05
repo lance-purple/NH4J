@@ -245,7 +245,7 @@ int *attk_count, *role_roll_penalty;
 
     *role_roll_penalty = 0; /* default is `none' */
 
-    tmp = 1 + Luck + abon() + find_mac(mtmp) + u.uhitinc
+    tmp = 1 + Luck + abon() + find_mac(mtmp) + toHitModifier()
           + maybe_polyd(youmonst.data->mlevel, currentExperienceLevel());
 
     /* some actions should occur only once during multiple attacks */
@@ -960,7 +960,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
      *      *OR* if attacking bare-handed!! */
 
     if (get_dmg_bonus && tmp > 0) {
-        tmp += u.udaminc;
+        tmp += damageBonus();
         /* If you throw using a propellor, you don't get a strength
          * bonus but you do get an increase-damage bonus.
          */
@@ -1439,13 +1439,13 @@ register struct attack *mattk;
                     tmp = rnd(4); /* bless damage */
             }
             /* add ring(s) of increase damage */
-            if (u.udaminc > 0) {
+            if (damageBonus() > 0) {
                 /* applies even if damage was 0 */
-                tmp += u.udaminc;
+                tmp += damageBonus();
             } else if (tmp > 0) {
                 /* ring(s) might be negative; avoid converting
                    0 to non-0 or positive to non-positive */
-                tmp += u.udaminc;
+                tmp += damageBonus();
                 if (tmp < 1)
                     tmp = 1;
             }

@@ -929,10 +929,10 @@ register struct obj *obj;
         context.botl = 1;
         break;
     case RIN_INCREASE_ACCURACY: /* KMH */
-        u.uhitinc += obj->spe;
+        increaseToHitModifier(obj->spe);
         break;
     case RIN_INCREASE_DAMAGE:
-        u.udaminc += obj->spe;
+        increaseDamageBonus(obj->spe);
         break;
     case RIN_PROTECTION_FROM_SHAPE_CHAN:
         rescham();
@@ -1039,10 +1039,10 @@ boolean gone;
         context.botl = 1;
         break;
     case RIN_INCREASE_ACCURACY: /* KMH */
-        u.uhitinc -= obj->spe;
+        decreaseToHitModifier(obj->spe);
         break;
     case RIN_INCREASE_DAMAGE:
-        u.udaminc -= obj->spe;
+        decreaseDamageBonus(obj->spe);
         break;
     case RIN_PROTECTION:
         /* might have been put on while blind and we can now see

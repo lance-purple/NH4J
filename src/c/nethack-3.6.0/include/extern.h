@@ -945,6 +945,16 @@ E void FDECL(decreaseCurrentLuck, (int));
 E int FDECL(luckBonus, ());
 E void FDECL(setLuckBonus, (int));
 
+E int FDECL(toHitModifier, ());
+E void FDECL(setToHitModifier, (int));
+E void FDECL(increaseToHitModifier, (int));
+E void FDECL(decreaseToHitModifier, (int));
+
+E int FDECL(damageBonus, ());
+E void FDECL(setDamageBonus, (int));
+E void FDECL(increaseDamageBonus, (int));
+E void FDECL(decreaseDamageBonus, (int));
+
 E boolean FDECL(areYouPolymorphed, ());
 
 E int FDECL(originalMonsterNumber, ());

@@ -362,6 +362,9 @@ register int fd, mode;
     write_int(fd, currentLuck());
     write_int(fd, luckBonus());
 
+    write_int(fd, toHitModifier());
+    write_int(fd, damageBonus());
+
     write_int(fd, abilityToConfuseMonsters());
 
     write_int(fd, creamed());

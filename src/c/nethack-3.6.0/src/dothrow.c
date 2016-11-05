@@ -907,7 +907,7 @@ boolean hitsroof;
         if (dmg > 1 && less_damage)
             dmg = 1;
         if (dmg > 0)
-            dmg += u.udaminc;
+            dmg += damageBonus();
         if (dmg < 0)
             dmg = 0; /* beware negative rings of increase damage */
         dmg = Maybe_Half_Phys(dmg);
@@ -1363,7 +1363,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
      * Certain items which don't in themselves do damage ignore tmp.
      * Distance and monster size affect chance to hit.
      */
-    tmp = -1 + Luck + find_mac(mon) + u.uhitinc
+    tmp = -1 + Luck + find_mac(mon) + toHitModifier()
           + maybe_polyd(youmonst.data->mlevel, currentExperienceLevel());
     if (ACURR(A_DEX) < 4)
         tmp -= 3;

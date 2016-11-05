@@ -632,6 +632,9 @@ unsigned int *stuckid, *steedid;
     setCurrentLuck(read_int(fd));
     setLuckBonus(read_int(fd));
 
+    setToHitModifier(read_int(fd));
+    setDamageBonus(read_int(fd));
+
     setAbilityToConfuseMonsters(read_int(fd));
 
     setCreamed(read_int(fd));

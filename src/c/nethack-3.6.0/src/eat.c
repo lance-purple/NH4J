@@ -1910,13 +1910,13 @@ struct obj *otmp;
             break;
         case RIN_INCREASE_ACCURACY:
             accessory_has_effect(otmp);
-            u.uhitinc = (schar) bounded_increase((int) u.uhitinc, otmp->spe,
-                                                 RIN_INCREASE_ACCURACY);
+            setToHitModifier((schar) bounded_increase(toHitModifier(), otmp->spe,
+                                                 RIN_INCREASE_ACCURACY));
             break;
         case RIN_INCREASE_DAMAGE:
             accessory_has_effect(otmp);
-            u.udaminc = (schar) bounded_increase((int) u.udaminc, otmp->spe,
-                                                 RIN_INCREASE_DAMAGE);
+            setDamageBonus((schar) bounded_increase(damageBonus(), otmp->spe,
+                                                 RIN_INCREASE_DAMAGE));
             break;
         case RIN_PROTECTION:
             accessory_has_effect(otmp);

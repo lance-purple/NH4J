@@ -377,7 +377,7 @@ xchar x, y;
         assignFromCurrentLevel(&context.digging.level);
         /* solid rock takes more work & time to dig through */
         context.digging.effort =
-            (IS_ROCK(lev->typ) && !IS_TREE(lev->typ) ? 30 : 60) + u.udaminc;
+            (IS_ROCK(lev->typ) && !IS_TREE(lev->typ) ? 30 : 60) + damageBonus();
         You("start chewing %s %s.",
             (boulder || IS_TREE(lev->typ) || lev->typ == IRONBARS)
                 ? "on a"
@@ -393,7 +393,7 @@ xchar x, y;
                             : "door");
         watch_dig((struct monst *) 0, x, y, FALSE);
         return 1;
-    } else if ((context.digging.effort += (30 + u.udaminc)) <= 100) {
+    } else if ((context.digging.effort += (30 + damageBonus())) <= 100) {
         if (flags.verbose)
             You("%s chewing on the %s.",
                 context.digging.chew ? "continue" : "begin",

@@ -2105,10 +2105,10 @@ int final;
         enl_msg("You regenerate", "", "d", "", from_what(REGENERATION));
     if (Slow_digestion)
         you_have("slower digestion", from_what(SLOW_DIGESTION));
-    if (u.uhitinc)
-        you_have(enlght_combatinc("to hit", u.uhitinc, final, buf), "");
-    if (u.udaminc)
-        you_have(enlght_combatinc("damage", u.udaminc, final, buf), "");
+    if (toHitModifier())
+        you_have(enlght_combatinc("to hit", toHitModifier(), final, buf), "");
+    if (damageBonus())
+        you_have(enlght_combatinc("damage", damageBonus(), final, buf), "");
     if (u.uspellprot || Protection) {
         int prot = 0;
 
