@@ -843,6 +843,30 @@ void decreaseArmorBonusFromProtectionSpell(int c) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseArmorBonusFromProtectionSpell", c);
 }
 
+int protectionSpellPointDuration() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "protectionSpellPointDuration");
+} 
+
+void setProtectionSpellPointDuration(int c) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setProtectionSpellPointDuration", c);
+}
+
+int protectionSpellPointCountdown() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "protectionSpellPointCountdown");
+} 
+
+void setProtectionSpellPointCountdown(int c) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setProtectionSpellPointCountdown", c);
+}
+
+void increaseProtectionSpellPointCountdown(int c) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "increaseProtectionSpellPointCountdown", c);
+}
+
+void decreaseProtectionSpellPointCountdown(int c) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseProtectionSpellPointCountdown", c);
+}
+
 int originalMonsterNumber() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "originalMonsterNumber");
 } 

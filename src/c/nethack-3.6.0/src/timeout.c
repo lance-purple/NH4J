@@ -252,9 +252,10 @@ nh_timeout()
         decreaseCreamed(1);
 
     /* Dissipate spell-based protection. */
-    if (u.usptime) {
-        if (--u.usptime == 0 && armorBonusFromProtectionSpell()) {
-            u.usptime = u.uspmtime;
+    if (protectionSpellPointCountdown()) {
+        decreaseProtectionSpellPointCountdown(1);
+        if (protectionSpellPointCountdown() == 0 && armorBonusFromProtectionSpell()) {
+            setProtectionSpellPointCountdown(protectionSpellPointDuration());
             decreaseArmorBonusFromProtectionSpell(1);
             find_ac();
             if (!Blind)

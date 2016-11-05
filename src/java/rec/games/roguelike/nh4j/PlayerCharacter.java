@@ -46,6 +46,8 @@ public class PlayerCharacter {
 	
 	private static int armorClass;
 	private static int armorBonusFromProtectionSpell;
+	private static int protectionSpellPointDuration;
+	private static int protectionSpellPointCountdown;
 	
 	private static NHAttributeSet currentAttributes = new NHAttributeSet();
 	private static NHAttributeSet maximumAttributes = new NHAttributeSet();
@@ -370,6 +372,30 @@ public class PlayerCharacter {
 
 	public static void decreaseArmorBonusFromProtectionSpell(int sp) {
 		armorBonusFromProtectionSpell -= sp;
+	}
+
+	public static int protectionSpellPointDuration() {
+		return protectionSpellPointDuration;
+	}
+
+	public static void setProtectionSpellPointDuration(int sp) {
+		protectionSpellPointDuration = sp;
+	}
+
+	public static int protectionSpellPointCountdown() {
+		return protectionSpellPointCountdown;
+	}
+
+	public static void setProtectionSpellPointCountdown(int sp) {
+		protectionSpellPointCountdown = sp;
+	}
+
+	public static void increaseProtectionSpellPointCountdown(int sp) {
+		protectionSpellPointCountdown += sp;
+	}
+
+	public static void decreaseProtectionSpellPointCountdown(int sp) {
+		protectionSpellPointCountdown -= sp;
 	}
 
 	public static int currentAttribute(int attrIndex) {

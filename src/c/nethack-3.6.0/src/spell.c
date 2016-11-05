@@ -812,10 +812,9 @@ cast_protection()
             }
         }
         increaseArmorBonusFromProtectionSpell(gain);
-        u.uspmtime = (P_SKILL(spell_skilltype(SPE_PROTECTION)) == P_EXPERT)
-                        ? 20 : 10;
-        if (!u.usptime)
-            u.usptime = u.uspmtime;
+        setProtectionSpellPointDuration((P_SKILL(spell_skilltype(SPE_PROTECTION)) == P_EXPERT) ? 20 : 10);
+        if (!protectionSpellPointCountdown())
+            setProtectionSpellPointCountdown(protectionSpellPointDuration());
         find_ac();
     } else {
         Your("skin feels warm for a moment.");

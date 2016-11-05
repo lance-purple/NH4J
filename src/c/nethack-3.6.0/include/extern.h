@@ -962,6 +962,12 @@ E int FDECL(armorBonusFromProtectionSpell, ());
 E void FDECL(setArmorBonusFromProtectionSpell, (int));
 E void FDECL(increaseArmorBonusFromProtectionSpell, (int));
 E void FDECL(decreaseArmorBonusFromProtectionSpell, (int));
+E int FDECL(protectionSpellPointDuration, ());
+E void FDECL(setProtectionSpellPointDuration, (int));
+E int FDECL(protectionSpellPointCountdown, ());
+E void FDECL(setProtectionSpellPointCountdown, (int));
+E void FDECL(increaseProtectionSpellPointCountdown, (int));
+E void FDECL(decreaseProtectionSpellPointCountdown, (int));
 
 E boolean FDECL(areYouPolymorphed, ());
 
