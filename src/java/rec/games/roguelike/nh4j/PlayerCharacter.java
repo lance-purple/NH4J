@@ -45,6 +45,7 @@ public class PlayerCharacter {
 	private static int damageBonus;
 	
 	private static int armorClass;
+	private static int armorBonusFromProtectionSpell;
 	
 	private static NHAttributeSet currentAttributes = new NHAttributeSet();
 	private static NHAttributeSet maximumAttributes = new NHAttributeSet();
@@ -353,6 +354,22 @@ public class PlayerCharacter {
 
 	public static void setArmorClass(int ac) {
 		armorClass = ac;
+	}
+
+	public static int armorBonusFromProtectionSpell() {
+		return armorBonusFromProtectionSpell;
+	}
+
+	public static void setArmorBonusFromProtectionSpell(int sp) {
+		armorBonusFromProtectionSpell = sp;
+	}
+
+	public static void increaseArmorBonusFromProtectionSpell(int sp) {
+		armorBonusFromProtectionSpell += sp;
+	}
+
+	public static void decreaseArmorBonusFromProtectionSpell(int sp) {
+		armorBonusFromProtectionSpell -= sp;
 	}
 
 	public static int currentAttribute(int attrIndex) {

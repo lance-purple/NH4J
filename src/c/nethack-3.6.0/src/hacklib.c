@@ -827,6 +827,22 @@ void setArmorClass(int c) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "setArmorClass", c);
 }
 
+int armorBonusFromProtectionSpell() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "armorBonusFromProtectionSpell");
+} 
+
+void setArmorBonusFromProtectionSpell(int c) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setArmorBonusFromProtectionSpell", c);
+}
+
+void increaseArmorBonusFromProtectionSpell(int c) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "increaseArmorBonusFromProtectionSpell", c);
+}
+
+void decreaseArmorBonusFromProtectionSpell(int c) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseArmorBonusFromProtectionSpell", c);
+}
+
 int originalMonsterNumber() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "originalMonsterNumber");
 } 

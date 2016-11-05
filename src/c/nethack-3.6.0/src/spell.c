@@ -746,8 +746,8 @@ STATIC_OVL void
 cast_protection()
 {
     int l = currentExperienceLevel(), loglev = 0,
-        gain, natac = armorClass() + u.uspellprot;
-    /* note: u.uspellprot is subtracted when find_ac() factors it into armorClass(),
+        gain, natac = armorClass() + armorBonusFromProtectionSpell();
+    /* note: armorBonusFromProtectionSpell is subtracted when find_ac() factors it into armorClass(),
        so adding here factors it back out
        (versions prior to 3.6 had this backwards) */
 
@@ -757,7 +757,7 @@ cast_protection()
         l /= 2;
     }
 
-    /* The more u.uspellprot you already have, the less you get,
+    /* The more armorBonusFromProtectionSpell you already have, the less you get,
      * and the better your natural ac, the less you get.
      *
      *  LEVEL AC    SPELLPROT from successive SPE_PROTECTION casts
@@ -779,14 +779,14 @@ cast_protection()
      *     16-30 -10    0,  5,  8,  9, 10
      */
     natac = (10 - natac) / 10; /* convert to positive and scale down */
-    gain = loglev - (int) u.uspellprot / (4 - min(3, natac));
+    gain = loglev - armorBonusFromProtectionSpell() / (4 - min(3, natac));
 
     if (gain > 0) {
         if (!Blind) {
             int rmtyp;
             const char *hgolden = hcolor(NH_GOLDEN), *atmosphere;
 
-            if (u.uspellprot) {
+            if (armorBonusFromProtectionSpell()) {
                 pline_The("%s haze around you becomes more dense.", hgolden);
             } else {
                 rmtyp = levl[currentX()][currentY()].typ;
@@ -811,7 +811,7 @@ cast_protection()
                           atmosphere, an(hgolden));
             }
         }
-        u.uspellprot += gain;
+        increaseArmorBonusFromProtectionSpell(gain);
         u.uspmtime = (P_SKILL(spell_skilltype(SPE_PROTECTION)) == P_EXPERT)
                         ? 20 : 10;
         if (!u.usptime)

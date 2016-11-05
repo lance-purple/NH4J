@@ -2109,7 +2109,7 @@ int final;
         you_have(enlght_combatinc("to hit", toHitModifier(), final, buf), "");
     if (damageBonus())
         you_have(enlght_combatinc("damage", damageBonus(), final, buf), "");
-    if (u.uspellprot || Protection) {
+    if (armorBonusFromProtectionSpell() || Protection) {
         int prot = 0;
 
         if (uleft && uleft->otyp == RIN_PROTECTION)
@@ -2118,7 +2118,7 @@ int final;
             prot += uright->spe;
         if (HProtection & INTRINSIC)
             prot += u.ublessed;
-        prot += u.uspellprot;
+        prot += armorBonusFromProtectionSpell();
         if (prot)
             you_have(enlght_combatinc("defense", prot, final, buf), "");
     }

@@ -1987,7 +1987,7 @@ find_ac()
     /* armor class from other sources */
     if (HProtection & INTRINSIC)
         uac -= u.ublessed;
-    uac -= u.uspellprot;
+    uac -= armorBonusFromProtectionSpell();
 
     /* [The magic binary numbers 127 and -128 should be replaced with the
      * mystic decimal numbers 99 and -99 which require no explanation to

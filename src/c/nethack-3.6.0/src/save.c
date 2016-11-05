@@ -365,6 +365,7 @@ register int fd, mode;
     write_int(fd, toHitModifier());
     write_int(fd, damageBonus());
     write_int(fd, armorClass());
+    write_int(fd, armorBonusFromProtectionSpell());
 
     write_int(fd, abilityToConfuseMonsters());
 

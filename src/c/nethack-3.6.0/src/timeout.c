@@ -253,13 +253,13 @@ nh_timeout()
 
     /* Dissipate spell-based protection. */
     if (u.usptime) {
-        if (--u.usptime == 0 && u.uspellprot) {
+        if (--u.usptime == 0 && armorBonusFromProtectionSpell()) {
             u.usptime = u.uspmtime;
-            u.uspellprot--;
+            decreaseArmorBonusFromProtectionSpell(1);
             find_ac();
             if (!Blind)
                 Norep("The %s haze around you %s.", hcolor(NH_GOLDEN),
-                      u.uspellprot ? "becomes less dense" : "disappears");
+                      armorBonusFromProtectionSpell() ? "becomes less dense" : "disappears");
         }
     }
 
