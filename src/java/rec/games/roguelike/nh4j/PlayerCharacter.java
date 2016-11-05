@@ -302,6 +302,14 @@ public class PlayerCharacter {
 		currentLuck -= luck;
 	}
 
+	public static int luckBonus() {
+		return luckBonus;
+	}
+
+	public static void setLuckBonus(int bonus) {
+		luckBonus = bonus;
+	}
+
 	public static int currentAttribute(int attrIndex) {
 		return currentAttributes.get(attrIndex);
 	}

@@ -291,8 +291,7 @@ struct you {
 #define A_CURRENT 0
     aligntyp ualignbase[CONVERT]; /* for ualign conversion record */
 
-    schar moreluck;        /* luck bonus */
-#define Luck (currentLuck() + u.moreluck)
+#define Luck (currentLuck() + luckBonus())
 #define LUCKADD 3 /* added value when carrying luck stone */
 #define LUCKMAX 10
 #define LUCKMIN (-10)

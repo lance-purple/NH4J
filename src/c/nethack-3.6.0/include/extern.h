@@ -942,6 +942,8 @@ E int FDECL(currentLuck, ());
 E void FDECL(setCurrentLuck, (int));
 E void FDECL(increaseCurrentLuck, (int));
 E void FDECL(decreaseCurrentLuck, (int));
+E int FDECL(luckBonus, ());
+E void FDECL(setLuckBonus, (int));
 
 E boolean FDECL(areYouPolymorphed, ());
 

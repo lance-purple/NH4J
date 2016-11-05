@@ -360,6 +360,7 @@ register int fd, mode;
     write_int(fd, highestExperienceLevelSoFar());
 
     write_int(fd, currentLuck());
+    write_int(fd, luckBonus());
 
     write_int(fd, abilityToConfuseMonsters());
 

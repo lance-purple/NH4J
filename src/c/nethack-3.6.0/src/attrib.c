@@ -320,11 +320,11 @@ set_moreluck()
     int luckbon = stone_luck(TRUE);
 
     if (!luckbon && !carrying(LUCKSTONE))
-        u.moreluck = 0;
+        setLuckBonus(0);
     else if (luckbon >= 0)
-        u.moreluck = LUCKADD;
+        setLuckBonus(LUCKADD);
     else
-        u.moreluck = -LUCKADD;
+        setLuckBonus(-LUCKADD);
 }
 
 void

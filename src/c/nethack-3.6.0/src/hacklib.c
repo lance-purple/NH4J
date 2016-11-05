@@ -779,6 +779,14 @@ void decreaseCurrentLuck(int c) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseCurrentLuck", c);
 }
 
+int luckBonus() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "luckBonus");
+} 
+
+void setLuckBonus(int c) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setLuckBonus", c);
+}
+
 int originalMonsterNumber() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "originalMonsterNumber");
 } 

@@ -2208,9 +2208,9 @@ int final;
         you_are(buf, "");
     } else if (wizard)
         enl_msg("Your luck ", "is", "was", " zero", "");
-    if (u.moreluck > 0)
+    if (luckBonus() > 0)
         you_have("extra luck", "");
-    else if (u.moreluck < 0)
+    else if (luckBonus() < 0)
         you_have("reduced luck", "");
     if (carrying(LUCKSTONE) || stone_luck(TRUE)) {
         ltmp = stone_luck(0);
