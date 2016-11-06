@@ -83,8 +83,8 @@ bot2()
     int hp, hpmax;
     int cap = near_capacity();
 
-    hp = areYouPolymorphed() ? currentHitPointsAsMonster() : u.uhp;
-    hpmax = areYouPolymorphed() ? maximumHitPointsAsMonster() : u.uhpmax;
+    hp = areYouPolymorphed() ? currentHitPointsAsMonster() : currentHitPoints();
+    hpmax = areYouPolymorphed() ? maximumHitPointsAsMonster() : maximumHitPoints();
 
     if (hp < 0)
         hp = 0;
@@ -464,8 +464,8 @@ bot()
 #endif
     /*  Hit points  */
 
-    blstats[idx][BL_HP].a.a_int = areYouPolymorphed() ? currentHitPointsAsMonster() : u.uhp;
-    blstats[idx][BL_HPMAX].a.a_int = areYouPolymorphed() ? maximumHitPointsAsMonster() : u.uhpmax;
+    blstats[idx][BL_HP].a.a_int = areYouPolymorphed() ? currentHitPointsAsMonster() : currentHitPoints();
+    blstats[idx][BL_HPMAX].a.a_int = areYouPolymorphed() ? maximumHitPointsAsMonster() : maximumHitPoints();
     if (blstats[idx][BL_HP].a.a_int < 0)
         blstats[idx][BL_HP].a.a_int = 0;
 

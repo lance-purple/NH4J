@@ -2039,7 +2039,7 @@ do_class_genocide()
                        or role.  Assumption:  male and female forms
                        share same monster class. */
                     if (i == urole.malenum || i == urace.malenum) {
-                        u.uhp = -1;
+                        setCurrentHitPoints(-1);
                         if (areYouPolymorphed()) {
                             if (!feel_dead++)
                                 You_feel("dead inside.");
@@ -2080,7 +2080,7 @@ do_class_genocide()
                 }
             }
         }
-        if (gameover || u.uhp == -1) {
+        if (gameover || currentHitPoints() == -1) {
             killer.format = KILLED_BY_AN;
             Strcpy(killer.name, "scroll of genocide");
             if (gameover)
@@ -2202,7 +2202,7 @@ int how;
             if (urace.femalenum != NON_PM && mndx == urace.femalenum)
                 mvitals[urace.malenum].mvflags |= (G_GENOD | G_NOCORPSE);
 
-            u.uhp = -1;
+            setCurrentHitPoints(-1);
             if (how & PLAYER) {
                 killer.format = KILLED_BY;
                 Strcpy(killer.name, "genocidal confusion");

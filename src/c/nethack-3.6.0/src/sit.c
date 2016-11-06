@@ -183,9 +183,9 @@ dosit()
                     }
                     setCurrentHitPointsAsMonster(maximumHitPointsAsMonster());
                 }
-                if (u.uhp >= (u.uhpmax - 5))
-                    u.uhpmax += 4;
-                u.uhp = u.uhpmax;
+                if (currentHitPoints() >= (maximumHitPoints() - 5))
+                    increaseMaximumHitPoints(4);
+                setCurrentHitPoints(maximumHitPoints());
                 make_blinded(0L, TRUE);
                 make_sick(0L, (char *) 0, FALSE, SICK_ALL);
                 heal_legs();

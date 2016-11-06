@@ -702,9 +702,9 @@ int how;
 {
     int uhpmin = max(2 * currentExperienceLevel(), 10);
 
-    if (u.uhpmax < uhpmin)
-        u.uhpmax = uhpmin;
-    u.uhp = u.uhpmax;
+    if (maximumHitPoints() < uhpmin)
+        setMaximumHitPoints(uhpmin);
+    setCurrentHitPoints(maximumHitPoints());
     setTimeSinceBeingSwallowed(0);
     if (currentNutrition() < 500) {
         setCurrentNutrition(500);
@@ -991,7 +991,7 @@ int how;
 
     if (how == QUIT) {
         killer.format = NO_KILLER_PREFIX;
-        if (u.uhp < 1) {
+        if (currentHitPoints() < 1) {
             how = DIED;
             u.umortality++; /* skipped above when how==QUIT */
             Strcpy(killer.name, "quit while already on Charon's boat");
@@ -1257,7 +1257,7 @@ int how;
     if (!done_stopprint) {
         Sprintf(pbuf,
             "You were level %d with a maximum of %d hit point%s when you %s.",
-                currentExperienceLevel(), u.uhpmax, plur(u.uhpmax), ends[how]);
+                currentExperienceLevel(), maximumHitPoints(), plur(maximumHitPoints()), ends[how]);
         putstr(endwin, 0, pbuf);
         putstr(endwin, 0, "");
     }

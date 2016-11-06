@@ -913,7 +913,7 @@ boolean hitsroof;
         dmg = Maybe_Half_Phys(dmg);
 
         if (uarmh) {
-            if (less_damage && dmg < (areYouPolymorphed() ? currentHitPointsAsMonster() : u.uhp)) {
+            if (less_damage && dmg < (areYouPolymorphed() ? currentHitPointsAsMonster() : currentHitPoints())) {
                 if (!artimsg)
                     pline("Fortunately, you are wearing a hard helmet.");
                 /* helmet definitely protects you when it blocks petrification
@@ -1015,8 +1015,8 @@ boolean
     if ((directionX() || directionY() || (directionZ() < 1))
         && calc_capacity((int) obj->owt) > SLT_ENCUMBER
         && (areYouPolymorphed() ? (currentHitPointsAsMonster() < 5 && currentHitPointsAsMonster() != maximumHitPointsAsMonster())
-                   : (u.uhp < 10 && u.uhp != u.uhpmax))
-        && obj->owt > (unsigned) ((areYouPolymorphed() ? currentHitPointsAsMonster() : u.uhp) * 2)
+                   : (currentHitPoints() < 10 && currentHitPoints() != maximumHitPoints()))
+        && obj->owt > (unsigned) ((areYouPolymorphed() ? currentHitPointsAsMonster() : currentHitPoints()) * 2)
         && !areYouOnAirLevel()) {
         You("have so little stamina, %s drops from your grasp.",
             the(xname(obj)));

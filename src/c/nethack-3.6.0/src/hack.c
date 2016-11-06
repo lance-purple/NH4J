@@ -1231,7 +1231,7 @@ domove()
     if (((wtcap = near_capacity()) >= OVERLOADED
          || (wtcap > SLT_ENCUMBER
              && (areYouPolymorphed() ? (currentHitPointsAsMonster() < 5 && currentHitPointsAsMonster() != maximumHitPointsAsMonster())
-                        : (u.uhp < 10 && u.uhp != u.uhpmax))))
+                        : (currentHitPoints() < 10 && currentHitPoints() != maximumHitPoints()))))
         && !areYouOnAirLevel()) {
         if (wtcap < OVERLOADED) {
             You("don't have enough stamina to move.");
@@ -1736,11 +1736,11 @@ overexertion()
     gethungry();
     if ((moves % 3L) != 0L && near_capacity() >= HVY_ENCUMBER) {
 
-        int currHP = (!areYouPolymorphed() ? u.uhp : currentHitPointsAsMonster());
+        int currHP = (!areYouPolymorphed() ? currentHitPoints() : currentHitPointsAsMonster());
 
         if (currHP > 1) {
             if (!areYouPolymorphed()) {
-                u.uhp -= 1;
+                decreaseCurrentHitPoints(1);
             } else {
                decreaseCurrentHitPointsAsMonster(1);
             }
@@ -2652,7 +2652,7 @@ maybe_wail()
 
         who = (Role_if(PM_WIZARD) || Role_if(PM_VALKYRIE)) ? urole.name.m
                                                            : "Elf";
-        if (u.uhp == 1) {
+        if (currentHitPoints() == 1) {
             pline("%s is about to die.", who);
         } else {
             for (i = 0, powercnt = 0; i < SIZE(powers); ++i)
@@ -2664,7 +2664,7 @@ maybe_wail()
                   who);
         }
     } else {
-        You_hear(u.uhp == 1 ? "the wailing of the Banshee..."
+        You_hear(currentHitPoints() == 1 ? "the wailing of the Banshee..."
                             : "the howling of the CwnAnnwn...");
     }
 }
@@ -2687,17 +2687,17 @@ boolean k_format;
         return;
     }
 
-    u.uhp -= n;
-    if (u.uhp > u.uhpmax)
-        u.uhpmax = u.uhp; /* perhaps n was negative */
+    decreaseCurrentHitPoints(n);
+    if (currentHitPoints() > maximumHitPoints())
+        setMaximumHitPoints(currentHitPoints()); /* perhaps n was negative */
     context.botl = 1;
-    if (u.uhp < 1) {
+    if (currentHitPoints() < 1) {
         killer.format = k_format;
         if (killer.name != knam) /* the thing that killed you */
             Strcpy(killer.name, knam ? knam : "");
         You("die...");
         done(DIED);
-    } else if (n > 0 && u.uhp * 10 < u.uhpmax) {
+    } else if (n > 0 && currentHitPoints() * 10 < maximumHitPoints()) {
         maybe_wail();
     }
 }

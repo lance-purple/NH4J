@@ -434,7 +434,7 @@ make_bones:
     }
     if (mtmp) {
         mtmp->m_lev = (currentExperienceLevel() ? currentExperienceLevel() : 1);
-        mtmp->mhp = mtmp->mhpmax = u.uhpmax;
+        mtmp->mhp = mtmp->mhpmax = maximumHitPoints();
         mtmp->female = flags.female;
         mtmp->msleeping = 1;
     }

@@ -296,7 +296,6 @@ struct you {
 #define LUCKMAX 10
 #define LUCKMIN (-10)
 
-    int uhp, uhpmax;
     int uen, uenmax; /* magical energy - M. Stephenson */
     xchar uhpinc[MAXULEV], ueninc[MAXULEV]; /* increases from level gain */
     int ugangr;                             /* if the gods are angry at you */

@@ -1109,9 +1109,11 @@ register boolean curesick, cureblind;
                 setCurrentHitPointsAsMonster(maximumHitPointsAsMonster());
             }
         } else {
-            u.uhp += nhp;
-            if (u.uhp > u.uhpmax)
-                u.uhp = (u.uhpmax += nxtra);
+            increaseCurrentHitPoints(nhp);
+            if (currentHitPoints() > maximumHitPoints()) {
+                increaseMaximumHitPoints(nxtra);
+                setCurrentHitPoints(maximumHitPoints());
+            }
         }
     }
     if (cureblind)
@@ -1545,24 +1547,30 @@ register struct obj *obj;
             increaseCurrentHitPointsAsMonster(1);
             context.botl = 1;
         }
-        if (u.uhp < u.uhpmax)
-            u.uhp++, context.botl = 1;
+        if (currentHitPoints() < maximumHitPoints()) {
+            increaseCurrentHitPoints(1);
+            context.botl = 1;
+        }
         /*FALLTHRU*/
     case POT_EXTRA_HEALING:
         if (areYouPolymorphed() && currentHitPointsAsMonster() < maximumHitPointsAsMonster()) {
             increaseCurrentHitPointsAsMonster(1);
             context.botl = 1;
         }
-        if (u.uhp < u.uhpmax)
-            u.uhp++, context.botl = 1;
+        if (currentHitPoints() < maximumHitPoints()) {
+            increaseCurrentHitPoints(1);
+            context.botl = 1;
+        }
         /*FALLTHRU*/
     case POT_HEALING:
         if (areYouPolymorphed() && currentHitPointsAsMonster() < maximumHitPointsAsMonster()) {
             increaseCurrentHitPointsAsMonster(1);
             context.botl = 1;
         }
-        if (u.uhp < u.uhpmax)
-            u.uhp++, context.botl = 1;
+        if (currentHitPoints() < maximumHitPoints()) {
+            increaseCurrentHitPoints(1);
+            context.botl = 1;
+        }
         exercise(A_CON, TRUE);
         break;
     case POT_SICKNESS:
@@ -1573,10 +1581,10 @@ register struct obj *obj;
                 else
                     decreaseCurrentHitPointsAsMonster(5);
             } else {
-                if (u.uhp <= 5)
-                    u.uhp = 1;
+                if (currentHitPoints() <= 5)
+                    setCurrentHitPoints(1);
                 else
-                    u.uhp -= 5;
+                    decreaseCurrentHitPoints(5);
             }
             context.botl = 1;
             exercise(A_CON, FALSE);

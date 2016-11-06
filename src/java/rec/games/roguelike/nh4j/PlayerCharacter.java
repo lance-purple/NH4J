@@ -59,6 +59,8 @@ public class PlayerCharacter {
 	private static NHAttributeSet attributesAsMonster = new NHAttributeSet();
 	private static NHAttributeSet maximumAttributesAsMonster = new NHAttributeSet();
 	
+	private static int currentHitPoints;
+	private static int maximumHitPoints;
 	private static int currentHitPointsAsMonster;
 	private static int maximumHitPointsAsMonster;
 	
@@ -542,18 +544,6 @@ public class PlayerCharacter {
 		currentMonsterNumber = n;
 	}
 	
-	public static int lycanthropeType() {
-		return lycanthropeType;
-	}
-
-	public static void setLycanthropeType(int t) {
-		lycanthropeType = t;
-	}
-
-	public static final int currentHitPointsAsMonster() {
-		return currentHitPointsAsMonster;
-	}
-	
 	public static final int timeRemainingAsMonster() {
 		return timeRemainingAsMonster;
 	}
@@ -573,7 +563,51 @@ public class PlayerCharacter {
 	public static final void multiplyTimeRemainingAsMonster(int t) {
 		timeRemainingAsMonster *= t;
 	}
+	
+	public static int lycanthropeType() {
+		return lycanthropeType;
+	}
 
+	public static void setLycanthropeType(int t) {
+		lycanthropeType = t;
+	}
+
+	public static final int currentHitPoints() {
+		return currentHitPoints;
+	}
+	
+	public static final void setCurrentHitPoints(int hp) {
+		currentHitPoints = hp;
+	}
+
+	public static final void increaseCurrentHitPoints(int hp) {
+		currentHitPoints += hp;
+	}
+
+	public static final void decreaseCurrentHitPoints(int hp) {
+		currentHitPoints -= hp;
+	}
+
+	public static final int maximumHitPoints() {
+		return maximumHitPoints;
+	}
+	
+	public static final void setMaximumHitPoints(int hp) {
+		maximumHitPoints = hp;
+	}
+
+	public static final void increaseMaximumHitPoints(int hp) {
+		maximumHitPoints += hp;
+	}
+
+	public static final void decreaseMaximumHitPoints(int hp) {
+		maximumHitPoints -= hp;
+	}
+
+	public static final int currentHitPointsAsMonster() {
+		return currentHitPointsAsMonster;
+	}
+	
 	public static final void setCurrentHitPointsAsMonster(int m) {
 		currentHitPointsAsMonster = m;
 	}

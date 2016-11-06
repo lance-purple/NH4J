@@ -1334,7 +1334,7 @@ unsigned trflags;
         if (!Antimagic) {
             drain_en(rnd(currentExperienceLevel()) + 1);
         } else {
-            int dmgval2 = rnd(4), hp = areYouPolymorphed() ? currentHitPointsAsMonster() : u.uhp;
+            int dmgval2 = rnd(4), hp = areYouPolymorphed() ? currentHitPointsAsMonster() : currentHitPoints();
 
             /* Half_XXX_damage has opposite its usual effect (approx)
                but isn't cumulative if hero has more than one */
@@ -3028,8 +3028,10 @@ struct obj *box; /* null for floor trap */
         }
     } else {
         num = d(2, 4);
-        if (u.uhpmax > currentExperienceLevel())
-            u.uhpmax -= rn2(min(u.uhpmax, num + 1)), context.botl = 1;
+        if (maximumHitPoints() > currentExperienceLevel()) {
+            decreaseMaximumHitPoints(rn2(min(maximumHitPoints(), num + 1)));
+            context.botl = 1;
+        }
     }
     if (!num)
         You("are uninjured.");
@@ -4983,7 +4985,7 @@ lava_effects()
     if (likes_lava(youmonst.data))
         return FALSE;
 
-    usurvive = Fire_resistance || (canYouWalkOnWater() && dmg < u.uhp);
+    usurvive = Fire_resistance || (canYouWalkOnWater() && dmg < currentHitPoints());
     /*
      * A timely interrupt might manage to salvage your life
      * but not your gear.  For scrolls and potions this
@@ -5061,7 +5063,7 @@ lava_effects()
                      || currentMonsterNumber() == PM_STEAM_VORTEX
                      || currentMonsterNumber() == PM_FOG_CLOUD);
         for (;;) {
-            u.uhp = -1;
+            setCurrentHitPoints(-1);
             /* killer format and name are reconstructed every iteration
                because lifesaving resets them */
             killer.format = KILLED_BY;
@@ -5084,8 +5086,8 @@ lava_effects()
         You("sink into the lava%s!", !boil_away
                                          ? ", but it only burns slightly"
                                          : " and are about to be immolated");
-        if (u.uhp > 1)
-            losehp(!boil_away ? 1 : (u.uhp / 2), lava_killer,
+        if (currentHitPoints() > 1)
+            losehp(!boil_away ? 1 : (currentHitPoints() / 2), lava_killer,
                    KILLED_BY); /* lava damage */
     }
 
@@ -5112,7 +5114,7 @@ sink_into_lava()
            resistance if water walking boots allow survival and then
            get burned up; currentTrapTimeout() time will be quite short in that case */
         if (!Fire_resistance)
-            u.uhp = (u.uhp + 2) / 3;
+            setCurrentHitPoints((currentHitPoints() + 2) / 3);
 
         setCurrentTrapTimeout(currentTrapTimeout() - (1 << 8));
         if (currentTrapTimeout() < (1 << 8)) {

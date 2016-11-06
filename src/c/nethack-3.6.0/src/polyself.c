@@ -309,7 +309,7 @@ newman()
      * and the extra got multiplied by 2 or 3.  Repeat the level
      * drain and polyself steps until out of lifesaving capability.)
      */
-    hpmax = u.uhpmax;
+    hpmax = maximumHitPoints();
     for (i = 0; i < oldlvl; i++)
         hpmax -= (int) u.uhpinc[i];
     /* hpmax * rn1(4,8) / 10; 0.95*hpmax on average */
@@ -320,9 +320,9 @@ newman()
     if (hpmax < currentExperienceLevel()) {
         hpmax = currentExperienceLevel(); /* min of 1 HP per level */
     }
-    /* retain same proportion for current HP; u.uhp * hpmax / u.uhpmax */
-    u.uhp = rounddiv((long) u.uhp * (long) hpmax, u.uhpmax);
-    u.uhpmax = hpmax;
+    /* retain same proportion for current HP; currentHitPoints() * hpmax / maximumHitPoints() */
+    setCurrentHitPoints(rounddiv((long) currentHitPoints() * (long) hpmax, maximumHitPoints()));
+    setMaximumHitPoints(hpmax);
     /*
      * Do the same for spell power.
      */
@@ -346,10 +346,10 @@ newman()
         make_sick(0L, (char *) 0, FALSE, SICK_ALL);
     if (Stoned)
         make_stoned(0L, (char *) 0, 0, (char *) 0);
-    if (u.uhp <= 0) {
+    if (currentHitPoints() <= 0) {
         if (Polymorph_control) { /* even when Stunned || Unaware */
-            if (u.uhp <= 0)
-                u.uhp = 1;
+            if (currentHitPoints() <= 0)
+                setCurrentHitPoints(1);
         } else {
         dead: /* we come directly here if their experience level went to 0 or
                  less */
@@ -1039,7 +1039,7 @@ rehumanize()
         del_light_source(LS_MONSTER, monst_to_any(&youmonst));
     polyman("return to %s form!", urace.adj);
 
-    if (u.uhp < 1) {
+    if (currentHitPoints() < 1) {
         /* can only happen if some bit of code reduces u.uhp
            instead of currentHitPointsAsMonster() while poly'd */
         Your("old form was not healthy enough to survive.");

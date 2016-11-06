@@ -102,8 +102,8 @@ boolean
 critically_low_hp(only_if_injured)
 boolean only_if_injured; /* determines whether maxhp <= 5 matters */
 {
-    int divisor, hplim, curhp = areYouPolymorphed() ? currentHitPointsAsMonster() : u.uhp,
-                        maxhp = areYouPolymorphed() ? maximumHitPointsAsMonster() : u.uhpmax;
+    int divisor, hplim, curhp = areYouPolymorphed() ? currentHitPointsAsMonster() : currentHitPoints(),
+                        maxhp = areYouPolymorphed() ? maximumHitPointsAsMonster() : maximumHitPoints();
 
     if (only_if_injured && !(curhp < maxhp))
         return FALSE;
@@ -370,11 +370,11 @@ int trouble;
                 setMaximumHitPointsAsMonster(5 + 1);
             setCurrentHitPointsAsMonster(maximumHitPointsAsMonster());
         }
-        if (u.uhpmax < currentExperienceLevel() * 5 + 11)
-            u.uhpmax += rnd(5);
-        if (u.uhpmax <= 5)
-            u.uhpmax = 5 + 1;
-        u.uhp = u.uhpmax;
+        if (maximumHitPoints() < currentExperienceLevel() * 5 + 11)
+            increaseMaximumHitPoints(rnd(5));
+        if (maximumHitPoints() <= 5)
+            setMaximumHitPoints(5 + 1);
+        setCurrentHitPoints(maximumHitPoints());
         context.botl = 1;
         break;
     case TROUBLE_COLLAPSING:
@@ -1039,11 +1039,11 @@ aligntyp g_align;
                 setHighestExperienceLevelSoFar(highestExperienceLevelSoFar() - 1); /* see potion.c */
                 pluslvl(FALSE);
             } else {
-                u.uhpmax += 5;
+                increaseMaximumHitPoints(5);
                 if (areYouPolymorphed())
                     increaseMaximumHitPointsAsMonster(5);
             }
-            u.uhp = u.uhpmax;
+            setCurrentHitPoints(maximumHitPoints());
             if (areYouPolymorphed())
                 setCurrentHitPointsAsMonster(maximumHitPointsAsMonster());
             setYourCurrentAttr(A_STR, yourAttrMax(A_STR));

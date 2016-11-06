@@ -986,6 +986,16 @@ E void FDECL(multiplyTimeRemainingAsMonster, (int));
 E int FDECL(lycanthropeType, ());
 E void FDECL(setLycanthropeType, (int));
 
+E int FDECL(currentHitPoints, ());
+E void FDECL(setCurrentHitPoints, (int));
+E void FDECL(increaseCurrentHitPoints, (int));
+E void FDECL(decreaseCurrentHitPoints, (int));
+
+E int FDECL(maximumHitPoints, ());
+E void FDECL(setMaximumHitPoints, (int));
+E void FDECL(increaseMaximumHitPoints, (int));
+E void FDECL(decreaseMaximumHitPoints, (int));
+
 E int FDECL(currentHitPointsAsMonster, ());
 E void FDECL(setCurrentHitPointsAsMonster, (int));
 E void FDECL(increaseCurrentHitPointsAsMonster, (int));

@@ -185,8 +185,8 @@ register int num;
             decreaseCurrentHitPointsAsMonster(6);
             decreaseMaximumHitPointsAsMonster(6);
         } else {
-            u.uhp -= 6;
-            u.uhpmax -= 6;
+            decreaseCurrentHitPoints(6);
+            decreaseMaximumHitPoints(6);
         }
     }
     (void) adjattrib(A_STR, -num, 1);
@@ -258,7 +258,7 @@ boolean thrown_weapon; /* thrown weapons are less deadly */
     i = !fatal ? 1 : rn2(fatal + (thrown_weapon ? 20 : 0));
     if (i == 0 && typ != A_CHA) {
         /* instant kill */
-        u.uhp = -1;
+        decreaseCurrentHitPoints(1);
         pline_The("poison was deadly...");
     } else if (i > 5) {
         /* HP damage; more likely--but less severe--with missiles */
@@ -273,7 +273,7 @@ boolean thrown_weapon; /* thrown weapons are less deadly */
             poisontell(typ, TRUE);
     }
 
-    if (u.uhp < 1) {
+    if (currentHitPoints() < 1) {
         killer.format = kprefix;
         Strcpy(killer.name, pkiller);
         /* "Poisoned by a poisoned ___" is redundant */

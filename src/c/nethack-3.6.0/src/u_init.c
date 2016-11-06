@@ -635,7 +635,11 @@ u_init()
     set_uasmon();
 
     setCurrentExperienceLevel(0); /* set up some of the initial attributes */
-    u.uhp = u.uhpmax = newhp();
+
+    int hp = newhp();
+    setCurrentHitPoints(hp);
+    setMaximumHitPoints(hp);
+
     u.uen = u.uenmax = newpw();
     setArmorBonusFromProtectionSpell(0);
     adjabil(0, 1);

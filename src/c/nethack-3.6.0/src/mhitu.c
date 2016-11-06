@@ -1366,16 +1366,16 @@ register struct attack *mattk;
                 if (currentHitPointsAsMonster() > maximumHitPointsAsMonster())
                     setCurrentHitPointsAsMonster(maximumHitPointsAsMonster());
             } else {
-                u.uhp += rnd(7);
+                increaseCurrentHitPoints(rnd(7));
                 if (!rn2(7)) {
                     /* hard upper limit via nurse care: 25 * ulevel */
-                    if (u.uhpmax < 5 * currentExperienceLevel() + d(2 * currentExperienceLevel(), 10))
-                        u.uhpmax++;
+                    if (maximumHitPoints() < 5 * currentExperienceLevel() + d(2 * currentExperienceLevel(), 10))
+                        increaseMaximumHitPoints(1);
                     if (!rn2(13))
                         goaway = TRUE;
                 }
-                if (u.uhp > u.uhpmax)
-                    u.uhp = u.uhpmax;
+                if (currentHitPoints() > maximumHitPoints())
+                    setCurrentHitPoints(maximumHitPoints());
             }
             if (!rn2(3))
                 exercise(A_STR, TRUE);
@@ -1545,7 +1545,7 @@ register struct attack *mattk;
         dmg = 0;
         break;
     }
-    if (u.uhp < 1)
+    if (currentHitPoints() < 1)
         done_in_by(mtmp, DIED);
 
     /*  Negative armor class reduces damage done instead of fully protecting
@@ -1577,11 +1577,11 @@ register struct attack *mattk;
              * Never reduces hpmax below 1 hit point per level.
              */
             permdmg = rn2(dmg / 2 + 1);
-            if (areYouPolymorphed() || u.uhpmax > 25 * currentExperienceLevel())
+            if (areYouPolymorphed() || maximumHitPoints() > 25 * currentExperienceLevel())
                 permdmg = dmg;
-            else if (u.uhpmax > 10 * currentExperienceLevel())
+            else if (maximumHitPoints() > 10 * currentExperienceLevel())
                 permdmg += dmg / 2;
-            else if (u.uhpmax > 5 * currentExperienceLevel())
+            else if (maximumHitPoints() > 5 * currentExperienceLevel())
                 permdmg += dmg / 4;
 
             if (areYouPolymorphed()) {
@@ -1594,11 +1594,11 @@ register struct attack *mattk;
                 }
             } else {
                 lowerlimit = currentExperienceLevel();
-                if (u.uhpmax - permdmg > lowerlimit)
-                    u.uhpmax -= permdmg;
-                else if (u.uhpmax > lowerlimit)
-                    u.uhpmax = lowerlimit;
-            }
+                if (maximumHitPoints() - permdmg > lowerlimit)
+                    decreaseMaximumHitPoints(permdmg);
+                else if (maximumHitPoints() > lowerlimit)
+                    setMaximumHitPoints(lowerlimit);
+            } 
             /* else unlikely...
              * already at or below minimum threshold; do nothing */
             context.botl = 1;
@@ -1745,7 +1745,7 @@ register struct attack *mattk;
             tmp = 0;
         } else if (timeSinceBeingSwallowed() == 0) {
             pline("%s totally digests you!", Monnam(mtmp));
-            tmp = u.uhp;
+            tmp = currentHitPoints();
             if (Half_physical_damage)
                 tmp *= 2; /* sorry */
         } else {
@@ -2196,8 +2196,8 @@ register int n;
         if (currentHitPointsAsMonster() < 1)
             rehumanize();
     } else {
-        u.uhp -= n;
-        if (u.uhp < 1)
+        decreaseCurrentHitPoints(n);
+        if (currentHitPoints() < 1)
             done_in_by(mtmp, DIED);
     }
 }
@@ -2467,7 +2467,7 @@ register struct monst *mon;
             break;
         case 4:
             You_feel("restored to health!");
-            u.uhp = u.uhpmax;
+            setCurrentHitPoints(maximumHitPoints());
             if (areYouPolymorphed())
                 setCurrentHitPointsAsMonster(maximumHitPointsAsMonster());
             exercise(A_STR, TRUE);

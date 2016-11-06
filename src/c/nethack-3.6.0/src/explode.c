@@ -459,11 +459,11 @@ int expltype;
             if (areYouPolymorphed())
                 decreaseCurrentHitPointsAsMonster(damu);
             else
-                u.uhp -= damu;
+                decreaseCurrentHitPoints(damu);
             context.botl = 1;
         }
 
-        if (u.uhp <= 0 || (areYouPolymorphed() && currentHitPointsAsMonster() <= 0)) {
+        if (currentHitPoints() <= 0 || (areYouPolymorphed() && currentHitPointsAsMonster() <= 0)) {
             if (areYouPolymorphed()) {
                 rehumanize();
             } else {

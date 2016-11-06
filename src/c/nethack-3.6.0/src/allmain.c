@@ -217,7 +217,7 @@ boolean resuming;
                             context.botl = 1;
                             increaseCurrentHitPointsAsMonster(1);
                         }
-                    } else if (u.uhp < u.uhpmax
+                    } else if (currentHitPoints() < maximumHitPoints()
                                && (wtcap < MOD_ENCUMBER || (! youMoved())
                                    || Regeneration)) {
                         if (currentExperienceLevel() > 9 && !(moves % 3)) {
@@ -231,16 +231,16 @@ boolean resuming;
                                     heal = currentExperienceLevel() - 9;
                             }
                             context.botl = 1;
-                            u.uhp += heal;
-                            if (u.uhp > u.uhpmax)
-                                u.uhp = u.uhpmax;
+                            increaseCurrentHitPoints(heal);
+                            if (currentHitPoints() > maximumHitPoints())
+                                setCurrentHitPoints(maximumHitPoints());
                         } else if (Regeneration
                                    || (currentExperienceLevel() <= 9
                                        && !(moves
                                             % ((MAXULEV + 12) / (currentExperienceLevel() + 2)
                                                + 1)))) {
                             context.botl = 1;
-                            u.uhp++;
+                            increaseCurrentHitPoints(1);
                         }
                     }
 
@@ -250,8 +250,8 @@ boolean resuming;
                                                    : moves % 10)) {
                             if (areYouPolymorphed() && currentHitPointsAsMonster() > 1) {
                                 decreaseCurrentHitPointsAsMonster(1);
-                            } else if (!areYouPolymorphed() && u.uhp > 1) {
-                                u.uhp--;
+                            } else if (!areYouPolymorphed() && currentHitPoints() > 1) {
+                                decreaseCurrentHitPoints(1);
                             } else {
                                 You("pass out from exertion!");
                                 exercise(A_CON, FALSE);

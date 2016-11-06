@@ -225,7 +225,7 @@ char *argv[];
     /*
      * It seems you really want to play.
      */
-    u.uhp = 1; /* prevent RIP on early quits */
+    setCurrentHitPoints(1); /* prevent RIP on early quits */
     program_state.preserve_locks = 1;
 #ifndef NO_SIGNAL
     sethanguphandler((SIG_RET_TYPE) hangup);

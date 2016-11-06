@@ -630,7 +630,7 @@ long wp_mask;
 }
 
 /* touch_artifact()'s return value isn't sufficient to tell whether it
-   dished out damage, and tracking changes to u.uhp, currentHitPointsAsMonster, Lifesaved
+   dished out damage, and tracking changes to currentHitPoints, currentHitPointsAsMonster, Lifesaved
    when trying to avoid second wounding is too cumbersome */
 STATIC_VAR boolean touch_blasted; /* for retouch_object() */
 
@@ -1275,7 +1275,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                  * value to the damage so that this reduction in
                  * damage does not prevent death.
                  */
-                *dmgptr = 2 * (areYouPolymorphed() ? currentHitPointsAsMonster() : u.uhp) + FATAL_DAMAGE_MODIFIER;
+                *dmgptr = 2 * (areYouPolymorphed() ? currentHitPointsAsMonster() : currentHitPoints()) + FATAL_DAMAGE_MODIFIER;
                 pline("%s cuts you in half!", wepdesc);
                 otmp->dknown = TRUE;
                 return TRUE;
@@ -1321,7 +1321,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                           body_part(NECK));
                     return TRUE;
                 }
-                *dmgptr = 2 * (areYouPolymorphed() ? currentHitPointsAsMonster() : u.uhp) + FATAL_DAMAGE_MODIFIER;
+                *dmgptr = 2 * (areYouPolymorphed() ? currentHitPointsAsMonster() : currentHitPoints()) + FATAL_DAMAGE_MODIFIER;
                 pline(behead_msg[rn2(SIZE(behead_msg))], wepdesc, "you");
                 otmp->dknown = TRUE;
                 /* Should amulets fall off? */
@@ -1358,7 +1358,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
             }
             return vis;
         } else { /* youdefend */
-            int oldhpmax = u.uhpmax;
+            int oldhpmax = maximumHitPoints();
 
             if (Blind)
                 You_feel("an %s drain your %s!",
@@ -1373,7 +1373,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                       life);
             losexp("life drainage");
             if (magr && magr->mhp < magr->mhpmax) {
-                magr->mhp += (oldhpmax - u.uhpmax) / 2;
+                magr->mhp += (oldhpmax - maximumHitPoints()) / 2;
                 if (magr->mhp > magr->mhpmax)
                     magr->mhp = magr->mhpmax;
             }
@@ -1441,7 +1441,7 @@ struct obj *obj;
             break;
         }
         case HEALING: {
-            int healamt = (u.uhpmax + 1 - u.uhp) / 2;
+            int healamt = (maximumHitPoints() + 1 - currentHitPoints()) / 2;
 
             if (areYouPolymorphed())
                 healamt = (maximumHitPointsAsMonster() + 1 - currentHitPointsAsMonster()) / 2;
@@ -1453,7 +1453,7 @@ struct obj *obj;
                 if (areYouPolymorphed())
                     increaseCurrentHitPointsAsMonster(healamt);
                 else
-                    u.uhp += healamt;
+                    increaseCurrentHitPoints(healamt);
             }
             if (Sick)
                 make_sick(0L, (char *) 0, FALSE, SICK_ALL);

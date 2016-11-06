@@ -90,7 +90,7 @@ dosave()
         program_state.done_hup = 0;
 #endif
         if (dosave0()) {
-            u.uhp = -1; /* universal game's over indicator */
+            setCurrentHitPoints(-1); /* universal game's over indicator */
             /* make sure they see the Saving message */
             display_nhwindow(WIN_MESSAGE, TRUE);
             exit_nhwindows("Be seeing you...");
@@ -349,6 +349,9 @@ register int fd, mode;
     write_int(fd, currentMonsterNumber());
     write_int(fd, lycanthropeType());
     write_int(fd, timeRemainingAsMonster());
+
+    write_int(fd, currentHitPoints());
+    write_int(fd, maximumHitPoints());
 
     write_int(fd, currentHitPointsAsMonster());
     write_int(fd, maximumHitPointsAsMonster());

@@ -502,8 +502,8 @@ time_t when;
      */
     t0->deathlev = observableDepth();
     t0->maxlvl = deepest_lev_reached(TRUE);
-    t0->hp = u.uhp;
-    t0->maxhp = u.uhpmax;
+    t0->hp = currentHitPoints();
+    t0->maxhp = maximumHitPoints();
     t0->deaths = u.umortality;
     t0->uid = uid;
     copynchars(t0->plrole, urole.filecode, ROLESZ);

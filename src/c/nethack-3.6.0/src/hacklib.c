@@ -911,6 +911,38 @@ void multiplyTimeRemainingAsMonster(int t) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "multiplyTimeRemainingAsMonster", t);
 }
 
+int currentHitPoints() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "currentHitPoints");
+} 
+
+void setCurrentHitPoints(int hp) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setCurrentHitPoints", hp);
+}
+
+void increaseCurrentHitPoints(int hp) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "increaseCurrentHitPoints", hp);
+}
+
+void decreaseCurrentHitPoints(int hp) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseCurrentHitPoints", hp);
+}
+
+int maximumHitPoints() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "maximumHitPoints");
+} 
+
+void setMaximumHitPoints(int hp) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setMaximumHitPoints", hp);
+}
+
+void increaseMaximumHitPoints(int hp) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "increaseMaximumHitPoints", hp);
+}
+
+void decreaseMaximumHitPoints(int hp) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseMaximumHitPoints", hp);
+}
+
 int currentHitPointsAsMonster() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "currentHitPointsAsMonster");
 } 

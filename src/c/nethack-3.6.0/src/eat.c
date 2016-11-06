@@ -946,7 +946,7 @@ register int pm;
         if (areYouPolymorphed())
             setCurrentHitPointsAsMonster(maximumHitPointsAsMonster());
         else
-            u.uhp = u.uhpmax;
+            setCurrentHitPoints(maximumHitPoints());
         context.botl = 1;
         break;
     case PM_STALKER:
@@ -1843,7 +1843,7 @@ struct obj *otmp;
     oldprop = u.uprops[objects[typ].oc_oprop].intrinsic;
     if (otmp == uleft || otmp == uright) {
         Ring_gone(otmp);
-        if (u.uhp <= 0)
+        if (currentHitPoints() <= 0)
             return; /* died from sink fall */
     }
     otmp->known = otmp->dknown = 1; /* by taste */
@@ -2095,12 +2095,12 @@ struct obj *otmp;
                 rehumanize();
             }
         } else {
-            u.uhp += otmp->cursed ? -rnd(20) : rnd(20);
-            if (u.uhp > u.uhpmax) {
+            increaseCurrentHitPoints(otmp->cursed ? -rnd(20) : rnd(20));
+            if (currentHitPoints() > maximumHitPoints()) {
                 if (!rn2(17))
-                    u.uhpmax++;
-                u.uhp = u.uhpmax;
-            } else if (u.uhp <= 0) {
+                    increaseMaximumHitPoints(1);
+                setCurrentHitPoints(maximumHitPoints());
+            } else if (currentHitPoints() <= 0) {
                 killer.format = KILLED_BY_AN;
                 Strcpy(killer.name, "rotten lump of royal jelly");
                 done(POISONING);
@@ -2880,7 +2880,7 @@ boolean incr;
         setCurrentHungerState(newhs);
         context.botl = 1;
         bot();
-        if ((areYouPolymorphed() ? currentHitPointsAsMonster() : u.uhp) < 1) {
+        if ((areYouPolymorphed() ? currentHitPointsAsMonster() : currentHitPoints()) < 1) {
             You("die from hunger and exhaustion.");
             killer.format = KILLED_BY;
             Strcpy(killer.name, "exhaustion");
