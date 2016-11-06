@@ -1007,6 +1007,16 @@ E void FDECL(increaseMaximumHitPointsAsMonster, (int));
 E void FDECL(decreaseMaximumHitPointsAsMonster, (int));
 E void FDECL(multiplyMaximumHitPointsAsMonster, (int));
 
+E int FDECL(currentMagicalEnergy, ());
+E void FDECL(setCurrentMagicalEnergy, (int));
+E void FDECL(increaseCurrentMagicalEnergy, (int));
+E void FDECL(decreaseCurrentMagicalEnergy, (int));
+
+E int FDECL(maximumMagicalEnergy, ());
+E void FDECL(setMaximumMagicalEnergy, (int));
+E void FDECL(increaseMaximumMagicalEnergy, (int));
+E void FDECL(decreaseMaximumMagicalEnergy, (int));
+
 E int FDECL(currentNutrition, ());
 E void FDECL(setCurrentNutrition, (int));
 E void FDECL(increaseCurrentNutrition, (int));

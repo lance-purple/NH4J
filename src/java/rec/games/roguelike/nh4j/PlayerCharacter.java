@@ -68,6 +68,9 @@ public class PlayerCharacter {
 	private static int currentMonsterNumber;
 	private static int timeRemainingAsMonster;
 	private static int lycanthropeType;
+	
+	private static int currentMagicalEnergy;
+	private static int maximumMagicalEnergy;
 
 	private static HungerState currentHungerState = HungerState.NOT_HUNGRY;
 	private static int currentNutrition;
@@ -638,6 +641,30 @@ public class PlayerCharacter {
 
 	public static final void multiplyMaximumHitPointsAsMonster(int m) {
 		maximumHitPointsAsMonster *= m;
+	}
+
+	public static final int currentMagicalEnergy() {
+		return currentMagicalEnergy;
+	}
+
+	public static final void setCurrentMagicalEnergy(int m) {
+		currentMagicalEnergy = m;
+	}
+
+	public static final void increaseCurrentMagicalEnergy(int m) {
+		currentMagicalEnergy += m;
+	}
+
+	public static final void decreaseCurrentMagicalEnergy(int m) {
+		currentMagicalEnergy -= m;
+	}
+
+	public static final int maximumMagicalEnergy() {
+		return maximumMagicalEnergy;
+	}
+
+	public static final void setMaximumMagicalEnergy(int m) {
+		maximumMagicalEnergy = m;
 	}
 
 	public static final int currentNutrition() {

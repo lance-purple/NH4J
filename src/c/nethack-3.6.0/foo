@@ -1,1 +1,1 @@
-vi src/cmd.c src/do.c src/end.c src/mhitu.c src/mon.c src/teleport.c
+src/read.c

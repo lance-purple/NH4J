@@ -1028,11 +1028,11 @@ char *hittee;              /* target's name: "you" or mon_nam(mdef) */
             if (youdefend) {
                 if (youmonst.data != old_uasmon)
                     *dmgptr = 0; /* rehumanized, so no more damage */
-                if (u.uenmax > 0) {
+                if (maximumMagicalEnergy() > 0) {
                     You("lose magical energy!");
-                    u.uenmax--;
-                    if (u.uen > 0)
-                        u.uen--;
+                    decreaseMaximumMagicalEnergy(1);
+                    if (currentMagicalEnergy() > 0)
+                        decreaseCurrentMagicalEnergy(1);
                     context.botl = 1;
                 }
             } else {
@@ -1040,8 +1040,8 @@ char *hittee;              /* target's name: "you" or mon_nam(mdef) */
                     mdef->mhp = 1; /* cancelled clay golems will die */
                 if (youattack && attacktype(mdef->data, AT_MAGC)) {
                     You("absorb magical energy!");
-                    u.uenmax++;
-                    u.uen++;
+                    increaseMaximumMagicalEnergy(1);
+                    increaseCurrentMagicalEnergy(1);
                     context.botl = 1;
                 }
             }
@@ -1465,14 +1465,14 @@ struct obj *obj;
             break;
         }
         case ENERGY_BOOST: {
-            int epboost = (u.uenmax + 1 - u.uen) / 2;
+            int epboost = (maximumMagicalEnergy() + 1 - currentMagicalEnergy()) / 2;
             if (epboost > 120)
                 epboost = 120; /* arbitrary */
             else if (epboost < 12)
-                epboost = u.uenmax - u.uen;
+                epboost = maximumMagicalEnergy() - currentMagicalEnergy();
             if (epboost) {
                 You_feel("re-energized.");
-                u.uen += epboost;
+                increaseCurrentMagicalEnergy(epboost);
                 context.botl = 1;
             } else
                 goto nothing_special;

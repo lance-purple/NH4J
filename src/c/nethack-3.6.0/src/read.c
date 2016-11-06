@@ -1462,14 +1462,14 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
         if (confused) {
             if (scursed) {
                 You_feel("discharged.");
-                u.uen = 0;
+                setCurrentMagicalEnergy(0);
             } else {
                 You_feel("charged up!");
-                u.uen += d(sblessed ? 6 : 4, 4);
-                if (u.uen > u.uenmax) /* if current energy is already at   */
-                    u.uenmax = u.uen; /* or near maximum, increase maximum */
+                increaseCurrentMagicalEnergy(d(sblessed ? 6 : 4, 4));
+                if (currentMagicalEnergy() > maximumMagicalEnergy()) /* if current energy is already at   */
+                    setMaximumMagicalEnergy(currentMagicalEnergy()); /* or near maximum, increase maximum */
                 else
-                    u.uen = u.uenmax; /* otherwise restore current to max  */
+                    setCurrentMagicalEnergy(maximumMagicalEnergy()); /* otherwise restore current to max  */
             }
             context.botl = 1;
             break;

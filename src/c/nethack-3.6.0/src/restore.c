@@ -626,6 +626,9 @@ unsigned int *stuckid, *steedid;
     setCurrentHitPointsAsMonster(read_int(fd));
     setMaximumHitPointsAsMonster(read_int(fd));
 
+    setCurrentMagicalEnergy(read_int(fd));
+    setMaximumMagicalEnergy(read_int(fd));
+
     setCurrentNutrition(read_int(fd));
     setCurrentHungerState(read_int(fd));
 

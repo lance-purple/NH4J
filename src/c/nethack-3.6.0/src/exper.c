@@ -222,14 +222,14 @@ const char *drainer; /* cause of death, if drain should be fatal */
         setCurrentHitPoints(maximumHitPoints());
 
     num = (int) u.ueninc[currentExperienceLevel()];
-    u.uenmax -= num;
-    if (u.uenmax < 0)
-        u.uenmax = 0;
-    u.uen -= num;
-    if (u.uen < 0)
-        u.uen = 0;
-    else if (u.uen > u.uenmax)
-        u.uen = u.uenmax;
+    decreaseMaximumMagicalEnergy(num);
+    if (maximumMagicalEnergy() < 0)
+        setMaximumMagicalEnergy(0);
+    decreaseCurrentMagicalEnergy(num);
+    if (currentMagicalEnergy() < 0)
+        setCurrentMagicalEnergy(0);
+    else if (currentMagicalEnergy() > maximumMagicalEnergy())
+        setCurrentMagicalEnergy(maximumMagicalEnergy());
 
     if (u.uexp > 0)
         u.uexp = newuexp(currentExperienceLevel()) - 1;
@@ -280,8 +280,8 @@ boolean incr; /* true iff via incremental experience growth */
 
     /* increase spell power/energy points */
     eninc = newpw();
-    u.uenmax += eninc;
-    u.uen += eninc;
+    increaseMaximumMagicalEnergy(eninc);
+    increaseCurrentMagicalEnergy(eninc);
 
     /* increase level (unless already maxxed) */
     if (currentExperienceLevel() < MAXULEV) {

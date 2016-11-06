@@ -1034,14 +1034,14 @@ register struct obj *otmp;
         num = d(otmp->blessed ? 3 : !otmp->cursed ? 2 : 1, 6);
         if (otmp->cursed)
             num = -num; /* subtract instead of add when cursed */
-        u.uenmax += num;
-        if (u.uenmax <= 0)
-            u.uenmax = 0;
-        u.uen += 3 * num;
-        if (u.uen > u.uenmax)
-            u.uen = u.uenmax;
-        else if (u.uen <= 0)
-            u.uen = 0;
+        increaseMaximumMagicalEnergy(num);
+        if (maximumMagicalEnergy() <= 0)
+            setMaximumMagicalEnergy(0);
+        increaseCurrentMagicalEnergy(3 * num);
+        if (currentMagicalEnergy() > maximumMagicalEnergy())
+            setCurrentMagicalEnergy(maximumMagicalEnergy());
+        else if (currentMagicalEnergy() <= 0)
+            setCurrentMagicalEnergy(0);
         context.botl = 1;
         exercise(A_WIS, TRUE);
         break;

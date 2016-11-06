@@ -91,7 +91,7 @@ bot2()
     (void) describe_level(newbot2);
     Sprintf(nb = eos(newbot2), "%s:%-2ld HP:%d(%d) Pw:%d(%d) AC:%-2d",
             encglyph(objnum_to_glyph(GOLD_PIECE)), money_cnt(invent), hp,
-            hpmax, u.uen, u.uenmax, armorClass());
+            hpmax, currentMagicalEnergy(), maximumMagicalEnergy(), armorClass());
 
     if (areYouPolymorphed())
         Sprintf(nb = eos(nb), " HD:%d", mons[currentMonsterNumber()].mlevel);
@@ -497,8 +497,8 @@ bot()
 
     /* Power (magical energy) */
 
-    blstats[idx][BL_ENE].a.a_int = u.uen;
-    blstats[idx][BL_ENEMAX].a.a_int = u.uenmax;
+    blstats[idx][BL_ENE].a.a_int = currentMagicalEnergy();
+    blstats[idx][BL_ENEMAX].a.a_int = maximumMagicalEnergy()
 
     /* Armor class */
 

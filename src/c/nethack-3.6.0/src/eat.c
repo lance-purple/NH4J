@@ -913,15 +913,15 @@ register int pm;
     switch (pm) {
     case PM_NEWT:
         /* MRKR: "eye of newt" may give small magical energy boost */
-        if (rn2(3) || 3 * u.uen <= 2 * u.uenmax) {
-            int old_uen = u.uen;
-            u.uen += rnd(3);
-            if (u.uen > u.uenmax) {
+        if (rn2(3) || 3 * currentMagicalEnergy() <= 2 * maximumMagicalEnergy()) {
+            int old_uen = currentMagicalEnergy();
+            increaseCurrentMagicalEnergy(rnd(3));
+            if (currentMagicalEnergy() > maximumMagicalEnergy()) {
                 if (!rn2(3))
-                    u.uenmax++;
-                u.uen = u.uenmax;
+                    increaseMaximumMagicalEnergy(1);
+                setCurrentMagicalEnergy(maximumMagicalEnergy());
             }
-            if (old_uen != u.uen) {
+            if (old_uen != currentMagicalEnergy()) {
                 You_feel("a mild buzz.");
                 context.botl = 1;
             }

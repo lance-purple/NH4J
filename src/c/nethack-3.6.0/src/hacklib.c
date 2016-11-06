@@ -984,6 +984,38 @@ boolean areYouPolymorphed() {
     return (currentMonsterNumber() != originalMonsterNumber());
 }
 
+int currentMagicalEnergy() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "currentMagicalEnergy");
+} 
+
+void setCurrentMagicalEnergy(int n) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setCurrentMagicalEnergy", n);
+}
+
+void increaseCurrentMagicalEnergy(int n) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "increaseCurrentMagicalEnergy", n);
+}
+
+void decreaseCurrentMagicalEnergy(int n) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseCurrentMagicalEnergy", n);
+}
+
+int maximumMagicalEnergy() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "maximumMagicalEnergy");
+} 
+
+void setMaximumMagicalEnergy(int n) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setMaximumMagicalEnergy", n);
+}
+
+void increaseMaximumMagicalEnergy(int n) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "increaseMaximumMagicalEnergy", n);
+}
+
+void decreaseMaximumMagicalEnergy(int n) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseMaximumMagicalEnergy", n);
+}
+
 int currentNutrition() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "currentNutrition");
 } 

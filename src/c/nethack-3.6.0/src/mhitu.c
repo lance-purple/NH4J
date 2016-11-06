@@ -2404,11 +2404,11 @@ register struct monst *mon;
         switch (rn2(5)) {
         case 0:
             You_feel("drained of energy.");
-            u.uen = 0;
-            u.uenmax -= rnd(Half_physical_damage ? 5 : 10);
+            setCurrentMagicalEnergy(0);
+            decreaseMaximumMagicalEnergy(rnd(Half_physical_damage ? 5 : 10));
             exercise(A_CON, FALSE);
-            if (u.uenmax < 0)
-                u.uenmax = 0;
+            if (maximumMagicalEnergy() < 0)
+                setMaximumMagicalEnergy(0);
             break;
         case 1:
             You("are down in the dumps.");
@@ -2446,7 +2446,8 @@ register struct monst *mon;
         case 0:
             You_feel("raised to your full potential.");
             exercise(A_CON, TRUE);
-            u.uen = (u.uenmax += rnd(5));
+            increaseMaximumMagicalEnergy(rnd(5));
+            setCurrentMagicalEnergy(maximumMagicalEnergy());
             break;
         case 1:
             You_feel("good enough to do it again.");

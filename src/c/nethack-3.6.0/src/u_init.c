@@ -640,7 +640,9 @@ u_init()
     setCurrentHitPoints(hp);
     setMaximumHitPoints(hp);
 
-    u.uen = u.uenmax = newpw();
+    int power = newpw();
+    setCurrentMagicalEnergy(power);
+    setMaximumMagicalEnergy(power);
     setArmorBonusFromProtectionSpell(0);
     adjabil(0, 1);
     setHighestExperienceLevelSoFar(1);

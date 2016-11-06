@@ -1318,7 +1318,8 @@ unsigned trflags;
             You("are caught in a magical explosion!");
             losehp(rnd(10), "magical explosion", KILLED_BY_AN);
             Your("body absorbs some of the magical energy!");
-            u.uen = (u.uenmax += 2);
+            increaseMaximumMagicalEnergy(2);
+            setCurrentMagicalEnergy(maximumMagicalEnergy());
             break;
         } else {
             domagictrap();
@@ -3684,21 +3685,21 @@ void
 drain_en(n)
 int n;
 {
-    if (!u.uenmax) {
+    if (!maximumMagicalEnergy()) {
         /* energy is completely gone */
         You_feel("momentarily lethargic.");
     } else {
         /* throttle further loss a bit when there's not much left to lose */
-        if (n > u.uenmax || n > currentExperienceLevel())
+        if (n > maximumMagicalEnergy() || n > currentExperienceLevel())
             n = rnd(n);
 
-        You_feel("your magical energy drain away%c", (n > u.uen) ? '!' : '.');
-        u.uen -= n;
-        if (u.uen < 0) {
-            u.uenmax -= rnd(-u.uen);
-            if (u.uenmax < 0)
-                u.uenmax = 0;
-            u.uen = 0;
+        You_feel("your magical energy drain away%c", (n > currentMagicalEnergy()) ? '!' : '.');
+        decreaseCurrentMagicalEnergy(n);
+        if (currentMagicalEnergy() < 0) {
+            decreaseMaximumMagicalEnergy(rnd(-1 * currentMagicalEnergy()));
+            if (maximumMagicalEnergy() < 0)
+                setMaximumMagicalEnergy(0);
+            setCurrentMagicalEnergy(0);
         }
         context.botl = 1;
     }

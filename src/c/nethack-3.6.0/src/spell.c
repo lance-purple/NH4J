@@ -922,7 +922,7 @@ boolean atme;
         You_feel("the amulet draining your energy away.");
         energy += rnd(2 * energy);
     }
-    if (energy > u.uen) {
+    if (energy > currentMagicalEnergy()) {
         You("don't have enough energy to cast that spell.");
         return 0;
     } else {
@@ -979,12 +979,12 @@ boolean atme;
     chance = percent_success(spell);
     if (confused || (rnd(100) > chance)) {
         You("fail to cast the spell correctly.");
-        u.uen -= energy / 2;
+        decreaseCurrentMagicalEnergy(energy / 2);
         context.botl = 1;
         return 1;
     }
 
-    u.uen -= energy;
+    decreaseCurrentMagicalEnergy(energy);
     context.botl = 1;
     exercise(A_WIS, TRUE);
     /* pseudo is a temporary "false" object containing the spell stats */

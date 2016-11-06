@@ -545,9 +545,9 @@ dotele()
         }
 
         energy = objects[SPE_TELEPORT_AWAY].oc_level * 7 / 2 - 2;
-        if (u.uen <= energy) {
+        if (currentMagicalEnergy() <= energy) {
             if (wizard)
-                energy = u.uen;
+                energy = currentMagicalEnergy();
             else {
                 You("lack the energy %s.",
                     castit ? "for a teleport spell" : "to teleport");
@@ -566,7 +566,7 @@ dotele()
             else if (!wizard)
                 return 0;
         } else {
-            u.uen -= energy;
+            decreaseCurrentMagicalEnergy(energy);
             context.botl = 1;
         }
     }

@@ -260,15 +260,15 @@ boolean resuming;
                         }
                     }
 
-                    if ((u.uen < u.uenmax)
+                    if ((currentMagicalEnergy() < maximumMagicalEnergy())
                         && ((wtcap < MOD_ENCUMBER
                              && (!(moves % ((MAXULEV + 8 - currentExperienceLevel())
                                             * (Role_if(PM_WIZARD) ? 3 : 4)
                                             / 6)))) || Energy_regeneration)) {
-                        u.uen += rn1(
-                            (int) (ACURR(A_WIS) + ACURR(A_INT)) / 15 + 1, 1);
-                        if (u.uen > u.uenmax)
-                            u.uen = u.uenmax;
+                        increaseCurrentMagicalEnergy(rn1(
+                            (int) (ACURR(A_WIS) + ACURR(A_INT)) / 15 + 1, 1));
+                        if (currentMagicalEnergy() > maximumMagicalEnergy())
+                            setCurrentMagicalEnergy(maximumMagicalEnergy());
                         context.botl = 1;
                     }
 
