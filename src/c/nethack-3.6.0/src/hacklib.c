@@ -787,6 +787,22 @@ void setLuckBonus(int c) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "setLuckBonus", c);
 }
 
+int divineWrath() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "divineWrath");
+} 
+
+void setDivineWrath(int w) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setDivineWrath", w);
+}
+
+void increaseDivineWrath(int w) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "increaseDivineWrath", w);
+}
+
+void decreaseDivineWrath(int w) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseDivineWrath", w);
+}
+
 int toHitModifier() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "toHitModifier");
 } 

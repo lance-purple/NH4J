@@ -2220,11 +2220,11 @@ int final;
             enl_msg("Good luck ", "does", "did", " not time out for you", "");
     }
 
-    if (u.ugangr) {
+    if (divineWrath()) {
         Sprintf(buf, " %sangry with you",
-                u.ugangr > 6 ? "extremely " : u.ugangr > 3 ? "very " : "");
+                divineWrath() > 6 ? "extremely " : divineWrath() > 3 ? "very " : "");
         if (wizard)
-            Sprintf(eos(buf), " (%d)", u.ugangr);
+            Sprintf(eos(buf), " (%d)", divineWrath());
         enl_msg(u_gname(), " is", " was", buf, "");
     } else {
         /*

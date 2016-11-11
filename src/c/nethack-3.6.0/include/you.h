@@ -297,7 +297,7 @@ struct you {
 #define LUCKMIN (-10)
 
     xchar uhpinc[MAXULEV], ueninc[MAXULEV]; /* increases from level gain */
-    int ugangr;                             /* if the gods are angry at you */
+
     int ugifts;                             /* number of artifacts bestowed */
     int ublessed, ublesscnt;                /* blessing/duration from #pray */
     long umoney0;

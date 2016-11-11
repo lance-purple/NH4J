@@ -40,6 +40,7 @@ public class PlayerCharacter {
 	
 	private static int currentLuck;
 	private static int luckBonus;
+	private static int divineWrath;
 	
 	private static int toHitModifier;
 	private static int damageBonus;
@@ -323,6 +324,22 @@ public class PlayerCharacter {
 		luckBonus = bonus;
 	}
 
+	public static int divineWrath() {
+		return divineWrath;
+	}
+
+	public static void setDivineWrath(int wrath) {
+		divineWrath = wrath;
+	}
+
+	public static void increaseDivineWrath(int wrath) {
+		divineWrath += wrath;
+	}
+
+	public static void decreaseDivineWrath(int wrath) {
+		divineWrath -= wrath;
+	}
+	
 	public static int toHitModifier() {
 		return toHitModifier;
 	}

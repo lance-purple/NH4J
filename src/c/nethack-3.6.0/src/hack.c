@@ -1653,7 +1653,7 @@ domove()
                  */
                 if (rn2(4)) {
                     You_feel("guilty about losing your pet like this.");
-                    u.ugangr++;
+                    increaseDivineWrath(1);
                     adjalign(-15);
                 }
                 break;

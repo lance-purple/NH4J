@@ -637,6 +637,7 @@ unsigned int *stuckid, *steedid;
 
     setCurrentLuck(read_int(fd));
     setLuckBonus(read_int(fd));
+    setDivineWrath(read_int(fd));
 
     setToHitModifier(read_int(fd));
     setDamageBonus(read_int(fd));

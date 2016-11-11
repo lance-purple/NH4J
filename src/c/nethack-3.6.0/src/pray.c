@@ -625,12 +625,12 @@ aligntyp resp_god;
         resp_god = A_NONE;
     u.ublessed = 0;
 
-    /* changed from tmp = u.ugangr + abs (currentLuck()) -- rph */
+    /* changed from tmp = divineWrath() + abs (currentLuck()) -- rph */
     /* added test for alignment diff -dlc */
     if (resp_god != u.ualign.type)
         maxanger = u.ualign.record / 2 + (Luck > 0 ? -Luck / 3 : -Luck);
     else
-        maxanger = 3 * u.ugangr + ((Luck > 0 || u.ualign.record >= STRIDENT)
+        maxanger = 3 * divineWrath() + ((Luck > 0 || u.ualign.record >= STRIDENT)
                                    ? -Luck / 3
                                    : -Luck);
     if (maxanger < 1)
@@ -1219,9 +1219,9 @@ gods_upset(g_align)
 aligntyp g_align;
 {
     if (g_align == u.ualign.type)
-        u.ugangr++;
-    else if (u.ugangr)
-        u.ugangr--;
+        increaseDivineWrath(1);
+    else if (divineWrath())
+        decreaseDivineWrath(1);
     angrygods(g_align);
 }
 
@@ -1367,7 +1367,7 @@ dosacrifice()
 
             if (u.ualign.type != A_CHAOTIC) {
                 adjalign(-5);
-                u.ugangr += 3;
+                increaseDivineWrath(3);
                 (void) adjattrib(A_WIS, -1, TRUE);
                 if (!areYouInHell())
                     angrygods(u.ualign.type);
@@ -1515,7 +1515,7 @@ dosacrifice()
                 pline("Oh, no."); /* didn't hear thunderclap */
             change_luck(-3);
             adjalign(-1);
-            u.ugangr += 3;
+            increaseDivineWrath(3);
             value = -3;
         }
     } /* fake Amulet */
@@ -1541,7 +1541,7 @@ dosacrifice()
                < 0) { /* I don't think the gods are gonna like this... */
         gods_upset(altaralign);
     } else {
-        int saved_anger = u.ugangr;
+        int saved_anger = divineWrath();
         int saved_cnt = u.ublesscnt;
         int saved_luck = currentLuck();
 
@@ -1562,7 +1562,7 @@ dosacrifice()
                     change_luck(-3);
                     u.ublesscnt += 300;
                 } else {
-                    u.ugangr += 3;
+                    increaseDivineWrath(3);
                     adjalign(-5);
                     pline("%s rejects your sacrifice!", a_gname());
                     godvoice(altaralign, "Suffer, infidel!");
@@ -1617,13 +1617,13 @@ dosacrifice()
 
         consume_offering(otmp);
         /* OK, you get brownie points. */
-        if (u.ugangr) {
-            u.ugangr -= ((value * (u.ualign.type == A_CHAOTIC ? 2 : 3))
-                         / MAXVALUE);
-            if (u.ugangr < 0)
-                u.ugangr = 0;
-            if (u.ugangr != saved_anger) {
-                if (u.ugangr) {
+        if (divineWrath()) {
+            decreaseDivineWrath(((value * (u.ualign.type == A_CHAOTIC ? 2 : 3))
+                         / MAXVALUE));
+            if (divineWrath() < 0)
+                setDivineWrath(0);
+            if (divineWrath() != saved_anger) {
+                if (divineWrath()) {
                     pline("%s seems %s.", u_gname(),
                           Hallucination ? "groovy" : "slightly mollified");
 
@@ -1752,7 +1752,7 @@ boolean praying; /* false means no messages should be given */
            : (p_trouble < 0) ? (u.ublesscnt > 100) /* minor difficulties */
               : (u.ublesscnt > 0))                 /* not in trouble */
         p_type = 0;                     /* too soon... */
-    else if ((int) Luck < 0 || u.ugangr || alignment < 0)
+    else if ((int) Luck < 0 || divineWrath() || alignment < 0)
         p_type = 1; /* too naughty... */
     else /* alignment >= 0 */ {
         if (on_altar() && u.ualign.type != p_aligntyp)
@@ -1792,7 +1792,7 @@ dopray()
                 setCurrentLuck(0);
             if (u.ualign.record <= 0)
                 u.ualign.record = 1;
-            u.ugangr = 0;
+            setDivineWrath(0);
             if (p_type < 2)
                 p_type = 3;
         }
@@ -1898,7 +1898,7 @@ doturn()
 
     if ((u.ualign.type != A_CHAOTIC
          && (is_demon(youmonst.data) || is_undead(youmonst.data)))
-        || u.ugangr > 6) { /* "Die, mortal!" */
+        || divineWrath() > 6) { /* "Die, mortal!" */
         pline("For some reason, %s seems to ignore you.", u_gname());
         aggravate();
         exercise(A_WIS, FALSE);
