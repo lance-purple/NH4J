@@ -43,6 +43,7 @@ public class PlayerCharacter {
 	private static int currentLuck;
 	private static int luckBonus;
 	private static int blessings;
+	private static int timeToNextBlessing;
 	private static int divineWrath;
 	
 	private static int toHitModifier;
@@ -356,7 +357,23 @@ public class PlayerCharacter {
 	public static void decreaseBlessings(int b) {
 		blessings -= b;
 	}
-	
+
+	public static int timeToNextBlessing() {
+		return timeToNextBlessing;
+	}
+
+	public static void setTimeToNextBlessing(int t) {
+		timeToNextBlessing = t;
+	}
+
+	public static void increaseTimeToNextBlessing(int t) {
+		timeToNextBlessing += t;
+	}
+
+	public static void decreaseTimeToNextBlessing(int t) {
+		timeToNextBlessing -= t;
+	}
+
 
 	public static int divineWrath() {
 		return divineWrath;

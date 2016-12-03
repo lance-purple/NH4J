@@ -377,6 +377,7 @@ register int fd, mode;
     write_int(fd, currentLuck());
     write_int(fd, luckBonus());
     write_int(fd, blessings());
+    write_int(fd, timeToNextBlessing());
     write_int(fd, divineWrath());
 
     write_int(fd, toHitModifier());

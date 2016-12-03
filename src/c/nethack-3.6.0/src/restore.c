@@ -647,6 +647,7 @@ unsigned int *stuckid, *steedid;
     setCurrentLuck(read_int(fd));
     setLuckBonus(read_int(fd));
     setBlessings(read_int(fd));
+    setTimeToNextBlessing(read_int(fd));
     setDivineWrath(read_int(fd));
 
     setToHitModifier(read_int(fd));

@@ -181,8 +181,9 @@ boolean resuming;
                     nh_timeout();
                     run_regions();
 
-                    if (u.ublesscnt)
-                        u.ublesscnt--;
+                    if (timeToNextBlessing()) {
+                        decreaseTimeToNextBlessing(1);
+                    }
                     if (flags.time && !context.run)
                         context.botl = 1;
 

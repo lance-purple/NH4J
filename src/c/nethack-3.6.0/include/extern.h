@@ -950,6 +950,11 @@ E void FDECL(setBlessings, (int));
 E void FDECL(increaseBlessings, (int));
 E void FDECL(decreaseBlessings, (int));
 
+E int FDECL(timeToNextBlessing, ());
+E void FDECL(setTimeToNextBlessing, (int));
+E void FDECL(increaseTimeToNextBlessing, (int));
+E void FDECL(decreaseTimeToNextBlessing, (int));
+
 E int FDECL(divineWrath, ());
 E void FDECL(setDivineWrath, (int));
 E void FDECL(increaseDivineWrath, (int));

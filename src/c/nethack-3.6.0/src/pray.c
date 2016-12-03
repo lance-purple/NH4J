@@ -686,7 +686,7 @@ aligntyp resp_god;
         god_zaps_you(resp_god);
         break;
     }
-    u.ublesscnt = rnz(300);
+    setTimeToNextBlessing(rnz(300));
     return;
 }
 
@@ -1150,12 +1150,12 @@ aligntyp g_align;
             break;
         }
 
-    u.ublesscnt = rnz(350);
+    setTimeToNextBlessing(rnz(350));
     kick_on_butt = u.uevent.udemigod ? 1 : 0;
     if (u.uevent.uhand_of_elbereth)
         kick_on_butt++;
     if (kick_on_butt)
-        u.ublesscnt += kick_on_butt * rnz(1000);
+        increaseTimeToNextBlessing(kick_on_butt * rnz(1000));
 
     return;
 }
@@ -1544,7 +1544,7 @@ dosacrifice()
         gods_upset(altaralign);
     } else {
         int saved_anger = divineWrath();
-        int saved_cnt = u.ublesscnt;
+        int saved_cnt = timeToNextBlessing();
         int saved_luck = currentLuck();
 
         /* Sacrificing at an altar of a different alignment */
@@ -1562,7 +1562,7 @@ dosacrifice()
                     uchangealign(altaralign, 0);
                     /* Beware, Conversion is costly */
                     change_luck(-3);
-                    u.ublesscnt += 300;
+                    increaseTimeToNextBlessing(300);
                 } else {
                     increaseDivineWrath(3);
                     adjalign(-5);
@@ -1652,13 +1652,13 @@ dosacrifice()
                 value = -u.ualign.record;
             adjalign(value);
             You_feel("partially absolved.");
-        } else if (u.ublesscnt > 0) {
-            u.ublesscnt -= ((value * (u.ualign.type == A_CHAOTIC ? 500 : 300))
+        } else if (timeToNextBlessing() > 0) {
+            decreaseTimeToNextBlessing((value * (u.ualign.type == A_CHAOTIC ? 500 : 300))
                             / MAXVALUE);
-            if (u.ublesscnt < 0)
-                u.ublesscnt = 0;
-            if (u.ublesscnt != saved_cnt) {
-                if (u.ublesscnt) {
+            if (timeToNextBlessing() < 0)
+                setTimeToNextBlessing(0);
+            if (timeToNextBlessing() != saved_cnt) {
+                if (timeToNextBlessing()) {
                     if (Hallucination)
                         You("realize that the gods are not like you and I.");
                     else
@@ -1693,7 +1693,7 @@ dosacrifice()
                     dropy(otmp);
                     godvoice(u.ualign.type, "Use my gift wisely!");
                     increaseGiftsBestowed(1);
-                    u.ublesscnt = rnz(300 + (50 * nartifacts));
+                    setTimeToNextBlessing(rnz(300 + (50 * nartifacts)));
                     exercise(A_WIS, TRUE);
                     /* make sure we can use this weapon */
                     unrestrict_weapon_skill(weapon_type(otmp));
@@ -1750,9 +1750,9 @@ boolean praying; /* false means no messages should be given */
     else
         alignment = u.ualign.record;
 
-    if ((p_trouble > 0) ? (u.ublesscnt > 200)      /* big trouble */
-           : (p_trouble < 0) ? (u.ublesscnt > 100) /* minor difficulties */
-              : (u.ublesscnt > 0))                 /* not in trouble */
+    if ((p_trouble > 0) ? (timeToNextBlessing() > 200)      /* big trouble */
+           : (p_trouble < 0) ? (timeToNextBlessing() > 100) /* minor difficulties */
+              : (timeToNextBlessing() > 0))                 /* not in trouble */
         p_type = 0;                     /* too soon... */
     else if ((int) Luck < 0 || divineWrath() || alignment < 0)
         p_type = 1; /* too naughty... */
@@ -1789,7 +1789,7 @@ dopray()
 
     if (wizard && p_type >= 0) {
         if (yn("Force the gods to be pleased?") == 'y') {
-            u.ublesscnt = 0;
+            setTimeToNextBlessing(0);
             if (currentLuck() < 0)
                 setCurrentLuck(0);
             if (u.ualign.record <= 0)
@@ -1845,7 +1845,7 @@ prayer_done() /* M. Stephenson (1.0.3b) */
     if (p_type == 0) {
         if (on_altar() && u.ualign.type != alignment)
             (void) water_prayer(FALSE);
-        u.ublesscnt += rnz(250);
+        increaseTimeToNextBlessing(rnz(250));
         change_luck(-3);
         gods_upset(u.ualign.type);
     } else if (p_type == 1) {
@@ -1855,7 +1855,7 @@ prayer_done() /* M. Stephenson (1.0.3b) */
     } else if (p_type == 2) {
         if (water_prayer(FALSE)) {
             /* attempted water prayer on a non-coaligned altar */
-            u.ublesscnt += rnz(250);
+            increaseTimeToNextBlessing(rnz(250));
             change_luck(-3);
             gods_upset(u.ualign.type);
         } else

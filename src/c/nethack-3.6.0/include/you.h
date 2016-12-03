@@ -296,7 +296,6 @@ struct you {
 #define LUCKMAX 10
 #define LUCKMIN (-10)
 
-    int ublesscnt;                /* blessing/duration from #pray */
     long umoney0;
     long uexp, urexp;
     long ucleansed; /* to record moves when player was cleansed */

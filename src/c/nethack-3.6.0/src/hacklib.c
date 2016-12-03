@@ -815,6 +815,22 @@ void decreaseBlessings(int b) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseBlessings", b);
 }
 
+int timeToNextBlessing() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "timeToNextBlessing");
+} 
+
+void setTimeToNextBlessing(int t) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setTimeToNextBlessing", t);
+}
+
+void increaseTimeToNextBlessing(int t) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "increaseTimeToNextBlessing", t);
+}
+
+void decreaseTimeToNextBlessing(int t) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseTimeToNextBlessing", t);
+}
+
 int divineWrath() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "divineWrath");
 } 

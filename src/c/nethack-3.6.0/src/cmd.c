@@ -2241,7 +2241,7 @@ int final;
             Sprintf(buf, "%ssafely pray", can_pray(FALSE) ? "" : "not ");
 #endif
             if (wizard)
-                Sprintf(eos(buf), " (%d)", u.ublesscnt);
+                Sprintf(eos(buf), " (%d)", timeToNextBlessing());
             you_can(buf, "");
         }
     }
