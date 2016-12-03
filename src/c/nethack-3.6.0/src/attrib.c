@@ -1079,7 +1079,7 @@ int reason; /* 0==conversion, 1==helm-of-OA on, 2==helm-of-OA off */
 {
     aligntyp oldalign = u.ualign.type;
 
-    u.ublessed = 0;   /* lose divine protection */
+    setBlessings(0);   /* lose divine protection */
     context.botl = 1; /* status line needs updating */
     if (reason == 0) {
         /* conversion via altar */

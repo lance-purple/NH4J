@@ -608,20 +608,22 @@ register struct monst *priest;
                 incr_itimeout(&HClairvoyant, rn1(500, 500));
             }
         } else if (offer < (currentExperienceLevel() * 600)
-                   /* u.ublessed is only active when Protection is
+                   /* blessings is only active when Protection is
                       enabled via something other than worn gear
                       (theft by gremlin clears the intrinsic but not
                       its former magnitude, making it recoverable) */
                    && (!(HProtection & INTRINSIC)
-                       || (u.ublessed < 20
-                           && (u.ublessed < 9 || !rn2(u.ublessed))))) {
+                       || (blessings() < 20
+                           && (blessings() < 9 || !rn2(blessings()))))) {
             verbalize("Thy devotion has been rewarded.");
             if (!(HProtection & INTRINSIC)) {
                 HProtection |= FROMOUTSIDE;
-                if (!u.ublessed)
-                    u.ublessed = rn1(3, 2);
-            } else
-                u.ublessed++;
+                if (!blessings()) {
+                    setBlessings(rn1(3, 2));
+                }
+            } else {
+                increaseBlessings(1);
+            }
         } else {
             verbalize("Thy selfless generosity is deeply appreciated.");
             if (money_cnt(invent) < (offer * 2L) && coaligned) {

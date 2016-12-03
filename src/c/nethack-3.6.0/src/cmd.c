@@ -2117,7 +2117,7 @@ int final;
         if (uright && uright->otyp == RIN_PROTECTION)
             prot += uright->spe;
         if (HProtection & INTRINSIC)
-            prot += u.ublessed;
+            prot += blessings();
         prot += armorBonusFromProtectionSpell();
         if (prot)
             you_have(enlght_combatinc("defense", prot, final, buf), "");

@@ -1762,9 +1762,9 @@ struct obj *obj;
                 You("narrowly avoid losing all chance at your goal.");
             else /* converted */
                 You("are suddenly overcome with shame and change your mind.");
-            u.ublessed = 0; /* lose your god's protection */
+            setBlessings(0); /* lose your god's protection */
             makeknown(obj->otyp);
-            context.botl = 1; /*for AC after zeroing u.ublessed */
+            context.botl = 1; /*for AC after zeroing blessings */
             return 1;
         }
     } else {
@@ -1986,7 +1986,7 @@ find_ac()
 
     /* armor class from other sources */
     if (HProtection & INTRINSIC)
-        uac -= u.ublessed;
+        uac -= blessings();
     uac -= armorBonusFromProtectionSpell();
 
     /* [The magic binary numbers 127 and -128 should be replaced with the

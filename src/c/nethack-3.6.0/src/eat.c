@@ -1921,8 +1921,8 @@ struct obj *otmp;
         case RIN_PROTECTION:
             accessory_has_effect(otmp);
             HProtection |= FROMOUTSIDE;
-            u.ublessed = bounded_increase(u.ublessed, otmp->spe,
-                                          RIN_PROTECTION);
+            setBlessings(bounded_increase(blessings(), otmp->spe,
+                                          RIN_PROTECTION));
             context.botl = 1;
             break;
         case RIN_FREE_ACTION:

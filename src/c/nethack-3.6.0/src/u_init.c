@@ -599,7 +599,7 @@ u_init()
     uwep = uball = uchain = uleft = uright = 0;
     uswapwep = uquiver = 0;
     u.twoweap = 0;
-    u.ublessed = 0;                     /* not worthy yet */
+    setBlessings(0);                    /* not worthy yet */
     setDivineWrath(0);                  /* gods not angry */
     setGiftsBestowed(0);                /* no divine gifts bestowed */
     u.uevent.uhand_of_elbereth = 0;

@@ -799,6 +799,22 @@ void setLuckBonus(int c) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "setLuckBonus", c);
 }
 
+int blessings() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "blessings");
+} 
+
+void setBlessings(int b) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setBlessings", b);
+}
+
+void increaseBlessings(int b) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "increaseBlessings", b);
+}
+
+void decreaseBlessings(int b) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseBlessings", b);
+}
+
 int divineWrath() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "divineWrath");
 } 

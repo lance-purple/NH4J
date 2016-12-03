@@ -623,7 +623,7 @@ aligntyp resp_god;
 
     if (areYouInHell())
         resp_god = A_NONE;
-    u.ublessed = 0;
+    setBlessings(0);
 
     /* changed from tmp = divineWrath() + abs (currentLuck()) -- rph */
     /* added test for alignment diff -dlc */
@@ -1099,10 +1099,12 @@ aligntyp g_align;
             } else {
                 if (!(HProtection & INTRINSIC)) {
                     HProtection |= FROMOUTSIDE;
-                    if (!u.ublessed)
-                        u.ublessed = rn1(3, 2);
-                } else
-                    u.ublessed++;
+                    if (!blessings()) {
+                        setBlessings(rn1(3, 2));
+                    }
+                } else {
+                    increaseBlessings(1);
+                }
                 pline(msg, "my protection");
             }
             verbalize("Use it wisely in my name!");

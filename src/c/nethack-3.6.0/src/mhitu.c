@@ -827,7 +827,7 @@ struct monst *mon;
     } else if (mc < 1) {
         /* intrinsic Protection is weaker (play balance; obtaining divine
            protection is too easy); it confers minimum mc 1 instead of 0 */
-        if ((is_you && ((HProtection && u.ublessed) || armorBonusFromProtectionSpell()))
+        if ((is_you && ((HProtection && blessings()) || armorBonusFromProtectionSpell()))
             /* aligned priests and angels have innate intrinsic Protection */
             || (mon->data == &mons[PM_ALIGNED_PRIEST] || is_minion(mon->data)))
             mc = 1;

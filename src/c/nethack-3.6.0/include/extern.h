@@ -945,6 +945,11 @@ E void FDECL(decreaseCurrentLuck, (int));
 E int FDECL(luckBonus, ());
 E void FDECL(setLuckBonus, (int));
 
+E int FDECL(blessings, ());
+E void FDECL(setBlessings, (int));
+E void FDECL(increaseBlessings, (int));
+E void FDECL(decreaseBlessings, (int));
+
 E int FDECL(divineWrath, ());
 E void FDECL(setDivineWrath, (int));
 E void FDECL(increaseDivineWrath, (int));
