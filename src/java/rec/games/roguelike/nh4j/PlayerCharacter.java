@@ -77,6 +77,8 @@ public class PlayerCharacter {
 	private static int currentMagicalEnergy;
 	private static int maximumMagicalEnergy;
 
+	private static int magicalEnergyIncreasePerLevel[] = new int[MAXULEVEL];
+
 	private static HungerState currentHungerState = HungerState.NOT_HUNGRY;
 	private static int currentNutrition;
 	
@@ -702,6 +704,14 @@ public class PlayerCharacter {
 
 	public static final void decreaseMaximumMagicalEnergy(int m) {
 		maximumMagicalEnergy -= m;
+	}
+
+	public static int magicalEnergyIncreasePerLevel(int level) {
+		return magicalEnergyIncreasePerLevel[level];
+	}
+
+	public static void setMagicalEnergyIncreasePerLevel(int level, int en) {
+		magicalEnergyIncreasePerLevel[level] = en;
 	}
 
 	public static final int currentNutrition() {

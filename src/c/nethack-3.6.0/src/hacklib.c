@@ -1052,6 +1052,14 @@ void decreaseMaximumMagicalEnergy(int n) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseMaximumMagicalEnergy", n);
 }
 
+int magicalEnergyIncreasePerLevel(int level) {
+    return javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "magicalEnergyIncreasePerLevel", level);
+}
+
+void setMagicalEnergyIncreasePerLevel(int level, int en) {
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setMagicalEnergyIncreasePerLevel", level, en);
+}
+
 int currentNutrition() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "currentNutrition");
 } 

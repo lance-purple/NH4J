@@ -634,6 +634,10 @@ unsigned int *stuckid, *steedid;
     setCurrentMagicalEnergy(read_int(fd));
     setMaximumMagicalEnergy(read_int(fd));
 
+    for (level = 0; level < MAXULEV; level++) {
+      setMagicalEnergyIncreasePerLevel(level,read_int(fd));
+    }
+
     setCurrentNutrition(read_int(fd));
     setCurrentHungerState(read_int(fd));
 

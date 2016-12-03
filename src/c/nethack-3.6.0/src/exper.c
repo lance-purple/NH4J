@@ -63,8 +63,9 @@ newpw()
     }
     if (en <= 0)
         en = 1;
-    if (currentExperienceLevel() < MAXULEV)
-        u.ueninc[currentExperienceLevel()] = (xchar) en;
+    if (currentExperienceLevel() < MAXULEV) {
+        setMagicalEnergyIncreasePerLevel(currentExperienceLevel(), en);
+    }
     return en;
 }
 
@@ -222,7 +223,7 @@ const char *drainer; /* cause of death, if drain should be fatal */
     else if (currentHitPoints() > maximumHitPoints())
         setCurrentHitPoints(maximumHitPoints());
 
-    num = (int) u.ueninc[currentExperienceLevel()];
+    num = magicalEnergyIncreasePerLevel(currentExperienceLevel());
     decreaseMaximumMagicalEnergy(num);
     if (maximumMagicalEnergy() < 0)
         setMaximumMagicalEnergy(0);

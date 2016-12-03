@@ -328,8 +328,9 @@ newman()
      * Do the same for spell power.
      */
     enmax = maximumMagicalEnergy();
-    for (i = 0; i < oldlvl; i++)
-        enmax -= (int) u.ueninc[i];
+    for (i = 0; i < oldlvl; i++) {
+        enmax -= magicalEnergyIncreasePerLevel(i);
+    }
     enmax = rounddiv((long) enmax * (long) rn1(4, 8), 10);
     for (i = 0; (setCurrentExperienceLevel(i), i < newlvl); i++) {
         enmax += newpw();

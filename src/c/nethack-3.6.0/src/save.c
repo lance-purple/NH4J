@@ -364,6 +364,10 @@ register int fd, mode;
     write_int(fd, currentMagicalEnergy());
     write_int(fd, maximumMagicalEnergy());
 
+    for (level = 0; level < MAXULEV; level++) {
+        write_int(fd, magicalEnergyIncreasePerLevel(level));
+    }
+
     write_int(fd, currentNutrition());
     write_int(fd, currentHungerState());
 

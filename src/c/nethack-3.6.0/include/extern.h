@@ -1025,6 +1025,9 @@ E void FDECL(setMaximumMagicalEnergy, (int));
 E void FDECL(increaseMaximumMagicalEnergy, (int));
 E void FDECL(decreaseMaximumMagicalEnergy, (int));
 
+E int FDECL(magicalEnergyIncreasePerLevel, (int));
+E void FDECL(setMagicalEnergyIncreasePerLevel, (int, int));
+
 E int FDECL(currentNutrition, ());
 E void FDECL(setCurrentNutrition, (int));
 E void FDECL(increaseCurrentNutrition, (int));
