@@ -623,6 +623,11 @@ unsigned int *stuckid, *steedid;
     setCurrentHitPoints(read_int(fd));
     setMaximumHitPoints(read_int(fd));
 
+    int level;
+    for (level = 0; level < MAXULEV; level++) {
+      setHitPointIncreasePerLevel(level,read_int(fd));
+    }
+
     setCurrentHitPointsAsMonster(read_int(fd));
     setMaximumHitPointsAsMonster(read_int(fd));
 

@@ -296,7 +296,7 @@ struct you {
 #define LUCKMAX 10
 #define LUCKMIN (-10)
 
-    xchar uhpinc[MAXULEV], ueninc[MAXULEV]; /* increases from level gain */
+    xchar ueninc[MAXULEV]; /* increases from level gain */
 
     int ugifts;                             /* number of artifacts bestowed */
     int ublessed, ublesscnt;                /* blessing/duration from #pray */
@@ -306,6 +306,7 @@ struct you {
     long ucleansed; /* to record moves when player was cleansed */
     long usleep;    /* sleeping; monstermove you last started */
     int uinvault;
+
     struct monst *ustuck;
     struct monst *usteed;
     long ugallop;

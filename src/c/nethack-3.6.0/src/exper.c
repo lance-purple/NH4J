@@ -211,7 +211,8 @@ const char *drainer; /* cause of death, if drain should be fatal */
         /* no drainer or lifesaved */
         u.uexp = 0;
     }
-    num = (int) u.uhpinc[currentExperienceLevel()];
+    num = hitPointIncreasePerLevel(currentExperienceLevel());
+
     decreaseMaximumHitPoints(num);
     if (maximumHitPoints() < 1)
         setMaximumHitPoints(1);

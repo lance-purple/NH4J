@@ -1001,6 +1001,9 @@ E void FDECL(setMaximumHitPoints, (int));
 E void FDECL(increaseMaximumHitPoints, (int));
 E void FDECL(decreaseMaximumHitPoints, (int));
 
+E int FDECL(hitPointIncreasePerLevel, (int));
+E void FDECL(setHitPointIncreasePerLevel, (int, int));
+
 E int FDECL(currentHitPointsAsMonster, ());
 E void FDECL(setCurrentHitPointsAsMonster, (int));
 E void FDECL(increaseCurrentHitPointsAsMonster, (int));

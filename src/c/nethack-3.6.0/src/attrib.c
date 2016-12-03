@@ -970,8 +970,9 @@ newhp()
     }
     if (hp <= 0)
         hp = 1;
-    if (currentExperienceLevel() < MAXULEV)
-        u.uhpinc[currentExperienceLevel()] = (xchar) hp;
+    if (currentExperienceLevel() < MAXULEV) {
+        setHitPointIncreasePerLevel(currentExperienceLevel(), hp);
+    }
     return hp;
 }
 

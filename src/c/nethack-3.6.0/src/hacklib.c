@@ -89,6 +89,12 @@ int javaGetInt(const char* classname, const char* methodname) {
     return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
 }
 
+int javaGetIntFromInt(const char* classname, const char* methodname, int i) {
+    jclass you_class = getJavaClass(classname);
+    jmethodID method = getStaticMethod(you_class, methodname, "(I)I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method, i);
+}
+
 boolean javaGetBoolean(const char* classname, const char* methodname) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "()Z");
@@ -99,6 +105,12 @@ void javaSetInt(const char* classname, const char* methodname, int v) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "(I)V");
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, v);
+}
+
+void javaSetIntFromInt(const char* classname, const char* methodname, int i, int v) {
+    jclass you_class = getJavaClass(classname);
+    jmethodID method = getStaticMethod(you_class, methodname, "(II)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, i, v);
 }
 
 void javaSetBoolean(const char* classname, const char* methodname, boolean v) {
@@ -941,6 +953,14 @@ void increaseCurrentHitPoints(int hp) {
 
 void decreaseCurrentHitPoints(int hp) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseCurrentHitPoints", hp);
+}
+
+int hitPointIncreasePerLevel(int level) {
+    return javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "hitPointIncreasePerLevel", level);
+}
+
+void setHitPointIncreasePerLevel(int level, int hp) {
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setHitPointIncreasePerLevel", level, hp);
 }
 
 int maximumHitPoints() {

@@ -353,6 +353,11 @@ register int fd, mode;
     write_int(fd, currentHitPoints());
     write_int(fd, maximumHitPoints());
 
+    int level;
+    for (level = 0; level < MAXULEV; level++) {
+        write_int(fd, hitPointIncreasePerLevel(level));
+    }
+
     write_int(fd, currentHitPointsAsMonster());
     write_int(fd, maximumHitPointsAsMonster());
 

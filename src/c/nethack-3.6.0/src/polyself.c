@@ -310,8 +310,9 @@ newman()
      * drain and polyself steps until out of lifesaving capability.)
      */
     hpmax = maximumHitPoints();
-    for (i = 0; i < oldlvl; i++)
-        hpmax -= (int) u.uhpinc[i];
+    for (i = 0; i < oldlvl; i++) {
+        hpmax -= hitPointIncreasePerLevel(i);
+    }
     /* hpmax * rn1(4,8) / 10; 0.95*hpmax on average */
     hpmax = rounddiv((long) hpmax * (long) rn1(4, 8), 10);
     for (i = 0; (setCurrentExperienceLevel(i), i < newlvl); i++) {
