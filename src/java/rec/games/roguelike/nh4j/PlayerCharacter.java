@@ -2,6 +2,8 @@
 package rec.games.roguelike.nh4j;
 
 public class PlayerCharacter {
+	
+	private static final int MAXULEVEL = 30;
 
 	private static int currentDungeonNumber;
 	private static int currentDungeonLevel;
@@ -64,7 +66,9 @@ public class PlayerCharacter {
 	private static int maximumHitPoints;
 	private static int currentHitPointsAsMonster;
 	private static int maximumHitPointsAsMonster;
-	
+
+	private static int hitPointIncreasePerLevel[] = new int[MAXULEVEL];
+
 	private static int originalMonsterNumber;
 	private static int currentMonsterNumber;
 	private static int timeRemainingAsMonster;
@@ -298,6 +302,14 @@ public class PlayerCharacter {
 
 	public static void setHighestExperienceLevelSoFar(int level) {
 		highestExperienceLevelSoFar = level;
+	}
+
+	public static int hitPointIncreasePerLevel(int level) {
+		return hitPointIncreasePerLevel[level];
+	}
+
+	public static void setHitPointIncreasePerLevel(int level, int hp) {
+		hitPointIncreasePerLevel[level] = hp;
 	}
 
 	public static int currentLuck() {
@@ -682,6 +694,14 @@ public class PlayerCharacter {
 
 	public static final void setMaximumMagicalEnergy(int m) {
 		maximumMagicalEnergy = m;
+	}
+
+	public static final void increaseMaximumMagicalEnergy(int m) {
+		maximumMagicalEnergy += m;
+	}
+
+	public static final void decreaseMaximumMagicalEnergy(int m) {
+		maximumMagicalEnergy -= m;
 	}
 
 	public static final int currentNutrition() {
