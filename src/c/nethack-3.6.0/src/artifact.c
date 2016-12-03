@@ -162,7 +162,7 @@ aligntyp alignment; /* target alignment, or A_NONE */
                 break; /* skip all other candidates */
             }
             /* found something to consider for random selection */
-            if (a->alignment != A_NONE || u.ugifts > 0) {
+            if (a->alignment != A_NONE || giftsBestowed() > 0) {
                 /* right alignment, or non-aligned with at least 1
                    previous gift bestowed, makes this one viable */
                 eligible[n++] = m;

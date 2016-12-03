@@ -99,6 +99,8 @@ public class PlayerCharacter {
 	private static boolean sickWithFoodPoisoning;
 	private static boolean sickWithIllness;
 	
+	private static int giftsBestowed;
+	
 	public static int currentDungeonNumber() {
 		return currentDungeonNumber;
 	}
@@ -825,6 +827,22 @@ public class PlayerCharacter {
 
 	public static final void setSickWithIllness(boolean i) {
 		sickWithIllness = i;
+	}
+
+	public static final int giftsBestowed() {
+		return giftsBestowed;
+	}
+
+	public static final void setGiftsBestowed(int g) {
+		giftsBestowed = g;
+	}
+
+	public static final void increaseGiftsBestowed(int g) {
+		giftsBestowed += g;
+	}
+
+	public static final void decreaseGiftsBestowed(int g) {
+		giftsBestowed -= g;
 	}
 
 }

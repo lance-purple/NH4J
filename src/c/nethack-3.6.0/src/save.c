@@ -401,6 +401,8 @@ register int fd, mode;
     write_int(fd, sickWithFoodPoisoning());
     write_int(fd, sickWithIllness());
 
+    write_int(fd, giftsBestowed());
+
     bwrite(fd, yyyymmddhhmmss(ubirthday), 14);
     bwrite(fd, (genericptr_t) &urealtime.realtime,
            sizeof(urealtime.realtime));

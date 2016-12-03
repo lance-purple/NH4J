@@ -763,7 +763,7 @@ gcrownu()
         obj->bknown = TRUE;
         at_your_feet("A spellbook");
         dropy(obj);
-        u.ugifts++;
+        increaseGiftsBestowed(1);
         /* when getting a new book for known spell, enhance
            currently wielded weapon rather than the book */
         for (sp_no = 0; sp_no < MAXSPELL; sp_no++)
@@ -788,7 +788,7 @@ gcrownu()
                 Your("sword shines brightly for a moment.");
             obj = oname(obj, artiname(ART_EXCALIBUR));
             if (obj && obj->oartifact == ART_EXCALIBUR)
-                u.ugifts++;
+                increaseGiftsBestowed(1);
         }
         /* acquire Excalibur's skill regardless of weapon or gift */
         unrestrict_weapon_skill(P_LONG_SWORD);
@@ -807,7 +807,7 @@ gcrownu()
             obj->spe = 1;
             at_your_feet("A sword");
             dropy(obj);
-            u.ugifts++;
+            increaseGiftsBestowed(1);
         }
         /* acquire Vorpal Blade's skill regardless of weapon or gift */
         unrestrict_weapon_skill(P_LONG_SWORD);
@@ -829,7 +829,7 @@ gcrownu()
             obj->spe = 1;
             at_your_feet(An(swordbuf));
             dropy(obj);
-            u.ugifts++;
+            increaseGiftsBestowed(1);
         }
         /* acquire Stormbringer's skill regardless of weapon or gift */
         unrestrict_weapon_skill(P_BROAD_SWORD);
@@ -1679,7 +1679,7 @@ dosacrifice()
             /* The player can gain an artifact */
             /* The chance goes down as the number of artifacts goes up */
             if (currentExperienceLevel() > 2 && currentLuck() >= 0
-                && !rn2(10 + (2 * u.ugifts * nartifacts))) {
+                && !rn2(10 + (2 * giftsBestowed() * nartifacts))) {
                 otmp = mk_artifact((struct obj *) 0, a_align(currentX(), currentY()));
                 if (otmp) {
                     if (otmp->spe < 0)
@@ -1690,7 +1690,7 @@ dosacrifice()
                     at_your_feet("An object");
                     dropy(otmp);
                     godvoice(u.ualign.type, "Use my gift wisely!");
-                    u.ugifts++;
+                    increaseGiftsBestowed(1);
                     u.ublesscnt = rnz(300 + (50 * nartifacts));
                     exercise(A_WIS, TRUE);
                     /* make sure we can use this weapon */

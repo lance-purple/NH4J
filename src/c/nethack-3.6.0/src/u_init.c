@@ -601,7 +601,7 @@ u_init()
     u.twoweap = 0;
     u.ublessed = 0;                     /* not worthy yet */
     setDivineWrath(0);                  /* gods not angry */
-    u.ugifts   = 0;                     /* no divine gifts bestowed */
+    setGiftsBestowed(0);                /* no divine gifts bestowed */
     u.uevent.uhand_of_elbereth = 0;
     u.uevent.uheard_tune = 0;
     u.uevent.uopened_dbridge = 0;

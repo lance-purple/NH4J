@@ -1068,6 +1068,11 @@ E void FDECL(setGlyphUnderChain, (int));
 E int FDECL(ballAndChainOrder, ());
 E void FDECL(setBallAndChainOrder, (int));
 
+E int FDECL(giftsBestowed, ());
+E void FDECL(setGiftsBestowed, (int));
+E void FDECL(increaseGiftsBestowed, (int));
+E void FDECL(decreaseGiftsBestowed, (int));
+
 #ifndef STRNCMPI
 E int FDECL(strncmpi, (const char *, const char *, int));
 #endif

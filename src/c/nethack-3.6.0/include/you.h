@@ -296,10 +296,8 @@ struct you {
 #define LUCKMAX 10
 #define LUCKMIN (-10)
 
-    int ugifts;                             /* number of artifacts bestowed */
     int ublessed, ublesscnt;                /* blessing/duration from #pray */
     long umoney0;
-    long uspare1;
     long uexp, urexp;
     long ucleansed; /* to record moves when player was cleansed */
     long usleep;    /* sleeping; monstermove you last started */

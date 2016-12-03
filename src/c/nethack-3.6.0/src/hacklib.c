@@ -1188,6 +1188,22 @@ void setSickWithIllness(boolean i) {
     javaSetBoolean(PLAYER_CHARACTER_CLASS, "setSickWithIllness", i);
 }
 
+int giftsBestowed() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "giftsBestowed");
+}
+
+void setGiftsBestowed(int g) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setGiftsBestowed", g);
+}
+
+void increaseGiftsBestowed(int g) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "increaseGiftsBestowed", g);
+}
+
+void decreaseGiftsBestowed(int g) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseGiftsBestowed", g);
+}
+
 /* square of euclidean distance from pt to your current position */
 int
 distanceSquaredToYou(x, y)
