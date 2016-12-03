@@ -674,6 +674,7 @@ unsigned int *stuckid, *steedid;
     setSickWithIllness(read_int(fd) ? TRUE : FALSE);
 
     setGiftsBestowed(read_int(fd));
+    setStartingMoney(read_int(fd));
 
 #define ReadTimebuf(foo)                   \
     mread(fd, (genericptr_t) timebuf, 14); \

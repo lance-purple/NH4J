@@ -404,6 +404,7 @@ register int fd, mode;
     write_int(fd, sickWithIllness());
 
     write_int(fd, giftsBestowed());
+    write_int(fd, startingMoney());
 
     bwrite(fd, yyyymmddhhmmss(ubirthday), 14);
     bwrite(fd, (genericptr_t) &urealtime.realtime,

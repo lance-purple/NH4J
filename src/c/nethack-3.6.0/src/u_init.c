@@ -704,7 +704,7 @@ u_init()
         skill_init(Skill_C);
         break;
     case PM_HEALER:
-        u.umoney0 = rn1(1000, 1001);
+        setStartingMoney(rn1(1000, 1001));
         ini_inv(Healer);
         if (!rn2(25))
             ini_inv(Lamp);
@@ -764,7 +764,7 @@ u_init()
         break;
     case PM_ROGUE:
         Rogue[R_DAGGERS].trquan = rn1(10, 6);
-        u.umoney0 = 0;
+        setStartingMoney(0);
         ini_inv(Rogue);
         if (!rn2(5))
             ini_inv(Blindfold);
@@ -782,7 +782,7 @@ u_init()
         break;
     case PM_TOURIST:
         Tourist[T_DARTS].trquan = rn1(20, 21);
-        u.umoney0 = rnd(1000);
+        setStartingMoney(rnd(1000));
         ini_inv(Tourist);
         if (!rn2(25))
             ini_inv(Tinopener);
@@ -890,9 +890,9 @@ u_init()
     if (wizard)
         read_wizkit();
 
-    if (u.umoney0)
+    if (startingMoney())
         ini_inv(Money);
-    u.umoney0 += hidden_gold(); /* in case sack has gold in it */
+    increaseStartingMoney(hidden_gold()); /* in case sack has gold in it */
 
     find_ac();     /* get initial ac value */
     init_attr(75); /* init attribute values */
@@ -1083,7 +1083,7 @@ register struct trobj *trop;
 
         if (trop->trclass == COIN_CLASS) {
             /* no "blessed" or "identified" money */
-            obj->quan = u.umoney0;
+            obj->quan = startingMoney();
         } else {
             if (objects[otyp].oc_uses_known)
                 obj->known = 1;

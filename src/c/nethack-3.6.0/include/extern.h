@@ -1083,6 +1083,11 @@ E void FDECL(setGiftsBestowed, (int));
 E void FDECL(increaseGiftsBestowed, (int));
 E void FDECL(decreaseGiftsBestowed, (int));
 
+E int FDECL(startingMoney, ());
+E void FDECL(setStartingMoney, (int));
+E void FDECL(increaseStartingMoney, (int));
+E void FDECL(decreaseStartingMoney, (int));
+
 #ifndef STRNCMPI
 E int FDECL(strncmpi, (const char *, const char *, int));
 #endif

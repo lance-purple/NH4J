@@ -102,6 +102,8 @@ public class PlayerCharacter {
 	private static boolean sickWithIllness;
 	
 	private static int giftsBestowed;
+
+	private static int startingMoney;
 	
 	public static int currentDungeonNumber() {
 		return currentDungeonNumber;
@@ -878,6 +880,22 @@ public class PlayerCharacter {
 
 	public static final void decreaseGiftsBestowed(int g) {
 		giftsBestowed -= g;
+	}
+
+	public static final int startingMoney() {
+		return startingMoney;
+	}
+
+	public static final void setStartingMoney(int m) {
+		startingMoney = m;
+	}
+
+	public static final void increaseStartingMoney(int m) {
+		startingMoney += m;
+	}
+
+	public static final void decreaseStartingMoney(int m) {
+		startingMoney -= m;
 	}
 
 }

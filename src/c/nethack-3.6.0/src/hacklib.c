@@ -1236,6 +1236,22 @@ void decreaseGiftsBestowed(int g) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseGiftsBestowed", g);
 }
 
+int startingMoney() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "startingMoney");
+}
+
+void setStartingMoney(int g) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setStartingMoney", g);
+}
+
+void increaseStartingMoney(int g) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "increaseStartingMoney", g);
+}
+
+void decreaseStartingMoney(int g) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseStartingMoney", g);
+}
+
 /* square of euclidean distance from pt to your current position */
 int
 distanceSquaredToYou(x, y)

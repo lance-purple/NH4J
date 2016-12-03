@@ -1047,7 +1047,7 @@ int how;
         int deepest = deepest_lev_reached(FALSE);
 
         umoney = money_cnt(invent);
-        tmp = u.umoney0;
+        tmp = startingMoney();
         umoney += hidden_gold(); /* accumulate gold from containers */
         tmp = umoney - tmp;      /* net gain */
 
