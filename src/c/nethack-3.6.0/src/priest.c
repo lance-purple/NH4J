@@ -627,9 +627,9 @@ register struct monst *priest;
         } else {
             verbalize("Thy selfless generosity is deeply appreciated.");
             if (money_cnt(invent) < (offer * 2L) && coaligned) {
-                if (strayed && (moves - u.ucleansed) > 5000L) {
+                if (strayed && (moves - timeOfLastCleansing()) > 5000L) {
                     u.ualign.record = 0; /* cleanse thee */
-                    u.ucleansed = moves;
+                    setTimeOfLastCleansing(moves);
                 } else {
                     adjalign(2);
                 }

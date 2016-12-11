@@ -879,6 +879,15 @@ void decreaseTimeToNextBlessing(int t) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseTimeToNextBlessing", t);
 }
 
+long timeOfLastCleansing() {
+    return javaGetLong(PLAYER_CHARACTER_CLASS, "timeOfLastCleansing");
+} 
+
+void setTimeOfLastCleansing(long t) {
+    javaSetLong(PLAYER_CHARACTER_CLASS, "setTimeOfLastCleansing", t);
+}
+
+
 int divineWrath() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "divineWrath");
 } 
