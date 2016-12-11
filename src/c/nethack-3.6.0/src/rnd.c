@@ -33,7 +33,7 @@ register int x;
 #endif
 }
 
-/* 0 <= rnl(x) < x; sometimes subtracting Luck;
+/* 0 <= rnl(x) < x; sometimes subtracting currentLuckWithBonus;
    good luck approaches 0, bad luck approaches (x-1) */
 int
 rnl(x)
@@ -48,9 +48,9 @@ register int x;
     }
 #endif
 
-    adjustment = Luck;
+    adjustment = currentLuckWithBonus();
     if (x <= 15) {
-        /* for small ranges, use Luck/3 (rounded away from 0);
+        /* for small ranges, use currentLuckWithBonus/3 (rounded away from 0);
            also guard against architecture-specific differences
            of integer division involving negative values */
         adjustment = (abs(adjustment) + 1) / 3 * sgn(adjustment);

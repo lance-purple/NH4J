@@ -3283,7 +3283,7 @@ typfnd:
                || (oclass == RING_CLASS && objects[typ].oc_charged)) {
         if (spe > rnd(5) && spe > otmp->spe)
             spe = 0;
-        if (spe > 2 && Luck < 0)
+        if (spe > 2 && currentLuckWithBonus() < 0)
             spesgn = -1;
     } else {
         if (oclass == WAND_CLASS) {
@@ -3399,10 +3399,10 @@ typfnd:
         curse(otmp);
     } else if (uncursed) {
         otmp->blessed = 0;
-        otmp->cursed = (Luck < 0 && !wizard);
+        otmp->cursed = (currentLuckWithBonus() < 0 && !wizard);
     } else if (blessed) {
-        otmp->blessed = (Luck >= 0 || wizard);
-        otmp->cursed = (Luck < 0 && !wizard);
+        otmp->blessed = (currentLuckWithBonus() >= 0 || wizard);
+        otmp->cursed = (currentLuckWithBonus() < 0 && !wizard);
     } else if (spesgn < 0) {
         curse(otmp);
     }
@@ -3416,7 +3416,7 @@ typfnd:
 
         /* set erodeproof */
         if (erodeproof && !eroded && !eroded2)
-            otmp->oerodeproof = (Luck >= 0 || wizard);
+            otmp->oerodeproof = (currentLuckWithBonus() >= 0 || wizard);
     }
 
     /* set otmp->recharged */
@@ -3430,7 +3430,7 @@ typfnd:
     /* set poisoned */
     if (ispoisoned) {
         if (is_poisonable(otmp))
-            otmp->opoisoned = (Luck >= 0);
+            otmp->opoisoned = (currentLuckWithBonus() >= 0);
         else if (oclass == FOOD_CLASS)
             /* try to taint by making it as old as possible */
             otmp->age = 1L;

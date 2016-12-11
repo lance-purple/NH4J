@@ -952,6 +952,10 @@ E void FDECL(increaseCurrentLuck, (int));
 E void FDECL(decreaseCurrentLuck, (int));
 E int FDECL(luckBonus, ());
 E void FDECL(setLuckBonus, (int));
+E int FDECL(currentLuckWithBonus, ());
+
+E int FDECL(minimumPossibleLuck, ());
+E int FDECL(maximumPossibleLuck, ());
 
 E int FDECL(blessings, ());
 E void FDECL(setBlessings, (int));

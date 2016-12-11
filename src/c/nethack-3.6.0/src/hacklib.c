@@ -835,6 +835,18 @@ void setLuckBonus(int c) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "setLuckBonus", c);
 }
 
+int currentLuckWithBonus() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "currentLuckWithBonus");
+} 
+
+int minimumPossibleLuck() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "minimumPossibleLuck");
+} 
+
+int maximumPossibleLuck() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "maximumPossibleLuck");
+} 
+
 int blessings() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "blessings");
 } 

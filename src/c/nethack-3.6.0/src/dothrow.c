@@ -1363,7 +1363,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
      * Certain items which don't in themselves do damage ignore tmp.
      * Distance and monster size affect chance to hit.
      */
-    tmp = -1 + Luck + find_mac(mon) + toHitModifier()
+    tmp = -1 + currentLuckWithBonus() + find_mac(mon) + toHitModifier()
           + maybe_polyd(youmonst.data->mlevel, currentExperienceLevel());
     if (ACURR(A_DEX) < 4)
         tmp -= 3;

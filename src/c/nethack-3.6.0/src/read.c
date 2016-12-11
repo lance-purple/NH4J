@@ -1446,7 +1446,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
         if (sblessed || (!scursed && !rn2(5))) {
             cval = rn2(5);
             /* note: if cval==0, identify all items */
-            if (cval == 1 && sblessed && Luck > 0)
+            if (cval == 1 && sblessed && currentLuckWithBonus() > 0)
                 ++cval;
         }
         if (invent && !confused) {

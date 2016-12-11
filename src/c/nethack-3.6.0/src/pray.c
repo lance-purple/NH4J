@@ -628,11 +628,11 @@ aligntyp resp_god;
     /* changed from tmp = divineWrath() + abs (currentLuck()) -- rph */
     /* added test for alignment diff -dlc */
     if (resp_god != u.ualign.type)
-        maxanger = u.ualign.record / 2 + (Luck > 0 ? -Luck / 3 : -Luck);
+        maxanger = u.ualign.record / 2 + (currentLuckWithBonus() > 0 ? -currentLuckWithBonus() / 3 : -currentLuckWithBonus());
     else
-        maxanger = 3 * divineWrath() + ((Luck > 0 || u.ualign.record >= STRIDENT)
-                                   ? -Luck / 3
-                                   : -Luck);
+        maxanger = 3 * divineWrath() + ((currentLuckWithBonus() > 0 || u.ualign.record >= STRIDENT)
+                                   ? -currentLuckWithBonus() / 3
+                                   : -currentLuckWithBonus());
     if (maxanger < 1)
         maxanger = 1; /* possible if bad align & good luck */
     else if (maxanger > 15)
@@ -920,7 +920,7 @@ aligntyp g_align;
            We don't bother remembering start-of-prayer luck, just make
            sure it's at least -1 so that Luck+2 is big enough to avoid
            a divide by zero crash when generating a random number.  */
-        prayer_luck = max(Luck, -1); /* => (prayer_luck + 2 > 0) */
+        prayer_luck = max(currentLuckWithBonus(), -1); /* => (prayer_luck + 2 > 0) */
         action = rn1(prayer_luck + (on_altar() ? 3 + on_shrine() : 2), 1);
         if (!on_altar())
             action = min(action, 3);
@@ -956,7 +956,7 @@ aligntyp g_align;
        fixed or there were no troubles to begin with; hallucination
        won't be in effect so special handling for it is superfluous */
     if (pat_on_head)
-        switch (rn2((Luck + 6) >> 1)) {
+        switch (rn2((currentLuckWithBonus() + 6) >> 1)) {
         case 0:
             break;
         case 1:
@@ -1705,7 +1705,7 @@ dosacrifice()
                     return 1;
                 }
             }
-            change_luck((value * LUCKMAX) / (MAXVALUE * 2));
+            change_luck((value * maximumPossibleLuck()) / (MAXVALUE * 2));
             if (currentLuck() < 0)
                 setCurrentLuck(0);
             if (currentLuck() != saved_luck) {
@@ -1754,7 +1754,7 @@ boolean praying; /* false means no messages should be given */
            : (p_trouble < 0) ? (timeToNextBlessing() > 100) /* minor difficulties */
               : (timeToNextBlessing() > 0))                 /* not in trouble */
         p_type = 0;                     /* too soon... */
-    else if ((int) Luck < 0 || divineWrath() || alignment < 0)
+    else if (currentLuckWithBonus() < 0 || divineWrath() || alignment < 0)
         p_type = 1; /* too naughty... */
     else /* alignment >= 0 */ {
         if (on_altar() && u.ualign.type != p_aligntyp)

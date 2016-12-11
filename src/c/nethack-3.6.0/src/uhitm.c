@@ -245,7 +245,7 @@ int *attk_count, *role_roll_penalty;
 
     *role_roll_penalty = 0; /* default is `none' */
 
-    tmp = 1 + Luck + abon() + find_mac(mtmp) + toHitModifier()
+    tmp = 1 + currentLuckWithBonus() + abon() + find_mac(mtmp) + toHitModifier()
           + maybe_polyd(youmonst.data->mlevel, currentExperienceLevel());
 
     /* some actions should occur only once during multiple attacks */

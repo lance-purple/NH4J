@@ -291,11 +291,6 @@ struct you {
 #define A_CURRENT 0
     aligntyp ualignbase[CONVERT]; /* for ualign conversion record */
 
-#define Luck (currentLuck() + luckBonus())
-#define LUCKADD 3 /* added value when carrying luck stone */
-#define LUCKMAX 10
-#define LUCKMIN (-10)
-
     long ucleansed; /* to record moves when player was cleansed */
     long usleep;    /* sleeping; monstermove you last started */
     int uinvault;

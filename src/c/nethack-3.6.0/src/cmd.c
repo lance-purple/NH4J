@@ -2198,13 +2198,13 @@ int final;
         enl_msg("Your life ", "will be", "would have been", " saved", "");
 
     /*** Miscellany ***/
-    if (Luck) {
-        ltmp = abs((int) Luck);
+    if (currentLuckWithBonus()) {
+        ltmp = abs((int) currentLuckWithBonus());
         Sprintf(buf, "%s%slucky",
                 ltmp >= 10 ? "extremely " : ltmp >= 5 ? "very " : "",
-                Luck < 0 ? "un" : "");
+                currentLuckWithBonus() < 0 ? "un" : "");
         if (wizard)
-            Sprintf(eos(buf), " (%d)", Luck);
+            Sprintf(eos(buf), " (%d)", currentLuckWithBonus());
         you_are(buf, "");
     } else if (wizard)
         enl_msg("Your luck ", "is", "was", " zero", "");

@@ -373,6 +373,18 @@ public class PlayerCharacter {
 		luckBonus = bonus;
 	}
 
+	public static int currentLuckWithBonus() {
+		return currentLuck() + luckBonus();
+	}
+
+	public static int minimumPossibleLuck() {
+		return -10;
+	}
+
+	public static int maximumPossibleLuck() {
+		return 10;
+	}
+
 	public static int blessings() {
 		return blessings;
 	}

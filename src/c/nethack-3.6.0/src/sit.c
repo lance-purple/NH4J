@@ -225,13 +225,13 @@ dosit()
                 pline("A voice echoes:");
                 verbalize(
                  "A curse upon thee for sitting upon this most holy throne!");
-                if (Luck > 0) {
+                if (currentLuckWithBonus() > 0) {
                     make_blinded(Blinded + rn1(100, 250), TRUE);
                 } else
                     rndcurse();
                 break;
             case 10:
-                if (Luck < 0 || (HSee_invisible & INTRINSIC)) {
+                if (currentLuckWithBonus() < 0 || (HSee_invisible & INTRINSIC)) {
                     if (level.flags.nommap) {
                         pline("A terrible drone fills your head!");
                         make_confused((HConfusion & TIMEOUT) + (long) rnd(30),
@@ -247,7 +247,7 @@ dosit()
                 }
                 break;
             case 11:
-                if (Luck < 0) {
+                if (currentLuckWithBonus() < 0) {
                     You_feel("threatened.");
                     aggravate();
                 } else {

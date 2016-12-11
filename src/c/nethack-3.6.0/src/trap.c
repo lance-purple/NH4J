@@ -3187,7 +3187,7 @@ xchar x, y;
             chance = 20;
             break;
         }
-        if ((!force && (Luck + 5) > rn2(chance))
+        if ((!force && (currentLuckWithBonus() + 5) > rn2(chance))
             || (is_flammable(obj) && obj->oerodeproof))
             return FALSE;
         /* Container is burnt up - dump contents out */
@@ -3206,11 +3206,11 @@ xchar x, y;
         setnotworn(obj);
         delobj(obj);
         return TRUE;
-    } else if (!force && (Luck + 5) > rn2(20)) {
+    } else if (!force && (currentLuckWithBonus() + 5) > rn2(20)) {
         /*  chance per item of sustaining damage:
-          *     max luck (Luck==13):    10%
-          *     avg luck (Luck==0):     75%
-          *     awful luck (Luck<-4):  100%
+          *     max luck (currentLuckWithBonus()==13):    10%
+          *     avg luck (currentLuckWithBonus()==0):     75%
+          *     awful luck (currentLuckWithBonus()<-4):  100%
           */
         return FALSE;
     } else if (obj->oclass == SCROLL_CLASS || obj->oclass == SPBOOK_CLASS) {
@@ -3351,11 +3351,11 @@ boolean force;
 
         water_damage_chain(obj->cobj, FALSE);
         return ER_NOTHING;
-    } else if (!force && (Luck + 5) > rn2(20)) {
+    } else if (!force && (currentLuckWithBonus() + 5) > rn2(20)) {
         /*  chance per item of sustaining damage:
             *   max luck:               10%
-            *   avg luck (Luck==0):     75%
-            *   awful luck (Luck<-4):  100%
+            *   avg luck (currentLuckWithBonus()==0):     75%
+            *   awful luck (currentLuckWithBonus()<-4):  100%
             */
         return ER_NOTHING;
     } else if (obj->oclass == SCROLL_CLASS) {
@@ -3595,7 +3595,7 @@ drown()
         return FALSE;
     }
     if ((Teleportation || can_teleport(youmonst.data)) && !Unaware
-        && (Teleport_control || rn2(3) < Luck + 2)) {
+        && (Teleport_control || rn2(3) < currentLuckWithBonus() + 2)) {
         You("attempt a teleport spell."); /* utcsri!carroll */
         if (!level.flags.noteleport) {
             (void) dotele();
@@ -4551,7 +4551,7 @@ boolean disarm;
                            chest kills you and ends up in bones file */
     You(disarm ? "set it off!" : "trigger a trap!");
     display_nhwindow(WIN_MESSAGE, FALSE);
-    if (Luck > -13 && rn2(13 + Luck) > 7) { /* saved by luck */
+    if (currentLuckWithBonus() > -13 && rn2(13 + currentLuckWithBonus()) > 7) { /* saved by luck */
         /* trap went off, but good luck prevents damage */
         switch (rn2(13)) {
         case 12:
@@ -4585,7 +4585,7 @@ boolean disarm;
         if (msg)
             pline("But luckily the %s!", msg);
     } else {
-        switch (rn2(20) ? ((Luck >= 13) ? 0 : rn2(13 - Luck)) : rn2(26)) {
+        switch (rn2(20) ? ((currentLuckWithBonus() >= 13) ? 0 : rn2(13 - currentLuckWithBonus())) : rn2(26)) {
         case 25:
         case 24:
         case 23:

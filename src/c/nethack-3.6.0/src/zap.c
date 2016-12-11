@@ -1271,7 +1271,7 @@ struct obj *obj;
     if (poly_zapped < 0) {
         /* some may metamorphosize */
         for (i = obj->quan; i; i--)
-            if (!rn2(Luck + 45)) {
+            if (!rn2(currentLuckWithBonus() + 45)) {
                 poly_zapped = objects[obj->otyp].oc_material;
                 break;
             }
@@ -2025,7 +2025,7 @@ register struct obj *obj;
         break;
     case WAN_WISHING:
         known = TRUE;
-        if (Luck + rn2(5) < 0) {
+        if (currentLuckWithBonus() + rn2(5) < 0) {
             pline("Unfortunately, nothing happens.");
             break;
         }

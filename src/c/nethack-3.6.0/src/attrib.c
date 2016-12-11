@@ -287,10 +287,16 @@ change_luck(n)
 register schar n;
 {
     increaseCurrentLuck(n);
-    if (currentLuck() < 0 && currentLuck() < LUCKMIN)
-        setCurrentLuck(LUCKMIN);
-    if (currentLuck() > 0 && currentLuck() > LUCKMAX)
-        setCurrentLuck(LUCKMAX);
+    if (currentLuck() < 0) {
+        if (currentLuck() < minimumPossibleLuck()) {
+            setCurrentLuck(minimumPossibleLuck());
+        }
+    }
+    if (currentLuck() > 0) {
+        if (currentLuck() > maximumPossibleLuck()) {
+            setCurrentLuck(maximumPossibleLuck());
+        }
+    }
 }
 
 int
@@ -318,6 +324,7 @@ void
 set_moreluck()
 {
     int luckbon = stone_luck(TRUE);
+    int LUCKADD = 3; /* added value when carrying luck stone */
 
     if (!luckbon && !carrying(LUCKSTONE))
         setLuckBonus(0);

@@ -997,7 +997,7 @@ dokick()
             register int i;
             if (Levitation)
                 goto dumb;
-            if ((Luck < 0 || maploc->doormask) && !rn2(3)) {
+            if ((currentLuckWithBonus() < 0 || maploc->doormask) && !rn2(3)) {
                 maploc->typ = ROOM;
                 maploc->doormask = 0; /* don't leave loose ends.. */
                 (void) mkgold((long) rnd(200), x, y);
@@ -1009,9 +1009,9 @@ dokick()
                 }
                 exercise(A_DEX, TRUE);
                 return 1;
-            } else if (Luck > 0 && !rn2(3) && !maploc->looted) {
+            } else if (currentLuckWithBonus() > 0 && !rn2(3) && !maploc->looted) {
                 (void) mkgold((long) rn1(201, 300), x, y);
-                i = Luck + 1;
+                i = currentLuckWithBonus() + 1;
                 if (i > 6)
                     i = 6;
                 while (i--)
