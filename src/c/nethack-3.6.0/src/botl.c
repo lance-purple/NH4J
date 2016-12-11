@@ -253,9 +253,9 @@ botl_score()
     utotal = money_cnt(invent) + hidden_gold();
     if ((utotal -= startingMoney()) < 0L)
         utotal = 0L;
-    utotal += u.urexp + (50 * (deepest - 1))
+    utotal += currentScore() + (50 * (deepest - 1))
           + (deepest > 30 ? 10000 : deepest > 20 ? 1000 * (deepest - 20) : 0);
-    if (utotal < u.urexp)
+    if (utotal < currentScore())
         utotal = LONG_MAX; /* wrap around */
     return utotal;
 }

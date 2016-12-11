@@ -492,7 +492,7 @@ time_t when;
     t0->ver_major = VERSION_MAJOR;
     t0->ver_minor = VERSION_MINOR;
     t0->patchlevel = PATCHLEVEL;
-    t0->points = u.urexp;
+    t0->points = currentScore();
     t0->deathdnum = currentDungeonNumber();
     /* deepest_lev_reached() is in terms of depth(), and reporting the
      * deepest level reached in the dungeon death occurred in doesn't
@@ -768,7 +768,7 @@ boolean so;
     else
         Strcat(linebuf, "   ");
 
-    Sprintf(eos(linebuf), " %10ld  %.10s", t1->points ? t1->points : u.urexp,
+    Sprintf(eos(linebuf), " %10ld  %.10s", t1->points ? t1->points : currentScore(),
             t1->name);
     Sprintf(eos(linebuf), "-%s", t1->plrole);
     if (t1->plrace[0] != '?')

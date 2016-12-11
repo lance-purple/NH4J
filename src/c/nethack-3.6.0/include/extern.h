@@ -941,6 +941,11 @@ E void FDECL(setHighestExperienceLevelSoFar, (int));
 E long FDECL(currentXP, ());
 E void FDECL(setCurrentXP, (long));
 
+E long FDECL(currentScore, ());
+E void FDECL(setCurrentScore, (long));
+E void FDECL(increaseCurrentScore, (long));
+E void FDECL(decreaseCurrentScore, (long));
+
 E int FDECL(currentLuck, ());
 E void FDECL(setCurrentLuck, (int));
 E void FDECL(increaseCurrentLuck, (int));

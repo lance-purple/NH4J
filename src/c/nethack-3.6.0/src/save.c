@@ -381,6 +381,7 @@ register int fd, mode;
     write_int(fd, currentExperienceLevel());
     write_int(fd, highestExperienceLevelSoFar());
     write_long(fd, currentXP());
+    write_long(fd, currentScore());
 
     write_int(fd, currentLuck());
     write_int(fd, luckBonus());

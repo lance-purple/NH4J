@@ -162,7 +162,7 @@ register int addXP, addScore;
 {
     long newexp = currentXP() + addXP;
     long rexpincr = 4 * addXP + addScore;
-    long newrexp = u.urexp + rexpincr;
+    long newrexp = currentScore() + rexpincr;
 
     /* cap experience and score on wraparound */
     if (newexp < 0 && addXP > 0)
@@ -170,7 +170,7 @@ register int addXP, addScore;
     if (newrexp < 0 && rexpincr > 0)
         newrexp = LONG_MAX;
     setCurrentXP(newexp);
-    u.urexp = newrexp;
+    setCurrentScore(newrexp);
 
     if (addXP
 #ifdef SCORE_ON_BOTL
@@ -178,7 +178,7 @@ register int addXP, addScore;
 #endif
         )
         context.botl = 1;
-    if (u.urexp >= (Role_if(PM_WIZARD) ? 1000 : 2000))
+    if (currentScore() >= (Role_if(PM_WIZARD) ? 1000 : 2000))
         flags.beginner = 0;
 }
 

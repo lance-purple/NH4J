@@ -652,6 +652,7 @@ unsigned int *stuckid, *steedid;
     setCurrentExperienceLevel(read_int(fd));
     setHighestExperienceLevelSoFar(read_int(fd));
     setCurrentXP(read_long(fd));
+    setCurrentScore(read_long(fd));
 
     setCurrentLuck(read_int(fd));
     setLuckBonus(read_int(fd));

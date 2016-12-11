@@ -795,6 +795,22 @@ void setCurrentXP(long xp) {
     javaSetLong(PLAYER_CHARACTER_CLASS, "setCurrentXP", xp);
 }
 
+long currentScore() {
+    return javaGetLong(PLAYER_CHARACTER_CLASS, "currentScore");
+}
+
+void setCurrentScore(long score) {
+    javaSetLong(PLAYER_CHARACTER_CLASS, "setCurrentScore", score);
+}
+
+void increaseCurrentScore(long score) {
+    javaSetLong(PLAYER_CHARACTER_CLASS, "increaseCurrentScore", score);
+}
+
+void decreaseCurrentScore(long score) {
+    javaSetLong(PLAYER_CHARACTER_CLASS, "decreaseCurrentScore", score);
+}
+
 int currentLuck() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "currentLuck");
 } 
