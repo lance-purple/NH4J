@@ -294,7 +294,6 @@ struct you {
     struct monst *ustuck;
     struct monst *usteed;
 
-    int umortality;      /* how many times you died */
     int ugrave_arise;    /* you die and become something aside from a ghost */
     int weapon_slots;    /* unused skill slots */
     int skills_advanced; /* # of advances made so far */

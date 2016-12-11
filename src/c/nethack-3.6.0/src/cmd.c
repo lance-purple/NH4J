@@ -2268,7 +2268,7 @@ int final;
         buf[0] = '\0';
         if (final < 2) { /* still in progress, or quit/escaped/ascended */
             p = "survived after being killed ";
-            switch (u.umortality) {
+            switch (deathCount()) {
             case 0:
                 p = !final ? (char *) 0 : "survived";
                 break;
@@ -2282,19 +2282,19 @@ int final;
                 Strcpy(buf, "thrice");
                 break;
             default:
-                Sprintf(buf, "%d times", u.umortality);
+                Sprintf(buf, "%d times", deathCount());
                 break;
             }
         } else { /* game ended in character's death */
             p = "are dead";
-            switch (u.umortality) {
+            switch (deathCount()) {
             case 0:
                 impossible("dead without dying?");
             case 1:
                 break; /* just "are dead" */
             default:
-                Sprintf(buf, " (%d%s time!)", u.umortality,
-                        ordin(u.umortality));
+                Sprintf(buf, " (%d%s time!)", deathCount(),
+                        ordin(deathCount()));
                 break;
             }
         }

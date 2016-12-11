@@ -364,7 +364,7 @@ struct obj *obj;         /* missile (or stack providing it) */
                 potionhit(&youmonst, singleobj, FALSE);
                 break;
             }
-            oldumort = u.umortality;
+            oldumort = deathCount();
             switch (singleobj->otyp) {
                 int dam, hitv;
             case EGG:
@@ -407,7 +407,7 @@ struct obj *obj;         /* missile (or stack providing it) */
                 poisoned(onmbuf, A_STR, knmbuf,
                          /* if damage triggered life-saving,
                             poison is limited to attrib loss */
-                         (u.umortality > oldumort) ? 0 : 10, TRUE);
+                         (deathCount() > oldumort) ? 0 : 10, TRUE);
             }
             if (hitu && can_blnd((struct monst *) 0, &youmonst,
                                  (uchar) (singleobj->otyp == BLINDING_VENOM

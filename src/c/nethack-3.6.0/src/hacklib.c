@@ -1051,6 +1051,22 @@ void multiplyTimeRemainingAsMonster(int t) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "multiplyTimeRemainingAsMonster", t);
 }
 
+int deathCount() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "deathCount");
+} 
+
+void setDeathCount(int hp) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setDeathCount", hp);
+}
+
+void increaseDeathCount(int hp) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "increaseDeathCount", hp);
+}
+
+void decreaseDeathCount(int hp) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseDeathCount", hp);
+}
+
 int currentHitPoints() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "currentHitPoints");
 } 

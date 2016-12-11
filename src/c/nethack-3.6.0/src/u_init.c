@@ -622,7 +622,7 @@ u_init()
     setSentToDungeonLevel(currentDungeonLevel());
 
     setYouMoved(FALSE);
-    u.umortality = 0;
+    setDeathCount(0);
     u.ugrave_arise = NON_PM;
 
     setCurrentMonsterNumber((flags.female && urole.femalenum != NON_PM)

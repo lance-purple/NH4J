@@ -1024,6 +1024,11 @@ E void FDECL(multiplyTimeRemainingAsMonster, (int));
 E int FDECL(lycanthropeType, ());
 E void FDECL(setLycanthropeType, (int));
 
+E int FDECL(deathCount, ());
+E void FDECL(setDeathCount, (int));
+E void FDECL(increaseDeathCount, (int));
+E void FDECL(decreaseDeathCount, (int));
+
 E int FDECL(currentHitPoints, ());
 E void FDECL(setCurrentHitPoints, (int));
 E void FDECL(increaseCurrentHitPoints, (int));

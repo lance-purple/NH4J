@@ -361,6 +361,7 @@ register int fd, mode;
     write_int(fd, lycanthropeType());
     write_int(fd, timeRemainingAsMonster());
 
+    write_int(fd, deathCount());
     write_int(fd, currentHitPoints());
     write_int(fd, maximumHitPoints());
 

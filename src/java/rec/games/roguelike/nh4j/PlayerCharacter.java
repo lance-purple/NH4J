@@ -80,6 +80,9 @@ public class PlayerCharacter {
 	private static int originalMonsterNumber;
 	private static int currentMonsterNumber;
 	private static int timeRemainingAsMonster;
+	
+	private static int deathCount;
+	
 	private static int lycanthropeType;
 	
 	private static int currentMagicalEnergy;
@@ -722,6 +725,22 @@ public class PlayerCharacter {
 
 	public static void setLycanthropeType(int t) {
 		lycanthropeType = t;
+	}
+
+	public static final int deathCount() {
+		return deathCount;
+	}
+
+	public static final void setDeathCount(int c) {
+	   deathCount = c;
+	}
+
+	public static final void increaseDeathCount(int c) {
+		   deathCount += c;
+	}
+
+	public static final void decreaseDeathCount(int c) {
+		   deathCount -= c;
 	}
 
 	public static final int currentHitPoints() {

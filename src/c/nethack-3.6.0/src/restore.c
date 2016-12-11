@@ -631,6 +631,7 @@ unsigned int *stuckid, *steedid;
     setLycanthropeType(read_int(fd));
     setTimeRemainingAsMonster(read_int(fd));
 
+    setDeathCount(read_int(fd));
     setCurrentHitPoints(read_int(fd));
     setMaximumHitPoints(read_int(fd));
 

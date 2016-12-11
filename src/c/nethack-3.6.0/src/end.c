@@ -877,7 +877,7 @@ int how;
         Strcpy(killer.name, deaths[how]);
 
     if (how < PANICKED)
-        u.umortality++;
+        increaseDeathCount(1);
     if (Lifesaved && (how <= GENOCIDED)) {
         pline("But wait...");
         makeknown(AMULET_OF_LIFE_SAVING);
@@ -990,7 +990,7 @@ int how;
         killer.format = NO_KILLER_PREFIX;
         if (currentHitPoints() < 1) {
             how = DIED;
-            u.umortality++; /* skipped above when how==QUIT */
+            increaseDeathCount(1); /* skipped above when how==QUIT */
             Strcpy(killer.name, "quit while already on Charon's boat");
         }
     }

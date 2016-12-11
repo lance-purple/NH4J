@@ -902,7 +902,7 @@ unsigned trflags;
         otmp->owt = weight(otmp);
         if (!rn2(6))
             otmp->opoisoned = 1;
-        oldumort = u.umortality;
+        oldumort = deathCount();
         if (u.usteed && !rn2(2) && steedintrap(trap, otmp)) { /* nothing */
             ;
         } else if (thitu(7, dmgval(otmp, &youmonst), otmp, "little dart")) {
@@ -910,7 +910,7 @@ unsigned trflags;
                 poisoned("dart", A_CON, "little dart",
                          /* if damage triggered life-saving,
                             poison is limited to attrib loss */
-                         (u.umortality > oldumort) ? 0 : 10, TRUE);
+                         (deathCount() > oldumort) ? 0 : 10, TRUE);
             obfree(otmp, (struct obj *) 0);
         } else {
             place_object(otmp, currentX(), currentY());
@@ -1145,7 +1145,7 @@ unsigned trflags;
         setCurrentTrapType(TT_PIT);
         if (!steedintrap(trap, (struct obj *) 0)) {
             if (ttype == SPIKED_PIT) {
-                oldumort = u.umortality;
+                oldumort = deathCount();
                 losehp(Maybe_Half_Phys(rnd(adj_pit ? 6 : 10)),
                        plunged
                            ? "deliberately plunged into a pit of iron spikes"
@@ -1158,7 +1158,7 @@ unsigned trflags;
                                      : "fall onto poison spikes",
                              /* if damage triggered life-saving,
                                 poison is limited to attrib loss */
-                             (u.umortality > oldumort) ? 0 : 8, FALSE);
+                             (deathCount() > oldumort) ? 0 : 8, FALSE);
             } else {
                 /* plunging flyers take spike damage but not pit damage */
                 if (!adj_pit
