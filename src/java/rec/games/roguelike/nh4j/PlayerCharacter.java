@@ -35,7 +35,8 @@ public class PlayerCharacter {
 	private static int currentTrapTimeout;
 	
 	private static long sleepingSinceMove;
-	
+
+	private static int timeInVault;
 	private static int timeSinceBeingSwallowed;
 	private static int timeSinceBecomingADemigod;
 	
@@ -268,6 +269,22 @@ public class PlayerCharacter {
 	
 	public static void setSleepingSinceMove(long m) {
 		sleepingSinceMove = m;
+	}
+
+	public static int timeInVault() {
+		return timeInVault;
+	}
+
+	public static void setTimeInVault(int t) {
+		timeInVault = t;
+	}
+
+	public static void increaseTimeInVault(int t) {
+		timeInVault += t;
+	}
+
+	public static void decreaseTimeInVault(int t) {
+		timeInVault -= t;
 	}
 
 	public static int timeSinceBeingSwallowed() {

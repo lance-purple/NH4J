@@ -610,6 +610,7 @@ unsigned int *stuckid, *steedid;
 
     setSleepingSinceMove(read_long(fd));
 
+    setTimeInVault(read_int(fd));
     setTimeSinceBeingSwallowed(read_int(fd));
     setTimeSinceBecomingADemigod(read_int(fd));
 

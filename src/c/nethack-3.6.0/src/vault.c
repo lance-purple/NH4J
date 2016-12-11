@@ -214,14 +214,15 @@ invault()
     int trycount, vaultroom = (int) vault_occupied(u.urooms);
 
     if (!vaultroom) {
-        u.uinvault = 0;
+        setTimeInVault(0);
         return;
     }
 
     vaultroom -= ROOMOFFSET;
 
     guard = findgd();
-    if (++u.uinvault % 30 == 0 && !guard) { /* if time ok and no guard now. */
+    increaseTimeInVault();
+    if (timeInVault() % 30 == 0 && !guard) { /* if time ok and no guard now. */
         char buf[BUFSZ];
         register int x, y, dd, gx, gy;
         int lx = 0, ly = 0;
@@ -868,7 +869,7 @@ paygd()
     if (!umoney || !grd)
         return;
 
-    if (u.uinvault) {
+    if (timeInVault()) {
         Your("%ld %s goes into the Magic Memory Vault.", umoney,
              currency(umoney));
         gx = currentX();

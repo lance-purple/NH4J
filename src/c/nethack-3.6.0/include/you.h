@@ -291,10 +291,9 @@ struct you {
 #define A_CURRENT 0
     aligntyp ualignbase[CONVERT]; /* for ualign conversion record */
 
-    int uinvault;
-
     struct monst *ustuck;
     struct monst *usteed;
+
     long ugallop;
     int urideturns;
     int umortality;      /* how many times you died */

@@ -747,6 +747,22 @@ void setSleepingSinceMove(long m) {
     javaSetLong(PLAYER_CHARACTER_CLASS, "setSleepingSinceMove", m);
 }
 
+int timeInVault() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "timeInVault");
+}
+
+void setTimeInVault(int t) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setTimeInVault", t);
+}
+
+void increaseTimeInVault(int t) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "increaseTimeInVault", t);
+}
+
+void decreaseTimeInVault(int t) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseTimeInVault", t);
+}
+
 int timeSinceBeingSwallowed() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "timeSinceBeingSwallowed");
 }
