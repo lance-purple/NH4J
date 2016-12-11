@@ -379,6 +379,8 @@ register int fd, mode;
         write_int(fd, magicalEnergyIncreasePerLevel(level));
     }
 
+    write_long(fd, remainingGallopTime());
+
     write_int(fd, currentNutrition());
     write_int(fd, currentHungerState());
 

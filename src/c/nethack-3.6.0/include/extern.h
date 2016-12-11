@@ -1061,6 +1061,11 @@ E void FDECL(decreaseMaximumMagicalEnergy, (int));
 E int FDECL(magicalEnergyIncreasePerLevel, (int));
 E void FDECL(setMagicalEnergyIncreasePerLevel, (int, int));
 
+E long FDECL(remainingGallopTime, ());
+E void FDECL(setRemainingGallopTime, (long));
+E void FDECL(increaseRemainingGallopTime, (long));
+E void FDECL(decreaseRemainingGallopTime, (long));
+
 E int FDECL(currentNutrition, ());
 E void FDECL(setCurrentNutrition, (int));
 E void FDECL(increaseCurrentNutrition, (int));

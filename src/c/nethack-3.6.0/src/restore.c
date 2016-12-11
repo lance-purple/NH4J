@@ -649,6 +649,8 @@ unsigned int *stuckid, *steedid;
       setMagicalEnergyIncreasePerLevel(level,read_int(fd));
     }
 
+    setRemainingGallopTime(read_long(fd));
+
     setCurrentNutrition(read_int(fd));
     setCurrentHungerState(read_int(fd));
 

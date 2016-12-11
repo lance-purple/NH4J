@@ -264,8 +264,9 @@ nh_timeout()
         }
     }
 
-    if (u.ugallop) {
-        if (--u.ugallop == 0L && u.usteed)
+    if (remainingGallopTime()) {
+        decreaseRemainingGallopTime(1);
+        if (remainingGallopTime() == 0L && u.usteed)
             pline("%s stops galloping.", Monnam(u.usteed));
     }
 

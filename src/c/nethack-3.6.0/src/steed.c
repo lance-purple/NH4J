@@ -396,7 +396,7 @@ kick_steed()
     }
 
     pline("%s gallops!", Monnam(u.usteed));
-    u.ugallop += rn1(20, 30);
+    increaseRemainingGallopTime(rn1(20, 30));
     return;
 }
 
@@ -527,7 +527,7 @@ int reason; /* Player was thrown off etc. */
 
     /* Release the steed and saddle */
     u.usteed = 0;
-    u.ugallop = 0L;
+    setRemainingGallopTime(0L);
 
     /* Set player and steed's position.  Try moving the player first
        unless we're in the midst of creating a bones file. */

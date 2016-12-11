@@ -1172,6 +1172,22 @@ void setMagicalEnergyIncreasePerLevel(int level, int en) {
     javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setMagicalEnergyIncreasePerLevel", level, en);
 }
 
+long remainingGallopTime() {
+    return javaGetLong(PLAYER_CHARACTER_CLASS, "remainingGallopTime");
+} 
+
+void setRemainingGallopTime(long t) {
+    javaSetLong(PLAYER_CHARACTER_CLASS, "setRemainingGallopTime", t);
+}
+
+void increaseRemainingGallopTime(long t) {
+    javaSetLong(PLAYER_CHARACTER_CLASS, "increaseRemainingGallopTime", t);
+}
+
+void decreaseRemainingGallopTime(long t) {
+    javaSetLong(PLAYER_CHARACTER_CLASS, "decreaseRemainingGallopTime", t);
+}
+
 int currentNutrition() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "currentNutrition");
 } 
