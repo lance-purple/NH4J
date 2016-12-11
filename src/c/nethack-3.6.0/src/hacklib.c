@@ -1193,12 +1193,15 @@ int turnsRiddenSinceLastSkillCheck() {
 } 
 
 void setTurnsRiddenSinceLastSkillCheck(int t) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setTurnsRiddenSinceLastSkillCheck", t);
 }
 
 void increaseTurnsRiddenSinceLastSkillCheck(int t) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "increaseTurnsRiddenSinceLastSkillCheck", t);
 }
 
 void decreaseTurnsRiddenSinceLastSkillCheck(int t) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseTurnsRiddenSinceLastSkillCheck", t);
 }
 
 int currentNutrition() {
