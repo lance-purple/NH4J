@@ -392,7 +392,7 @@ register int fd, mode;
     write_int(fd, blessings());
     write_int(fd, timeToNextBlessing());
     write_int(fd, divineWrath());
-    write_long(fd, timeOfLastCleansing());
+    write_long(fd, cleansedSinceMove());
 
     write_int(fd, toHitModifier());
     write_int(fd, damageBonus());

@@ -50,7 +50,7 @@ public class PlayerCharacter {
 	private static int blessings;
 	private static int timeToNextBlessing;
 	private static int divineWrath;
-	private static long timeOfLastCleansing;
+	private static long cleansedSinceMove;
 	
 	private static int toHitModifier;
 	private static int damageBonus;
@@ -461,12 +461,12 @@ public class PlayerCharacter {
 		divineWrath -= wrath;
 	}
 
-	public static long timeOfLastCleansing() {
-		return timeOfLastCleansing;
+	public static long cleansedSinceMove() {
+		return cleansedSinceMove;
 	}
 
-	public static void setTimeOfLastCleansing(long t) {
-		timeOfLastCleansing = t;
+	public static void setCleansedSinceMove(long t) {
+		cleansedSinceMove = t;
 	}
 
 	public static int toHitModifier() {

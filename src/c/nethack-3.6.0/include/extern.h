@@ -980,8 +980,8 @@ E void FDECL(setDivineWrath, (int));
 E void FDECL(increaseDivineWrath, (int));
 E void FDECL(decreaseDivineWrath, (int));
 
-E long FDECL(timeOfLastCleansing, ());
-E void FDECL(setTimeOfLastCleansing, (long));
+E long FDECL(cleansedSinceMove, ());
+E void FDECL(setCleansedSinceMove, (long));
 
 E int FDECL(toHitModifier, ());
 E void FDECL(setToHitModifier, (int));

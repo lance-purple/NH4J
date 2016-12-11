@@ -662,7 +662,7 @@ unsigned int *stuckid, *steedid;
     setBlessings(read_int(fd));
     setTimeToNextBlessing(read_int(fd));
     setDivineWrath(read_int(fd));
-    setTimeOfLastCleansing(read_long(fd));
+    setCleansedSinceMove(read_long(fd));
 
     setToHitModifier(read_int(fd));
     setDamageBonus(read_int(fd));
