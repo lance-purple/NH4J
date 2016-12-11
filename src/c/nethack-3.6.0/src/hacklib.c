@@ -1188,6 +1188,19 @@ void decreaseRemainingGallopTime(long t) {
     javaSetLong(PLAYER_CHARACTER_CLASS, "decreaseRemainingGallopTime", t);
 }
 
+int turnsRiddenSinceLastSkillCheck() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "turnsRiddenSinceLastSkillCheck");
+} 
+
+void setTurnsRiddenSinceLastSkillCheck(int t) {
+}
+
+void increaseTurnsRiddenSinceLastSkillCheck(int t) {
+}
+
+void decreaseTurnsRiddenSinceLastSkillCheck(int t) {
+}
+
 int currentNutrition() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "currentNutrition");
 } 

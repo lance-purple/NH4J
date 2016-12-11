@@ -650,6 +650,7 @@ unsigned int *stuckid, *steedid;
     }
 
     setRemainingGallopTime(read_long(fd));
+    setTurnsRiddenSinceLastSkillCheck(read_int(fd));
 
     setCurrentNutrition(read_int(fd));
     setCurrentHungerState(read_int(fd));

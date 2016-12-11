@@ -88,6 +88,7 @@ public class PlayerCharacter {
 	private static int magicalEnergyIncreasePerLevel[] = new int[MAXULEVEL];
 
 	private static long remainingGallopTime;
+	private static int turnsRiddenSinceLastSkillCheck;
 	
 	private static HungerState currentHungerState = HungerState.NOT_HUNGRY;
 	private static int currentNutrition;
@@ -845,6 +846,22 @@ public class PlayerCharacter {
 
 	public static final void decreaseRemainingGallopTime(int t) {
 		remainingGallopTime -= t;
+	}
+
+	public static final int turnsRiddenSinceLastSkillCheck() {
+		return turnsRiddenSinceLastSkillCheck;
+	}
+
+	public static final void setTurnsRiddenSinceLastSkillCheck(int t) {
+		turnsRiddenSinceLastSkillCheck = t;
+	}
+
+	public static final void increaseTurnsRiddenSinceLastSkillCheck(int t) {
+		turnsRiddenSinceLastSkillCheck += t;
+	}
+
+	public static final void decreaseTurnsRiddenSinceLastSkillCheck(int t) {
+		turnsRiddenSinceLastSkillCheck -= t;
 	}
 
 	public static final int currentNutrition() {

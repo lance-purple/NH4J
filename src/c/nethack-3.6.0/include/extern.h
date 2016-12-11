@@ -1066,6 +1066,11 @@ E void FDECL(setRemainingGallopTime, (long));
 E void FDECL(increaseRemainingGallopTime, (long));
 E void FDECL(decreaseRemainingGallopTime, (long));
 
+E int FDECL(turnsRiddenSinceLastSkillCheck, ());
+E void FDECL(setTurnsRiddenSinceLastSkillCheck, (int));
+E void FDECL(increaseTurnsRiddenSinceLastSkillCheck, (int));
+E void FDECL(decreaseTurnsRiddenSinceLastSkillCheck, (int));
+
 E int FDECL(currentNutrition, ());
 E void FDECL(setCurrentNutrition, (int));
 E void FDECL(increaseCurrentNutrition, (int));

@@ -380,6 +380,7 @@ register int fd, mode;
     }
 
     write_long(fd, remainingGallopTime());
+    write_int(fd, turnsRiddenSinceLastSkillCheck());
 
     write_int(fd, currentNutrition());
     write_int(fd, currentHungerState());
