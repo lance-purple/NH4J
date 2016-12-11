@@ -946,7 +946,7 @@ register struct obj *otmp;
         /* blessed potions place you at a random spot in the
            middle of the new level instead of the low point */
         if (otmp->blessed)
-            u.uexp = rndexp(TRUE);
+            setCurrentXP(rndexp(TRUE));
         break;
     case POT_HEALING:
         You_feel("better.");

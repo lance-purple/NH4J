@@ -95,6 +95,12 @@ int javaGetIntFromInt(const char* classname, const char* methodname, int i) {
     return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method, i);
 }
 
+long javaGetLong(const char* classname, const char* methodname) {
+    jclass you_class = getJavaClass(classname);
+    jmethodID method = getStaticMethod(you_class, methodname, "()J");
+    return (*jni_env)->CallStaticLongMethod(jni_env, you_class, method);
+}
+
 boolean javaGetBoolean(const char* classname, const char* methodname) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "()Z");
@@ -111,6 +117,12 @@ void javaSetIntFromInt(const char* classname, const char* methodname, int i, int
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "(II)V");
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, i, v);
+}
+
+void javaSetLong(const char* classname, const char* methodname, long v) {
+    jclass you_class = getJavaClass(classname);
+    jmethodID method = getStaticMethod(you_class, methodname, "(J)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, v);
 }
 
 void javaSetBoolean(const char* classname, const char* methodname, boolean v) {
@@ -773,6 +785,14 @@ void setCurrentExperienceLevel(int e) {
 
 void setHighestExperienceLevelSoFar(int e) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "setHighestExperienceLevelSoFar", e);
+}
+
+long currentXP() {
+    return javaGetLong(PLAYER_CHARACTER_CLASS, "currentXP");
+} 
+
+void setCurrentXP(long xp) {
+    javaSetLong(PLAYER_CHARACTER_CLASS, "setCurrentXP", xp);
 }
 
 int currentLuck() {

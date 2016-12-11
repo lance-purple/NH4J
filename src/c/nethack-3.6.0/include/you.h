@@ -296,7 +296,7 @@ struct you {
 #define LUCKMAX 10
 #define LUCKMIN (-10)
 
-    long uexp, urexp;
+    long urexp;
     long ucleansed; /* to record moves when player was cleansed */
     long usleep;    /* sleeping; monstermove you last started */
     int uinvault;

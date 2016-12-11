@@ -96,7 +96,7 @@ bot2()
     if (areYouPolymorphed())
         Sprintf(nb = eos(nb), " HD:%d", mons[currentMonsterNumber()].mlevel);
     else if (flags.showexp)
-        Sprintf(nb = eos(nb), " Xp:%u/%-1ld", currentExperienceLevel(), u.uexp);
+        Sprintf(nb = eos(nb), " Xp:%u/%-1ld", currentExperienceLevel(), currentXP());
     else
         Sprintf(nb = eos(nb), " Exp:%u", currentExperienceLevel());
 
@@ -514,7 +514,7 @@ bot()
     /* Experience */
 
     blstats[idx][BL_XP].a.a_int = currentExperienceLevel();
-    blstats[idx][BL_EXP].a.a_int = u.uexp;
+    blstats[idx][BL_EXP].a.a_int = currentXP();
 
     /* Time (moves) */
 

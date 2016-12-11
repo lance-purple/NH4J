@@ -290,7 +290,7 @@ newman()
     reset_rndmonst(NON_PM); /* new monster generation criteria */
 
     /* random experience points for the new experience level */
-    u.uexp = rndexp(FALSE);
+    setCurrentXP(rndexp(FALSE));
 
     /* set up new attribute points (particularly Con) */
     redist_attr();

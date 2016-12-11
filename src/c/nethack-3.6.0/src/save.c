@@ -280,6 +280,13 @@ int fd, value;
     bwrite(fd, (genericptr_t) &value, sizeof(int));
 }
 
+static void write_long(fd, value)
+int fd;
+long value;
+{
+    bwrite(fd, (genericptr_t) &value, sizeof(long));
+}
+
 STATIC_OVL void
 savegamestate(fd, mode)
 register int fd, mode;
@@ -373,6 +380,7 @@ register int fd, mode;
 
     write_int(fd, currentExperienceLevel());
     write_int(fd, highestExperienceLevelSoFar());
+    write_long(fd, currentXP());
 
     write_int(fd, currentLuck());
     write_int(fd, luckBonus());

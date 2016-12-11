@@ -5,18 +5,18 @@
 #include "hack.h"
 #include <limits.h>
 
-STATIC_DCL long FDECL(newuexp, (int));
+STATIC_DCL long FDECL(xpToReachNextLevel, (int));
 STATIC_DCL int FDECL(enermod, (int));
 
 STATIC_OVL long
-newuexp(lev)
-int lev;
+xpToReachNextLevel(currentLevel)
+int currentLevel;
 {
-    if (lev < 10)
-        return (10L * (1L << lev));
-    if (lev < 20)
-        return (10000L * (1L << (lev - 10)));
-    return (10000000L * ((long) (lev - 19)));
+    if (currentLevel < 10)
+        return (10L * (1L << currentLevel));
+    if (currentLevel < 20)
+        return (10000L * (1L << (currentLevel - 10)));
+    return (10000000L * ((long) (currentLevel - 19)));
 }
 
 STATIC_OVL int
@@ -157,22 +157,22 @@ register int nk;
 }
 
 void
-more_experienced(exper, rexp)
-register int exper, rexp;
+more_experienced(addXP, addScore)
+register int addXP, addScore;
 {
-    long newexp = u.uexp + exper;
-    long rexpincr = 4 * exper + rexp;
+    long newexp = currentXP() + addXP;
+    long rexpincr = 4 * addXP + addScore;
     long newrexp = u.urexp + rexpincr;
 
     /* cap experience and score on wraparound */
-    if (newexp < 0 && exper > 0)
+    if (newexp < 0 && addXP > 0)
         newexp = LONG_MAX;
     if (newrexp < 0 && rexpincr > 0)
         newrexp = LONG_MAX;
-    u.uexp = newexp;
+    setCurrentXP(newexp);
     u.urexp = newrexp;
 
-    if (exper
+    if (addXP
 #ifdef SCORE_ON_BOTL
         || flags.showscore
 #endif
@@ -210,7 +210,7 @@ const char *drainer; /* cause of death, if drain should be fatal */
             done(DIED);
         }
         /* no drainer or lifesaved */
-        u.uexp = 0;
+        setCurrentXP(0);
     }
     num = hitPointIncreasePerLevel(currentExperienceLevel());
 
@@ -233,8 +233,8 @@ const char *drainer; /* cause of death, if drain should be fatal */
     else if (currentMagicalEnergy() > maximumMagicalEnergy())
         setCurrentMagicalEnergy(maximumMagicalEnergy());
 
-    if (u.uexp > 0)
-        u.uexp = newuexp(currentExperienceLevel()) - 1;
+    if (currentXP() > 0)
+        setCurrentXP(xpToReachNextLevel(currentExperienceLevel()) - 1);
 
     if (areYouPolymorphed()) {
         num = monhp_per_lvl(&youmonst);
@@ -256,7 +256,7 @@ const char *drainer; /* cause of death, if drain should be fatal */
 void
 newexplevel()
 {
-    if (currentExperienceLevel() < MAXULEV && u.uexp >= newuexp(currentExperienceLevel()))
+    if (currentExperienceLevel() < MAXULEV && currentXP() >= xpToReachNextLevel(currentExperienceLevel()))
         pluslvl(TRUE);
 }
 
@@ -289,11 +289,11 @@ boolean incr; /* true iff via incremental experience growth */
     if (currentExperienceLevel() < MAXULEV) {
         /* increase experience points to reflect new level */
         if (incr) {
-            long tmp = newuexp(currentExperienceLevel() + 1);
-            if (u.uexp >= tmp)
-                u.uexp = tmp - 1;
+            long tmp = xpToReachNextLevel(currentExperienceLevel() + 1);
+            if (currentXP() >= tmp)
+                setCurrentXP(tmp - 1);
         } else {
-            u.uexp = newuexp(currentExperienceLevel());
+            setCurrentXP(xpToReachNextLevel(currentExperienceLevel()));
         }
         setCurrentExperienceLevel(currentExperienceLevel() + 1);
         if (highestExperienceLevelSoFar() < currentExperienceLevel()) {
@@ -315,8 +315,8 @@ boolean gaining; /* gaining XP via potion vs setting XP for polyself */
 {
     long minexp, maxexp, diff, factor, result;
 
-    minexp = (currentExperienceLevel() == 1) ? 0L : newuexp(currentExperienceLevel() - 1);
-    maxexp = newuexp(currentExperienceLevel());
+    minexp = (currentExperienceLevel() == 1) ? 0L : xpToReachNextLevel(currentExperienceLevel() - 1);
+    maxexp = xpToReachNextLevel(currentExperienceLevel());
     diff = maxexp - minexp, factor = 1L;
     /* make sure that `diff' is an argument which rn2() can handle */
     while (diff >= (long) LARGEST_INT)
@@ -327,10 +327,10 @@ boolean gaining; /* gaining XP via potion vs setting XP for polyself */
        level; otherwise blessed potions of gain level can result
        in lowering the experience points instead of raising them */
     if (currentExperienceLevel() == MAXULEV && gaining) {
-        result += (u.uexp - minexp);
+        result += (currentXP() - minexp);
         /* avoid wrapping (over 400 blessed potions needed for that...) */
-        if (result < u.uexp)
-            result = u.uexp;
+        if (result < currentXP())
+            result = currentXP();
     }
     return result;
 }

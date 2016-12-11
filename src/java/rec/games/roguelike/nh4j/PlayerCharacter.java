@@ -39,6 +39,7 @@ public class PlayerCharacter {
 	
 	private static int currentExperienceLevel;
 	private static int highestExperienceLevelSoFar;
+	private static long currentXP;
 	
 	private static int currentLuck;
 	private static int luckBonus;
@@ -310,6 +311,14 @@ public class PlayerCharacter {
 
 	public static void setHighestExperienceLevelSoFar(int level) {
 		highestExperienceLevelSoFar = level;
+	}
+
+	public static long currentXP() {
+		return currentXP;
+	}
+
+	public static void setCurrentXP(long exp) {
+		currentXP = exp;
 	}
 
 	public static int hitPointIncreasePerLevel(int level) {

@@ -515,6 +515,14 @@ register int fd;
     return value;
 }
 
+static int read_long(fd)
+register int fd;
+{
+    long value;
+    mread(fd, (genericptr_t) &value, sizeof(long));
+    return value;
+}
+
 STATIC_OVL
 boolean
 restgamestate(fd, stuckid, steedid)
@@ -643,6 +651,7 @@ unsigned int *stuckid, *steedid;
 
     setCurrentExperienceLevel(read_int(fd));
     setHighestExperienceLevelSoFar(read_int(fd));
+    setCurrentXP(read_long(fd));
 
     setCurrentLuck(read_int(fd));
     setLuckBonus(read_int(fd));
