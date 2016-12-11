@@ -2608,7 +2608,7 @@ register int nval;
     if (multi < nval)
         return;              /* This is a bug fix by ab@unido */
     u.uinvulnerable = FALSE; /* Kludge to avoid ctrl-C bug -dlc */
-    u.usleep = 0;
+    setSleepingSinceMove(0);
     multi = nval;
     if (nval == 0)
         multi_reason = NULL;
@@ -2628,7 +2628,7 @@ const char *msg_override;
     if (*nomovemsg)
         pline1(nomovemsg);
     nomovemsg = 0;
-    u.usleep = 0;
+    setSleepingSinceMove(0);
     multi_reason = NULL;
     if (afternmv)
         (*afternmv)();

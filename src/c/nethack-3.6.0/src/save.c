@@ -337,8 +337,11 @@ register int fd, mode;
     write_int(fd, currentTrapType());
     write_int(fd, currentTrapTimeout());
 
+    write_long(fd, sleepingSinceMove());
+
     write_int(fd, timeSinceBeingSwallowed());
     write_int(fd, timeSinceBecomingADemigod());
+
 
     int i;
     for (i = 0; i < A_MAX; i++) {

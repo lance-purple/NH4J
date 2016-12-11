@@ -34,6 +34,8 @@ public class PlayerCharacter {
 	private static TrapType currentTrapType;
 	private static int currentTrapTimeout;
 	
+	private static long sleepingSinceMove;
+	
 	private static int timeSinceBeingSwallowed;
 	private static int timeSinceBecomingADemigod;
 	
@@ -258,6 +260,14 @@ public class PlayerCharacter {
 	
 	public static void setCurrentTrapType(int key) {
 	    currentTrapType = TrapType.byKey(key);	
+	}
+
+	public static long sleepingSinceMove() {
+		return sleepingSinceMove;
+	}
+	
+	public static void setSleepingSinceMove(long m) {
+		sleepingSinceMove = m;
 	}
 
 	public static int timeSinceBeingSwallowed() {

@@ -739,6 +739,14 @@ void setCurrentTrapTimeout(int timeout) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "setCurrentTrapTimeout", timeout);
 }
 
+long sleepingSinceMove() {
+    return javaGetLong(PLAYER_CHARACTER_CLASS, "sleepingSinceMove");
+}
+
+void setSleepingSinceMove(long m) {
+    javaSetLong(PLAYER_CHARACTER_CLASS, "setSleepingSinceMove", m);
+}
+
 int timeSinceBeingSwallowed() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "timeSinceBeingSwallowed");
 }
@@ -886,7 +894,6 @@ long timeOfLastCleansing() {
 void setTimeOfLastCleansing(long t) {
     javaSetLong(PLAYER_CHARACTER_CLASS, "setTimeOfLastCleansing", t);
 }
-
 
 int divineWrath() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "divineWrath");

@@ -452,7 +452,7 @@ boolean wakeup_msg;
         afternmv = Hear_again; /* this won't give any messages */
     }
     /* early wakeup from combat won't be possible until next monster turn */
-    u.usleep = monstermoves;
+    setSleepingSinceMove(monstermoves);
     nomovemsg = wakeup_msg ? "You wake up." : You_can_move_again;
 }
 

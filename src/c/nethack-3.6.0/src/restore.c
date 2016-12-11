@@ -608,6 +608,8 @@ unsigned int *stuckid, *steedid;
     setCurrentTrapType(read_int(fd));
     setCurrentTrapTimeout(read_int(fd));
 
+    setSleepingSinceMove(read_long(fd));
+
     setTimeSinceBeingSwallowed(read_int(fd));
     setTimeSinceBecomingADemigod(read_int(fd));
 

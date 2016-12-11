@@ -3613,8 +3613,8 @@ drown()
     x = y = 0; /* lint suppression */
     /* if sleeping, wake up now so that we don't crawl out of water
        while still asleep; we can't do that the same way that waking
-       due to combat is handled; note unmul() clears u.usleep */
-    if (u.usleep)
+       due to combat is handled; note unmul() clears sleepingSinceMove */
+    if (sleepingSinceMove())
         unmul("Suddenly you wake up!");
     /* being doused will revive from fainting */
     if (is_fainted())
@@ -4966,7 +4966,7 @@ unconscious()
     if (multi >= 0)
         return FALSE;
 
-    return (boolean) (u.usleep
+    return (boolean) (sleepingSinceMove()
                       || (nomovemsg
                           && (!strncmp(nomovemsg, "You awake", 9)
                               || !strncmp(nomovemsg, "You regain con", 14)

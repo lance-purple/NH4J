@@ -326,7 +326,7 @@ done2()
             nomul(0);
         if (multi == 0) {
             u.uinvulnerable = FALSE; /* avoid ctrl-C bug -dlc */
-            u.usleep = 0;
+            setSleepingSinceMove(0);
         }
         return 0;
     }

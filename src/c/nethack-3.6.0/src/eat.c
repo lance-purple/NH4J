@@ -2615,7 +2615,7 @@ gethungry()
     if (u.uinvulnerable)
         return; /* you don't feel hungrier */
 
-    if ((!u.usleep || !rn2(10)) /* slow metabolic rate while asleep */
+    if ((!sleepingSinceMove() || !rn2(10)) /* slow metabolic rate while asleep */
         && (carnivorous(youmonst.data) || herbivorous(youmonst.data))
         && !Slow_digestion) {
         decreaseCurrentNutrition(1); /* ordinary food consumption */

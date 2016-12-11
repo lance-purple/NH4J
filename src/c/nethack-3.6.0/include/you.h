@@ -291,7 +291,6 @@ struct you {
 #define A_CURRENT 0
     aligntyp ualignbase[CONVERT]; /* for ualign conversion record */
 
-    long usleep;    /* sleeping; monstermove you last started */
     int uinvault;
 
     struct monst *ustuck;

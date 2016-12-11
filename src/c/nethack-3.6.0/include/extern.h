@@ -923,6 +923,9 @@ E void FDECL(setCurrentTrapType, (int));
 E int FDECL(currentTrapTimeout, ());
 E void FDECL(setCurrentTrapTimeout, (int));
 
+E long FDECL(sleepingSinceMove, ());
+E void FDECL(setSleepingSinceMove, (long));
+
 E int FDECL(timeSinceBeingSwallowed, ());
 E void FDECL(setTimeSinceBeingSwallowed, (int));
 E void FDECL(increaseTimeSinceBeingSwallowed, (int));
