@@ -3622,7 +3622,7 @@ xchar sx, sy;
         killer.format = KILLED_BY_AN;
         Strcpy(killer.name, fltxt ? fltxt : "");
         /* when killed by disintegration breath, don't leave corpse */
-        u.ugrave_arise = (type == -ZT_BREATH(ZT_DEATH)) ? -3 : NON_PM;
+        setAriseFromGraveAsMonster((type == -ZT_BREATH(ZT_DEATH)) ? -3 : NON_PM);
         done(DIED);
         return; /* lifesaved */
     case ZT_LIGHTNING:

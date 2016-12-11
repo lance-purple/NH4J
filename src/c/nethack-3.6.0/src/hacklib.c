@@ -1059,6 +1059,14 @@ void setDeathCount(int hp) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "setDeathCount", hp);
 }
 
+int ariseFromGraveAsMonster() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "ariseFromGraveAsMonster");
+} 
+
+void setAriseFromGraveAsMonster(int hp) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setAriseFromGraveAsMonster", hp);
+}
+
 void increaseDeathCount(int hp) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "increaseDeathCount", hp);
 }

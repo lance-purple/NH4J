@@ -623,7 +623,7 @@ u_init()
 
     setYouMoved(FALSE);
     setDeathCount(0);
-    u.ugrave_arise = NON_PM;
+    setAriseFromGraveAsMonster(NON_PM);
 
     setCurrentMonsterNumber((flags.female && urole.femalenum != NON_PM)
                                  ? urole.femalenum

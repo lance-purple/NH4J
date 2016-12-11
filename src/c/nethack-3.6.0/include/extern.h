@@ -1029,6 +1029,9 @@ E void FDECL(setDeathCount, (int));
 E void FDECL(increaseDeathCount, (int));
 E void FDECL(decreaseDeathCount, (int));
 
+E int FDECL(ariseFromDeadAsMonster, ());
+E void FDECL(setAriseFromDeadAsMonster, (int));
+
 E int FDECL(currentHitPoints, ());
 E void FDECL(setCurrentHitPoints, (int));
 E void FDECL(increaseCurrentHitPoints, (int));

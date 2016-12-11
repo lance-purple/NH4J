@@ -386,7 +386,7 @@ make_bones:
         uball->owornmask = uchain->owornmask = 0;
 
     /* dispose of your possessions, usually cursed */
-    if (u.ugrave_arise == (NON_PM - 1)) {
+    if (ariseFromGraveAsMonster() == (NON_PM - 1)) {
         struct obj *otmp;
 
         /* embed your possessions in your statue */
@@ -396,7 +396,7 @@ make_bones:
         if (!otmp)
             return; /* couldn't make statue */
         mtmp = (struct monst *) 0;
-    } else if (u.ugrave_arise < LOW_PM) {
+    } else if (ariseFromGraveAsMonster() < LOW_PM) {
         /* drop everything */
         drop_upon_death((struct monst *) 0, (struct obj *) 0, currentX(), currentY());
         /* trick makemon() into allowing monster creation
@@ -413,11 +413,11 @@ make_bones:
     } else {
         /* give your possessions to the monster you become */
         in_mklev = TRUE; /* use <u.ux,u.uy> as-is */
-        mtmp = makemon(&mons[u.ugrave_arise], currentX(), currentY(), NO_MINVENT);
+        mtmp = makemon(&mons[ariseFromGraveAsMonster()], currentX(), currentY(), NO_MINVENT);
         in_mklev = FALSE;
         if (!mtmp) {
             drop_upon_death((struct monst *) 0, (struct obj *) 0, currentX(), currentY());
-            u.ugrave_arise = NON_PM; /* in case caller cares */
+            setAriseFromGraveAsMonster(NON_PM); /* in case caller cares */
             return;
         }
         /* give mummy-from-hero a wrapping unless hero already

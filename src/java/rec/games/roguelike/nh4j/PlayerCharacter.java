@@ -82,6 +82,7 @@ public class PlayerCharacter {
 	private static int timeRemainingAsMonster;
 	
 	private static int deathCount;
+	private static int ariseFromGraveAsMonster;
 	
 	private static int lycanthropeType;
 	
@@ -741,6 +742,14 @@ public class PlayerCharacter {
 
 	public static final void decreaseDeathCount(int c) {
 		   deathCount -= c;
+	}
+
+	public static final int ariseFromGraveAsMonster() {
+		return ariseFromGraveAsMonster;
+	}
+
+	public static final void setAriseFromGraveAsMonster(int m) {
+		ariseFromGraveAsMonster = m;
 	}
 
 	public static final int currentHitPoints() {

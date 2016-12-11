@@ -362,6 +362,8 @@ register int fd, mode;
     write_int(fd, timeRemainingAsMonster());
 
     write_int(fd, deathCount());
+    write_int(fd, ariseFromGraveAsMonster());
+
     write_int(fd, currentHitPoints());
     write_int(fd, maximumHitPoints());
 

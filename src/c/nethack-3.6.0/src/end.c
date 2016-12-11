@@ -479,18 +479,18 @@ int how;
 
     Strcpy(killer.name, buf);
     if (mptr->mlet == S_WRAITH)
-        u.ugrave_arise = PM_WRAITH;
+        setAriseFromGraveAsMonster(PM_WRAITH);
     else if (mptr->mlet == S_MUMMY && urace.mummynum != NON_PM)
-        u.ugrave_arise = urace.mummynum;
+        setAriseFromGraveAsMonster(urace.mummynum);
     else if (mptr->mlet == S_VAMPIRE && Race_if(PM_HUMAN))
-        u.ugrave_arise = PM_VAMPIRE;
+        setAriseFromGraveAsMonster(PM_VAMPIRE);
     else if (mptr == &mons[PM_GHOUL])
-        u.ugrave_arise = PM_GHOUL;
+        setAriseFromGraveAsMonster(PM_GHOUL);
     /* this could happen if a high-end vampire kills the hero
        when ordinary vampires are genocided; ditto for wraiths */
-    if (u.ugrave_arise >= LOW_PM
-        && (mvitals[u.ugrave_arise].mvflags & G_GENOD))
-        u.ugrave_arise = NON_PM;
+    if (ariseFromGraveAsMonster() >= LOW_PM
+        && (mvitals[ariseFromGraveAsMonster()].mvflags & G_GENOD))
+        setAriseFromGraveAsMonster(NON_PM);
 
     done(how);
     return;
@@ -725,7 +725,7 @@ int how;
         setCurrentTrapTimeout(0);
     }
     context.botl = 1;
-    u.ugrave_arise = NON_PM;
+    setAriseFromGraveAsMonster(NON_PM);
     HUnchanging = 0L;
     curs_on_u();
 }
@@ -973,13 +973,13 @@ int how;
 
     /* maintain ugrave_arise even for !bones_ok */
     if (how == PANICKED)
-        u.ugrave_arise = (NON_PM - 3); /* no corpse, no grave */
+        setAriseFromGraveAsMonster(NON_PM - 3); /* no corpse, no grave */
     else if (how == BURNING || how == DISSOLVED) /* corpse burns up too */
-        u.ugrave_arise = (NON_PM - 2); /* leave no corpse */
+        setAriseFromGraveAsMonster(NON_PM - 2); /* leave no corpse */
     else if (how == STONING)
-        u.ugrave_arise = (NON_PM - 1); /* statue instead of corpse */
+        setAriseFromGraveAsMonster(NON_PM - 1); /* statue instead of corpse */
     else if (how == TURNED_SLIME)
-        u.ugrave_arise = PM_GREEN_SLIME;
+        setAriseFromGraveAsMonster(PM_GREEN_SLIME);
 
     /* if pets will contribute to score, populate mydogs list now
        (bones creation isn't a factor, but pline() messaging is) */
@@ -1019,7 +1019,7 @@ int how;
 
     /* grave creation should be after disclosure so it doesn't have
        this grave in the current level's features for #overview */
-    if (bones_ok && u.ugrave_arise == NON_PM
+    if (bones_ok && ariseFromGraveAsMonster() == NON_PM
         && !(mvitals[currentMonsterNumber()].mvflags & G_NOCORPSE)) {
         int mnum = currentMonsterNumber();
 
@@ -1068,12 +1068,12 @@ int how;
         }
     }
 
-    if (u.ugrave_arise >= LOW_PM && u.ugrave_arise != PM_GREEN_SLIME) {
+    if (ariseFromGraveAsMonster() >= LOW_PM && ariseFromGraveAsMonster() != PM_GREEN_SLIME) {
         /* give this feedback even if bones aren't going to be created,
            so that its presence or absence doesn't tip off the player to
            new bones or their lack; it might be a lie if makemon fails */
         Your("body rises from the dead as %s...",
-             an(mons[u.ugrave_arise].mname));
+             an(mons[ariseFromGraveAsMonster()].mname));
         display_nhwindow(WIN_MESSAGE, FALSE);
     }
 
