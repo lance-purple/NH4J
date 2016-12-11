@@ -598,7 +598,7 @@ u_init()
     uarm = uarmc = uarmh = uarms = uarmg = uarmf = 0;
     uwep = uball = uchain = uleft = uright = 0;
     uswapwep = uquiver = 0;
-    u.twoweap = 0;
+    setUsingTwoWeapons(FALSE);
     setBlessings(0);                    /* not worthy yet */
     setDivineWrath(0);                  /* gods not angry */
     setGiftsBestowed(0);                /* no divine gifts bestowed */

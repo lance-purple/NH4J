@@ -672,6 +672,7 @@ unsigned int *stuckid, *steedid;
 
     setToHitModifier(read_int(fd));
     setDamageBonus(read_int(fd));
+    setUsingTwoWeapons(read_int(fd) ? TRUE : FALSE);
     setArmorClass(read_int(fd));
     setArmorBonusFromProtectionSpell(read_int(fd));
     setProtectionSpellPointDuration(read_int(fd));

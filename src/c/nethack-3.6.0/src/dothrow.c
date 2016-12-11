@@ -214,7 +214,7 @@ int shotlimit;
     m_shot.o = obj->otyp;
     m_shot.n = multishot;
     for (m_shot.i = 1; m_shot.i <= m_shot.n; m_shot.i++) {
-        twoweap = u.twoweap;
+        twoweap = usingTwoWeapons();
         /* split this object off from its slot if necessary */
         if (obj->quan > 1L) {
             otmp = splitobj(obj, 1L);
@@ -1041,7 +1041,7 @@ boolean
             obj = addinv(obj);
             (void) encumber_msg();
             setuwep(obj);
-            u.twoweap = twoweap;
+            setUsingTwoWeapons(twoweap);
         } else if (directionZ() < 0) {
             (void) toss_up(obj, rn2(5) && !Underwater);
         } else if (directionZ() > 0 && u.usteed && obj->oclass == POTION_CLASS
@@ -1065,7 +1065,7 @@ boolean
             (void) encumber_msg();
             if (wep_mask && !(obj->owornmask & wep_mask)) {
                 setworn(obj, wep_mask);
-                u.twoweap = twoweap;
+                setUsingTwoWeapons(twoweap);
             }
             thrownobj = (struct obj *) 0;
             return;
@@ -1178,7 +1178,7 @@ boolean
                 obj = addinv(obj);
                 (void) encumber_msg();
                 setuwep(obj);
-                u.twoweap = twoweap;
+                setUsingTwoWeapons(twoweap);
                 if (cansee(bhitpos.x, bhitpos.y))
                     newsym(bhitpos.x, bhitpos.y);
             } else {

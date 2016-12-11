@@ -1501,7 +1501,7 @@ int id;
     if (obj_location == OBJ_INVENT && obj->owornmask) {
         long old_wornmask = obj->owornmask & ~(W_ART | W_ARTI),
              new_wornmask = wearslot(otmp);
-        boolean was_twohanded = bimanual(obj), was_twoweap = u.twoweap;
+        boolean was_twohanded = bimanual(obj), was_twoweap = usingTwoWeapons();
 
         remove_worn_item(obj, TRUE);
         /* if the new form can be worn in the same slot, make it so
@@ -1513,12 +1513,12 @@ int id;
             if (was_twohanded || !bimanual(otmp))
                 setuswapwep(otmp);
             if (was_twoweap && uswapwep)
-                u.twoweap = TRUE;
+                setUsingTwoWeapons(TRUE);
         } else if ((old_wornmask & W_WEP) != 0L) {
             if (was_twohanded || !bimanual(otmp) || !uarms)
                 setuwep(otmp);
             if (was_twoweap && uwep && !bimanual(uwep))
-                u.twoweap = TRUE;
+                setUsingTwoWeapons(TRUE);
         } else if ((old_wornmask & new_wornmask) != 0L) {
             new_wornmask &= old_wornmask;
             setworn(otmp, new_wornmask);
@@ -3652,9 +3652,9 @@ xchar sx, sy;
             exercise(A_STR, FALSE);
         }
         /* using two weapons at once makes both of them more vulnerable */
-        if (!rn2(u.twoweap ? 3 : 6))
+        if (!rn2(usingTwoWeapons() ? 3 : 6))
             acid_damage(uwep);
-        if (u.twoweap && !rn2(3))
+        if (usingTwoWeapons() && !rn2(3))
             acid_damage(uswapwep);
         if (!rn2(6))
             erode_armor(&youmonst, ERODE_CORRODE);

@@ -1033,7 +1033,7 @@ register const char *let, *word;
                  && (otmp->owornmask & W_WEP))
 #endif
              || (!strcmp(word, "ready") /* exclude if wielded */
-                 && (otmp == uwep || (otmp == uswapwep && u.twoweap)))
+                 && (otmp == uwep || (otmp == uswapwep && usingTwoWeapons())))
              || ((!strcmp(word, "dip") || !strcmp(word, "grease"))
                  && inaccessible_equipment(otmp, (const char *) 0, FALSE))
              ) {
@@ -2989,7 +2989,7 @@ doprwep()
         You("are empty %s.", body_part(HANDED));
     } else {
         prinv((char *) 0, uwep, 0L);
-        if (u.twoweap)
+        if (usingTwoWeapons())
             prinv((char *) 0, uswapwep, 0L);
     }
     return 0;

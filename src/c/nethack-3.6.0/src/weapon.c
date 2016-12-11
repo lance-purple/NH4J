@@ -1235,7 +1235,7 @@ struct obj *obj;
 int
 uwep_skill_type()
 {
-    if (u.twoweap)
+    if (usingTwoWeapons())
         return P_TWO_WEAPON_COMBAT;
     return weapon_type(uwep);
 }
@@ -1254,7 +1254,7 @@ struct obj *weapon;
     wep_type = weapon_type(weapon);
     /* use two weapon skill only if attacking with one of the wielded weapons
      */
-    type = (u.twoweap && (weapon == uwep || weapon == uswapwep))
+    type = (usingTwoWeapons() && (weapon == uwep || weapon == uswapwep))
                ? P_TWO_WEAPON_COMBAT
                : wep_type;
     if (type == P_NONE) {
@@ -1328,7 +1328,7 @@ struct obj *weapon;
         case P_EXPERT:
             break;
         }
-        if (u.twoweap)
+        if (usingTwoWeapons())
             bonus -= 2;
     }
 
@@ -1348,7 +1348,7 @@ struct obj *weapon;
     wep_type = weapon_type(weapon);
     /* use two weapon skill only if attacking with one of the wielded weapons
      */
-    type = (u.twoweap && (weapon == uwep || weapon == uswapwep))
+    type = (usingTwoWeapons() && (weapon == uwep || weapon == uswapwep))
                ? P_TWO_WEAPON_COMBAT
                : wep_type;
     if (type == P_NONE) {

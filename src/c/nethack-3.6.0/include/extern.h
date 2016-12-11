@@ -993,6 +993,9 @@ E void FDECL(setDamageBonus, (int));
 E void FDECL(increaseDamageBonus, (int));
 E void FDECL(decreaseDamageBonus, (int));
 
+E boolean FDECL(usingTwoWeapons, ());
+E void FDECL(setUsingTwoWeapons, (boolean));
+
 E int FDECL(armorClass, ());
 E void FDECL(setArmorClass, (int));
 

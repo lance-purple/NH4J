@@ -959,6 +959,14 @@ void decreaseDamageBonus(int c) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseDamageBonus", c);
 }
 
+boolean usingTwoWeapons() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "usingTwoWeapons");
+} 
+
+void setUsingTwoWeapons(boolean using) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setUsingTwoWeapons", using);
+} 
+
 int armorClass() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "armorClass");
 } 

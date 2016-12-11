@@ -335,7 +335,7 @@ gotobj:
            (ignores loadstones; the !can_carry() check will catch those) */
         if (otmp == uball)
             ostuck = TRUE; /* effectively worn; curse is implicit */
-        else if (otmp == uquiver || (otmp == uswapwep && !u.twoweap))
+        else if (otmp == uquiver || (otmp == uswapwep && !usingTwoWeapons()))
             ostuck = FALSE; /* not really worn; curse doesn't matter */
         else
             ostuck = ((otmp->cursed && otmp->owornmask)

@@ -1241,7 +1241,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
                        allow auxiliary weapon slots to be used to
                        artificially increase number of worn items */
                     if (obj == uswapwep) {
-                        if (!u.twoweap)
+                        if (!usingTwoWeapons())
                             wornmask = 0L;
                     } else if (obj == uquiver) {
                         if (obj->oclass == WEAPON_CLASS) {

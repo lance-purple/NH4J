@@ -1796,7 +1796,7 @@ long *abil;
                      /* [do W_ART and W_ARTI actually belong here?] */
                      | W_ART | W_ARTI);
 
-    if (u.twoweap)
+    if (usingTwoWeapons())
         wornmask |= W_SWAPWEP;
     dtyp = abil_to_adtyp(abil);
     spfx = abil_to_spfx(abil);
@@ -1949,7 +1949,7 @@ boolean drop_untouchable;
 {
     struct artifact *art;
     boolean beingworn, carryeffect, invoked;
-    long wearmask = ~(W_QUIVER | (u.twoweap ? 0L : W_SWAPWEP) | W_BALL);
+    long wearmask = ~(W_QUIVER | (usingTwoWeapons() ? 0L : W_SWAPWEP) | W_BALL);
 
     beingworn = ((obj->owornmask & wearmask) != 0L
                  /* some items in use don't have any wornmask setting */
@@ -2006,7 +2006,7 @@ int dropflag; /* 0==don't drop, 1==drop all, 2==drop weapon */
 
     dropit = (dropflag > 0); /* drop all or drop weapon */
     /* check secondary weapon first, before possibly unwielding primary */
-    if (u.twoweap)
+    if (usingTwoWeapons())
         (void) untouchable(uswapwep, dropit);
     /* check primary weapon next so that they're handled together */
     if (uwep)

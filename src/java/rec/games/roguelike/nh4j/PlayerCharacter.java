@@ -54,6 +54,7 @@ public class PlayerCharacter {
 	
 	private static int toHitModifier;
 	private static int damageBonus;
+	private static boolean usingTwoWeapons;
 	
 	private static int armorClass;
 	private static int armorBonusFromProtectionSpell;
@@ -506,6 +507,14 @@ public class PlayerCharacter {
 
 	public static void decreaseDamageBonus(int bonus) {
 		damageBonus -= bonus;
+	}
+	
+	public static boolean usingTwoWeapons() {
+		return usingTwoWeapons;
+	}
+
+	public static void setUsingTwoWeapons(boolean using) {
+		usingTwoWeapons = using;
 	}
 
 	public static int armorClass() {

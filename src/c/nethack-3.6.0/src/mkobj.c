@@ -1262,7 +1262,7 @@ register struct obj *otmp;
         reset_remarm();
     /* rules at top of wield.c state that twoweapon cannot be done
        with cursed alternate weapon */
-    if (otmp == uswapwep && u.twoweap)
+    if (otmp == uswapwep && usingTwoWeapons())
         drop_uswapwep();
     /* some cursed items need immediate updating */
     if (carried(otmp) && confers_luck(otmp))
@@ -2478,7 +2478,7 @@ struct obj *obj;
             break;
         case W_SWAPWEP:
             if (obj != uswapwep)
-                what = u.twoweap ? "secondary weapon" : "alternate weapon";
+                what = usingTwoWeapons() ? "secondary weapon" : "alternate weapon";
             break;
         case W_AMUL:
             if (obj != uamul)

@@ -967,7 +967,7 @@ boolean with_price;
         }
     }
     if (obj->owornmask & W_SWAPWEP) {
-        if (u.twoweap)
+        if (usingTwoWeapons())
             Sprintf(eos(bp), " (wielded in other %s)", body_part(HAND));
         else
             Strcat(bp, " (alternate weapon; not wielded)");

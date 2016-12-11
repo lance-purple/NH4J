@@ -383,7 +383,7 @@ register struct monst *mtmp;
         || overexertion())
         goto atk_done;
 
-    if (u.twoweap && !can_twoweapon())
+    if (usingTwoWeapons() && !can_twoweapon())
         untwoweapon();
 
     if (unweapon) {
@@ -506,7 +506,7 @@ struct attack *uattk;
     /* second attack for two-weapon combat; won't occur if Stormbringer
        overrode confirmation (assumes Stormbringer is primary weapon)
        or if the monster was killed or knocked to different location */
-    if (u.twoweap && !override_confirmation && malive && m_at(x, y) == mon) {
+    if (usingTwoWeapons() && !override_confirmation && malive && m_at(x, y) == mon) {
         tmp = find_roll_to_hit(mon, uattk->aatyp, uswapwep, &attknum,
                                &armorpenalty);
         mhit = (tmp > (dieroll = rnd(20)) || u.uswallow);
@@ -644,7 +644,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                 tmp = dmgval(obj, mon);
                 /* a minimal hit doesn't exercise proficiency */
                 valid_weapon_attack = (tmp > 1);
-                if (!valid_weapon_attack || mon == u.ustuck || u.twoweap) {
+                if (!valid_weapon_attack || mon == u.ustuck || usingTwoWeapons()) {
                     ; /* no special bonuses */
                 } else if (mon->mflee && Role_if(PM_ROGUE) && !areYouPolymorphed()
                            /* multi-shot throwing is too powerful here */
@@ -1029,7 +1029,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
         if (jousting < 0) {
             pline("%s shatters on impact!", Yname2(obj));
             /* (must be either primary or secondary weapon to get here) */
-            u.twoweap = FALSE; /* untwoweapon() is too verbose here */
+            setUsingTwoWeapons(FALSE); /* untwoweapon() is too verbose here */
             if (obj == uwep)
                 uwepgone(); /* set unweapon */
             /* minor side-effect: broken lance won't split puddings */
@@ -1242,12 +1242,12 @@ struct obj *obj;   /* weapon */
     if (Fumbling || Stunned)
         return 0;
     /* sanity check; lance must be wielded in order to joust */
-    if (obj != uwep && (obj != uswapwep || !u.twoweap))
+    if (obj != uwep && (obj != uswapwep || !usingTwoWeapons()))
         return 0;
 
     /* if using two weapons, use worse of lance and two-weapon skills */
     skill_rating = P_SKILL(weapon_type(obj)); /* lance skill */
-    if (u.twoweap && P_SKILL(P_TWO_WEAPON_COMBAT) < skill_rating)
+    if (usingTwoWeapons() && P_SKILL(P_TWO_WEAPON_COMBAT) < skill_rating)
         skill_rating = P_SKILL(P_TWO_WEAPON_COMBAT);
     if (skill_rating == P_ISRESTRICTED)
         skill_rating = P_UNSKILLED; /* 0=>1 */
@@ -2512,7 +2512,7 @@ struct attack *mattk;     /* null means we find one internally */
 
     /* if caller hasn't specified an object, use uwep, uswapwep or uarmg */
     if (!obj) {
-        obj = (u.twoweap && uswapwep && !rn2(2)) ? uswapwep : uwep;
+        obj = (usingTwoWeapons() && uswapwep && !rn2(2)) ? uswapwep : uwep;
         if (!obj && mattk->adtyp == AD_ENCH)
             obj = uarmg; /* no weapon? then must be gloves */
         if (!obj)

@@ -294,7 +294,7 @@ worst_cursed_item()
     } else if (welded(uwep)) { /* weapon */
         otmp = uwep;
         /* active secondary weapon even though it isn't welded */
-    } else if (uswapwep && uswapwep->cursed && u.twoweap) {
+    } else if (uswapwep && uswapwep->cursed && usingTwoWeapons()) {
         otmp = uswapwep;
         /* all worn items ought to be handled by now */
     } else {

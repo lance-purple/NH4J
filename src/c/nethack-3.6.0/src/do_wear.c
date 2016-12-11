@@ -508,7 +508,7 @@ boolean voluntary; /* taking gloves off on purpose? */
 
     if (!obj || obj->otyp != CORPSE)
         return;
-    if (obj != uwep && (obj != uswapwep || !u.twoweap))
+    if (obj != uwep && (obj != uswapwep || !usingTwoWeapons()))
         return;
 
     if (touch_petrifies(&mons[obj->corpsenm]) && !Stone_resistance) {
@@ -561,7 +561,7 @@ Gloves_off(VOID_ARGS)
     /* KMH -- ...or your secondary weapon when you're wielding it
        [This case can't actually happen; twoweapon mode won't
        engage if a corpse has been set up as the alternate weapon.] */
-    if (u.twoweap && uswapwep && uswapwep->otyp == CORPSE)
+    if (usingTwoWeapons() && uswapwep && uswapwep->otyp == CORPSE)
         wielding_corpse(uswapwep, on_purpose);
 
     return 0;
@@ -1631,7 +1631,7 @@ boolean noisy;
                                                    ? c_axe
                                                    : c_weapon);
             err++;
-        } else if (u.twoweap) {
+        } else if (usingTwoWeapons()) {
             if (noisy)
                 You("cannot wear a shield while wielding two weapons.");
             err++;
@@ -2036,7 +2036,7 @@ glibr()
     }
 
     otmp = uswapwep;
-    if (u.twoweap && otmp) {
+    if (usingTwoWeapons() && otmp) {
         /* secondary weapon doesn't need nearly as much handling as
            primary; when in two-weapon mode, we know it's one-handed
            with something else in the other hand and also that it's
@@ -2051,7 +2051,7 @@ glibr()
              otense(otmp, "slip"), which, hand);
         xfl++;
         wastwoweap = TRUE;
-        setuswapwep((struct obj *) 0); /* clears u.twoweap */
+        setuswapwep((struct obj *) 0); /* clears usingTwoWeapons */
         if (canletgo(otmp, ""))
             dropx(otmp);
     }
@@ -2236,7 +2236,7 @@ register struct obj *otmp;
         }
     }
     /* basic curse check */
-    if (otmp == uquiver || (otmp == uswapwep && !u.twoweap)) {
+    if (otmp == uquiver || (otmp == uswapwep && !usingTwoWeapons())) {
         ; /* some items can be removed even when cursed */
     } else {
         /* otherwise, this is fundamental */
@@ -2289,12 +2289,12 @@ do_takeoff()
         if (!cursed(uwep)) {
             setuwep((struct obj *) 0);
             You("are empty %s.", body_part(HANDED));
-            u.twoweap = FALSE;
+            setUsingTwoWeapons(FALSE);
         }
     } else if (doff->what == W_SWAPWEP) {
         setuswapwep((struct obj *) 0);
         You("no longer have a second weapon readied.");
-        u.twoweap = FALSE;
+        setUsingTwoWeapons(FALSE);
     } else if (doff->what == W_QUIVER) {
         setuqwep((struct obj *) 0);
         You("no longer have ammunition readied.");

@@ -201,7 +201,7 @@ const char *fmt, *arg;
         done(GENOCIDED);
     }
 
-    if (u.twoweap && !could_twoweap(youmonst.data))
+    if (usingTwoWeapons() && !could_twoweap(youmonst.data))
         untwoweapon();
 
     if (currentlyTrapped() && currentTrapType() == TT_PIT) {
@@ -994,23 +994,23 @@ int alone;
          */
         if (!alone || cantwield(youmonst.data)) {
             candropwep = canletgo(uwep, "");
-            candropswapwep = !u.twoweap || canletgo(uswapwep, "");
+            candropswapwep = !usingTwoWeapons() || canletgo(uswapwep, "");
             if (alone) {
                 what = (candropwep && candropswapwep) ? "drop" : "release";
                 which = is_sword(uwep) ? "sword" : weapon_descr(uwep);
-                if (u.twoweap) {
+                if (usingTwoWeapons()) {
                     whichtoo =
                         is_sword(uswapwep) ? "sword" : weapon_descr(uswapwep);
                     if (strcmp(which, whichtoo))
                         which = "weapon";
                 }
-                if (uwep->quan != 1L || u.twoweap)
+                if (uwep->quan != 1L || usingTwoWeapons())
                     which = makeplural(which);
 
                 You("find you must %s %s %s!", what,
                     the_your[!!strncmp(which, "corpse", 6)], which);
             }
-            if (u.twoweap) {
+            if (usingTwoWeapons()) {
                 otmp = uswapwep;
                 uswapwepgone();
                 if (candropswapwep)

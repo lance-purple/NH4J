@@ -327,7 +327,7 @@ doswapweapon()
             You("have no secondary weapon readied.");
     }
 
-    if (u.twoweap && !can_twoweapon())
+    if (usingTwoWeapons() && !can_twoweapon())
         untwoweapon();
 
     return result;
@@ -464,7 +464,7 @@ const char *verb; /* "rub",&c */
     if (uwep != obj)
         return FALSE; /* rewielded old object after dying */
     /* applying weapon or tool that gets wielded ends two-weapon combat */
-    if (u.twoweap)
+    if (usingTwoWeapons())
         untwoweapon();
     if (obj->oclass != WEAPON_CLASS)
         unweapon = TRUE;
@@ -527,9 +527,9 @@ int
 dotwoweapon()
 {
     /* You can always toggle it off */
-    if (u.twoweap) {
+    if (usingTwoWeapons()) {
         You("switch to your primary weapon.");
-        u.twoweap = 0;
+        setUsingTwoWeapons(FALSE);
         update_inventory();
         return 0;
     }
@@ -538,7 +538,7 @@ dotwoweapon()
     if (can_twoweapon()) {
         /* Success! */
         You("begin two-weapon combat.");
-        u.twoweap = 1;
+        setUsingTwoWeapons(TRUE);
         update_inventory();
         return (rnd(20) > ACURR(A_DEX));
     }
@@ -587,9 +587,9 @@ uqwepgone()
 void
 untwoweapon()
 {
-    if (u.twoweap) {
+    if (usingTwoWeapons()) {
         You("can no longer use two weapons at once.");
-        u.twoweap = FALSE;
+        setUsingTwoWeapons(FALSE);
         update_inventory();
     }
     return;

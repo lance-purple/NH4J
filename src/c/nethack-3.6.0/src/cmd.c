@@ -1852,7 +1852,7 @@ int final;
                          : "not wielding anything",
                 "");
     /* two-weaponing implies a weapon (not other odd stuff) in each hand */
-    } else if (u.twoweap) {
+    } else if (usingTwoWeapons()) {
         you_are("wielding two weapons at once", "");
     /* report most weapons by their skill class (so a katana will be
        described as a long sword, for instance; mattock and hook are
