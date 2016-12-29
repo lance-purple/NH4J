@@ -3014,7 +3014,7 @@ int x, y;
         clipy = clipymax - (LI - 3);
     }
     if (clipx != oldx || clipy != oldy) {
-        if (onTheSameLevelAsLastTurn() && !restoring)
+        if (onSameLevelAsLastTurn() && !restoring)
             (void) doredraw();
     }
 }

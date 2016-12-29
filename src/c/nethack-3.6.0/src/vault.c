@@ -221,7 +221,7 @@ invault()
     vaultroom -= ROOMOFFSET;
 
     guard = findgd();
-    increaseTimeInVault();
+    increaseTimeInVault(1);
     if (timeInVault() % 30 == 0 && !guard) { /* if time ok and no guard now. */
         char buf[BUFSZ];
         register int x, y, dd, gx, gy;

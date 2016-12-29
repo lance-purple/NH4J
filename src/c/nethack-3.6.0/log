@@ -1,0 +1,151 @@
+( cd src ; make )
+make[1]: Entering directory '/cygdrive/c/Users/lance/workspace/NH4J/src/c/nethack-3.6.0/src'
+touch ../src/config.h-t
+cc -O -I../include -c monst.c
+cc -O -I../include -c objects.c
+make[2]: Entering directory '/cygdrive/c/Users/lance/workspace/NH4J/src/c/nethack-3.6.0/util'
+cc -O -I../include   -c -o makedefs.o makedefs.c
+cc  -o makedefs makedefs.o ../src/monst.o ../src/objects.o
+make[2]: Leaving directory '/cygdrive/c/Users/lance/workspace/NH4J/src/c/nethack-3.6.0/util'
+make[2]: Entering directory '/cygdrive/c/Users/lance/workspace/NH4J/src/c/nethack-3.6.0/util'
+./makedefs -p
+make[2]: Leaving directory '/cygdrive/c/Users/lance/workspace/NH4J/src/c/nethack-3.6.0/util'
+make[2]: Entering directory '/cygdrive/c/Users/lance/workspace/NH4J/src/c/nethack-3.6.0/util'
+./makedefs -o
+make[2]: Leaving directory '/cygdrive/c/Users/lance/workspace/NH4J/src/c/nethack-3.6.0/util'
+touch ../src/hack.h-t
+cc -O -I../include   -c -o allmain.o allmain.c
+cc -O -I../include   -c -o alloc.o alloc.c
+cc -O -I../include   -c -o apply.o apply.c
+cc -O -I../include   -c -o artifact.o artifact.c
+cc -O -I../include   -c -o attrib.o attrib.c
+cc -O -I../include   -c -o ball.o ball.c
+cc -O -I../include   -c -o bones.o bones.c
+cc -O -I../include   -c -o botl.o botl.c
+cc -O -I../include   -c -o cmd.o cmd.c
+cc -O -I../include   -c -o dbridge.o dbridge.c
+cc -O -I../include   -c -o decl.o decl.c
+cc -O -I../include   -c -o detect.o detect.c
+cc -O -I../include   -c -o dig.o dig.c
+cc -O -I../include   -c -o display.o display.c
+cc -O -I../include   -c -o dlb.o dlb.c
+cc -O -I../include   -c -o do.o do.c
+cc -O -I../include   -c -o do_name.o do_name.c
+cc -O -I../include   -c -o do_wear.o do_wear.c
+cc -O -I../include   -c -o dog.o dog.c
+cc -O -I../include   -c -o dogmove.o dogmove.c
+cc -O -I../include   -c -o dokick.o dokick.c
+cc -O -I../include   -c -o dothrow.o dothrow.c
+cc -O -I../include   -c -o drawing.o drawing.c
+cc -O -I../include   -c -o dungeon.o dungeon.c
+cc -O -I../include   -c -o eat.o eat.c
+cc -O -I../include   -c -o end.o end.c
+cc -O -I../include   -c -o engrave.o engrave.c
+cc -O -I../include   -c -o exper.o exper.c
+cc -O -I../include   -c -o explode.o explode.c
+cc -O -I../include   -c -o extralev.o extralev.c
+cc -O -I../include   -c -o files.o files.c
+cc -O -I../include   -c -o fountain.o fountain.c
+cc -O -I../include   -c -o hack.o hack.c
+cc -O -I../include   -c -o hacklib.o hacklib.c
+cc -O -I../include   -c -o invent.o invent.c
+cc -O -I../include   -c -o light.o light.c
+cc -O -I../include   -c -o lock.o lock.c
+cc -O -I../include   -c -o mail.o mail.c
+cc -O -I../include   -c -o makemon.o makemon.c
+cc -O -I../include   -c -o mapglyph.o mapglyph.c
+cc -O -I../include   -c -o mcastu.o mcastu.c
+cc -O -I../include   -c -o mhitm.o mhitm.c
+cc -O -I../include   -c -o mhitu.o mhitu.c
+cc -O -I../include   -c -o minion.o minion.c
+cc -O -I../include   -c -o mklev.o mklev.c
+cc -O -I../include   -c -o mkmap.o mkmap.c
+cc -O -I../include   -c -o mkmaze.o mkmaze.c
+cc -O -I../include   -c -o mkobj.o mkobj.c
+cc -O -I../include   -c -o mkroom.o mkroom.c
+cc -O -I../include   -c -o mon.o mon.c
+cc -O -I../include   -c -o mondata.o mondata.c
+cc -O -I../include   -c -o monmove.o monmove.c
+make[2]: Entering directory '/cygdrive/c/Users/lance/workspace/NH4J/src/c/nethack-3.6.0/util'
+./makedefs -m
+make[2]: Leaving directory '/cygdrive/c/Users/lance/workspace/NH4J/src/c/nethack-3.6.0/util'
+cc -O -I../include   -c -o monstr.o monstr.c
+cc -O -I../include   -c -o mplayer.o mplayer.c
+cc -O -I../include   -c -o mthrowu.o mthrowu.c
+cc -O -I../include   -c -o muse.o muse.c
+cc -O -I../include   -c -o music.o music.c
+cc -O -I../include   -c -o o_init.o o_init.c
+cc -O -I../include   -c -o objnam.o objnam.c
+cc -O -I../include   -c -o options.o options.c
+cc -O -I../include   -c -o pager.o pager.c
+cc -O -I../include   -c -o pickup.o pickup.c
+cc -O -I../include   -c -o pline.o pline.c
+cc -O -I../include   -c -o polyself.o polyself.c
+cc -O -I../include   -c -o potion.o potion.c
+cc -O -I../include   -c -o pray.o pray.c
+cc -O -I../include   -c -o priest.o priest.c
+cc -O -I../include   -c -o quest.o quest.c
+cc -O -I../include   -c -o questpgr.o questpgr.c
+cc -O -I../include   -c -o read.o read.c
+cc -O -I../include   -c -o rect.o rect.c
+cc -O -I../include   -c -o region.o region.c
+cc -O -I../include   -c -o restore.o restore.c
+cc -O -I../include   -c -o rip.o rip.c
+cc -O -I../include   -c -o rnd.o rnd.c
+cc -O -I../include   -c -o role.o role.c
+cc -O -I../include   -c -o rumors.o rumors.c
+cc -O -I../include   -c -o save.o save.c
+cc -O -I../include   -c -o shk.o shk.c
+cc -O -I../include   -c -o shknam.o shknam.c
+cc -O -I../include   -c -o sit.o sit.c
+cc -O -I../include   -c -o sounds.o sounds.c
+cc -O -I../include   -c -o sp_lev.o sp_lev.c
+cc -O -I../include   -c -o spell.o spell.c
+cc -O -I../include   -c -o sys.o sys.c
+cc -O -I../include   -c -o steal.o steal.c
+cc -O -I../include   -c -o steed.o steed.c
+cc -O -I../include   -c -o teleport.o teleport.c
+cc -O -I../include   -c -o timeout.o timeout.c
+cc -O -I../include   -c -o topten.o topten.c
+cc -O -I../include   -c -o track.o track.c
+cc -O -I../include   -c -o trap.o trap.c
+cc -O -I../include   -c -o u_init.o u_init.c
+cc -O -I../include   -c -o uhitm.o uhitm.c
+cc -O -I../include   -c -o vault.o vault.c
+make[2]: Entering directory '/cygdrive/c/Users/lance/workspace/NH4J/src/c/nethack-3.6.0/util'
+./makedefs -z
+make[2]: Leaving directory '/cygdrive/c/Users/lance/workspace/NH4J/src/c/nethack-3.6.0/util'
+cc -O -I../include   -c -o vision.o vision.c
+cc -O -I../include   -c -o vis_tab.o vis_tab.c
+cc -O -I../include   -c -o weapon.o weapon.c
+cc -O -I../include   -c -o were.o were.c
+cc -O -I../include   -c -o wield.o wield.c
+cc -O -I../include   -c -o windows.o windows.c
+cc -O -I../include   -c -o wizard.o wizard.c
+cc -O -I../include   -c -o worm.o worm.c
+cc -O -I../include   -c -o worn.o worn.c
+cc -O -I../include   -c -o write.o write.c
+cc -O -I../include   -c -o zap.o zap.c
+cc -O -I../include -c ../sys/share/posixregex.c
+cc -O -I../include -c ../sys/share/ioctl.c
+../sys/share/ioctl.c: In function ‘getwindowsz’:
+../sys/share/ioctl.c:101:9: warning: implicit declaration of function ‘ioctl’ [-Wimplicit-function-declaration]
+     if (ioctl(fileno(stdin), (int) TIOCGWINSZ, (char *) &ttsz) != -1) {
+         ^
+cc -O -I../include -c ../sys/unix/unixmain.c
+cc -O -I../include -c ../sys/share/unixtty.c
+cc -O -I../include -c ../sys/unix/unixunix.c
+cc -O -I../include -c ../sys/unix/unixres.c
+cc -O -I../include -c ../win/tty/getline.c
+cc -O -I../include -c ../win/tty/termcap.c
+cc -O -I../include -c ../win/tty/topl.c
+cc -O -I../include -c ../win/tty/wintty.c
+../util/makedefs -v
+cc -O -I../include   -c -o version.o version.c
+Loading ...
+cc  -o nethack monst.o objects.o allmain.o alloc.o apply.o artifact.o attrib.o ball.o bones.o botl.o cmd.o dbridge.o decl.o detect.o dig.o display.o dlb.o do.o do_name.o do_wear.o dog.o dogmove.o dokick.o dothrow.o drawing.o dungeon.o eat.o end.o engrave.o exper.o explode.o extralev.o files.o fountain.o hack.o hacklib.o invent.o light.o lock.o mail.o makemon.o mapglyph.o mcastu.o mhitm.o mhitu.o minion.o mklev.o mkmap.o mkmaze.o mkobj.o mkroom.o mon.o mondata.o monmove.o monstr.o mplayer.o mthrowu.o muse.o music.o o_init.o objnam.o options.o pager.o pickup.o pline.o polyself.o potion.o pray.o priest.o quest.o questpgr.o read.o rect.o region.o restore.o rip.o rnd.o role.o rumors.o save.o shk.o shknam.o sit.o sounds.o sp_lev.o spell.o sys.o steal.o steed.o teleport.o timeout.o topten.o track.o trap.o u_init.o uhitm.o vault.o vision.o vis_tab.o weapon.o were.o wield.o windows.o wizard.o worm.o worn.o write.o zap.o posixregex.o  ioctl.o unixmain.o unixtty.o unixunix.o unixres.o getline.o termcap.o topl.o wintty.o  version.o -lncurses -L/cygdrive/c/Program\ Files/Java/jdk1.8.0_40/jre/bin/server -ljvm
+/usr/lib/gcc/x86_64-pc-cygwin/5.4.0/../../../../x86_64-pc-cygwin/bin/ld: cannot find -ljvm
+collect2: error: ld returned 1 exit status
+make[1]: *** [Makefile:464: Sysunix] Error 1
+make[1]: Leaving directory '/cygdrive/c/Users/lance/workspace/NH4J/src/c/nethack-3.6.0/src'
+make: *** [Makefile:140: nethack] Error 2

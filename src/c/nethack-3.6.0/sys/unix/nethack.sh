@@ -7,7 +7,11 @@ HACK=$HACKDIR/nethack
 # NB: MAXNROFPLAYERS is deprecated in favor of MAXPLAYERS in SYSCF.
 MAXNROFPLAYERS=4
 
-JAVA_HOME="/cygdrive/c/Program Files/Java/jre1.8.0_111"
+JAVA_VERSION=`java -version 2>&1 | head -1 | cut -d' ' -f3`
+JAVA_VERSION=${JAVA_VERSION//\"/}
+JAVA_VERSION=${JAVA_VERSION//[$'\r\n']/}
+
+JAVA_HOME="/cygdrive/c/Program Files/Java/jre"$JAVA_VERSION
 export JAVA_HOME
 
 if [[ $PATH != ?(*:)$JAVA_HOME/bin/server?(:*) ]]

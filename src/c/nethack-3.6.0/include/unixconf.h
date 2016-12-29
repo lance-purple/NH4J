@@ -37,7 +37,7 @@
                        /* e.g. Suns sharing a playground through NFS */
 /* #define SUNOS4 */   /* SunOS 4.x */
 /* #define LINUX */    /* Another Unix clone */
-/* #define CYGWIN32 */ /* Unix on Win32 -- use with case sensitive defines */
+/* #define __CYGWIN__ */ /* Unix on Win32 -- use with case sensitive defines */
 /* #define GENIX */    /* Yet Another Unix Clone */
 /* #define HISX */     /* Bull Unix for XPS Machines */
 /* #define BOS */      /* Bull Open Software - Unix for DPX/2 Machines */
@@ -314,7 +314,7 @@
 #endif
 
 /* Use the high quality random number routines. */
-#if defined(BSD) || defined(LINUX) || defined(ULTRIX) || defined(CYGWIN32) \
+#if defined(BSD) || defined(LINUX) || defined(ULTRIX) || defined(__CYGWIN__) \
     || defined(RANDOM) || defined(__APPLE__)
 #define Rand() random()
 #else

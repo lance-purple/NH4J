@@ -563,7 +563,7 @@ E xchar FDECL(deepest_lev_reached, (BOOLEAN_P));
 E boolean FDECL(on_level, (d_level *, d_level *));
 E boolean FDECL(areYouOnLevel, (d_level *));
 E boolean FDECL(areYouBeingSentToSameLevel, ());
-E boolean FDECL(onTheSameLevelAsLastTurn, ());
+E boolean FDECL(onSameLevelAsLastTurn, ());
 E boolean FDECL(notOnTheSameLevelAsLastTurn, ());
 E void FDECL(next_level, (BOOLEAN_P));
 E void FDECL(prev_level, (BOOLEAN_P));
@@ -575,9 +575,9 @@ E void NDECL(u_on_dnstairs);
 E boolean FDECL(On_stairs, (XCHAR_P, XCHAR_P));
 E void FDECL(get_level, (d_level *, int));
 E boolean FDECL(Is_botlevel, (d_level *));
-E boolean FDECL(canYouFallThroughThisLevel, ());
+E boolean FDECL(canYouFallThroughCurrentLevel, ());
 E boolean FDECL(canYouDigDown, ());
-E boolean FDECL(CanYouRiseUp, (int, int));
+E boolean FDECL(canYouRiseUp, (int, int));
 E boolean FDECL(currentLevelHasCeiling, ());
 E boolean FDECL(In_quest, (d_level *));
 E boolean FDECL(areYouInTheQuestDungeon, ());
@@ -741,7 +741,7 @@ E int FDECL(create_levelfile, (int, char *));
 E int FDECL(open_levelfile, (int, char *));
 E void FDECL(delete_levelfile, (int));
 E void NDECL(clearlocks);
-E int FDECL(createBonesFileForCurrenrtLevel, (char **, char *));
+E int FDECL(createBonesFileForCurrentLevel, (char **, char *));
 #ifdef MFLOPPY
 E void NDECL(cancel_bonesfile);
 #endif
@@ -850,6 +850,7 @@ E int NDECL(max_capacity);
 E boolean FDECL(check_capacity, (const char *));
 E int FDECL(inv_cnt, (BOOLEAN_P));
 E long FDECL(money_cnt, (struct obj *));
+E void FDECL(exit_java, ());
 
 /* ### hacklib.c ### */
 
@@ -883,6 +884,10 @@ E int FDECL(currentDungeonLevel, ());
 E int FDECL(currentDungeonNumber, ());
 E void FDECL(setCurrentDungeonLevel, (int));
 E void FDECL(setCurrentDungeonNumber, (int));
+E int FDECL(previousDungeonLevel, ());
+E int FDECL(previousDungeonNumber, ());
+E void FDECL(setPreviousDungeonLevel, (int));
+E void FDECL(setPreviousDungeonNumber, (int));
 E int FDECL(sentToDungeonLevel, ());
 E int FDECL(sentToDungeonNumber, ());
 E void FDECL(setSentToDungeonLevel, (int));
@@ -928,8 +933,8 @@ E void FDECL(setSleepingSinceMove, (long));
 
 E int FDECL(timeInVault, ());
 E void FDECL(setTimeInVault, (int));
-E void FDECL(increaseInVault, (int));
-E void FDECL(decreaseInVault, (int));
+E void FDECL(increaseTimeInVault, (int));
+E void FDECL(decreaseTimeInVault, (int));
 
 E int FDECL(timeSinceBeingSwallowed, ());
 E void FDECL(setTimeSinceBeingSwallowed, (int));
@@ -1032,8 +1037,8 @@ E void FDECL(setDeathCount, (int));
 E void FDECL(increaseDeathCount, (int));
 E void FDECL(decreaseDeathCount, (int));
 
-E int FDECL(ariseFromDeadAsMonster, ());
-E void FDECL(setAriseFromDeadAsMonster, (int));
+E int FDECL(ariseFromGraveAsMonster, ());
+E void FDECL(setAriseFromGraveAsMonster, (int));
 
 E int FDECL(currentHitPoints, ());
 E void FDECL(setCurrentHitPoints, (int));

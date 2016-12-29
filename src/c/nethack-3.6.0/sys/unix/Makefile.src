@@ -281,7 +281,7 @@ WINBELIB = -lbe
 # versions compile fine using SYSV without this.)
 # LIBS = -lbsd
 #
-# for CYGWIN32 aka cygwin 1.1.1
+# for __CYGWIN__ aka cygwin 1.1.1
 # LIBS = -lcygwin
 #
 # Solaris 2.x seems to work with the following

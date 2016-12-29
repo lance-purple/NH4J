@@ -1125,7 +1125,7 @@ boolean areYouBeingSentToSameLevel()
                       && sentToDungeonLevel() == currentDungeonLevel());
 }
 
-boolean onTheSameLevelAsLastTurn()
+boolean onSameLevelAsLastTurn()
 {
     return (boolean) (previousDungeonNumber() == currentDungeonNumber())
                       && (previousDungeonLevel() == currentDungeonLevel());
@@ -1133,7 +1133,7 @@ boolean onTheSameLevelAsLastTurn()
 
 boolean notOnTheSameLevelAsLastTurn()
 {
-    return ! onTheSameLevelAsLastTurn();
+    return ! onSameLevelAsLastTurn();
 }
 
 /* are "lev1" and "lev2" actually the same? */

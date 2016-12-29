@@ -1664,7 +1664,7 @@ setrandom()
     srandom((unsigned int) seed);
 #else
 #if defined(__APPLE__) || defined(BSD) || defined(LINUX) || defined(ULTRIX) \
-    || defined(CYGWIN32) /* system srandom() */
+    || defined(__CYGWIN__) /* system srandom() */
 #if defined(BSD) && !defined(POSIX_TYPES) && defined(SUNOS4)
     (void)
 #endif

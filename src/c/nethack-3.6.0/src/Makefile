@@ -328,7 +328,7 @@ WINBELIB = -lbe
 # versions compile fine using SYSV without this.)
 # LIBS = -lbsd
 #
-# for CYGWIN32 aka cygwin 1.1.1
+# for __CYGWIN__ aka cygwin 1.1.1
 # LIBS = -lcygwin
 #
 # Solaris 2.x seems to work with the following
@@ -341,7 +341,10 @@ WINBELIB = -lbe
 # LIBS = -lz
 #
 
-LIBS = -L/cygdrive/c/Program\ Files/Java/jdk1.8.0_40/jre/bin/server -ljvm
+JAVA_VERSION := $(shell java -version 2>&1 | head -n 1 | cut -c14-)
+JAVA_VERSION := $(shell echo $(JAVA_VERSION))
+
+LIBS = -L/cygdrive/c/Program\ Files/Java/jre$(JAVA_VERSION)/bin/server -ljvm
 
 # make NetHack
 GAME     = nethack
