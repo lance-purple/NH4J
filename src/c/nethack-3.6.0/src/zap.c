@@ -143,7 +143,7 @@ struct obj *otmp;
     boolean disguised_mimic =
         (mtmp->data->mlet == S_MIMIC && mtmp->m_ap_type != M_AP_NOTHING);
 
-    if (u.uswallow && mtmp == u.ustuck)
+    if (swallowed() && mtmp == u.ustuck)
         reveal_invis = FALSE;
 
     switch (otyp) {
@@ -156,7 +156,7 @@ struct obj *otmp;
             shieldeff(mtmp->mx, mtmp->my);
             pline("Boing!");
             break; /* skip makeknown */
-        } else if (u.uswallow || rnd(20) < 10 + find_mac(mtmp)) {
+        } else if (swallowed() || rnd(20) < 10 + find_mac(mtmp)) {
             dmg = d(2, 12);
             if (dbldam)
                 dmg *= 2;
@@ -173,7 +173,7 @@ struct obj *otmp;
         if (!resist(mtmp, otmp->oclass, 0, NOTELL)) {
             mon_adjust_speed(mtmp, -1, otmp);
             m_dowear(mtmp, FALSE); /* might want speed boots */
-            if (u.uswallow && (mtmp == u.ustuck) && is_whirly(mtmp->data)) {
+            if (swallowed() && (mtmp == u.ustuck) && is_whirly(mtmp->data)) {
                 You("disrupt %s!", mon_nam(mtmp));
                 pline("A huge hole opens up...");
                 expels(mtmp, mtmp->data, TRUE);
@@ -271,7 +271,7 @@ struct obj *otmp;
     case WAN_OPENING:
     case SPE_KNOCK:
         wake = FALSE; /* don't want immediate counterattack */
-        if (u.uswallow && mtmp == u.ustuck) {
+        if (swallowed() && mtmp == u.ustuck) {
             if (is_animal(mtmp->data)) {
                 if (Blind)
                     You_feel("a sudden rush of air!");
@@ -441,7 +441,7 @@ struct monst *mtmp;
         (void) display_minventory(mtmp, MINV_ALL | MINV_NOLET, (char *) 0);
     } else {
         pline("%s is not carrying anything%s.", noit_Monnam(mtmp),
-              (u.uswallow && mtmp == u.ustuck) ? " besides you" : "");
+              (swallowed() && mtmp == u.ustuck) ? " besides you" : "");
     }
 }
 
@@ -2840,7 +2840,7 @@ struct obj *obj;
         disclose = TRUE;
     } else if (objects[otyp].oc_dir == IMMEDIATE) {
         zapsetup(); /* reset obj_zapped */
-        if (u.uswallow) {
+        if (swallowed()) {
             (void) bhitm(u.ustuck, obj);
             /* [how about `bhitpile(u.ustuck->minvent)' effect?] */
         } else if (directionZ()) {
@@ -2963,7 +2963,7 @@ struct monst *mtmp;
 const char *force; /* usually either "." or "!" */
 {
     if ((!cansee(bhitpos.x, bhitpos.y) && !canspotmon(mtmp)
-         && !(u.uswallow && mtmp == u.ustuck)) || !flags.verbose)
+         && !(swallowed() && mtmp == u.ustuck)) || !flags.verbose)
         pline("%s %s it.", The(str), vtense(str, "hit"));
     else
         pline("%s %s %s%s", The(str), vtense(str, "hit"),
@@ -3010,7 +3010,7 @@ int range, *skipstart, *skipend;
  * Thrown and kicked objects (THROWN_WEAPON or KICKED_WEAPON) may be
  * destroyed and *pobj set to NULL to indicate this.
  *
- *  Check !u.uswallow before calling bhit().
+ *  Check !swallowed() before calling bhit().
  *  This function reveals the absence of a remembered invisible monster in
  *  necessary cases (throwing or kicking weapons).  The presence of a real
  *  one is revealed for a weapon, but if not a weapon is left up to fhitm().
@@ -3484,7 +3484,7 @@ struct obj **ootmp; /* to return worn armor for caller to disintegrate */
         if (spellcaster)
             tmp = spell_damage_bonus(tmp);
         if (!resists_blnd(mon)
-            && !(type > 0 && u.uswallow && mon == u.ustuck)) {
+            && !(type > 0 && swallowed() && mon == u.ustuck)) {
             register unsigned rnd_tmp = rnd(50);
             mon->mcansee = 0;
             if ((mon->mblinded + rnd_tmp) > 127)
@@ -3823,14 +3823,14 @@ register int dx, dy;
     spell_type = is_hero_spell(type) ? SPE_MAGIC_MISSILE + abstype : 0;
 
     fltxt = flash_types[(type <= -30) ? abstype : abs(type)];
-    if (u.uswallow) {
+    if (swallowed()) {
         register int tmp;
 
         if (type < 0)
             return;
         tmp = zhitm(u.ustuck, type, nd, &otmp);
         if (!u.ustuck)
-            u.uswallow = 0;
+            setSwallowed(FALSE);
         else
             pline("%s rips into %s%s", The(fltxt), mon_nam(u.ustuck),
                   exclam(tmp));
@@ -4971,7 +4971,7 @@ retry:
     if (otmp != &zeroobj) {
         const char
             *verb = ((areYouOnAirLevel() || inWater()) ? "slip" : "drop"),
-            *oops_msg = (u.uswallow
+            *oops_msg = (swallowed()
                          ? "Oops!  %s out of your reach!"
                          : (areYouOnAirLevel() || areYouOnWaterLevel()
                             || levl[currentX()][currentY()].typ < IRONBARS

@@ -504,7 +504,7 @@ register struct monst *mtmp;
             if (cansee(mtmp->mx, mtmp->my)) {
                 pline("%s drowns.", Monnam(mtmp));
             }
-            if (u.ustuck && u.uswallow && u.ustuck == mtmp) {
+            if (u.ustuck && swallowed() && u.ustuck == mtmp) {
                 /* This can happen after a purple worm plucks you off a
                 flying steed while you are over water. */
                 pline("%s sinks as water rushes in and flushes you out.",
@@ -1764,7 +1764,7 @@ register struct monst *mtmp;
                 mtmp->mhpmax = 10;
             mtmp->mhp = mtmp->mhpmax;
             /* this can happen if previously a fog cloud */
-            if (u.uswallow && (mtmp == u.ustuck))
+            if (swallowed() && (mtmp == u.ustuck))
                 expels(mtmp, mtmp->data, FALSE);
             if (in_door) {
                 coord new_xy;
@@ -2033,7 +2033,7 @@ struct monst *mdef;
         newsym(x, y);
     /* We don't currently trap the hero in the statue in this case but we
      * could */
-    if (u.uswallow && u.ustuck == mdef)
+    if (swallowed() && u.ustuck == mdef)
         wasinside = TRUE;
     mondead(mdef);
     if (wasinside) {
@@ -2075,10 +2075,10 @@ unstuck(mtmp)
 struct monst *mtmp;
 {
     if (u.ustuck == mtmp) {
-        if (u.uswallow) {
+        if (swallowed()) {
             setCurrentX(mtmp->mx);
             setCurrentY(mtmp->my);
-            u.uswallow = 0;
+            setSwallowed(FALSE);
             setTimeSinceBeingSwallowed(0);
             if (Punished && uchain->where != OBJ_FLOOR)
                 placebc();
@@ -2107,7 +2107,7 @@ int dest; /* dest==1, normal; dest==0, don't print message; dest==2, don't
     struct permonst *mdat;
     struct obj *otmp;
     struct trap *t;
-    boolean wasinside = u.uswallow && (u.ustuck == mtmp);
+    boolean wasinside = swallowed() && (u.ustuck == mtmp);
     boolean burycorpse = FALSE;
 
     /* KMH, conduct */
@@ -3178,7 +3178,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
     if (mtmp->mundetected)
         (void) hideunder(mtmp);
     if (u.ustuck == mtmp) {
-        if (u.uswallow) {
+        if (swallowed()) {
             if (!attacktype(mdat, AT_ENGL)) {
                 /* Does mdat care? */
                 if (!noncorporeal(mdat) && !amorphous(mdat)

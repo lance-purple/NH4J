@@ -294,8 +294,8 @@ boolean allow_drag;
         youmonst.m_ap_type = M_AP_NOTHING;
     }
 
-    if (u.uswallow) {
-        u.uswallow = 0;
+    if (swallowed()) {
+        setSwallowed(FALSE);
         setTimeSinceBeingSwallowed(0);
         if (Punished && !ball_active) {
             /* ensure ball placement, like unstuck */
@@ -990,7 +990,7 @@ register int x, y;
         place_worm_tail_randomly(mtmp, x, y);
 
     if (u.ustuck == mtmp) {
-        if (u.uswallow) {
+        if (swallowed()) {
             setCurrentX(x);
             setCurrentY(y);
             docrt();
@@ -1333,7 +1333,7 @@ boolean give_feedback;
         if (give_feedback)
             pline("%s resists your magic!", Monnam(mtmp));
         return FALSE;
-    } else if (level.flags.noteleport && u.uswallow && mtmp == u.ustuck) {
+    } else if (level.flags.noteleport && swallowed() && mtmp == u.ustuck) {
         if (give_feedback)
             You("are no longer inside %s!", mon_nam(mtmp));
         unstuck(mtmp);

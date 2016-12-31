@@ -541,7 +541,7 @@ register struct obj *obj;
         setuswapwep((struct obj *) 0);
     }
 
-    if (u.uswallow) {
+    if (swallowed()) {
         /* barrier between you and the floor */
         if (flags.verbose) {
             char buf[BUFSZ];
@@ -594,7 +594,7 @@ register struct obj *obj;
     if (obj->oclass == COIN_CLASS)
         context.botl = 1;
     freeinv(obj);
-    if (!u.uswallow) {
+    if (!swallowed()) {
         if (ship_object(obj, currentX(), currentY(), FALSE))
             return;
         if (IS_ALTAR(levl[currentX()][currentY()].typ))
@@ -624,10 +624,10 @@ boolean with_impact;
     if (obj == uswapwep)
         setuswapwep((struct obj *) 0);
 
-    if (!u.uswallow && flooreffects(obj, currentX(), currentY(), "drop"))
+    if (!swallowed() && flooreffects(obj, currentX(), currentY(), "drop"))
         return;
     /* uswallow check done by GAN 01/29/87 */
-    if (u.uswallow) {
+    if (swallowed()) {
         boolean could_petrify = FALSE;
         boolean could_poly = FALSE;
         boolean could_slime = FALSE;
@@ -653,7 +653,7 @@ boolean with_impact;
                 } else if (could_petrify) {
                     minstapetrify(u.ustuck, TRUE);
                     /* Don't leave a cockatrice corpse in a statue */
-                    if (!u.uswallow)
+                    if (!swallowed())
                         delobj(obj);
                 } else if (could_grow) {
                     (void) grow_up(u.ustuck, (struct monst *) 0);
@@ -924,7 +924,7 @@ dodown()
     }
     if (u.ustuck) {
         You("are %s, and cannot go down.",
-            !u.uswallow ? "being held" : is_animal(u.ustuck->data)
+            !swallowed() ? "being held" : is_animal(u.ustuck->data)
                                              ? "swallowed"
                                              : "engulfed");
         return 1;
@@ -983,7 +983,7 @@ doup()
     }
     if (u.ustuck) {
         You("are %s, and cannot go up.",
-            !u.uswallow ? "being held" : is_animal(u.ustuck->data)
+            !swallowed() ? "being held" : is_animal(u.ustuck->data)
                                              ? "swallowed"
                                              : "engulfed");
         return 1;
@@ -1181,14 +1181,14 @@ boolean at_stairs, falling, portal;
     setInWater(FALSE);
     u.uundetected = 0; /* not hidden, even if means are available */
     keepdogs(FALSE);
-    if (u.uswallow) { /* idem */
+    if (swallowed()) { /* idem */
         setTimeSinceBeingSwallowed(0);
-        u.uswallow = 0;
+        setSwallowed(FALSE);
     }
     recalc_mapseen(); /* recalculate map overview before we leave the level */
     /*
      *  We no longer see anything on the level.  Make sure that this
-     *  follows u.uswallow set to null since uswallow overrides all
+     *  follows swallowed() set to null since uswallow overrides all
      *  normal vision.
      */
     vision_recalc(2);

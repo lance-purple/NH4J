@@ -312,7 +312,7 @@ register struct monst *mtmp;
         return 0;
 
     /* If swallowed, can only be affected by u.ustuck */
-    if (u.uswallow) {
+    if (swallowed()) {
         if (mtmp != u.ustuck)
             return 0;
         u.ustuck->mux = currentX();
@@ -342,7 +342,7 @@ register struct monst *mtmp;
         }
     }
 
-    if (u.uundetected && !range2 && foundyou && !u.uswallow) {
+    if (u.uundetected && !range2 && foundyou && !swallowed()) {
         if (!canspotmon(mtmp))
             map_invisible(mtmp->mx, mtmp->my);
         u.uundetected = 0;
@@ -450,7 +450,7 @@ register struct monst *mtmp;
 
     /* hero might be a mimic, concealed via #monster */
     if (youmonst.data->mlet == S_MIMIC && youmonst.m_ap_type && !range2
-        && foundyou && !u.uswallow) {
+        && foundyou && !swallowed()) {
         boolean sticky = sticks(youmonst.data);
 
         if (!canspotmon(mtmp))
@@ -470,7 +470,7 @@ register struct monst *mtmp;
 
     /* non-mimic hero might be mimicking an object after eating m corpse */
     if (youmonst.m_ap_type == M_AP_OBJECT && !range2 && foundyou
-        && !u.uswallow) {
+        && !swallowed()) {
         if (!canspotmon(mtmp))
             map_invisible(mtmp->mx, mtmp->my);
         if (!youseeit)
@@ -589,7 +589,7 @@ register struct monst *mtmp;
     for (i = 0; i < NATTK; i++) {
         sum[i] = 0;
         mattk = getmattk(mdat, i, sum, &alt_attk);
-        if ((u.uswallow && mattk->aatyp != AT_ENGL)
+        if ((swallowed() && mattk->aatyp != AT_ENGL)
             || (skipnonmagc && mattk->aatyp != AT_MAGC))
             continue;
 
@@ -640,7 +640,7 @@ register struct monst *mtmp;
         case AT_ENGL:
             if (!range2) {
                 if (foundyou) {
-                    if (u.uswallow || tmp > (j = rnd(20 + i))) {
+                    if (swallowed() || tmp > (j = rnd(20 + i))) {
                         /* Force swallowing monster to be
                          * displayed even when player is
                          * moving away */
@@ -1623,7 +1623,7 @@ gulp_blnd_check()
 {
     struct attack *mattk;
 
-    if (!Blinded && u.uswallow
+    if (!Blinded && swallowed()
         && (mattk = attacktype_fordmg(u.ustuck->data, AT_ENGL, AD_BLND))
         && can_blnd(u.ustuck, &youmonst, mattk->aatyp, (struct obj *) 0)) {
         increaseTimeSinceBeingSwallowed(1); /* compensate for gulpmu change */
@@ -1633,7 +1633,7 @@ gulp_blnd_check()
     return FALSE;
 }
 
-/* monster swallows you, or damage if u.uswallow */
+/* monster swallows you, or damage if swallowed() */
 STATIC_OVL int
 gulpmu(mtmp, mattk)
 register struct monst *mtmp;
@@ -1646,7 +1646,7 @@ register struct attack *mattk;
     int i;
     boolean physical_damage = FALSE;
 
-    if (!u.uswallow) { /* swallows you */
+    if (!swallowed()) { /* swallows you */
         int omx = mtmp->mx, omy = mtmp->my;
 
         if (!engulf_target(mtmp, &youmonst))
@@ -1706,7 +1706,7 @@ register struct attack *mattk;
 
         display_nhwindow(WIN_MESSAGE, FALSE);
         vision_recalc(2); /* hero can't see anything */
-        u.uswallow = 1;
+        setSwallowed(TRUE);
         /* for digestion, shorter time is more dangerous;
            for other swallowings, longer time means more
            chances for the swallower to attack */

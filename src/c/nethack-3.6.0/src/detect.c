@@ -1264,7 +1264,7 @@ findit()
 {
     int num = 0;
 
-    if (u.uswallow)
+    if (swallowed())
         return 0;
     do_clear_area(currentX(), currentY(), BOLT_LIM, findone, (genericptr_t) &num);
     return num;
@@ -1276,7 +1276,7 @@ openit()
 {
     int num = 0;
 
-    if (u.uswallow) {
+    if (swallowed()) {
         if (is_animal(u.ustuck->data)) {
             if (Blind)
                 pline("Its mouth opens!");
@@ -1343,7 +1343,7 @@ register int aflag; /* intrinsic autosearch vs explicit searching */
     register struct trap *trap;
     register struct monst *mtmp;
 
-    if (u.uswallow) {
+    if (swallowed()) {
         if (!aflag)
             pline("What are you looking for?  The exit?");
     } else {
@@ -1497,12 +1497,12 @@ int which_subset; /* when not full, whether to suppress objs and/or traps */
                 keep_objs = (which_subset & 2) != 0,
                 keep_mons = (which_subset & 4) != 0; /* actually always 0 */
 
-        save_swallowed = u.uswallow;
+        save_swallowed = swallowed();
         iflags.save_uinwater = inWater();
        	iflags.save_uburied = u.uburied;
         setInWater(FALSE);
        	u.uburied = 0;
-        u.uswallow = 0;
+        setSwallowed(FALSE);
         default_glyph = cmap_to_glyph(level.flags.arboreal ? S_tree : S_stone);
         /* for 'full', show the actual terrain for the entire level,
            otherwise what the hero remembers for seen locations with
@@ -1577,7 +1577,7 @@ int which_subset; /* when not full, whether to suppress objs and/or traps */
         setInWater(iflags.save_uinwater);
         u.uburied = iflags.save_uburied;
         if (save_swallowed)
-            u.uswallow = 1;
+            setSwallowed(TRUE);
         flush_screen(1);
         if (full) {
             Strcpy(buf, "underlying terrain");
