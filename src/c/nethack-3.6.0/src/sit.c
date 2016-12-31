@@ -41,8 +41,8 @@ dosit()
         You("are already sitting on %s.", mon_nam(u.usteed));
         return 0;
     }
-    if (u.uundetected && is_hider(youmonst.data) && currentMonsterNumber() != PM_TRAPPER)
-        u.uundetected = 0; /* no longer on the ceiling */
+    if (lurking() && is_hider(youmonst.data) && currentMonsterNumber() != PM_TRAPPER)
+        setLurking(FALSE); /* no longer on the ceiling */
 
     if (!can_reach_floor(FALSE)) {
         if (swallowed())

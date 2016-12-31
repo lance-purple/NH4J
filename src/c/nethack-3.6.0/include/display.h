@@ -135,7 +135,7 @@
  * unable to see.  So when blind, being invisible won't affect your
  * self-perception, and when swallowed, the enclosing monster touches.
  */
-#define canseeself() (Blind || swallowed() || (!Invisible && !u.uundetected))
+#define canseeself() (Blind || swallowed() || (!Invisible && !lurking()))
 #define senseself() (Unblind_telepat || Detect_monsters)
 #define canspotself() (canseeself() || senseself())
 

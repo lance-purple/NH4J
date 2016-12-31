@@ -1791,7 +1791,7 @@ struct obj *obj, *otmp;
 
             if (obj_shudders(obj)) {
                 boolean cover =
-                    ((obj == level.objects[currentX()][currentY()]) && u.uundetected
+                    ((obj == level.objects[currentX()][currentY()]) && lurking()
                      && hides_under(youmonst.data));
 
                 if (cansee(obj->ox, obj->oy))
@@ -1964,7 +1964,7 @@ schar zz;
     for (otmp = level.objects[tx][ty]; otmp; otmp = next_obj) {
         next_obj = otmp->nexthere;
         /* for zap downwards, don't hit object poly'd hero is hiding under */
-        if (zz > 0 && u.uundetected && otmp == level.objects[currentX()][currentY()]
+        if (zz > 0 && lurking() && otmp == level.objects[currentX()][currentY()]
             && hides_under(youmonst.data))
             continue;
 
@@ -2794,7 +2794,7 @@ struct obj *obj; /* wand or spell */
         /* game flavor: if you're hiding under "something"
          * a zap upward should hit that "something".
          */
-        if (u.uundetected && hides_under(youmonst.data)) {
+        if (lurking() && hides_under(youmonst.data)) {
             int hitit = 0;
             otmp = level.objects[currentX()][currentY()];
 
@@ -4244,7 +4244,7 @@ short exploding_wand_typ;
                     if (inWater()) { /* not just `if (underwater())' */
                         /* leave the no longer existent water */
                         setInWater(FALSE);
-                        u.uundetected = 0;
+                        setLurking(FALSE);
                         docrt();
                         vision_full_recalc = 1;
                     } else if (currentlyTrapped() && currentTrapType() == TT_LAVA) {

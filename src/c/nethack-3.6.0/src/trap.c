@@ -727,8 +727,9 @@ int *fail_reason;
 
     /* avoid hiding under nothing */
     if (x == currentX() && y == currentY() && areYouPolymorphed() && hides_under(youmonst.data)
-        && !OBJ_AT(x, y))
-        u.uundetected = 0;
+        && !OBJ_AT(x, y)) {
+        setLurking(FALSE);
+    }
 
     if (fail_reason)
         *fail_reason = AS_OK;

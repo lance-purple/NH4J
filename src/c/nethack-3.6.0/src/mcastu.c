@@ -56,7 +56,7 @@ boolean undirected;
         else if ((Invis && !perceives(mtmp->data)
                   && (mtmp->mux != currentX() || mtmp->muy != currentY()))
                  || is_obj_mappear(&youmonst, STRANGE_OBJECT)
-                 || u.uundetected)
+                 || lurking())
             point_msg = "and curses in your general direction";
         else if (Displaced && (mtmp->mux != currentX() || mtmp->muy != currentY()))
             point_msg = "and curses at your displaced image";

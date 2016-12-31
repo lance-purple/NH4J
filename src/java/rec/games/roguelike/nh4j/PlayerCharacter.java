@@ -86,6 +86,7 @@ public class PlayerCharacter {
 	private static int currentMonsterNumber;
 	private static int timeRemainingAsMonster;
 	
+	private static boolean lurking; /* you are an undetected piercer or other hidden monster */
 	private static int deathCount;
 	private static int ariseFromGraveAsMonster;
 	
@@ -772,6 +773,14 @@ public class PlayerCharacter {
 
 	public static void setLycanthropeType(int t) {
 		lycanthropeType = t;
+	}
+	
+	public static boolean lurking() {
+		return lurking;
+	}
+	
+	public static void setLurking(boolean b) {
+		lurking = b;
 	}
 
 	public static final int deathCount() {

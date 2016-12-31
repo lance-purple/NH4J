@@ -366,6 +366,7 @@ register int fd, mode;
 
     write_int(fd, originalMonsterNumber());
     write_int(fd, currentMonsterNumber());
+    write_int(fd, lurking());
     write_int(fd, lycanthropeType());
     write_int(fd, timeRemainingAsMonster());
 

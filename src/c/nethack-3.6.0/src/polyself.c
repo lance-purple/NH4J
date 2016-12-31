@@ -166,7 +166,7 @@ const char *fmt, *arg;
     setMaximumHitPointsAsMonster(0);
     setTimeRemainingAsMonster(0);
     skinback(FALSE);
-    u.uundetected = 0;
+    setLurking(FALSE);
 
     if (sticky)
         uunstick();
@@ -1422,9 +1422,9 @@ dohide()
                                              : humanoid(u.ustuck->data)
                                                    ? "holding someone"
                                                    : "holding that creature");
-        if (u.uundetected
+        if (lurking()
             || (ismimic && youmonst.m_ap_type != M_AP_NOTHING)) {
-            u.uundetected = 0;
+            setLurking(FALSE);
             youmonst.m_ap_type = M_AP_NOTHING;
             newsym(currentX(), currentY());
         }
@@ -1437,31 +1437,31 @@ dohide()
             The("fountain is not deep enough to hide in.");
         else
             There("is no water to hide in here.");
-        u.uundetected = 0;
+        setLurking(FALSE);
         return 0;
     }
     if (hides_under(youmonst.data) && !level.objects[currentX()][currentY()]) {
         There("is nothing to hide under here.");
-        u.uundetected = 0;
+        setLurking(FALSE);
         return 0;
     }
     /* Planes of Air and Water */
     if (on_ceiling && !currentLevelHasCeiling()) {
         There("is nowhere to hide above you.");
-        u.uundetected = 0;
+        setLurking(FALSE);
         return 0;
     }
     if ((is_hider(youmonst.data) && !Flying) /* floor hider */
         && (areYouOnAirLevel() || areYouOnWaterLevel())) {
         There("is nowhere to hide beneath you.");
-        u.uundetected = 0;
+        setLurking(FALSE);
         return 0;
     }
     /* TODO? inhibit floor hiding at furniture locations, or
      * else make youhiding() give smarter messages at such spots.
      */
 
-    if (u.uundetected || (ismimic && youmonst.m_ap_type != M_AP_NOTHING)) {
+    if (lurking() || (ismimic && youmonst.m_ap_type != M_AP_NOTHING)) {
         youhiding(FALSE, 1); /* "you are already hiding" */
         return 0;
     }
@@ -1471,7 +1471,7 @@ dohide()
         youmonst.m_ap_type = M_AP_OBJECT;
         youmonst.mappearance = STRANGE_OBJECT;
     } else
-        u.uundetected = 1;
+        setLurking(TRUE);
     newsym(currentX(), currentY());
     youhiding(FALSE, 0); /* "you are now hiding" */
     return 1;

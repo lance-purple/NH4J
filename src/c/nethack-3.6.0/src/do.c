@@ -1179,7 +1179,7 @@ boolean at_stairs, falling, portal;
     fill_pit(currentX(), currentY());
     u.ustuck = 0; /* idem */
     setInWater(FALSE);
-    u.uundetected = 0; /* not hidden, even if means are available */
+    setLurking(FALSE); /* not hidden, even if means are available */
     keepdogs(FALSE);
     if (swallowed()) { /* idem */
         setTimeSinceBeingSwallowed(0);

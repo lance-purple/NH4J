@@ -349,7 +349,7 @@ invault()
             mongone(guard);
             return;
         }
-        if (youmonst.m_ap_type == M_AP_OBJECT || u.uundetected) {
+        if (youmonst.m_ap_type == M_AP_OBJECT || lurking()) {
             if (youmonst.m_ap_type == M_AP_OBJECT
                 && youmonst.mappearance != GOLD_PIECE)
                 verbalize("Hey! Who left that %s in here?",

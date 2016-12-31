@@ -278,7 +278,7 @@ char *buf, *monbuf;
            (even if you could also see yourself via other means).
            Sensing self while blind or swallowed is treated as if it
            were by normal vision (cf canseeself()). */
-        if ((Invisible || u.uundetected) && !Blind && !swallowed()) {
+        if ((Invisible || lurking()) && !Blind && !swallowed()) {
             unsigned how = 0;
 
             if (Infravision)

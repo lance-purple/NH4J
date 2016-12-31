@@ -1660,7 +1660,7 @@ int final;
                   : surface(currentX(), currentY())); /* catchall; shouldn't happen */
         you_are(buf, from_what(WWALKING));
     }
-    if (areYouPolymorphed() && (u.uundetected || youmonst.m_ap_type != M_AP_NOTHING))
+    if (areYouPolymorphed() && (lurking() || youmonst.m_ap_type != M_AP_NOTHING))
         youhiding(TRUE, final);
 
     /* internal troubles, mostly in the order that prayer ranks them */
@@ -2452,7 +2452,7 @@ int msgflag;          /* for variant message phrasing */
         } else {
             ; /* something unexpected; leave 'buf' as-is */
         }
-    } else if (u.uundetected) {
+    } else if (lurking()) {
         bp = eos(buf); /* points past "hiding" */
         if (youmonst.data->mlet == S_EEL) {
             if (is_pool(currentX(), currentY()))

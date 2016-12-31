@@ -3160,7 +3160,7 @@ long numused;
             (void) stolen_value(otmp, otmp->ox, otmp->oy, FALSE, FALSE);
     }
     delobj(otmp);
-    if (at_u && u.uundetected && hides_under(youmonst.data))
+    if (at_u && lurking() && hides_under(youmonst.data))
         (void) hideunder(&youmonst);
 }
 

@@ -2695,7 +2695,7 @@ struct monst *mtmp;
     }
 
     if (is_u)
-        u.uundetected = undetected;
+        setLurking(undetected);
     else
         mtmp->mundetected = undetected;
     return undetected;

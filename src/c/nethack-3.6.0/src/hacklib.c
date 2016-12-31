@@ -1063,6 +1063,14 @@ void setCurrentMonsterNumber(int n) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "setCurrentMonsterNumber", n);
 }
 
+boolean lurking() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "lurking");
+} 
+
+void setLurking(boolean b) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setLurking", b);
+}
+
 int lycanthropeType() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "lycanthropeType");
 } 

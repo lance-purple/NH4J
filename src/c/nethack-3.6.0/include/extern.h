@@ -1040,6 +1040,9 @@ E void FDECL(increaseTimeRemainingAsMonster, (int));
 E void FDECL(decreaseTimeRemainingAsMonster, (int));
 E void FDECL(multiplyTimeRemainingAsMonster, (int));
 
+E boolean FDECL(lurking, ());
+E void FDECL(setLurking, (boolean));
+
 E int FDECL(lycanthropeType, ());
 E void FDECL(setLycanthropeType, (int));
 

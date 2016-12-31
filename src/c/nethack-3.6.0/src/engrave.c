@@ -157,7 +157,7 @@ boolean check_pit;
 
     return (boolean) ((!Levitation || areYouOnAirLevel()
                        || areYouOnWaterLevel())
-                      && (!u.uundetected || !is_hider(youmonst.data)
+                      && (!lurking() || !is_hider(youmonst.data)
                           || currentMonsterNumber() == PM_TRAPPER));
 }
 

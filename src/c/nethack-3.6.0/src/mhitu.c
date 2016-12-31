@@ -342,10 +342,10 @@ register struct monst *mtmp;
         }
     }
 
-    if (u.uundetected && !range2 && foundyou && !swallowed()) {
+    if (lurking() && !range2 && foundyou && !swallowed()) {
         if (!canspotmon(mtmp))
             map_invisible(mtmp->mx, mtmp->my);
-        u.uundetected = 0;
+        setLurking(FALSE);
         if (is_hider(youmonst.data) && currentMonsterNumber() != PM_TRAPPER) {
             /* ceiling hider */
             coord cc; /* maybe we need a unexto() function? */
@@ -368,7 +368,7 @@ register struct monst *mtmp;
                    original positions; hero has become unconcealed
                    so mtmp's next move will be a regular attack */
                 place_monster(mtmp, mtmp->mx, mtmp->my); /* put back */
-                newsym(currentX(), currentY()); /* u.uundetected was toggled */
+                newsym(currentX(), currentY()); /* luking() was toggled */
                 pline("%s draws back as you drop!", Monnam(mtmp));
                 return 0;
             }
