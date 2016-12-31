@@ -1575,6 +1575,7 @@ int which_subset; /* when not full, whether to suppress objs and/or traps */
 
         /* [TODO: highlight hero's location somehow] */
         setInWater(iflags.save_uinwater);
+        u.uburied = iflags.save_uburied;
         if (save_swallowed)
             u.uswallow = 1;
         flush_screen(1);
