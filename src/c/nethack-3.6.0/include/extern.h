@@ -318,7 +318,7 @@ E void FDECL(newsym, (int, int));
 E void FDECL(shieldeff, (XCHAR_P, XCHAR_P));
 E void FDECL(tmp_at, (int, int));
 E void FDECL(showHeroBeingSwallowed, (int));
-E void FDECL(under_ground, (int));
+E void FDECL(showHeroBeingBuried, (int));
 E void FDECL(showHeroUnderwater, (int));
 E void NDECL(see_monsters);
 E void NDECL(set_mimic_blocking);
@@ -938,6 +938,9 @@ E void FDECL(setInWater, (boolean));
 
 E boolean FDECL(swallowed, ());
 E void FDECL(setSwallowed, (boolean));
+
+E boolean FDECL(buried, ());
+E void FDECL(setBuried, (boolean));
 
 E int FDECL(timeInVault, ());
 E void FDECL(setTimeInVault, (int));

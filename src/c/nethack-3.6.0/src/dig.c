@@ -2026,10 +2026,10 @@ bury_you()
             pline_The("%s opens beneath you and you fall in!",
                       surface(currentX(), currentY(currentY()
 
-        u.uburied = TRUE;
+        setBuried(TRUE);
         if (!Strangled && !Breathless)
             Strangled = 6;
-        under_ground(1);
+        showHeroBeingBuried(1);
     }
 }
 
@@ -2037,8 +2037,8 @@ void
 unearth_you()
 {
     debugpline0("unearth_you");
-    u.uburied = FALSE;
-    under_ground(0);
+    setBuried(FALSE);
+    showHeroBeingBuried(0);
     if (!uamul || uamul->otyp != AMULET_OF_STRANGULATION)
         Strangled = 0;
     vision_recalc(0);
@@ -2052,7 +2052,7 @@ escape_tomb()
         && (Teleport_control || rn2(3) < Luck+2)) {
         You("attempt a teleport spell.");
         (void) dotele();        /* calls unearth_you() */
-    } else if (u.uburied) { /* still buried after 'port attempt */
+    } else if (buried()) { /* still buried after 'port attempt */
         boolean good;
 
         if (amorphous(youmonst.data) || Passes_walls

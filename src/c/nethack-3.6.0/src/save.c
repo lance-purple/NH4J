@@ -119,8 +119,10 @@ dosave0()
         setInWater(TRUE);
         iflags.save_uinwater = 0;
     }	 
-    if (iflags.save_uburied)
-        u.uburied = 1, iflags.save_uburied = 0;
+    if (iflags.save_uburied) {
+        buried(TRUE);
+        iflags.save_uburied = 0;
+    }
 
     if (!program_state.something_worth_saving || !SAVEF[0])
         return 0;
@@ -343,6 +345,7 @@ register int fd, mode;
 
     write_int(fd, inWater());
     write_int(fd, swallowed());
+    write_int(fd, buried());
 
     write_int(fd, timeInVault());
     write_int(fd, timeSinceBeingSwallowed());

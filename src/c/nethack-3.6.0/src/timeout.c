@@ -396,7 +396,7 @@ nh_timeout()
             case STRANGLED:
                 killer.format = KILLED_BY;
                 Strcpy(killer.name,
-                       (u.uburied) ? "suffocation" : "strangulation");
+                       (buried()) ? "suffocation" : "strangulation");
                 done(DIED);
                 /* must be declining to die in explore|wizard mode;
                    treat like being cured of strangulation by prayer */

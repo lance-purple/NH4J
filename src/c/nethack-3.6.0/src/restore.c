@@ -612,6 +612,7 @@ unsigned int *stuckid, *steedid;
 
     setInWater(read_int(fd) ? TRUE : FALSE);
     setSwallowed(read_int(fd) ? TRUE : FALSE);
+    setBuried(read_int(fd) ? TRUE : FALSE);
 
     setTimeInVault(read_int(fd));
     setTimeSinceBeingSwallowed(read_int(fd));

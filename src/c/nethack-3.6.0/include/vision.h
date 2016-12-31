@@ -45,7 +45,7 @@ extern char *viz_rmax;			/* max could see indices */
 
 #define m_canseeu(m)                                       \
     ((!Invis || perceives((m)->data))                      \
-             && !(underwater() || u.uburied || (m)->mburied) \
+             && !(underwater() || buried() || (m)->mburied) \
          ? couldsee((m)->mx, (m)->my)                      \
          : 0)
 

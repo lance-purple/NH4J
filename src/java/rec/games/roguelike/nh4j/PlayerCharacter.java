@@ -38,6 +38,7 @@ public class PlayerCharacter {
 
 	private static boolean immersed;
 	private static boolean swallowed;
+	private static boolean buried;
 	
 	private static int timeInVault;
 	private static int timeSinceBeingSwallowed;
@@ -297,6 +298,14 @@ public class PlayerCharacter {
 
 	public static void setInWater(boolean w) {
 		immersed = w;
+	}
+
+	public static boolean buried() {
+		return buried;
+	}
+	
+	public static void setBuried(boolean b) {
+		buried = b;
 	}
 
 	public static int timeInVault() {

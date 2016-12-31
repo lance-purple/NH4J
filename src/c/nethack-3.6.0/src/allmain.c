@@ -340,8 +340,8 @@ boolean resuming;
                     else if (underwater())
                         showHeroUnderwater(0);
                     /* vision while buried done here */
-                    else if (u.uburied)
-                        under_ground(0);
+                    else if (buried())
+                        showHeroBeingBuried(0);
 
                     /* when immobile, count is in turns */
                     if (multi < 0) {

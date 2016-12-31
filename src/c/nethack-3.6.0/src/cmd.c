@@ -514,7 +514,7 @@ domonability(VOID_ARGS)
         return 1;
     } else if (youmonst.data->msound == MS_SHRIEK) {
         You("shriek.");
-        if (u.uburied)
+        if (buried())
             pline("Unfortunately sound does not carry well through rock.");
         else
             aggravate();
@@ -1669,7 +1669,7 @@ int final;
     if (Slimed)
         you_are("turning into slime", "");
     if (Strangled) {
-        if (u.uburied) {
+        if (buried()) {
             you_are("buried", "");
         } else {
             Strcpy(buf, "being strangled");
@@ -3410,7 +3410,7 @@ register char *cmd;
         /* current - use *cmd to directly index cmdlist array */
         if ((tlist = Cmd.commands[*cmd & 0xff]) != 0) {
 #endif
-            if (u.uburied && !tlist->can_if_buried) {
+            if (buried() && !tlist->can_if_buried) {
                 You_cant("do that while you are buried!");
                 res = 0;
             } else {

@@ -771,6 +771,14 @@ void setSwallowed(boolean w) {
     javaSetBoolean(PLAYER_CHARACTER_CLASS, "setSwallowed", w);
 }
 
+boolean buried() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "buried");
+}
+
+void setBuried(boolean b) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setBuried", b);
+}
+
 int timeInVault() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "timeInVault");
 }

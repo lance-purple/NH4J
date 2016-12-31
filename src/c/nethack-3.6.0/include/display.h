@@ -62,7 +62,7 @@
     (/* The hero can see the monster IF the monster                     */ \
      (!mon->minvis || See_invisible)  /*     1. is not invisible        */ \
      && !mon->mundetected             /* AND 2. not an undetected hider */ \
-     && !(mon->mburied || u.uburied)) /* AND 3. neither you nor it is buried */
+     && !(mon->mburied || buried()))  /* AND 3. neither you nor it is buried */
 
 /*
  * see_with_infrared()

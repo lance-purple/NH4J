@@ -1114,12 +1114,12 @@ int mode;
 }
 
 /*
- *      under_ground()
+ *      showHeroBeingBuried()
  *
  *      Very restricted display.  You can only see yourself.
  */
 void
-under_ground(mode)
+showHeroBeingBuried(mode)
 int mode;
 {
     static boolean dela;
@@ -1277,8 +1277,8 @@ docrt()
         showHeroUnderwater(1);
         return;
     }
-    if (u.uburied) {
-        under_ground(1);
+    if (buried()) {
+        showHeroBeingBuried(1);
         return;
     }
 
