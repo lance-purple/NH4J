@@ -1316,6 +1316,14 @@ void setCurrentHungerState(int s) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "setCurrentHungerState", s);
 }
 
+boolean canSenseUnsafeFood() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "canSenseUnsafeFood");
+} 
+
+void setCanSenseUnsafeFood(boolean u) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setCanSenseUnsafeFood", u);
+}
+
 int abilityToConfuseMonsters() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "abilityToConfuseMonsters");
 } 

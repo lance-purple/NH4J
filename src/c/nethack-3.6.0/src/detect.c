@@ -323,23 +323,23 @@ register struct obj *sobj;
             docrt();
             You("sense a lack of %s nearby.", what);
             if (sobj && sobj->blessed) {
-                if (!u.uedibility)
+                if (!canSenseUnsafeFood())
                     Your("%s starts to tingle.", body_part(NOSE));
-                u.uedibility = 1;
+                setCanSenseUnsafeFood(TRUE);
             }
         } else if (sobj) {
             char buf[BUFSZ];
             Sprintf(buf, "Your %s twitches%s.", body_part(NOSE),
-                    (sobj->blessed && !u.uedibility)
+                    (sobj->blessed && !canSenseUnsafeFood())
                         ? " then starts to tingle"
                         : "");
-            if (sobj->blessed && !u.uedibility) {
+            if (sobj->blessed && !canSenseUnsafeFood()) {
                 boolean savebeginner = flags.beginner;
 
                 flags.beginner = FALSE; /* prevent non-delivery of message */
                 strange_feeling(sobj, buf);
                 flags.beginner = savebeginner;
-                u.uedibility = 1;
+                setCanSenseUnsafeFood(TRUE);
             } else
                 strange_feeling(sobj, buf);
         }
@@ -348,9 +348,9 @@ register struct obj *sobj;
         known = TRUE;
         You("%s %s nearby.", sobj ? "smell" : "sense", what);
         if (sobj && sobj->blessed) {
-            if (!u.uedibility)
+            if (!canSenseUnsafeFood())
                 pline("Your %s starts to tingle.", body_part(NOSE));
-            u.uedibility = 1;
+            setCanSenseUnsafeFood(TRUE);
         }
     } else {
         struct obj *temp;
@@ -384,8 +384,8 @@ register struct obj *sobj;
         if (sobj) {
             if (sobj->blessed) {
                 Your("%s %s to tingle and you smell %s.", body_part(NOSE),
-                     u.uedibility ? "continues" : "starts", what);
-                u.uedibility = 1;
+                     canSenseUnsafeFood() ? "continues" : "starts", what);
+                setCanSenseUnsafeFood(TRUE);
             } else
                 Your("%s tingles and you smell %s.", body_part(NOSE), what);
         } else

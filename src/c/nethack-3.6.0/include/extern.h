@@ -1115,6 +1115,9 @@ E void FDECL(decreaseCurrentNutrition, (int));
 E int FDECL(currentHungerState, ());
 E void FDECL(setCurrentHungerState, (int));
 
+E boolean FDECL(canSenseUnsafeFood, ());
+E void FDECL(setCanSenseUnsafeFood, (boolean));
+
 E boolean FDECL(sickWithFoodPoisoning, ());
 E void FDECL(setSickWithFoodPoisoning, (boolean));
 

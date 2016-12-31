@@ -107,6 +107,8 @@ public class PlayerCharacter {
 	private static HungerState currentHungerState = HungerState.NOT_HUNGRY;
 	private static int currentNutrition;
 	
+	private static boolean canSenseUnsafeFood;
+	
 	private static int abilityToConfuseMonsters;
 	
 	private static int creamed;
@@ -981,6 +983,14 @@ public class PlayerCharacter {
 
 	public static final void setCurrentHungerState(int key) {
 		currentHungerState = HungerState.byKey(key);
+	}
+	
+	public static boolean canSenseUnsafeFood() {
+		return canSenseUnsafeFood;
+	}
+	
+	public static void setCanSenseUnsafeFood(boolean u) {
+		canSenseUnsafeFood = u;
 	}
 	
 	public static final int abilityToConfuseMonsters() {

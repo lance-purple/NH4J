@@ -2335,13 +2335,13 @@ doeat()
     if (check_capacity((char *) 0))
         return 0;
 
-    if (u.uedibility) {
+    if (canSenseUnsafeFood()) {
         int res = edibility_prompts(otmp);
         if (res) {
             Your(
                "%s stops tingling and your sense of smell returns to normal.",
                  body_part(NOSE));
-            u.uedibility = 0;
+            setCanSenseUnsafeFood(FALSE);
             if (res == 1)
                 return 0;
         }
