@@ -810,7 +810,7 @@ int mntmp;
     }
     find_ac();
     if ((!Levitation && !u.ustuck && !Flying && is_pool_or_lava(currentX(), currentY()))
-        || (Underwater && !Swimming))
+        || (underwater() && !Swimming))
         spoteffects(TRUE);
     if (Passes_walls && currentlyTrapped()
         && (currentTrapType() == TT_INFLOOR || currentTrapType() == TT_BURIEDBALL)) {
@@ -1141,7 +1141,7 @@ dospinweb()
 {
     register struct trap *ttmp = t_at(currentX(), currentY());
 
-    if (Levitation || areYouOnAirLevel() || Underwater
+    if (Levitation || areYouOnAirLevel() || underwater()
         || areYouOnWaterLevel()) {
         You("must be on the ground to spin a web.");
         return 0;

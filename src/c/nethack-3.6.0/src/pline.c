@@ -232,7 +232,7 @@ VA_DECL(const char *, line)
         return;
     VA_START(line);
     VA_INIT(line, const char *);
-    if (Underwater)
+    if (underwater())
         YouPrefix(tmp, "You barely hear ", line);
     else if (Unaware)
         YouPrefix(tmp, "You dream that you hear ", line);

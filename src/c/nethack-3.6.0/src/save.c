@@ -115,8 +115,10 @@ dosave0()
        a few of things before saving so that they won't be restored in
        an improper state; these will be no-ops for normal save sequence */
     u.uinvulnerable = 0;
-    if (iflags.save_uinwater)
-        u.uinwater = 1, iflags.save_uinwater = 0;
+    if (iflags.save_uinwater) {
+        setInWater(TRUE);
+        iflags.save_uinwater = 0;
+    }	 
     if (iflags.save_uburied)
         u.uburied = 1, iflags.save_uburied = 0;
 
@@ -338,6 +340,8 @@ register int fd, mode;
     write_int(fd, currentTrapTimeout());
 
     write_long(fd, sleepingSinceMove());
+
+    write_int(fd, inWater());
 
     write_int(fd, timeInVault());
     write_int(fd, timeSinceBeingSwallowed());

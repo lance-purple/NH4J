@@ -86,7 +86,7 @@ boolean pushing;
             }
         }
         if (!fills_up || !pushing) { /* splashing occurs */
-            if (!u.uinwater) {
+            if (!inWater()) {
                 if (pushing ? !Blind : cansee(rx, ry)) {
                     There("is a large splash as %s %s the %s.",
                           the(xname(otmp)), fills_up ? "fills" : "falls into",
@@ -96,8 +96,8 @@ boolean pushing;
                 wake_nearto(rx, ry, 40);
             }
 
-            if (fills_up && u.uinwater && distanceSquaredToYou(rx, ry) == 0) {
-                u.uinwater = 0;
+            if (fills_up && inWater() && distanceSquaredToYou(rx, ry) == 0) {
+                setInWater(FALSE);
                 docrt();
                 vision_full_recalc = 1;
                 You("find yourself on dry land again!");
@@ -196,7 +196,7 @@ const char *verb;
          * noise.  Stuff dropped near fountains always misses */
         if ((Blind || (Levitation || Flying)) && !Deaf
             && ((x == currentX()) && (y == currentY()))) {
-            if (!Underwater) {
+            if (!underwater()) {
                 if (weight(obj) > 9) {
                     pline("Splash!");
                 } else if (Levitation || Flying) {
@@ -1178,7 +1178,7 @@ boolean at_stairs, falling, portal;
     setCurrentTrapTimeout(0); /* needed in level_tele */
     fill_pit(currentX(), currentY());
     u.ustuck = 0; /* idem */
-    u.uinwater = 0;
+    setInWater(FALSE);
     u.uundetected = 0; /* not hidden, even if means are available */
     keepdogs(FALSE);
     if (u.uswallow) { /* idem */

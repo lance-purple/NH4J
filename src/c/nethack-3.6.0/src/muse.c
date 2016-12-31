@@ -758,7 +758,7 @@ struct monst *mtmp;
         struct permonst *pm =
             !is_pool(mtmp->mx, mtmp->my)
                 ? 0
-                : &mons[u.uinwater ? PM_GIANT_EEL : PM_CROCODILE];
+                : &mons[inWater() ? PM_GIANT_EEL : PM_CROCODILE];
         struct monst *mon;
 
         if (!enexto(&cc, mtmp->mx, mtmp->my, pm))
@@ -784,7 +784,7 @@ struct monst *mtmp;
         if (mtmp->mconf)
             pm = fish = &mons[PM_ACID_BLOB];
         else if (is_pool(mtmp->mx, mtmp->my))
-            fish = &mons[u.uinwater ? PM_GIANT_EEL : PM_CROCODILE];
+            fish = &mons[inWater() ? PM_GIANT_EEL : PM_CROCODILE];
         mreadmsg(mtmp, otmp);
         while (cnt--) {
             /* `fish' potentially gives bias towards water locations;

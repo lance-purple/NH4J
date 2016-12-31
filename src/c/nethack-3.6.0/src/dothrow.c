@@ -416,7 +416,7 @@ void
 hitfloor(obj)
 register struct obj *obj;
 {
-    if (IS_SOFT(levl[currentX()][currentY()].typ) || u.uinwater) {
+    if (IS_SOFT(levl[currentX()][currentY()].typ) || inWater()) {
         dropy(obj);
         return;
     }
@@ -1043,7 +1043,7 @@ boolean
             setuwep(obj);
             setUsingTwoWeapons(twoweap);
         } else if (directionZ() < 0) {
-            (void) toss_up(obj, rn2(5) && !Underwater);
+            (void) toss_up(obj, rn2(5) && !underwater());
         } else if (directionZ() > 0 && u.usteed && obj->oclass == POTION_CLASS
                    && rn2(6)) {
             /* alternative to prayer or wand of opening/spell of knock
@@ -1055,7 +1055,7 @@ boolean
         thrownobj = (struct obj *) 0;
         return;
 
-    } else if (obj->otyp == BOOMERANG && !Underwater) {
+    } else if (obj->otyp == BOOMERANG && !underwater()) {
         if (areYouOnAirLevel() || Levitation)
             hurtle(-directionX(), -directionY(), 1, TRUE);
         mon = boomhit(obj, directionX(), directionY());
@@ -1120,7 +1120,7 @@ boolean
         else if (obj == uball && currentlyTrapped() && currentTrapType() == TT_INFLOOR)
             range = 1;
 
-        if (Underwater)
+        if (underwater())
             range = 1;
 
         mon = bhit(directionX(), directionY(), range, THROWN_WEAPON,
@@ -1940,7 +1940,7 @@ struct obj *obj;
     }
 
     if (directionZ()) {
-        if (directionZ() < 0 && !areYouOnAirLevel() && !Underwater
+        if (directionZ() < 0 && !areYouOnAirLevel() && !underwater()
             && !areYouOnWaterLevel()) {
             pline_The("gold hits the %s, then falls back on top of your %s.",
                       ceiling(currentX(), currentY()), body_part(HEAD));

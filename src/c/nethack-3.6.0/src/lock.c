@@ -305,7 +305,7 @@ struct obj *pick;
         } else if (is_lava(currentX(), currentY())) {
             pline("Doing that would probably melt %s.", yname(pick));
             return PICKLOCK_LEARNED_SOMETHING;
-        } else if (is_pool(currentX(), currentY()) && !Underwater) {
+        } else if (is_pool(currentX(), currentY()) && !underwater()) {
             pline_The("water has no lock.");
             return PICKLOCK_LEARNED_SOMETHING;
         }

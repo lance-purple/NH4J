@@ -747,6 +747,22 @@ void setSleepingSinceMove(long m) {
     javaSetLong(PLAYER_CHARACTER_CLASS, "setSleepingSinceMove", m);
 }
 
+boolean underwater() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "underwater");
+}
+
+void setUnderwater(boolean w) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setUnderwater", w);
+}
+
+boolean inWater() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "inWater");
+}
+
+void setInWater(boolean w) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setInWater", w);
+}
+
 int timeInVault() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "timeInVault");
 }

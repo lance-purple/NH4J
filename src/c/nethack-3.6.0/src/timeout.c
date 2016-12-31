@@ -701,7 +701,7 @@ slip_or_trip()
     if (u.usteed)
         on_foot = FALSE;
 
-    if (otmp && on_foot && !u.uinwater && is_pool(currentX(), currentY()))
+    if (otmp && on_foot && !inWater() && is_pool(currentX(), currentY()))
         otmp = 0;
 
     if (otmp && on_foot) { /* trip over something in particular */

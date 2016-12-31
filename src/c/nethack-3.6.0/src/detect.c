@@ -227,8 +227,10 @@ register struct obj *sobj;
 outgoldmap:
     cls();
 
-    iflags.save_uinwater = u.uinwater, iflags.save_uburied = u.uburied;
-    u.uinwater = u.uburied = 0;
+    iflags.save_uinwater = inWater();
+    iflags.save_uburied = u.uburied;
+    setInWater(FALSE);
+    u.uburied = 0;
     /* Discover gold locations. */
     for (obj = fobj; obj; obj = obj->nobj) {
         if (sobj->blessed && (temp = o_material(obj, GOLD))) {
@@ -270,12 +272,13 @@ outgoldmap:
                 }
     }
     newsym(currentX(), currentY());
-    u.uinwater = iflags.save_uinwater, u.uburied = iflags.save_uburied;
+    setInWater(iflags.save_uinwater);
+    u.uburied = iflags.save_uburied;
     You_feel("very greedy, and sense gold!");
     exercise(A_WIS, TRUE);
     display_nhwindow(WIN_MAP, TRUE);
     docrt();
-    if (Underwater)
+    if (underwater())
         under_water(2);
     if (u.uburied)
         under_ground(2);
@@ -353,8 +356,10 @@ register struct obj *sobj;
         struct obj *temp;
         known = TRUE;
         cls();
-        iflags.save_uinwater = u.uinwater, iflags.save_uburied = u.uburied;
-        u.uinwater = u.uburied = 0;
+        iflags.save_uinwater = inWater();
+       	iflags.save_uburied = u.uburied;
+        setInWater(FALSE);
+       	u.uburied = 0;
         for (obj = fobj; obj; obj = obj->nobj)
             if ((temp = o_in(obj, oclass)) != 0) {
                 if (temp != obj) {
@@ -374,7 +379,8 @@ register struct obj *sobj;
                     break; /* skip rest of this monster's inventory */
                 }
         newsym(currentX(), currentY());
-        u.uinwater = iflags.save_uinwater, u.uburied = iflags.save_uburied;
+        setInWater(iflags.save_uinwater);
+        u.uburied = iflags.save_uburied;
         if (sobj) {
             if (sobj->blessed) {
                 Your("%s %s to tingle and you smell %s.", body_part(NOSE),
@@ -387,7 +393,7 @@ register struct obj *sobj;
         display_nhwindow(WIN_MAP, TRUE);
         exercise(A_WIS, TRUE);
         docrt();
-        if (Underwater)
+        if (underwater())
             under_water(2);
         if (u.uburied)
             under_ground(2);
@@ -496,8 +502,10 @@ int class;            /* an object class, 0 for all */
 
     cls();
 
-    iflags.save_uinwater = u.uinwater, iflags.save_uburied = u.uburied;
-    u.uinwater = u.uburied = 0;
+    iflags.save_uinwater = inWater();
+    iflags.save_uburied = u.uburied;
+    setInWater(FALSE);
+    u.uburied = 0;
     /*
      *  Map all buried objects first.
      */
@@ -573,7 +581,8 @@ int class;            /* an object class, 0 for all */
     }
 
     newsym(currentX(), currentY());
-    u.uinwater = iflags.save_uinwater, u.uburied = iflags.save_uburied;
+    setInWater(iflags.save_uinwater);
+    u.uburied = iflags.save_uburied;
     You("detect the %s of %s.", ct ? "presence" : "absence", stuff);
     display_nhwindow(WIN_MAP, TRUE);
     /*
@@ -582,7 +591,7 @@ int class;            /* an object class, 0 for all */
      */
     docrt(); /* this will correctly reset vision */
 
-    if (Underwater)
+    if (underwater())
         under_water(2);
     if (u.uburied)
         under_ground(2);
@@ -654,7 +663,7 @@ int mclass;                /* monster class, 0 for all */
             pline("Monsters sense the presence of you.");
         display_nhwindow(WIN_MAP, TRUE);
         docrt();
-        if (Underwater)
+        if (underwater())
             under_water(2);
         if (u.uburied)
             under_ground(2);
@@ -797,8 +806,10 @@ register struct obj *sobj;
 outtrapmap:
     cls();
 
-    iflags.save_uinwater = u.uinwater, iflags.save_uburied = u.uburied;
-    u.uinwater = u.uburied = 0;
+    iflags.save_uinwater = inWater();
+    iflags.save_uburied = u.uburied;
+    setInWater(FALSE);
+    u.uburied = 0;
 
     /* show chest traps first, so that subsequent floor trap display
        will override if both types are present at the same location */
@@ -824,13 +835,14 @@ outtrapmap:
     glyph = glyph_at(currentX(), currentY());
     if (!(glyph_is_trap(glyph) || glyph_is_object(glyph)))
         newsym(currentX(), currentY());
-    u.uinwater = iflags.save_uinwater, u.uburied = iflags.save_uburied;
+    setInWater(iflags.save_uinwater);
+    u.uburied = iflags.save_uburied;
 
     You_feel("%s.", cursed_src ? "very greedy" : "entrapped");
     /* wait for user to respond, then reset map display to normal */
     display_nhwindow(WIN_MAP, TRUE);
     docrt();
-    if (Underwater)
+    if (underwater())
         under_water(2);
     if (u.uburied)
         under_ground(2);
@@ -1083,13 +1095,16 @@ do_mapping()
 {
     register int zx, zy;
 
-    iflags.save_uinwater = u.uinwater, iflags.save_uburied = u.uburied;
-    u.uinwater = u.uburied = 0;
+    iflags.save_uinwater = inWater();
+    iflags.save_uburied = u.uburied;
+    setInWater(FALSE);
+    u.uburied = 0;
     for (zx = 1; zx < COLNO; zx++)
         for (zy = 0; zy < ROWNO; zy++)
             show_map_spot(zx, zy);
-    u.uinwater = iflags.save_uinwater, u.uburied = iflags.save_uburied;
-    if (!level.flags.hero_memory || Underwater) {
+    setInWater(iflags.save_uinwater);
+    u.uburied = iflags.save_uburied;
+    if (!level.flags.hero_memory || underwater()) {
         flush_screen(1);                 /* flush temp screen */
         display_nhwindow(WIN_MAP, TRUE); /* wait */
         docrt();
@@ -1110,7 +1125,7 @@ do_vicinity_map()
         for (zy = lo_y; zy < hi_y; zy++)
             show_map_spot(zx, zy);
 
-    if (!level.flags.hero_memory || Underwater) {
+    if (!level.flags.hero_memory || underwater()) {
         flush_screen(1);                 /* flush temp screen */
         display_nhwindow(WIN_MAP, TRUE); /* wait */
         docrt();
@@ -1483,8 +1498,10 @@ int which_subset; /* when not full, whether to suppress objs and/or traps */
                 keep_mons = (which_subset & 4) != 0; /* actually always 0 */
 
         save_swallowed = u.uswallow;
-        iflags.save_uinwater = u.uinwater, iflags.save_uburied = u.uburied;
-        u.uinwater = u.uburied = 0;
+        iflags.save_uinwater = inWater();
+       	iflags.save_uburied = u.uburied;
+        setInWater(FALSE);
+       	u.uburied = 0;
         u.uswallow = 0;
         default_glyph = cmap_to_glyph(level.flags.arboreal ? S_tree : S_stone);
         /* for 'full', show the actual terrain for the entire level,
@@ -1557,7 +1574,7 @@ int which_subset; /* when not full, whether to suppress objs and/or traps */
             }
 
         /* [TODO: highlight hero's location somehow] */
-        u.uinwater = iflags.save_uinwater, u.uburied = iflags.save_uburied;
+        setInWater(iflags.save_uinwater);
         if (save_swallowed)
             u.uswallow = 1;
         flush_screen(1);
@@ -1579,7 +1596,7 @@ int which_subset; /* when not full, whether to suppress objs and/or traps */
         pline("Showing %s only...", buf);
         display_nhwindow(WIN_MAP, TRUE); /* give "--More--" prompt */
         docrt(); /* redraw the screen, restoring regular map */
-        if (Underwater)
+        if (underwater())
             under_water(2);
         if (u.uburied)
             under_ground(2);

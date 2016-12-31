@@ -163,7 +163,7 @@ Boots_on(VOID_ARGS)
     case KICKING_BOOTS:
         break;
     case WATER_WALKING_BOOTS:
-        if (u.uinwater)
+        if (inWater())
             spoteffects(TRUE);
         /* (we don't need a lava check here since boots can't be
            put on while feet are stuck) */
@@ -766,7 +766,7 @@ Amulet_off()
     case FAKE_AMULET_OF_YENDOR:
         break;
     case AMULET_OF_MAGICAL_BREATHING:
-        if (Underwater) {
+        if (underwater()) {
             /* HMagical_breathing must be set off
                 before calling drown() */
             setworn((struct obj *) 0, W_AMUL);

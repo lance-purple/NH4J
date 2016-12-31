@@ -337,7 +337,7 @@ boolean resuming;
                         movebubbles();
                     else if (areYouOnFireLevel())
                         fumaroles();
-                    else if (Underwater)
+                    else if (underwater())
                         under_water(0);
                     /* vision while buried done here */
                     else if (u.uburied)

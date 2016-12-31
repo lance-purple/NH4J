@@ -60,7 +60,7 @@ dosit()
         else
             pline("%s has no lap.", Monnam(u.ustuck));
         return 0;
-    } else if (is_pool(currentX(), currentY()) && !Underwater) { /* water walking */
+    } else if (is_pool(currentX(), currentY()) && !underwater()) { /* water walking */
         goto in_water;
     }
 
@@ -116,7 +116,7 @@ dosit()
             You("sit down.");
             dotrap(trap, 0);
         }
-    } else if (Underwater || areYouOnWaterLevel()) {
+    } else if (underwater() || areYouOnWaterLevel()) {
         if (areYouOnWaterLevel())
             There("are no cushions floating nearby.");
         else

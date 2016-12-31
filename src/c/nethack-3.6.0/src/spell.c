@@ -798,7 +798,7 @@ cast_protection()
                                       : is_animal(u.ustuck->data)
                                          ? "maw"
                                          : "ooze")
-                                : (u.uinwater
+                                : (inWater()
                                    ? "water"
                                    : (rmtyp == CLOUD)
                                       ? "cloud"
@@ -1172,7 +1172,7 @@ throwspell()
     coord cc;
     struct monst *mtmp;
 
-    if (u.uinwater) {
+    if (inWater()) {
         pline("You're joking! In this weather?");
         return 0;
     } else if (areYouOnWaterLevel()) {

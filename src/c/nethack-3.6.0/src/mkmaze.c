@@ -358,7 +358,7 @@ fixup_special()
 
     if (was_waterlevel) {
         was_waterlevel = FALSE;
-        u.uinwater = 0;
+        setInWater(FALSE);
         unsetup_waterlevel();
     }
     if (areYouOnWaterLevel() || areYouOnAirLevel()) {

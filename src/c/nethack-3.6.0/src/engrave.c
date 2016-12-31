@@ -185,7 +185,7 @@ register int x, y;
     else if (IS_AIR(lev->typ) && areYouOnAirLevel())
         return "air";
     else if (is_pool(x, y))
-        return (Underwater && !areYouOnWaterLevel()) ? "bottom" : "water";
+        return (underwater() && !areYouOnWaterLevel()) ? "bottom" : "water";
     else if (is_ice(x, y))
         return "ice";
     else if (is_lava(x, y))
@@ -226,7 +226,7 @@ register int x, y;
         what = "water above";
     else if (IS_AIR(lev->typ))
         what = "sky";
-    else if (Underwater)
+    else if (underwater())
         what = "water's surface";
     else if ((IS_ROOM(lev->typ) && !areYouOnEarthLevel())
              || IS_WALL(lev->typ) || IS_DOOR(lev->typ) || lev->typ == SDOOR)

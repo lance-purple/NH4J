@@ -1354,7 +1354,7 @@ boolean neverask;
         x = currentX(), y = currentY();
         /* if in water, try to encourage an aquatic monster
            by finding and then specifying another wet location */
-        if (!mptr && u.uinwater && enexto(&c, x, y, &mons[PM_GIANT_EEL]))
+        if (!mptr && inWater() && enexto(&c, x, y, &mons[PM_GIANT_EEL]))
             x = c.x, y = c.y;
 
         mon = makemon(mptr, x, y, NO_MM_FLAGS);

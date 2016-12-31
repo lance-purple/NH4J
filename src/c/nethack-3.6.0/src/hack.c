@@ -1303,7 +1303,7 @@ domove()
             } while (!isok(x, y) || bad_rock(youmonst.data, x, y));
         }
         /* turbulence might alter your actual destination */
-        if (u.uinwater) {
+        if (inWater()) {
             water_friction();
             if (!directionX() && !directionY()) {
                 nomul(0);
@@ -1443,7 +1443,7 @@ domove()
         int glyph = glyph_at(x, y); /* might be monster */
         char buf[BUFSZ];
 
-        if (!Underwater) {
+        if (!underwater()) {
             boulder = sobj_at(BOULDER, x, y);
             /* if a statue is displayed at the target location,
                player is attempting to attack it [and boulder
@@ -1473,8 +1473,8 @@ domove()
 
         if (boulder)
             Strcpy(buf, ansimpleoname(boulder));
-        else if (Underwater && !is_pool(x, y))
-            /* Underwater, targetting non-water; the map just shows blank
+        else if (underwater() && !is_pool(x, y))
+            /* underwater(), targetting non-water; the map just shows blank
                because you don't see remembered terrain while underwater;
                although the hero can attack an adjacent monster this way,
                assume he can't reach out far enough to distinguish terrain */
@@ -1822,7 +1822,7 @@ pooleffects(newspot)
 boolean newspot;             /* true if called by spoteffects */
 {
     /* check for leaving water */
-    if (u.uinwater) {
+    if (inWater()) {
         boolean still_inwater = FALSE; /* assume we're getting out */
 
         if (!is_pool(currentX(), currentY())) {
@@ -1845,9 +1845,9 @@ boolean newspot;             /* true if called by spoteffects */
             still_inwater = TRUE;
         }
         if (!still_inwater) {
-            boolean was_underwater = (Underwater && !areYouOnWaterLevel());
+            boolean was_underwater = (underwater() && !areYouOnWaterLevel());
 
-            u.uinwater = 0;       /* leave the water */
+            setInWater(FALSE);       /* leave the water */
             if (was_underwater) { /* restore vision */
                 docrt();
                 vision_full_recalc = 1;
@@ -1865,7 +1865,7 @@ boolean newspot;             /* true if called by spoteffects */
             return FALSE;
         } else if (u.usteed) {
             /* steed enters pool */
-            dismount_steed(Underwater ? DISMOUNT_FELL : DISMOUNT_GENERIC);
+            dismount_steed(underwater() ? DISMOUNT_FELL : DISMOUNT_GENERIC);
             /* dismount_steed() -> float_down() -> pickup()
                (float_down doesn't do autopickup on Air or Water) */
             if (areYouOnAirLevel() || areYouOnWaterLevel())
@@ -1884,7 +1884,7 @@ boolean newspot;             /* true if called by spoteffects */
             if (lava_effects())
                 return TRUE;
         } else if (!canYouWalkOnWater()
-                   && (newspot || !u.uinwater || !(Swimming || Amphibious))) {
+                   && (newspot || !inWater() || !(Swimming || Amphibious))) {
             if (drown())
                 return TRUE;
         }
@@ -2346,7 +2346,7 @@ dopickup()
             || (Flying && !Breathless)) {
             You("cannot dive into the water to pick things up.");
             return 0;
-        } else if (!Underwater) {
+        } else if (!underwater()) {
             You_cant("even see the bottom, let alone pick up %s.", something);
             return 0;
         }

@@ -244,11 +244,6 @@ extern boolean canYouWalkOnWater();
 #define Breathless \
     (HMagical_breathing || EMagical_breathing || breathless(youmonst.data))
 
-#define Underwater (u.uinwater)
-/* Note that Underwater and u.uinwater are both used in code.
-   The latter form is for later implementation of other in-water
-   states, like swimming, wading, etc. */
-
 #define HPasses_walls u.uprops[PASSES_WALLS].intrinsic
 #define EPasses_walls u.uprops[PASSES_WALLS].extrinsic
 #define Passes_walls (HPasses_walls || EPasses_walls)

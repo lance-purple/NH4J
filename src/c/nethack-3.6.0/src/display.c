@@ -534,7 +534,7 @@ xchar x, y;
         return;
 
     /* The hero can't feel non pool locations while under water. */
-    if (Underwater && !areYouOnWaterLevel() && !is_pool(x, y))
+    if (underwater() && !areYouOnWaterLevel() && !is_pool(x, y))
         return;
 
     /* Set the seen vector as if the hero had seen it.
@@ -698,7 +698,7 @@ register int x, y;
             display_self();
         return;
     }
-    if (Underwater && !areYouOnWaterLevel()) {
+    if (underwater() && !areYouOnWaterLevel()) {
         /* don't do anything unless (x,y) is an adjacent underwater position
          */
         int dx, dy;
@@ -1273,7 +1273,7 @@ docrt()
         swallowed(1);
         return;
     }
-    if (Underwater && !areYouOnWaterLevel()) {
+    if (underwater() && !areYouOnWaterLevel()) {
         under_water(1);
         return;
     }

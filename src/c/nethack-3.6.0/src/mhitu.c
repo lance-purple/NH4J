@@ -196,7 +196,7 @@ register struct attack *mattk;
                    */
                   Monnam(mtmp), Invis ? "invisible " : "");
 
-    } else if (Underwater) {
+    } else if (underwater()) {
         /* monsters may miss especially on water level where
            bubbles shake the player here and there */
         if (compat)
@@ -308,7 +308,7 @@ register struct monst *mtmp;
 
     if (!ranged)
         nomul(0);
-    if (mtmp->mhp <= 0 || (Underwater && !is_swimmer(mtmp->data)))
+    if (mtmp->mhp <= 0 || (underwater() && !is_swimmer(mtmp->data)))
         return 0;
 
     /* If swallowed, can only be affected by u.ustuck */
@@ -868,7 +868,7 @@ register struct attack *mattk;
             if ((obj = level.objects[mtmp->mx][mtmp->my]) != 0) {
                 if (Blind && !obj->dknown)
                     what = something;
-                else if (is_pool(mtmp->mx, mtmp->my) && !Underwater)
+                else if (is_pool(mtmp->mx, mtmp->my) && !underwater())
                     what = "the water";
                 else
                     what = doname(obj);

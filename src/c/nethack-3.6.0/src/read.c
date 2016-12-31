@@ -1562,7 +1562,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             }
             break;
         }
-        if (Underwater) {
+        if (underwater()) {
             pline_The("water around you vaporizes violently!");
         } else {
             pline_The("scroll erupts in a tower of flame!");
@@ -1884,7 +1884,7 @@ struct obj *obj;
     }
 
     /* No-op when swallowed or in water */
-    if (u.uswallow || Underwater || areYouOnWaterLevel())
+    if (u.uswallow || underwater() || areYouOnWaterLevel())
         return;
     /*
      *  If we are darkening the room and the hero is punished but not

@@ -481,7 +481,7 @@ int what; /* should be a long */
         struct trap *ttmp = t_at(currentX(), currentY());
         /* no auto-pick if no-pick move, nothing there, or in a pool */
         if (autopickup && (context.nopick || !OBJ_AT(currentX(), currentY())
-                           || (is_pool(currentX(), currentY()) && !Underwater)
+                           || (is_pool(currentX(), currentY()) && !underwater())
                            || is_lava(currentX(), currentY()))) {
             read_engr_at(currentX(), currentY());
             return 0;
@@ -1535,8 +1535,8 @@ boolean looting; /* loot vs tip */
         else
             cant_reach_floor(x, y, FALSE, TRUE);
         return FALSE;
-    } else if ((is_pool(x, y) && (looting || !Underwater)) || is_lava(x, y)) {
-        /* at present, can't loot in water even when Underwater;
+    } else if ((is_pool(x, y) && (looting || !underwater())) || is_lava(x, y)) {
+        /* at present, can't loot in water even when underwater();
            can tip underwater, but not when over--or stuck in--lava */
         You("cannot %s things that are deep in the %s.", verb,
             is_lava(x, y) ? "lava" : "water");

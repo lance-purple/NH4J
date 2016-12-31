@@ -31,7 +31,7 @@ dosounds()
 #endif
     struct monst *mtmp;
 
-    if (Deaf || !flags.acoustics || u.uswallow || Underwater)
+    if (Deaf || !flags.acoustics || u.uswallow || underwater())
         return;
 
     hallu = Hallucination ? 1 : 0;
@@ -987,7 +987,7 @@ dochat()
         pline("They won't hear you out there.");
         return 0;
     }
-    if (Underwater) {
+    if (underwater()) {
         Your("speech is unintelligible underwater.");
         return 0;
     }

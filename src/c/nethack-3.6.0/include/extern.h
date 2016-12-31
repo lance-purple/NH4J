@@ -931,6 +931,11 @@ E void FDECL(setCurrentTrapTimeout, (int));
 E long FDECL(sleepingSinceMove, ());
 E void FDECL(setSleepingSinceMove, (long));
 
+E boolean FDECL(underwater, ());
+E void FDECL(setUnderwater, (boolean));
+E boolean FDECL(inWater, ());
+E void FDECL(setInWater, (boolean));
+
 E int FDECL(timeInVault, ());
 E void FDECL(setTimeInVault, (int));
 E void FDECL(increaseTimeInVault, (int));

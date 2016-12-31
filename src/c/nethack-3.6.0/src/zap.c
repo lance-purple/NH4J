@@ -2676,7 +2676,7 @@ struct obj *obj; /* wand or spell */
                 destroy_drawbridge(xx, yy);
             disclose = TRUE;
         } else if (striking && directionZ() < 0 && rn2(3) && !areYouOnAirLevel()
-                   && !areYouOnWaterLevel() && !Underwater
+                   && !areYouOnWaterLevel() && !underwater()
                    && !areYouOnQuestStartLevel()) {
             int dmg;
             /* similar to zap_dig() */
@@ -2724,7 +2724,7 @@ struct obj *obj; /* wand or spell */
         }
         break;
     case SPE_STONE_TO_FLESH:
-        if (areYouOnAirLevel() || areYouOnWaterLevel() || Underwater
+        if (areYouOnAirLevel() || areYouOnWaterLevel() || underwater()
             || (areYouOnQuestStartLevel() && directionZ() < 0)) {
             pline1(nothing_happens);
         } else if (directionZ() < 0) { /* we should do more... */
@@ -4075,7 +4075,7 @@ const char *msg;
     spot_stop_timers(x, y, MELT_ICE_AWAY); /* no more ice to melt away */
     obj_ice_effects(x, y, FALSE);
     unearth_objs(x, y);
-    if (Underwater)
+    if (underwater())
         vision_recalc(1);
     newsym(x, y);
     if (cansee(x, y))
@@ -4241,9 +4241,9 @@ short exploding_wand_typ;
                     You_hear("a crackling sound.");
 
                 if (x == currentX() && y == currentY()) {
-                    if (u.uinwater) { /* not just `if (Underwater)' */
+                    if (inWater()) { /* not just `if (underwater())' */
                         /* leave the no longer existent water */
-                        u.uinwater = 0;
+                        setInWater(FALSE);
                         u.uundetected = 0;
                         docrt();
                         vision_full_recalc = 1;
@@ -4970,7 +4970,7 @@ retry:
 
     if (otmp != &zeroobj) {
         const char
-            *verb = ((areYouOnAirLevel() || u.uinwater) ? "slip" : "drop"),
+            *verb = ((areYouOnAirLevel() || inWater()) ? "slip" : "drop"),
             *oops_msg = (u.uswallow
                          ? "Oops!  %s out of your reach!"
                          : (areYouOnAirLevel() || areYouOnWaterLevel()

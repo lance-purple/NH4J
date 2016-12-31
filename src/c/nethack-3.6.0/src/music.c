@@ -569,7 +569,7 @@ struct obj *instr;
     int x, y;
     boolean ok;
 
-    if (Underwater) {
+    if (underwater()) {
         You_cant("play music underwater!");
         return 0;
     } else if ((instr->otyp == WOODEN_FLUTE || instr->otyp == MAGIC_FLUTE

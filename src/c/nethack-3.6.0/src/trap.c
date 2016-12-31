@@ -2754,7 +2754,7 @@ float_up()
     } else if (areYouOnWaterLevel()) {
         pline("It feels as though you've lost some weight.");
 #endif
-    } else if (u.uinwater) {
+    } else if (inWater()) {
         spoteffects(TRUE);
     } else if (u.uswallow) {
         You(is_animal(u.ustuck->data) ? "float away from the %s."
@@ -2863,7 +2863,7 @@ long hmask, emask; /* might cancel timeout */
          * Use knowledge of the two routines as a hack -- this
          * should really be handled differently -dlc
          */
-        if (is_pool(currentX(), currentY()) && !canYouWalkOnWater() && !Swimming && !u.uinwater)
+        if (is_pool(currentX(), currentY()) && !canYouWalkOnWater() && !Swimming && !inWater())
             no_msg = drown();
 
         if (is_lava(currentX(), currentY())) {
@@ -2877,8 +2877,8 @@ long hmask, emask; /* might cancel timeout */
             You("begin to tumble in place.");
         } else if (areYouOnWaterLevel() && !no_msg) {
             You_feel("heavier.");
-        /* u.uinwater msgs already in spoteffects()/drown() */
-        } else if (!u.uinwater && !no_msg) {
+        /* inWater() msgs already in spoteffects()/drown() */
+        } else if (!inWater() && !no_msg) {
             if (!(emask & W_SADDLE)) {
                 if (Sokoban && trap) {
                     /* Justification elsewhere for Sokoban traps is based
@@ -2988,7 +2988,7 @@ struct obj *box; /* null for floor trap */
      * to be done upon its contents.
      */
 
-    if ((box && !carried(box)) ? is_pool(box->ox, box->oy) : Underwater) {
+    if ((box && !carried(box)) ? is_pool(box->ox, box->oy) : underwater()) {
         pline("A cascade of steamy bubbles erupts from %s!",
               the(box ? xname(box) : surface(currentX(), currentY())));
         if (Fire_resistance)
@@ -3537,7 +3537,7 @@ drown()
     int i, x, y;
 
     /* happily wading in the same contiguous pool */
-    if (u.uinwater && is_pool(currentX() - directionX(), currentY() - directionY())
+    if (inWater() && is_pool(currentX() - directionX(), currentY() - directionY())
         && (Swimming || Amphibious)) {
         /* water effects on objects every now and then */
         if (!rn2(5))
@@ -3546,7 +3546,7 @@ drown()
             return FALSE;
     }
 
-    if (!u.uinwater) {
+    if (!inWater()) {
         You("%s into the water%c", areYouOnWaterLevel() ? "plunge" : "fall",
             Amphibious || Swimming ? '.' : '!');
         if (!Swimming && !areYouOnWaterLevel())
@@ -3589,7 +3589,7 @@ drown()
             placebc();
         }
         vision_recalc(2); /* unsee old position */
-        u.uinwater = 1;
+        setInWater(TRUE);
         under_water(1);
         vision_full_recalc = 1;
         return FALSE;
@@ -3655,7 +3655,7 @@ crawl:
         /* still too much weight */
         pline("But in vain.");
     }
-    u.uinwater = 1;
+    setInWater(TRUE);
     You("drown.");
     for (i = 0; i < 5; i++) { /* arbitrary number of loops */
         /* killer format and name are reconstructed every iteration
@@ -3673,8 +3673,8 @@ crawl:
         /* nowhere safe to land; repeat drowning loop... */
         pline("You're still drowning.");
     }
-    if (u.uinwater) {
-        u.uinwater = 0;
+    if (inWater()) {
+        setInWater(FALSE);
         You("find yourself back %s.",
             areYouOnWaterLevel() ? "in an air bubble" : "on land");
     }

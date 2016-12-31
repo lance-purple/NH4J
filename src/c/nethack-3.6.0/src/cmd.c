@@ -1286,7 +1286,7 @@ int final;
 STATIC_OVL boolean
 walking_on_water()
 {
-    if (u.uinwater || Levitation || Flying)
+    if (inWater() || Levitation || Flying)
         return FALSE;
     return (boolean) (canYouWalkOnWater()
                       && (is_pool(currentX(), currentY()) || is_lava(currentX(), currentY())));
@@ -1648,9 +1648,9 @@ int final;
     } else if (Flying) { /* can only fly when not levitating */
         enl_msg(youtoo, are, were, "flying", from_what(FLYING));
     }
-    if (Underwater) {
+    if (underwater()) {
         you_are("underwater", "");
-    } else if (u.uinwater) {
+    } else if (inWater()) {
         you_are(Swimming ? "swimming" : "in water", from_what(SWIMMING));
     } else if (walking_on_water()) {
         /* show active canYouWalkOnWater() here, potential canYouWalkOnWater() elsewhere */
@@ -2091,7 +2091,7 @@ int final;
     if (canYouWalkOnWater() && !walking_on_water())
         you_can("walk on water", from_what(WWALKING));
     /* actively swimming (in water but not under it) handled earlier */
-    if (Swimming && (Underwater || !u.uinwater))
+    if (Swimming && (underwater() || !inWater()))
         you_can("swim", from_what(SWIMMING));
     if (Breathless)
         you_can("survive without air", from_what(MAGICAL_BREATHING));

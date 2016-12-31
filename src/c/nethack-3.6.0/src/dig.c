@@ -1023,7 +1023,7 @@ struct obj *obj;
 
     if (u.uswallow && attack(u.ustuck)) {
         ; /* return 1 */
-    } else if (Underwater) {
+    } else if (underwater()) {
         pline("Turbulence torpedoes your %s attempts.", verbing);
     } else if (directionZ() < 0) {
         if (Levitation)
@@ -1401,7 +1401,7 @@ zap_dig()
     } /* swallowed */
 
     if (directionZ()) {
-        if (!areYouOnAirLevel() && !areYouOnWaterLevel() && !Underwater) {
+        if (!areYouOnAirLevel() && !areYouOnWaterLevel() && !underwater()) {
             if (directionZ() < 0 || On_stairs(currentX(), currentY())) {
                 int dmg;
                 if (On_stairs(currentX(), currentY()))

@@ -46,7 +46,7 @@ struct obj *otmp;
         return 0;
 
     /* Select an animal */
-    if (u.uswallow || Underwater || !getdir((char *) 0)) {
+    if (u.uswallow || underwater() || !getdir((char *) 0)) {
         pline1(Never_mind);
         return 0;
     }
@@ -155,7 +155,7 @@ struct monst *mtmp;
 {
     return (mtmp->mtame && humanoid(youmonst.data)
             && !verysmall(youmonst.data) && !bigmonst(youmonst.data)
-            && (!Underwater || is_swimmer(mtmp->data)));
+            && (!underwater() || is_swimmer(mtmp->data)));
 }
 
 int
@@ -279,7 +279,7 @@ boolean force;      /* Quietly force this animal */
             m_unleash(mtmp, FALSE);
         return (FALSE);
     }
-    if (!force && Underwater && !is_swimmer(ptr)) {
+    if (!force && underwater() && !is_swimmer(ptr)) {
         You_cant("ride that creature while under water.");
         return (FALSE);
     }
@@ -548,7 +548,7 @@ int reason; /* Player was thrown off etc. */
             /* The steed may drop into water/lava */
             if (!is_flyer(mdat) && !is_floater(mdat) && !is_clinger(mdat)) {
                 if (is_pool(currentX(), currentY())) {
-                    if (!Underwater)
+                    if (!underwater())
                         pline("%s falls into the %s!", Monnam(mtmp),
                               surface(currentX(), currentY()));
                     if (!is_swimmer(mdat) && !amphibious(mdat)) {

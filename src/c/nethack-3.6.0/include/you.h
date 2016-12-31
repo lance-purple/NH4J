@@ -270,8 +270,6 @@ struct you {
     struct prop uprops[LAST_PROP + 1];
 
     Bitfield(uswallow, 1);      /* true if swallowed */
-    Bitfield(uinwater, 1);      /* if you're currently in water (only
-                                   underwater possible currently) */
     Bitfield(uundetected, 1);   /* if you're a hiding monster/piercer */
     Bitfield(mfemale, 1);       /* saved human value of flags.female */
     Bitfield(uinvulnerable, 1); /* you're invulnerable (praying) */

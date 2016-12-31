@@ -36,6 +36,8 @@ public class PlayerCharacter {
 	
 	private static long sleepingSinceMove;
 
+	private static boolean immersed;
+	
 	private static int timeInVault;
 	private static int timeSinceBeingSwallowed;
 	private static int timeSinceBecomingADemigod;
@@ -277,6 +279,23 @@ public class PlayerCharacter {
 	
 	public static void setSleepingSinceMove(long m) {
 		sleepingSinceMove = m;
+	}
+
+	public static boolean underwater() {
+		return immersed;
+	}
+	
+	public static void setUnderwater(boolean w) {
+		immersed = w;
+	}
+
+	/** for states like swimming, wading, etc. */
+	public static boolean inWater() {
+		return immersed;
+	}
+
+	public static void setInWater(boolean w) {
+		immersed = w;
 	}
 
 	public static int timeInVault() {

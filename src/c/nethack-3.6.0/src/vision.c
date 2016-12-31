@@ -167,7 +167,7 @@ register struct rm *lev;
         return 1;
 
     if (lev->typ == CLOUD || lev->typ == WATER
-        || (lev->typ == MOAT && Underwater))
+        || (lev->typ == MOAT && underwater()))
         return 1;
 
     /* Boulders block light. */
@@ -577,7 +577,7 @@ int control;
     } else {
         int has_night_vision = 1; /* hero has night vision */
 
-        if (Underwater && !areYouOnWaterLevel()) {
+        if (underwater() && !areYouOnWaterLevel()) {
             /*
              * The hero is under water.  Only see surrounding locations if
              * they are also underwater.  This overrides night vision but

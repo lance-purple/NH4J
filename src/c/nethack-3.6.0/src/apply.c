@@ -52,7 +52,7 @@ struct obj *obj;
 {
     struct monst *mtmp;
 
-    if (Underwater) {
+    if (underwater()) {
         pline("Using your camera underwater would void the warranty.");
         return 0;
     }
@@ -331,7 +331,7 @@ register struct obj *obj;
         mstatusline(u.ustuck);
         return res;
     } else if (directionZ()) {
-        if (Underwater)
+        if (underwater())
             You_hear("faint splashing.");
         else if (directionZ() < 0 || !can_reach_floor(TRUE))
             cant_reach_floor(currentX(), currentY(), (directionZ() < 0), TRUE);
@@ -424,7 +424,7 @@ struct obj *obj;
 {
     if (!can_blow(&youmonst)) {
         You("are incapable of using the whistle.");
-    } else if (Underwater) {
+    } else if (underwater()) {
         You("blow bubbles through %s.", yname(obj));
     } else {
         You(whistle_str, obj->cursed ? "shrill" : "high");
@@ -442,14 +442,14 @@ struct obj *obj;
         You("are incapable of using the whistle.");
     } else if (obj->cursed && !rn2(2)) {
         You("produce a %shigh-pitched humming noise.",
-            Underwater ? "very " : "");
+            underwater() ? "very " : "");
         wake_nearby();
     } else {
         int pet_cnt = 0, omx, omy;
 
         /* it's magic!  it works underwater too (at a higher pitch) */
         You(whistle_str,
-            Hallucination ? "normal" : Underwater ? "strange, high-pitched"
+            Hallucination ? "normal" : underwater() ? "strange, high-pitched"
                                                   : "strange");
         for (mtmp = fmon; mtmp; mtmp = nextmon) {
             nextmon = mtmp->nmon; /* trap might kill mon */
@@ -831,7 +831,7 @@ struct obj *obj;
                 mbodypart(u.ustuck, STOMACH));
         return 1;
     }
-    if (Underwater) {
+    if (underwater()) {
         if (useeit)
             You(Hallucination ? "give the fish a chance to fix their makeup."
                               : "reflect the murky water.");
@@ -946,7 +946,7 @@ struct obj **optr;
 
     You("ring %s.", the(xname(obj)));
 
-    if (Underwater || (u.uswallow && ordinary)) {
+    if (underwater() || (u.uswallow && ordinary)) {
 #ifdef AMIGA
         amii_speaker(obj, "AhDhGqEqDhEhAqDqFhGw", AMII_MUFFLED_VOLUME);
 #endif
@@ -1079,7 +1079,7 @@ register struct obj *obj;
         pline("This %s has no %s.", xname(obj), s);
         return;
     }
-    if (Underwater) {
+    if (underwater()) {
         You("cannot make fire under water.");
         return;
     }
@@ -1286,7 +1286,7 @@ struct obj *obj;
         end_burn(obj, TRUE);
         return;
     }
-    if (Underwater) {
+    if (underwater()) {
         pline(!Is_candle(obj) ? "This is not a diving lamp"
                               : "Sorry, fire and water don't mix.");
         return;
@@ -1347,7 +1347,7 @@ struct obj *obj; /* obj is a potion of oil */
         freeinv(obj);
         (void) addinv(obj);
         return;
-    } else if (Underwater) {
+    } else if (underwater()) {
         There("is not enough oxygen to sustain a fire.");
         return;
     }
@@ -1514,7 +1514,7 @@ int magic; /* 0=Physical, otherwise skill level */
         }
         pline("You've got to be kidding!");
         return 0;
-    } else if (u.uinwater) {
+    } else if (inWater()) {
         if (magic) {
             You("swish around a little.");
             return 1;
@@ -2310,7 +2310,7 @@ struct obj *otmp;
     else if (u.uswallow)
         what =
             is_animal(u.ustuck->data) ? "while swallowed" : "while engulfed";
-    else if (Underwater)
+    else if (underwater())
         what = "underwater";
     else if (Levitation)
         what = "while levitating";
@@ -2487,7 +2487,7 @@ struct obj *obj;
     if (u.uswallow && attack(u.ustuck)) {
         There("is not enough room to flick your bullwhip.");
 
-    } else if (Underwater) {
+    } else if (underwater()) {
         There("is too much resistance to flick your bullwhip.");
 
     } else if (directionZ() < 0) {

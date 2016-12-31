@@ -781,7 +781,7 @@ int x, y;
     get_wall_for_db(&x2, &y2);
     if (cansee(x, y) || cansee(x2, y2))
         You_see("a drawbridge %s up!",
-                (((currentX() == x || currentY() == y) && !Underwater)
+                (((currentX() == x || currentY() == y) && !underwater())
                  || distanceSquaredToYou(x2, y2) < distanceSquaredToYou(x, y))
                     ? "coming"
                     : "going");

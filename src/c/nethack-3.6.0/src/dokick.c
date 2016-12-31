@@ -788,7 +788,7 @@ dokick()
     } else if (youmonst.data->mlet == S_LIZARD) {
         Your("legs cannot kick effectively.");
         no_kick = TRUE;
-    } else if (u.uinwater && !rn2(2)) {
+    } else if (inWater() && !rn2(2)) {
         Your("slow motion kick doesn't hit anything.");
         no_kick = TRUE;
     } else if (currentlyTrapped()) {
@@ -941,7 +941,7 @@ dokick()
         unmap_object(x, y);
         newsym(x, y);
     }
-    if (is_pool(x, y) ^ !!u.uinwater) {
+    if (is_pool(x, y) ^ !!inWater()) {
         /* objects normally can't be removed from water by kicking */
         You("splash some water around.");
         return 1;

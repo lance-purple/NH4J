@@ -2720,7 +2720,7 @@ boolean picked_some;
 
     otmp = level.objects[currentX()][currentY()];
     dfeature = dfeature_at(currentX(), currentY(), fbuf2);
-    if (dfeature && !strcmp(dfeature, "pool of water") && Underwater)
+    if (dfeature && !strcmp(dfeature, "pool of water") && underwater())
         dfeature = 0;
 
     if (Blind) {
@@ -2752,7 +2752,7 @@ boolean picked_some;
         Sprintf(fbuf, "There is %s here.", an(dfeature));
 
     if (!otmp || is_lava(currentX(), currentY())
-        || (is_pool(currentX(), currentY()) && !Underwater)) {
+        || (is_pool(currentX(), currentY()) && !underwater())) {
         if (dfeature)
             pline1(fbuf);
         read_engr_at(currentX(), currentY()); /* Eric Backus */
