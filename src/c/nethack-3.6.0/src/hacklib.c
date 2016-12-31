@@ -1079,6 +1079,14 @@ void setLycanthropeType(int t) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "setLycanthropeType", t);
 }
 
+boolean inherentlyFemale() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "inherentlyFemale");
+} 
+
+void setInherentlyFemale(boolean f) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setInherentlyFemale", f);
+}
+
 int timeRemainingAsMonster() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "timeRemainingAsMonster");
 } 

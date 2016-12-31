@@ -1339,9 +1339,9 @@ int final; /* ENL_GAMEINPROGRESS:0, ENL_GAMEOVERALIVE, ENL_GAMEOVERDEAD */
     Strcpy(tmpbuf, plname);
     *tmpbuf = highc(*tmpbuf); /* same adjustment as bottom line */
     /* as in background_enlightenment, when poly'd we need to use the saved
-       gender in u.mfemale rather than the current you-as-monster gender */
+       gender in inherentlyFemale rather than the current you-as-monster gender */
     Sprintf(buf, "%s the %s's attributes:", tmpbuf,
-            ((areYouPolymorphed() ? u.mfemale : flags.female) && urole.name.f)
+            ((areYouPolymorphed() ? inherentlyFemale() : flags.female) && urole.name.f)
                 ? urole.name.f
                 : urole.name.m);
 
@@ -1383,9 +1383,9 @@ int final;
     int innategend, difgend, difalgn;
     char buf[BUFSZ], tmpbuf[BUFSZ];
 
-    /* note that if poly'd, we need to use u.mfemale instead of flags.female
+    /* note that if poly'd, we need to use inherentlyFemale instead of flags.female
        to access hero's saved gender-as-human/elf/&c rather than current one */
-    innategend = (areYouPolymorphed() ? u.mfemale : flags.female) ? 1 : 0;
+    innategend = (areYouPolymorphed() ? inherentlyFemale() : flags.female) ? 1 : 0;
     role_titl = (innategend && urole.name.f) ? urole.name.f : urole.name.m;
     rank_titl = rank_of(currentExperienceLevel(), Role_switch, innategend);
 
@@ -2359,7 +2359,7 @@ minimal_enlightenment()
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
     if (areYouPolymorphed()) {
         Sprintf(buf, fmtstr, "role (base)",
-                (u.mfemale && urole.name.f) ? urole.name.f
+                (inherentlyFemale() && urole.name.f) ? urole.name.f
                                             : urole.name.m);
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
     } else {
@@ -2372,8 +2372,8 @@ minimal_enlightenment()
     genidx = is_neuter(youmonst.data) ? 2 : flags.female;
     Sprintf(buf, fmtstr, "gender", genders[genidx].adj);
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
-    if (areYouPolymorphed() && (int) u.mfemale != genidx) {
-        Sprintf(buf, fmtstr, "gender (base)", genders[u.mfemale].adj);
+    if (areYouPolymorphed() && (int) inherentlyFemale() != genidx) {
+        Sprintf(buf, fmtstr, "gender (base)", genders[inherentlyFemale()].adj);
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
     }
 

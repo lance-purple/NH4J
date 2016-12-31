@@ -1043,6 +1043,9 @@ E void FDECL(multiplyTimeRemainingAsMonster, (int));
 E boolean FDECL(lurking, ());
 E void FDECL(setLurking, (boolean));
 
+E boolean FDECL(inherentlyFemale, ());
+E void FDECL(setInherentlyFemale, (boolean));
+
 E int FDECL(lycanthropeType, ());
 E void FDECL(setLycanthropeType, (int));
 

@@ -158,7 +158,7 @@ const char *fmt, *arg;
             setYourAttrMax    (i, yourAttrMaxAsMonster(i));
         } 
         setCurrentMonsterNumber(originalMonsterNumber());
-        flags.female = u.mfemale;
+        flags.female = inherentlyFemale();
     }
     set_uasmon();
 
@@ -237,13 +237,13 @@ change_sex()
             && !is_neuter(youmonst.data)))
         flags.female = !flags.female;
     if (already_polyd) /* poly'd: also change saved sex */
-        u.mfemale = !u.mfemale;
+        setInherentlyFemale(!inherentlyFemale());
     max_rank_sz(); /* [this appears to be superfluous] */
-    if ((already_polyd ? u.mfemale : flags.female) && urole.name.f)
+    if ((already_polyd ? inherentlyFemale() : flags.female) && urole.name.f)
         Strcpy(pl_character, urole.name.f);
     else
         Strcpy(pl_character, urole.name.m);
-    setOriginalMonsterNumber( ((already_polyd ? u.mfemale : flags.female)
+    setOriginalMonsterNumber( ((already_polyd ? inherentlyFemale() : flags.female)
                   && urole.femalenum != NON_PM)
                      ? urole.femalenum
                      : urole.malenum );
@@ -367,7 +367,7 @@ newman()
     newuhs(FALSE);
     polyman("feel like a new %s!",
             /* use saved gender we're about to revert to, not current */
-            (u.mfemale && urace.individual.f)
+            (inherentlyFemale() && urace.individual.f)
                 ? urace.individual.f
                 : (urace.individual.m) ? urace.individual.m : urace.noun);
     if (Slimed) {
@@ -619,7 +619,7 @@ int mntmp;
             setYourAttrAsMonster(i, yourCurrentAttr(i));
             setYourAttrMaxAsMonster(i, yourAttrMax(i));
         }
-        u.mfemale = flags.female;
+        setInherentlyFemale(flags.female);
     } else {
         /* Monster to monster; restore human stats, to be
          * immediately changed to provide stats for the new monster
@@ -629,7 +629,7 @@ int mntmp;
             setYourCurrentAttr(i, yourAttrAsMonster(i));
             setYourAttrMax(i,     yourAttrMaxAsMonster(i));
         }
-        flags.female = u.mfemale;
+        flags.female = inherentlyFemale();
     }
 
     /* if stuck mimicking gold, stop immediately */

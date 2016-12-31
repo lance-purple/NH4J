@@ -86,7 +86,10 @@ public class PlayerCharacter {
 	private static int currentMonsterNumber;
 	private static int timeRemainingAsMonster;
 	
+	private static boolean inherentlyFemale; /* since you might be polymorphed into a male being */
+	
 	private static boolean lurking; /* you are an undetected piercer or other hidden monster */
+	
 	private static int deathCount;
 	private static int ariseFromGraveAsMonster;
 	
@@ -774,6 +777,14 @@ public class PlayerCharacter {
 	public static void setLycanthropeType(int t) {
 		lycanthropeType = t;
 	}
+	
+	public static boolean inherentlyFemale() {
+		return inherentlyFemale;
+	}
+	
+	public static void setInherentlyFemale(boolean f) {
+		inherentlyFemale = f;
+	}	
 	
 	public static boolean lurking() {
 		return lurking;

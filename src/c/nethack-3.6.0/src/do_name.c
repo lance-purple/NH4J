@@ -773,7 +773,7 @@ namefloorobj()
         char tmpbuf[BUFSZ];
 
         /* straight role name */
-        unames[0] = ((areYouPolymorphed() ? u.mfemale : flags.female) && urole.name.f)
+        unames[0] = ((areYouPolymorphed() ? inherentlyFemale() : flags.female) && urole.name.f)
                      ? urole.name.f
                      : urole.name.m;
         /* random rank title for hero's role */

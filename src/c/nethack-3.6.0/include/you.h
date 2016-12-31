@@ -269,7 +269,6 @@ struct you {
 
     struct prop uprops[LAST_PROP + 1];
 
-    Bitfield(mfemale, 1);       /* saved human value of flags.female */
     Bitfield(uinvulnerable, 1); /* you're invulnerable (praying) */
     Bitfield(uedibility, 1); /* blessed food detection; sense unsafe food */
     /* 1 free bit! */

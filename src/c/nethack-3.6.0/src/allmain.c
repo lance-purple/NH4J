@@ -618,7 +618,7 @@ welcome(new_game)
 boolean new_game; /* false => restoring an old game */
 {
     char buf[BUFSZ];
-    boolean currentgend = areYouPolymorphed() ? u.mfemale : flags.female;
+    boolean currentgend = areYouPolymorphed() ? inherentlyFemale() : flags.female;
 
     /*
      * The "welcome back" message always describes your innate form

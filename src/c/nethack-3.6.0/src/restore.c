@@ -633,6 +633,7 @@ unsigned int *stuckid, *steedid;
     setOriginalMonsterNumber(read_int(fd));
     setCurrentMonsterNumber(read_int(fd));
     setLurking(read_int(fd) ? TRUE : FALSE);
+    setInherentlyFemale(read_int(fd) ? TRUE : FALSE);
     setLycanthropeType(read_int(fd));
     setTimeRemainingAsMonster(read_int(fd));
 
