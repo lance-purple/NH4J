@@ -279,7 +279,7 @@ struct monst *mtmp;
         return FALSE;
     if (dist2(x, y, mtmp->mux, mtmp->muy) > 25)
         return FALSE;
-    if (u.uswallow && stuck)
+    if (swallowed() && stuck)
         return FALSE;
 
     m.defensive = (struct obj *) 0;
@@ -1073,7 +1073,7 @@ struct monst *mtmp;
     if (mtmp->mpeaceful || is_animal(mtmp->data) || mindless(mtmp->data)
         || nohands(mtmp->data))
         return FALSE;
-    if (u.uswallow)
+    if (swallowed())
         return FALSE;
     if (in_your_sanctuary(mtmp, 0, 0))
         return FALSE;
@@ -1608,7 +1608,7 @@ struct monst *mtmp;
     m.has_misc = 0;
     if (is_animal(mdat) || mindless(mdat))
         return 0;
-    if (u.uswallow && stuck)
+    if (swallowed() && stuck)
         return FALSE;
 
     /* We arbitrarily limit to times when a player is nearby for the

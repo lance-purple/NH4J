@@ -532,7 +532,7 @@ int control;
     get_unused_cs(&next_array, &next_rmin, &next_rmax);
 
     /* You see nothing, nothing can see you --- if swallowed or refreshing. */
-    if (u.uswallow || control == 2) {
+    if (swallowed() || control == 2) {
         /* do nothing -- get_unused_cs() nulls out the new work area */
         ;
     } else if (Blind) {

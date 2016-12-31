@@ -390,7 +390,7 @@ boolean resuming;
                 see_monsters();
                 see_objects();
                 see_traps();
-                if (u.uswallow)
+                if (swallowed())
                     showHeroBeingSwallowed(0);
             } else if (Unblind_telepat) {
                 see_monsters();

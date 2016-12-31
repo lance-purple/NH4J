@@ -214,7 +214,7 @@ int distance;
 {
     struct monst *mtmp, *mtmp2;
 
-    if (u.uswallow) {
+    if (swallowed()) {
         if (!resist(u.ustuck, TOOL_CLASS, 0, NOTELL))
             (void) tamedog(u.ustuck, (struct obj *) 0);
     } else {

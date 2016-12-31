@@ -2073,7 +2073,7 @@ struct obj *otmp;
             you_unwere(TRUE);
         break;
     case CARROT:
-        if (!u.uswallow
+        if (!swallowed()
             || !attacktype_fordmg(u.ustuck->data, AT_ENGL, AD_BLND))
             make_blinded((long) creamed(), TRUE);
         break;

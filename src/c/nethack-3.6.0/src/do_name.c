@@ -873,7 +873,7 @@ boolean called;
     do_invis = mtmp->minvis && !(suppress & SUPPRESS_INVISIBLE);
     do_it = !canspotmon(mtmp) && article != ARTICLE_YOUR
             && !program_state.gameover && mtmp != u.usteed
-            && !(u.uswallow && mtmp == u.ustuck) && !(suppress & SUPPRESS_IT);
+            && !(swallowed() && mtmp == u.ustuck) && !(suppress & SUPPRESS_IT);
     do_saddle = !(suppress & SUPPRESS_SADDLE);
 
     buf[0] = '\0';

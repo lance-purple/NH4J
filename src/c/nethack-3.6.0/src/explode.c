@@ -87,7 +87,7 @@ int expltype;
     }
     /* if hero is engulfed and caused the explosion, only hero and
        engulfer will be affected */
-    inside_engulfer = (u.uswallow && type >= 0);
+    inside_engulfer = (swallowed() && type >= 0);
 
     if (olet == MON_EXPLODE) {
         str = killer.name;
@@ -294,7 +294,7 @@ int expltype;
                 else if (inside_engulfer)
                     continue;
                 idamres = idamnonres = 0;
-                if (type >= 0 && !u.uswallow)
+                if (type >= 0 && !swallowed())
                     (void) zap_over_floor((xchar) (i + x - 1),
                                           (xchar) (j + y - 1), type,
                                           &shopdamage, exploding_wand_typ);
@@ -315,7 +315,7 @@ int expltype;
                     } while (*hallu_buf != lowc(*hallu_buf));
                     str = hallu_buf;
                 }
-                if (u.uswallow && mtmp == u.ustuck) {
+                if (swallowed() && mtmp == u.ustuck) {
                     const char *adj = NULL;
                     if (is_animal(u.ustuck->data)) {
                         switch (adtyp) {

@@ -1744,7 +1744,7 @@ int final;
         } else
             you_are(predicament, "");
     } /* (currentlyTrapped()) */
-    if (u.uswallow) {
+    if (swallowed()) {
         Sprintf(buf, "swallowed by %s", a_monnam(u.ustuck));
         if (wizard)
             Sprintf(eos(buf), " (%u)", timeSinceBeingSwallowed());

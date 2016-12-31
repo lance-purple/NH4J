@@ -409,7 +409,7 @@ give_up:
 void
 ckmailstatus()
 {
-    if (u.uswallow || !flags.biff)
+    if (swallowed() || !flags.biff)
         return;
     if (mustgetmail < 0) {
 #if defined(AMIGA) || defined(MSDOS) || defined(TOS)
@@ -467,7 +467,7 @@ struct obj *otmp;
 void
 ckmailstatus()
 {
-    if (!mailbox || u.uswallow || !flags.biff
+    if (!mailbox || swallowed() || !flags.biff
 #ifdef MAILCKFREQ
         || moves < laststattime + MAILCKFREQ
 #endif
@@ -539,7 +539,7 @@ ckmailstatus()
 {
     struct mail_info *brdcst;
 
-    if (u.uswallow || !flags.biff)
+    if (swallowed() || !flags.biff)
         return;
 
     while (broadcasts > 0) { /* process all trapped broadcasts [until] */

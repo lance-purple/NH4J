@@ -2756,7 +2756,7 @@ float_up()
 #endif
     } else if (inWater()) {
         spoteffects(TRUE);
-    } else if (u.uswallow) {
+    } else if (swallowed()) {
         You(is_animal(u.ustuck->data) ? "float away from the %s."
                                       : "spiral up into %s.",
             is_animal(u.ustuck->data) ? surface(currentX(), currentY())
@@ -2825,7 +2825,7 @@ long hmask, emask; /* might cancel timeout */
             return 1;
         }
     }
-    if (u.uswallow) {
+    if (swallowed()) {
         You("float down, but you are still %s.",
             is_animal(u.ustuck->data) ? "swallowed" : "engulfed");
         return 1;
@@ -2846,7 +2846,7 @@ long hmask, emask; /* might cancel timeout */
     }
     /* check for falling into pool - added by GAN 10/20/86 */
     if (!Flying) {
-        if (!u.uswallow && u.ustuck) {
+        if (!swallowed() && u.ustuck) {
             if (sticks(youmonst.data))
                 You("aren't able to maintain your hold on %s.",
                     mon_nam(u.ustuck));
@@ -2927,7 +2927,7 @@ long hmask, emask; /* might cancel timeout */
             }
         }
     }
-    if (!areYouOnAirLevel() && !areYouOnWaterLevel() && !u.uswallow
+    if (!areYouOnAirLevel() && !areYouOnWaterLevel() && !swallowed()
         /* falling through trap door calls goto_level,
            and goto_level does its own pickup() call */
         && areYouOnLevel(&current_dungeon_level))

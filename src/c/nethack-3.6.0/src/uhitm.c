@@ -105,7 +105,7 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
     /* if you're close enough to attack, alert any waiting monster */
     mtmp->mstrategy &= ~STRAT_WAITMASK;
 
-    if (u.uswallow && mtmp == u.ustuck)
+    if (swallowed() && mtmp == u.ustuck)
         return FALSE;
 
     if (context.forcefight) {
@@ -425,7 +425,7 @@ atk_done:
      */
     if (context.forcefight && mtmp->mhp > 0 && !canspotmon(mtmp)
         && !glyph_is_invisible(levl[currentX() + directionX()][currentY() + directionY()].glyph)
-        && !(u.uswallow && mtmp == u.ustuck))
+        && !(swallowed() && mtmp == u.ustuck))
         map_invisible(currentX() + directionX(), currentY() + directionY());
 
     return TRUE;
@@ -466,11 +466,11 @@ struct attack *uattk;
         if (malive) {
             /* monster still alive */
             if (!rn2(25) && mon->mhp < mon->mhpmax / 2
-                && !(u.uswallow && mon == u.ustuck)) {
+                && !(swallowed() && mon == u.ustuck)) {
                 /* maybe should regurgitate if swallowed? */
                 monflee(mon, !rn2(3) ? rnd(100) : 0, FALSE, TRUE);
 
-                if (u.ustuck == mon && !u.uswallow && !sticks(youmonst.data))
+                if (u.ustuck == mon && !swallowed() && !sticks(youmonst.data))
                     u.ustuck = 0;
             }
             /* Vorpal Blade hit converted to miss */
@@ -498,7 +498,7 @@ struct attack *uattk;
     int armorpenalty, attknum = 0, x = currentX() + directionX(), y = currentY() + directionY(),
                       tmp = find_roll_to_hit(mon, uattk->aatyp, uwep,
                                              &attknum, &armorpenalty);
-    int mhit = (tmp > (dieroll = rnd(20)) || u.uswallow);
+    int mhit = (tmp > (dieroll = rnd(20)) || swallowed());
 
     if (tmp > dieroll)
         exercise(A_DEX, TRUE);
@@ -509,7 +509,7 @@ struct attack *uattk;
     if (usingTwoWeapons() && !override_confirmation && malive && m_at(x, y) == mon) {
         tmp = find_roll_to_hit(mon, uattk->aatyp, uswapwep, &attknum,
                                &armorpenalty);
-        mhit = (tmp > (dieroll = rnd(20)) || u.uswallow);
+        mhit = (tmp > (dieroll = rnd(20)) || swallowed());
         malive = known_hitum(mon, uswapwep, &mhit, tmp, armorpenalty, uattk);
     }
     if (wepbefore && !uwep)
@@ -1553,11 +1553,11 @@ register struct attack *mattk;
         if (!negated && tmp < mdef->mhp) {
             char nambuf[BUFSZ];
             boolean u_saw_mon =
-                canseemon(mdef) || (u.uswallow && u.ustuck == mdef);
+                canseemon(mdef) || (swallowed() && u.ustuck == mdef);
             /* record the name before losing sight of monster */
             Strcpy(nambuf, Monnam(mdef));
             if (u_teleport_mon(mdef, FALSE) && u_saw_mon
-                && !(canseemon(mdef) || (u.uswallow && u.ustuck == mdef)))
+                && !(canseemon(mdef) || (swallowed() && u.ustuck == mdef)))
                 pline("%s suddenly disappears!", nambuf);
         }
         break;
@@ -1876,7 +1876,7 @@ register struct attack *mattk;
     if (!engulf_target(&youmonst, mdef))
         return 0;
 
-    if (currentNutrition() < 1500 && !u.uswallow) {
+    if (currentNutrition() < 1500 && !swallowed()) {
         for (otmp = mdef->minvent; otmp; otmp = otmp->nobj)
             (void) snuff_lit(otmp);
 
@@ -2099,7 +2099,7 @@ register struct monst *mon;
             altwep = !altwep; /* toggle for next attack */
             tmp = find_roll_to_hit(mon, AT_WEAP, weapon, &attknum,
                                    &armorpenalty);
-            dhit = (tmp > (dieroll = rnd(20)) || u.uswallow);
+            dhit = (tmp > (dieroll = rnd(20)) || swallowed());
             /* Enemy dead, before any special abilities used */
             if (!known_hitum(mon, weapon, &dhit, tmp, armorpenalty, mattk)) {
                 sum[i] = 2;
@@ -2130,11 +2130,11 @@ register struct monst *mon;
         case AT_TENT:
             tmp = find_roll_to_hit(mon, mattk->aatyp, (struct obj *) 0,
                                    &attknum, &armorpenalty);
-            dhit = (tmp > (dieroll = rnd(20)) || u.uswallow);
+            dhit = (tmp > (dieroll = rnd(20)) || swallowed());
             if (dhit) {
                 int compat;
 
-                if (!u.uswallow
+                if (!swallowed()
                     && (compat = could_seduce(&youmonst, mon, mattk))) {
                     You("%s %s %s.",
                         mon->mcansee && haseyes(mon->data) ? "smile at"
@@ -2182,7 +2182,7 @@ register struct monst *mon;
             wakeup(mon);
             if (mon->data == &mons[PM_SHADE])
                 Your("hug passes harmlessly through %s.", mon_nam(mon));
-            else if (!sticks(mon->data) && !u.uswallow) {
+            else if (!sticks(mon->data) && !swallowed()) {
                 if (mon == u.ustuck) {
                     pline("%s is being %s.", Monnam(mon),
                           currentMonsterNumber() == PM_ROPE_GOLEM ? "choked" : "crushed");

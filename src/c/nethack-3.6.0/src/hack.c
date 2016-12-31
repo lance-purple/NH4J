@@ -1241,7 +1241,7 @@ domove()
         nomul(0);
         return;
     }
-    if (u.uswallow) {
+    if (swallowed()) {
         setDirectionX(0);
         setDirectionY(0);
 
@@ -1990,7 +1990,7 @@ boolean pick;
                                                            ? icewarnings[1]
                                                            : icewarnings[0]);
     }
-    if ((mtmp = m_at(currentX(), currentY())) && !u.uswallow) {
+    if ((mtmp = m_at(currentX(), currentY())) && !swallowed()) {
         mtmp->mundetected = mtmp->msleeping = 0;
         switch (mtmp->data->mlet) {
         case S_PIERCER:
@@ -2327,7 +2327,7 @@ dopickup()
     count = (multi || (save_cm && *save_cm == ',')) ? multi + 1 : 0;
     multi = 0; /* always reset */
     /* uswallow case added by GAN 01/29/87 */
-    if (u.uswallow) {
+    if (swallowed()) {
         if (!u.ustuck->minvent) {
             if (is_animal(u.ustuck->data)) {
                 You("pick up %s tongue.", s_suffix(mon_nam(u.ustuck)));

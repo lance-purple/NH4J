@@ -221,7 +221,7 @@ release_hero(mon)
 struct monst *mon;
 {
     if (mon == u.ustuck) {
-        if (u.uswallow) {
+        if (swallowed()) {
             expels(mon, mon->data, TRUE);
         } else if (!sticks(youmonst.data)) {
             unstuck(mon); /* let go */
@@ -432,7 +432,7 @@ register struct monst *mtmp;
 
     /* Demonic Blackmail! */
     if (nearby && mdat->msound == MS_BRIBE && mtmp->mpeaceful && !mtmp->mtame
-        && !u.uswallow) {
+        && !swallowed()) {
         if (mtmp->mux != currentX() || mtmp->muy != currentY()) {
             pline("%s whispers at thin air.",
                   cansee(mtmp->mux, mtmp->muy) ? Monnam(mtmp) : "It");
@@ -592,7 +592,7 @@ toofar:
                 /* a monster that's digesting you can move at the
                  * same time -dlc
                  */
-                if (u.uswallow)
+                if (swallowed())
                     return mattacku(mtmp);
                 /* if confused grabber has wandered off, let go */
                 if (distanceSquaredToYou(mtmp->mx, mtmp->my) > 2)
@@ -639,7 +639,7 @@ boolean
 itsstuck(mtmp)
 register struct monst *mtmp;
 {
-    if (sticks(youmonst.data) && mtmp == u.ustuck && !u.uswallow) {
+    if (sticks(youmonst.data) && mtmp == u.ustuck && !swallowed()) {
         pline("%s cannot escape from you!", Monnam(mtmp));
         return TRUE;
     }
@@ -828,14 +828,14 @@ register int after;
         goto postmov;
     }
 not_special:
-    if (u.uswallow && !mtmp->mflee && u.ustuck != mtmp)
+    if (swallowed() && !mtmp->mflee && u.ustuck != mtmp)
         return 1;
     omx = mtmp->mx;
     omy = mtmp->my;
     gx = mtmp->mux;
     gy = mtmp->muy;
     appr = mtmp->mflee ? -1 : 1;
-    if (mtmp->mconf || (u.uswallow && mtmp == u.ustuck)) {
+    if (mtmp->mconf || (swallowed() && mtmp == u.ustuck)) {
         appr = 0;
     } else {
         struct obj *lepgold, *ygold;
@@ -1312,7 +1312,7 @@ postmov:
                 return 2; /* mon died (position already updated) */
 
             /* set also in domove(), hack.c */
-            if (u.uswallow && mtmp == u.ustuck
+            if (swallowed() && mtmp == u.ustuck
                 && (mtmp->mx != omx || mtmp->my != omy)) {
                 /* If the monster moved, then update */
                 setOriginalX(currentX());

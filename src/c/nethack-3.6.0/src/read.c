@@ -1348,7 +1348,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
     case SPE_CHARM_MONSTER: {
         int candidates, res, results, vis_results;
 
-        if (u.uswallow) {
+        if (swallowed()) {
             candidates = 1;
             results = vis_results = maybe_tame(u.ustuck, sobj);
         } else {
@@ -1580,7 +1580,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             int nboulders = 0;
 
             /* Identify the scroll */
-            if (u.uswallow)
+            if (swallowed())
                 You_hear("rumbling.");
             else
                 pline_The("%s rumbles %s you!", ceiling(currentX(), currentY()),
@@ -1652,7 +1652,7 @@ boolean confused, helmet_protects, byu, skip_uswallow;
     struct obj *otmp2;
 
     /* hit monster if swallowed */
-    if (u.uswallow && !skip_uswallow) {
+    if (swallowed() && !skip_uswallow) {
         drop_boulder_on_monster(currentX(), currentY(), confused, byu);
         return;
     }
@@ -1713,7 +1713,7 @@ boolean confused, byu;
             pline("%s is hit by %s!", Monnam(mtmp), doname(otmp2));
             if (mtmp->minvis && !canspotmon(mtmp))
                 map_invisible(mtmp->mx, mtmp->my);
-        } else if (u.uswallow && mtmp == u.ustuck)
+        } else if (swallowed() && mtmp == u.ustuck)
             You_hear("something hit %s %s over your %s!",
                      s_suffix(mon_nam(mtmp)), mbodypart(mtmp, STOMACH),
                      body_part(HEAD));
@@ -1743,7 +1743,7 @@ boolean confused, byu;
                 mondied(mtmp);
             }
         }
-    } else if (u.uswallow && mtmp == u.ustuck) {
+    } else if (swallowed() && mtmp == u.ustuck) {
         obfree(otmp2, (struct obj *) 0);
         /* fall through to player */
         drop_boulder_on_player(confused, TRUE, FALSE, TRUE);
@@ -1853,7 +1853,7 @@ struct obj *obj;
         register struct obj *otmp;
 
         if (!Blind) {
-            if (u.uswallow) {
+            if (swallowed()) {
                 pline("It seems even darker in here than before.");
             } else {
                 if (uwep && artifact_light(uwep) && uwep->lamplit)
@@ -1869,7 +1869,7 @@ struct obj *obj;
             if (otmp->lamplit)
                 (void) snuff_lit(otmp);
     } else { /* on */
-        if (u.uswallow) {
+        if (swallowed()) {
             if (Blind)
                 ; /* no feedback */
             else if (is_animal(u.ustuck->data))
@@ -1884,7 +1884,7 @@ struct obj *obj;
     }
 
     /* No-op when swallowed or in water */
-    if (u.uswallow || underwater() || areYouOnWaterLevel())
+    if (swallowed() || underwater() || areYouOnWaterLevel())
         return;
     /*
      *  If we are darkening the room and the hero is punished but not
@@ -2288,7 +2288,7 @@ struct obj *sobj;
      *  Place ball & chain if not swallowed.  If swallowed, the ball &
      *  chain variables will be set at the next call to placebc().
      */
-    if (!u.uswallow) {
+    if (!swallowed()) {
         placebc();
         if (Blind)
             set_bc(1);      /* set up ball and chain variables */

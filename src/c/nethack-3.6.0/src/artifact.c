@@ -1149,7 +1149,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
     boolean youdefend = (mdef == &youmonst);
     boolean vis = (!youattack && magr && cansee(magr->mx, magr->my))
                   || (!youdefend && cansee(mdef->mx, mdef->my))
-                  || (youattack && u.uswallow && mdef == u.ustuck && !Blind);
+                  || (youattack && swallowed() && mdef == u.ustuck && !Blind);
     boolean realizes_damage;
     const char *wepdesc;
     static const char you[] = "you";
@@ -1239,7 +1239,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
         if (otmp->oartifact == ART_TSURUGI_OF_MURAMASA && dieroll == 1) {
             wepdesc = "The razor-sharp blade";
             /* not really beheading, but so close, why add another SPFX */
-            if (youattack && u.uswallow && mdef == u.ustuck) {
+            if (youattack && swallowed() && mdef == u.ustuck) {
                 You("slice %s wide open!", mon_nam(mdef));
                 *dmgptr = 2 * mdef->mhp + FATAL_DAMAGE_MODIFIER;
                 return TRUE;
@@ -1285,11 +1285,11 @@ int dieroll; /* needed for Magicbane and vorpal blades */
             static const char *const behead_msg[2] = { "%s beheads %s!",
                                                        "%s decapitates %s!" };
 
-            if (youattack && u.uswallow && mdef == u.ustuck)
+            if (youattack && swallowed() && mdef == u.ustuck)
                 return FALSE;
             wepdesc = artilist[ART_VORPAL_BLADE].name;
             if (!youdefend) {
-                if (!has_head(mdef->data) || notonhead || u.uswallow) {
+                if (!has_head(mdef->data) || notonhead || swallowed()) {
                     if (youattack)
                         pline("Somehow, you miss %s wildly.", mon_nam(mdef));
                     else if (vis)

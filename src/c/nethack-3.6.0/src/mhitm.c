@@ -135,7 +135,7 @@ register struct monst *mtmp;
         if (itsstuck(mtmp))
             return 0;
     }
-    has_u_swallowed = (u.uswallow && (mtmp == u.ustuck));
+    has_u_swallowed = (swallowed() && (mtmp == u.ustuck));
 
     for (mon = fmon; mon; mon = nmon) {
         nmon = mon->nmon;
@@ -148,7 +148,7 @@ register struct monst *mtmp;
          */
         if (mon != mtmp && !DEADMONSTER(mon)) {
             if (monnear(mtmp, mon->mx, mon->my)) {
-                if (!u.uswallow && (mtmp == u.ustuck)) {
+                if (!swallowed() && (mtmp == u.ustuck)) {
                     if (!rn2(4)) {
                         pline("%s releases you!", Monnam(mtmp));
                         u.ustuck = 0;
@@ -444,7 +444,7 @@ register struct monst *magr, *mdef;
             /* Engulfing attacks are directed at the hero if
              * possible. -dlc
              */
-            if (u.uswallow && magr == u.ustuck)
+            if (swallowed() && magr == u.ustuck)
                 strike = 0;
             else {
                 if ((strike = (tmp > rnd(20 + i))))
@@ -1371,7 +1371,7 @@ slept_monst(mon)
 struct monst *mon;
 {
     if ((mon->msleeping || !mon->mcanmove) && mon == u.ustuck
-        && !sticks(youmonst.data) && !u.uswallow) {
+        && !sticks(youmonst.data) && !swallowed()) {
         pline("%s grip relaxes.", s_suffix(Monnam(mon)));
         unstuck(mon);
     }

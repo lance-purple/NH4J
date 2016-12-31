@@ -46,7 +46,7 @@ struct obj *otmp;
         return 0;
 
     /* Select an animal */
-    if (u.uswallow || underwater() || !getdir((char *) 0)) {
+    if (swallowed() || underwater() || !getdir((char *) 0)) {
         pline1(Never_mind);
         return 0;
     }
@@ -234,10 +234,10 @@ boolean force;      /* Quietly force this animal */
         pline("I see nobody there.");
         return (FALSE);
     }
-    if (u.uswallow || u.ustuck || currentlyTrapped() || Punished
+    if (swallowed() || u.ustuck || currentlyTrapped() || Punished
         || !test_move(currentX(), currentY(), mtmp->mx - currentX(), mtmp->my - currentY(),
                       TEST_MOVE)) {
-        if (Punished || !(u.uswallow || u.ustuck || currentlyTrapped()))
+        if (Punished || !(swallowed() || u.ustuck || currentlyTrapped()))
             You("are unable to swing your %s over.", body_part(LEG));
         else
             You("are stuck here for now.");
@@ -542,7 +542,7 @@ int reason; /* Player was thrown off etc. */
     }
     if (mtmp->mhp > 0) {
         place_monster(mtmp, currentX(), currentY());
-        if (!u.uswallow && !u.ustuck && have_spot) {
+        if (!swallowed() && !u.ustuck && have_spot) {
             struct permonst *mdat = mtmp->data;
 
             /* The steed may drop into water/lava */

@@ -146,7 +146,7 @@ boolean check_pit;
 {
     struct trap *t;
 
-    if (u.uswallow)
+    if (swallowed())
         return FALSE;
     /* Restricted/unskilled riders can't reach the floor */
     if (u.usteed && P_SKILL(P_RIDING) < P_BASIC)
@@ -180,7 +180,7 @@ register int x, y;
 {
     register struct rm *lev = &levl[x][y];
 
-    if (x == currentX() && y == currentY() && u.uswallow && is_animal(u.ustuck->data))
+    if (x == currentX() && y == currentY() && swallowed() && is_animal(u.ustuck->data))
         return "maw";
     else if (IS_AIR(lev->typ) && areYouOnAirLevel())
         return "air";
@@ -495,7 +495,7 @@ doengrave()
 
     /* Can the adventurer engrave at all? */
 
-    if (u.uswallow) {
+    if (swallowed()) {
         if (is_animal(u.ustuck->data)) {
             pline("What would you write?  \"Jonah was here\"?");
             return 0;

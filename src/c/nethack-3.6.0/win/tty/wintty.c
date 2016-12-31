@@ -2891,7 +2891,7 @@ register int xmin, ymax;
     register int y;
     register struct WinDesc *cw = wins[WIN_MAP];
 
-    if (u.uswallow) { /* Can be done more efficiently */
+    if (swallowed()) { /* Can be done more efficiently */
         showHeroBeingSwallowed(1);
         return;
     }

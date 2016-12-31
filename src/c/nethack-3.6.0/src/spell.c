@@ -790,7 +790,7 @@ cast_protection()
                 pline_The("%s haze around you becomes more dense.", hgolden);
             } else {
                 rmtyp = levl[currentX()][currentY()].typ;
-                atmosphere = u.uswallow
+                atmosphere = swallowed()
                                 ? ((u.ustuck->data == &mons[PM_FOG_CLOUD])
                                    ? "mist"
                                    : is_whirly(u.ustuck->data)
@@ -1031,7 +1031,7 @@ boolean atme;
                     setDirectionX(cc.x + rnd(3) - 2);
                     setDirectionY(cc.y + rnd(3) - 2);
                     if (!isok(directionX(), directionY()) || !cansee(directionX(), directionY())
-                        || IS_STWALL(levl[directionX()][directionY()].typ) || u.uswallow) {
+                        || IS_STWALL(levl[directionX()][directionY()].typ) || swallowed()) {
                         /* Spell is reflected back to center */
                         setDirectionX(cc.x);
                         setDirectionY(cc.y);
@@ -1189,7 +1189,7 @@ throwspell()
     if (distmin(currentX(), currentY(), cc.x, cc.y) > 10) {
         pline_The("spell dissipates over the distance!");
         return 0;
-    } else if (u.uswallow) {
+    } else if (swallowed()) {
         pline_The("spell is cut short!");
         exercise(A_WIS, FALSE); /* What were you THINKING! */
         setDirectionX(0);

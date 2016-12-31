@@ -883,7 +883,7 @@ register struct obj *obj;
 
     /* make grabber let go now, whether it becomes tame or not */
     if (mtmp == u.ustuck) {
-        if (u.uswallow)
+        if (swallowed())
             expels(mtmp, mtmp->data, TRUE);
         else if (!(areYouPolymorphed() && sticks(youmonst.data)))
             unstuck(mtmp);

@@ -348,7 +348,7 @@ NEARDATA extern coord bhitpos; /* place where throw or zap hits or stops */
 /* Some misc definitions */
 #define POTION_OCCUPANT_CHANCE(n) (13 + 2 * (n))
 #define WAND_BACKFIRE_CHANCE 100
-#define BALL_IN_MON (u.uswallow && uball && uball->where == OBJ_FREE)
+#define BALL_IN_MON (swallowed() && uball && uball->where == OBJ_FREE)
 #define NODIAG(monnum) ((monnum) == PM_GRID_BUG)
 
 /* Flags to control menus */

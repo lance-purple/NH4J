@@ -341,7 +341,7 @@ invault()
         else
             pline("Someone else has entered the Vault.");
         newsym(guard->mx, guard->my);
-        if (u.uswallow) {
+        if (swallowed()) {
             /* can't interrogate hero, don't interrogate engulfer */
             verbalize("What's going on here?");
             if (gsensed)
@@ -711,7 +711,7 @@ register struct monst *grd;
         return 0;
     }
     if (um_dist(grd->mx, grd->my, 1) || egrd->gddone) {
-        if (!egrd->gddone && !rn2(10) && !Deaf && !u.uswallow
+        if (!egrd->gddone && !rn2(10) && !Deaf && !swallowed()
             && !(u.ustuck && !sticks(youmonst.data)))
             verbalize("Move along!");
         restfakecorr(grd);

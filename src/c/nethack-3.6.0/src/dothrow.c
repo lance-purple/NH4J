@@ -1029,7 +1029,7 @@ boolean
     thrownobj = obj;
     thrownobj->was_thrown = 1;
 
-    if (u.uswallow) {
+    if (swallowed()) {
         mon = u.ustuck;
         bhitpos.x = mon->mx;
         bhitpos.y = mon->my;
@@ -1161,7 +1161,7 @@ boolean
 
     if (!thrownobj) {
         ; /* missile has already been handled */
-    } else if (u.uswallow) {
+    } else if (swallowed()) {
         /* ball is not picked up by monster */
         if (obj != uball)
             (void) mpickobj(u.ustuck, obj);
@@ -1347,7 +1347,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
     register int tmp;     /* Base chance to hit */
     register int disttmp; /* distance modifier */
     int otyp = obj->otyp, hmode;
-    boolean guaranteed_hit = (u.uswallow && mon == u.ustuck);
+    boolean guaranteed_hit = (swallowed() && mon == u.ustuck);
 
     hmode = (obj == uwep) ? HMON_APPLIED : (obj == kickedobj) ? HMON_KICKED
                                                               : HMON_THROWN;
@@ -1545,7 +1545,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
 
             exercise(A_DEX, TRUE);
             if (!hmon(mon, obj, hmode)) { /* mon killed */
-                if (was_swallowed && !u.uswallow && obj == uball)
+                if (was_swallowed && !swallowed() && obj == uball)
                     return 1; /* already did placebc() */
             }
         } else {
@@ -1588,7 +1588,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
             if (is_animal(u.ustuck->data)) {
                 minstapetrify(u.ustuck, TRUE);
                 /* Don't leave a cockatrice corpse available in a statue */
-                if (!u.uswallow) {
+                if (!swallowed()) {
                     delobj(obj);
                     return 1;
                 }
@@ -1931,7 +1931,7 @@ struct obj *obj;
         return 0;
     }
     freeinv(obj);
-    if (u.uswallow) {
+    if (swallowed()) {
         pline(is_animal(u.ustuck->data) ? "%s in the %s's entrails."
                                         : "%s into %s.",
               "The money disappears", mon_nam(u.ustuck));

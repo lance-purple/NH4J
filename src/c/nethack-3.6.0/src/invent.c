@@ -2690,7 +2690,7 @@ boolean picked_some;
     /* default pile_limit is 5; a value of 0 means "never skip"
        (and 1 effectively forces "always skip") */
     skip_objects = (flags.pile_limit > 0 && obj_cnt >= flags.pile_limit);
-    if (u.uswallow && u.ustuck) {
+    if (swallowed() && u.ustuck) {
         struct monst *mtmp = u.ustuck;
         Sprintf(fbuf, "Contents of %s %s", s_suffix(mon_nam(mtmp)),
                 mbodypart(mtmp, STOMACH));
@@ -3543,7 +3543,7 @@ char *title;
     int n;
     menu_item *selected = 0;
     int do_all = (dflags & MINV_ALL) != 0,
-        incl_hero = (do_all && u.uswallow && mon == u.ustuck),
+        incl_hero = (do_all && swallowed() && mon == u.ustuck),
         have_inv = (mon->minvent != 0), have_any = (have_inv || incl_hero);
 
     Sprintf(tmp, "%s %s:", s_suffix(noit_Monnam(mon)),

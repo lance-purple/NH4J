@@ -278,7 +278,7 @@ char *buf, *monbuf;
            (even if you could also see yourself via other means).
            Sensing self while blind or swallowed is treated as if it
            were by normal vision (cf canseeself()). */
-        if ((Invisible || u.uundetected) && !Blind && !u.uswallow) {
+        if ((Invisible || u.uundetected) && !Blind && !swallowed()) {
             unsigned how = 0;
 
             if (Infravision)
@@ -298,7 +298,7 @@ char *buf, *monbuf;
                     ((how & 7) > 4) ? ", " : "",
                     (how & 4) ? "monster detection" : "");
         }
-    } else if (u.uswallow) {
+    } else if (swallowed()) {
         /* all locations when swallowed other than the hero are the monster */
         Sprintf(buf, "interior of %s",
                 Blind ? "a monster" : a_monnam(u.ustuck));
@@ -580,7 +580,7 @@ const char **firstmatch;
      * and looking at something other than our own symbol, then just say
      * "the interior of a monster".
      */
-    if (u.uswallow && looked
+    if (swallowed() && looked
         && (is_swallow_sym(sym) || (int) showsyms[S_stone] == sym)) {
         if (!found) {
             Sprintf(out_str, "%s%s", prefix, mon_interior);
@@ -681,7 +681,7 @@ const char **firstmatch;
                 }
                 *firstmatch = x_str;
                 found++;
-            } else if (!u.uswallow && !(hit_trap && is_cmap_trap(i))
+            } else if (!swallowed() && !(hit_trap && is_cmap_trap(i))
                        && !(found >= 3 && is_cmap_drawbridge(i))
                        /* don't mention vibrating square outside of Gehennom
                           unless this happens to be one (hallucination?) */
@@ -825,7 +825,7 @@ coord *click_cc;
             add_menu(win, NO_GLYPH, &any,
                      flags.lootabc ? 0 : any.a_char, 'n', ATR_NONE,
                      "something else (by symbol or name)", MENU_UNSELECTED);
-            if (!u.uswallow && !Hallucination) {
+            if (!swallowed() && !Hallucination) {
                 any = zeroany;
                 add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE,
                          "", MENU_UNSELECTED);

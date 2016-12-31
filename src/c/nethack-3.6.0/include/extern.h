@@ -936,6 +936,9 @@ E void FDECL(setUnderwater, (boolean));
 E boolean FDECL(inWater, ());
 E void FDECL(setInWater, (boolean));
 
+E boolean FDECL(swallowed, ());
+E void FDECL(setSwallowed, (boolean));
+
 E int FDECL(timeInVault, ());
 E void FDECL(setTimeInVault, (int));
 E void FDECL(increaseTimeInVault, (int));

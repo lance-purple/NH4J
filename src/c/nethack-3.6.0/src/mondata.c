@@ -212,7 +212,7 @@ struct obj *obj; /* aatyp == AT_WEAP, AT_SPIT */
             return TRUE; /* no defense */
         } else
             return FALSE; /* other objects cannot cause blindness yet */
-        if ((magr == &youmonst) && u.uswallow)
+        if ((magr == &youmonst) && swallowed())
             return FALSE; /* can't affect eyes while inside monster */
         break;
 
@@ -227,7 +227,7 @@ struct obj *obj; /* aatyp == AT_WEAP, AT_SPIT */
         /* e.g. raven: all ublindf, including LENSES, protect */
         if (is_you && ublindf)
             return FALSE;
-        if ((magr == &youmonst) && u.uswallow)
+        if ((magr == &youmonst) && swallowed())
             return FALSE; /* can't affect eyes while inside monster */
         check_visor = TRUE;
         break;

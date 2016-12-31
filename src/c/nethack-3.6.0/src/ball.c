@@ -121,7 +121,7 @@ placebc()
 void
 unplacebc()
 {
-    if (u.uswallow) {
+    if (swallowed()) {
         if (areYouOnWaterLevel()) {
             /* we need to proceed with the removal from the floor
              * so that movebubbles() processing will disregard it as
@@ -163,7 +163,7 @@ bc_order()
     struct obj *obj;
 
     if (uchain->ox != uball->ox || uchain->oy != uball->oy || carried(uball)
-        || u.uswallow)
+        || swallowed())
         return BCPOS_DIFFER;
 
     for (obj = level.objects[uball->ox][uball->oy]; obj;
@@ -193,7 +193,7 @@ int already_blind;
     setFeltChain(TRUE);
     setFeltBall(ball_on_floor);
     
-    if (already_blind || u.uswallow) {
+    if (already_blind || swallowed()) {
         setGlyphUnderBall(levl[currentX()][currentY()].glyph);
         setGlyphUnderChain(levl[currentX()][currentY()].glyph);
         return;

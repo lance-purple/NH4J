@@ -693,7 +693,7 @@ register int x, y;
 #endif
 
     /* only permit updating the hero when swallowed */
-    if (u.uswallow) {
+    if (swallowed()) {
         if (x == currentX() && y == currentY())
             display_self();
         return;
@@ -1080,7 +1080,7 @@ int mode;
     register int x, y;
 
     /* swallowing has a higher precedence than under water */
-    if (areYouOnWaterLevel() || u.uswallow)
+    if (areYouOnWaterLevel() || swallowed())
         return;
 
     /* full update */
@@ -1125,7 +1125,7 @@ int mode;
     static boolean dela;
 
     /* swallowing has a higher precedence than under ground */
-    if (u.uswallow)
+    if (swallowed())
         return;
 
     /* full update */
@@ -1269,7 +1269,7 @@ docrt()
     if (!currentX())
         return; /* display isn't ready yet */
 
-    if (u.uswallow) {
+    if (swallowed()) {
         showHeroBeingSwallowed(1);
         return;
     }

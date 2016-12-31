@@ -1036,7 +1036,7 @@ movebubbles()
                             newsym(x, y); /* clean up old position */
                             mon->mx = mon->my = 0;
                         }
-                        if (!u.uswallow && x == currentX() && y == currentY()) {
+                        if (!swallowed() && x == currentX() && y == currentY()) {
                             struct container *cons =
                                 (struct container *) alloc(
                                     sizeof(struct container));

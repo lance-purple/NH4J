@@ -342,6 +342,7 @@ register int fd, mode;
     write_long(fd, sleepingSinceMove());
 
     write_int(fd, inWater());
+    write_int(fd, swallowed());
 
     write_int(fd, timeInVault());
     write_int(fd, timeSinceBeingSwallowed());

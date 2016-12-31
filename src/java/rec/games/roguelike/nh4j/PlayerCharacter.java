@@ -37,6 +37,7 @@ public class PlayerCharacter {
 	private static long sleepingSinceMove;
 
 	private static boolean immersed;
+	private static boolean swallowed;
 	
 	private static int timeInVault;
 	private static int timeSinceBeingSwallowed;
@@ -312,6 +313,14 @@ public class PlayerCharacter {
 
 	public static void decreaseTimeInVault(int t) {
 		timeInVault -= t;
+	}
+	
+	public static boolean swallowed() {
+		return swallowed;
+	}
+	
+	public static void setSwallowed(boolean s) {
+		swallowed = s;
 	}
 
 	public static int timeSinceBeingSwallowed() {

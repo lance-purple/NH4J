@@ -146,7 +146,7 @@ STATIC_OVL void
 polyman(fmt, arg)
 const char *fmt, *arg;
 {
-    boolean sticky = (sticks(youmonst.data) && u.ustuck && !u.uswallow),
+    boolean sticky = (sticks(youmonst.data) && u.ustuck && !swallowed()),
             was_mimicking = (youmonst.m_ap_type == M_AP_OBJECT);
     boolean was_blind = !!Blind;
 
@@ -594,7 +594,7 @@ int
 polymon(mntmp)
 int mntmp;
 {
-    boolean sticky = sticks(youmonst.data) && u.ustuck && !u.uswallow,
+    boolean sticky = sticks(youmonst.data) && u.ustuck && !swallowed(),
             was_blind = !!Blind, dochange = FALSE;
     int mlvl;
 
@@ -752,7 +752,7 @@ int mntmp;
     }
     newsym(currentX(), currentY()); /* Change symbol */
 
-    if (!sticky && !u.uswallow && u.ustuck && sticks(youmonst.data))
+    if (!sticky && !swallowed() && u.ustuck && sticks(youmonst.data))
         u.ustuck = 0;
     else if (sticky && !sticks(youmonst.data))
         uunstick();
@@ -1146,7 +1146,7 @@ dospinweb()
         You("must be on the ground to spin a web.");
         return 0;
     }
-    if (u.uswallow) {
+    if (swallowed()) {
         You("release web fluid inside %s.", mon_nam(u.ustuck));
         if (is_animal(u.ustuck->data)) {
             expels(u.ustuck, u.ustuck->data, TRUE);

@@ -3427,7 +3427,7 @@ boolean catchup; /* restoring a level */
                 == ESHK(shkp)->shoproom)
                 litter[i] |= INSHOP;
         }
-        if (Punished && !u.uswallow
+        if (Punished && !swallowed()
             && ((uchain->ox == x && uchain->oy == y)
                 || (uball->ox == x && uball->oy == y))) {
             /*

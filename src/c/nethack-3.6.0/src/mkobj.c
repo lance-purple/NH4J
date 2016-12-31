@@ -2117,7 +2117,7 @@ boolean tipping; /* caller emptying entire contents; affects shop handling */
         iflags.suppress_price++;
         if (!tipping) {
             obj = hold_another_object(
-                obj, u.uswallow ? "Oops!  %s out of your reach!"
+                obj, swallowed() ? "Oops!  %s out of your reach!"
                                 : (areYouOnAirLevel() || areYouOnWaterLevel()
                                    || levl[currentX()][currentY()].typ < IRONBARS
                                    || levl[currentX()][currentY()].typ >= ICE)

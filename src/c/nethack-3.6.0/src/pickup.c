@@ -477,7 +477,7 @@ int what; /* should be a long */
     else /* pick anything */
         count = 0;
 
-    if (!u.uswallow) {
+    if (!swallowed()) {
         struct trap *ttmp = t_at(currentX(), currentY());
         /* no auto-pick if no-pick move, nothing there, or in a pool */
         if (autopickup && (context.nopick || !OBJ_AT(currentX(), currentY())
@@ -517,7 +517,7 @@ int what; /* should be a long */
     }
 
     add_valid_menu_class(0); /* reset */
-    if (!u.uswallow) {
+    if (!swallowed()) {
         objchain = level.objects[currentX()][currentY()];
         traverse_how = BY_NEXTHERE;
     } else {
@@ -660,7 +660,7 @@ int what; /* should be a long */
         ; /* semicolon needed by brain-damaged compilers */
     }
 
-    if (!u.uswallow) {
+    if (!swallowed()) {
         if (hides_under(youmonst.data))
             (void) hideunder(&youmonst);
 
@@ -1430,7 +1430,7 @@ pick_obj(otmp)
 struct obj *otmp;
 {
     obj_extract_self(otmp);
-    if (!u.uswallow && otmp != uball && costly_spot(otmp->ox, otmp->oy)) {
+    if (!swallowed() && otmp != uball && costly_spot(otmp->ox, otmp->oy)) {
         char saveushops[5], fakeshop[2];
 
         /* addtobill cares about your location rather than the object's;
@@ -1886,7 +1886,7 @@ boolean *prev_loot;
     }
     /* 3.4.0 introduced the ability to pick things up from within swallower's
      * stomach */
-    if (u.uswallow) {
+    if (swallowed()) {
         int count = passed_info ? *passed_info : 0;
         timepassed = pickup(count);
     }
@@ -2907,7 +2907,7 @@ struct obj *box; /* or bag */
         int held = carried(box);
         long loss = 0L;
 
-        if (u.uswallow)
+        if (swallowed())
             highdrop = altarizing = FALSE;
         box->cknown = 1;
         pline("%s out%c",

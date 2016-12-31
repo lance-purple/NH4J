@@ -830,7 +830,7 @@ dokick()
     else
         avrg_attrib = (ACURRSTR + ACURR(A_DEX) + ACURR(A_CON)) / 3;
 
-    if (u.uswallow) {
+    if (swallowed()) {
         switch (rn2(3)) {
         case 0:
             You_cant("move your %s!", body_part(LEG));
@@ -918,7 +918,7 @@ dokick()
                       to an unseen square doesn't leave an I behind */
                    && mtmp->mx == x && mtmp->my == y
                    && !glyph_is_invisible(glyph)
-                   && !(u.uswallow && mtmp == u.ustuck)) {
+                   && !(swallowed() && mtmp == u.ustuck)) {
             map_invisible(x, y);
         }
         /* recoil if floating */

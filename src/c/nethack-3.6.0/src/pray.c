@@ -230,7 +230,7 @@ in_trouble()
     }
 
     if (Blinded > 1 && haseyes(youmonst.data)
-        && (!u.uswallow
+        && (!swallowed()
             || !attacktype_fordmg(u.ustuck->data, AT_ENGL, AD_BLND)))
         return TROUBLE_BLIND;
     for (i = 0; i < A_MAX; i++)
@@ -533,7 +533,7 @@ STATIC_OVL void
 god_zaps_you(resp_god)
 aligntyp resp_god;
 {
-    if (u.uswallow) {
+    if (swallowed()) {
         pline(
           "Suddenly a bolt of lightning comes down at you from the heavens!");
         pline("It strikes %s!", mon_nam(u.ustuck));
@@ -561,7 +561,7 @@ aligntyp resp_god;
     }
 
     pline("%s is not deterred...", align_gname(resp_god));
-    if (u.uswallow) {
+    if (swallowed()) {
         pline("A wide-angle disintegration beam aimed at you hits %s!",
               mon_nam(u.ustuck));
         if (!resists_disint(u.ustuck)) {
@@ -697,7 +697,7 @@ const char *str;
 {
     if (Blind)
         str = Something;
-    if (u.uswallow) {
+    if (swallowed()) {
         /* barrier between you and the floor */
         pline("%s %s into %s %s.", str, vtense(str, "drop"),
               s_suffix(mon_nam(u.ustuck)), mbodypart(u.ustuck, STOMACH));
@@ -1266,7 +1266,7 @@ dosacrifice()
     boolean highaltar;
     aligntyp altaralign = a_align(currentX(), currentY());
 
-    if (!on_altar() || u.uswallow) {
+    if (!on_altar() || swallowed()) {
         You("are not standing on an altar.");
         return 0;
     }

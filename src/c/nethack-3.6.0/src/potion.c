@@ -382,7 +382,7 @@ long mask; /* nonzero if resistance status should change by mask */
         if (!Hallucination)
             eatmupdate();
 
-        if (u.uswallow) {
+        if (swallowed()) {
             showHeroBeingSwallowed(0); /* redraw swallow display */
         } else {
             /* The see_* routines should be called *before* the pline. */
@@ -482,7 +482,7 @@ dodrink()
         }
     }
     /* Or are you surrounded by water? */
-    if (underwater() && !u.uswallow) {
+    if (underwater() && !swallowed()) {
         if (yn("Drink the water around you?") == 'y') {
             pline("Do you know what lives in this water?");
             return 1;

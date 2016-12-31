@@ -763,6 +763,14 @@ void setInWater(boolean w) {
     javaSetBoolean(PLAYER_CHARACTER_CLASS, "setInWater", w);
 }
 
+boolean swallowed() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "swallowed");
+}
+
+void setSwallowed(boolean w) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setSwallowed", w);
+}
+
 int timeInVault() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "timeInVault");
 }

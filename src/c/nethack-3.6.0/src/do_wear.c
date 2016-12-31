@@ -127,7 +127,7 @@ boolean on;
            with touch, which isn't appropriate for deciding whether
            we'll notice that monsters have trouble spotting the hero */
         && ((!Blind         /* see anything */
-             && !u.uswallow /* see surroundings */
+             && !swallowed() /* see surroundings */
              && !Invisible) /* see self */
             /* actively sensing nearby monsters via telepathy or extended
                monster detection overrides vision considerations because

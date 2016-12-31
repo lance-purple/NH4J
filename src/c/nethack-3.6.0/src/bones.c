@@ -301,7 +301,7 @@ can_make_bones()
         return FALSE;
     if (noBonesOnCurrentLevel())
         return FALSE; /* no bones for specific levels */
-    if (u.uswallow) {
+    if (swallowed()) {
         return FALSE; /* no bones when swallowed */
     }
     if (!areYouOnABranchLevel()) {

@@ -45,7 +45,7 @@ dosit()
         u.uundetected = 0; /* no longer on the ceiling */
 
     if (!can_reach_floor(FALSE)) {
-        if (u.uswallow)
+        if (swallowed())
             There("are no seats in here!");
         else if (Levitation)
             You("tumble in place.");

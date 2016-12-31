@@ -444,7 +444,7 @@ register struct monst *mtmp;
     if (mtmp == u.ustuck)
         Strcat(info, sticks(youmonst.data)
                          ? ", held by you"
-                         : !u.uswallow ? ", holding you"
+                         : !swallowed() ? ", holding you"
                                        : attacktype_fordmg(u.ustuck->data,
                                                            AT_ENGL, AD_DGST)
                                              ? ", digesting you"

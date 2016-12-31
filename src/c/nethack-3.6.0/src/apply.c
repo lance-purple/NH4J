@@ -67,7 +67,7 @@ struct obj *obj;
 
     if (obj->cursed && !rn2(2)) {
         (void) zapyourself(obj, TRUE);
-    } else if (u.uswallow) {
+    } else if (swallowed()) {
         You("take a picture of %s %s.", s_suffix(mon_nam(u.ustuck)),
             mbodypart(u.ustuck, STOMACH));
     } else if (directionZ()) {
@@ -295,7 +295,7 @@ register struct obj *obj;
     struct monst *mtmp;
     struct rm *lev;
     int rx, ry, res;
-    boolean interference = (u.uswallow && is_whirly(u.ustuck->data)
+    boolean interference = (swallowed() && is_whirly(u.ustuck->data)
                             && !rn2(Role_if(PM_HEALER) ? 10 : 3));
 
     if (nohands(youmonst.data)) {
@@ -323,10 +323,10 @@ register struct obj *obj;
         } else
             mstatusline(u.usteed);
         return res;
-    } else if (u.uswallow && (directionX() || directionY() || directionZ())) {
+    } else if (swallowed() && (directionX() || directionY() || directionZ())) {
         mstatusline(u.ustuck);
         return res;
-    } else if (u.uswallow && interference) {
+    } else if (swallowed() && interference) {
         pline("%s interferes.", Monnam(u.ustuck));
         mstatusline(u.ustuck);
         return res;
@@ -825,7 +825,7 @@ struct obj *obj;
         }
         return 1;
     }
-    if (u.uswallow) {
+    if (swallowed()) {
         if (useeit)
             You("reflect %s %s.", s_suffix(mon_nam(u.ustuck)),
                 mbodypart(u.ustuck, STOMACH));
@@ -946,7 +946,7 @@ struct obj **optr;
 
     You("ring %s.", the(xname(obj)));
 
-    if (underwater() || (u.uswallow && ordinary)) {
+    if (underwater() || (swallowed() && ordinary)) {
 #ifdef AMIGA
         amii_speaker(obj, "AhDhGqEqDhEhAqDqFhGw", AMII_MUFFLED_VOLUME);
 #endif
@@ -993,7 +993,7 @@ struct obj **optr;
         /* charged Bell of Opening */
         consume_obj_charge(obj, TRUE);
 
-        if (u.uswallow) {
+        if (swallowed()) {
             if (!obj->cursed)
                 (void) openit();
             else
@@ -1083,7 +1083,7 @@ register struct obj *obj;
         You("cannot make fire under water.");
         return;
     }
-    if (u.uswallow || obj->cursed) {
+    if (swallowed() || obj->cursed) {
         if (!Blind)
             pline_The("%s %s for a moment, then %s.", s, vtense(s, "flicker"),
                       vtense(s, "die"));
@@ -1126,7 +1126,7 @@ struct obj **optr;
     const char *s = (obj->quan != 1) ? "candles" : "candle";
     char qbuf[QBUFSZ], qsfx[QBUFSZ], *q;
 
-    if (u.uswallow) {
+    if (swallowed()) {
         You(no_elbow_room);
         return;
     }
@@ -1331,7 +1331,7 @@ struct obj *obj; /* obj is a potion of oil */
     char buf[BUFSZ];
     boolean split1off;
 
-    if (u.uswallow) {
+    if (swallowed()) {
         You(no_elbow_room);
         return;
     }
@@ -1507,7 +1507,7 @@ int magic; /* 0=Physical, otherwise skill level */
     } else if (!magic && u.usteed && stucksteed(FALSE)) {
         /* stucksteed gave "<steed> won't move" message */
         return 0;
-    } else if (u.uswallow) {
+    } else if (swallowed()) {
         if (magic) {
             You("bounce around a little.");
             return 1;
@@ -1785,7 +1785,7 @@ struct obj *obj;
     if (TimedTrouble(Sick))
         prop_trouble(SICK);
     if (TimedTrouble(Blinded) > (long) creamed()
-        && !(u.uswallow
+        && !(swallowed()
              && attacktype_fordmg(u.ustuck->data, AT_ENGL, AD_BLND)))
         prop_trouble(BLINDED);
     if (TimedTrouble(HHallucination))
@@ -2032,7 +2032,7 @@ boolean quietly;
 {
     xchar x, y;
 
-    if (carried(obj) && u.uswallow) {
+    if (carried(obj) && swallowed()) {
         if (!quietly)
             You("don't have enough room in here.");
         return FALSE;
@@ -2068,7 +2068,7 @@ struct obj **optr;
     xchar x, y;
     coord cc;
 
-    if (u.uswallow) {
+    if (swallowed()) {
         /* can't activate a figurine while swallowed */
         if (!figurine_location_checks(obj, (coord *) 0, FALSE))
             return;
@@ -2307,7 +2307,7 @@ struct obj *otmp;
         what = "without hands";
     else if (Stunned)
         what = "while stunned";
-    else if (u.uswallow)
+    else if (swallowed())
         what =
             is_animal(u.ustuck->data) ? "while swallowed" : "while engulfed";
     else if (underwater())
@@ -2453,7 +2453,7 @@ struct obj *obj;
     if (!getdir((char *) 0))
         return res;
 
-    if (u.uswallow) {
+    if (swallowed()) {
         mtmp = u.ustuck;
         rx = mtmp->mx;
         ry = mtmp->my;
@@ -2484,7 +2484,7 @@ struct obj *obj;
     if (proficient < 0)
         proficient = 0;
 
-    if (u.uswallow && attack(u.ustuck)) {
+    if (swallowed() && attack(u.ustuck)) {
         There("is not enough room to flick your bullwhip.");
 
     } else if (underwater()) {
@@ -2770,7 +2770,7 @@ struct obj *obj;
     struct monst *hitm = context.polearm.hitmon;
 
     /* Are you allowed to use the pole? */
-    if (u.uswallow) {
+    if (swallowed()) {
         pline(not_enough_room);
         return 0;
     }
@@ -2930,7 +2930,7 @@ struct obj *obj;
     struct obj *otmp;
 
     /* Are you allowed to use the hook? */
-    if (u.uswallow) {
+    if (swallowed()) {
         pline(not_enough_room);
         return 0;
     }

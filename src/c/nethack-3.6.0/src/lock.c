@@ -260,7 +260,7 @@ struct obj *pick;
             pline(no_longer, "hold the", what);
             reset_pick();
             return PICKLOCK_LEARNED_SOMETHING;
-        } else if (u.uswallow || (xlock.box && !can_reach_floor(TRUE))) {
+        } else if (swallowed() || (xlock.box && !can_reach_floor(TRUE))) {
             pline(no_longer, "reach the", "lock");
             reset_pick();
             return PICKLOCK_LEARNED_SOMETHING;
@@ -276,7 +276,7 @@ struct obj *pick;
     if (nohands(youmonst.data)) {
         You_cant("hold %s -- you have no hands!", doname(pick));
         return PICKLOCK_DID_NOTHING;
-    } else if (u.uswallow) {
+    } else if (swallowed()) {
         You_cant("%sunlock %s.", (picktyp == CREDIT_CARD) ? "" : "lock or ",
                  mon_nam(u.ustuck));
         return PICKLOCK_DID_NOTHING;
@@ -466,7 +466,7 @@ doforce()
     register int c, picktyp;
     char qbuf[QBUFSZ];
 
-    if (u.uswallow) {
+    if (swallowed()) {
         You_cant("force anything from inside here.");
         return 0;
     }
