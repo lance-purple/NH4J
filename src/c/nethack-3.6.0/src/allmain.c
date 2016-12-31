@@ -629,8 +629,8 @@ boolean new_game; /* false => restoring an old game */
      * restores it's only shown if different from its original value.
      */
     *buf = '\0';
-    if (new_game || u.ualignbase[A_ORIGINAL] != u.ualignbase[A_CURRENT])
-        Sprintf(eos(buf), " %s", align_str(u.ualignbase[A_ORIGINAL]));
+    if (new_game || originalAlignmentBase() != currentAlignmentBase())
+        Sprintf(eos(buf), " %s", align_str(originalAlignmentBase()));
     if (!urole.name.f
         && (new_game
                 ? (urole.allow & ROLE_GENDMASK) == (ROLE_MALE | ROLE_FEMALE)

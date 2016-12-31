@@ -867,6 +867,22 @@ void decreaseCurrentScore(long score) {
     javaSetLong(PLAYER_CHARACTER_CLASS, "decreaseCurrentScore", score);
 }
 
+int originalAlignmentBase() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "originalAlignmentBase");
+} 
+
+void setOriginalAlignmentBase(int c) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setOriginalAlignmentBase", c);
+}
+
+int currentAlignmentBase() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "currentAlignmentBase");
+} 
+
+void setCurrentAlignmentBase(int c) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setCurrentAlignmentBase", c);
+}
+
 int currentLuck() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "currentLuck");
 } 

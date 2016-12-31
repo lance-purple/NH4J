@@ -652,8 +652,9 @@ u_init()
     for (i = 0; i <= MAXSPELL; i++)
         spl_book[i].sp_id = NO_SPELL;
     setTimeToNextBlessing(300); /* no prayers just yet */
-    u.ualignbase[A_CURRENT] = u.ualignbase[A_ORIGINAL] = u.ualign.type =
-        aligns[flags.initalign].value;
+    u.ualign.type = aligns[flags.initalign].value;
+    setOriginalAlignmentBase(u.ualign.type);
+    setCurrentAlignmentBase(u.ualign.type);
 
 #if defined(BSD) && !defined(POSIX_TYPES)
     (void) time((long *) &ubirthday);

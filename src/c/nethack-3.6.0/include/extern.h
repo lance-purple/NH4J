@@ -970,6 +970,11 @@ E void FDECL(setCurrentScore, (long));
 E void FDECL(increaseCurrentScore, (long));
 E void FDECL(decreaseCurrentScore, (long));
 
+E int FDECL(originalAlignmentBase, ());
+E void FDECL(setOriginalAlignmentBase, (int));
+E int FDECL(currentAlignmentBase, ());
+E void FDECL(setCurrentAlignmentBase, (int));
+
 E int FDECL(currentLuck, ());
 E void FDECL(setCurrentLuck, (int));
 E void FDECL(increaseCurrentLuck, (int));

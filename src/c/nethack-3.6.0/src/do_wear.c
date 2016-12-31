@@ -462,7 +462,7 @@ Helmet_off(VOID_ARGS)
         /* changing alignment can toggle off active artifact
            properties, including levitation; uarmh could get
            dropped or destroyed here */
-        uchangealign(u.ualignbase[A_CURRENT], 2);
+        uchangealign(currentAlignmentBase(), 2);
         break;
     default:
         impossible(unknown_type, c_helmet, uarmh->otyp);
@@ -1758,7 +1758,7 @@ struct obj *obj;
 
         if (obj->otyp == HELM_OF_OPPOSITE_ALIGNMENT
             && qstart_level.dnum == currentDungeonNumber()) { /* in quest */
-            if (u.ualignbase[A_CURRENT] == u.ualignbase[A_ORIGINAL])
+            if (currentAlignmentBase() == originalAlignmentBase())
                 You("narrowly avoid losing all chance at your goal.");
             else /* converted */
                 You("are suddenly overcome with shame and change your mind.");

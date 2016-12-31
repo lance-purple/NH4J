@@ -324,19 +324,19 @@ char c;
         str = guardname();
         break;
     case 'G':
-        str = align_gtitle(u.ualignbase[A_ORIGINAL]);
+        str = align_gtitle(originalAlignmentBase());
         break;
     case 'H':
         str = homebase();
         break;
     case 'a':
-        str = align_str(u.ualignbase[A_ORIGINAL]);
+        str = align_str(originalAlignmentBase());
         break;
     case 'A':
         str = align_str(u.ualign.type);
         break;
     case 'd':
-        str = align_gname(u.ualignbase[A_ORIGINAL]);
+        str = align_gname(originalAlignmentBase());
         break;
     case 'D':
         str = align_gname(A_LAWFUL);

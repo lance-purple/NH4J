@@ -669,6 +669,9 @@ unsigned int *stuckid, *steedid;
     setCurrentXP(read_long(fd));
     setCurrentScore(read_long(fd));
 
+    setOriginalAlignmentBase(read_int(fd));
+    setCurrentAlignmentBase(read_int(fd));
+
     setCurrentLuck(read_int(fd));
     setLuckBonus(read_int(fd));
     setBlessings(read_int(fd));

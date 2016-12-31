@@ -1517,9 +1517,9 @@ struct mkroom *croom;
         panic("create_monster: unknown monster class '%c'", m->class);
 
     amask = (m->align == AM_SPLEV_CO)
-               ? Align2amask(u.ualignbase[A_ORIGINAL])
+               ? Align2amask(originalAlignmentBase())
                : (m->align == AM_SPLEV_NONCO)
-                  ? Align2amask(noncoalignment(u.ualignbase[A_ORIGINAL]))
+                  ? Align2amask(noncoalignment(originalAlignmentBase()))
                   : (m->align <= -(MAX_REGISTERS + 1))
                      ? induced_align(80)
                      : (m->align < 0 ? ralign[-m->align - 1] : m->align);
@@ -1998,9 +1998,9 @@ struct mkroom *croom;
      * shared by many other parts of the special level code.
      */
     amask = (a->align == AM_SPLEV_CO)
-               ? Align2amask(u.ualignbase[A_ORIGINAL])
+               ? Align2amask(originalAlignmentBase())
                : (a->align == AM_SPLEV_NONCO)
-                  ? Align2amask(noncoalignment(u.ualignbase[A_ORIGINAL]))
+                  ? Align2amask(noncoalignment(originalAlignmentBase()))
                   : (a->align == -(MAX_REGISTERS + 1))
                      ? induced_align(80)
                      : (a->align < 0 ? ralign[-a->align - 1] : a->align);

@@ -1058,10 +1058,10 @@ int how;
         increaseCurrentScore(tmp);
 
         /* ascension gives a score bonus iff offering to original deity */
-        if (how == ASCENDED && u.ualign.type == u.ualignbase[A_ORIGINAL]) {
+        if (how == ASCENDED && u.ualign.type == originalAlignmentBase()) {
             /* retaining original alignment: score *= 2;
                converting, then using helm-of-OA to switch back: *= 1.5 */
-            tmp = (u.ualignbase[A_CURRENT] == u.ualignbase[A_ORIGINAL])
+            tmp = (currentAlignmentBase() == originalAlignmentBase())
                       ? currentScore()
                       : (currentScore() / 2L);
             increaseCurrentScore(tmp);

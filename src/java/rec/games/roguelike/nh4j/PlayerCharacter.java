@@ -49,6 +49,8 @@ public class PlayerCharacter {
 	private static long currentXP;
 	private static long currentScore;
 	
+	private static int originalAlignmentBase;
+	private static int currentAlignmentBase;
 	private static int currentLuck;
 	private static int luckBonus;
 	private static int blessings;
@@ -427,6 +429,22 @@ public class PlayerCharacter {
 
 	public static void setHitPointIncreasePerLevel(int level, int hp) {
 		hitPointIncreasePerLevel[level] = hp;
+	}
+
+	public static int originalAlignmentBase() {
+		return originalAlignmentBase;
+	}
+
+	public static void setOriginalAlignmentBase(int b) {
+		originalAlignmentBase = b;
+	}
+
+	public static int currentAlignmentBase() {
+		return currentAlignmentBase;
+	}
+
+	public static void setCurrentAlignmentBase(int b) {
+		currentAlignmentBase = b;
 	}
 
 	public static int currentLuck() {

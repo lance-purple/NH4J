@@ -1552,7 +1552,7 @@ dosacrifice()
             /* Is this a conversion ? */
             /* An unaligned altar in Gehennom will always elicit rejection. */
             if (ugod_is_angry() || (altaralign == A_NONE && areYouInHell())) {
-                if (u.ualignbase[A_CURRENT] == u.ualignbase[A_ORIGINAL]
+                if (currentAlignmentBase() == originalAlignmentBase()
                     && altaralign != A_NONE) {
                     You("have a strong feeling that %s is angry...",
                         u_gname());

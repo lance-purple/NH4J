@@ -403,6 +403,9 @@ register int fd, mode;
     write_long(fd, currentXP());
     write_long(fd, currentScore());
 
+    write_int(fd, originalAlignmentBase());
+    write_int(fd, currentAlignmentBase());
+
     write_int(fd, currentLuck());
     write_int(fd, luckBonus());
     write_int(fd, blessings());

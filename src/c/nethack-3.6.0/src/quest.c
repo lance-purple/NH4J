@@ -135,13 +135,13 @@ is_pure(talk)
 boolean talk;
 {
     int purity;
-    aligntyp original_alignment = u.ualignbase[A_ORIGINAL];
+    aligntyp original_alignment = (aligntyp) originalAlignmentBase();
 
     if (wizard && talk) {
         if (u.ualign.type != original_alignment) {
             You("are currently %s instead of %s.", align_str(u.ualign.type),
                 align_str(original_alignment));
-        } else if (u.ualignbase[A_CURRENT] != original_alignment) {
+        } else if (currentAlignmentBase() != original_alignment) {
             You("have converted.");
         } else if (u.ualign.record < MIN_QUEST_ALIGN) {
             You("are currently %d and require %d.", u.ualign.record,
@@ -152,9 +152,9 @@ boolean talk;
     }
     purity = (u.ualign.record >= MIN_QUEST_ALIGN
               && u.ualign.type == original_alignment
-              && u.ualignbase[A_CURRENT] == original_alignment)
+              && currentAlignmentBase() == original_alignment)
                  ? 1
-                 : (u.ualignbase[A_CURRENT] != original_alignment) ? -1 : 0;
+                 : (currentAlignmentBase() != original_alignment) ? -1 : 0;
     return purity;
 }
 

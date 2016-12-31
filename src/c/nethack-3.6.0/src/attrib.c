@@ -1090,10 +1090,10 @@ int reason; /* 0==conversion, 1==helm-of-OA on, 2==helm-of-OA off */
     context.botl = 1; /* status line needs updating */
     if (reason == 0) {
         /* conversion via altar */
-        u.ualignbase[A_CURRENT] = (aligntyp) newalign;
+        setCurrentAlignmentBase(newalign);
         /* worn helm of opposite alignment might block change */
         if (!uarmh || uarmh->otyp != HELM_OF_OPPOSITE_ALIGNMENT)
-            u.ualign.type = u.ualignbase[A_CURRENT];
+            u.ualign.type = (aligntyp) currentAlignmentBase();
         You("have a %ssense of a new direction.",
             (u.ualign.type != oldalign) ? "sudden " : "");
     } else {

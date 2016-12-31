@@ -333,7 +333,7 @@ struct toptenentry *tt;
             (long) urealtime.endtime);
     Fprintf(rfile, "%cgender0=%s%calign0=%s", XLOG_SEP,
             genders[flags.initgend].filecode, XLOG_SEP,
-            aligns[1 - u.ualignbase[A_ORIGINAL]].filecode);
+            aligns[1 - originalAlignmentBase()].filecode);
     Fprintf(rfile, "%cflags=0x%lx", XLOG_SEP, encodexlogflags());
     Fprintf(rfile, "\n");
 #undef XLOG_SEP

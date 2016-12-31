@@ -1434,9 +1434,9 @@ int final;
             You_, !final ? are : were,
             align_str(u.ualign.type),
             /* helm of opposite alignment (might hide conversion) */
-            (u.ualign.type != u.ualignbase[A_CURRENT]) ? "temporarily "
+            (u.ualign.type != currentAlignmentBase()) ? "temporarily "
                /* permanent conversion */
-               : (u.ualign.type != u.ualignbase[A_ORIGINAL]) ? "now "
+               : (u.ualign.type != originalAlignmentBase()) ? "now "
                   /* atheist (ignored in very early game) */
                   : (!u.uconduct.gnostic && moves > 1000L) ? "nominally "
                      /* lastly, normal case */
@@ -1465,11 +1465,11 @@ int final;
        for tricky phrasing otherwise necessitated by possibility of having
        helm of opposite alignment mask a permanent alignment conversion */
     difgend = (innategend != flags.initgend);
-    difalgn = (((u.ualign.type != u.ualignbase[A_CURRENT]) ? 1 : 0)
-               + ((u.ualignbase[A_CURRENT] != u.ualignbase[A_ORIGINAL])
+    difalgn = (((u.ualign.type != currentAlignmentBase()) ? 1 : 0)
+               + ((currentAlignmentBase() != originalAlignmentBase())
                   ? 2 : 0));
     if (difalgn & 1) { /* have temporary alignment so report permanent one */
-        Sprintf(buf, "actually %s", align_str(u.ualignbase[A_CURRENT]));
+        Sprintf(buf, "actually %s", align_str(currentAlignmentBase()));
         you_are(buf, "");
         difalgn &= ~1; /* suppress helm from "started out <foo>" message */
     }
@@ -1477,7 +1477,7 @@ int final;
         Sprintf(buf, " You started out %s%s%s.",
                 difgend ? genders[flags.initgend].adj : "",
                 (difgend && difalgn) ? " and " : "",
-                difalgn ? align_str(u.ualignbase[A_ORIGINAL]) : "");
+                difalgn ? align_str(originalAlignmentBase()) : "");
         putstr(en_win, 0, buf);
     }
 }
@@ -2348,7 +2348,7 @@ minimal_enlightenment()
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
 
     /* Starting alignment */
-    Sprintf(buf, fmtstr, "alignment", align_str(u.ualignbase[A_ORIGINAL]));
+    Sprintf(buf, fmtstr, "alignment", align_str(originalAlignmentBase()));
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
 
     /* Current name, race, role, gender */
@@ -2386,25 +2386,25 @@ minimal_enlightenment()
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, iflags.menu_headings,
              "Deities", FALSE);
     Sprintf(buf2, deity_fmtstr, align_gname(A_CHAOTIC),
-            (u.ualignbase[A_ORIGINAL] == u.ualign.type
+            (originalAlignmentBase() == u.ualign.type
              && u.ualign.type == A_CHAOTIC)               ? " (s,c)"
-                : (u.ualignbase[A_ORIGINAL] == A_CHAOTIC) ? " (s)"
+                : (originalAlignmentBase() == A_CHAOTIC) ? " (s)"
                 : (u.ualign.type   == A_CHAOTIC)          ? " (c)" : "");
     Sprintf(buf, fmtstr, "Chaotic", buf2);
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
 
     Sprintf(buf2, deity_fmtstr, align_gname(A_NEUTRAL),
-            (u.ualignbase[A_ORIGINAL] == u.ualign.type
+            (originalAlignmentBase() == u.ualign.type
              && u.ualign.type == A_NEUTRAL)               ? " (s,c)"
-                : (u.ualignbase[A_ORIGINAL] == A_NEUTRAL) ? " (s)"
+                : (originalAlignmentBase() == A_NEUTRAL) ? " (s)"
                 : (u.ualign.type   == A_NEUTRAL)          ? " (c)" : "");
     Sprintf(buf, fmtstr, "Neutral", buf2);
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
 
     Sprintf(buf2, deity_fmtstr, align_gname(A_LAWFUL),
-            (u.ualignbase[A_ORIGINAL] == u.ualign.type
+            (originalAlignmentBase() == u.ualign.type
              && u.ualign.type == A_LAWFUL)                ? " (s,c)"
-                : (u.ualignbase[A_ORIGINAL] == A_LAWFUL)  ? " (s)"
+                : (originalAlignmentBase() == A_LAWFUL)  ? " (s)"
                 : (u.ualign.type   == A_LAWFUL)           ? " (c)" : "");
     Sprintf(buf, fmtstr, "Lawful", buf2);
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
