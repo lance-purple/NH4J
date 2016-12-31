@@ -325,7 +325,7 @@ done2()
         if (multi > 0)
             nomul(0);
         if (multi == 0) {
-            u.uinvulnerable = FALSE; /* avoid ctrl-C bug -dlc */
+            setInvulnerableWhilePraying(FALSE); /* avoid ctrl-C bug -dlc */
             setSleepingSinceMove(0);
         }
         return 0;

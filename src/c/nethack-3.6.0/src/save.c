@@ -114,7 +114,7 @@ dosave0()
     /* we may get here via hangup signal, in which case we want to fix up
        a few of things before saving so that they won't be restored in
        an improper state; these will be no-ops for normal save sequence */
-    u.uinvulnerable = 0;
+    setInvulnerableWhilePraying(FALSE);
     if (iflags.save_uinwater) {
         setInWater(TRUE);
         iflags.save_uinwater = 0;
@@ -409,6 +409,7 @@ register int fd, mode;
     write_int(fd, timeToNextBlessing());
     write_int(fd, divineWrath());
     write_long(fd, cleansedSinceMove());
+    write_long(fd, invulnerableWhilePraying());
 
     write_int(fd, toHitModifier());
     write_int(fd, damageBonus());

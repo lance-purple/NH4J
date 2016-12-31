@@ -319,7 +319,7 @@ register struct monst *mtmp;
         u.ustuck->muy = currentY();
         range2 = 0;
         foundyou = 1;
-        if (u.uinvulnerable)
+        if (invulnerableWhilePraying())
             return 0; /* stomachs can't hurt you! */
 
     } else if (u.usteed) {
@@ -564,7 +564,7 @@ register struct monst *mtmp;
         }
     }
 
-    if (u.uinvulnerable) {
+    if (invulnerableWhilePraying()) {
         /* monsters won't attack you */
         if (mtmp == u.ustuck)
             pline("%s loosens its grip slightly.", Monnam(mtmp));

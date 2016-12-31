@@ -5110,7 +5110,7 @@ sink_into_lava()
         ; /* do nothing; this shouldn't happen */
     } else if (!is_lava(currentX(), currentY())) {
         setCurrentTrapTimeout(0); /* this shouldn't happen either */
-    } else if (!u.uinvulnerable) {
+    } else if (!invulnerableWhilePraying()) {
         /* ordinarily we'd have to be fire resistant to survive long
            enough to become stuck in lava, but it can happen without
            resistance if water walking boots allow survival and then

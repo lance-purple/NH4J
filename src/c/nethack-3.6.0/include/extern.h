@@ -999,6 +999,9 @@ E void FDECL(decreaseDivineWrath, (int));
 E long FDECL(cleansedSinceMove, ());
 E void FDECL(setCleansedSinceMove, (long));
 
+E boolean FDECL(invulnerableWhilePraying, ());
+E void FDECL(setInvulnerableWhilePraying, (boolean));
+
 E int FDECL(toHitModifier, ());
 E void FDECL(setToHitModifier, (int));
 E void FDECL(increaseToHitModifier, (int));

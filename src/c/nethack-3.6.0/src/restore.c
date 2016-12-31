@@ -675,6 +675,7 @@ unsigned int *stuckid, *steedid;
     setTimeToNextBlessing(read_int(fd));
     setDivineWrath(read_int(fd));
     setCleansedSinceMove(read_long(fd));
+    setInvulnerableWhilePraying(read_long(fd) ? TRUE : FALSE);
 
     setToHitModifier(read_int(fd));
     setDamageBonus(read_int(fd));

@@ -2612,7 +2612,7 @@ bite()
 void
 gethungry()
 {
-    if (u.uinvulnerable)
+    if (invulnerableWhilePraying())
         return; /* you don't feel hungrier */
 
     if ((!sleepingSinceMove() || !rn2(10)) /* slow metabolic rate while asleep */

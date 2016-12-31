@@ -1808,7 +1808,7 @@ dopray()
         /* if you've been true to your god you can't die while you pray */
         if (!Blind)
             You("are surrounded by a shimmering light.");
-        u.uinvulnerable = TRUE;
+        setInvulnerableWhilePraying(TRUE);
     }
 
     return 1;
@@ -1819,7 +1819,7 @@ prayer_done() /* M. Stephenson (1.0.3b) */
 {
     aligntyp alignment = p_aligntyp;
 
-    u.uinvulnerable = FALSE;
+    setInvulnerableWhilePraying(FALSE);
     if (p_type == -1) {
         godvoice(alignment,
                  (alignment == A_LAWFUL)

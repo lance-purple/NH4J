@@ -959,6 +959,14 @@ void decreaseDivineWrath(int w) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseDivineWrath", w);
 }
 
+boolean invulnerableWhilePraying() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "invulnerableWhilePraying");
+} 
+
+void setInvulnerableWhilePraying(boolean i) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setInvulnerableWhilePraying", i);
+} 
+
 int toHitModifier() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "toHitModifier");
 } 

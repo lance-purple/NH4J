@@ -271,7 +271,6 @@ struct you {
 
     Bitfield(uinvulnerable, 1); /* you're invulnerable (praying) */
     Bitfield(uedibility, 1); /* blessed food detection; sense unsafe food */
-    /* 1 free bit! */
 
     struct u_achieve uachieve; /* achievements */
     struct u_event uevent;     /* certain events have happened */

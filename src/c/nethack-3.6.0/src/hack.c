@@ -2607,7 +2607,7 @@ register int nval;
 {
     if (multi < nval)
         return;              /* This is a bug fix by ab@unido */
-    u.uinvulnerable = FALSE; /* Kludge to avoid ctrl-C bug -dlc */
+    setInvulnerableWhilePraying(FALSE); /* Kludge to avoid ctrl-C bug -dlc */
     setSleepingSinceMove(0);
     multi = nval;
     if (nval == 0)

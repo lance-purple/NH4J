@@ -228,7 +228,7 @@ nh_timeout()
         else if (currentLuck() < baseluck && (nostone || time_luck > 0))
             increaseCurrentLuck(1);
     }
-    if (u.uinvulnerable)
+    if (invulnerableWhilePraying())
         return; /* things past this point could kill you */
     if (Stoned)
         stoned_dialogue();
@@ -1295,7 +1295,7 @@ do_storms()
         /* Even if already deaf, we sense the thunder's vibrations. */
         pline("Kaboom!!!  Boom!!  Boom!!");
         incr_itimeout(&HDeaf, rn1(20, 30));
-        if (!u.uinvulnerable) {
+        if (!invulnerableWhilePraying()) {
             stop_occupation();
             nomul(-3);
             multi_reason = "hiding from thunderstorm";

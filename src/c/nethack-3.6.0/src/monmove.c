@@ -470,7 +470,7 @@ register struct monst *mtmp;
         if (mtmp->mpeaceful
             && (!Conflict || resist(mtmp, RING_CLASS, 0, 0))) {
             pline("It feels quite soothing.");
-        } else if (!u.uinvulnerable) {
+        } else if (!invulnerableWhilePraying()) {
             register boolean m_sen = sensemon(mtmp);
 
             if (m_sen || (Blind_telepat && rn2(2)) || !rn2(10)) {

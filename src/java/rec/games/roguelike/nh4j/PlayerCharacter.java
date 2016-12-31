@@ -55,7 +55,8 @@ public class PlayerCharacter {
 	private static int timeToNextBlessing;
 	private static int divineWrath;
 	private static long cleansedSinceMove;
-	
+	private static boolean invulnerableWhilePraying;
+		
 	private static int toHitModifier;
 	private static int damageBonus;
 	private static boolean usingTwoWeapons;
@@ -516,6 +517,14 @@ public class PlayerCharacter {
 
 	public static void setCleansedSinceMove(long t) {
 		cleansedSinceMove = t;
+	}
+	
+	public static boolean invulnerableWhilePraying() {
+		return invulnerableWhilePraying;
+	}
+
+	public static void setInvulnerableWhilePraying(boolean i) {
+		invulnerableWhilePraying = i;
 	}
 
 	public static int toHitModifier() {

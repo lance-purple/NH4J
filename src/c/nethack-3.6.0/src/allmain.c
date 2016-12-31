@@ -195,7 +195,7 @@ boolean resuming;
                      * requires
                      * that encumbrance and movement rate be recalculated.
                      */
-                    if (u.uinvulnerable) {
+                    if (invulnerableWhilePraying()) {
                         /* for the moment at least, you're in tiptop shape */
                         wtcap = UNENCUMBERED;
                     } else if (areYouPolymorphed() && youmonst.data->mlet == S_EEL
@@ -273,7 +273,7 @@ boolean resuming;
                         context.botl = 1;
                     }
 
-                    if (!u.uinvulnerable) {
+                    if (!invulnerableWhilePraying()) {
                         if (Teleportation && !rn2(85)) {
                             xchar old_ux = currentX();
                             xchar old_uy = currentY();
@@ -323,7 +323,7 @@ boolean resuming;
                         amulet();
                     if (!rn2(40 + (int) (ACURR(A_DEX) * 3)))
                         u_wipe_engr(rnd(3));
-                    if (u.uevent.udemigod && !u.uinvulnerable) {
+                    if (u.uevent.udemigod && !invulnerableWhilePraying()) {
                         if (timeSinceBecomingADemigod())
                             decreaseTimeSinceBecomingADemigod(1);
                         if (!timeSinceBecomingADemigod()) {
