@@ -3590,7 +3590,7 @@ drown()
         }
         vision_recalc(2); /* unsee old position */
         setInWater(TRUE);
-        under_water(1);
+        showHeroUnderwater(1);
         vision_full_recalc = 1;
         return FALSE;
     }

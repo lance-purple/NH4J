@@ -3190,7 +3190,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
                 expels(mtmp, olddata, FALSE);
             } else {
                 /* update swallow glyphs for new monster */
-                swallowed(0);
+                showHeroBeingSwallowed(0);
             }
         } else if (!sticks(mdat) && !sticks(youmonst.data))
             unstuck(mtmp);

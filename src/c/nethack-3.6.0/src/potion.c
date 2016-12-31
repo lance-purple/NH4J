@@ -383,7 +383,7 @@ long mask; /* nonzero if resistance status should change by mask */
             eatmupdate();
 
         if (u.uswallow) {
-            swallowed(0); /* redraw swallow display */
+            showHeroBeingSwallowed(0); /* redraw swallow display */
         } else {
             /* The see_* routines should be called *before* the pline. */
             see_monsters();

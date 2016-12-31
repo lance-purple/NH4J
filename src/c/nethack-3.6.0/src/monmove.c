@@ -1319,7 +1319,7 @@ postmov:
                 setOriginalY(currentY());
                 setCurrentX(mtmp->mx);
                 setCurrentY(mtmp->my);
-                swallowed(0);
+                showHeroBeingSwallowed(0);
             } else
                 newsym(mtmp->mx, mtmp->my);
         }

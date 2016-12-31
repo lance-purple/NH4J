@@ -338,7 +338,7 @@ boolean resuming;
                     else if (areYouOnFireLevel())
                         fumaroles();
                     else if (underwater())
-                        under_water(0);
+                        showHeroUnderwater(0);
                     /* vision while buried done here */
                     else if (u.uburied)
                         under_ground(0);
@@ -391,7 +391,7 @@ boolean resuming;
                 see_objects();
                 see_traps();
                 if (u.uswallow)
-                    swallowed(0);
+                    showHeroBeingSwallowed(0);
             } else if (Unblind_telepat) {
                 see_monsters();
             } else if (Warning || Warn_of_mon)

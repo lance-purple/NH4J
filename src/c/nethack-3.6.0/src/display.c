@@ -1001,7 +1001,7 @@ int x, y;
 }
 
 /*
- * swallowed()
+ * showHeroBeingSwallowed()
  *
  * The hero is swallowed.  Show a special graphics sequence for this.  This
  * bypasses all of the display routines and messes with buffered screen
@@ -1009,7 +1009,7 @@ int x, y;
  * being swallowed.
  */
 void
-swallowed(first)
+showHeroBeingSwallowed(first)
 int first;
 {
     static xchar lastx, lasty; /* last swallowed position */
@@ -1066,13 +1066,13 @@ int first;
 }
 
 /*
- * under_water()
+ * showHeroUnderwater()
  *
- * Similar to swallowed() in operation.  Shows hero when underwater
+ * Similar to showHeroBeingSwallowed() in operation.  Shows hero when underwater
  * except when in water level.  Special routines exist for that.
  */
 void
-under_water(mode)
+showHeroUnderwater(mode)
 int mode;
 {
     static xchar lastx, lasty;
@@ -1270,11 +1270,11 @@ docrt()
         return; /* display isn't ready yet */
 
     if (u.uswallow) {
-        swallowed(1);
+        showHeroBeingSwallowed(1);
         return;
     }
     if (underwater() && !areYouOnWaterLevel()) {
-        under_water(1);
+        showHeroUnderwater(1);
         return;
     }
     if (u.uburied) {
@@ -1661,7 +1661,7 @@ xchar x, y;
  *
  * Convert a monster number and a swallow location into the correct glyph.
  * If you don't want a patchwork monster while hallucinating, decide on
- * a random monster in swallowed() and don't use what_mon() here.
+ * a random monster in showHeroBeingSwallowed() and don't use what_mon() here.
  */
 STATIC_OVL int
 swallow_to_glyph(mnum, loc)

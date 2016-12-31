@@ -279,7 +279,7 @@ outgoldmap:
     display_nhwindow(WIN_MAP, TRUE);
     docrt();
     if (underwater())
-        under_water(2);
+        showHeroUnderwater(2);
     if (u.uburied)
         under_ground(2);
     return 0;
@@ -394,7 +394,7 @@ register struct obj *sobj;
         exercise(A_WIS, TRUE);
         docrt();
         if (underwater())
-            under_water(2);
+            showHeroUnderwater(2);
         if (u.uburied)
             under_ground(2);
     }
@@ -592,7 +592,7 @@ int class;            /* an object class, 0 for all */
     docrt(); /* this will correctly reset vision */
 
     if (underwater())
-        under_water(2);
+        showHeroUnderwater(2);
     if (u.uburied)
         under_ground(2);
     return 0;
@@ -664,7 +664,7 @@ int mclass;                /* monster class, 0 for all */
         display_nhwindow(WIN_MAP, TRUE);
         docrt();
         if (underwater())
-            under_water(2);
+            showHeroUnderwater(2);
         if (u.uburied)
             under_ground(2);
     }
@@ -843,7 +843,7 @@ outtrapmap:
     display_nhwindow(WIN_MAP, TRUE);
     docrt();
     if (underwater())
-        under_water(2);
+        showHeroUnderwater(2);
     if (u.uburied)
         under_ground(2);
     return 0;
@@ -1598,7 +1598,7 @@ int which_subset; /* when not full, whether to suppress objs and/or traps */
         display_nhwindow(WIN_MAP, TRUE); /* give "--More--" prompt */
         docrt(); /* redraw the screen, restoring regular map */
         if (underwater())
-            under_water(2);
+            showHeroUnderwater(2);
         if (u.uburied)
             under_ground(2);
     }

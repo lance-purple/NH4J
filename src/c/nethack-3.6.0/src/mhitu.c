@@ -1726,7 +1726,7 @@ register struct attack *mattk;
         }
         /* timeSinceBeingSwallowed always set > 1 */
         setTimeSinceBeingSwallowed((unsigned) ((tim_tmp < 2) ? 2 : tim_tmp));
-        swallowed(1);
+        showHeroBeingSwallowed(1);
         for (otmp2 = invent; otmp2; otmp2 = otmp2->nobj)
             (void) snuff_lit(otmp2);
     }
