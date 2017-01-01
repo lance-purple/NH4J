@@ -107,6 +107,12 @@ boolean javaGetBoolean(const char* classname, const char* methodname) {
     return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method);
 }
 
+boolean javaGetBooleanFromInt(const char* classname, const char* methodname, int i) {
+    jclass you_class = getJavaClass(classname);
+    jmethodID method = getStaticMethod(you_class, methodname, "(I)Z");
+    return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method, i);
+}
+
 void javaSetInt(const char* classname, const char* methodname, int v) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "(I)V");
@@ -129,6 +135,12 @@ void javaSetBoolean(const char* classname, const char* methodname, boolean v) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "(Z)V");
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, v);
+}
+
+void javaSetBooleanFromInt(const char* classname, const char* methodname, int i, boolean v) {
+    jclass you_class = getJavaClass(classname);
+    jmethodID method = getStaticMethod(you_class, methodname, "(IZ)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, i, v);
 }
 
 static boolean FDECL(pmatch_internal, (const char *, const char *,
@@ -1474,6 +1486,18 @@ void increaseStartingMoney(int g) {
 
 void decreaseStartingMoney(int g) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseStartingMoney", g);
+}
+
+boolean achieved(int t) {
+    return javaGetBooleanFromInt(PLAYER_CHARACTER_CLASS, "achieved", t);
+}
+
+void setAchieved(int t, boolean a) {
+    return javaSetBooleanFromInt(PLAYER_CHARACTER_CLASS, "setAchieved", t, a);
+}
+
+int knownAchievementTypes() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "knownAchievementTypes");
 }
 
 /* square of euclidean distance from pt to your current position */

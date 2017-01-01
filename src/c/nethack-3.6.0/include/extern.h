@@ -1188,6 +1188,10 @@ E boolean NDECL(friday_13th);
 E int NDECL(night);
 E int NDECL(midnight);
 
+E boolean FDECL(achieved, (int));
+E void FDECL(setAchieved, (int, boolean));
+E int FDECL(knownAchievementTypes, ());
+
 /* ### invent.c ### */
 
 E struct obj **FDECL(objarr_init, (int));

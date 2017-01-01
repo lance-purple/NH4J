@@ -1852,7 +1852,7 @@ register struct monst *mtmp;
     if (mtmp->data->msound == MS_NEMESIS)
         nemdead();
     if (mtmp->data == &mons[PM_MEDUSA])
-        u.uachieve.killed_medusa = 1;
+        setAchieved(ACHIEVEMENT_KILLED_MEDUSA, TRUE);
     if (glyph_is_invisible(levl[mtmp->mx][mtmp->my].glyph))
         unmap_object(mtmp->mx, mtmp->my);
     m_detach(mtmp, mptr);

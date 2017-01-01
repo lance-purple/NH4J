@@ -1,6 +1,8 @@
 
 package rec.games.roguelike.nh4j;
 
+import java.util.HashMap;
+
 public class PlayerCharacter {
 	
 	private static final int MAXULEVEL = 30;
@@ -130,6 +132,8 @@ public class PlayerCharacter {
 	
 	private static int giftsBestowed;
 
+	private static HashMap<Integer, Boolean> achievements = new HashMap<>();
+	
 	private static int startingMoney;
 	
 	public static int currentDungeonNumber() {
@@ -1139,5 +1143,17 @@ public class PlayerCharacter {
 	public static final void decreaseStartingMoney(int m) {
 		startingMoney -= m;
 	}
+	
+	public static final boolean achieved(int type) {
+		Boolean result = achievements.get(type);
+		return (null == result) ? false : result.booleanValue();
+	}
 
+	public static final void setAchieved(int type, boolean state) {
+		achievements.put(type, state);
+	}
+
+	public static final int knownAchievementTypes() {
+		return AchievementType.values().length;
+	}
 }

@@ -708,6 +708,13 @@ unsigned int *stuckid, *steedid;
     setGiftsBestowed(read_int(fd));
     setStartingMoney(read_int(fd));
 
+    int nAchievements = knownAchievementTypes();
+    int type;
+    for (type = 0; type < nAchievements; type++) {
+        setAchieved(type, read_int(fd));
+    }
+
+
 #define ReadTimebuf(foo)                   \
     mread(fd, (genericptr_t) timebuf, 14); \
     timebuf[14] = '\0';                    \

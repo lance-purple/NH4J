@@ -1434,11 +1434,11 @@ boolean at_stairs, falling, portal;
             You_hear("groans and moans everywhere.");
         } else
             pline("It is hot here.  You smell smoke...");
-        u.uachieve.enter_gehennom = 1;
+        setAchieved(ACHIEVEMENT_ENTERED_GEHENNOM, TRUE);
     }
     /* in case we've managed to bypass the Valley's stairway down */
     if (areYouInHell() && !areYouOnValleyLevel())
-        u.uevent.gehennom_entered = 1;
+        setAchieved(ACHIEVEMENT_ENTERED_GEHENNOM, TRUE);
 
     if (familiar) {
         static const char *const fam_msgs[4] = {

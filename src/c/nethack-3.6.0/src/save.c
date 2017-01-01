@@ -442,6 +442,12 @@ register int fd, mode;
     write_int(fd, giftsBestowed());
     write_int(fd, startingMoney());
 
+    int nAchievements = knownAchievementTypes();
+    int type;
+    for (type = 0; type < nAchievements; type++) {
+        write_int(fd, achieved(type));
+    }
+
     bwrite(fd, yyyymmddhhmmss(ubirthday), 14);
     bwrite(fd, (genericptr_t) &urealtime.realtime,
            sizeof(urealtime.realtime));
