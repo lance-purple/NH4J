@@ -207,7 +207,7 @@ struct obj *obj; /* quest artifact; possibly null if carrying Amulet */
 {
     struct obj *otmp;
 
-    if (u.uhave.amulet) { /* unlikely but not impossible */
+    if (haveSpecialItem(SPECIAL_ITEM_AMULET)) { /* unlikely but not impossible */
         qt_pager(QT_HASAMULET);
         /* leader IDs the real amulet but ignores any fakes */
         if ((otmp = carrying(AMULET_OF_YENDOR)) != 0)
@@ -234,7 +234,7 @@ STATIC_OVL void
 chat_with_leader()
 {
     /*  Rule 0: Cheater checks. */
-    if (u.uhave.questart && !Qstat(met_nemesis))
+    if (haveSpecialItem(SPECIAL_ITEM_QUEST_ARTIFACT) && !Qstat(met_nemesis))
         Qstat(cheater) = TRUE;
 
     /*  It is possible for you to get the amulet without completing
@@ -242,7 +242,7 @@ chat_with_leader()
      */
     if (Qstat(got_thanks)) {
         /* Rule 1: You've gone back with/without the amulet. */
-        if (u.uhave.amulet)
+        if (haveSpecialItem(SPECIAL_ITEM_AMULET))
             finish_quest((struct obj *) 0);
 
         /* Rule 2: You've gone back before going for the amulet. */
@@ -250,7 +250,7 @@ chat_with_leader()
             qt_pager(QT_POSTHANKS);
 
     /* Rule 3: You've got the artifact and are back to return it. */
-    } else if (u.uhave.questart) {
+    } else if (haveSpecialItem(SPECIAL_ITEM_QUEST_ARTIFACT)) {
         struct obj *otmp;
 
         for (otmp = invent; otmp; otmp = otmp->nobj)
@@ -336,7 +336,7 @@ void
 nemesis_speaks()
 {
     if (!Qstat(in_battle)) {
-        if (u.uhave.questart)
+        if (haveSpecialItem(SPECIAL_ITEM_QUEST_ARTIFACT))
             qt_pager(QT_NEMWANTSIT);
         else if (Qstat(made_goal) == 1 || !Qstat(met_nemesis))
             qt_pager(QT_FIRSTNEMESIS);
@@ -358,7 +358,7 @@ STATIC_OVL void
 chat_with_guardian()
 {
     /*  These guys/gals really don't have much to say... */
-    if (u.uhave.questart && Qstat(killed_nemesis))
+    if (haveSpecialItem(SPECIAL_ITEM_QUEST_ARTIFACT) && Qstat(killed_nemesis))
         qt_pager(rn1(5, QT_GUARDTALK2));
     else
         qt_pager(rn1(5, QT_GUARDTALK));

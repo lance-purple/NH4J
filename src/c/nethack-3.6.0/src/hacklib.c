@@ -1500,6 +1500,18 @@ int knownAchievementTypes() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "knownAchievementTypes");
 }
 
+boolean haveSpecialItem(int t) {
+    return javaGetBooleanFromInt(PLAYER_CHARACTER_CLASS, "haveSpecialItem", t);
+}
+
+void setHaveSpecialItem(int t, boolean a) {
+    return javaSetBooleanFromInt(PLAYER_CHARACTER_CLASS, "setHaveSpecialItem", t, a);
+}
+
+int knownSpecialItems() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "knownSpecialItems");
+}
+
 /* square of euclidean distance from pt to your current position */
 int
 distanceSquaredToYou(x, y)

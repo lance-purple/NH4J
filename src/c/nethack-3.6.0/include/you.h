@@ -36,14 +36,11 @@ struct RoleAdvance {
 #define ACHIEVEMENT_FINISHED_SOKOBAN_LEVEL 7
 #define ACHIEVEMENT_KILLED_MEDUSA 8
 
-struct u_have {
-    Bitfield(amulet, 1);   /* carrying Amulet	*/
-    Bitfield(bell, 1);     /* carrying Bell	*/
-    Bitfield(book, 1);     /* carrying Book	*/
-    Bitfield(menorah, 1);  /* carrying Candelabrum */
-    Bitfield(questart, 1); /* carrying the Quest Artifact */
-    Bitfield(unused, 3);
-};
+#define SPECIAL_ITEM_AMULET 0
+#define SPECIAL_ITEM_BELL 1
+#define SPECIAL_ITEM_BOOK 2
+#define SPECIAL_ITEM_CANDELABRUM 3
+#define SPECIAL_ITEM_QUEST_ARTIFACT 4
 
 struct u_event {
     Bitfield(minor_oracle, 1); /* received at least 1 cheap oracle */
@@ -266,7 +263,6 @@ struct you {
     struct prop uprops[LAST_PROP + 1];
 
     struct u_event uevent;     /* certain events have happened */
-    struct u_have uhave;       /* you're carrying special objects */
     struct u_conduct uconduct; /* KMH, conduct */
     struct u_roleplay uroleplay;
 

@@ -47,7 +47,7 @@ amulet()
     struct obj *amu;
 
 #if 0 /* caller takes care of this check */
-    if (!u.uhave.amulet)
+    if (!haveSpecialItem(SPECIAL_ITEM_AMULET))
         return;
 #endif
     if ((((amu = uamul) != 0 && amu->otyp == AMULET_OF_YENDOR)
@@ -202,15 +202,15 @@ register int mask;
 {
     switch (mask) {
     case M3_WANTSAMUL:
-        return (boolean) u.uhave.amulet;
+        return (boolean) haveSpecialItem(SPECIAL_ITEM_AMULET);
     case M3_WANTSBELL:
-        return (boolean) u.uhave.bell;
+        return (boolean) haveSpecialItem(SPECIAL_ITEM_BELL);
     case M3_WANTSCAND:
-        return (boolean) u.uhave.menorah;
+        return (boolean) haveSpecialItem(SPECIAL_ITEM_CANDELABRUM);
     case M3_WANTSBOOK:
-        return (boolean) u.uhave.book;
+        return (boolean) haveSpecialItem(SPECIAL_ITEM_BOOK);
     case M3_WANTSARTI:
-        return (boolean) u.uhave.questart;
+        return (boolean) haveSpecialItem(SPECIAL_ITEM_QUEST_ARTIFACT);
     default:
         break;
     }
@@ -413,7 +413,7 @@ clonewiz()
     if ((mtmp2 = makemon(&mons[PM_WIZARD_OF_YENDOR], currentX(), currentY(), NO_MM_FLAGS))
         != 0) {
         mtmp2->msleeping = mtmp2->mtame = mtmp2->mpeaceful = 0;
-        if (!u.uhave.amulet && rn2(2)) { /* give clone a fake */
+        if (!haveSpecialItem(SPECIAL_ITEM_AMULET) && rn2(2)) { /* give clone a fake */
             (void) add_to_minv(mtmp2,
                                mksobj(FAKE_AMULET_OF_YENDOR, TRUE, FALSE));
         }
@@ -627,7 +627,7 @@ register struct monst *mtmp;
     if (mtmp->iswiz) {
         if (!rn2(5)) /* typical bad guy action */
             pline("%s laughs fiendishly.", Monnam(mtmp));
-        else if (u.uhave.amulet && !rn2(SIZE(random_insult)))
+        else if (haveSpecialItem(SPECIAL_ITEM_AMULET) && !rn2(SIZE(random_insult)))
             verbalize("Relinquish the amulet, %s!",
                       random_insult[rn2(SIZE(random_insult))]);
         else if (currentHitPoints() < 5 && !rn2(2)) /* Panic */

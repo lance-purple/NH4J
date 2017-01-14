@@ -1098,7 +1098,7 @@ boolean at_stairs, falling, portal;
     if (dunlev(newlevel) > dunlevs_in_dungeon(newlevel))
         newlevel->dlevel = dunlevs_in_dungeon(newlevel);
     if (newdungeon && In_endgame(newlevel)) { /* 1st Endgame Level !!! */
-        if (!u.uhave.amulet)
+        if (!haveSpecialItem(SPECIAL_ITEM_AMULET))
             return;  /* must have the Amulet */
         if (!wizard) /* wizard ^V can bypass Earth level */
             assign_level(newlevel, &earth_level); /* (redundant) */
@@ -1122,7 +1122,7 @@ boolean at_stairs, falling, portal;
      *   -2    5.21   4.17   0.0
      *   -3    2.08   0.0    0.0
      */
-    if (areYouInHell() && up && u.uhave.amulet && !newdungeon && !portal
+    if (areYouInHell() && up && haveSpecialItem(SPECIAL_ITEM_AMULET) && !newdungeon && !portal
         && (currentDungeonLevel() < levelsInCurrentDungeon() - 3)) {
         if (!rn2(4)) {
             int odds = 3 + (int) u.ualign.type,   /* 2..4 */
@@ -1471,7 +1471,7 @@ boolean at_stairs, falling, portal;
     if (areYouInEndgame()) {
         if (new && areYouOnLevel(&astral_level))
             final_level(); /* guardian angel,&c */
-        else if (newdungeon && u.uhave.amulet)
+        else if (newdungeon && haveSpecialItem(SPECIAL_ITEM_AMULET))
             resurrect(); /* force confrontation with Wizard */
     } else if (areYouInTheQuestDungeon()) {
         onquest(); /* might be reaching locate|goal level */

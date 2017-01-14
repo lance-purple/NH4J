@@ -1110,7 +1110,7 @@ int how;
     } else
         done_stopprint = 1; /* just avoid any more output */
 
-    if (u.uhave.amulet) {
+    if (haveSpecialItem(SPECIAL_ITEM_AMULET)) {
         Strcat(killer.name, " (with the Amulet)");
     } else if (how == ESCAPED) {
         if (areYouOnAstralLevel()) /* offered Amulet to wrong deity */

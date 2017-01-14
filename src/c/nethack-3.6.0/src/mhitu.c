@@ -1300,10 +1300,14 @@ register struct attack *mattk;
     case AD_SAMU:
         hitmsg(mtmp, mattk);
         /* when the Wiz hits, 1/20 steals the amulet */
-        if (u.uhave.amulet || u.uhave.bell || u.uhave.book || u.uhave.menorah
-            || u.uhave.questart) /* carrying the Quest Artifact */
+        if (haveSpecialItem(SPECIAL_ITEM_AMULET) ||
+            haveSpecialItem(SPECIAL_ITEM_BELL)   ||
+            haveSpecialItem(SPECIAL_ITEM_BOOK)   ||
+            haveSpecialItem(SPECIAL_ITEM_CANDELABRUM) ||
+            haveSpecialItem(SPECIAL_ITEM_QUEST_ARTIFACT)) {
             if (!rn2(20))
                 stealamulet(mtmp);
+	}
         break;
 
     case AD_TLPT:

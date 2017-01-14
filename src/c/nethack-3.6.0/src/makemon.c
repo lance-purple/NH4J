@@ -1177,7 +1177,7 @@ int mmflags;
         break;
     case S_JABBERWOCK:
     case S_NYMPH:
-        if (rn2(5) && !u.uhave.amulet)
+        if (rn2(5) && !haveSpecialItem(SPECIAL_ITEM_AMULET))
             mtmp->msleeping = 1;
         break;
     case S_ORC:
@@ -1237,7 +1237,7 @@ int mmflags;
     if (in_mklev) {
         if ((is_ndemon(ptr) || mndx == PM_WUMPUS
              || mndx == PM_LONG_WORM || mndx == PM_GIANT_EEL)
-            && !u.uhave.amulet && rn2(5))
+            && !haveSpecialItem(SPECIAL_ITEM_AMULET) && rn2(5))
             mtmp->msleeping = TRUE;
     } else {
         if (byyou) {
@@ -1875,7 +1875,7 @@ register struct permonst *ptr;
         return FALSE;
 
     /* Negative monster hostile to player with Amulet. */
-    if (mal < A_NEUTRAL && u.uhave.amulet)
+    if (mal < A_NEUTRAL && haveSpecialItem(SPECIAL_ITEM_AMULET))
         return FALSE;
 
     /* minions are hostile to players that have strayed at all */

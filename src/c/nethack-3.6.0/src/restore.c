@@ -708,10 +708,16 @@ unsigned int *stuckid, *steedid;
     setGiftsBestowed(read_int(fd));
     setStartingMoney(read_int(fd));
 
-    int nAchievements = knownAchievementTypes();
     int type;
+
+    int nAchievements = knownAchievementTypes();
     for (type = 0; type < nAchievements; type++) {
         setAchieved(type, read_int(fd));
+    }
+
+    int nSpecialItems = knownSpecialItems();
+    for (type = 0; type < nSpecialItems; type++) {
+        setHaveSpecialItem(type, read_int(fd));
     }
 
 

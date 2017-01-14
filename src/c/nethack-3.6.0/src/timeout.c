@@ -214,7 +214,7 @@ nh_timeout()
         baseluck -= 1;
 
     if (currentLuck() != baseluck
-        && moves % (u.uhave.amulet || divineWrath() ? 300 : 600) == 0) {
+        && moves % (haveSpecialItem(SPECIAL_ITEM_AMULET) || divineWrath() ? 300 : 600) == 0) {
         /* Cursed luckstones stop bad luck from timing out; blessed luckstones
          * stop good luck from timing out; normal luckstones stop both;
          * neither is stopped if you don't have a luckstone.

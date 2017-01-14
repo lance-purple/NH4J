@@ -365,30 +365,30 @@ struct obj *obj;
     if (obj->oclass == COIN_CLASS) {
         context.botl = 1;
     } else if (obj->otyp == AMULET_OF_YENDOR) {
-        if (u.uhave.amulet)
+        if (haveSpecialItem(SPECIAL_ITEM_AMULET))
             impossible("already have amulet?");
-        u.uhave.amulet = 1;
+        setHaveSpecialItem(SPECIAL_ITEM_AMULET, TRUE);
         setAchieved(ACHIEVEMENT_GOT_AMULET, TRUE);
     } else if (obj->otyp == CANDELABRUM_OF_INVOCATION) {
-        if (u.uhave.menorah)
+        if (haveSpecialItem(SPECIAL_ITEM_CANDELABRUM))
             impossible("already have candelabrum?");
-        u.uhave.menorah = 1;
+        setHaveSpecialItem(SPECIAL_ITEM_CANDELABRUM, TRUE);
         setAchieved(ACHIEVEMENT_GOT_CANDELABRUM, TRUE);
     } else if (obj->otyp == BELL_OF_OPENING) {
-        if (u.uhave.bell)
+        if (haveSpecialItem(SPECIAL_ITEM_BELL))
             impossible("already have silver bell?");
-        u.uhave.bell = 1;
+        setHaveSpecialItem(SPECIAL_ITEM_BELL, TRUE);
         setAchieved(ACHIEVEMENT_GOT_BELL, TRUE);
     } else if (obj->otyp == SPE_BOOK_OF_THE_DEAD) {
-        if (u.uhave.book)
+        if (haveSpecialItem(SPECIAL_ITEM_BOOK))
             impossible("already have the book?");
-        u.uhave.book = 1;
+        setHaveSpecialItem(SPECIAL_ITEM_BOOK, TRUE);
         setAchieved(ACHIEVEMENT_GOT_BOOK, TRUE);
     } else if (obj->oartifact) {
         if (is_quest_artifact(obj)) {
-            if (u.uhave.questart)
+            if (haveSpecialItem(SPECIAL_ITEM_QUEST_ARTIFACT))
                 impossible("already have quest artifact?");
-            u.uhave.questart = 1;
+            setHaveSpecialItem(SPECIAL_ITEM_QUEST_ARTIFACT, TRUE);
             artitouch(obj);
         }
         set_artifact_intrinsic(obj, 1, W_ART);
@@ -638,26 +638,26 @@ struct obj *obj;
         context.botl = 1;
         return;
     } else if (obj->otyp == AMULET_OF_YENDOR) {
-        if (!u.uhave.amulet)
+        if (!haveSpecialItem(SPECIAL_ITEM_AMULET))
             impossible("don't have amulet?");
-        u.uhave.amulet = 0;
+        setHaveSpecialItem(SPECIAL_ITEM_AMULET, FALSE);
     } else if (obj->otyp == CANDELABRUM_OF_INVOCATION) {
-        if (!u.uhave.menorah)
+        if (!haveSpecialItem(SPECIAL_ITEM_CANDELABRUM))
             impossible("don't have candelabrum?");
-        u.uhave.menorah = 0;
+        setHaveSpecialItem(SPECIAL_ITEM_CANDELABRUM, FALSE);
     } else if (obj->otyp == BELL_OF_OPENING) {
-        if (!u.uhave.bell)
+        if (!haveSpecialItem(SPECIAL_ITEM_BELL))
             impossible("don't have silver bell?");
-        u.uhave.bell = 0;
+        setHaveSpecialItem(SPECIAL_ITEM_BELL, FALSE);
     } else if (obj->otyp == SPE_BOOK_OF_THE_DEAD) {
-        if (!u.uhave.book)
+        if (!haveSpecialItem(SPECIAL_ITEM_BOOK))
             impossible("don't have the book?");
-        u.uhave.book = 0;
+        setHaveSpecialItem(SPECIAL_ITEM_BOOK, FALSE);
     } else if (obj->oartifact) {
         if (is_quest_artifact(obj)) {
-            if (!u.uhave.questart)
+            if (!haveSpecialItem(SPECIAL_ITEM_QUEST_ARTIFACT))
                 impossible("don't have quest artifact?");
-            u.uhave.questart = 0;
+            setHaveSpecialItem(SPECIAL_ITEM_QUEST_ARTIFACT, FALSE);
         }
         set_artifact_intrinsic(obj, 0, W_ART);
     }

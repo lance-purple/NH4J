@@ -3753,7 +3753,7 @@ struct trap *ttmp;
     if (Role_if(PM_ROGUE)) {
         if (rn2(2 * MAXULEV) < currentExperienceLevel())
             chance--;
-        if (u.uhave.questart && chance > 1)
+        if (haveSpecialItem(SPECIAL_ITEM_QUEST_ARTIFACT) && chance > 1)
             chance--;
     } else if (Role_if(PM_RANGER) && chance > 1)
         chance--;

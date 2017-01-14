@@ -442,10 +442,16 @@ register int fd, mode;
     write_int(fd, giftsBestowed());
     write_int(fd, startingMoney());
 
-    int nAchievements = knownAchievementTypes();
     int type;
+
+    int nAchievements = knownAchievementTypes();
     for (type = 0; type < nAchievements; type++) {
         write_int(fd, achieved(type));
+    }
+
+    int nSpecialItems = knownSpecialItems();
+    for (type = 0; type < nSpecialItems; type++) {
+        write_int(fd, haveSpecialItem(type));
     }
 
     bwrite(fd, yyyymmddhhmmss(ubirthday), 14);

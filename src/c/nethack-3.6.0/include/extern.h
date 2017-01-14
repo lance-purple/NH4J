@@ -1192,6 +1192,10 @@ E boolean FDECL(achieved, (int));
 E void FDECL(setAchieved, (int, boolean));
 E int FDECL(knownAchievementTypes, ());
 
+E boolean FDECL(haveSpecialItem, (int));
+E void FDECL(setHaveSpecialItem, (int, boolean));
+E int FDECL(knownSpecialItems, ());
+
 /* ### invent.c ### */
 
 E struct obj **FDECL(objarr_init, (int));

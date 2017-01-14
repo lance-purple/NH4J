@@ -133,6 +133,7 @@ public class PlayerCharacter {
 	private static int giftsBestowed;
 
 	private static HashMap<Integer, Boolean> achievements = new HashMap<>();
+	private static HashMap<Integer, Boolean> specialItems = new HashMap<>();
 	
 	private static int startingMoney;
 	
@@ -1156,4 +1157,18 @@ public class PlayerCharacter {
 	public static final int knownAchievementTypes() {
 		return AchievementType.values().length;
 	}
+
+	public static final boolean haveSpecialItem(int type) {
+		Boolean result = specialItems.get(type);
+		return (null == result) ? false : result.booleanValue();
+	}
+
+	public static final void setHaveSpecialItem(int type, boolean state) {
+		specialItems.put(type, state);
+	}
+
+	public static final int knownSpecialItems() {
+		return SpecialItem.values().length;
+	}
+
 }

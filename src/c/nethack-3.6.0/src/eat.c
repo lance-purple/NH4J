@@ -2657,7 +2657,7 @@ gethungry()
             }
             break;
         case 16:
-            if (u.uhave.amulet) {
+            if (haveSpecialItem(SPECIAL_ITEM_AMULET)) {
                 decreaseCurrentNutrition(1);
             }
             break;

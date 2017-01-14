@@ -919,7 +919,7 @@ register struct obj *otmp;
         if (otmp->cursed) {
             unkn++;
             /* they went up a level */
-            if ((currentLevelLedgerNum() == 1 && u.uhave.amulet)
+            if ((currentLevelLedgerNum() == 1 && haveSpecialItem(SPECIAL_ITEM_AMULET))
                 || canYouRiseUp(currentX(), currentY())) {
                 const char *riseup = "rise up, through the %s!";
 
