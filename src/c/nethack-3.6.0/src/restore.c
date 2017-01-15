@@ -708,6 +708,8 @@ unsigned int *stuckid, *steedid;
     setGiftsBestowed(read_int(fd));
     setStartingMoney(read_int(fd));
 
+    setNumBonesFilesLoaded(read_int(fd));
+
     int type;
 
     int nAchievements = knownAchievementTypes();

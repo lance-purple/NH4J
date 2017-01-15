@@ -442,6 +442,8 @@ register int fd, mode;
     write_int(fd, giftsBestowed());
     write_int(fd, startingMoney());
 
+    write_int(fd, numBonesFilesLoaded());
+
     int type;
 
     int nAchievements = knownAchievementTypes();

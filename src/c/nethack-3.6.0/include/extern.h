@@ -1196,6 +1196,11 @@ E boolean FDECL(haveSpecialItem, (int));
 E void FDECL(setHaveSpecialItem, (int, boolean));
 E int FDECL(knownSpecialItems, ());
 
+E int FDECL(numBonesFilesLoaded, ());
+E void FDECL(setNumBonesFilesLoaded, (int));
+E void FDECL(increaseNumBonesFilesLoaded, (int));
+E void FDECL(decreaseNumBonesFilesLoaded, (int));
+
 /* ### invent.c ### */
 
 E struct obj **FDECL(objarr_init, (int));

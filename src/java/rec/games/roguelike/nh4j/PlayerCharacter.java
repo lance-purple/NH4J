@@ -137,6 +137,8 @@ public class PlayerCharacter {
 	
 	private static int startingMoney;
 	
+	private static int numBonesFilesLoaded;
+	
 	public static int currentDungeonNumber() {
 		return currentDungeonNumber;
 	}
@@ -1143,6 +1145,22 @@ public class PlayerCharacter {
 
 	public static final void decreaseStartingMoney(int m) {
 		startingMoney -= m;
+	}
+	
+	public static final int numBonesFilesLoaded() {
+		return numBonesFilesLoaded;
+	}
+
+	public static final void setNumBonesFilesLoaded(int b) {
+		numBonesFilesLoaded = b;
+	}
+
+	public static final void increaseNumBonesFilesLoaded(int b) {
+		numBonesFilesLoaded += b;
+	}
+
+	public static final void decreaseNumBonesFilesLoaded(int b) {
+		numBonesFilesLoaded -= b;
 	}
 	
 	public static final boolean achieved(int type) {

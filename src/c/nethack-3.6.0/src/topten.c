@@ -348,7 +348,7 @@ encodexlogflags()
         e |= 1L << 0;
     if (discover)
         e |= 1L << 1;
-    if (!u.uroleplay.numbones)
+    if (0 == numBonesFilesLoaded())
         e |= 1L << 2;
 
     return e;
