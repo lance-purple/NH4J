@@ -418,7 +418,7 @@ encodeachieve()
         r |= 1L << 11;
     if (permanentlyBlind())
         r |= 1L << 12;
-    if (u.uroleplay.nudist)
+    if (nudist())
         r |= 1L << 13;
 
     return r;

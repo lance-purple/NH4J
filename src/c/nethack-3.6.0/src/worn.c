@@ -56,7 +56,7 @@ long mask;
         /* assert( !uarm ); */
     } else {
         if ((mask & W_ARMOR))
-            u.uroleplay.nudist = FALSE;
+            setNudist(FALSE);
         for (wp = worn; wp->w_mask; wp++)
             if (wp->w_mask & mask) {
                 oobj = *(wp->w_obj);

@@ -445,6 +445,7 @@ register int fd, mode;
     write_int(fd, numBonesFilesLoaded());
 
     write_int(fd, permanentlyBlind());
+    write_int(fd, nudist());
 
     int type;
 

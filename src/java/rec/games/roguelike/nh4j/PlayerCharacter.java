@@ -138,7 +138,8 @@ public class PlayerCharacter {
 	private static int startingMoney;
 	
 	private static int numBonesFilesLoaded;
-	private static boolean permanentlyBlind;
+	private static boolean permanentlyBlind = false;
+	private static boolean nudist = false;
 	
 	public static int currentDungeonNumber() {
 		return currentDungeonNumber;
@@ -1196,6 +1197,14 @@ public class PlayerCharacter {
 	
 	public static final void setPermanentlyBlind(boolean b) {
 		permanentlyBlind = b;
+	}
+
+	public static final boolean nudist() {
+		return nudist;
+	}
+	
+	public static final void setNudist(boolean n) {
+		nudist = n;
 	}
 
 }

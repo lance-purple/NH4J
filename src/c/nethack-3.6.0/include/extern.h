@@ -1203,6 +1203,8 @@ E void FDECL(decreaseNumBonesFilesLoaded, (int));
 
 E boolean FDECL(permanentlyBlind, ());
 E void FDECL(setPermanentlyBlind, (boolean));
+E boolean FDECL(nudist, ());
+E void FDECL(setNudist, (boolean));
 
 /* ### invent.c ### */
 

@@ -153,7 +153,6 @@ static struct Bool_Opt {
 #else
     { "news", (boolean *) 0, FALSE, SET_IN_FILE },
 #endif
-    { "nudist", &u.uroleplay.nudist, FALSE, DISP_IN_GAME },
     { "null", &flags.null, TRUE, SET_IN_GAME },
 #if defined(SYSFLAGS) && defined(MAC)
     { "page_wait", &sysflags.page_wait, TRUE, SET_IN_GAME },
@@ -3386,6 +3385,15 @@ boolean tinitial, tfrom_file;
 	return;
     }
 
+    if (match_optname(opts, "nudist", 6, FALSE)) {
+        if (negated) {
+	    setNudist(FALSE);
+	} else {
+	    setNudist(TRUE);
+	}
+	return;
+    }
+
     /* out of valid options */
     badoption(opts, __LINE__);
 }
@@ -3528,6 +3536,22 @@ doset()
              "Booleans (selecting will toggle value):", MENU_UNSELECTED);
     any.a_int = 0;
     /* first list any other non-modifiable booleans, then modifiable ones */
+
+    
+    if (!iflags.menu_tab_sep)
+        Sprintf(buf, "%s%-17s [%s]", "    ",
+                "blind", permanentlyBlind() ? "true" : "false");
+    else
+        Sprintf(buf, "%s\t[%s]", "blind", permanentlyBlind() ? "true" : "false");
+    add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, MENU_UNSELECTED);
+
+    if (!iflags.menu_tab_sep)
+        Sprintf(buf, "%s%-17s [%s]", "    ",
+                "nudist", nudist() ? "true" : "false");
+    else
+        Sprintf(buf, "%s\t[%s]", "nudist", nudist() ? "true" : "false");
+    add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, MENU_UNSELECTED);
+
     for (pass = 0; pass <= 1; pass++)
         for (i = 0; boolopt[i].name; i++)
             if ((bool_p = boolopt[i].addr) != 0

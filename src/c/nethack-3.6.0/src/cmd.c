@@ -1870,7 +1870,7 @@ int final;
     }
     /* report 'nudity' */
     if (!uarm && !uarmu && !uarmc && !uarmg && !uarmf && !uarmh) {
-        if (u.uroleplay.nudist)
+        if (nudist())
             enl_msg(You_, "do", "did", " not wear any armor", "");
         else
             you_are("not wearing any armor", "");
@@ -2512,7 +2512,7 @@ int final;
 
     if (permanentlyBlind())
         you_have_been("blind from birth");
-    if (u.uroleplay.nudist)
+    if (nudist())
         you_have_been("faithfully nudist");
 
     if (!u.uconduct.food)

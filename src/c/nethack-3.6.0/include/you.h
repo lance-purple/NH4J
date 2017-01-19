@@ -86,10 +86,6 @@ struct u_conduct {     /* number of times... */
     /* genocides already listed at end of game */
 };
 
-struct u_roleplay {
-    boolean nudist; /* has not worn any armor, ever */
-};
-
 /*** Unified structure containing role information ***/
 struct Role {
     /*** Strings that name various things ***/
@@ -262,7 +258,6 @@ struct you {
 
     struct u_event uevent;     /* certain events have happened */
     struct u_conduct uconduct; /* KMH, conduct */
-    struct u_roleplay uroleplay;
 
     align ualign;         /* character alignment */
 

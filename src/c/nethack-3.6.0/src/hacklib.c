@@ -1528,7 +1528,6 @@ void decreaseNumBonesFilesLoaded(int b) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "decreaseNumBonesFilesLoaded", b);
 }
 
-
 boolean permanentlyBlind() {
     return javaGetBoolean(PLAYER_CHARACTER_CLASS, "permanentlyBlind");
 }
@@ -1537,6 +1536,13 @@ void setPermanentlyBlind(boolean b) {
     javaSetBoolean(PLAYER_CHARACTER_CLASS, "setPermanentlyBlind", b);
 }
 
+boolean nudist() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "nudist");
+}
+
+void setNudist(boolean b) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setNudist", b);
+}
 
 /* square of euclidean distance from pt to your current position */
 int
