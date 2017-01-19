@@ -710,6 +710,8 @@ unsigned int *stuckid, *steedid;
 
     setNumBonesFilesLoaded(read_int(fd));
 
+    setPermanentlyBlind(read_int(fd) ? TRUE : FALSE);
+
     int type;
 
     int nAchievements = knownAchievementTypes();

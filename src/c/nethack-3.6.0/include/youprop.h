@@ -86,14 +86,14 @@
 #define Blindfolded (ublindf && ublindf->otyp != LENSES)
 /* ...means blind because of a cover */
 #define Blind                                     \
-    ((u.uroleplay.blind || Blinded || Blindfolded \
+    ((permanentlyBlind() || Blinded || Blindfolded \
       || !haseyes(youmonst.data))                 \
      && !(ublindf && ublindf->oartifact == ART_EYES_OF_THE_OVERWORLD))
 /* ...the Eyes operate even when you really are blind
     or don't have any eyes */
 #define Blindfolded_only                                            \
     (Blindfolded && ublindf->oartifact != ART_EYES_OF_THE_OVERWORLD \
-     && !u.uroleplay.blind && !Blinded && haseyes(youmonst.data))
+     && !permanentlyBlind() && !Blinded && haseyes(youmonst.data))
 /* ...blind because of a blindfold, and *only* that */
 
 #define Sick u.uprops[SICK].intrinsic

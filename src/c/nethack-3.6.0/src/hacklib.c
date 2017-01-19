@@ -1529,6 +1529,15 @@ void decreaseNumBonesFilesLoaded(int b) {
 }
 
 
+boolean permanentlyBlind() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "permanentlyBlind");
+}
+
+void setPermanentlyBlind(boolean b) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setPermanentlyBlind", b);
+}
+
+
 /* square of euclidean distance from pt to your current position */
 int
 distanceSquaredToYou(x, y)

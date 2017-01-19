@@ -444,6 +444,8 @@ register int fd, mode;
 
     write_int(fd, numBonesFilesLoaded());
 
+    write_int(fd, permanentlyBlind());
+
     int type;
 
     int nAchievements = knownAchievementTypes();

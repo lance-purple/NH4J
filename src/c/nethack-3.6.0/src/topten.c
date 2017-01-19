@@ -416,7 +416,7 @@ encodeachieve()
         r |= 1L << 10;
     if (achieved(ACHIEVEMENT_KILLED_MEDUSA))
         r |= 1L << 11;
-    if (u.uroleplay.blind)
+    if (permanentlyBlind())
         r |= 1L << 12;
     if (u.uroleplay.nudist)
         r |= 1L << 13;

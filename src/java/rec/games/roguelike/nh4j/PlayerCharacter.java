@@ -138,6 +138,7 @@ public class PlayerCharacter {
 	private static int startingMoney;
 	
 	private static int numBonesFilesLoaded;
+	private static boolean permanentlyBlind;
 	
 	public static int currentDungeonNumber() {
 		return currentDungeonNumber;
@@ -1187,6 +1188,14 @@ public class PlayerCharacter {
 
 	public static final int knownSpecialItems() {
 		return SpecialItem.values().length;
+	}
+	
+	public static final boolean permanentlyBlind() {
+		return permanentlyBlind;
+	}
+	
+	public static final void setPermanentlyBlind(boolean b) {
+		permanentlyBlind = b;
 	}
 
 }

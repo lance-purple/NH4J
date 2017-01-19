@@ -1201,6 +1201,9 @@ E void FDECL(setNumBonesFilesLoaded, (int));
 E void FDECL(increaseNumBonesFilesLoaded, (int));
 E void FDECL(decreaseNumBonesFilesLoaded, (int));
 
+E boolean FDECL(permanentlyBlind, ());
+E void FDECL(setPermanentlyBlind, (boolean));
+
 /* ### invent.c ### */
 
 E struct obj **FDECL(objarr_init, (int));

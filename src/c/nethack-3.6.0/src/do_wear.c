@@ -1097,12 +1097,12 @@ register struct obj *otmp;
     } else if (already_blind && !Blind) {
         changed = TRUE;
         /* "You are now wearing the Eyes of the Overworld." */
-        if (u.uroleplay.blind) {
+        if (permanentlyBlind()) {
             /* this can only happen by putting on the Eyes of the Overworld;
                that shouldn't actually produce a permanent cure, but we
                can't let the "blind from birth" conduct remain intact */
             pline("For the first time in your life, you can see!");
-            u.uroleplay.blind = FALSE;
+            setPermanentlyBlind(FALSE);
         } else
             You("can see!");
     }

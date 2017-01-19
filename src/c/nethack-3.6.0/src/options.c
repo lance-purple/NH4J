@@ -84,7 +84,6 @@ static struct Bool_Opt {
 #else
     { "BIOS", (boolean *) 0, FALSE, SET_IN_FILE },
 #endif
-    { "blind", &u.uroleplay.blind, FALSE, DISP_IN_GAME },
     { "bones", &flags.bones, TRUE, SET_IN_FILE },
 #ifdef INSURANCE
     { "checkpoint", &flags.ins_chkpt, TRUE, SET_IN_GAME },
@@ -485,7 +484,7 @@ STATIC_DCL void FDECL(doset_add_menu, (winid, const char *, int));
 STATIC_DCL void FDECL(nmcpy, (char *, const char *, int));
 STATIC_DCL void FDECL(escapes, (const char *, char *));
 STATIC_DCL void FDECL(rejectoption, (const char *));
-STATIC_DCL void FDECL(badoption, (const char *));
+STATIC_DCL void FDECL(badoption, (const char *, int));
 STATIC_DCL char *FDECL(string_for_opt, (char *, BOOLEAN_P));
 STATIC_DCL char *FDECL(string_for_env_opt, (const char *, char *, BOOLEAN_P));
 STATIC_DCL void FDECL(bad_negation, (const char *, BOOLEAN_P));
@@ -901,14 +900,15 @@ const char *optname;
 }
 
 STATIC_OVL void
-badoption(opts)
+badoption(opts, where)
 const char *opts;
+const int where;
 {
     if (!initial) {
         if (!strncmp(opts, "h", 1) || !strncmp(opts, "?", 1))
             option_help();
         else
-            pline("Bad syntax: %s.  Enter \"?g\" for help.", opts);
+            pline("Line %d: Bad syntax: %s.  Enter \"?g\" for help.", where, opts);
         return;
     }
 #ifdef MAC
@@ -917,7 +917,7 @@ const char *opts;
 #endif
 
     if (from_file)
-        raw_printf("Bad syntax in OPTIONS in %s: %s%s.\n", lastconfigfile,
+        raw_printf("Line %d: Bad syntax in OPTIONS in %s: %s%s.\n", where, lastconfigfile,
 #ifdef WIN32
                     "\n",
 #else
@@ -925,7 +925,7 @@ const char *opts;
 #endif
                     opts);
     else
-        raw_printf("Bad syntax in NETHACKOPTIONS: %s%s.\n",
+        raw_printf("Line %d: Bad syntax in NETHACKOPTIONS: %s%s.\n", where,
 #ifdef WIN32
                     "\n",
 #else
@@ -949,7 +949,7 @@ boolean val_optional;
 
     if (!colon || !*++colon) {
         if (!val_optional)
-            badoption(opts);
+            badoption(opts, __LINE__);
         return (char *) 0;
     }
     return colon;
@@ -1073,7 +1073,7 @@ const char *optn;
             Sprintf(buf,
                     "\n%s=%s Invalid reference to a future version ignored",
                     optn, op);
-            badoption(buf);
+            badoption(buf, __LINE__);
         }
         return 0;
     }
@@ -1676,7 +1676,7 @@ boolean tinitial, tfrom_file;
         parseoptions(op, initial, from_file);
     }
     if (strlen(opts) > BUFSZ / 2) {
-        badoption("option too long");
+        badoption("option too long", __LINE__);
         return;
     }
 
@@ -1753,12 +1753,12 @@ boolean tinitial, tfrom_file;
             }
             if (val_negated) {
                 if (!setrolefilter(op))
-                    badoption(opts);
+                    badoption(opts, __LINE__);
             } else {
                 if (duplicate_opt_detection(opts, 1))
                     complain_about_duplicate(opts, 1);
                 if ((flags.initalign = str2align(op)) == ROLE_NONE)
-                    badoption(opts);
+                    badoption(opts, __LINE__);
             }
         }
         return;
@@ -1781,12 +1781,12 @@ boolean tinitial, tfrom_file;
             }
             if (val_negated) {
                 if (!setrolefilter(op))
-                    badoption(opts);
+                    badoption(opts, __LINE__);
             } else {
                 if (duplicate_opt_detection(opts, 1))
                     complain_about_duplicate(opts, 1);
                 if ((flags.initrole = str2role(op)) == ROLE_NONE)
-                    badoption(opts);
+                    badoption(opts, __LINE__);
                 else /* Backwards compatibility */
                     nmcpy(pl_character, op, PL_NSIZ);
             }
@@ -1810,12 +1810,12 @@ boolean tinitial, tfrom_file;
             }
             if (val_negated) {
                 if (!setrolefilter(op))
-                    badoption(opts);
+                    badoption(opts, __LINE__);
             } else {
                 if (duplicate_opt_detection(opts, 1))
                     complain_about_duplicate(opts, 1);
                 if ((flags.initrace = str2race(op)) == ROLE_NONE)
-                    badoption(opts);
+                    badoption(opts, __LINE__);
                 else /* Backwards compatibility */
                     pl_race = *op;
             }
@@ -1839,12 +1839,12 @@ boolean tinitial, tfrom_file;
             }
             if (val_negated) {
                 if (!setrolefilter(op))
-                    badoption(opts);
+                    badoption(opts, __LINE__);
             } else {
                 if (duplicate_opt_detection(opts, 1))
                     complain_about_duplicate(opts, 1);
                 if ((flags.initgend = str2gend(op)) == ROLE_NONE)
-                    badoption(opts);
+                    badoption(opts, __LINE__);
                 else
                     flags.female = flags.initgend;
             }
@@ -1952,7 +1952,7 @@ boolean tinitial, tfrom_file;
             int mode = atoi(op);
 
             if (mode < -1 || mode > 4 || (mode == 0 && *op != '0')) {
-                badoption(opts);
+                badoption(opts, __LINE__);
                 return;
             } else if (mode <= 0) {
                 iflags.num_pad = FALSE;
@@ -2033,7 +2033,7 @@ boolean tinitial, tfrom_file;
             else if (!strncmpi(op, "crawl", strlen(op)))
                 flags.runmode = RUN_CRAWL;
             else
-                badoption(opts);
+                badoption(opts, __LINE__);
         }
         return;
     }
@@ -2045,7 +2045,7 @@ boolean tinitial, tfrom_file;
             bad_negation(fullname, FALSE);
         else if ((op = string_for_env_opt(fullname, opts, FALSE)) != 0)
             if (!add_menu_coloring(op))
-                badoption(opts);
+                badoption(opts, __LINE__);
         return;
     }
 
@@ -2093,7 +2093,7 @@ boolean tinitial, tfrom_file;
             iflags.prevmsg_window = 'r';
             break;
         default:
-            badoption(opts);
+            badoption(opts, __LINE__);
         }
 #endif
         return;
@@ -2132,7 +2132,7 @@ boolean tinitial, tfrom_file;
             else if (!strncmpi(fontopts, "_size_status", 11))
                 opttype = STATUS_OPTION;
             else {
-                badoption(opts);
+                badoption(opts, __LINE__);
                 return;
             }
             if (duplicate)
@@ -2159,7 +2159,7 @@ boolean tinitial, tfrom_file;
             }
             return;
         } else {
-            badoption(opts);
+            badoption(opts, __LINE__);
         }
         if (opttype > 0 && (op = string_for_opt(opts, FALSE)) != 0) {
             wc_set_font_name(opttype, op);
@@ -2205,7 +2205,7 @@ boolean tinitial, tfrom_file;
 #ifdef WIN32
         op = string_for_opt(opts, TRUE);
         if (!alternative_palette(op))
-            badoption(opts);
+            badoption(opts, __LINE__);
 #else
         if ((op = string_for_opt(opts, FALSE)) != (char *) 0) {
             char *pt = op;
@@ -2404,7 +2404,7 @@ boolean tinitial, tfrom_file;
             else if (!strncmpi(op, "bottom", sizeof("bottom") - 1))
                 iflags.wc_align_status = ALIGN_BOTTOM;
             else
-                badoption(opts);
+                badoption(opts, __LINE__);
         } else if (negated)
             bad_negation(fullname, TRUE);
         return;
@@ -2426,7 +2426,7 @@ boolean tinitial, tfrom_file;
             else if (!strncmpi(op, "bottom", sizeof("bottom") - 1))
                 iflags.wc_align_message = ALIGN_BOTTOM;
             else
-                badoption(opts);
+                badoption(opts, __LINE__);
         } else if (negated)
             bad_negation(fullname, TRUE);
         return;
@@ -2443,7 +2443,7 @@ boolean tinitial, tfrom_file;
             return;
 
         if (!change_inv_order(op))
-            badoption(opts);
+            badoption(opts, __LINE__);
         return;
     }
 
@@ -2489,7 +2489,7 @@ boolean tinitial, tfrom_file;
                 if (i == SIZE(paranoia)) {
                     /* didn't match anything, so arg is bad;
                        any flags already set will stay set */
-                    badoption(opts);
+                    badoption(opts, __LINE__);
                     break;
                 }
                 /* move on to next token */
@@ -2548,7 +2548,7 @@ boolean tinitial, tfrom_file;
                 flags.pickup_burden = OVERLOADED;
                 break;
             default:
-                badoption(opts);
+                badoption(opts, __LINE__);
             }
         }
         return;
@@ -2614,7 +2614,7 @@ boolean tinitial, tfrom_file;
                 op++;
             }
             if (badopt)
-                badoption(opts);
+                badoption(opts, __LINE__);
         }
         return;
     }
@@ -2674,7 +2674,7 @@ boolean tinitial, tfrom_file;
             else if (!strncmpi(op, "prompt", sizeof("prompt") - 1))
                 iflags.wc_player_selection = VIA_PROMPTS;
             else
-                badoption(opts);
+                badoption(opts, __LINE__);
         } else if (negated)
             bad_negation(fullname, TRUE);
         return;
@@ -2760,7 +2760,7 @@ boolean tinitial, tfrom_file;
             op++;
         }
         if (badopt)
-            badoption(opts);
+            badoption(opts, __LINE__);
         return;
     }
 
@@ -2803,7 +2803,7 @@ boolean tinitial, tfrom_file;
                 flags.end_own = !negated;
                 break;
             default:
-                badoption(opts);
+                badoption(opts, __LINE__);
                 return;
             }
             while (letter(*++op) || *op == ' ')
@@ -2825,7 +2825,7 @@ boolean tinitial, tfrom_file;
                 flags.sortloot = tolower(*op);
                 break;
             default:
-                badoption(opts);
+                badoption(opts, __LINE__);
                 return;
             }
         }
@@ -2858,7 +2858,7 @@ boolean tinitial, tfrom_file;
             return;
         }
         if (!assign_videocolors(opts))
-            badoption(opts);
+            badoption(opts, __LINE__);
         return;
     }
     /* videoshades:string */
@@ -2873,7 +2873,7 @@ boolean tinitial, tfrom_file;
             return;
         }
         if (!assign_videoshades(opts))
-            badoption(opts);
+            badoption(opts, __LINE__);
         return;
     }
 #endif /* VIDEOSHADES */
@@ -2891,7 +2891,7 @@ boolean tinitial, tfrom_file;
             return;
         }
         if (!assign_video(opts))
-            badoption(opts);
+            badoption(opts, __LINE__);
         return;
     }
 #endif /* NO_TERMS */
@@ -2907,7 +2907,7 @@ boolean tinitial, tfrom_file;
             return;
         }
         if (!assign_soundcard(opts))
-            badoption(opts);
+            badoption(opts, __LINE__);
         return;
     }
 #endif /* MSDOS */
@@ -2947,7 +2947,7 @@ boolean tinitial, tfrom_file;
                                sizeof("fit_to_screen") - 1))
                 iflags.wc_map_mode = MAP_MODE_ASCII_FIT_TO_SCREEN;
             else
-                badoption(opts);
+                badoption(opts, __LINE__);
         } else if (negated)
             bad_negation(fullname, TRUE);
         return;
@@ -3083,7 +3083,7 @@ boolean tinitial, tfrom_file;
             complain_about_duplicate(opts, 1);
         if ((op = string_for_opt(opts, FALSE)) != 0) {
             if (!wc_set_window_colors(op))
-                badoption(opts);
+                badoption(opts, __LINE__);
         } else if (negated)
             bad_negation(fullname, TRUE);
         return;
@@ -3118,7 +3118,7 @@ boolean tinitial, tfrom_file;
             flags.menu_style = MENU_FULL;
             break;
         default:
-            badoption(opts);
+            badoption(opts, __LINE__);
         }
         return;
     }
@@ -3138,7 +3138,7 @@ boolean tinitial, tfrom_file;
                 iflags.menu_headings = attrnames[i].attr;
                 return;
             }
-        badoption(opts);
+        badoption(opts, __LINE__);
         return;
     }
 
@@ -3169,7 +3169,7 @@ boolean tinitial, tfrom_file;
                         }
 
                 if (isbad)
-                    badoption(opts);
+                    badoption(opts, __LINE__);
                 else
                     add_menu_cmd_alias(c, default_menu_cmd_info[i].cmd);
             }
@@ -3187,11 +3187,11 @@ boolean tinitial, tfrom_file;
             return;
         } else if (!op) {
             /* a value is mandatory */
-            badoption(opts);
+            badoption(opts, __LINE__);
             return;
         }
         if (!set_status_hilites(op, tfrom_file))
-            badoption(opts);
+            badoption(opts, __LINE__);
         return;
     }
 #endif
@@ -3377,8 +3377,17 @@ boolean tinitial, tfrom_file;
         }
     }
 
+    if (match_optname(opts, "blind", 5, FALSE)) {
+        if (negated) {
+	    setPermanentlyBlind(FALSE);
+	} else {
+	    setPermanentlyBlind(TRUE);
+	}
+	return;
+    }
+
     /* out of valid options */
-    badoption(opts);
+    badoption(opts, __LINE__);
 }
 
 static NEARDATA const char *menutype[] = { "traditional", "combination",
