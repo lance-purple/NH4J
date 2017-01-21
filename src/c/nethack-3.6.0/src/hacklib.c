@@ -1544,6 +1544,30 @@ void setNudist(boolean b) {
     javaSetBoolean(PLAYER_CHARACTER_CLASS, "setNudist", b);
 }
 
+boolean veganConduct() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "veganConduct");
+}
+
+void setVeganConduct(boolean b) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setVeganConduct", b);
+}
+
+boolean vegetarianConduct() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "vegetarianConduct");
+}
+
+void setVegetarianConduct(boolean b) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setVegetarianConduct", b);
+}
+
+boolean foodlessConduct() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "foodlessConduct");
+}
+
+void setFoodlessConduct(boolean b) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setFoodlessConduct", b);
+}
+
 /* square of euclidean distance from pt to your current position */
 int
 distanceSquaredToYou(x, y)

@@ -1690,7 +1690,7 @@ struct obj *obj;
            vegetarian conduct yet (or if poly'd into non-carnivorous/
            non-omnivorous form, regardless of whether it's herbivorous,
            non-eating, or something stranger) */
-        if (Role_if(PM_MONK) || !u.uconduct.unvegetarian
+        if (Role_if(PM_MONK) || vegetarianConduct()
             || !carnivorous(youmonst.data))
             Norep("You smell the odor of meat.");
         else

@@ -2515,12 +2515,12 @@ int final;
     if (nudist())
         you_have_been("faithfully nudist");
 
-    if (!u.uconduct.food)
+    if (foodlessConduct())
         enl_msg(You_, "have gone", "went", " without food", "");
     /* But beverages are okay */
-    else if (!u.uconduct.unvegan)
+    else if (veganConduct())
         you_have_X("followed a strict vegan diet");
-    else if (!u.uconduct.unvegetarian)
+    else if (vegetarianConduct())
         you_have_been("vegetarian");
 
     if (!u.uconduct.gnostic)

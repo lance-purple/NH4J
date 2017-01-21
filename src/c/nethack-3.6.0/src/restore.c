@@ -713,6 +713,10 @@ unsigned int *stuckid, *steedid;
     setPermanentlyBlind(read_int(fd) ? TRUE : FALSE);
     setNudist(read_int(fd) ? TRUE : FALSE);
 
+    setVeganConduct(read_int(fd) ? TRUE : FALSE);
+    setVegetarianConduct(read_int(fd) ? TRUE : FALSE);
+    setFoodlessConduct(read_int(fd) ? TRUE : FALSE);
+
     int type;
 
     int nAchievements = knownAchievementTypes();

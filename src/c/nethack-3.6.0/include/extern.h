@@ -1206,6 +1206,14 @@ E void FDECL(setPermanentlyBlind, (boolean));
 E boolean FDECL(nudist, ());
 E void FDECL(setNudist, (boolean));
 
+E boolean FDECL(veganConduct, ());
+E void FDECL(setVeganConduct, (boolean));
+E boolean FDECL(vegetarianConduct, ());
+E void FDECL(setVegetarianConduct, (boolean));
+E boolean FDECL(foodlessConduct, ());
+E void FDECL(setFoodlessConduct, (boolean));
+
+
 /* ### invent.c ### */
 
 E struct obj **FDECL(objarr_init, (int));

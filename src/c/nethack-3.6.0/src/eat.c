@@ -443,9 +443,9 @@ void
 eating_conducts(pd)
 struct permonst *pd;
 {
-    u.uconduct.food++;
+    setFoodlessConduct(FALSE);
     if (!vegan(pd))
-        u.uconduct.unvegan++;
+        setVeganConduct(FALSE);
     if (!vegetarian(pd))
         violated_vegetarian();
 }
@@ -1108,7 +1108,7 @@ register int pm;
 void
 violated_vegetarian()
 {
-    u.uconduct.unvegetarian++;
+    setVegetarianConduct(FALSE);
     if (Role_if(PM_MONK)) {
         You_feel("guilty.");
         adjalign(-1);
@@ -1352,8 +1352,7 @@ const char *mesg;
          * Same order as with non-spinach above:
          * conduct update, side-effects, shop handling, and nutrition.
          */
-        u.uconduct
-            .food++; /* don't need vegan/vegetarian checks for spinach */
+        setFoodlessConduct(FALSE); /* don't need vegan/vegetarian checks for spinach */
         if (!tin->cursed)
             pline("This makes you feel like %s!",
                   Hallucination ? "Swee'pea" : "Popeye");
@@ -1535,7 +1534,7 @@ struct obj *otmp;
 
     /* KMH, conduct */
     if (!vegan(&mons[mnum]))
-        u.uconduct.unvegan++;
+        setVeganConduct(FALSE);
     if (!vegetarian(&mons[mnum]))
         violated_vegetarian();
 
@@ -2256,7 +2255,7 @@ struct obj *otmp;
                 it_or_they, eat_it_anyway);
         return (yn_function(buf, ynchars, 'n') == 'n') ? 1 : 2;
     }
-    if (cadaver && !vegetarian(&mons[mnum]) && !u.uconduct.unvegetarian
+    if (cadaver && !vegetarian(&mons[mnum]) && vegetarianConduct()
         && Role_if(PM_MONK)) {
         Sprintf(buf, "%s unhealthy. %s", foodsmell, eat_it_anyway);
         if (yn_function(buf, ynchars, 'n') == 'n')
@@ -2284,7 +2283,7 @@ struct obj *otmp;
     /*
      * Breaks conduct, but otherwise safe.
      */
-    if (!u.uconduct.unvegan
+    if (veganConduct()
         && ((material == LEATHER || material == BONE
              || material == DRAGON_HIDE || material == WAX)
             || (cadaver && !vegan(&mons[mnum])))) {
@@ -2295,7 +2294,7 @@ struct obj *otmp;
         else
             return 2;
     }
-    if (!u.uconduct.unvegetarian
+    if (vegetarianConduct()
         && ((material == LEATHER || material == BONE
              || material == DRAGON_HIDE)
             || (cadaver && !vegetarian(&mons[mnum])))) {
@@ -2427,11 +2426,12 @@ doeat()
         material = objects[otmp->otyp].oc_material;
         if (material == LEATHER || material == BONE
             || material == DRAGON_HIDE) {
-            u.uconduct.unvegan++;
+            setVeganConduct(FALSE);
             violated_vegetarian();
-        } else if (material == WAX)
-            u.uconduct.unvegan++;
-        u.uconduct.food++;
+        } else if (material == WAX) {
+            setVeganConduct(FALSE);
+	}
+        setFoodlessConduct(FALSE);
 
         if (otmp->cursed)
             (void) rottenfood(otmp);
@@ -2483,7 +2483,7 @@ doeat()
     }
 
     /* KMH, conduct */
-    u.uconduct.food++;
+    setFoodlessConduct(FALSE);
 
     context.victual.o_id = 0;
     context.victual.piece = otmp = touchfood(otmp);
@@ -2513,7 +2513,7 @@ doeat()
          */
         switch (objects[otmp->otyp].oc_material) {
         case FLESH:
-            u.uconduct.unvegan++;
+            setVeganConduct(FALSE);
             if (otmp->otyp != EGG) {
                 violated_vegetarian();
             }
@@ -2523,7 +2523,7 @@ doeat()
             if (otmp->otyp == PANCAKE || otmp->otyp == FORTUNE_COOKIE /*eggs*/
                 || otmp->otyp == CREAM_PIE || otmp->otyp == CANDY_BAR /*milk*/
                 || otmp->otyp == LUMP_OF_ROYAL_JELLY)
-                u.uconduct.unvegan++;
+                setVeganConduct(FALSE);
             break;
         }
 

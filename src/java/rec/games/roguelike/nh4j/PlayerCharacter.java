@@ -140,6 +140,10 @@ public class PlayerCharacter {
 	private static int numBonesFilesLoaded;
 	private static boolean permanentlyBlind = false;
 	private static boolean nudist = false;
+
+	private static boolean vegetarianConduct = true;
+	private static boolean veganConduct = true;
+	private static boolean foodlessConduct = true;
 	
 	public static int currentDungeonNumber() {
 		return currentDungeonNumber;
@@ -1205,6 +1209,30 @@ public class PlayerCharacter {
 	
 	public static final void setNudist(boolean n) {
 		nudist = n;
+	}
+
+	public static final boolean veganConduct() {
+		return veganConduct;
+	}
+	
+	public static final void setVeganConduct(boolean v) {
+		veganConduct = v;
+	}
+
+	public static final boolean vegetarianConduct() {
+		return vegetarianConduct;
+	}
+	
+	public static final void setVegetarianConduct(boolean v) {
+		vegetarianConduct = v;
+	}
+
+	public static final boolean foodlessConduct() {
+		return foodlessConduct;
+	}
+	
+	public static final void setFoodlessConduct(boolean f) {
+		foodlessConduct = f;
 	}
 
 }

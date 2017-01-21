@@ -447,6 +447,10 @@ register int fd, mode;
     write_int(fd, permanentlyBlind());
     write_int(fd, nudist());
 
+    write_int(fd, veganConduct());
+    write_int(fd, vegetarianConduct());
+    write_int(fd, foodlessConduct());
+
     int type;
 
     int nAchievements = knownAchievementTypes();

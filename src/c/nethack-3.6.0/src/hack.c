@@ -412,7 +412,7 @@ xchar x, y;
     }
 
     /* Okay, you've chewed through something */
-    u.uconduct.food++;
+    setFoodlessConduct(FALSE);
     increaseCurrentNutrition(rnd(20));
 
     if (boulder) {

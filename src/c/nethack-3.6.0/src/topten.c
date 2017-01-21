@@ -359,11 +359,11 @@ encodeconduct()
 {
     long e = 0L;
 
-    if (!u.uconduct.food)
+    if (foodlessConduct())
         e |= 1L << 0;
-    if (!u.uconduct.unvegan)
+    if (veganConduct())
         e |= 1L << 1;
-    if (!u.uconduct.unvegetarian)
+    if (vegetarianConduct())
         e |= 1L << 2;
     if (!u.uconduct.gnostic)
         e |= 1L << 3;
