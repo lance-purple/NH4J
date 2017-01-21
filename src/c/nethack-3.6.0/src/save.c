@@ -450,6 +450,7 @@ register int fd, mode;
     write_int(fd, veganConduct());
     write_int(fd, vegetarianConduct());
     write_int(fd, foodlessConduct());
+    write_int(fd, atheistConduct());
 
     int type;
 

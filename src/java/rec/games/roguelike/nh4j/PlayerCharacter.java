@@ -144,6 +144,7 @@ public class PlayerCharacter {
 	private static boolean vegetarianConduct = true;
 	private static boolean veganConduct = true;
 	private static boolean foodlessConduct = true;
+	private static boolean atheistConduct = true;
 	
 	public static int currentDungeonNumber() {
 		return currentDungeonNumber;
@@ -1233,6 +1234,14 @@ public class PlayerCharacter {
 	
 	public static final void setFoodlessConduct(boolean f) {
 		foodlessConduct = f;
+	}
+
+	public static final boolean atheistConduct() {
+		return atheistConduct;
+	}
+	
+	public static final void setAtheistConduct(boolean f) {
+		atheistConduct = f;
 	}
 
 }

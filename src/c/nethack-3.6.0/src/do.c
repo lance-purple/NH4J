@@ -239,7 +239,7 @@ register struct obj *obj;
 
     if (obj->oclass != COIN_CLASS) {
         /* KMH, conduct */
-        u.uconduct.gnostic++;
+        setAtheistConduct(FALSE);
     } else {
         /* coins don't have bless/curse status */
         obj->blessed = obj->cursed = 0;

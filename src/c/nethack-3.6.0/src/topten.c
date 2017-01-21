@@ -365,7 +365,7 @@ encodeconduct()
         e |= 1L << 1;
     if (vegetarianConduct())
         e |= 1L << 2;
-    if (!u.uconduct.gnostic)
+    if (atheistConduct())
         e |= 1L << 3;
     if (!u.uconduct.weaphit)
         e |= 1L << 4;

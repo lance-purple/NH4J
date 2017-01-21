@@ -716,6 +716,7 @@ unsigned int *stuckid, *steedid;
     setVeganConduct(read_int(fd) ? TRUE : FALSE);
     setVegetarianConduct(read_int(fd) ? TRUE : FALSE);
     setFoodlessConduct(read_int(fd) ? TRUE : FALSE);
+    setAtheistConduct(read_int(fd) ? TRUE : FALSE);
 
     int type;
 

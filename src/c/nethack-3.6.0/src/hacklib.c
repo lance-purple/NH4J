@@ -1568,6 +1568,14 @@ void setFoodlessConduct(boolean b) {
     javaSetBoolean(PLAYER_CHARACTER_CLASS, "setFoodlessConduct", b);
 }
 
+boolean atheistConduct() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "atheistConduct");
+}
+
+void setAtheistConduct(boolean b) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setAtheistConduct", b);
+}
+
 /* square of euclidean distance from pt to your current position */
 int
 distanceSquaredToYou(x, y)

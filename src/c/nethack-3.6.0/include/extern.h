@@ -1212,6 +1212,8 @@ E boolean FDECL(vegetarianConduct, ());
 E void FDECL(setVegetarianConduct, (boolean));
 E boolean FDECL(foodlessConduct, ());
 E void FDECL(setFoodlessConduct, (boolean));
+E boolean FDECL(atheistConduct, ());
+E void FDECL(setAtheistConduct, (boolean));
 
 
 /* ### invent.c ### */

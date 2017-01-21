@@ -1293,7 +1293,7 @@ dosacrifice()
         extern const int monstr[];
 
         /* KMH, conduct */
-        u.uconduct.gnostic++;
+        setAtheistConduct(FALSE);
 
         /* you're handling this corpse, even if it was killed upon the altar
          */
@@ -1781,7 +1781,7 @@ dopray()
     if (ParanoidPray && yn("Are you sure you want to pray?") != 'y')
         return 0;
 
-    u.uconduct.gnostic++;
+    setAtheistConduct(FALSE);
 
     /* set up p_type and p_alignment */
     if (!can_pray(TRUE))
@@ -1896,7 +1896,7 @@ doturn()
         You("don't know how to turn undead!");
         return 0;
     }
-    u.uconduct.gnostic++;
+    setAtheistConduct(FALSE);
 
     if ((u.ualign.type != A_CHAOTIC
          && (is_demon(youmonst.data) || is_undead(youmonst.data)))

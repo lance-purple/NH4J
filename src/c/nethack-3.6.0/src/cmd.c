@@ -1438,7 +1438,7 @@ int final;
                /* permanent conversion */
                : (u.ualign.type != originalAlignmentBase()) ? "now "
                   /* atheist (ignored in very early game) */
-                  : (!u.uconduct.gnostic && moves > 1000L) ? "nominally "
+                  : (atheistConduct() && moves > 1000L) ? "nominally "
                      /* lastly, normal case */
                      : "",
             u_gname());
@@ -2523,7 +2523,7 @@ int final;
     else if (vegetarianConduct())
         you_have_been("vegetarian");
 
-    if (!u.uconduct.gnostic)
+    if (atheistConduct())
         you_have_been("an atheist");
 
     if (!u.uconduct.weaphit) {

@@ -532,7 +532,7 @@ register struct monst *priest;
     boolean strayed = (u.ualign.record < 0);
 
     /* KMH, conduct */
-    u.uconduct.gnostic++;
+    setAtheistConduct(FALSE);
 
     if (priest->mflee || (!priest->ispriest && coaligned && strayed)) {
         pline("%s doesn't want anything to do with you!", Monnam(priest));
