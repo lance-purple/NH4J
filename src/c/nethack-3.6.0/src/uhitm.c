@@ -453,11 +453,11 @@ struct attack *uattk;
         missum(mon, uattk, (rollneeded + armorpenalty > dieroll));
     } else {
         int oldhp = mon->mhp, x = currentX() + directionX(), y = currentY() + directionY();
-        long oldweaphit = u.uconduct.weaphit;
+        long oldweaphit = weaponHitCount();
 
         /* KMH, conduct */
         if (weapon && (weapon->oclass == WEAPON_CLASS || is_weptool(weapon)))
-            u.uconduct.weaphit++;
+            incrementWeaponHitCount(1);
 
         /* we hit the monster; be careful: it might die or
            be knocked into a different location */
@@ -478,7 +478,7 @@ struct attack *uattk;
             if (mon->mhp == oldhp) {
                 *mhit = 0;
                 /* a miss does not break conduct */
-                u.uconduct.weaphit = oldweaphit;
+                setWeaponHitCount(oldweaphit);
             }
             if (mon->wormno && *mhit)
                 cutworm(mon, x, y, weapon);

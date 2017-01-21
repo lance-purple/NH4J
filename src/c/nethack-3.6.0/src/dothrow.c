@@ -1494,8 +1494,9 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
         }
 
         if (tmp >= rnd(20)) {
-            if (hmode == HMON_APPLIED)
-                u.uconduct.weaphit++;
+            if (hmode == HMON_APPLIED) {
+                incrementWeaponHitCount(1);
+	    }
             if (hmon(mon, obj, hmode)) { /* mon still alive */
                 cutworm(mon, bhitpos.x, bhitpos.y, obj);
             }

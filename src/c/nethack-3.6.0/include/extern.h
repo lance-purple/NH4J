@@ -1215,6 +1215,14 @@ E void FDECL(setFoodlessConduct, (boolean));
 E boolean FDECL(atheistConduct, ());
 E void FDECL(setAtheistConduct, (boolean));
 
+E boolean FDECL(hitlessConduct, ());
+E long FDECL(weaponHitCount, ());
+E void FDECL(setWeaponHitCount, (long));
+E void FDECL(incrementWeaponHitCount, (long));
+
+E boolean FDECL(pacifistConduct, ());
+E void FDECL(setPacifistConduct, (boolean));
+
 
 /* ### invent.c ### */
 

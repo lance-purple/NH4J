@@ -72,8 +72,6 @@ struct u_realtime {
  * times a challenge has been violated.
  */
 struct u_conduct {     /* number of times... */
-    long weaphit;      /* hit a monster with a weapon */
-    long killer;       /* killed a monster yourself */
     long literate;     /* read something (other than BotD) */
     long polypiles;    /* polymorphed an object */
     long polyselfs;    /* transformed yourself */

@@ -2526,14 +2526,14 @@ int final;
     if (atheistConduct())
         you_have_been("an atheist");
 
-    if (!u.uconduct.weaphit) {
+    if (hitlessConduct()) {
         you_have_never("hit with a wielded weapon");
     } else if (wizard) {
-        Sprintf(buf, "used a wielded weapon %ld time%s", u.uconduct.weaphit,
-                plur(u.uconduct.weaphit));
+        Sprintf(buf, "used a wielded weapon %ld time%s", weaponHitCount(),
+                plur(weaponHitCount()));
         you_have_X(buf);
     }
-    if (!u.uconduct.killer)
+    if (pacifistConduct())
         you_have_been("a pacifist");
 
     if (!u.uconduct.literate) {

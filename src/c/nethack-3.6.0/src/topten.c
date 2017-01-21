@@ -367,9 +367,9 @@ encodeconduct()
         e |= 1L << 2;
     if (atheistConduct())
         e |= 1L << 3;
-    if (!u.uconduct.weaphit)
+    if (hitlessConduct())
         e |= 1L << 4;
-    if (!u.uconduct.killer)
+    if (pacifistConduct())
         e |= 1L << 5;
     if (!u.uconduct.literate)
         e |= 1L << 6;

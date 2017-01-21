@@ -146,6 +146,11 @@ public class PlayerCharacter {
 	private static boolean foodlessConduct = true;
 	private static boolean atheistConduct = true;
 	
+	private static long weaponHitCount = 0;
+	// hitlessConduct inferred
+	private static boolean pacifistConduct = true;
+	
+	
 	public static int currentDungeonNumber() {
 		return currentDungeonNumber;
 	}
@@ -1240,8 +1245,32 @@ public class PlayerCharacter {
 		return atheistConduct;
 	}
 	
-	public static final void setAtheistConduct(boolean f) {
-		atheistConduct = f;
+	public static final void setAtheistConduct(boolean a) {
+		atheistConduct = a;
+	}
+
+	public static final boolean hitlessConduct() {
+		return (0L == weaponHitCount);
+	}
+	
+    public static final long weaponHitCount() {
+    	return weaponHitCount;
+    }
+
+    public static final void setWeaponHitCount(long n) {
+    	weaponHitCount = n;
+    }
+
+    public static final void incrementWeaponHitCount(long n) {
+    	weaponHitCount += n;
+    }
+
+	public static final boolean pacifistConduct() {
+		return pacifistConduct;
+	}
+	
+	public static final void setPacifistConduct(boolean p) {
+		pacifistConduct = p;
 	}
 
 }

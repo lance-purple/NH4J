@@ -1576,6 +1576,30 @@ void setAtheistConduct(boolean b) {
     javaSetBoolean(PLAYER_CHARACTER_CLASS, "setAtheistConduct", b);
 }
 
+boolean hitlessConduct() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "hitlessConduct");
+}
+
+long weaponHitCount() {
+    javaGetLong(PLAYER_CHARACTER_CLASS, "weaponHitCount");
+}
+
+void setWeaponHitCount(long n) {
+    javaSetLong(PLAYER_CHARACTER_CLASS, "setWeaponHitCount", n);
+}
+
+void incrementWeaponHitCount(long n) {
+    javaSetLong(PLAYER_CHARACTER_CLASS, "incrememtWeaponHitCount", n);
+}
+
+boolean pacifistConduct() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "pacifistConduct");
+}
+
+void setPacifistConduct(boolean b) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setPacifistConduct", b);
+}
+
 /* square of euclidean distance from pt to your current position */
 int
 distanceSquaredToYou(x, y)

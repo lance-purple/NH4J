@@ -2111,7 +2111,7 @@ int dest; /* dest==1, normal; dest==0, don't print message; dest==2, don't
     boolean burycorpse = FALSE;
 
     /* KMH, conduct */
-    u.uconduct.killer++;
+    setPacifistConduct(FALSE);
 
     if (dest & 1) {
         const char *verb = nonliving(mtmp->data) ? "destroy" : "kill";
