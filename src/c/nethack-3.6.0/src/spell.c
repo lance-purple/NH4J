@@ -476,11 +476,11 @@ register struct obj *spellbook;
                              spellbook->o_id)) {
                 incrementLiteracyCount(1);
                 check_unpaid(spellbook);
-                if (!u.uevent.read_tribute) {
+                if (!hasReadTribute()) {
                     /* give bonus of 20 xp and 4*20+0 pts */
                     more_experienced(20, 0);
                     newexplevel();
-                    u.uevent.read_tribute = 1; /* only once */
+                    setHasReadTribute(TRUE); /* only once */
                 }
             }
             return 1;

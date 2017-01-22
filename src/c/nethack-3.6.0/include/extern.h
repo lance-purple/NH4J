@@ -1248,6 +1248,13 @@ E void FDECL(incrementWeaponHitCount, (long));
 E boolean FDECL(pacifistConduct, ());
 E void FDECL(setPacifistConduct, (boolean));
 
+E boolean FDECL(gotMinorOracle, ());
+E void FDECL(setGotMinorOracle, (boolean));
+E boolean FDECL(gotMajorOracle, ());
+E void FDECL(setGotMajorOracle, (boolean));
+E boolean FDECL(hasReadTribute, ());
+E void FDECL(setHasReadTribute, (boolean));
+
 
 /* ### invent.c ### */
 

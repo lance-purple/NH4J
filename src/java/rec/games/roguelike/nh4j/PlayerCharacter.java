@@ -155,6 +155,10 @@ public class PlayerCharacter {
 
 	private static boolean pacifistConduct = true;
 	
+	private static boolean gotMinorOracle = false;
+	private static boolean gotMajorOracle = false;
+	private static boolean hasReadTribute = false;
+	
 	
 	public static int currentDungeonNumber() {
 		return currentDungeonNumber;
@@ -1356,6 +1360,30 @@ public class PlayerCharacter {
 
 	public static final void incrementArtifactWishCount(long n) {
 		artifactWishCount += n;
+	}
+	
+	public static final boolean gotMinorOracle() {
+		return gotMinorOracle;
+	}
+	
+	public static final void setGotMinorOracle(boolean g) {
+		gotMinorOracle = g;
+	}
+
+	public static final boolean gotMajorOracle() {
+		return gotMajorOracle;
+	}
+	
+	public static final void setGotMajorOracle(boolean g) {
+		gotMajorOracle = g;
+	}
+
+	public static final boolean hasReadTribute() {
+		return hasReadTribute;
+	}
+	
+	public static final void setHasReadTribute(boolean t) {
+		hasReadTribute = t;
 	}
 
 }

@@ -525,18 +525,18 @@ struct monst *oracl;
     add_xpts = 0; /* first oracle of each type gives experience points */
     if (u_pay == minor_cost) {
         outrumor(1, BY_ORACLE);
-        if (!u.uevent.minor_oracle)
-            add_xpts = u_pay / (u.uevent.major_oracle ? 25 : 10);
+        if (!gotMinorOracle())
+            add_xpts = u_pay / (gotMajorOracle() ? 25 : 10);
         /* 5 pts if very 1st, or 2 pts if major already done */
-        u.uevent.minor_oracle = TRUE;
+        setGotMinorOracle(TRUE);
     } else {
         boolean cheapskate = u_pay < major_cost;
 
         outoracle(cheapskate, TRUE);
-        if (!cheapskate && !u.uevent.major_oracle)
-            add_xpts = u_pay / (u.uevent.minor_oracle ? 25 : 10);
+        if (!cheapskate && !gotMajorOracle())
+            add_xpts = u_pay / (gotMinorOracle() ? 25 : 10);
         /* ~100 pts if very 1st, ~40 pts if minor already done */
-        u.uevent.major_oracle = TRUE;
+        setGotMajorOracle(TRUE);
         exercise(A_WIS, !cheapskate);
     }
     if (add_xpts) {

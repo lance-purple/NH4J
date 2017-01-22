@@ -727,6 +727,10 @@ unsigned int *stuckid, *steedid;
 
     setPacifistConduct(read_int(fd) ? TRUE : FALSE);
 
+    setGotMinorOracle(read_int(fd) ? TRUE : FALSE);
+    setGotMajorOracle(read_int(fd) ? TRUE : FALSE);
+    setHasReadTribute(read_int(fd) ? TRUE : FALSE);
+
     int type;
 
     int nAchievements = knownAchievementTypes();

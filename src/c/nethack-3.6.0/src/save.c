@@ -461,6 +461,10 @@ register int fd, mode;
 
     write_int(fd, pacifistConduct());
 
+    write_int(fd, gotMinorOracle());
+    write_int(fd, gotMajorOracle());
+    write_int(fd, hasReadTribute());
+
     int type;
 
     int nAchievements = knownAchievementTypes();

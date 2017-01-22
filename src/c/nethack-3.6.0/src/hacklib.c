@@ -1669,7 +1669,7 @@ void setWeaponHitCount(long n) {
 }
 
 void incrementWeaponHitCount(long n) {
-    javaSetLong(PLAYER_CHARACTER_CLASS, "incrememtWeaponHitCount", n);
+    javaSetLong(PLAYER_CHARACTER_CLASS, "incrementWeaponHitCount", n);
 }
 
 boolean pacifistConduct() {
@@ -1678,6 +1678,30 @@ boolean pacifistConduct() {
 
 void setPacifistConduct(boolean b) {
     javaSetBoolean(PLAYER_CHARACTER_CLASS, "setPacifistConduct", b);
+}
+
+boolean gotMinorOracle() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "gotMinorOracle");
+}
+
+void setGotMinorOracle(boolean g) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setGotMinorOracle", g);
+}
+
+boolean gotMajorOracle() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "gotMajorOracle");
+}
+
+void setGotMajorOracle(boolean g) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setGotMajorOracle", g);
+}
+
+boolean hasReadTribute() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "hasReadTribute");
+}
+
+void setHasReadTribute(boolean t) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setHasReadTribute", t);
 }
 
 /* square of euclidean distance from pt to your current position */

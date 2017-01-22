@@ -43,9 +43,6 @@ struct RoleAdvance {
 #define SPECIAL_ITEM_QUEST_ARTIFACT 4
 
 struct u_event {
-    Bitfield(minor_oracle, 1); /* received at least 1 cheap oracle */
-    Bitfield(major_oracle, 1); /*  "  expensive oracle */
-    Bitfield(read_tribute, 1); /* read a passage from a novel */
     Bitfield(qcalled, 1);      /* called by Quest leader to do task */
     Bitfield(qexpelled, 1);    /* expelled from the Quest dungeon */
     Bitfield(qcompleted, 1);   /* successfully completed Quest task */
