@@ -1230,6 +1230,16 @@ E long FDECL(polyselfCount, ());
 E void FDECL(setPolyselfCount, (long));
 E void FDECL(incrementPolyselfCount, (long));
 
+E boolean FDECL(wishlessConduct, ());
+E long FDECL(wishCount, ());
+E void FDECL(setWishCount, (long));
+E void FDECL(incrementWishCount, (long));
+
+E boolean FDECL(artifactWishlessConduct, ());
+E long FDECL(artifactWishCount, ());
+E void FDECL(setArtifactWishCount, (long));
+E void FDECL(incrementArtifactWishCount, (long));
+
 E boolean FDECL(hitlessConduct, ());
 E long FDECL(weaponHitCount, ());
 E void FDECL(setWeaponHitCount, (long));

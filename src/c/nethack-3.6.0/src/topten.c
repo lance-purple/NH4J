@@ -377,9 +377,9 @@ encodeconduct()
         e |= 1L << 7;
     if (unpolyselfingConduct())
         e |= 1L << 8;
-    if (!u.uconduct.wishes)
+    if (wishlessConduct())
         e |= 1L << 9;
-    if (!u.uconduct.wisharti)
+    if (artifactWishlessConduct())
         e |= 1L << 10;
     if (!num_genocides())
         e |= 1L << 11;

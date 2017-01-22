@@ -1628,6 +1628,38 @@ void incrementPolyselfCount(long n) {
     javaSetLong(PLAYER_CHARACTER_CLASS, "incrementPolyselfCount", n);
 }
 
+boolean wishlessConduct() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "wishlessConduct");
+}
+
+long wishCount() {
+    javaGetLong(PLAYER_CHARACTER_CLASS, "wishCount");
+}
+
+void setWishCount(long n) {
+    javaSetLong(PLAYER_CHARACTER_CLASS, "setWishCount", n);
+}
+
+void incrementWishCount(long n) {
+    javaSetLong(PLAYER_CHARACTER_CLASS, "incrementWishCount", n);
+}
+
+boolean artifactWishlessConduct() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "artifactWishlessConduct");
+}
+
+long artifactWishCount() {
+    javaGetLong(PLAYER_CHARACTER_CLASS, "artifactWishCount");
+}
+
+void setArtifactWishCount(long n) {
+    javaSetLong(PLAYER_CHARACTER_CLASS, "setArtifactWishCount", n);
+}
+
+void incrementArtifactWishCount(long n) {
+    javaSetLong(PLAYER_CHARACTER_CLASS, "incrementArtifactWishCount", n);
+}
+
 long weaponHitCount() {
     javaGetLong(PLAYER_CHARACTER_CLASS, "weaponHitCount");
 }

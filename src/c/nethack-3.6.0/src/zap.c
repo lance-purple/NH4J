@@ -4902,7 +4902,7 @@ int triesleft;
         return;
     for (i = 0; i < SIZE(wishinfo) - 1; ++i)
         putstr(win, 0, wishinfo[i]);
-    if (!u.uconduct.wishes)
+    if (wishlessConduct())
         putstr(win, 0, preserve_wishless);
     putstr(win, 0, "");
     Sprintf(buf, retry_info,
@@ -4966,7 +4966,7 @@ retry:
     }
 
     /* KMH, conduct */
-    u.uconduct.wishes++;
+    incrementWishCount(1);
 
     if (otmp != &zeroobj) {
         const char

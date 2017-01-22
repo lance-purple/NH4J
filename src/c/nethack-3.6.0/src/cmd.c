@@ -2569,14 +2569,14 @@ int final;
         you_have_X(buf);
     }
 
-    if (!u.uconduct.wishes) {
+    if (wishlessConduct()) {
         you_have_X("used no wishes");
     } else {
-        Sprintf(buf, "used %ld wish%s", u.uconduct.wishes,
-                (u.uconduct.wishes > 1L) ? "es" : "");
+        Sprintf(buf, "used %ld wish%s", wishCount(),
+                (wishCount() > 1L) ? "es" : "");
         you_have_X(buf);
 
-        if (!u.uconduct.wisharti)
+        if (artifactWishlessConduct())
             enl_msg(You_, "have not wished", "did not wish",
                     " for any artifacts", "");
     }

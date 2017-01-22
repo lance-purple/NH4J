@@ -722,6 +722,8 @@ unsigned int *stuckid, *steedid;
     setWeaponHitCount(read_long(fd));
     setPolypileCount(read_long(fd));
     setPolyselfCount(read_long(fd));
+    setWishCount(read_long(fd));
+    setArtifactWishCount(read_long(fd));
 
     setPacifistConduct(read_int(fd) ? TRUE : FALSE);
 

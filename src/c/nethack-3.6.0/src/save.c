@@ -456,6 +456,8 @@ register int fd, mode;
     write_long(fd, weaponHitCount());
     write_long(fd, polypileCount());
     write_long(fd, polyselfCount());
+    write_long(fd, wishCount());
+    write_long(fd, artifactWishCount());
 
     write_int(fd, pacifistConduct());
 

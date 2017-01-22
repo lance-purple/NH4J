@@ -3472,7 +3472,7 @@ typfnd:
         otmp = oname(otmp, name);
         if (otmp->oartifact) {
             otmp->quan = 1L;
-            u.uconduct.wisharti++; /* KMH, conduct */
+            incrementArtifactWishCount(1); /* KMH, conduct */
         }
     }
 

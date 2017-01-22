@@ -150,6 +150,8 @@ public class PlayerCharacter {
 	private static long weaponHitCount = 0;
 	private static long polypileCount = 0;
 	private static long polyselfCount = 0;
+	private static long wishCount = 0;
+	private static long artifactWishCount = 0;
 
 	private static boolean pacifistConduct = true;
 	
@@ -1322,6 +1324,38 @@ public class PlayerCharacter {
 
 	public static final void incrementPolyselfCount(long n) {
 		polyselfCount += n;
+	}
+
+	public static final boolean wishlessConduct() {
+		return (0L == wishCount);
+	}
+	
+	public static final long wishCount() {
+		return wishCount;
+	}
+
+	public static final void setWishCount(long n) {
+		wishCount = n;
+	}
+
+	public static final void incrementWishCount(long n) {
+		wishCount += n;
+	}
+
+	public static final boolean artifactWishlessConduct() {
+		return (0L == artifactWishCount);
+	}
+	
+	public static final long artifactWishCount() {
+		return artifactWishCount;
+	}
+
+	public static final void setArtifactWishCount(long n) {
+		artifactWishCount = n;
+	}
+
+	public static final void incrementArtifactWishCount(long n) {
+		artifactWishCount += n;
 	}
 
 }

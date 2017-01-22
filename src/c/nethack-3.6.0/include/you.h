@@ -67,16 +67,6 @@ struct u_realtime {
     time_t endtime;
 };
 
-/* KMH, conduct --
- * These are voluntary challenges.  Each field denotes the number of
- * times a challenge has been violated.
- */
-struct u_conduct {     /* number of times... */
-    long wishes;       /* used a wish */
-    long wisharti;     /* wished for an artifact */
-    /* genocides already listed at end of game */
-};
-
 /*** Unified structure containing role information ***/
 struct Role {
     /*** Strings that name various things ***/
@@ -248,7 +238,6 @@ struct you {
     struct prop uprops[LAST_PROP + 1];
 
     struct u_event uevent;     /* certain events have happened */
-    struct u_conduct uconduct; /* KMH, conduct */
 
     align ualign;         /* character alignment */
 
