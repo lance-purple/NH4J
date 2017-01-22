@@ -474,7 +474,7 @@ register struct obj *spellbook;
 
             if (read_tribute("books", tribtitle, 0, (char *) 0, 0,
                              spellbook->o_id)) {
-                u.uconduct.literate++;
+                incrementLiteracyCount(1);
                 check_unpaid(spellbook);
                 if (!u.uevent.read_tribute) {
                     /* give bonus of 20 xp and 4*20+0 pts */

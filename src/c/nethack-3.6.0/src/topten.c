@@ -371,7 +371,7 @@ encodeconduct()
         e |= 1L << 4;
     if (pacifistConduct())
         e |= 1L << 5;
-    if (!u.uconduct.literate)
+    if (illiterateConduct())
         e |= 1L << 6;
     if (!u.uconduct.polypiles)
         e |= 1L << 7;

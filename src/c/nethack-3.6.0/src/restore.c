@@ -718,7 +718,9 @@ unsigned int *stuckid, *steedid;
     setFoodlessConduct(read_int(fd) ? TRUE : FALSE);
     setAtheistConduct(read_int(fd) ? TRUE : FALSE);
 
+    setLiteracyCount(read_long(fd));
     setWeaponHitCount(read_long(fd));
+
     setPacifistConduct(read_int(fd) ? TRUE : FALSE);
 
     int type;

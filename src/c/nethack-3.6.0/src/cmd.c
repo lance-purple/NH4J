@@ -2536,11 +2536,11 @@ int final;
     if (pacifistConduct())
         you_have_been("a pacifist");
 
-    if (!u.uconduct.literate) {
+    if (illiterateConduct()) {
         you_have_been("illiterate");
     } else if (wizard) {
-        Sprintf(buf, "read items or engraved %ld time%s", u.uconduct.literate,
-                plur(u.uconduct.literate));
+        Sprintf(buf, "read items or engraved %ld time%s", literacyCount(),
+                plur(literacyCount()));
         you_have_X(buf);
     }
 

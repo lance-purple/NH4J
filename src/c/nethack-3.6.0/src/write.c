@@ -223,7 +223,7 @@ found:
     }
 
     /* KMH, conduct */
-    u.uconduct.literate++;
+    incrementLiteracyCount(1);
 
     new_obj = mksobj(i, FALSE, FALSE);
     new_obj->bknown = (paper->bknown && pen->bknown);

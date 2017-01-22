@@ -452,7 +452,9 @@ register int fd, mode;
     write_int(fd, foodlessConduct());
     write_int(fd, atheistConduct());
 
+    write_long(fd, literacyCount());
     write_long(fd, weaponHitCount());
+
     write_int(fd, pacifistConduct());
 
     int type;

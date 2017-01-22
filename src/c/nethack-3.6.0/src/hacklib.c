@@ -1576,6 +1576,22 @@ void setAtheistConduct(boolean b) {
     javaSetBoolean(PLAYER_CHARACTER_CLASS, "setAtheistConduct", b);
 }
 
+boolean illiterateConduct() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "illiterateConduct");
+}
+
+long literacyCount() {
+    javaGetLong(PLAYER_CHARACTER_CLASS, "literacyCount");
+}
+
+void setLiteracyCount(long n) {
+    javaSetLong(PLAYER_CHARACTER_CLASS, "setLiteracyCount", n);
+}
+
+void incrementLiteracyCount(long n) {
+    javaSetLong(PLAYER_CHARACTER_CLASS, "incrementLiteracyCount", n);
+}
+
 boolean hitlessConduct() {
     return javaGetBoolean(PLAYER_CHARACTER_CLASS, "hitlessConduct");
 }

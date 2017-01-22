@@ -145,9 +145,10 @@ public class PlayerCharacter {
 	private static boolean veganConduct = true;
 	private static boolean foodlessConduct = true;
 	private static boolean atheistConduct = true;
-	
+
+	private static long literacyCount = 0;
 	private static long weaponHitCount = 0;
-	// hitlessConduct inferred
+
 	private static boolean pacifistConduct = true;
 	
 	
@@ -1271,6 +1272,22 @@ public class PlayerCharacter {
 	
 	public static final void setPacifistConduct(boolean p) {
 		pacifistConduct = p;
+	}
+
+	public static final boolean illiterateConduct() {
+		return (0L == literacyCount);
+	}
+	
+	public static final long literacyCount() {
+		return literacyCount;
+	}
+
+	public static final void setLiteracyCount(long n) {
+		literacyCount = n;
+	}
+
+	public static final void incrementLiteracyCount(long n) {
+		literacyCount += n;
 	}
 
 }

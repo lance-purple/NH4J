@@ -1215,6 +1215,11 @@ E void FDECL(setFoodlessConduct, (boolean));
 E boolean FDECL(atheistConduct, ());
 E void FDECL(setAtheistConduct, (boolean));
 
+E boolean FDECL(illiterateConduct, ());
+E long FDECL(literacyCount, ());
+E void FDECL(setLiteracyCount, (long));
+E void FDECL(incrementLiteracyCount, (long));
+
 E boolean FDECL(hitlessConduct, ());
 E long FDECL(weaponHitCount, ());
 E void FDECL(setWeaponHitCount, (long));

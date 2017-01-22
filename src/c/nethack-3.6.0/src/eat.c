@@ -2078,8 +2078,9 @@ struct obj *otmp;
         break;
     case FORTUNE_COOKIE:
         outrumor(bcsign(otmp), BY_COOKIE);
-        if (!Blind)
-            u.uconduct.literate++;
+        if (!Blind) {
+            incrementLiteracyCount(1);
+	}
         break;
     case LUMP_OF_ROYAL_JELLY:
         /* This stuff seems to be VERY healthy! */
