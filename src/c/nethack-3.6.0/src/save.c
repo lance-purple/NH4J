@@ -467,6 +467,15 @@ register int fd, mode;
     write_int(fd, calledByQuestLeader());
     write_int(fd, expelledFromQuestDungeon());
     write_int(fd, completedQuest());
+    write_int(fd, haveOpenedDrawbridge());
+    write_int(fd, haveInvokedGateToSanctum());
+    write_int(fd, enteredGehennomViaValley());
+
+    write_int(fd, handOfElberethLevel());
+
+    write_int(fd, becameDemigod());
+    write_int(fd, steppedOnVibratingSquare());
+    write_int(fd, haveAscended());
 
     write_int(fd, knowledgeOfPasstune());
 

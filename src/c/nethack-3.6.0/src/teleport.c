@@ -792,7 +792,7 @@ level_tele()
         /* if invocation did not yet occur, teleporting into
          * the last level of Gehennom is forbidden.
          */
-        if (!wizard && areYouInHell() && !u.uevent.invoked
+        if (!wizard && areYouInHell() && ! haveInvokedGateToSanctum()
             && newlev >= (dungeons[currentDungeonNumber()].depth_start
                           + levelsInCurrentDungeon() - 1)) {
             newlev = dungeons[currentDungeonNumber()].depth_start
@@ -1293,7 +1293,7 @@ random_teleport_level()
         max_depth =
             levelsInCurrentDungeon() + (dungeons[currentDungeonNumber()].depth_start - 1);
         /* can't reach Sanctum if the invocation hasn't been performed */
-        if (areYouInHell() && !u.uevent.invoked)
+        if (areYouInHell() && ! haveInvokedGateToSanctum())
             max_depth -= 1;
     }
 

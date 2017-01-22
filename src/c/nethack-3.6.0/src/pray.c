@@ -729,18 +729,18 @@ gcrownu()
     already_exists = in_hand = FALSE; /* lint suppression */
     switch (u.ualign.type) {
     case A_LAWFUL:
-        u.uevent.uhand_of_elbereth = 1;
+        setHandOfElberethLevel(1);
         verbalize("I crown thee...  The Hand of Elbereth!");
         break;
     case A_NEUTRAL:
-        u.uevent.uhand_of_elbereth = 2;
+        setHandOfElberethLevel(2);
         in_hand = (uwep && uwep->oartifact == ART_VORPAL_BLADE);
         already_exists =
             exist_artifact(LONG_SWORD, artiname(ART_VORPAL_BLADE));
         verbalize("Thou shalt be my Envoy of Balance!");
         break;
     case A_CHAOTIC:
-        u.uevent.uhand_of_elbereth = 3;
+        setHandOfElberethLevel(3);
         in_hand = (uwep && uwep->oartifact == ART_STORMBRINGER);
         already_exists =
             exist_artifact(RUNESWORD, artiname(ART_STORMBRINGER));
@@ -1012,7 +1012,7 @@ aligntyp g_align;
                skip if you've solved it via mastermind or destroyed the
                drawbridge (both set uopened_dbridge) or if you've already
                travelled past the Valley of the Dead (gehennom_entered) */
-            if (!u.uevent.uopened_dbridge && !u.uevent.gehennom_entered) {
+            if (! haveOpenedDrawbridge() && ! enteredGehennomViaValley()) {
                 if (knowledgeOfPasstune() < 1) {
                     godvoice(g_align, (char *) 0);
                     verbalize("Hark, %s!", youmonst.data->mlet == S_HUMAN
@@ -1112,7 +1112,7 @@ aligntyp g_align;
         }
         case 7:
         case 8:
-            if (u.ualign.record >= PIOUS && !u.uevent.uhand_of_elbereth) {
+            if (u.ualign.record >= PIOUS && (0 == handOfElberethLevel())) {
                 gcrownu();
                 break;
             } /* else FALLTHRU */
@@ -1151,8 +1151,8 @@ aligntyp g_align;
         }
 
     setTimeToNextBlessing(rnz(350));
-    kick_on_butt = u.uevent.udemigod ? 1 : 0;
-    if (u.uevent.uhand_of_elbereth)
+    kick_on_butt = becameDemigod() ? 1 : 0;
+    if (handOfElberethLevel() > 0)
         kick_on_butt++;
     if (kick_on_butt)
         increaseTimeToNextBlessing(kick_on_butt * rnz(1000));
@@ -1452,7 +1452,7 @@ dosacrifice()
             /* The final Test.  Did you win? */
             if (uamul == otmp)
                 Amulet_off();
-            u.uevent.ascended = 1;
+            setHaveAscended(TRUE);
             if (carried(otmp))
                 useup(otmp); /* well, it's gone now */
             else

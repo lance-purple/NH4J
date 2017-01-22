@@ -1261,6 +1261,23 @@ E void FDECL(setExpelledFromQuestDungeon, (boolean));
 E boolean FDECL(completedQuest, ());
 E void FDECL(setCompletedQuest, (boolean));
 
+E boolean FDECL(haveOpenedDrawbridge, ());
+E void FDECL(setHaveOpenedDrawbridge, (boolean));
+E boolean FDECL(haveInvokedGateToSanctum, ());
+E void FDECL(setHaveInvokedGateToSanctum, (boolean));
+E boolean FDECL(enteredGehennomViaValley, ());
+E void FDECL(setEnteredGehennomViaValley, (boolean));
+
+E int FDECL(handOfElberethLevel, ());
+E void FDECL(setHandOfElberethLevel, (int));
+
+E boolean FDECL(becameDemigod, ());
+E void FDECL(setBecameDemigod, (boolean));
+E boolean FDECL(steppedOnVibratingSquare, ());
+E void FDECL(setSteppedOnVibratingSquare, (boolean));
+E boolean FDECL(haveAscended, ());
+E void FDECL(setHaveAscended, (boolean));
+
 E int FDECL(knowledgeOfPasstune, ());
 E void FDECL(setKnowledgeOfPasstune, (int));
 E void FDECL(incrementKnowledgeOfPasstune, (int));

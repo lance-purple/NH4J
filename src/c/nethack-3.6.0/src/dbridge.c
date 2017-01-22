@@ -867,7 +867,7 @@ int x, y;
     newsym(x2, y2);
     unblock_point(x2, y2); /* vision */
     if (areYouOnStrongholdLevel())
-        u.uevent.uopened_dbridge = TRUE;
+        setHaveOpenedDrawbridge(TRUE);
 }
 
 /*
@@ -947,7 +947,7 @@ int x, y;
     if (!does_block(x2, y2, lev2))
         unblock_point(x2, y2); /* vision */
     if (areYouOnStrongholdLevel())
-        u.uevent.uopened_dbridge = TRUE;
+        setHaveOpenedDrawbridge(TRUE);
 
     set_entity(x2, y2, etmp2); /* currently only automissers can be here */
     if (etmp2->edata) {

@@ -400,7 +400,7 @@ encodeachieve()
         r |= 1L << 2;
     if (achieved(ACHIEVEMENT_GOT_BOOK))
         r |= 1L << 3;
-    if (u.uevent.invoked)
+    if (haveInvokedGateToSanctum())
         r |= 1L << 4;
     if (achieved(ACHIEVEMENT_GOT_AMULET))
         r |= 1L << 5;

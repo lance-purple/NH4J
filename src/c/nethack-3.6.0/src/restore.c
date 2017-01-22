@@ -733,6 +733,15 @@ unsigned int *stuckid, *steedid;
     setCalledByQuestLeader(read_int(fd) ? TRUE : FALSE);
     setExpelledFromQuestDungeon(read_int(fd) ? TRUE : FALSE);
     setCompletedQuest(read_int(fd) ? TRUE : FALSE);
+    setHaveOpenedDrawbridge(read_int(fd) ? TRUE : FALSE);
+    setHaveInvokedGateToSanctum(read_int(fd) ? TRUE : FALSE);
+    setEnteredGehennomViaValley(read_int(fd) ? TRUE : FALSE);
+
+    setHandOfElberethLevel(read_int(fd));
+
+    setBecameDemigod(read_int(fd) ? TRUE : FALSE);
+    setSteppedOnVibratingSquare(read_int(fd) ? TRUE : FALSE);
+    setHaveAscended(read_int(fd) ? TRUE : FALSE);
 
     setKnowledgeOfPasstune(read_int(fd));
 

@@ -2114,7 +2114,7 @@ boolean quietly;
     if (ESHK(shkp)->shoptype == CANDLESHOP
         && obj->otyp == CANDELABRUM_OF_INVOCATION) {
         if (!quietly) {
-            if (is_izchak(shkp, TRUE) && !u.uevent.invoked) {
+            if (is_izchak(shkp, TRUE) && ! haveInvokedGateToSanctum()) {
                 verbalize("No thanks, I'd hang onto that if I were you.");
                 if (obj->spe < 7)
                     verbalize(
@@ -2492,7 +2492,7 @@ char *buf;
     static const char *const honored[] = { "good", "honored", "most gracious",
                                            "esteemed",
                                            "most renowned and sacred" };
-    Strcat(buf, honored[rn2(SIZE(honored) - 1) + u.uevent.udemigod]);
+    Strcat(buf, honored[rn2(SIZE(honored) - 1) + becameDemigod()]);
     if (is_vampire(youmonst.data))
         Strcat(buf, (flags.female) ? " dark lady" : " dark lord");
     else if (is_elf(youmonst.data))

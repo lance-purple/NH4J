@@ -42,15 +42,6 @@ struct RoleAdvance {
 #define SPECIAL_ITEM_CANDELABRUM 3
 #define SPECIAL_ITEM_QUEST_ARTIFACT 4
 
-struct u_event {
-    Bitfield(uopened_dbridge, 1);   /* opened the drawbridge */
-    Bitfield(invoked, 1);           /* invoked Gate to the Sanctum level */
-    Bitfield(gehennom_entered, 1);  /* entered Gehennom via Valley */
-    Bitfield(uhand_of_elbereth, 2); /* became Hand of Elbereth */
-    Bitfield(udemigod, 1);          /* killed the wiz */
-    Bitfield(uvibrated, 1);         /* stepped on "vibrating square" */
-    Bitfield(ascended, 1);          /* has offered the Amulet */
-};
 
 struct u_realtime {
     long
@@ -228,8 +219,6 @@ struct you {
     char ushops_left[5];    /* ditto, shops exited this turn */
 
     struct prop uprops[LAST_PROP + 1];
-
-    struct u_event uevent;     /* certain events have happened */
 
     align ualign;         /* character alignment */
 

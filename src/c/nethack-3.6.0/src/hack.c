@@ -1770,7 +1770,7 @@ invocation_message()
             Sprintf(buf, "under your %s", makeplural(body_part(FOOT)));
 
         You_feel("a strange vibration %s.", buf);
-        u.uevent.uvibrated = 1;
+        setSteppedOnVibratingSquare(TRUE);
         if (otmp && otmp->spe == 7 && otmp->lamplit)
             pline("%s %s!", The(xname(otmp)),
                   Blind ? "throbs palpably" : "glows with a strange light");

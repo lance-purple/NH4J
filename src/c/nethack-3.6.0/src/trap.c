@@ -495,7 +495,7 @@ boolean td; /* td == TRUE : trap door or hole */
     else if (Levitation || u.ustuck
              || (!canYouFallThroughCurrentLevel() && !levl[currentX()][currentY()].candig) || Flying
              || is_clinger(youmonst.data)
-             || (areYouInHell() && !u.uevent.invoked && newlevel == bottom)) {
+             || (areYouInHell() && ! haveInvokedGateToSanctum() && newlevel == bottom)) {
         dont_fall = "don't fall in.";
     } else if (youmonst.data->msize >= MZ_HUGE) {
         dont_fall = "don't fit through.";

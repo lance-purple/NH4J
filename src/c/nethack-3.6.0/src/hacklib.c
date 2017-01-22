@@ -1728,6 +1728,62 @@ void setCompletedQuest(boolean c) {
     javaSetBoolean(PLAYER_CHARACTER_CLASS, "setCompletedQuest", c);
 }
 
+boolean haveOpenedDrawbridge() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "haveOpenedDrawbridge");
+}
+
+void setHaveOpenedDrawbridge(boolean c) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setHaveOpenedDrawbridge", c);
+}
+
+boolean haveInvokedGateToSanctum() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "haveInvokedGateToSanctum");
+}
+
+void setHaveInvokedGateToSanctum(boolean c) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setHaveInvokedGateToSanctum", c);
+}
+
+boolean enteredGehennomViaValley() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "enteredGehennomViaValley");
+}
+
+void setEnteredGehennomViaValley(boolean c) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setEnteredGehennomViaValley", c);
+}
+
+int handOfElberethLevel() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "handOfElberethLevel");
+}
+
+void setHandOfElberethLevel(int h) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setHandOfElberethLevel", h);
+}
+
+boolean becameDemigod() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "becameDemigod");
+}
+
+void setBecameDemigod(boolean c) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setBecameDemigod", c);
+}
+
+boolean steppedOnVibratingSquare() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "steppedOnVibratingSquare");
+}
+
+void setSteppedOnVibratingSquare(boolean c) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setSteppedOnVibratingSquare", c);
+}
+
+boolean haveAscended() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "haveAscended");
+}
+
+void setHaveAscended(boolean c) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setHaveAscended", c);
+}
+
 int knowledgeOfPasstune() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "knowledgeOfPasstune");
 }

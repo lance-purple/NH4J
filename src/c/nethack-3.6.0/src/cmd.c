@@ -1894,11 +1894,11 @@ int final;
     putstr(en_win, 0, "");
     putstr(en_win, 0, final ? "Final Attributes:" : "Current Attributes:");
 
-    if (u.uevent.uhand_of_elbereth) {
+    if (handOfElberethLevel() > 0) {
         static const char *const hofe_titles[3] = { "the Hand of Elbereth",
                                                     "the Envoy of Balance",
                                                     "the Glory of Arioch" };
-        you_are(hofe_titles[u.uevent.uhand_of_elbereth - 1], "");
+        you_are(hofe_titles[handOfElberethLevel() - 1], "");
     }
 
     /* note: piousness 20 matches MIN_QUEST_ALIGN (quest.h) */

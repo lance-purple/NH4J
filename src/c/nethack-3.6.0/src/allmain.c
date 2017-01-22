@@ -118,7 +118,7 @@ boolean resuming;
                     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon)
                         mtmp->movement += mcalcmove(mtmp);
 
-                    if (!rn2(u.uevent.udemigod
+                    if (!rn2(becameDemigod()
                                  ? 25
                                  : (currentDepth() > depth(&stronghold_level))
                                        ? 50
@@ -323,7 +323,7 @@ boolean resuming;
                         amulet();
                     if (!rn2(40 + (int) (ACURR(A_DEX) * 3)))
                         u_wipe_engr(rnd(3));
-                    if (u.uevent.udemigod && !invulnerableWhilePraying()) {
+                    if (becameDemigod() && !invulnerableWhilePraying()) {
                         if (timeSinceBecomingADemigod())
                             decreaseTimeSinceBecomingADemigod(1);
                         if (!timeSinceBecomingADemigod()) {

@@ -284,7 +284,7 @@ register struct monst *mtmp;
         if ((strat = target_on(M3_WANTSAMUL, mtmp)) != STRAT_NONE)
             return strat;
 
-    if (u.uevent.invoked) { /* priorities change once gate opened */
+    if (haveInvokedGateToSanctum()) { /* priorities change once gate opened */
         if ((strat = target_on(M3_WANTSARTI, mtmp)) != STRAT_NONE)
             return strat;
         if ((strat = target_on(M3_WANTSBOOK, mtmp)) != STRAT_NONE)
@@ -591,8 +591,8 @@ void
 wizdead()
 {
     context.no_of_wizards--;
-    if (!u.uevent.udemigod) {
-        u.uevent.udemigod = TRUE;
+    if (! becameDemigod()) {
+        setBecameDemigod(TRUE);
         setTimeSinceBecomingADemigod(rn1(250, 50));
     }
 }

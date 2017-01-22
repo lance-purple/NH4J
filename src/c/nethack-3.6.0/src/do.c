@@ -929,14 +929,14 @@ dodown()
                                              : "engulfed");
         return 1;
     }
-    if (areYouOnLevel(&valley_level) && !u.uevent.gehennom_entered) {
+    if (areYouOnLevel(&valley_level) && ! enteredGehennomViaValley()) {
         You("are standing at the gate to Gehennom.");
         pline("Unspeakable cruelty and harm lurk down there.");
         if (yn("Are you sure you want to enter?") != 'y')
             return 0;
         else
             pline("So be it.");
-        u.uevent.gehennom_entered = 1; /* don't ask again */
+        setEnteredGehennomViaValley(TRUE); /* don't ask again */
     }
 
     if (!next_to_u()) {

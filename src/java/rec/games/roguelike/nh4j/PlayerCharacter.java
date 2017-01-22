@@ -161,6 +161,15 @@ public class PlayerCharacter {
 	private static boolean calledByQuestLeader = false;
 	private static boolean expelledFromQuestDungeon = false;
 	private static boolean completedQuest = false;
+	private static boolean haveOpenedDrawbridge = false;
+	private static boolean haveInvokedGateToSanctum = false;
+	private static boolean enteredGehennomViaValley = false;
+	
+	private static int handOfElberethLevel = 0;
+	
+	private static boolean becameDemigod = false;
+	private static boolean steppedOnVibratingSquare = false;
+	private static boolean haveAscended = false;
 	
 	private static int knowledgeOfPasstune = 0;
 	
@@ -1424,6 +1433,62 @@ public class PlayerCharacter {
 
 	public static void incrementKnowledgeOfPasstune(int k) {
 		knowledgeOfPasstune += k;
+	}
+
+	public static boolean haveOpenedDrawbridge() {
+		return haveOpenedDrawbridge;
+	};
+
+	public static void setHaveOpenedDrawbridge(boolean h) {
+		haveOpenedDrawbridge = h;
+	};
+	
+	public static boolean haveInvokedGateToSanctum() {
+	    return haveInvokedGateToSanctum;	
+	}
+
+	public static void setHaveInvokedGateToSanctum(boolean h) {
+	    haveInvokedGateToSanctum = h;	
+	}
+
+	public static boolean enteredGehennomViaValley() {
+		return enteredGehennomViaValley;
+	}
+
+	public static void setEnteredGehennomViaValley(boolean e) {
+		enteredGehennomViaValley = e;
+	}
+
+	public static int handOfElberethLevel() {
+		return handOfElberethLevel;
+	}
+
+	public static void setHandOfElberethLevel(int h) {
+		handOfElberethLevel = h;
+	}
+
+	public static boolean becameDemigod() {
+		return becameDemigod;
+	}
+
+	public static void setBecameDemigod(boolean b) {
+		becameDemigod = b;
+	}
+
+	public static boolean steppedOnVibratingSquare() {
+		return steppedOnVibratingSquare;
+	}
+
+	public static void setSteppedOnVibratingSquare(boolean v) {
+		steppedOnVibratingSquare = v;
+	}
+
+	public static boolean haveAscended() {
+		return haveAscended;
+	}
+
+	public static void setHaveAscended(boolean h) {
+		haveAscended = h;
 	}
 
 }
