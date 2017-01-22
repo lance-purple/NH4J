@@ -734,6 +734,8 @@ unsigned int *stuckid, *steedid;
     setExpelledFromQuestDungeon(read_int(fd) ? TRUE : FALSE);
     setCompletedQuest(read_int(fd) ? TRUE : FALSE);
 
+    setKnowledgeOfPasstune(read_int(fd));
+
     int type;
 
     int nAchievements = knownAchievementTypes();

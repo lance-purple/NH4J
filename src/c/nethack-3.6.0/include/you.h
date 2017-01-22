@@ -43,8 +43,6 @@ struct RoleAdvance {
 #define SPECIAL_ITEM_QUEST_ARTIFACT 4
 
 struct u_event {
-    Bitfield(uheard_tune, 2);  /* 1=know about, 2=heard passtune */
-
     Bitfield(uopened_dbridge, 1);   /* opened the drawbridge */
     Bitfield(invoked, 1);           /* invoked Gate to the Sanctum level */
     Bitfield(gehennom_entered, 1);  /* entered Gehennom via Valley */

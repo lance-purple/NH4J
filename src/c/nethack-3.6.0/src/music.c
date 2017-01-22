@@ -585,7 +585,7 @@ struct obj *instr;
             goto nevermind;
     }
     if (c == 'n') {
-        if (u.uevent.uheard_tune == 2)
+        if (2 == knowledgeOfPasstune())
             c = ynq("Play the passtune?");
         if (c == 'q') {
             goto nevermind;
@@ -650,8 +650,7 @@ struct obj *instr;
                     for (x = currentX() - 1; x <= currentX() + 1; x++)
                         if (isok(x, y))
                             if (find_drawbridge(&x, &y)) {
-                                u.uevent.uheard_tune =
-                                    2; /* tune now fully known */
+                                setKnowledgeOfPasstune(2); /* tune now fully known */
                                 if (levl[x][y].typ == DRAWBRIDGE_DOWN)
                                     close_drawbridge(x, y);
                                 else
@@ -659,8 +658,8 @@ struct obj *instr;
                                 return 1;
                             }
             } else if (!Deaf) {
-                if (u.uevent.uheard_tune < 1)
-                    u.uevent.uheard_tune = 1;
+                if (knowledgeOfPasstune() < 1)
+                    setKnowledgeOfPasstune(1);
                 /* Okay, it wasn't the right tune, but perhaps
                  * we can give the player some hints like in the
                  * Mastermind game */
@@ -707,7 +706,7 @@ struct obj *instr;
                            correct notes followed by excess; otherwise,
                            tune would have matched above */
                         if (gears == 5)
-                            u.uevent.uheard_tune = 2;
+                            setKnowledgeOfPasstune(2);
                     }
                 }
             }

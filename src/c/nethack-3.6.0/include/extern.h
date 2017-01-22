@@ -1261,6 +1261,10 @@ E void FDECL(setExpelledFromQuestDungeon, (boolean));
 E boolean FDECL(completedQuest, ());
 E void FDECL(setCompletedQuest, (boolean));
 
+E int FDECL(knowledgeOfPasstune, ());
+E void FDECL(setKnowledgeOfPasstune, (int));
+E void FDECL(incrementKnowledgeOfPasstune, (int));
+
 
 /* ### invent.c ### */
 

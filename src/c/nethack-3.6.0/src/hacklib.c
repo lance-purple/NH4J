@@ -1728,6 +1728,18 @@ void setCompletedQuest(boolean c) {
     javaSetBoolean(PLAYER_CHARACTER_CLASS, "setCompletedQuest", c);
 }
 
+int knowledgeOfPasstune() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "knowledgeOfPasstune");
+}
+
+void setKnowledgeOfPasstune(int k) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setKnowledgeOfPasstune", k);
+}
+
+void incrementKnowledgeOfPasstune(int k) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "incrementKnowledgeOfPasstune", k);
+}
+
 /* square of euclidean distance from pt to your current position */
 int
 distanceSquaredToYou(x, y)

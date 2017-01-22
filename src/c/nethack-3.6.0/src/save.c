@@ -468,6 +468,8 @@ register int fd, mode;
     write_int(fd, expelledFromQuestDungeon());
     write_int(fd, completedQuest());
 
+    write_int(fd, knowledgeOfPasstune());
+
     int type;
 
     int nAchievements = knownAchievementTypes();

@@ -162,6 +162,8 @@ public class PlayerCharacter {
 	private static boolean expelledFromQuestDungeon = false;
 	private static boolean completedQuest = false;
 	
+	private static int knowledgeOfPasstune = 0;
+	
 	public static int currentDungeonNumber() {
 		return currentDungeonNumber;
 	}
@@ -1411,5 +1413,17 @@ public class PlayerCharacter {
 	public static void setCompletedQuest(boolean c) {
 		completedQuest = c;
 	};
+	
+	public static int knowledgeOfPasstune() {
+		return knowledgeOfPasstune;
+	}
+
+	public static void setKnowledgeOfPasstune(int k) {
+		knowledgeOfPasstune = k;
+	}
+
+	public static void incrementKnowledgeOfPasstune(int k) {
+		knowledgeOfPasstune += k;
+	}
 
 }

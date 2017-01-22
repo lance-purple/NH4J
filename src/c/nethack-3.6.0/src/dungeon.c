@@ -2852,10 +2852,10 @@ mapseen *mptr;
 char *outbuf;
 {
     *outbuf = '\0';
-    if (mptr->flags.castletune && u.uevent.uheard_tune) {
+    if (mptr->flags.castletune && (knowledgeOfPasstune() > 0)) {
         char tmp[BUFSZ];
 
-        if (u.uevent.uheard_tune == 2)
+        if (2 == knowledgeOfPasstune())
             Sprintf(tmp, "notes \"%s\"", tune);
         else
             Strcpy(tmp, "5-note tune");
