@@ -373,7 +373,7 @@ encodeconduct()
         e |= 1L << 5;
     if (illiterateConduct())
         e |= 1L << 6;
-    if (!u.uconduct.polypiles)
+    if (unpolypilingConduct())
         e |= 1L << 7;
     if (!u.uconduct.polyselfs)
         e |= 1L << 8;

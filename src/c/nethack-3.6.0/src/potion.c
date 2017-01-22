@@ -1854,7 +1854,7 @@ dodip()
             short save_otyp = obj->otyp;
 
             /* KMH, conduct */
-            u.uconduct.polypiles++;
+            incrementPolypileCount(1);
 
             was_wep = (obj == uwep);
             was_swapwep = (obj == uswapwep);

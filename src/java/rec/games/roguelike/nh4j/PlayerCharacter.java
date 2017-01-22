@@ -148,6 +148,7 @@ public class PlayerCharacter {
 
 	private static long literacyCount = 0;
 	private static long weaponHitCount = 0;
+	private static long polypileCount = 0;
 
 	private static boolean pacifistConduct = true;
 	
@@ -1288,6 +1289,22 @@ public class PlayerCharacter {
 
 	public static final void incrementLiteracyCount(long n) {
 		literacyCount += n;
+	}
+
+	public static final boolean unpolypilingConduct() {
+		return (0L == polypileCount);
+	}
+	
+	public static final long polypileCount() {
+		return polypileCount;
+	}
+
+	public static final void setPolypileCount(long n) {
+		polypileCount = n;
+	}
+
+	public static final void incrementPolypileCount(long n) {
+		polypileCount += n;
 	}
 
 }

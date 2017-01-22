@@ -72,7 +72,6 @@ struct u_realtime {
  * times a challenge has been violated.
  */
 struct u_conduct {     /* number of times... */
-    long polypiles;    /* polymorphed an object */
     long polyselfs;    /* transformed yourself */
     long wishes;       /* used a wish */
     long wisharti;     /* wished for an artifact */

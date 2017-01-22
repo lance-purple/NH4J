@@ -1592,6 +1592,22 @@ void incrementLiteracyCount(long n) {
     javaSetLong(PLAYER_CHARACTER_CLASS, "incrementLiteracyCount", n);
 }
 
+boolean unpolypilingConduct() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "unpolypilingConduct");
+}
+
+long polypileCount() {
+    javaGetLong(PLAYER_CHARACTER_CLASS, "polypileCount");
+}
+
+void setPolypileCount(long n) {
+    javaSetLong(PLAYER_CHARACTER_CLASS, "setPolypileCount", n);
+}
+
+void incrementPolypileCount(long n) {
+    javaSetLong(PLAYER_CHARACTER_CLASS, "incrementPolypileCount", n);
+}
+
 boolean hitlessConduct() {
     return javaGetBoolean(PLAYER_CHARACTER_CLASS, "hitlessConduct");
 }

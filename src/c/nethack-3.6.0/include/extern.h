@@ -1220,6 +1220,11 @@ E long FDECL(literacyCount, ());
 E void FDECL(setLiteracyCount, (long));
 E void FDECL(incrementLiteracyCount, (long));
 
+E boolean FDECL(unpolypilingConduct, ());
+E long FDECL(polypileCount, ());
+E void FDECL(setPolypileCount, (long));
+E void FDECL(incrementPolypileCount, (long));
+
 E boolean FDECL(hitlessConduct, ());
 E long FDECL(weaponHitCount, ());
 E void FDECL(setWeaponHitCount, (long));

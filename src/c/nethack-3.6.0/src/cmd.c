@@ -2553,11 +2553,11 @@ int final;
         you_have_X(buf);
     }
 
-    if (!u.uconduct.polypiles) {
+    if (unpolypilingConduct()) {
         you_have_never("polymorphed an object");
     } else if (wizard) {
-        Sprintf(buf, "polymorphed %ld item%s", u.uconduct.polypiles,
-                plur(u.uconduct.polypiles));
+        Sprintf(buf, "polymorphed %ld item%s", polypileCount(),
+                plur(polypileCount()));
         you_have_X(buf);
     }
 
