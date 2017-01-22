@@ -158,7 +158,9 @@ public class PlayerCharacter {
 	private static boolean gotMinorOracle = false;
 	private static boolean gotMajorOracle = false;
 	private static boolean hasReadTribute = false;
-	
+	private static boolean calledByQuestLeader = false;
+	private static boolean expelledFromQuestDungeon = false;
+	private static boolean completedQuest = false;
 	
 	public static int currentDungeonNumber() {
 		return currentDungeonNumber;
@@ -1385,5 +1387,29 @@ public class PlayerCharacter {
 	public static final void setHasReadTribute(boolean t) {
 		hasReadTribute = t;
 	}
+
+	public static boolean calledByQuestLeader() {
+		return calledByQuestLeader;
+	}
+
+	public static void setCalledByQuestLeader(boolean c) {
+		calledByQuestLeader = c;
+	}
+
+	public static boolean expelledFromQuestDungeon() {
+		return expelledFromQuestDungeon;
+	}
+
+	public static void setExpelledFromQuestDungeon(boolean e) {
+		expelledFromQuestDungeon = e;
+	}
+
+	public static boolean completedQuest() {
+		return completedQuest;
+	};
+
+	public static void setCompletedQuest(boolean c) {
+		completedQuest = c;
+	};
 
 }

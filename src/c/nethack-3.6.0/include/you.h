@@ -43,9 +43,6 @@ struct RoleAdvance {
 #define SPECIAL_ITEM_QUEST_ARTIFACT 4
 
 struct u_event {
-    Bitfield(qcalled, 1);      /* called by Quest leader to do task */
-    Bitfield(qexpelled, 1);    /* expelled from the Quest dungeon */
-    Bitfield(qcompleted, 1);   /* successfully completed Quest task */
     Bitfield(uheard_tune, 2);  /* 1=know about, 2=heard passtune */
 
     Bitfield(uopened_dbridge, 1);   /* opened the drawbridge */

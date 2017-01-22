@@ -1494,10 +1494,10 @@ boolean at_stairs, falling, portal;
             You("enter what seems to be an older, more primitive world.");
         /* main dungeon message from your quest leader */
         if (!wereYouInTheQuestDungeonLastTurn() && at_dgn_entrance("The Quest")
-            && !(u.uevent.qcompleted || u.uevent.qexpelled
+            && !(completedQuest() || expelledFromQuestDungeon()
                  || quest_status.leader_is_dead)) {
-            if (!u.uevent.qcalled) {
-                u.uevent.qcalled = 1;
+            if (!calledByQuestLeader()) {
+                setCalledByQuestLeader(TRUE);
                 com_pager(2); /* main "leader needs help" message */
             } else {          /* reminder message */
                 com_pager(Role_if(PM_ROGUE) ? 4 : 3);

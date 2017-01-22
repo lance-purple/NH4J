@@ -464,6 +464,9 @@ register int fd, mode;
     write_int(fd, gotMinorOracle());
     write_int(fd, gotMajorOracle());
     write_int(fd, hasReadTribute());
+    write_int(fd, calledByQuestLeader());
+    write_int(fd, expelledFromQuestDungeon());
+    write_int(fd, completedQuest());
 
     int type;
 

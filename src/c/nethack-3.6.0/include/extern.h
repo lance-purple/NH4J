@@ -1254,6 +1254,12 @@ E boolean FDECL(gotMajorOracle, ());
 E void FDECL(setGotMajorOracle, (boolean));
 E boolean FDECL(hasReadTribute, ());
 E void FDECL(setHasReadTribute, (boolean));
+E boolean FDECL(calledByQuestLeader, ());
+E void FDECL(setCalledByQuestLeader, (boolean));
+E boolean FDECL(expelledFromQuestDungeon, ());
+E void FDECL(setExpelledFromQuestDungeon, (boolean));
+E boolean FDECL(completedQuest, ());
+E void FDECL(setCompletedQuest, (boolean));
 
 
 /* ### invent.c ### */

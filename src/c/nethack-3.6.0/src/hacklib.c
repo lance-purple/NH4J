@@ -1704,6 +1704,30 @@ void setHasReadTribute(boolean t) {
     javaSetBoolean(PLAYER_CHARACTER_CLASS, "setHasReadTribute", t);
 }
 
+boolean calledByQuestLeader() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "calledByQuestLeader");
+}
+
+void setCalledByQuestLeader(boolean q) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setCalledByQuestLeader", q);
+}
+
+boolean expelledFromQuestDungeon() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "expelledFromQuestDungeon");
+}
+
+void setExpelledFromQuestDungeon(boolean e) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setExpelledFromQuestDungeon", e);
+}
+
+boolean completedQuest() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "completedQuest");
+}
+
+void setCompletedQuest(boolean c) {
+    javaSetBoolean(PLAYER_CHARACTER_CLASS, "setCompletedQuest", c);
+}
+
 /* square of euclidean distance from pt to your current position */
 int
 distanceSquaredToYou(x, y)

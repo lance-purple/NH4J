@@ -2448,9 +2448,9 @@ recalc_mapseen()
     mptr->flags.forgot = 0;
     /* flags.quest_summons disabled once quest finished */
     mptr->flags.quest_summons = (at_dgn_entrance("The Quest")
-                                 && u.uevent.qcalled
-                                 && !(u.uevent.qcompleted
-                                      || u.uevent.qexpelled
+                                 && calledByQuestLeader()
+                                 && !(completedQuest()
+                                      || expelledFromQuestDungeon()
                                       || quest_status.leader_is_dead));
     mptr->flags.questing = (areYouOnLevel(&qstart_level)
                             && quest_status.got_quest);
@@ -2745,7 +2745,7 @@ branch *br;
 {
     /* Special case: quest portal says closed if kicked from quest */
     boolean closed_portal = (br->end2.dnum == quest_dnum
-                             && u.uevent.qexpelled);
+                             && expelledFromQuestDungeon());
 
     switch (br->type) {
     case BR_PORTAL:
@@ -3014,7 +3014,7 @@ boolean printdun;
     } else if (on_level(&mptr->lev, &qstart_level)) {
         Sprintf(buf, "%sHome%s.", PREFIX,
                 mptr->flags.unreachable ? " (no way back...)" : "");
-        if (u.uevent.qcompleted)
+        if (completedQuest())
             Sprintf(buf, "%sCompleted quest for %s.", PREFIX, ldrname());
         else if (mptr->flags.questing)
             Sprintf(buf, "%sGiven quest by %s.", PREFIX, ldrname());

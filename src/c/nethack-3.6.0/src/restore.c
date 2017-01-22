@@ -730,6 +730,9 @@ unsigned int *stuckid, *steedid;
     setGotMinorOracle(read_int(fd) ? TRUE : FALSE);
     setGotMajorOracle(read_int(fd) ? TRUE : FALSE);
     setHasReadTribute(read_int(fd) ? TRUE : FALSE);
+    setCalledByQuestLeader(read_int(fd) ? TRUE : FALSE);
+    setExpelledFromQuestDungeon(read_int(fd) ? TRUE : FALSE);
+    setCompletedQuest(read_int(fd) ? TRUE : FALSE);
 
     int type;
 

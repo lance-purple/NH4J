@@ -2259,7 +2259,7 @@ cleanup:
     if (mtmp->m_id == quest_status.leader_m_id) { /* REAL BAD! */
         adjalign(-(u.ualign.record + (int) ALIGNLIM / 2));
         pline("That was %sa bad idea...",
-              u.uevent.qcompleted ? "probably " : "");
+              completedQuest() ? "probably " : "");
     } else if (mdat->msound == MS_NEMESIS) { /* Real good! */
         adjalign((int) (ALIGNLIM / 4));
     } else if (mdat->msound == MS_GUARDIAN) { /* Bad */

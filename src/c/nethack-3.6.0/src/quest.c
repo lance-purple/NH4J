@@ -78,7 +78,7 @@ on_goal()
 void
 onquest()
 {
-    if (u.uevent.qcompleted || Not_firsttime)
+    if (completedQuest() || Not_firsttime)
         return;
     if (!areYouOnASpecialLevel())
         return;
@@ -175,12 +175,12 @@ boolean seal;
 
     br = dungeon_branch("The Quest");
     dest = (br->end1.dnum == currentDungeonNumber()) ? &br->end2 : &br->end1;
-    portal_flag = u.uevent.qexpelled ? 0 /* returned via artifact? */
+    portal_flag = expelledFromQuestDungeon() ? 0 /* returned via artifact? */
                                      : !seal ? 1 : -1;
     schedule_goto(dest, FALSE, FALSE, portal_flag, (char *) 0, (char *) 0);
     if (seal) { /* remove the portal to the quest - sealing it off */
-        int reexpelled = u.uevent.qexpelled;
-        u.uevent.qexpelled = 1;
+        int reexpelled = expelledFromQuestDungeon();
+        setExpelledFromQuestDungeon(TRUE);
         remdun_mapseen(quest_dnum);
         /* Delete the near portal now; the far (main dungeon side)
            portal will be deleted as part of arrival on that level.
@@ -222,7 +222,7 @@ struct obj *obj; /* quest artifact; possibly null if carrying Amulet */
     Qstat(got_thanks) = TRUE;
 
     if (obj) {
-        u.uevent.qcompleted = 1; /* you did it! */
+        setCompletedQuest(TRUE); /* you did it! */
         /* behave as if leader imparts sufficient info about the
            quest artifact */
         fully_identify_obj(obj);
