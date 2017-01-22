@@ -1612,6 +1612,22 @@ boolean hitlessConduct() {
     return javaGetBoolean(PLAYER_CHARACTER_CLASS, "hitlessConduct");
 }
 
+boolean unpolyselfingConduct() {
+    return javaGetBoolean(PLAYER_CHARACTER_CLASS, "unpolyselfingConduct");
+}
+
+long polyselfCount() {
+    javaGetLong(PLAYER_CHARACTER_CLASS, "polyselfCount");
+}
+
+void setPolyselfCount(long n) {
+    javaSetLong(PLAYER_CHARACTER_CLASS, "setPolyselfCount", n);
+}
+
+void incrementPolyselfCount(long n) {
+    javaSetLong(PLAYER_CHARACTER_CLASS, "incrementPolyselfCount", n);
+}
+
 long weaponHitCount() {
     javaGetLong(PLAYER_CHARACTER_CLASS, "weaponHitCount");
 }

@@ -375,7 +375,7 @@ encodeconduct()
         e |= 1L << 6;
     if (unpolypilingConduct())
         e |= 1L << 7;
-    if (!u.uconduct.polyselfs)
+    if (unpolyselfingConduct())
         e |= 1L << 8;
     if (!u.uconduct.wishes)
         e |= 1L << 9;

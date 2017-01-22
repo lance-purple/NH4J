@@ -2561,11 +2561,11 @@ int final;
         you_have_X(buf);
     }
 
-    if (!u.uconduct.polyselfs) {
+    if (unpolyselfingConduct()) {
         you_have_never("changed form");
     } else if (wizard) {
-        Sprintf(buf, "changed form %ld time%s", u.uconduct.polyselfs,
-                plur(u.uconduct.polyselfs));
+        Sprintf(buf, "changed form %ld time%s", polyselfCount(),
+                plur(polyselfCount()));
         you_have_X(buf);
     }
 

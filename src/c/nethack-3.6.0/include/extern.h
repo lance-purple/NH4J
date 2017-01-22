@@ -1225,6 +1225,11 @@ E long FDECL(polypileCount, ());
 E void FDECL(setPolypileCount, (long));
 E void FDECL(incrementPolypileCount, (long));
 
+E boolean FDECL(unpolyselfingConduct, ());
+E long FDECL(polyselfCount, ());
+E void FDECL(setPolyselfCount, (long));
+E void FDECL(incrementPolyselfCount, (long));
+
 E boolean FDECL(hitlessConduct, ());
 E long FDECL(weaponHitCount, ());
 E void FDECL(setWeaponHitCount, (long));

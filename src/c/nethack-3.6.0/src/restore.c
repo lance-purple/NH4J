@@ -721,6 +721,7 @@ unsigned int *stuckid, *steedid;
     setLiteracyCount(read_long(fd));
     setWeaponHitCount(read_long(fd));
     setPolypileCount(read_long(fd));
+    setPolyselfCount(read_long(fd));
 
     setPacifistConduct(read_int(fd) ? TRUE : FALSE);
 

@@ -980,7 +980,7 @@ register int pm;
         if (youmonst.data->mlet != S_MIMIC && !Unchanging) {
             char buf[BUFSZ];
 
-            u.uconduct.polyselfs++; /* you're changing form */
+            incrementPolyselfCount(1); /* you're changing form */
             You_cant("resist the temptation to mimic %s.",
                      Hallucination ? "an orange" : "a pile of gold");
             /* A pile of gold can't ride. */

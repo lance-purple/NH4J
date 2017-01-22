@@ -605,7 +605,7 @@ int mntmp;
     }
 
     /* KMH, conduct */
-    u.uconduct.polyselfs++;
+    incrementPolyselfCount(1);
 
     /* exercise used to be at the very end but only Wis was affected
        there since the polymorph was always in effect by then */

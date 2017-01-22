@@ -296,7 +296,7 @@ nh_timeout()
                 }
                 dealloc_killer(kptr);
                 /* involuntarily break "never changed form" conduct */
-                u.uconduct.polyselfs++;
+                incrementPolyselfCount(1);
                 done(TURNED_SLIME);
                 break;
             case VOMITING:
