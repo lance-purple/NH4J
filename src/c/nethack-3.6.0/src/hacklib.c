@@ -2299,12 +2299,24 @@ midnight()
 }
 
 boolean currently_occupying(char roomID) {
-    for (int i = 0; (i < sizeof(u.urooms)) && (u.urooms[i]); i++) {
-        if (roomID == u.urooms[i]) {
+    for (int i = 0; (i < maximumOccupiedRooms()) && (currentlyOccupiedRooms(i)); i++) {
+        if (roomID == currentlyOccupiedRooms(i)) {
 	    return TRUE;
 	}
     }
     return FALSE;
+}
+
+int maximumOccupiedRooms() {
+    return sizeof(u.urooms);
+}
+
+char currentlyOccupiedRooms(int i) {
+    return u.urooms[i];
+}
+
+void setCurrentlyOccupiedRooms(int i, char roomID) {
+    u.urooms[i] = roomID;
 }
 
 /*hacklib.c*/
