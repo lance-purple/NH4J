@@ -206,7 +206,7 @@ char *array;
 char
 vault_currently_occupied()
 {
-    for (int i = 0; (i < maximumOccupiedRooms()) && (currentlyOccupiedRooms(i)); i++) {
+    for (int i = 0; (i < maximumOccupiedRoomCount()) && (currentlyOccupiedRooms(i)); i++) {
 	char roomID = currentlyOccupiedRooms(i);
         if (rooms[roomID - ROOMOFFSET].rtype == VAULT) {
             return roomID;

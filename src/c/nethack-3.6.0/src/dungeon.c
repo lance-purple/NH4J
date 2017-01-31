@@ -2456,7 +2456,7 @@ recalc_mapseen()
                             && quest_status.got_quest);
 
     /* track rooms the hero is in */
-    for (i = 0; i < maximumOccupiedRooms(); ++i) {
+    for (i = 0; i < maximumOccupiedRoomCount(); ++i) {
 	char roomID = currentlyOccupiedRooms(i);
         if (!roomID)
             continue;

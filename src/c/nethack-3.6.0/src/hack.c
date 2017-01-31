@@ -2154,7 +2154,7 @@ register boolean newlev;
 {
     char *ptr1, *ptr2, *ptr3, *ptr4;
 
-    for (int i = 0; (i < maximumOccupiedRooms()) && (currentlyOccupiedRooms(i)); i++) {
+    for (int i = 0; (i < maximumOccupiedRoomCount()) && (currentlyOccupiedRooms(i)); i++) {
         u.urooms0[i] = currentlyOccupiedRooms(i);
     }
 
@@ -2174,7 +2174,7 @@ register boolean newlev;
         setCurrentlyOccupiedRooms(i, inRooms[i]);
 	i++;
     }
-    while (i < maximumOccupiedRooms()) {
+    while (i < maximumOccupiedRoomCount()) {
         setCurrentlyOccupiedRooms(i, '\0');
 	i++;
     }
@@ -2183,7 +2183,7 @@ register boolean newlev;
     ptr2 = &u.uentered[0];
     ptr3 = &u.ushops[0];
     ptr4 = &u.ushops_entered[0];
-    for (int i = 0; (i < maximumOccupiedRooms()) && (currentlyOccupiedRooms(i)); i++) {
+    for (int i = 0; (i < maximumOccupiedRoomCount()) && (currentlyOccupiedRooms(i)); i++) {
 	char roomID = currentlyOccupiedRooms(i);
         if (!index(u.urooms0, roomID))
             *(ptr2++) = roomID;

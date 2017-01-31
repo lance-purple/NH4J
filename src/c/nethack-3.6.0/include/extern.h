@@ -1283,7 +1283,7 @@ E void FDECL(setKnowledgeOfPasstune, (int));
 E void FDECL(incrementKnowledgeOfPasstune, (int));
 
 E boolean FDECL(currently_occupying, (char));
-E int FDECL(maximumOccupiedRooms, ());
+E int FDECL(maximumOccupiedRoomCount, ());
 E char FDECL(currentlyOccupiedRooms, (int));
 E void FDECL(setCurrentlyOccupiedRooms, (int, char));
 

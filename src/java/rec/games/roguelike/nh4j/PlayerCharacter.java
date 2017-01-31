@@ -31,6 +31,10 @@ public class PlayerCharacter {
 	private static int destinationY;
 
 	private static boolean youMoved;
+	
+	private static final int MAXIMUM_OCCUPIED_ROOM_COUNT = 5;
+	private static int currentlyOccupiedRooms[] = new int[MAXIMUM_OCCUPIED_ROOM_COUNT];
+	
 	private static int lastTurningDirection;
 	
 	private static TrapType currentTrapType;
@@ -1489,6 +1493,18 @@ public class PlayerCharacter {
 
 	public static void setHaveAscended(boolean h) {
 		haveAscended = h;
+	}
+	
+	public static int maximumOccupiedRoomCount() {
+		return MAXIMUM_OCCUPIED_ROOM_COUNT;
+	}
+
+	public static int currentlyOccupiedRooms(int index) {
+		return currentlyOccupiedRooms[index];
+	}
+	
+	public static void setCurrentlyOccupiedRooms(int index, int v) {
+		currentlyOccupiedRooms[index] = v;
 	}
 
 }

@@ -2299,7 +2299,7 @@ midnight()
 }
 
 boolean currently_occupying(char roomID) {
-    for (int i = 0; (i < maximumOccupiedRooms()) && (currentlyOccupiedRooms(i)); i++) {
+    for (int i = 0; (i < maximumOccupiedRoomCount()) && (currentlyOccupiedRooms(i)); i++) {
         if (roomID == currentlyOccupiedRooms(i)) {
 	    return TRUE;
 	}
@@ -2307,16 +2307,18 @@ boolean currently_occupying(char roomID) {
     return FALSE;
 }
 
-int maximumOccupiedRooms() {
-    return sizeof(u.urooms);
+int maximumOccupiedRoomCount() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "maximumOccupiedRoomCount");
 }
 
 char currentlyOccupiedRooms(int i) {
-    return u.urooms[i];
+    int roomID = javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "currentlyOccupiedRooms", i);
+    return (char) 0xff & roomID;
 }
 
 void setCurrentlyOccupiedRooms(int i, char roomID) {
-    u.urooms[i] = roomID;
+    int v = roomID;
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setCurrentlyOccupiedRooms", i, v);
 }
 
 /*hacklib.c*/
