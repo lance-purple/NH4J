@@ -157,6 +157,18 @@ temple_currently_occupied()
     return '\0';
 }
 
+char
+temple_previously_occupied()
+{
+    for (int i = 0; (i < maximumOccupiedRoomCount()) && (previouslyOccupiedRooms(i)); i++) {
+	char roomID = previouslyOccupiedRooms(i);
+        if (rooms[roomID - ROOMOFFSET].rtype == TEMPLE) {
+            return roomID;
+	}
+    }
+    return '\0';
+}
+
 STATIC_OVL boolean
 histemple_at(priest, x, y)
 register struct monst *priest;
@@ -402,7 +414,7 @@ int roomno;
     char buf[BUFSZ];
 
     /* don't do anything if hero is already in the room */
-    if (temple_occupied(u.urooms0))
+    if (temple_previously_occupied())
         return;
 
     if ((priest = findpriest((char) roomno)) != 0) {

@@ -2155,7 +2155,7 @@ register boolean newlev;
     char *ptr1, *ptr2, *ptr3, *ptr4;
 
     for (int i = 0; (i < maximumOccupiedRoomCount()) && (currentlyOccupiedRooms(i)); i++) {
-        u.urooms0[i] = currentlyOccupiedRooms(i);
+        setPreviouslyOccupiedRooms(i, currentlyOccupiedRooms(i));
     }
 
     Strcpy(u.ushops0, u.ushops);
@@ -2185,7 +2185,7 @@ register boolean newlev;
     ptr4 = &u.ushops_entered[0];
     for (int i = 0; (i < maximumOccupiedRoomCount()) && (currentlyOccupiedRooms(i)); i++) {
 	char roomID = currentlyOccupiedRooms(i);
-        if (!index(u.urooms0, roomID))
+        if (!previously_occupying(roomID))
             *(ptr2++) = roomID;
         if (IS_SHOP(roomID - ROOMOFFSET)) {
             *(ptr3++) = roomID;

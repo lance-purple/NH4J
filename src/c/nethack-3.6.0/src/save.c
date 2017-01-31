@@ -340,6 +340,7 @@ register int fd, mode;
 
     for (int i = 0; i < maximumOccupiedRoomCount(); i++) {
         write_int(fd, currentlyOccupiedRooms(i));
+        write_int(fd, previouslyOccupiedRooms(i));
     }
 
     write_int(fd, currentTrapType());
