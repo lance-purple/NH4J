@@ -2298,4 +2298,13 @@ midnight()
     return (getlt()->tm_hour == 0);
 }
 
+boolean currently_occupying(char roomID) {
+    for (int i = 0; (i < sizeof(u.urooms)) && (u.urooms[i]); i++) {
+        if (roomID == u.urooms[i]) {
+	    return TRUE;
+	}
+    }
+    return FALSE;
+}
+
 /*hacklib.c*/

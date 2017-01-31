@@ -2154,7 +2154,10 @@ register boolean newlev;
 {
     char *ptr1, *ptr2, *ptr3, *ptr4;
 
-    Strcpy(u.urooms0, u.urooms);
+    for (int i = 0; (i < sizeof(u.urooms)) && (u.urooms[i]); i++) {
+        u.urooms0[i] = u.urooms[i];
+    }
+
     Strcpy(u.ushops0, u.ushops);
     if (newlev) {
         u.urooms[0] = '\0';
@@ -2164,17 +2167,28 @@ register boolean newlev;
         Strcpy(u.ushops_left, u.ushops0);
         return;
     }
-    Strcpy(u.urooms, in_rooms(currentX(), currentY(), 0));
 
-    for (ptr1 = &u.urooms[0], ptr2 = &u.uentered[0], ptr3 = &u.ushops[0],
-        ptr4 = &u.ushops_entered[0];
-         *ptr1; ptr1++) {
-        if (!index(u.urooms0, *ptr1))
-            *(ptr2++) = *ptr1;
-        if (IS_SHOP(*ptr1 - ROOMOFFSET)) {
-            *(ptr3++) = *ptr1;
-            if (!index(u.ushops0, *ptr1))
-                *(ptr4++) = *ptr1;
+    char* inRooms = in_rooms(currentX(), currentY(), 0);
+    strcpy(u.urooms, inRooms);
+    int i = 0;
+    while (i < sizeof(u.urooms)) {
+        u.urooms[i] = inRooms[i];
+	if (u.urooms[i] == '\0') break;
+	i++;
+    }
+
+
+    ptr2 = &u.uentered[0];
+    ptr3 = &u.ushops[0];
+    ptr4 = &u.ushops_entered[0];
+    for (int i = 0; u.urooms[i]; i++) {
+	char roomID = u.urooms[i];
+        if (!index(u.urooms0, roomID))
+            *(ptr2++) = roomID;
+        if (IS_SHOP(roomID - ROOMOFFSET)) {
+            *(ptr3++) = roomID;
+            if (!index(u.ushops0, roomID))
+                *(ptr4++) = roomID;
         }
     }
     *ptr2 = '\0';

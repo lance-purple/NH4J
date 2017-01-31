@@ -203,6 +203,18 @@ char *array;
     return '\0';
 }
 
+char
+vault_currently_occupied()
+{
+    for (int i = 0; (u.urooms[i]); i++) {
+	char roomID = u.urooms[i];     
+        if (rooms[roomID - ROOMOFFSET].rtype == VAULT) {
+            return roomID;
+	}
+    }
+    return '\0';
+}
+
 void
 invault()
 {
@@ -211,7 +223,7 @@ invault()
 #endif
     struct monst *guard;
     boolean gsensed;
-    int trycount, vaultroom = (int) vault_occupied(u.urooms);
+    int trycount, vaultroom = (int) vault_currently_occupied();
 
     if (!vaultroom) {
         setTimeInVault(0);
@@ -546,7 +558,7 @@ register struct monst *grd;
     register struct egd *egrd = EGD(grd);
     struct rm *crm;
     boolean goldincorridor = FALSE,
-            u_in_vault = vault_occupied(u.urooms) ? TRUE : FALSE,
+            u_in_vault = vault_currently_occupied() ? TRUE : FALSE,
             grd_in_vault = *in_rooms(grd->mx, grd->my, VAULT) ? TRUE : FALSE;
     boolean disappear_msg_seen = FALSE, semi_dead = (grd->mhp <= 0);
     long umoney = money_cnt(invent);
@@ -918,7 +930,7 @@ gd_sound()
 {
     struct monst *grd = findgd();
 
-    if (vault_occupied(u.urooms))
+    if (vault_currently_occupied())
         return FALSE;
     else
         return (boolean) (grd == (struct monst *) 0);

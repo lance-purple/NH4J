@@ -2457,16 +2457,17 @@ recalc_mapseen()
 
     /* track rooms the hero is in */
     for (i = 0; i < SIZE(u.urooms); ++i) {
-        if (!u.urooms[i])
+	char roomID = u.urooms[i];
+        if (!roomID)
             continue;
 
-        ridx = u.urooms[i] - ROOMOFFSET;
+        ridx = roomID - ROOMOFFSET;
         mptr->msrooms[ridx].seen = 1;
         mptr->msrooms[ridx].untended =
             (rooms[ridx].rtype >= SHOPBASE)
-                ? (!(mtmp = shop_keeper(u.urooms[i])) || !inhishop(mtmp))
+                ? (!(mtmp = shop_keeper(roomID)) || !inhishop(mtmp))
                 : (rooms[ridx].rtype == TEMPLE)
-                      ? (!(mtmp = findpriest(u.urooms[i]))
+                      ? (!(mtmp = findpriest(roomID))
                          || !inhistemple(mtmp))
                       : 0;
     }

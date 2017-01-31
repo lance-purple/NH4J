@@ -1282,6 +1282,8 @@ E int FDECL(knowledgeOfPasstune, ());
 E void FDECL(setKnowledgeOfPasstune, (int));
 E void FDECL(incrementKnowledgeOfPasstune, (int));
 
+E boolean FDECL(currently_occupying, (char));
+
 
 /* ### invent.c ### */
 
@@ -2247,6 +2249,7 @@ E void FDECL(altar_wrath, (int, int));
 E int FDECL(move_special, (struct monst *, BOOLEAN_P, SCHAR_P, BOOLEAN_P,
                            BOOLEAN_P, XCHAR_P, XCHAR_P, XCHAR_P, XCHAR_P));
 E char FDECL(temple_occupied, (char *));
+E char FDECL(temple_currently_occupied, ());
 E boolean FDECL(inhistemple, (struct monst *));
 E int FDECL(pri_move, (struct monst *));
 E void FDECL(initPriestOnCurrentLevel, (struct mkroom *, int, int, BOOLEAN_P));
@@ -2834,6 +2837,7 @@ E void FDECL(newegd, (struct monst *));
 E void FDECL(free_egd, (struct monst *));
 E boolean FDECL(grddead, (struct monst *));
 E char FDECL(vault_occupied, (char *));
+E char FDECL(vault_currently_occupied, ());
 E void NDECL(invault);
 E int FDECL(gd_move, (struct monst *));
 E void NDECL(paygd);
