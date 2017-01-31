@@ -608,6 +608,7 @@ unsigned int *stuckid, *steedid;
     for (int i =  0; i < maximumOccupiedRoomCount(); i++) {
         setCurrentlyOccupiedRooms(i, (char) (0xff & read_int(fd)));
         setPreviouslyOccupiedRooms(i, (char) (0xff & read_int(fd)));
+        setFreshlyEnteredRooms(i, (char) (0xff & read_int(fd)));
     }
 
     setCurrentTrapType(read_int(fd));

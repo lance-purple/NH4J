@@ -1289,6 +1289,8 @@ E char FDECL(currentlyOccupiedRooms, (int));
 E void FDECL(setCurrentlyOccupiedRooms, (int, char));
 E char FDECL(previouslyOccupiedRooms, (int));
 E void FDECL(setPreviouslyOccupiedRooms, (int, char));
+E char FDECL(freshlyEnteredRooms, (int));
+E void FDECL(setFreshlyEnteredRooms, (int, char));
 
 
 /* ### invent.c ### */

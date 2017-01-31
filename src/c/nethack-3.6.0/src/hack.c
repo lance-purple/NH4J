@@ -2161,7 +2161,7 @@ register boolean newlev;
     Strcpy(u.ushops0, u.ushops);
     if (newlev) {
 	setCurrentlyOccupiedRooms(0, '\0');
-        u.uentered[0] = '\0';
+	setFreshlyEnteredRooms(0, '\0');
         u.ushops[0] = '\0';
         u.ushops_entered[0] = '\0';
         Strcpy(u.ushops_left, u.ushops0);
@@ -2180,20 +2180,21 @@ register boolean newlev;
     }
 
 
-    ptr2 = &u.uentered[0];
+    int i2 = 0;
     ptr3 = &u.ushops[0];
     ptr4 = &u.ushops_entered[0];
-    for (int i = 0; (i < maximumOccupiedRoomCount()) && (currentlyOccupiedRooms(i)); i++) {
-	char roomID = currentlyOccupiedRooms(i);
-        if (!previously_occupying(roomID))
-            *(ptr2++) = roomID;
+    for (int i1 = 0; (i1 < maximumOccupiedRoomCount()) && (currentlyOccupiedRooms(i1)); i1++) {
+	char roomID = currentlyOccupiedRooms(i1);
+        if (!previously_occupying(roomID)) {
+            setFreshlyEnteredRooms(i2, roomID); i2++;
+	}
         if (IS_SHOP(roomID - ROOMOFFSET)) {
             *(ptr3++) = roomID;
             if (!index(u.ushops0, roomID))
                 *(ptr4++) = roomID;
         }
     }
-    *ptr2 = '\0';
+    setFreshlyEnteredRooms(i2, '\0');
     *ptr3 = '\0';
     *ptr4 = '\0';
 
@@ -2209,22 +2210,22 @@ check_special_room(newlev)
 register boolean newlev;
 {
     register struct monst *mtmp;
-    char *ptr;
 
     move_update(newlev);
 
     if (*u.ushops0)
         u_left_shop(u.ushops_left, newlev);
 
-    if (!*u.uentered && !*u.ushops_entered) /* implied by newlev */
+    if (!(freshlyEnteredRooms(0)) && !*u.ushops_entered) /* implied by newlev */
         return; /* no entrance messages necessary */
 
     /* Did we just enter a shop? */
     if (*u.ushops_entered)
         u_entered_shop(u.ushops_entered);
 
-    for (ptr = &u.uentered[0]; *ptr; ptr++) {
-        int roomno = *ptr - ROOMOFFSET, rt = rooms[roomno].rtype;
+    for (int i = 0; (freshlyEnteredRooms(i)); i++) {
+        char roomID = freshlyEnteredRooms(i);
+        int roomno = (roomID - ROOMOFFSET), rt = rooms[roomno].rtype;
         boolean msg_given = TRUE;
 
         /* Did we just enter some other special room? */

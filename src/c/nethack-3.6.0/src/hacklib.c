@@ -2340,4 +2340,14 @@ void setPreviouslyOccupiedRooms(int i, char roomID) {
     javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setPreviouslyOccupiedRooms", i, v);
 }
 
+char freshlyEnteredRooms(int i) {
+    int roomID = javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "freshlyEnteredRooms", i);
+    return (char) 0xff & roomID;
+}
+
+void setFreshlyEnteredRooms(int i, char roomID) {
+    int v = roomID;
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setFreshlyEnteredRooms", i, v);
+}
+
 /*hacklib.c*/

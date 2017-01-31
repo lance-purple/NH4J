@@ -35,7 +35,8 @@ public class PlayerCharacter {
 	private static final int MAXIMUM_OCCUPIED_ROOM_COUNT = 5;
 	private static int currentlyOccupiedRooms[] = new int[MAXIMUM_OCCUPIED_ROOM_COUNT];
 	private static int previouslyOccupiedRooms[] = new int[MAXIMUM_OCCUPIED_ROOM_COUNT];
-	
+    private static int freshlyEnteredRooms[] = new int[MAXIMUM_OCCUPIED_ROOM_COUNT];
+    
 	private static int lastTurningDirection;
 	
 	private static TrapType currentTrapType;
@@ -1514,6 +1515,14 @@ public class PlayerCharacter {
 
 	public static void setPreviouslyOccupiedRooms(int index, int v) {
 		previouslyOccupiedRooms[index] = v;
+	}
+
+	public static int freshlyEnteredRooms(int index) {
+		return freshlyEnteredRooms[index];
+	}
+
+	public static void setFreshlyEnteredRooms(int index, int v) {
+		freshlyEnteredRooms[index] = v;
 	}
 
 }
