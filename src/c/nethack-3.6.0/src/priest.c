@@ -225,7 +225,7 @@ register struct monst *priest;
                 Your("displaced image doesn't fool %s!", mon_nam(priest));
             (void) mattacku(priest);
             return 0;
-        } else if (currently_occupying(temple)) {
+        } else if (currently_occupying_room(temple)) {
             /* chase player if inside temple & can see him */
             if (priest->mcansee && m_canseeu(priest)) {
                 gx = currentX();

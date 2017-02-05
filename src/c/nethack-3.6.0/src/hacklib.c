@@ -2298,7 +2298,7 @@ midnight()
     return (getlt()->tm_hour == 0);
 }
 
-boolean currently_occupying(char roomID) {
+boolean currently_occupying_room(char roomID) {
     for (int i = 0; (i < maximumOccupiedRoomCount()) && (currentlyOccupiedRooms(i)); i++) {
         if (roomID == currentlyOccupiedRooms(i)) {
 	    return TRUE;
@@ -2307,7 +2307,7 @@ boolean currently_occupying(char roomID) {
     return FALSE;
 }
 
-boolean previously_occupying(char roomID) {
+boolean previously_occupying_room(char roomID) {
     for (int i = 0; (i < maximumOccupiedRoomCount()) && (previouslyOccupiedRooms(i)); i++) {
         if (roomID == previouslyOccupiedRooms(i)) {
 	    return TRUE;

@@ -1233,11 +1233,12 @@ register struct obj *obj;
     } else if (otx == 0 && oty == 0) {
         ; /* fell through a trap door; no update of old loc needed */
     } else {
+        char roomID = *in_rooms(otx, oty, 0);
         if (costly_spot(otx, oty)
             && (!costly_spot(tx, ty)
-                || !index(in_rooms(tx, ty, 0), *in_rooms(otx, oty, 0)))) {
+                || !index(in_rooms(tx, ty, 0), roomID))) {
             if (costly_spot(currentX(), currentY())
-                && currently_occupying(*in_rooms(otx, oty, 0)))
+                && currently_occupying_room(roomID))
                 addtobill(obj, FALSE, FALSE, FALSE);
             else
                 (void) stolen_value(obj, otx, oty, FALSE, FALSE);

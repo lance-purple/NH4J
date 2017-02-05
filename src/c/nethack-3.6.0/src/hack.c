@@ -2185,7 +2185,7 @@ register boolean newlev;
     ptr4 = &u.ushops_entered[0];
     for (int i1 = 0; (i1 < maximumOccupiedRoomCount()) && (currentlyOccupiedRooms(i1)); i1++) {
 	char roomID = currentlyOccupiedRooms(i1);
-        if (!previously_occupying(roomID)) {
+        if (!previously_occupying_room(roomID)) {
             setFreshlyEnteredRooms(i2, roomID); i2++;
 	}
         if (IS_SHOP(roomID - ROOMOFFSET)) {
