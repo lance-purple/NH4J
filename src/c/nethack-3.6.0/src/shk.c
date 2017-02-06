@@ -70,7 +70,7 @@ STATIC_DCL void FDECL(add_to_billobjs, (struct obj *));
 STATIC_DCL void FDECL(bill_box_content, (struct obj *, BOOLEAN_P, BOOLEAN_P,
                                          struct monst *));
 STATIC_DCL boolean FDECL(rob_shop, (struct monst *));
-STATIC_DCL void FDECL(deserted_shop, (char *));
+STATIC_DCL void FDECL(freshly_entered_shop_deserted, ());
 STATIC_DCL boolean FDECL(special_stock, (struct obj *, struct monst *,
                                          BOOLEAN_P));
 STATIC_DCL const char *FDECL(cad, (BOOLEAN_P));
@@ -532,11 +532,10 @@ struct monst *shkp;
 
 /* give a message when entering an untended shop (caller has verified that) */
 STATIC_OVL void
-deserted_shop(enterstring)
-/*const*/ char *enterstring;
+freshly_entered_shop_deserted()
 {
     struct monst *mtmp;
-    struct mkroom *r = &rooms[(int) *enterstring - ROOMOFFSET];
+    struct mkroom *r = &rooms[(int) freshlyEnteredShops(0) - ROOMOFFSET];
     int x, y, m = 0, n = 0;
 
     for (x = r->lx; x <= r->hx; ++x)
@@ -560,22 +559,21 @@ deserted_shop(enterstring)
 }
 
 void
-u_entered_shop(enterstring)
-char *enterstring;
+u_freshly_entered_shop()
 {
     register int rt;
     register struct monst *shkp;
     register struct eshk *eshkp;
     static char empty_shops[5];
 
-    if (!*enterstring)
+    if (!freshlyEnteredShops(0))
         return;
 
-    if (!(shkp = shop_keeper(*enterstring))) {
-        if (!index(empty_shops, *enterstring)
+    if (!(shkp = shop_keeper(freshlyEnteredShops(0)))) {
+        if (!index(empty_shops, freshlyEnteredShops(0))
             && in_rooms(currentX(), currentY(), SHOPBASE)
                    != in_rooms(originalX(), originalY(), SHOPBASE))
-            deserted_shop(enterstring);
+            freshly_entered_shop_deserted();
 
 	for (int i = 0; i < maximumOccupiedRoomCount(); i++) {
             empty_shops[i] = currentlyOccupiedShops(i);
@@ -589,8 +587,8 @@ char *enterstring;
     if (!inhishop(shkp)) {
         /* dump core when referenced */
         eshkp->bill_p = (struct bill_x *) -1000;
-        if (!index(empty_shops, *enterstring))
-            deserted_shop(enterstring);
+        if (!index(empty_shops, freshlyEnteredShops(0)))
+            freshly_entered_shop_deserted();
 
 	for (int i = 0; i < maximumOccupiedRoomCount(); i++) {
             empty_shops[i] = currentlyOccupiedShops(i);
@@ -620,7 +618,7 @@ char *enterstring;
         return;
     }
 
-    rt = rooms[*enterstring - ROOMOFFSET].rtype;
+    rt = rooms[freshlyEnteredShops(0) - ROOMOFFSET].rtype;
 
     if (ANGRY(shkp)) {
         verbalize("So, %s, you dare return to %s %s?!", plname,
