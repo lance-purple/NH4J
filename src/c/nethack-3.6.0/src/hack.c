@@ -2159,7 +2159,7 @@ register boolean newlev;
     }
 
     for (int i = 0; (i < maximumOccupiedRoomCount()) && (currentlyOccupiedShops(i)); i++) {
-        u.ushops0[i] = currentlyOccupiedShops(i);
+        setPreviouslyOccupiedShops(i, currentlyOccupiedShops(i));
     }
 
     if (newlev) {
@@ -2167,7 +2167,9 @@ register boolean newlev;
 	setFreshlyEnteredRooms(0, '\0');
 	setCurrentlyOccupiedShops(0, '\0');
         u.ushops_entered[0] = '\0';
-        Strcpy(u.ushops_left, u.ushops0);
+        for (int i = 0; (i < maximumOccupiedRoomCount()); i++) {
+            u.ushops_left[i] = previouslyOccupiedShops(i);
+        }
         return;
     }
 
@@ -2193,7 +2195,7 @@ register boolean newlev;
 	}
         if (IS_SHOP(roomID - ROOMOFFSET)) {
             setCurrentlyOccupiedShops(i3, roomID); i3++;
-            if (!index(u.ushops0, roomID))
+            if (!previously_occupying_shop(roomID))
                 *(ptr4++) = roomID;
         }
     }
@@ -2202,8 +2204,9 @@ register boolean newlev;
     *ptr4 = '\0';
 
     /* filter u.ushops0 -> u.ushops_left */
-    for (ptr1 = &u.ushops0[0], ptr2 = &u.ushops_left[0]; *ptr1; ptr1++) {
-	char shopID = *ptr1;
+    ptr2 = &u.ushops_left[0];
+    for (int i = 0; previouslyOccupiedShops(i); i++) {
+	char shopID = previouslyOccupiedShops(i);
         if (!currently_occupying_shop(shopID)) {
             *(ptr2++) = shopID;
 	}
@@ -2219,7 +2222,7 @@ register boolean newlev;
 
     move_update(newlev);
 
-    if (*u.ushops0)
+    if (previouslyOccupiedShops(0))
         u_left_shop(u.ushops_left, newlev);
 
     if (!(freshlyEnteredRooms(0)) && !*u.ushops_entered) /* implied by newlev */

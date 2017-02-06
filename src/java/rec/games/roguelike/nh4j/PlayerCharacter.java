@@ -37,6 +37,7 @@ public class PlayerCharacter {
 	private static int previouslyOccupiedRooms[] = new int[MAXIMUM_OCCUPIED_ROOM_COUNT];
     private static int freshlyEnteredRooms[] = new int[MAXIMUM_OCCUPIED_ROOM_COUNT];
 	private static int currentlyOccupiedShops[] = new int[MAXIMUM_OCCUPIED_ROOM_COUNT];
+	private static int previouslyOccupiedShops[] = new int[MAXIMUM_OCCUPIED_ROOM_COUNT];
     
 	private static int lastTurningDirection;
 	
@@ -1532,6 +1533,14 @@ public class PlayerCharacter {
 	
 	public static void setCurrentlyOccupiedShops(int index, int v) {
 		currentlyOccupiedShops[index] = v;
+	}
+
+	public static int previouslyOccupiedShops(int index) {
+		return previouslyOccupiedShops[index];
+	}
+	
+	public static void setPreviouslyOccupiedShops(int index, int v) {
+		previouslyOccupiedShops[index] = v;
 	}
 
 }

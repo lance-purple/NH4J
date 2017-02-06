@@ -2359,6 +2359,15 @@ boolean currently_occupying_shop(char shopID) {
     return FALSE;
 }
 
+boolean previously_occupying_shop(char shopID) {
+    for (int i = 0; (i < maximumOccupiedRoomCount()) && (previouslyOccupiedShops(i)); i++) {
+        if (shopID == previouslyOccupiedShops(i)) {
+	    return TRUE;
+	}
+    }
+    return FALSE;
+}
+
 char currentlyOccupiedShops(int i) {
     int shopID = javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "currentlyOccupiedShops", i);
     return (char) 0xff & shopID;
@@ -2367,6 +2376,16 @@ char currentlyOccupiedShops(int i) {
 void setCurrentlyOccupiedShops(int i, char shopID) {
     int v = shopID;
     javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setCurrentlyOccupiedShops", i, v);
+}
+
+char previouslyOccupiedShops(int i) {
+    int shopID = javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "previouslyOccupiedShops", i);
+    return (char) 0xff & shopID;
+}
+
+void setPreviouslyOccupiedShops(int i, char shopID) {
+    int v = shopID;
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setPreviouslyOccupiedShops", i, v);
 }
 
 /*hacklib.c*/

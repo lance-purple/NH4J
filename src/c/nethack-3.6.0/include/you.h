@@ -210,7 +210,6 @@ extern const struct Align aligns[]; /* table of available alignments */
 
 /*** Information about the player ***/
 struct you {
-    char ushops0[5];        /* ditto, for previous position */
     char ushops_entered[5]; /* ditto, shops entered this turn */
     char ushops_left[5];    /* ditto, shops exited this turn */
 

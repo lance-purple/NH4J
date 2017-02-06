@@ -725,12 +725,12 @@ level_tele()
     killer.name[0] = 0; /* still alive, so far... */
 
     if (newlev < 0 && !force_dest) {
-        if (*u.ushops0) {
+        if (previouslyOccupiedShops(0)) {
             /* take unpaid inventory items off of shop bills */
             in_mklev = TRUE; /* suppress map update */
-            u_left_shop(u.ushops0, TRUE);
+            u_left_previously_occupied_shop(TRUE);
             /* you're now effectively out of the shop */
-            *u.ushops0 = '\0';
+            setPreviouslyOccupiedShops(0, '\0');
             setCurrentlyOccupiedShops(0, '\0');
             in_mklev = FALSE;
         }
