@@ -1284,6 +1284,7 @@ E void FDECL(incrementKnowledgeOfPasstune, (int));
 
 E boolean FDECL(currently_occupying_room, (char));
 E boolean FDECL(previously_occupying_room, (char));
+E boolean FDECL(currently_occupying_shop, (char));
 E int FDECL(maximumOccupiedRoomCount, ());
 E char FDECL(currentlyOccupiedRooms, (int));
 E void FDECL(setCurrentlyOccupiedRooms, (int, char));
@@ -1291,6 +1292,8 @@ E char FDECL(previouslyOccupiedRooms, (int));
 E void FDECL(setPreviouslyOccupiedRooms, (int, char));
 E char FDECL(freshlyEnteredRooms, (int));
 E void FDECL(setFreshlyEnteredRooms, (int, char));
+E char FDECL(currentlyOccupiedShops, (int));
+E void FDECL(setCurrentlyOccupiedShops, (int, char));
 
 
 /* ### invent.c ### */

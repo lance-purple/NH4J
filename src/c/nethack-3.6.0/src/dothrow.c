@@ -787,13 +787,13 @@ struct obj *obj;
 xchar x, y;
 boolean broken;
 {
-    struct monst *shkp = shop_keeper(*u.ushops);
+    struct monst *shkp = shop_keeper(currentlyOccupiedShops(0));
 
     if (!shkp)
         return;
 
     if (broken || !costly_spot(x, y)
-        || *in_rooms(x, y, SHOPBASE) != *u.ushops) {
+        || *in_rooms(x, y, SHOPBASE) != currentlyOccupiedShops(0)) {
         /* thrown out of a shop or into a different shop */
         if (is_unpaid(obj))
             (void) stolen_value(obj, currentX(), currentY(), (boolean) shkp->mpeaceful,
@@ -1152,7 +1152,7 @@ boolean
         /* [perhaps this should be moved into thitmonst or hmon] */
         if (mon && mon->isshk
             && (!inside_shop(currentX(), currentY())
-                || !index(in_rooms(mon->mx, mon->my, SHOPBASE), *u.ushops)))
+                || !index(in_rooms(mon->mx, mon->my, SHOPBASE), currentlyOccupiedShops(0))))
             hot_pursuit(mon);
 
         if (obj_gone)
@@ -1228,7 +1228,7 @@ boolean
         if (mon && mon->isshk && is_pick(obj)) {
             if (cansee(bhitpos.x, bhitpos.y))
                 pline("%s snatches up %s.", Monnam(mon), the(xname(obj)));
-            if (*u.ushops || obj->unpaid)
+            if (currentlyOccupiedShops(0) || obj->unpaid)
                 check_shop_obj(obj, bhitpos.x, bhitpos.y, FALSE);
             (void) mpickobj(mon, obj); /* may merge and free obj */
             thrownobj = (struct obj *) 0;
@@ -1249,7 +1249,7 @@ boolean
             container_impact_dmg(obj, currentX(), currentY());
         /* charge for items thrown out of shop;
            shk takes possession for items thrown into one */
-        if ((*u.ushops || obj->unpaid) && obj != uball)
+        if ((currentlyOccupiedShops(0) || obj->unpaid) && obj != uball)
             check_shop_obj(obj, bhitpos.x, bhitpos.y, FALSE);
 
         stackobj(obj);
@@ -1444,7 +1444,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
                 (void) encumber_msg();
             } else {
                 /* angry leader caught it and isn't returning it */
-                if (*u.ushops || obj->unpaid) /* not very likely... */
+                if (currentlyOccupiedShops(0) || obj->unpaid) /* not very likely... */
                     check_shop_obj(obj, mon->mx, mon->my, FALSE);
                 (void) mpickobj(mon, obj);
             }
@@ -1526,7 +1526,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
                     broken = 0;
 
                 if (broken) {
-                    if (*u.ushops || obj->unpaid)
+                    if (currentlyOccupiedShops(0) || obj->unpaid)
                         check_shop_obj(obj, bhitpos.x, bhitpos.y, TRUE);
                     obfree(obj, (struct obj *) 0);
                     return 1;
@@ -1667,7 +1667,7 @@ register struct obj *obj;
         }
     }
     Strcat(buf, acceptgift);
-    if (*u.ushops || obj->unpaid)
+    if (currentlyOccupiedShops(0) || obj->unpaid)
         check_shop_obj(obj, mon->mx, mon->my, TRUE);
     (void) mpickobj(mon, obj); /* may merge and free obj */
     ret = 1;
@@ -1824,7 +1824,7 @@ boolean from_invent;
 
     if (hero_caused) {
         if (from_invent || obj->unpaid) {
-            if (*u.ushops || obj->unpaid)
+            if (currentlyOccupiedShops(0) || obj->unpaid)
                 check_shop_obj(obj, x, y, TRUE);
         } else if (!obj->no_charge && costly_spot(x, y)) {
             /* it is assumed that the obj is a floor-object */
@@ -1841,7 +1841,7 @@ boolean from_invent;
                 if (moves != lastmovetime)
                     peaceful_shk = shkp->mpeaceful;
                 if (stolen_value(obj, x, y, peaceful_shk, FALSE) > 0L
-                    && (*o_shop != u.ushops[0] || !inside_shop(currentX(), currentY()))
+                    && (*o_shop != currentlyOccupiedShops(0) || !inside_shop(currentX(), currentY()))
                     && moves != lastmovetime)
                     make_angry_shk(shkp, x, y);
                 lastmovetime = moves;
@@ -1983,7 +1983,7 @@ struct obj *obj;
     if (directionZ() > 0)
         pline_The("gold hits the %s.", surface(bhitpos.x, bhitpos.y));
     place_object(obj, bhitpos.x, bhitpos.y);
-    if (*u.ushops)
+    if (currentlyOccupiedShops(0))
         sellobj(obj, bhitpos.x, bhitpos.y);
     stackobj(obj);
     newsym(bhitpos.x, bhitpos.y);

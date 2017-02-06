@@ -2439,7 +2439,7 @@ dotypeinv()
     char *extra_types, types[BUFSZ];
     int class_count, oclass, unpaid_count, itemcount;
     int bcnt, ccnt, ucnt, xcnt, ocnt;
-    boolean billx = *u.ushops && doinvbill(0);
+    boolean billx = currentlyOccupiedShops(0) && doinvbill(0);
     menu_item *pick_list;
     boolean traditional = TRUE;
     const char *prompt = "What type of object do you want an inventory of?";

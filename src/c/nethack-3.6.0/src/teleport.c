@@ -730,7 +730,8 @@ level_tele()
             in_mklev = TRUE; /* suppress map update */
             u_left_shop(u.ushops0, TRUE);
             /* you're now effectively out of the shop */
-            *u.ushops0 = *u.ushops = '\0';
+            *u.ushops0 = '\0';
+            setCurrentlyOccupiedShops(0, '\0');
             in_mklev = FALSE;
         }
         if (newlev <= -10) {

@@ -513,7 +513,7 @@ boolean td; /* td == TRUE : trap door or hole */
         return;
     }
 
-    if (*u.ushops)
+    if (currentlyOccupiedShops(0))
         shopdig(1);
     if (areYouOnStrongholdLevel()) {
         find_hell(&dtmp);
@@ -4601,8 +4601,8 @@ boolean disarm;
             costly = (costly_spot(ox, oy)
                       && (shkp = shop_keeper(*in_rooms(ox, oy, SHOPBASE)))
                              != (struct monst *) 0);
-            insider = (*u.ushops && inside_shop(currentX(), currentY())
-                       && *in_rooms(ox, oy, SHOPBASE) == *u.ushops);
+            insider = (currentlyOccupiedShops(0) && inside_shop(currentX(), currentY())
+                       && *in_rooms(ox, oy, SHOPBASE) == currentlyOccupiedShops(0));
 
             pline("%s!", Tobjnam(obj, "explode"));
             Sprintf(buf, "exploding %s", xname(obj));

@@ -342,6 +342,7 @@ register int fd, mode;
         write_int(fd, currentlyOccupiedRooms(i));
         write_int(fd, previouslyOccupiedRooms(i));
         write_int(fd, freshlyEnteredRooms(i));
+        write_int(fd, currentlyOccupiedShops(i));
     }
 
     write_int(fd, currentTrapType());

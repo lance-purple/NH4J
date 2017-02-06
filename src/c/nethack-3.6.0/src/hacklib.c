@@ -2350,4 +2350,23 @@ void setFreshlyEnteredRooms(int i, char roomID) {
     javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setFreshlyEnteredRooms", i, v);
 }
 
+boolean currently_occupying_shop(char shopID) {
+    for (int i = 0; (i < maximumOccupiedRoomCount()) && (currentlyOccupiedShops(i)); i++) {
+        if (shopID == currentlyOccupiedShops(i)) {
+	    return TRUE;
+	}
+    }
+    return FALSE;
+}
+
+char currentlyOccupiedShops(int i) {
+    int shopID = javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "currentlyOccupiedShops", i);
+    return (char) 0xff & shopID;
+}
+
+void setCurrentlyOccupiedShops(int i, char shopID) {
+    int v = shopID;
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setCurrentlyOccupiedShops", i, v);
+}
+
 /*hacklib.c*/

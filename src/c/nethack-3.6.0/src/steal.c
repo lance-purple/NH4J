@@ -157,7 +157,7 @@ stealarm(VOID_ARGS)
                     if (!dmgtype(mtmp->data, AD_SITM)) /* polymorphed */
                         goto botm;
                     if (otmp->unpaid)
-                        subfrombill(otmp, shop_keeper(*u.ushops));
+                        subfrombill(otmp, shop_keeper(currentlyOccupiedShops(0)));
                     freeinv(otmp);
                     pline("%s steals %s!", Monnam(mtmp), doname(otmp));
                     (void) mpickobj(mtmp, otmp); /* may free otmp */
@@ -454,7 +454,7 @@ gotobj:
     mtmp->mavenge = 1;
 
     if (otmp->unpaid)
-        subfrombill(otmp, shop_keeper(*u.ushops));
+        subfrombill(otmp, shop_keeper(currentlyOccupiedShops(0)));
     freeinv(otmp);
     pline("%s stole %s.", named ? "She" : Monnam(mtmp), doname(otmp));
     could_petrify =
@@ -544,7 +544,7 @@ struct monst *mtmp;
         if (otmp->owornmask)
             remove_worn_item(otmp, TRUE);
         if (otmp->unpaid)
-            subfrombill(otmp, shop_keeper(*u.ushops));
+            subfrombill(otmp, shop_keeper(currentlyOccupiedShops(0)));
         freeinv(otmp);
         /* mpickobj wont merge otmp because none of the above things
            to steal are mergable */
@@ -572,7 +572,7 @@ int ochance, achance; /* percent chance for ordinary item, artifact */
         if (obj->owornmask)
             remove_worn_item(obj, TRUE);
         if (obj->unpaid)
-            subfrombill(obj, shop_keeper(*u.ushops));
+            subfrombill(obj, shop_keeper(currentlyOccupiedShops(0)));
         if (cansee(mon->mx, mon->my)) {
             const char *MonName = Monnam(mon);
 
