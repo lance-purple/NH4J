@@ -2166,7 +2166,7 @@ register boolean newlev;
 	setCurrentlyOccupiedRooms(0, '\0');
 	setFreshlyEnteredRooms(0, '\0');
 	setCurrentlyOccupiedShops(0, '\0');
-        u.ushops_entered[0] = '\0';
+	setFreshlyEnteredShops(0, '\0');
         for (int i = 0; (i < maximumOccupiedRoomCount()); i++) {
             u.ushops_left[i] = previouslyOccupiedShops(i);
         }
@@ -2187,7 +2187,7 @@ register boolean newlev;
 
     int i2 = 0;
     int i3 = 0;
-    ptr4 = &u.ushops_entered[0];
+    int i4 = 0;
     for (int i1 = 0; (i1 < maximumOccupiedRoomCount()) && (currentlyOccupiedRooms(i1)); i1++) {
 	char roomID = currentlyOccupiedRooms(i1);
         if (!previously_occupying_room(roomID)) {
@@ -2195,13 +2195,14 @@ register boolean newlev;
 	}
         if (IS_SHOP(roomID - ROOMOFFSET)) {
             setCurrentlyOccupiedShops(i3, roomID); i3++;
-            if (!previously_occupying_shop(roomID))
-                *(ptr4++) = roomID;
+            if (!previously_occupying_shop(roomID)) {
+                setFreshlyEnteredShops(i4, roomID); i4++;
+	    }
         }
     }
     setFreshlyEnteredRooms(i2, '\0');
     setFreshlyEnteredRooms(i3, '\0');
-    *ptr4 = '\0';
+    setFreshlyEnteredShops(i4, '\0');
 
     /* filter u.ushops0 -> u.ushops_left */
     ptr2 = &u.ushops_left[0];
@@ -2225,12 +2226,12 @@ register boolean newlev;
     if (previouslyOccupiedShops(0))
         u_left_shop(u.ushops_left, newlev);
 
-    if (!(freshlyEnteredRooms(0)) && !*u.ushops_entered) /* implied by newlev */
+    if (!(freshlyEnteredRooms(0)) && !freshlyEnteredShops(0)) /* implied by newlev */
         return; /* no entrance messages necessary */
 
     /* Did we just enter a shop? */
-    if (*u.ushops_entered)
-        u_entered_shop(u.ushops_entered);
+    if (freshlyEnteredShops(0))
+        u_freshly_entered_shop();
 
     for (int i = 0; (freshlyEnteredRooms(i)); i++) {
         char roomID = freshlyEnteredRooms(i);
