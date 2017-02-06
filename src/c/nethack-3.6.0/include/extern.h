@@ -1299,6 +1299,8 @@ E char FDECL(previouslyOccupiedShops, (int));
 E void FDECL(setPreviouslyOccupiedShops, (int, char));
 E char FDECL(freshlyEnteredShops, (int));
 E void FDECL(setFreshlyEnteredShops, (int, char));
+E char FDECL(freshlyExitedShops, (int));
+E void FDECL(setFreshlyExitedShops, (int, char));
 
 
 /* ### invent.c ### */
@@ -2490,7 +2492,7 @@ E void FDECL(set_residency, (struct monst *, BOOLEAN_P));
 E void FDECL(replshk, (struct monst *, struct monst *));
 E void FDECL(restshk, (struct monst *, BOOLEAN_P));
 E char FDECL(inside_shop, (XCHAR_P, XCHAR_P));
-E void FDECL(u_left_shop, (char *, BOOLEAN_P));
+E void FDECL(u_freshly_left_shop, (BOOLEAN_P));
 E void FDECL(u_left_previously_occupied_shop, (BOOLEAN_P));
 E void FDECL(remote_burglary, (XCHAR_P, XCHAR_P));
 E void FDECL(u_freshly_entered_shop, ());

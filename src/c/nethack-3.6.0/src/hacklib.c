@@ -2393,6 +2393,16 @@ char freshlyEnteredShops(int i) {
     return (char) 0xff & roomID;
 }
 
+void setFreshlyExitedShops(int i, char roomID) {
+    int v = roomID;
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setFreshlyExitedShops", i, v);
+}
+
+char freshlyExitedShops(int i) {
+    int roomID = javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "freshlyExitedShops", i);
+    return (char) 0xff & roomID;
+}
+
 void setFreshlyEnteredShops(int i, char roomID) {
     int v = roomID;
     javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setFreshlyEnteredShops", i, v);

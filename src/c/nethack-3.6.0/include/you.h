@@ -210,8 +210,6 @@ extern const struct Align aligns[]; /* table of available alignments */
 
 /*** Information about the player ***/
 struct you {
-    char ushops_left[5];    /* ditto, shops exited this turn */
-
     struct prop uprops[LAST_PROP + 1];
 
     align ualign;         /* character alignment */

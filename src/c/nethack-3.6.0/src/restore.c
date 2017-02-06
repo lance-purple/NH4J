@@ -612,6 +612,7 @@ unsigned int *stuckid, *steedid;
         setCurrentlyOccupiedShops(i, (char) (0xff & read_int(fd)));
         setPreviouslyOccupiedShops(i, (char) (0xff & read_int(fd)));
         setFreshlyEnteredShops(i, (char) (0xff & read_int(fd)));
+        setFreshlyExitedShops(i, (char) (0xff & read_int(fd)));
     }
 
     setCurrentTrapType(read_int(fd));

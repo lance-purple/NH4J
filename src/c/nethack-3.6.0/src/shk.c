@@ -433,8 +433,7 @@ boolean newlev;
 }
 
 void
-u_left_shop(leavestring, newlev)
-char *leavestring;
+u_freshly_left_shop(newlev)
 boolean newlev;
 {
     struct monst *shkp;
@@ -447,7 +446,7 @@ boolean newlev;
      *   (he wasn't strictly-inside last turn anyway)))
      * THEN (there's nothing to do, so just return)
      */
-    if (!*leavestring && (!levl[currentX()][currentY()].edge || levl[originalX()][originalY()].edge))
+    if (!freshlyExitedShops(0) && (!levl[currentX()][currentY()].edge || levl[originalX()][originalY()].edge))
         return;
 
     shkp = shop_keeper(previouslyOccupiedShops(0));
@@ -458,7 +457,7 @@ boolean newlev;
     if (!eshkp->billct && !eshkp->debit) /* bill is settled */
         return;
 
-    if (!*leavestring && !muteshk(shkp)) {
+    if (!freshlyExitedShops(0) && !muteshk(shkp)) {
         /*
          * Player just stepped onto shop-boundary (known from above logic).
          * Try to intimidate him into paying his bill
