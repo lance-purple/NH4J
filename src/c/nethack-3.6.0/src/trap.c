@@ -383,7 +383,7 @@ register int x, y, typ;
         do { /* avoid ultimately hostile co-aligned unicorn */
             mptr = &mons[rndmonnum()];
         } while (--trycount > 0 && is_unicorn(mptr)
-                 && sgn(u.ualign.type) == sgn(mptr->maligntyp));
+                 && sgn(currentAlignmentType()) == sgn(mptr->maligntyp));
         statue = mkcorpstat(STATUE, (struct monst *) 0, mptr, x, y,
                             CORPSTAT_NONE);
         mtmp = makemon(&mons[statue->corpsenm], 0, 0, MM_NOCOUNTBIRTH);
@@ -3928,7 +3928,7 @@ struct monst *mtmp;
         }
         /* Helping someone out of a trap is a nice thing to do,
          * A lawful may be rewarded, but not too often.  */
-        if (!rn2(3) && !rnl(8) && u.ualign.type == A_LAWFUL) {
+        if (!rn2(3) && !rnl(8) && currentAlignmentType() == A_LAWFUL) {
             adjalign(1);
             You_feel("that you did the right thing.");
         }

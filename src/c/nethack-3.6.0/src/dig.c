@@ -903,13 +903,13 @@ coord *cc;
     /* Grave-robbing is frowned upon... */
     exercise(A_WIS, FALSE);
     if (Role_if(PM_ARCHEOLOGIST)) {
-        adjalign(-sgn(u.ualign.type) * 3);
+        adjalign(-sgn(currentAlignmentType()) * 3);
         You_feel("like a despicable grave-robber!");
     } else if (Role_if(PM_SAMURAI)) {
-        adjalign(-sgn(u.ualign.type));
+        adjalign(-sgn(currentAlignmentType()));
         You("disturb the honorable dead!");
-    } else if ((u.ualign.type == A_LAWFUL) && (u.ualign.record > -10)) {
-        adjalign(-sgn(u.ualign.type));
+    } else if ((currentAlignmentType() == A_LAWFUL) && (currentAlignmentRecord() > -10)) {
+        adjalign(-sgn(currentAlignmentType()));
         You("have violated the sanctity of this grave!");
     }
 
@@ -1357,10 +1357,10 @@ boolean unexpected;
             int dridx;
 
             /* Lawful: 0..1, Neutral: 1..2, Chaotic: 2..3 */
-            dridx = rn1(2, 1 - sgn(u.ualign.type));
-            if (u.ualign.record < STRIDENT)
+            dridx = rn1(2, 1 - sgn(currentAlignmentType()));
+            if (currentAlignmentRecord() < STRIDENT)
                 /* L: +(0..2), N: +(-1..1), C: +(-2..0); all: 0..3 */
-                dridx += rn1(3, sgn(u.ualign.type) - 1);
+                dridx += rn1(3, sgn(currentAlignmentType()) - 1);
             You_feel("like %s.", draft_reaction[dridx]);
         }
     }

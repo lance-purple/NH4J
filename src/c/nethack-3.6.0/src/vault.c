@@ -391,7 +391,7 @@ invault()
             (void) mungspaces(buf);
         } while (!letter(buf[0]) && --trycount > 0);
 
-        if (u.ualign.type == A_LAWFUL
+        if (currentAlignmentType() == A_LAWFUL
             /* ignore trailing text, in case player includes rank */
             && strncmpi(buf, plname, (int) strlen(plname)) != 0) {
             adjalign(-1); /* Liar! */

@@ -415,6 +415,8 @@ register int fd, mode;
 
     write_int(fd, originalAlignmentBase());
     write_int(fd, currentAlignmentBase());
+    write_int(fd, currentAlignmentType());
+    write_int(fd, currentAlignmentRecord());
 
     write_int(fd, currentLuck());
     write_int(fd, luckBonus());

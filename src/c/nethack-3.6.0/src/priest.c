@@ -365,7 +365,7 @@ boolean
 p_coaligned(priest)
 struct monst *priest;
 {
-    return (boolean) (u.ualign.type == mon_aligntyp(priest));
+    return (boolean) (currentAlignmentType() == mon_aligntyp(priest));
 }
 
 STATIC_OVL boolean
@@ -467,14 +467,14 @@ int roomno;
         }
         if (!sanctum) {
             if (!shrined || !p_coaligned(priest)
-                || u.ualign.record <= ALGN_SINNED) {
+                || currentAlignmentRecord() <= ALGN_SINNED) {
                 msg1 = "have a%s forbidding feeling...";
                 msg2 = (!shrined || !p_coaligned(priest)) ? "" : " strange";
                 this_time = &epri_p->hostile_time;
                 other_time = &epri_p->peaceful_time;
             } else {
                 msg1 = "experience %s sense of peace.";
-                msg2 = (u.ualign.record >= ALGN_PIOUS) ? "a" : "an unusual";
+                msg2 = (currentAlignmentRecord() >= ALGN_PIOUS) ? "a" : "an unusual";
                 this_time = &epri_p->peaceful_time;
                 other_time = &epri_p->hostile_time;
             }
@@ -553,7 +553,7 @@ priest_talk(priest)
 register struct monst *priest;
 {
     boolean coaligned = p_coaligned(priest);
-    boolean strayed = (u.ualign.record < 0);
+    boolean strayed = (currentAlignmentRecord() < 0);
 
     /* KMH, conduct */
     setAtheistConduct(FALSE);
@@ -626,7 +626,7 @@ register struct monst *priest;
         } else if (offer < (currentExperienceLevel() * 400)) {
             verbalize("Thou art indeed a pious individual.");
             if (money_cnt(invent) < (offer * 2L)) {
-                if (coaligned && u.ualign.record <= ALGN_SINNED)
+                if (coaligned && currentAlignmentRecord() <= ALGN_SINNED)
                     adjalign(1);
                 verbalize("I bestow upon thee a blessing.");
                 incr_itimeout(&HClairvoyant, rn1(500, 500));
@@ -652,7 +652,7 @@ register struct monst *priest;
             verbalize("Thy selfless generosity is deeply appreciated.");
             if (money_cnt(invent) < (offer * 2L) && coaligned) {
                 if (strayed && (moves - cleansedSinceMove()) > 5000L) {
-                    u.ualign.record = 0; /* cleanse thee */
+                    setCurrentAlignmentRecord(0); /* cleanse thee */
                     setCleansedSinceMove(moves);
                 } else {
                     adjalign(2);
@@ -670,7 +670,7 @@ xchar x, y;
 boolean peaceful;
 {
     register struct monst *roamer;
-    register boolean coaligned = (u.ualign.type == alignment);
+    register boolean coaligned = (currentAlignmentType() == alignment);
 
 #if 0 /* this was due to permonst's pxlth field which is now gone */
     if (ptr != &mons[PM_ALIGNED_PRIEST] && ptr != &mons[PM_ANGEL])
@@ -706,7 +706,7 @@ register struct monst *roamer;
         && roamer->data != &mons[PM_ANGEL])
         return;
 
-    if (EMIN(roamer)->min_align != u.ualign.type) {
+    if (EMIN(roamer)->min_align != currentAlignmentType()) {
         roamer->mpeaceful = roamer->mtame = 0;
         set_malign(roamer);
     }
@@ -726,7 +726,7 @@ xchar x, y;
             return FALSE;
         x = mon->mx, y = mon->my;
     }
-    if (u.ualign.record <= ALGN_SINNED) /* sinned or worse */
+    if (currentAlignmentRecord() <= ALGN_SINNED) /* sinned or worse */
         return FALSE;
     if ((roomno = temple_currently_occupied()) == 0
         || roomno != *in_rooms(x, y, TEMPLE))

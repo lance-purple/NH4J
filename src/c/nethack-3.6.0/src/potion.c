@@ -607,7 +607,7 @@ register struct obj *otmp;
         }
         unkn++;
         if (is_undead(youmonst.data) || is_demon(youmonst.data)
-            || u.ualign.type == A_CHAOTIC) {
+            || currentAlignmentType() == A_CHAOTIC) {
             if (otmp->blessed) {
                 pline("This burns like acid!");
                 exercise(A_CON, FALSE);
@@ -637,7 +637,7 @@ register struct obj *otmp;
                     you_unwere(TRUE); /* "Purified" */
                 /* make_confused(0L, TRUE); */
             } else {
-                if (u.ualign.type == A_LAWFUL) {
+                if (currentAlignmentType() == A_LAWFUL) {
                     pline("This burns like acid!");
                     losehp(Maybe_Half_Phys(d(2, 6)), "potion of unholy water",
                            KILLED_BY_AN);

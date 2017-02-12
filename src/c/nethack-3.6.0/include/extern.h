@@ -975,6 +975,11 @@ E void FDECL(setOriginalAlignmentBase, (int));
 E int FDECL(currentAlignmentBase, ());
 E void FDECL(setCurrentAlignmentBase, (int));
 
+E int FDECL(currentAlignmentType, ());
+E void FDECL(setCurrentAlignmentType, (int));
+E int FDECL(currentAlignmentRecord, ());
+E void FDECL(setCurrentAlignmentRecord, (int));
+
 E int FDECL(currentLuck, ());
 E void FDECL(setCurrentLuck, (int));
 E void FDECL(increaseCurrentLuck, (int));

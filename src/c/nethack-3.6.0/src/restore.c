@@ -681,6 +681,8 @@ unsigned int *stuckid, *steedid;
 
     setOriginalAlignmentBase(read_int(fd));
     setCurrentAlignmentBase(read_int(fd));
+    setCurrentAlignmentType(read_int(fd));
+    setCurrentAlignmentRecord(read_int(fd));
 
     setCurrentLuck(read_int(fd));
     setLuckBonus(read_int(fd));
@@ -1289,7 +1291,7 @@ boolean ghostly;
             if (!mtmp->isshk)
                 mtmp->mpeaceful =
                     (is_unicorn(mtmp->data)
-                     && sgn(u.ualign.type) == sgn(mtmp->data->maligntyp))
+                     && sgn(currentAlignmentType()) == sgn(mtmp->data->maligntyp))
                         ? TRUE
                         : peace_minded(mtmp->data);
             set_malign(mtmp);

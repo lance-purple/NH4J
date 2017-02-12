@@ -656,9 +656,9 @@ u_init()
     for (i = 0; i <= MAXSPELL; i++)
         spl_book[i].sp_id = NO_SPELL;
     setTimeToNextBlessing(300); /* no prayers just yet */
-    u.ualign.type = aligns[flags.initalign].value;
-    setOriginalAlignmentBase(u.ualign.type);
-    setCurrentAlignmentBase(u.ualign.type);
+    setCurrentAlignmentType(aligns[flags.initalign].value);
+    setOriginalAlignmentBase(currentAlignmentType());
+    setCurrentAlignmentBase(currentAlignmentType());
 
 #if defined(BSD) && !defined(POSIX_TYPES)
     (void) time((long *) &ubirthday);
@@ -1098,7 +1098,7 @@ register struct trobj *trop;
                 obj->otrapped = 0;
             }
             obj->cursed = 0;
-            if (obj->opoisoned && u.ualign.type != A_CHAOTIC)
+            if (obj->opoisoned && currentAlignmentType() != A_CHAOTIC)
                 obj->opoisoned = 0;
             if (obj->oclass == WEAPON_CLASS || obj->oclass == TOOL_CLASS) {
                 obj->quan = (long) trop->trquan;

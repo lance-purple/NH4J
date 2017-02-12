@@ -64,9 +64,9 @@ bot1()
             ACURR(A_DEX), ACURR(A_CON), ACURR(A_INT), ACURR(A_WIS),
             ACURR(A_CHA));
     Sprintf(nb = eos(nb),
-            (u.ualign.type == A_CHAOTIC)
+            (currentAlignmentType() == A_CHAOTIC)
                 ? "  Chaotic"
-                : (u.ualign.type == A_NEUTRAL) ? "  Neutral" : "  Lawful");
+                : (currentAlignmentType() == A_NEUTRAL) ? "  Neutral" : "  Lawful");
 #ifdef SCORE_ON_BOTL
     if (flags.showscore)
         Sprintf(nb = eos(nb), " S:%ld", botl_score());
@@ -450,9 +450,9 @@ bot()
     /* Alignment */
 
     Strcpy(blstats[idx][BL_ALIGN].val,
-           (u.ualign.type == A_CHAOTIC)
+           (currentAlignmentType() == A_CHAOTIC)
                ? "Chaotic"
-               : (u.ualign.type == A_NEUTRAL) ? "Neutral" : "Lawful");
+               : (currentAlignmentType() == A_NEUTRAL) ? "Neutral" : "Lawful");
 
     /* Score */
 

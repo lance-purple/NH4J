@@ -475,7 +475,7 @@ make_bones:
        character started out as, same as topten and logfile entries */
     Sprintf(newbones->who, "%s-%.3s-%.3s-%.3s-%.3s", plname, urole.filecode,
             urace.filecode, genders[flags.female].filecode,
-            aligns[1 - u.ualign.type].filecode);
+            aligns[1 - currentAlignmentType()].filecode);
     formatkiller(newbones->how, sizeof newbones->how, how);
     Strcpy(newbones->when, yyyymmddhhmmss(when));
     /* final resting place, used to decide when bones are discovered */

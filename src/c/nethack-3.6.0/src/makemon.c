@@ -1185,7 +1185,7 @@ int mmflags;
             mtmp->mpeaceful = FALSE;
         break;
     case S_UNICORN:
-        if (is_unicorn(ptr) && sgn(u.ualign.type) == sgn(ptr->maligntyp))
+        if (is_unicorn(ptr) && sgn(currentAlignmentType()) == sgn(ptr->maligntyp))
             mtmp->mpeaceful = TRUE;
         break;
     case S_BAT:
@@ -1279,7 +1279,7 @@ int mmflags;
         mtmp->isminion = 1;            /* make priest be a roamer */
         eminp->min_align = rn2(3) - 1; /* no A_NONE */
         eminp->renegade = (boolean) ((mmflags & MM_ANGRY) ? 1 : !rn2(3));
-        mtmp->mpeaceful = (eminp->min_align == u.ualign.type)
+        mtmp->mpeaceful = (eminp->min_align == currentAlignmentType())
                               ? !eminp->renegade
                               : eminp->renegade;
     }
@@ -1853,7 +1853,7 @@ boolean
 peace_minded(ptr)
 register struct permonst *ptr;
 {
-    aligntyp mal = ptr->maligntyp, ual = u.ualign.type;
+    aligntyp mal = ptr->maligntyp, ual = currentAlignmentType();
 
     if (always_peaceful(ptr))
         return TRUE;
@@ -1880,14 +1880,14 @@ register struct permonst *ptr;
 
     /* minions are hostile to players that have strayed at all */
     if (is_minion(ptr))
-        return (boolean) (u.ualign.record >= 0);
+        return (boolean) (currentAlignmentRecord() >= 0);
 
     /* Last case:  a chance of a co-aligned monster being
      * hostile.  This chance is greater if the player has strayed
-     * (u.ualign.record negative) or the monster is not strongly aligned.
+     * (currentAlignmentRecord() negative) or the monster is not strongly aligned.
      */
-    return (boolean) (!!rn2(16 + (u.ualign.record < -15 ? -15
-                                                        : u.ualign.record))
+    return (boolean) (!!rn2(16 + (currentAlignmentRecord() < -15 ? -15
+                                                        : currentAlignmentRecord()))
                       && !!rn2(2 + abs(mal)));
 }
 
@@ -1920,7 +1920,7 @@ struct monst *mtmp;
             mal *= 5;
     }
 
-    coaligned = (sgn(mal) == sgn(u.ualign.type));
+    coaligned = (sgn(mal) == sgn(currentAlignmentType()));
     if (mtmp->data->msound == MS_LEADER) {
         mtmp->malign = -20;
     } else if (mal == A_NONE) {

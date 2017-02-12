@@ -138,20 +138,20 @@ boolean talk;
     aligntyp original_alignment = (aligntyp) originalAlignmentBase();
 
     if (wizard && talk) {
-        if (u.ualign.type != original_alignment) {
-            You("are currently %s instead of %s.", align_str(u.ualign.type),
+        if (currentAlignmentType() != original_alignment) {
+            You("are currently %s instead of %s.", align_str(currentAlignmentType()),
                 align_str(original_alignment));
         } else if (currentAlignmentBase() != original_alignment) {
             You("have converted.");
-        } else if (u.ualign.record < MIN_QUEST_ALIGN) {
-            You("are currently %d and require %d.", u.ualign.record,
+        } else if (currentAlignmentRecord() < MIN_QUEST_ALIGN) {
+            You("are currently %d and require %d.", currentAlignmentRecord(),
                 MIN_QUEST_ALIGN);
             if (yn_function("adjust?", (char *) 0, 'y') == 'y')
-                u.ualign.record = MIN_QUEST_ALIGN;
+                setCurrentAlignmentRecord(MIN_QUEST_ALIGN);
         }
     }
-    purity = (u.ualign.record >= MIN_QUEST_ALIGN
-              && u.ualign.type == original_alignment
+    purity = (currentAlignmentRecord() >= MIN_QUEST_ALIGN
+              && currentAlignmentType() == original_alignment
               && currentAlignmentBase() == original_alignment)
                  ? 1
                  : (currentAlignmentBase() != original_alignment) ? -1 : 0;

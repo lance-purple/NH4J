@@ -2236,7 +2236,7 @@ cleanup:
     /* punish bad behaviour */
     if (is_human(mdat) && (!always_hostile(mdat) && mtmp->malign <= 0)
         && (mndx < PM_ARCHEOLOGIST || mndx > PM_WIZARD)
-        && u.ualign.type != A_CHAOTIC) {
+        && currentAlignmentType() != A_CHAOTIC) {
         HTelepat &= ~INTRINSIC;
         change_luck(-2);
         You("murderer!");
@@ -2245,7 +2245,7 @@ cleanup:
     }
     if ((mtmp->mpeaceful && !rn2(2)) || mtmp->mtame)
         change_luck(-1);
-    if (is_unicorn(mdat) && sgn(u.ualign.type) == sgn(mdat->maligntyp)) {
+    if (is_unicorn(mdat) && sgn(currentAlignmentType()) == sgn(mdat->maligntyp)) {
         change_luck(-5);
         You_feel("guilty...");
     }
@@ -2257,7 +2257,7 @@ cleanup:
 
     /* adjust alignment points */
     if (mtmp->m_id == quest_status.leader_m_id) { /* REAL BAD! */
-        adjalign(-(u.ualign.record + (int) ALIGNLIM / 2));
+        adjalign(-(currentAlignmentRecord() + (int) ALIGNLIM / 2));
         pline("That was %sa bad idea...",
               completedQuest() ? "probably " : "");
     } else if (mdat->msound == MS_NEMESIS) { /* Real good! */
@@ -2285,7 +2285,7 @@ cleanup:
     } else if (mtmp->mpeaceful)
         adjalign(-5);
 
-    /* malign was already adjusted for u.ualign.type and randomization */
+    /* malign was already adjusted for currentAlignmentType() and randomization */
     adjalign(mtmp->malign);
 }
 

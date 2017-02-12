@@ -133,7 +133,7 @@ struct monst *mon;
                 /* renegade if same alignment but not peaceful
                    or peaceful but different alignment */
                 EMIN(mtmp)->renegade =
-                    (atyp != u.ualign.type) ^ !mtmp->mpeaceful;
+                    (atyp != currentAlignmentType()) ^ !mtmp->mpeaceful;
             }
         }
         cnt--;
@@ -253,7 +253,7 @@ register struct monst *mtmp;
     cash = money_cnt(invent);
     demand =
         (cash * (rnd(80) + 20 * Athome))
-        / (100 * (1 + (sgn(u.ualign.type) == sgn(mtmp->data->maligntyp))));
+        / (100 * (1 + (sgn(currentAlignmentType()) == sgn(mtmp->data->maligntyp))));
 
     if (!demand || multi < 0) { /* you have no gold or can't move */
         mtmp->mpeaceful = 0;
@@ -413,7 +413,7 @@ struct monst *mon; /* if null, angel hasn't been created yet */
         mm.x = currentX();
         mm.y = currentY();
         if (enexto(&mm, mm.x, mm.y, &mons[PM_ANGEL]))
-            (void) mk_roamer(&mons[PM_ANGEL], u.ualign.type, mm.x, mm.y,
+            (void) mk_roamer(&mons[PM_ANGEL], currentAlignmentType(), mm.x, mm.y,
                              FALSE);
     }
 }
@@ -433,13 +433,13 @@ gain_guardian_angel()
         verbalize("Thy desire for conflict shall be fulfilled!");
         /* send in some hostile angels instead */
         lose_guardian_angel((struct monst *) 0);
-    } else if (u.ualign.record > 8) { /* fervent */
+    } else if (currentAlignmentRecord() > 8) { /* fervent */
         pline("A voice whispers:");
         verbalize("Thou hast been worthy of me!");
         mm.x = currentX();
         mm.y = currentY();
         if (enexto(&mm, mm.x, mm.y, &mons[PM_ANGEL])
-            && (mtmp = mk_roamer(&mons[PM_ANGEL], u.ualign.type, mm.x, mm.y,
+            && (mtmp = mk_roamer(&mons[PM_ANGEL], currentAlignmentType(), mm.x, mm.y,
                                  TRUE)) != 0) {
             mtmp->mstrategy &= ~STRAT_APPEARMSG;
             if (!Blind)

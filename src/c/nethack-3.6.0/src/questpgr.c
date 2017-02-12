@@ -333,7 +333,7 @@ char c;
         str = align_str(originalAlignmentBase());
         break;
     case 'A':
-        str = align_str(u.ualign.type);
+        str = align_str(currentAlignmentType());
         break;
     case 'd':
         str = align_gname(originalAlignmentBase());

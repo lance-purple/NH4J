@@ -219,10 +219,10 @@ void
 check_caitiff(mtmp)
 struct monst *mtmp;
 {
-    if (u.ualign.record <= -10)
+    if (currentAlignmentRecord() <= -10)
         return;
 
-    if (Role_if(PM_KNIGHT) && u.ualign.type == A_LAWFUL
+    if (Role_if(PM_KNIGHT) && currentAlignmentType() == A_LAWFUL
         && (!mtmp->mcanmove || mtmp->msleeping
             || (mtmp->mflee && !mtmp->mavenge))) {
         You("caitiff!");
@@ -987,8 +987,8 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
             nopoison = 2;
         if (Role_if(PM_SAMURAI)) {
             You("dishonorably use a poisoned weapon!");
-            adjalign(-sgn(u.ualign.type));
-        } else if (u.ualign.type == A_LAWFUL && u.ualign.record > -10) {
+            adjalign(-sgn(currentAlignmentType()));
+        } else if (currentAlignmentType() == A_LAWFUL && currentAlignmentRecord() > -10) {
             You_feel("like an evil coward for using a poisoned weapon.");
             adjalign(-1);
         }
@@ -1278,7 +1278,7 @@ demonpet()
     struct monst *dtmp;
 
     pline("Some hell-p has arrived!");
-    i = !rn2(6) ? ndemon(u.ualign.type) : NON_PM;
+    i = !rn2(6) ? ndemon(currentAlignmentType()) : NON_PM;
     pm = i != NON_PM ? &mons[i] : youmonst.data;
     if ((dtmp = makemon(pm, currentX(), currentY(), NO_MM_FLAGS)) != 0)
         (void) tamedog(dtmp, (struct obj *) 0);

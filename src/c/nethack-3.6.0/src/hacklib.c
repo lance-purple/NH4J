@@ -895,6 +895,22 @@ void setCurrentAlignmentBase(int c) {
     javaSetInt(PLAYER_CHARACTER_CLASS, "setCurrentAlignmentBase", c);
 }
 
+int currentAlignmentType() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "currentAlignmentType");
+} 
+
+void setCurrentAlignmentType(int t) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setCurrentAlignmentType", t);
+}
+
+int currentAlignmentRecord() {
+    return javaGetInt(PLAYER_CHARACTER_CLASS, "currentAlignmentRecord");
+} 
+
+void setCurrentAlignmentRecord(int r) {
+    javaSetInt(PLAYER_CHARACTER_CLASS, "setCurrentAlignmentRecord", r);
+}
+
 int currentLuck() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "currentLuck");
 } 

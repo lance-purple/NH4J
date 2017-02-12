@@ -329,7 +329,7 @@ struct obj *otmp;
                           otyp == SPE_EXTRA_HEALING ? " much" : "");
             }
             if (mtmp->mtame || mtmp->mpeaceful) {
-                adjalign(Role_if(PM_HEALER) ? 1 : sgn(u.ualign.type));
+                adjalign(Role_if(PM_HEALER) ? 1 : sgn(currentAlignmentType()));
             }
         } else { /* Pestilence */
             /* Pestilence will always resist; damage is half of 3d{4,8} */

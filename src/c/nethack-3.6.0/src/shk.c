@@ -523,7 +523,7 @@ struct monst *shkp;
     eshkp->robbed += total;
     You("stole %ld %s worth of merchandise.", total, currency(total));
     if (!Role_if(PM_ROGUE)) /* stealing is unlawful */
-        adjalign(-sgn(u.ualign.type));
+        adjalign(-sgn(currentAlignmentType()));
 
     hot_pursuit(shkp);
     return TRUE;
@@ -1089,7 +1089,7 @@ register boolean silentkops;
     eshkp->following = 0;
     eshkp->robbed = 0L;
     if (!Role_if(PM_ROGUE))
-        adjalign(sgn(u.ualign.type));
+        adjalign(sgn(currentAlignmentType()));
     if (!inhishop(shkp)) {
         char shk_nam[BUFSZ];
         boolean vanished = canseemon(shkp);
@@ -3689,7 +3689,7 @@ register int fall;
     if (!inhishop(shkp)) {
         if (Role_if(PM_KNIGHT)) {
             You_feel("like a common thief.");
-            adjalign(-sgn(u.ualign.type));
+            adjalign(-sgn(currentAlignmentType()));
         }
         return;
     }
@@ -3706,7 +3706,7 @@ register int fall;
         }
         if (Role_if(PM_KNIGHT)) {
             You_feel("like a common thief.");
-            adjalign(-sgn(u.ualign.type));
+            adjalign(-sgn(currentAlignmentType()));
         }
     } else if (!um_dist(shkp->mx, shkp->my, 5)
                && !shkp->msleeping && shkp->mcanmove
@@ -3944,7 +3944,7 @@ boolean cant_mollify;
         else
             growl(shkp);
         hot_pursuit(shkp);
-        adjalign(-sgn(u.ualign.type));
+        adjalign(-sgn(currentAlignmentType()));
     }
 }
 

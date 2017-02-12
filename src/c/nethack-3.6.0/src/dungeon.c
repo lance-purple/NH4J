@@ -2978,8 +2978,8 @@ boolean printdun;
                 ADDNTOBUF("temple", mptr->feat.ntemple);
 
             /* only print out altar's god if they are all to your god */
-            if (Amask2align(Msa2amask(mptr->feat.msalign)) == u.ualign.type)
-                Sprintf(eos(buf), " to %s", align_gname(u.ualign.type));
+            if (Amask2align(Msa2amask(mptr->feat.msalign)) == currentAlignmentType())
+                Sprintf(eos(buf), " to %s", align_gname(currentAlignmentType()));
         }
         ADDNTOBUF("throne", mptr->feat.nthrone);
         ADDNTOBUF("fountain", mptr->feat.nfount);

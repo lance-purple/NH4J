@@ -1069,8 +1069,8 @@ dokick()
                 goto ouch;
             exercise(A_WIS, FALSE);
             if (Role_if(PM_ARCHEOLOGIST) || Role_if(PM_SAMURAI)
-                || ((u.ualign.type == A_LAWFUL) && (u.ualign.record > -10))) {
-                adjalign(-sgn(u.ualign.type));
+                || ((currentAlignmentType() == A_LAWFUL) && (currentAlignmentRecord() > -10))) {
+                adjalign(-sgn(currentAlignmentType()));
             }
             maploc->typ = ROOM;
             maploc->doormask = 0;

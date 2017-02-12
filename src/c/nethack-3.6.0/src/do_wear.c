@@ -392,8 +392,8 @@ Helmet_on(VOID_ARGS)
         /* changing alignment can toggle off active artifact
            properties, including levitation; uarmh could get
            dropped or destroyed here */
-        uchangealign((u.ualign.type != A_NEUTRAL)
-                         ? -u.ualign.type
+        uchangealign((currentAlignmentType() != A_NEUTRAL)
+                         ? -currentAlignmentType()
                          : (uarmh->o_id % 2) ? A_CHAOTIC : A_LAWFUL,
                      1);
     /* makeknown(uarmh->otyp);   -- moved below, after xname() */

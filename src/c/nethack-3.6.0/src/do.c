@@ -1125,7 +1125,7 @@ boolean at_stairs, falling, portal;
     if (areYouInHell() && up && haveSpecialItem(SPECIAL_ITEM_AMULET) && !newdungeon && !portal
         && (currentDungeonLevel() < levelsInCurrentDungeon() - 3)) {
         if (!rn2(4)) {
-            int odds = 3 + (int) u.ualign.type,   /* 2..4 */
+            int odds = 3 + (int) currentAlignmentType(),   /* 2..4 */
                 diff = odds <= 1 ? 0 : rn2(odds); /* paranoia */
 
             if (diff != 0) {

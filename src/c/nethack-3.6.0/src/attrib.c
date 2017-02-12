@@ -941,8 +941,8 @@ newhp()
             hp += rnd(urace.hpadv.inrnd);
         if (moves <= 1L) { /* initial hero; skip for polyself to new man */
             /* Initialize alignment stuff */
-            u.ualign.type = aligns[flags.initalign].value;
-            u.ualign.record = urole.initrecord;
+            setCurrentAlignmentType(aligns[flags.initalign].value);
+            setCurrentAlignmentRecord(urole.initrecord);
         }
         /* no Con adjustment for initial hit points */
     } else {
@@ -1066,15 +1066,15 @@ void
 adjalign(n)
 int n;
 {
-    int newalign = u.ualign.record + n;
+    int newalign = currentAlignmentRecord() + n;
 
     if (n < 0) {
-        if (newalign < u.ualign.record)
-            u.ualign.record = newalign;
-    } else if (newalign > u.ualign.record) {
-        u.ualign.record = newalign;
-        if (u.ualign.record > ALIGNLIM)
-            u.ualign.record = ALIGNLIM;
+        if (newalign < currentAlignmentRecord())
+            setCurrentAlignmentRecord(newalign);
+    } else if (newalign > currentAlignmentRecord()) {
+        setCurrentAlignmentRecord(newalign);
+        if (currentAlignmentRecord() > ALIGNLIM)
+            setCurrentAlignmentRecord(ALIGNLIM);
     }
 }
 
@@ -1084,7 +1084,7 @@ uchangealign(newalign, reason)
 int newalign;
 int reason; /* 0==conversion, 1==helm-of-OA on, 2==helm-of-OA off */
 {
-    aligntyp oldalign = u.ualign.type;
+    aligntyp oldalign = currentAlignmentType();
 
     setBlessings(0);   /* lose divine protection */
     context.botl = 1; /* status line needs updating */
@@ -1093,12 +1093,12 @@ int reason; /* 0==conversion, 1==helm-of-OA on, 2==helm-of-OA off */
         setCurrentAlignmentBase(newalign);
         /* worn helm of opposite alignment might block change */
         if (!uarmh || uarmh->otyp != HELM_OF_OPPOSITE_ALIGNMENT)
-            u.ualign.type = (aligntyp) currentAlignmentBase();
+            setCurrentAlignmentType((aligntyp) currentAlignmentBase());
         You("have a %ssense of a new direction.",
-            (u.ualign.type != oldalign) ? "sudden " : "");
+            (currentAlignmentType() != oldalign) ? "sudden " : "");
     } else {
         /* putting on or taking off a helm of opposite alignment */
-        u.ualign.type = (aligntyp) newalign;
+        setCurrentAlignmentType((aligntyp) newalign);
         if (reason == 1)
             Your("mind oscillates %s.", Hallucination ? "wildly" : "briefly");
         else if (reason == 2)
@@ -1107,8 +1107,8 @@ int reason; /* 0==conversion, 1==helm-of-OA on, 2==helm-of-OA off */
                                     : "back in sync with your body");
     }
 
-    if (u.ualign.type != oldalign) {
-        u.ualign.record = 0; /* slate is wiped clean */
+    if (currentAlignmentType() != oldalign) {
+        setCurrentAlignmentRecord(0); /* slate is wiped clean */
         retouch_equipment(0);
     }
 }

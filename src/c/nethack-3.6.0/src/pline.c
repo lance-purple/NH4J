@@ -528,22 +528,22 @@ ustatusline()
     }
 
     pline("Status of %s (%s%s):  Level %d  HP %d(%d)  AC %d%s.", plname,
-          (u.ualign.record >= 20)
+          (currentAlignmentRecord() >= 20)
               ? "piously "
-              : (u.ualign.record > 13)
+              : (currentAlignmentRecord() > 13)
                     ? "devoutly "
-                    : (u.ualign.record > 8)
+                    : (currentAlignmentRecord() > 8)
                           ? "fervently "
-                          : (u.ualign.record > 3)
+                          : (currentAlignmentRecord() > 3)
                                 ? "stridently "
-                                : (u.ualign.record == 3)
+                                : (currentAlignmentRecord() == 3)
                                       ? ""
-                                      : (u.ualign.record >= 1)
+                                      : (currentAlignmentRecord() >= 1)
                                             ? "haltingly "
-                                            : (u.ualign.record == 0)
+                                            : (currentAlignmentRecord() == 0)
                                                   ? "nominally "
                                                   : "insufficiently ",
-          align_str(u.ualign.type),
+          align_str(currentAlignmentType()),
           areYouPolymorphed() ? mons[currentMonsterNumber()].mlevel : currentExperienceLevel(), areYouPolymorphed() ? currentHitPointsAsMonster() : currentHitPoints(),
           areYouPolymorphed() ? maximumHitPointsAsMonster() : maximumHitPoints(), armorClass(), info);
 }

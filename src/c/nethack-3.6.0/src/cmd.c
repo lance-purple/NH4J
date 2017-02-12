@@ -1432,11 +1432,11 @@ int final;
     /* report alignment (bypass you_are() in order to omit ending period) */
     Sprintf(buf, " %s%s%s, %son a mission for %s",
             You_, !final ? are : were,
-            align_str(u.ualign.type),
+            align_str(currentAlignmentType()),
             /* helm of opposite alignment (might hide conversion) */
-            (u.ualign.type != currentAlignmentBase()) ? "temporarily "
+            (currentAlignmentType() != currentAlignmentBase()) ? "temporarily "
                /* permanent conversion */
-               : (u.ualign.type != originalAlignmentBase()) ? "now "
+               : (currentAlignmentType() != originalAlignmentBase()) ? "now "
                   /* atheist (ignored in very early game) */
                   : (atheistConduct() && moves > 1000L) ? "nominally "
                      /* lastly, normal case */
@@ -1447,14 +1447,14 @@ int final;
        [appending "also Moloch" at the end would allow for straightforward
        trailing "and" on all three aligned entries but looks too verbose] */
     Sprintf(buf, " who %s opposed by", !final ? "is" : "was");
-    if (u.ualign.type != A_LAWFUL)
+    if (currentAlignmentType() != A_LAWFUL)
         Sprintf(eos(buf), " %s (%s) and", align_gname(A_LAWFUL),
                 align_str(A_LAWFUL));
-    if (u.ualign.type != A_NEUTRAL)
+    if (currentAlignmentType() != A_NEUTRAL)
         Sprintf(eos(buf), " %s (%s)%s", align_gname(A_NEUTRAL),
                 align_str(A_NEUTRAL),
-                (u.ualign.type != A_CHAOTIC) ? " and" : "");
-    if (u.ualign.type != A_CHAOTIC)
+                (currentAlignmentType() != A_CHAOTIC) ? " and" : "");
+    if (currentAlignmentType() != A_CHAOTIC)
         Sprintf(eos(buf), " %s (%s)", align_gname(A_CHAOTIC),
                 align_str(A_CHAOTIC));
     Strcat(buf, "."); /* terminate sentence */
@@ -1465,7 +1465,7 @@ int final;
        for tricky phrasing otherwise necessitated by possibility of having
        helm of opposite alignment mask a permanent alignment conversion */
     difgend = (innategend != flags.initgend);
-    difalgn = (((u.ualign.type != currentAlignmentBase()) ? 1 : 0)
+    difalgn = (((currentAlignmentType() != currentAlignmentBase()) ? 1 : 0)
                + ((currentAlignmentBase() != originalAlignmentBase())
                   ? 2 : 0));
     if (difalgn & 1) { /* have temporary alignment so report permanent one */
@@ -1902,28 +1902,28 @@ int final;
     }
 
     /* note: piousness 20 matches MIN_QUEST_ALIGN (quest.h) */
-    if (u.ualign.record >= 20)
+    if (currentAlignmentRecord() >= 20)
         you_are("piously aligned", "");
-    else if (u.ualign.record > 13)
+    else if (currentAlignmentRecord() > 13)
         you_are("devoutly aligned", "");
-    else if (u.ualign.record > 8)
+    else if (currentAlignmentRecord() > 8)
         you_are("fervently aligned", "");
-    else if (u.ualign.record > 3)
+    else if (currentAlignmentRecord() > 3)
         you_are("stridently aligned", "");
-    else if (u.ualign.record == 3)
+    else if (currentAlignmentRecord() == 3)
         you_are("aligned", "");
-    else if (u.ualign.record > 0)
+    else if (currentAlignmentRecord() > 0)
         you_are("haltingly aligned", "");
-    else if (u.ualign.record == 0)
+    else if (currentAlignmentRecord() == 0)
         you_are("nominally aligned", "");
-    else if (u.ualign.record >= -3)
+    else if (currentAlignmentRecord() >= -3)
         you_have("strayed", "");
-    else if (u.ualign.record >= -8)
+    else if (currentAlignmentRecord() >= -8)
         you_have("sinned", "");
     else
         you_have("transgressed", "");
     if (wizard) {
-        Sprintf(buf, " %d", u.ualign.record);
+        Sprintf(buf, " %d", currentAlignmentRecord());
         enl_msg("Your alignment ", "is", "was", buf, "");
     }
 
@@ -2378,7 +2378,7 @@ minimal_enlightenment()
     }
 
     /* Current alignment */
-    Sprintf(buf, fmtstr, "alignment", align_str(u.ualign.type));
+    Sprintf(buf, fmtstr, "alignment", align_str(currentAlignmentType()));
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
 
     /* Deity list */
@@ -2386,26 +2386,26 @@ minimal_enlightenment()
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, iflags.menu_headings,
              "Deities", FALSE);
     Sprintf(buf2, deity_fmtstr, align_gname(A_CHAOTIC),
-            (originalAlignmentBase() == u.ualign.type
-             && u.ualign.type == A_CHAOTIC)               ? " (s,c)"
+            (originalAlignmentBase() == currentAlignmentType()
+             && currentAlignmentType() == A_CHAOTIC)               ? " (s,c)"
                 : (originalAlignmentBase() == A_CHAOTIC) ? " (s)"
-                : (u.ualign.type   == A_CHAOTIC)          ? " (c)" : "");
+                : (currentAlignmentType()   == A_CHAOTIC)          ? " (c)" : "");
     Sprintf(buf, fmtstr, "Chaotic", buf2);
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
 
     Sprintf(buf2, deity_fmtstr, align_gname(A_NEUTRAL),
-            (originalAlignmentBase() == u.ualign.type
-             && u.ualign.type == A_NEUTRAL)               ? " (s,c)"
+            (originalAlignmentBase() == currentAlignmentType()
+             && currentAlignmentType() == A_NEUTRAL)               ? " (s,c)"
                 : (originalAlignmentBase() == A_NEUTRAL) ? " (s)"
-                : (u.ualign.type   == A_NEUTRAL)          ? " (c)" : "");
+                : (currentAlignmentType()   == A_NEUTRAL)          ? " (c)" : "");
     Sprintf(buf, fmtstr, "Neutral", buf2);
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
 
     Sprintf(buf2, deity_fmtstr, align_gname(A_LAWFUL),
-            (originalAlignmentBase() == u.ualign.type
-             && u.ualign.type == A_LAWFUL)                ? " (s,c)"
+            (originalAlignmentBase() == currentAlignmentType()
+             && currentAlignmentType() == A_LAWFUL)                ? " (s,c)"
                 : (originalAlignmentBase() == A_LAWFUL)  ? " (s)"
-                : (u.ualign.type   == A_LAWFUL)           ? " (c)" : "");
+                : (currentAlignmentType()   == A_LAWFUL)           ? " (c)" : "");
     Sprintf(buf, fmtstr, "Lawful", buf2);
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
 

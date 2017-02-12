@@ -2395,7 +2395,7 @@ register struct monst *mon;
             (void) rloc(mon, TRUE);
         return 1;
     }
-    if (u.ualign.type == A_CHAOTIC)
+    if (currentAlignmentType() == A_CHAOTIC)
         adjalign(1);
 
     /* by this point you have discovered mon's identity, blind or not... */

@@ -92,7 +92,7 @@ static int p_type; /* (-1)-3: (-1)=really naughty, 3=really good */
 #define TROUBLE_HALLUCINATION (-11)
 
 
-#define ugod_is_angry() (u.ualign.record < 0)
+#define ugod_is_angry() (currentAlignmentRecord() < 0)
 #define on_altar() IS_ALTAR(levl[currentX()][currentY()].typ)
 #define on_shrine() ((levl[currentX()][currentY()].altarmask & AM_SHRINE) != 0)
 #define a_align(x, y) ((aligntyp) Amask2align(levl[x][y].altarmask & AM_MASK))
@@ -627,10 +627,10 @@ aligntyp resp_god;
 
     /* changed from tmp = divineWrath() + abs (currentLuck()) -- rph */
     /* added test for alignment diff -dlc */
-    if (resp_god != u.ualign.type)
-        maxanger = u.ualign.record / 2 + (currentLuckWithBonus() > 0 ? -currentLuckWithBonus() / 3 : -currentLuckWithBonus());
+    if (resp_god != currentAlignmentType())
+        maxanger = currentAlignmentRecord() / 2 + (currentLuckWithBonus() > 0 ? -currentLuckWithBonus() / 3 : -currentLuckWithBonus());
     else
-        maxanger = 3 * divineWrath() + ((currentLuckWithBonus() > 0 || u.ualign.record >= STRIDENT)
+        maxanger = 3 * divineWrath() + ((currentLuckWithBonus() > 0 || currentAlignmentRecord() >= STRIDENT)
                                    ? -currentLuckWithBonus() / 3
                                    : -currentLuckWithBonus());
     if (maxanger < 1)
@@ -648,7 +648,7 @@ aligntyp resp_god;
     case 3:
         godvoice(resp_god, (char *) 0);
         pline("\"Thou %s, %s.\"",
-              (ugod_is_angry() && resp_god == u.ualign.type)
+              (ugod_is_angry() && resp_god == currentAlignmentType())
                   ? "hast strayed from the path"
                   : "art arrogant",
               youmonst.data->mlet == S_HUMAN ? "mortal" : "creature");
@@ -723,11 +723,11 @@ gcrownu()
     HShock_resistance |= FROMOUTSIDE;
     HSleep_resistance |= FROMOUTSIDE;
     HPoison_resistance |= FROMOUTSIDE;
-    godvoice(u.ualign.type, (char *) 0);
+    godvoice(currentAlignmentType(), (char *) 0);
 
     obj = ok_wep(uwep) ? uwep : 0;
     already_exists = in_hand = FALSE; /* lint suppression */
-    switch (u.ualign.type) {
+    switch (currentAlignmentType()) {
     case A_LAWFUL:
         setHandOfElberethLevel(1);
         verbalize("I crown thee...  The Hand of Elbereth!");
@@ -779,7 +779,7 @@ gcrownu()
         goto make_splbk;
     }
 
-    switch (u.ualign.type) {
+    switch (currentAlignmentType()) {
     case A_LAWFUL:
         if (class_gift != STRANGE_OBJECT) {
             ; /* already got bonus above */
@@ -873,17 +873,17 @@ aligntyp g_align;
     int pat_on_head = 0, kick_on_butt;
 
     You_feel("that %s is %s.", align_gname(g_align),
-             (u.ualign.record >= DEVOUT)
+             (currentAlignmentRecord() >= DEVOUT)
                  ? Hallucination ? "pleased as punch" : "well-pleased"
-                 : (u.ualign.record >= STRIDENT)
+                 : (currentAlignmentRecord() >= STRIDENT)
                        ? Hallucination ? "ticklish" : "pleased"
                        : Hallucination ? "full" : "satisfied");
 
     /* not your deity */
-    if (on_altar() && p_aligntyp != u.ualign.type) {
+    if (on_altar() && p_aligntyp != currentAlignmentType()) {
         adjalign(-1);
         return;
-    } else if (u.ualign.record < 2 && trouble <= 0)
+    } else if (currentAlignmentRecord() < 2 && trouble <= 0)
         adjalign(1);
 
     /*
@@ -900,7 +900,7 @@ aligntyp g_align;
      * If your luck is at least 0, then you are guaranteed rescued from
      * your worst major problem.
      */
-    if (!trouble && u.ualign.record >= DEVOUT) {
+    if (!trouble && currentAlignmentRecord() >= DEVOUT) {
         /* if hero was in trouble, but got better, no special favor */
         if (p_trouble == 0)
             pat_on_head = 1;
@@ -924,8 +924,8 @@ aligntyp g_align;
         action = rn1(prayer_luck + (on_altar() ? 3 + on_shrine() : 2), 1);
         if (!on_altar())
             action = min(action, 3);
-        if (u.ualign.record < STRIDENT)
-            action = (u.ualign.record > 0 || !rnl(2)) ? 1 : 0;
+        if (currentAlignmentRecord() < STRIDENT)
+            action = (currentAlignmentRecord() > 0 || !rnl(2)) ? 1 : 0;
 
         switch (min(action, 5)) {
         case 5:
@@ -1083,7 +1083,7 @@ aligntyp g_align;
             static NEARDATA const char msg[] =
                 "\"and thus I grant thee the gift of %s!\"";
 
-            godvoice(u.ualign.type,
+            godvoice(currentAlignmentType(),
                      "Thou hast pleased me with thy progress,");
             if (!(HTelepat & INTRINSIC)) {
                 HTelepat |= FROMOUTSIDE;
@@ -1112,7 +1112,7 @@ aligntyp g_align;
         }
         case 7:
         case 8:
-            if (u.ualign.record >= PIOUS && (0 == handOfElberethLevel())) {
+            if (currentAlignmentRecord() >= PIOUS && (0 == handOfElberethLevel())) {
                 gcrownu();
                 break;
             } /* else FALLTHRU */
@@ -1220,7 +1220,7 @@ STATIC_OVL void
 gods_upset(g_align)
 aligntyp g_align;
 {
-    if (g_align == u.ualign.type)
+    if (g_align == currentAlignmentType())
         increaseDivineWrath(1);
     else if (divineWrath())
         decreaseDivineWrath(1);
@@ -1244,11 +1244,11 @@ register struct obj *otmp;
      "sacrifice collapses into a cloud of dancing particles and fades away!");
             break;
         }
-    else if (Blind && u.ualign.type == A_LAWFUL)
+    else if (Blind && currentAlignmentType() == A_LAWFUL)
         Your("sacrifice disappears!");
     else
         Your("sacrifice is consumed in a %s!",
-             u.ualign.type == A_LAWFUL ? "flash of light" : "burst of flame");
+             currentAlignmentType() == A_LAWFUL ? "flash of light" : "burst of flame");
     if (carried(otmp))
         useup(otmp);
     else
@@ -1312,13 +1312,13 @@ dosacrifice()
             if (is_demon(youmonst.data)) {
                 You("find the idea very satisfying.");
                 exercise(A_WIS, TRUE);
-            } else if (u.ualign.type != A_CHAOTIC) {
+            } else if (currentAlignmentType() != A_CHAOTIC) {
                 pline("You'll regret this infamous offense!");
                 exercise(A_WIS, FALSE);
             }
 
             if (highaltar
-                && (altaralign != A_CHAOTIC || u.ualign.type != A_CHAOTIC)) {
+                && (altaralign != A_CHAOTIC || currentAlignmentType() != A_CHAOTIC)) {
                 goto desecrate_high_altar;
             } else if (altaralign != A_CHAOTIC && altaralign != A_NONE) {
                 /* curse the lawful/neutral altar */
@@ -1331,7 +1331,7 @@ dosacrifice()
 
                 /* Human sacrifice on a chaotic or unaligned altar */
                 /* is equivalent to demon summoning */
-                if (altaralign == A_CHAOTIC && u.ualign.type != A_CHAOTIC) {
+                if (altaralign == A_CHAOTIC && currentAlignmentType() != A_CHAOTIC) {
                     pline(
                     "The blood floods the altar, which vanishes in %s cloud!",
                           an(hcolor(NH_BLACK)));
@@ -1357,7 +1357,7 @@ dosacrifice()
                     else
                         dmon->mstrategy &= ~STRAT_APPEARMSG;
                     You("have summoned %s!", dbuf);
-                    if (sgn(u.ualign.type) == sgn(dmon->data->maligntyp))
+                    if (sgn(currentAlignmentType()) == sgn(dmon->data->maligntyp))
                         dmon->mpeaceful = TRUE;
                     You("are terrified, and unable to move.");
                     nomul(-3);
@@ -1367,12 +1367,12 @@ dosacrifice()
                     pline_The("%s.", demonless_msg);
             }
 
-            if (u.ualign.type != A_CHAOTIC) {
+            if (currentAlignmentType() != A_CHAOTIC) {
                 adjalign(-5);
                 increaseDivineWrath(3);
                 (void) adjattrib(A_WIS, -1, TRUE);
                 if (!areYouInHell())
-                    angrygods(u.ualign.type);
+                    angrygods(currentAlignmentType());
                 change_luck(-5);
             } else
                 adjalign(5);
@@ -1391,7 +1391,7 @@ dosacrifice()
             value = -1;
             HAggravate_monster |= FROMOUTSIDE;
         } else if (is_undead(ptr)) { /* Not demons--no demon corpses */
-            if (u.ualign.type != A_CHAOTIC)
+            if (currentAlignmentType() != A_CHAOTIC)
                 value += 1;
         } else if (is_unicorn(ptr)) {
             int unicalign = sgn(ptr->maligntyp);
@@ -1404,21 +1404,21 @@ dosacrifice()
                          : unicalign ? "law" : "balance");
                 (void) adjattrib(A_WIS, -1, TRUE);
                 value = -5;
-            } else if (u.ualign.type == altaralign) {
+            } else if (currentAlignmentType() == altaralign) {
                 /* When different from altar, and altar is same as yours,
                  * it's a very good action.
                  */
-                if (u.ualign.record < ALIGNLIM)
-                    You_feel("appropriately %s.", align_str(u.ualign.type));
+                if (currentAlignmentRecord() < ALIGNLIM)
+                    You_feel("appropriately %s.", align_str(currentAlignmentType()));
                 else
                     You_feel("you are thoroughly on the right path.");
                 adjalign(5);
                 value += 3;
-            } else if (unicalign == u.ualign.type) {
+            } else if (unicalign == currentAlignmentType()) {
                 /* When sacrificing unicorn of your alignment to altar not of
                  * your alignment, your god gets angry and it's a conversion.
                  */
-                u.ualign.record = -1;
+                setCurrentAlignmentRecord(-1);
                 value = 1;
             } else {
                 /* Otherwise, unicorn's alignment is different from yours
@@ -1443,7 +1443,7 @@ dosacrifice()
                          Hallucination
                             ? "homesick"
                             /* if on track, give a big hint */
-                            : (altaralign == u.ualign.type)
+                            : (altaralign == currentAlignmentType())
                                ? "an urge to return to the surface"
                                /* else headed towards celestial disgrace */
                                : "ashamed");
@@ -1460,8 +1460,8 @@ dosacrifice()
             You("offer the Amulet of Yendor to %s...", a_gname());
             if (altaralign == A_NONE) {
                 /* Moloch's high altar */
-                if (u.ualign.record > -99)
-                    u.ualign.record = -99;
+                if (currentAlignmentRecord() > -99)
+                    setCurrentAlignmentRecord(-99);
                 /*[apparently shrug/snarl can be sensed without being seen]*/
                 pline("%s shrugs and retains dominion over %s,", Moloch,
                       u_gname());
@@ -1475,7 +1475,7 @@ dosacrifice()
                 /* declined to die in wizard or explore mode */
                 pline(cloud_of_smoke, hcolor(NH_BLACK));
                 done(ESCAPED);
-            } else if (u.ualign.type != altaralign) {
+            } else if (currentAlignmentType() != altaralign) {
                 /* And the opposing team picks you up and
                    carries you off on their shoulders */
                 adjalign(-99);
@@ -1527,7 +1527,7 @@ dosacrifice()
         return 1;
     }
 
-    if (altaralign != u.ualign.type && highaltar) {
+    if (altaralign != currentAlignmentType() && highaltar) {
     desecrate_high_altar:
         /*
          * REAL BAD NEWS!!! High altars cannot be converted.  Even an attempt
@@ -1548,7 +1548,7 @@ dosacrifice()
         int saved_luck = currentLuck();
 
         /* Sacrificing at an altar of a different alignment */
-        if (u.ualign.type != altaralign) {
+        if (currentAlignmentType() != altaralign) {
             /* Is this a conversion ? */
             /* An unaligned altar in Gehennom will always elicit rejection. */
             if (ugod_is_angry() || (altaralign == A_NONE && areYouInHell())) {
@@ -1571,7 +1571,7 @@ dosacrifice()
                     change_luck(-5);
                     (void) adjattrib(A_WIS, -2, TRUE);
                     if (!areYouInHell())
-                        angrygods(u.ualign.type);
+                        angrygods(currentAlignmentType());
                 }
                 return 1;
             } else {
@@ -1588,17 +1588,17 @@ dosacrifice()
                     /* the following accommodates stupid compilers */
                     levl[currentX()][currentY()].altarmask =
                         levl[currentX()][currentY()].altarmask
-                        | (Align2amask(u.ualign.type));
+                        | (Align2amask(currentAlignmentType()));
                     if (!Blind)
                         pline_The("altar glows %s.",
-                                  hcolor((u.ualign.type == A_LAWFUL)
+                                  hcolor((currentAlignmentType() == A_LAWFUL)
                                             ? NH_WHITE
-                                            : u.ualign.type
+                                            : currentAlignmentType()
                                                ? NH_BLACK
                                                : (const char *) "gray"));
 
-                    if (rnl(currentExperienceLevel()) > 6 && u.ualign.record > 0
-                        && rnd(u.ualign.record) > (3 * ALIGNLIM) / 4)
+                    if (rnl(currentExperienceLevel()) > 6 && currentAlignmentRecord() > 0
+                        && rnd(currentAlignmentRecord()) > (3 * ALIGNLIM) / 4)
                         summon_minion(altaralign, TRUE);
                     /* anger priest; test handles bones files */
                     if ((pri = findpriest(temple_currently_occupied()))
@@ -1609,8 +1609,8 @@ dosacrifice()
                           u_gname());
                     change_luck(-1);
                     exercise(A_WIS, FALSE);
-                    if (rnl(currentExperienceLevel()) > 6 && u.ualign.record > 0
-                        && rnd(u.ualign.record) > (7 * ALIGNLIM) / 8)
+                    if (rnl(currentExperienceLevel()) > 6 && currentAlignmentRecord() > 0
+                        && rnd(currentAlignmentRecord()) > (7 * ALIGNLIM) / 8)
                         summon_minion(altaralign, TRUE);
                 }
                 return 1;
@@ -1620,7 +1620,7 @@ dosacrifice()
         consume_offering(otmp);
         /* OK, you get brownie points. */
         if (divineWrath()) {
-            decreaseDivineWrath(((value * (u.ualign.type == A_CHAOTIC ? 2 : 3))
+            decreaseDivineWrath(((value * (currentAlignmentType() == A_CHAOTIC ? 2 : 3))
                          / MAXVALUE));
             if (divineWrath() < 0)
                 setDivineWrath(0);
@@ -1648,12 +1648,12 @@ dosacrifice()
         } else if (ugod_is_angry()) {
             if (value > MAXVALUE)
                 value = MAXVALUE;
-            if (value > -u.ualign.record)
-                value = -u.ualign.record;
+            if (value > -currentAlignmentRecord())
+                value = -currentAlignmentRecord();
             adjalign(value);
             You_feel("partially absolved.");
         } else if (timeToNextBlessing() > 0) {
-            decreaseTimeToNextBlessing((value * (u.ualign.type == A_CHAOTIC ? 500 : 300))
+            decreaseTimeToNextBlessing((value * (currentAlignmentType() == A_CHAOTIC ? 500 : 300))
                             / MAXVALUE);
             if (timeToNextBlessing() < 0)
                 setTimeToNextBlessing(0);
@@ -1691,7 +1691,7 @@ dosacrifice()
                     otmp->oerodeproof = TRUE;
                     at_your_feet("An object");
                     dropy(otmp);
-                    godvoice(u.ualign.type, "Use my gift wisely!");
+                    godvoice(currentAlignmentType(), "Use my gift wisely!");
                     increaseGiftsBestowed(1);
                     setTimeToNextBlessing(rnz(300 + (50 * nartifacts)));
                     exercise(A_WIS, TRUE);
@@ -1730,7 +1730,7 @@ boolean praying; /* false means no messages should be given */
 {
     int alignment;
 
-    p_aligntyp = on_altar() ? a_align(currentX(), currentY()) : u.ualign.type;
+    p_aligntyp = on_altar() ? a_align(currentX(), currentY()) : currentAlignmentType();
     p_trouble = in_trouble();
 
     if (is_demon(youmonst.data) && (p_aligntyp != A_CHAOTIC)) {
@@ -1743,12 +1743,12 @@ boolean praying; /* false means no messages should be given */
     if (praying)
         You("begin praying to %s.", align_gname(p_aligntyp));
 
-    if (u.ualign.type && u.ualign.type == -p_aligntyp)
-        alignment = -u.ualign.record; /* Opposite alignment altar */
-    else if (u.ualign.type != p_aligntyp)
-        alignment = u.ualign.record / 2; /* Different alignment altar */
+    if (currentAlignmentType() && currentAlignmentType() == -p_aligntyp)
+        alignment = -currentAlignmentRecord(); /* Opposite alignment altar */
+    else if (currentAlignmentType() != p_aligntyp)
+        alignment = currentAlignmentRecord() / 2; /* Different alignment altar */
     else
-        alignment = u.ualign.record;
+        alignment = currentAlignmentRecord();
 
     if ((p_trouble > 0) ? (timeToNextBlessing() > 200)      /* big trouble */
            : (p_trouble < 0) ? (timeToNextBlessing() > 100) /* minor difficulties */
@@ -1757,7 +1757,7 @@ boolean praying; /* false means no messages should be given */
     else if (currentLuckWithBonus() < 0 || divineWrath() || alignment < 0)
         p_type = 1; /* too naughty... */
     else /* alignment >= 0 */ {
-        if (on_altar() && u.ualign.type != p_aligntyp)
+        if (on_altar() && currentAlignmentType() != p_aligntyp)
             p_type = 2;
         else
             p_type = 3;
@@ -1792,8 +1792,8 @@ dopray()
             setTimeToNextBlessing(0);
             if (currentLuck() < 0)
                 setCurrentLuck(0);
-            if (u.ualign.record <= 0)
-                u.ualign.record = 1;
+            if (currentAlignmentRecord() <= 0)
+                setCurrentAlignmentRecord(1);
             setDivineWrath(0);
             if (p_type < 2)
                 p_type = 3;
@@ -1837,27 +1837,27 @@ prayer_done() /* M. Stephenson (1.0.3b) */
         pline("Since you are in Gehennom, %s won't help you.",
               align_gname(alignment));
         /* haltingly aligned is least likely to anger */
-        if (u.ualign.record <= 0 || rnl(u.ualign.record))
-            angrygods(u.ualign.type);
+        if (currentAlignmentRecord() <= 0 || rnl(currentAlignmentRecord()))
+            angrygods(currentAlignmentType());
         return 0;
     }
 
     if (p_type == 0) {
-        if (on_altar() && u.ualign.type != alignment)
+        if (on_altar() && currentAlignmentType() != alignment)
             (void) water_prayer(FALSE);
         increaseTimeToNextBlessing(rnz(250));
         change_luck(-3);
-        gods_upset(u.ualign.type);
+        gods_upset(currentAlignmentType());
     } else if (p_type == 1) {
-        if (on_altar() && u.ualign.type != alignment)
+        if (on_altar() && currentAlignmentType() != alignment)
             (void) water_prayer(FALSE);
-        angrygods(u.ualign.type); /* naughty */
+        angrygods(currentAlignmentType()); /* naughty */
     } else if (p_type == 2) {
         if (water_prayer(FALSE)) {
             /* attempted water prayer on a non-coaligned altar */
             increaseTimeToNextBlessing(rnz(250));
             change_luck(-3);
-            gods_upset(u.ualign.type);
+            gods_upset(currentAlignmentType());
         } else
             pleased(alignment);
     } else {
@@ -1898,7 +1898,7 @@ doturn()
     }
     setAtheistConduct(FALSE);
 
-    if ((u.ualign.type != A_CHAOTIC
+    if ((currentAlignmentType() != A_CHAOTIC
          && (is_demon(youmonst.data) || is_undead(youmonst.data)))
         || divineWrath() > 6) { /* "Die, mortal!" */
         pline("For some reason, %s seems to ignore you.", u_gname());
@@ -1953,7 +1953,7 @@ doturn()
                     xlev += 2; /*FALLTHRU*/
                 case S_ZOMBIE:
                     if (currentExperienceLevel() >= xlev && !resist(mtmp, '\0', 0, NOTELL)) {
-                        if (u.ualign.type == A_CHAOTIC) {
+                        if (currentAlignmentType() == A_CHAOTIC) {
                             mtmp->mpeaceful = 1;
                             set_malign(mtmp);
                         } else { /* damn them */
@@ -1996,7 +1996,7 @@ xchar x, y;
 const char *
 u_gname()
 {
-    return align_gname(u.ualign.type);
+    return align_gname(currentAlignmentType());
 }
 
 const char *

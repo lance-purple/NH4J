@@ -61,6 +61,9 @@ public class PlayerCharacter {
 	private static long currentXP;
 	private static long currentScore;
 	
+	private static int currentAlignmentType;
+	private static int currentAlignmentRecord;
+	
 	private static int originalAlignmentBase;
 	private static int currentAlignmentBase;
 	private static int currentLuck;
@@ -488,6 +491,22 @@ public class PlayerCharacter {
 
 	public static void setOriginalAlignmentBase(int b) {
 		originalAlignmentBase = b;
+	}
+
+	public static int currentAlignmentType() {
+		return currentAlignmentType;
+	}
+
+	public static void setCurrentAlignmentType(int t) {
+		currentAlignmentType = t;
+	}
+
+	public static int currentAlignmentRecord() {
+		return currentAlignmentRecord;
+	}
+
+	public static void setCurrentAlignmentRecord(int r) {
+		currentAlignmentRecord = r;
 	}
 
 	public static int currentAlignmentBase() {

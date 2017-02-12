@@ -663,7 +663,7 @@ struct monst *mon;
                        || (oart->race != NON_PM && !Race_if(oart->race)));
         badalign =
             (oart->spfx & SPFX_RESTR) && oart->alignment != A_NONE
-            && (oart->alignment != u.ualign.type || u.ualign.record < 0);
+            && (oart->alignment != currentAlignmentType() || currentAlignmentRecord() < 0);
     } else if (!is_covetous(mon->data) && !is_mplayer(mon->data)) {
         badclass = self_willed && oart->role != NON_PM
                    && oart != &artilist[ART_EXCALIBUR];
@@ -772,7 +772,7 @@ struct monst *mtmp;
                     && ((!areYouPolymorphed() && (urace.selfmask & weap->mtype))
                         || ((weap->mtype & M2_WERE) && lycanthropeType() >= LOW_PM))));
     } else if (weap->spfx & SPFX_DALIGN) {
-        return yours ? (u.ualign.type != weap->alignment)
+        return yours ? (currentAlignmentType() != weap->alignment)
                      : (ptr->maligntyp == A_NONE
                         || sgn(ptr->maligntyp) != weap->alignment);
     } else if (weap->spfx & SPFX_ATTK) {

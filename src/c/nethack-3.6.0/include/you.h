@@ -212,8 +212,6 @@ extern const struct Align aligns[]; /* table of available alignments */
 struct you {
     struct prop uprops[LAST_PROP + 1];
 
-    align ualign;         /* character alignment */
-
     struct monst *ustuck;
     struct monst *usteed;
 

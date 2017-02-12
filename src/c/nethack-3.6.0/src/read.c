@@ -2149,9 +2149,9 @@ int how;
                 break;
             }
             if (is_human(ptr))
-                adjalign(-sgn(u.ualign.type));
+                adjalign(-sgn(currentAlignmentType()));
             if (is_demon(ptr))
-                adjalign(sgn(u.ualign.type));
+                adjalign(sgn(currentAlignmentType()));
 
             if (!(ptr->geno & G_GENO)) {
                 if (!Deaf) {
