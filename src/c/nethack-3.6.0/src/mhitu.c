@@ -741,7 +741,7 @@ STATIC_OVL boolean
 diseasemu(mdat)
 struct permonst *mdat;
 {
-    if (Sick_resistance) {
+    if (youResistSickness()) {
         You_feel("a slight illness.");
         return FALSE;
     } else {
@@ -975,7 +975,7 @@ register struct attack *mattk;
                 /* KMH -- this is okay with unchanging */
                 rehumanize();
                 break;
-            } else if (Fire_resistance) {
+            } else if (youResistFire()) {
                 pline_The("fire doesn't feel hot!");
                 dmg = 0;
             }
@@ -993,7 +993,7 @@ register struct attack *mattk;
         hitmsg(mtmp, mattk);
         if (uncancelled) {
             pline("You're covered in frost!");
-            if (Cold_resistance) {
+            if (youResistCold()) {
                 pline_The("frost doesn't seem cold!");
                 dmg = 0;
             }
@@ -1006,7 +1006,7 @@ register struct attack *mattk;
         hitmsg(mtmp, mattk);
         if (uncancelled) {
             You("get zapped!");
-            if (Shock_resistance) {
+            if (youResistShock()) {
                 pline_The("zap doesn't shock you!");
                 dmg = 0;
             }
@@ -1020,7 +1020,7 @@ register struct attack *mattk;
     case AD_SLEE:
         hitmsg(mtmp, mattk);
         if (uncancelled && multi >= 0 && !rn2(5)) {
-            if (Sleep_resistance)
+            if (youResistSleep())
                 break;
             fall_asleep(-rnd(10), TRUE);
             if (Blind)
@@ -1108,7 +1108,7 @@ register struct attack *mattk;
         break;
     case AD_DRLI:
         hitmsg(mtmp, mattk);
-        if (uncancelled && !rn2(3) && !Drain_resistance) {
+        if (uncancelled && !rn2(3) && !youResistDraining()) {
             losexp("life drainage");
         }
         break;
@@ -1165,7 +1165,7 @@ register struct attack *mattk;
                 if (!rn2(10)
                     || (flags.moonphase == NEW_MOON && !have_lizard())) {
                 do_stone:
-                    if (!Stoned && !Stone_resistance
+                    if (!Stoned && !youResistStoning()
                         && !(poly_when_stoned(youmonst.data)
                              && polymon(PM_STONE_GOLEM))) {
                         int kformat = KILLED_BY_AN;
@@ -1437,7 +1437,7 @@ register struct attack *mattk;
     case AD_ACID:
         hitmsg(mtmp, mattk);
         if (!mtmp->mcan && !rn2(3))
-            if (Acid_resistance) {
+            if (youResistAcid()) {
                 pline("You're covered in acid, but it seems harmless.");
                 dmg = 0;
             } else {
@@ -1481,7 +1481,7 @@ register struct attack *mattk;
         case 19:
         case 18:
         case 17:
-            if (!Antimagic) {
+            if (!youResistMagic()) {
                 killer.format = KILLED_BY_AN;
                 Strcpy(killer.name, "touch of death");
                 done(DIED);
@@ -1497,7 +1497,7 @@ register struct attack *mattk;
         case 2:
         case 1:
         case 0:
-            if (Antimagic)
+            if (youResistMagic())
                 shieldeff(currentX(), currentY());
             pline("Lucky for you, it didn't work!");
             dmg = 0;
@@ -1778,7 +1778,7 @@ register struct attack *mattk;
         }
         break;
     case AD_ACID:
-        if (Acid_resistance) {
+        if (youResistAcid()) {
             You("are covered with a seemingly harmless goo.");
             tmp = 0;
         } else {
@@ -1807,7 +1807,7 @@ register struct attack *mattk;
     case AD_ELEC:
         if (!mtmp->mcan && rn2(2)) {
             pline_The("air around you crackles with electricity.");
-            if (Shock_resistance) {
+            if (youResistShock()) {
                 shieldeff(currentX(), currentY());
                 You("seem unhurt.");
                 ugolemeffects(AD_ELEC, tmp);
@@ -1818,7 +1818,7 @@ register struct attack *mattk;
         break;
     case AD_COLD:
         if (!mtmp->mcan && rn2(2)) {
-            if (Cold_resistance) {
+            if (youResistCold()) {
                 shieldeff(currentX(), currentY());
                 You_feel("mildly chilly.");
                 ugolemeffects(AD_COLD, tmp);
@@ -1830,7 +1830,7 @@ register struct attack *mattk;
         break;
     case AD_FIRE:
         if (!mtmp->mcan && rn2(2)) {
-            if (Fire_resistance) {
+            if (youResistFire()) {
                 shieldeff(currentX(), currentY());
                 You_feel("mildly hot.");
                 ugolemeffects(AD_FIRE, tmp);
@@ -1905,15 +1905,15 @@ boolean ufound;
         switch (mattk->adtyp) {
         case AD_COLD:
             physical_damage = FALSE;
-            not_affected |= Cold_resistance;
+            not_affected |= youResistCold();
             goto common;
         case AD_FIRE:
             physical_damage = FALSE;
-            not_affected |= Fire_resistance;
+            not_affected |= youResistFire();
             goto common;
         case AD_ELEC:
             physical_damage = FALSE;
-            not_affected |= Shock_resistance;
+            not_affected |= youResistShock();
         common:
 
             if (!not_affected) {
@@ -2045,7 +2045,7 @@ register struct attack *mattk;
             return 2;
         }
         if (canseemon(mtmp) && couldsee(mtmp->mx, mtmp->my)
-            && !Stone_resistance) {
+            && !youResistStoning()) {
             You("meet %s gaze.", s_suffix(mon_nam(mtmp)));
             stop_occupation();
             if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))
@@ -2127,7 +2127,7 @@ register struct attack *mattk;
 
                 pline("%s attacks you with a fiery gaze!", Monnam(mtmp));
                 stop_occupation();
-                if (Fire_resistance) {
+                if (youResistFire()) {
                     pline_The("fire doesn't feel hot!");
                     dmg = 0;
                 }
@@ -2146,7 +2146,7 @@ register struct attack *mattk;
 #ifdef PM_BEHOLDER /* work in progress */
     case AD_SLEE:
         if (canseemon(mtmp) && couldsee(mtmp->mx, mtmp->my) && mtmp->mcansee
-            && multi >= 0 && !rn2(5) && !Sleep_resistance) {
+            && multi >= 0 && !rn2(5) && !youResistSleep()) {
             if (cancelled) {
                 react = 6;                      /* "tired" */
                 already = (mtmp->mfrozen != 0); /* can't happen... */

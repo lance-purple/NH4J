@@ -24,50 +24,38 @@
 /* With intrinsics and extrinsics */
 #define HFire_resistance u.uprops[FIRE_RES].intrinsic
 #define EFire_resistance u.uprops[FIRE_RES].extrinsic
-#define Fire_resistance (HFire_resistance || EFire_resistance)
 
 #define HCold_resistance u.uprops[COLD_RES].intrinsic
 #define ECold_resistance u.uprops[COLD_RES].extrinsic
-#define Cold_resistance (HCold_resistance || ECold_resistance)
 
 #define HSleep_resistance u.uprops[SLEEP_RES].intrinsic
 #define ESleep_resistance u.uprops[SLEEP_RES].extrinsic
-#define Sleep_resistance (HSleep_resistance || ESleep_resistance)
 
 #define HDisint_resistance u.uprops[DISINT_RES].intrinsic
 #define EDisint_resistance u.uprops[DISINT_RES].extrinsic
-#define Disint_resistance (HDisint_resistance || EDisint_resistance)
 
 #define HShock_resistance u.uprops[SHOCK_RES].intrinsic
 #define EShock_resistance u.uprops[SHOCK_RES].extrinsic
-#define Shock_resistance (HShock_resistance || EShock_resistance)
 
 #define HPoison_resistance u.uprops[POISON_RES].intrinsic
 #define EPoison_resistance u.uprops[POISON_RES].extrinsic
-#define Poison_resistance (HPoison_resistance || EPoison_resistance)
 
 #define HDrain_resistance u.uprops[DRAIN_RES].intrinsic
 #define EDrain_resistance u.uprops[DRAIN_RES].extrinsic
-#define Drain_resistance (HDrain_resistance || EDrain_resistance)
 
 /* Hxxx due to FROMFORM only */
 #define HAntimagic u.uprops[ANTIMAGIC].intrinsic
 #define EAntimagic u.uprops[ANTIMAGIC].extrinsic
-#define Antimagic (HAntimagic || EAntimagic)
 
 #define HAcid_resistance u.uprops[ACID_RES].intrinsic
 #define EAcid_resistance u.uprops[ACID_RES].extrinsic
-#define Acid_resistance (HAcid_resistance || EAcid_resistance)
 
 #define HStone_resistance u.uprops[STONE_RES].intrinsic
 #define EStone_resistance u.uprops[STONE_RES].extrinsic
-#define Stone_resistance (HStone_resistance || EStone_resistance)
 
 /* Intrinsics only */
 #define HSick_resistance u.uprops[SICK_RES].intrinsic
-#define Sick_resistance (HSick_resistance || defends(AD_DISE, uwep))
 
-#define Invulnerable u.uprops[INVULNERABLE].intrinsic /* [Tom] */
 
 /*** Troubles ***/
 /* Pseudo-property */

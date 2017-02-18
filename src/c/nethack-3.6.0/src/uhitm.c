@@ -1312,7 +1312,7 @@ theft_petrifies(otmp)
 struct obj *otmp;
 {
     if (uarmg || otmp->otyp != CORPSE
-        || !touch_petrifies(&mons[otmp->corpsenm]) || Stone_resistance)
+        || !touch_petrifies(&mons[otmp->corpsenm]) || youResistStoning())
         return FALSE;
 
 #if 0   /* no poly_when_stoned() critter has theft capability */
@@ -1903,10 +1903,10 @@ register struct attack *mattk;
             (void) snuff_lit(otmp);
 
         /* engulfing a cockatrice or digesting a Rider or Medusa */
-        fatal_gulp = (touch_petrifies(pd) && !Stone_resistance)
+        fatal_gulp = (touch_petrifies(pd) && !youResistStoning())
                      || (mattk->adtyp == AD_DGST
                          && (is_rider(pd) || (pd == &mons[PM_MEDUSA]
-                                              && !Stone_resistance)));
+                                              && !youResistStoning())));
 
         if ((mattk->adtyp == AD_DGST && !Slow_digestion) || fatal_gulp)
             eating_conducts(pd);
@@ -2234,7 +2234,7 @@ register struct monst *mon;
                     sum[i] = gulpum(mon, mattk);
                     if (sum[i] == 2 && (mon->data->mlet == S_ZOMBIE
                                         || mon->data->mlet == S_MUMMY)
-                        && rn2(5) && !Sick_resistance) {
+                        && rn2(5) && !youResistSickness()) {
                         You_feel("%ssick.", (Sick) ? "very " : "");
                         mdamageu(mon, rnd(8));
                     }
@@ -2334,7 +2334,7 @@ boolean wep_was_destroyed;
             else
                 You("are splashed by %s acid!", s_suffix(mon_nam(mon)));
 
-            if (!Acid_resistance)
+            if (!youResistAcid())
                 mdamageu(mon, tmp);
             if (!rn2(30))
                 erode_armor(&youmonst, ERODE_CORRODE);
@@ -2365,7 +2365,7 @@ boolean wep_was_destroyed;
                 || (protector == W_ARMF && !uarmf)
                 || (protector == W_ARMH && !uarmh)
                 || (protector == (W_ARMC | W_ARMG) && (!uarmc || !uarmg))) {
-                if (!Stone_resistance
+                if (!youResistStoning()
                     && !(poly_when_stoned(youmonst.data)
                          && polymon(PM_STONE_GOLEM))) {
                     done_in_by(mon, STONING); /* "You turn to stone..." */
@@ -2398,7 +2398,7 @@ boolean wep_was_destroyed;
         break;
     case AD_MAGM:
         /* wrath of gods for attacking Oracle */
-        if (Antimagic) {
+        if (youResistMagic()) {
             shieldeff(currentX(), currentY());
             pline("A hail of magic missiles narrowly misses you!");
         } else {
@@ -2469,7 +2469,7 @@ boolean wep_was_destroyed;
             break;
         case AD_COLD: /* brown mold or blue jelly */
             if (monnear(mon, currentX(), currentY())) {
-                if (Cold_resistance) {
+                if (youResistCold()) {
                     shieldeff(currentX(), currentY());
                     You_feel("a mild chill.");
                     ugolemeffects(AD_COLD, tmp);
@@ -2492,7 +2492,7 @@ boolean wep_was_destroyed;
             break;
         case AD_FIRE:
             if (monnear(mon, currentX(), currentY())) {
-                if (Fire_resistance) {
+                if (youResistFire()) {
                     shieldeff(currentX(), currentY());
                     You_feel("mildly warm.");
                     ugolemeffects(AD_FIRE, tmp);
@@ -2503,7 +2503,7 @@ boolean wep_was_destroyed;
             }
             break;
         case AD_ELEC:
-            if (Shock_resistance) {
+            if (youResistShock()) {
                 shieldeff(currentX(), currentY());
                 You_feel("a mild tingle.");
                 ugolemeffects(AD_ELEC, tmp);

@@ -149,11 +149,11 @@ dosit()
             return 1;
         }
         pline_The("lava burns you!");
-        losehp(d((Fire_resistance ? 2 : 10), 10), /* lava damage */
+        losehp(d((youResistFire() ? 2 : 10), 10), /* lava damage */
                "sitting on lava", KILLED_BY);
     } else if (is_ice(currentX(), currentY())) {
         You(sit_message, defsyms[S_ice].explanation);
-        if (!Cold_resistance)
+        if (!youResistCold())
             pline_The("ice feels cold.");
     } else if (typ == DRAWBRIDGE_DOWN) {
         You(sit_message, "drawbridge");
@@ -170,8 +170,8 @@ dosit()
                 break;
             case 3:
                 pline("A%s electric shock shoots through your body!",
-                      (Shock_resistance) ? "n" : " massive");
-                losehp(Shock_resistance ? rnd(6) : rnd(30), "electric chair",
+                      (youResistShock()) ? "n" : " massive");
+                losehp(youResistShock() ? rnd(6) : rnd(30), "electric chair",
                        KILLED_BY_AN);
                 exercise(A_CON, FALSE);
                 break;
@@ -329,7 +329,7 @@ rndcurse()
         return;
     }
 
-    if (Antimagic) {
+    if (youResistMagic()) {
         shieldeff(currentX(), currentY());
         You(mal_aura, "you");
     }
@@ -341,7 +341,7 @@ rndcurse()
         nobj++;
     }
     if (nobj) {
-        for (cnt = rnd(6 / ((!!Antimagic) + (!!Half_spell_damage) + 1));
+        for (cnt = rnd(6 / ((!!youResistMagic()) + (!!Half_spell_damage) + 1));
              cnt > 0; cnt--) {
             onum = rnd(nobj);
             for (otmp = invent; otmp; otmp = otmp->nobj) {

@@ -66,7 +66,7 @@ struct obj *otmp;
         return 1;
     }
     ptr = mtmp->data;
-    if (touch_petrifies(ptr) && !uarmg && !Stone_resistance) {
+    if (touch_petrifies(ptr) && !uarmg && !youResistStoning()) {
         char kbuf[BUFSZ];
 
         You("touch %s.", mon_nam(mtmp));
@@ -251,7 +251,7 @@ boolean force;      /* Quietly force this animal */
         return (FALSE);
     }
     ptr = mtmp->data;
-    if (touch_petrifies(ptr) && !Stone_resistance) {
+    if (touch_petrifies(ptr) && !youResistStoning()) {
         char kbuf[BUFSZ];
 
         You("touch %s.", mon_nam(mtmp));

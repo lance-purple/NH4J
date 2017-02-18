@@ -688,7 +688,7 @@ struct monst *mon;
             return 0;
         You("are blasted by %s power!", s_suffix(the(xname(obj))));
         touch_blasted = TRUE;
-        dmg = d((Antimagic ? 2 : 4), (self_willed ? 10 : 4));
+        dmg = d((youResistMagic() ? 2 : 4), (self_willed ? 10 : 4));
         /* add half (maybe quarter) of the usual silver damage bonus */
         if (objects[obj->otyp].oc_material == SILVER && youHateSilver())
             tmp = rnd(10), dmg += Maybe_Half_Phys(tmp);
@@ -783,20 +783,20 @@ struct monst *mtmp;
             return FALSE;
         switch (weap->attk.adtyp) {
         case AD_FIRE:
-            return !(yours ? Fire_resistance : resists_fire(mtmp));
+            return !(yours ? youResistFire() : resists_fire(mtmp));
         case AD_COLD:
-            return !(yours ? Cold_resistance : resists_cold(mtmp));
+            return !(yours ? youResistCold() : resists_cold(mtmp));
         case AD_ELEC:
-            return !(yours ? Shock_resistance : resists_elec(mtmp));
+            return !(yours ? youResistShock() : resists_elec(mtmp));
         case AD_MAGM:
         case AD_STUN:
-            return !(yours ? Antimagic : (rn2(100) < ptr->mr));
+            return !(yours ? youResistMagic() : (rn2(100) < ptr->mr));
         case AD_DRST:
-            return !(yours ? Poison_resistance : resists_poison(mtmp));
+            return !(yours ? youResistPoison() : resists_poison(mtmp));
         case AD_DRLI:
-            return !(yours ? Drain_resistance : resists_drli(mtmp));
+            return !(yours ? youResistDraining() : resists_drli(mtmp));
         case AD_STON:
-            return !(yours ? Stone_resistance : resists_ston(mtmp));
+            return !(yours ? youResistStoning() : resists_ston(mtmp));
         default:
             impossible("Weird weapon special attack.");
         }
@@ -1050,7 +1050,7 @@ char *hittee;              /* target's name: "you" or mon_nam(mdef) */
 
     case MB_INDEX_SCARE:
         if (youdefend) {
-            if (Antimagic) {
+            if (youResistMagic()) {
                 resisted = TRUE;
             } else {
                 nomul(-3);

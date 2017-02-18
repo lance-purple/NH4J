@@ -1670,7 +1670,7 @@ struct obj *obj;
         You("cannot tin %s which is partly eaten.", something);
         return;
     }
-    if (touch_petrifies(&mons[corpse->corpsenm]) && !Stone_resistance
+    if (touch_petrifies(&mons[corpse->corpsenm]) && !youResistStoning()
         && !uarmg) {
         char kbuf[BUFSZ];
 
@@ -2651,7 +2651,7 @@ struct obj *obj;
                     You("snatch %s!", yname(otmp));
                     if (otmp->otyp == CORPSE
                         && touch_petrifies(&mons[otmp->corpsenm]) && !uarmg
-                        && !Stone_resistance
+                        && !youResistStoning()
                         && !(poly_when_stoned(youmonst.data)
                              && polymon(PM_STONE_GOLEM))) {
                         char kbuf[BUFSZ];

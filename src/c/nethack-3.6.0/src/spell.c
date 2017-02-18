@@ -150,13 +150,13 @@ struct obj *bp;
         }
         /* temp disable in_use; death should not destroy the book */
         bp->in_use = FALSE;
-        losestr(Poison_resistance ? rn1(2, 1) : rn1(4, 3));
-        losehp(rnd(Poison_resistance ? 6 : 10), "contact-poisoned spellbook",
+        losestr(youResistPoison() ? rn1(2, 1) : rn1(4, 3));
+        losehp(rnd(youResistPoison() ? 6 : 10), "contact-poisoned spellbook",
                KILLED_BY_AN);
         bp->in_use = TRUE;
         break;
     case 6:
-        if (Antimagic) {
+        if (youResistMagic()) {
             shieldeff(currentX(), currentY());
             pline_The("book %s, but you are unharmed!", explodes);
         } else {

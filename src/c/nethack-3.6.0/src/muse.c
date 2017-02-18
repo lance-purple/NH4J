@@ -1211,7 +1211,7 @@ register struct obj *otmp;
         if (mtmp == &youmonst) {
             if (zap_oseen)
                 makeknown(WAN_STRIKING);
-            if (Antimagic) {
+            if (youResistMagic()) {
                 shieldeff(currentX(), currentY());
                 pline("Boing!");
             } else if (rnd(20) < 10 + armorClass()) {

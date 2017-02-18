@@ -381,7 +381,7 @@ nh_timeout()
                     stop_occupation();
                 break;
             case SLEEPY:
-                if (unconscious() || Sleep_resistance) {
+                if (unconscious() || youResistSleep()) {
                     incr_itimeout(&HSleepy, rnd(100));
                 } else if (Sleepy) {
                     You("fall asleep.");
@@ -729,7 +729,7 @@ slip_or_trip()
             You("trip over %s.", what);
         }
         if (!uarmf && otmp->otyp == CORPSE
-            && touch_petrifies(&mons[otmp->corpsenm]) && !Stone_resistance) {
+            && touch_petrifies(&mons[otmp->corpsenm]) && !youResistStoning()) {
             Sprintf(killer.name, "tripping over %s corpse",
                     an(mons[otmp->corpsenm].mname));
             instapetrify(killer.name);

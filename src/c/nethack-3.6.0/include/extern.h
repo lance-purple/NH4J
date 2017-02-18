@@ -124,6 +124,19 @@ E int FDECL(is_innate, (int));
 E char *FDECL(from_what, (int));
 E void FDECL(uchangealign, (int, int));
 
+E boolean FDECL(youResistFire, ());
+E boolean FDECL(youResistCold, ());
+E boolean FDECL(youResistSleep, ());
+E boolean FDECL(youResistDisintegration, ());
+E boolean FDECL(youResistShock, ());
+E boolean FDECL(youResistPoison, ());
+E boolean FDECL(youResistDraining, ());
+E boolean FDECL(youResistMagic, ());
+E boolean FDECL(youResistAcid, ());
+E boolean FDECL(youResistStoning, ());
+E boolean FDECL(youResistSickness, ());
+E boolean FDECL(youAreInvulnerable, ());
+
 /* ### ball.c ### */
 
 E void FDECL(ballrelease, (BOOLEAN_P));

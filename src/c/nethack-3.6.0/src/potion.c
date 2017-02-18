@@ -121,7 +121,7 @@ int mask;
         talk = FALSE;
 #endif
     if (xtime > 0L) {
-        if (Sick_resistance)
+        if (youResistSickness())
             return;
         if (!old) {
             /* newly sick */
@@ -764,7 +764,7 @@ register struct obj *otmp;
         }
         break;
     case POT_SLEEPING:
-        if (Sleep_resistance || Free_action) {
+        if (youResistSleep() || Free_action) {
             You("yawn.");
         } else {
             You("suddenly fall asleep!");
@@ -819,7 +819,7 @@ register struct obj *otmp;
                 losehp(1, "mildly contaminated potion", KILLED_BY_AN);
             }
         } else {
-            if (Poison_resistance)
+            if (youResistPoison())
                 pline("(But in fact it was biologically contaminated %s.)",
                       fruitname(TRUE));
             if (Role_if(PM_HEALER)) {
@@ -829,15 +829,15 @@ register struct obj *otmp;
                 int typ = rn2(A_MAX);
 
                 Sprintf(contaminant, "%s%s",
-                        (Poison_resistance) ? "mildly " : "",
+                        (youResistPoison()) ? "mildly " : "",
                         (otmp->fromsink) ? "contaminated tap water"
                                          : "contaminated potion");
                 if (!Fixed_abil) {
                     poisontell(typ, FALSE);
-                    (void) adjattrib(typ, Poison_resistance ? -1 : -rn1(4, 3),
+                    (void) adjattrib(typ, youResistPoison() ? -1 : -rn1(4, 3),
                                      1);
                 }
-                if (!Poison_resistance) {
+                if (!youResistPoison()) {
                     if (otmp->fromsink)
                         losehp(rnd(10) + 5 * !!(otmp->cursed), contaminant,
                                KILLED_BY);
@@ -1056,7 +1056,7 @@ register struct obj *otmp;
             } else {
                 You("burn your %s.", body_part(FACE));
                 /* fire damage */
-                losehp(d(Fire_resistance ? 1 : 3, 4), "burning potion of oil",
+                losehp(d(youResistFire() ? 1 : 3, 4), "burning potion of oil",
                        KILLED_BY_AN);
             }
         } else if (otmp->cursed)
@@ -1067,7 +1067,7 @@ register struct obj *otmp;
         break;
     }
     case POT_ACID:
-        if (Acid_resistance) {
+        if (youResistAcid()) {
             /* Not necessarily a creature who _likes_ acid */
             pline("This tastes %s.", Hallucination ? "tangy" : "sour");
         } else {
@@ -1298,11 +1298,11 @@ boolean your_fault;
             break;
         case POT_POLYMORPH:
             You_feel("a little %s.", Hallucination ? "normal" : "strange");
-            if (!Unchanging && !Antimagic)
+            if (!Unchanging && !youResistMagic())
                 polyself(0);
             break;
         case POT_ACID:
-            if (!Acid_resistance) {
+            if (!youResistAcid()) {
                 int dmg;
                 pline("This burns%s!",
                       obj->blessed ? " a little"
@@ -1620,7 +1620,7 @@ register struct obj *obj;
         break;
     case POT_SLEEPING:
         kn++;
-        if (!Free_action && !Sleep_resistance) {
+        if (!Free_action && !youResistSleep()) {
             You_feel("rather tired.");
             nomul(-rnd(5));
             multi_reason = "sleeping off a magical draught";

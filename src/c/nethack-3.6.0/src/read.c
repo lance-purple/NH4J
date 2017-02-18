@@ -1547,7 +1547,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
         if (!already_known)
             (void) learnscrolltyp(SCR_FIRE);
         if (confused) {
-            if (Fire_resistance) {
+            if (youResistFire()) {
                 shieldeff(currentX(), currentY());
                 if (!Blind)
                     pline("Oh, look, what a pretty fire in your %s.",

@@ -70,7 +70,7 @@ const char *name; /* if null, then format `obj' */
             pline_The("silver sears your flesh!");
             exercise(A_CON, FALSE);
         }
-        if (is_acid && Acid_resistance)
+        if (is_acid && youResistAcid())
             pline("It doesn't seem to hurt you.");
         else {
             if (is_acid)
@@ -434,7 +434,7 @@ struct obj *obj;         /* missile (or stack providing it) */
                 }
             }
             if (hitu && singleobj->otyp == EGG) {
-                if (!Stoned && !Stone_resistance
+                if (!Stoned && !youResistStoning()
                     && !(poly_when_stoned(youmonst.data)
                          && polymon(PM_STONE_GOLEM))) {
                     make_stoned(5L, (char *) 0, KILLED_BY, "");
@@ -747,7 +747,7 @@ struct attack *mattk;
                  */
                 if (!rn2(3))
                     mtmp->mspec_used = 10 + rn2(20);
-                if (typ == AD_SLEE && !Sleep_resistance)
+                if (typ == AD_SLEE && !youResistSleep())
                     mtmp->mspec_used += rnd(20);
             } else
                 impossible("Breath weapon %d used", typ - 1);

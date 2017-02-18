@@ -71,7 +71,7 @@ unsigned gpflags;
         } else if (is_lava(x, y)) {
             if (mtmp == &youmonst)
                 return (Levitation || Flying
-                        || (Fire_resistance && canYouWalkOnWater() && uarmf
+                        || (youResistFire() && canYouWalkOnWater() && uarmf
                             && uarmf->oerodeproof)
                         || (areYouPolymorphed() && likes_lava(youmonst.data)));
             else
@@ -859,8 +859,8 @@ void
 tele_trap(trap)
 struct trap *trap;
 {
-    if (areYouInEndgame() || Antimagic) {
-        if (Antimagic)
+    if (areYouInEndgame() || youResistMagic()) {
+        if (youResistMagic())
             shieldeff(currentX(), currentY());
         You_feel("a wrenching sensation.");
     } else if (!next_to_u()) {
@@ -880,10 +880,10 @@ struct trap *trap;
     You("%s onto a level teleport trap!",
         Levitation ? (const char *) "float"
                    : locomotion(youmonst.data, "step"));
-    if (Antimagic) {
+    if (youResistMagic()) {
         shieldeff(currentX(), currentY());
     }
-    if (Antimagic || areYouInEndgame()) {
+    if (youResistMagic() || areYouInEndgame()) {
         You_feel("a wrenching sensation.");
         return;
     }

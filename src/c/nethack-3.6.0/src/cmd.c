@@ -1928,29 +1928,29 @@ int final;
     }
 
     /*** Resistances to troubles ***/
-    if (Invulnerable)
+    if (youAreInvulnerable())
         you_are("invulnerable", from_what(INVULNERABLE));
-    if (Antimagic)
+    if (youResistMagic())
         you_are("magic-protected", from_what(ANTIMAGIC));
-    if (Fire_resistance)
+    if (youResistFire())
         you_are("fire resistant", from_what(FIRE_RES));
-    if (Cold_resistance)
+    if (youResistCold())
         you_are("cold resistant", from_what(COLD_RES));
-    if (Sleep_resistance)
+    if (youResistSleep())
         you_are("sleep resistant", from_what(SLEEP_RES));
-    if (Disint_resistance)
+    if (youResistDisintegration())
         you_are("disintegration-resistant", from_what(DISINT_RES));
-    if (Shock_resistance)
+    if (youResistShock())
         you_are("shock resistant", from_what(SHOCK_RES));
-    if (Poison_resistance)
+    if (youResistPoison())
         you_are("poison resistant", from_what(POISON_RES));
-    if (Acid_resistance)
+    if (youResistAcid())
         you_are("acid resistant", from_what(ACID_RES));
-    if (Drain_resistance)
+    if (youResistDraining())
         you_are("level-drain resistant", from_what(DRAIN_RES));
-    if (Sick_resistance)
+    if (youResistSickness())
         you_are("immune to sickness", from_what(SICK_RES));
-    if (Stone_resistance)
+    if (youResistStoning())
         you_are("petrification resistant", from_what(STONE_RES));
     if (Halluc_resistance)
         enl_msg(You_, "resist", "resisted", " hallucinations",

@@ -146,28 +146,28 @@ int expltype;
                     explmask[i][j] = 0;
                     break;
                 case AD_MAGM:
-                    explmask[i][j] = !!Antimagic;
+                    explmask[i][j] = !!youResistMagic();
                     break;
                 case AD_FIRE:
-                    explmask[i][j] = !!Fire_resistance;
+                    explmask[i][j] = !!youResistFire();
                     break;
                 case AD_COLD:
-                    explmask[i][j] = !!Cold_resistance;
+                    explmask[i][j] = !!youResistCold();
                     break;
                 case AD_DISN:
                     explmask[i][j] = (olet == WAND_CLASS)
                                          ? !!(nonliving(youmonst.data)
                                               || is_demon(youmonst.data))
-                                         : !!Disint_resistance;
+                                         : !!youResistDisintegration();
                     break;
                 case AD_ELEC:
-                    explmask[i][j] = !!Shock_resistance;
+                    explmask[i][j] = !!youResistShock();
                     break;
                 case AD_DRST:
-                    explmask[i][j] = !!Poison_resistance;
+                    explmask[i][j] = !!youResistPoison();
                     break;
                 case AD_ACID:
-                    explmask[i][j] = !!Acid_resistance;
+                    explmask[i][j] = !!youResistAcid();
                     physical_dmg = TRUE;
                     break;
                 default:
@@ -441,7 +441,7 @@ int expltype;
         /* do property damage first, in case we end up leaving bones */
         if (adtyp == AD_FIRE)
             burn_away_slime();
-        if (Invulnerable) {
+        if (youAreInvulnerable()) {
             damu = 0;
             You("are unharmed!");
         } else if (adtyp == AD_PHYS || physical_dmg)

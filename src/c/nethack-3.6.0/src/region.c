@@ -930,7 +930,7 @@ genericptr_t p2;
             Your("%s sting.", makeplural(body_part(EYE)));
             make_blinded(1L, FALSE);
         }
-        if (!Poison_resistance) {
+        if (!youResistPoison()) {
             pline("%s is burning your %s!", Something,
                   makeplural(body_part(LUNG)));
             You("cough and spit blood!");
@@ -1025,7 +1025,7 @@ region_danger()
                 continue;
             /* minor inconvenience if you're poison resistant;
                not harmful enough to be a prayer-level trouble */
-            if (Poison_resistance)
+            if (youResistPoison())
                 continue;
             ++n;
         }

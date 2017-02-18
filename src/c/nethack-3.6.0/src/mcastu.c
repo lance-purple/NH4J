@@ -84,7 +84,7 @@ int spellval;
     switch (spellval) {
     case 24:
     case 23:
-        if (Antimagic || Hallucination)
+        if (youResistMagic() || Hallucination)
             return MGC_PSI_BOLT;
     /* else FALL THROUGH */
     case 22:
@@ -291,7 +291,7 @@ boolean foundyou;
     switch (mattk->adtyp) {
     case AD_FIRE:
         pline("You're enveloped in flames.");
-        if (Fire_resistance) {
+        if (youResistFire()) {
             shieldeff(currentX(), currentY());
             pline("But you resist the effects.");
             dmg = 0;
@@ -300,7 +300,7 @@ boolean foundyou;
         break;
     case AD_COLD:
         pline("You're covered in frost.");
-        if (Cold_resistance) {
+        if (youResistCold()) {
             shieldeff(currentX(), currentY());
             pline("But you resist the effects.");
             dmg = 0;
@@ -308,7 +308,6 @@ boolean foundyou;
         break;
     case AD_MAGM:
         You("are hit by a shower of missiles!");
-        if (Antimagic) {
             shieldeff(currentX(), currentY());
             pline_The("missiles bounce off!");
             dmg = 0;
@@ -357,7 +356,7 @@ int spellnum;
         pline("Oh no, %s's using the touch of death!", mhe(mtmp));
         if (nonliving(youmonst.data) || is_demon(youmonst.data)) {
             You("seem no deader than before.");
-        } else if (!Antimagic && rn2(mtmp->m_lev) > 12) {
+        } else if (!youResistMagic() && rn2(mtmp->m_lev) > 12) {
             if (Hallucination) {
                 You("have an out of body experience.");
             } else {
@@ -366,7 +365,7 @@ int spellnum;
                 done(DIED);
             }
         } else {
-            if (Antimagic)
+            if (youResistMagic())
                 shieldeff(currentX(), currentY());
             pline("Lucky for you, it didn't work!");
         }
@@ -414,7 +413,7 @@ int spellnum;
         dmg = 0;
         break;
     case MGC_DESTRY_ARMR:
-        if (Antimagic) {
+        if (youResistMagic()) {
             shieldeff(currentX(), currentY());
             pline("A field of force surrounds you!");
         } else if (!destroy_arm(some_armor(&youmonst))) {
@@ -423,7 +422,7 @@ int spellnum;
         dmg = 0;
         break;
     case MGC_WEAKEN_YOU: /* drain strength */
-        if (Antimagic) {
+        if (youResistMagic()) {
             shieldeff(currentX(), currentY());
             You_feel("momentarily weakened.");
         } else {
@@ -448,7 +447,7 @@ int spellnum;
             impossible("no reason for monster to cast disappear spell?");
         break;
     case MGC_STUN_YOU:
-        if (Antimagic || Free_action) {
+        if (youResistMagic() || Free_action) {
             shieldeff(currentX(), currentY());
             if (!Stunned)
                 You_feel("momentarily disoriented.");
@@ -479,7 +478,7 @@ int spellnum;
     case MGC_PSI_BOLT:
         /* prior to 3.4.0 Antimagic was setting the damage to 1--this
            made the spell virtually harmless to players with magic res. */
-        if (Antimagic) {
+        if (youResistMagic()) {
             shieldeff(currentX(), currentY());
             dmg = (dmg + 1) / 2;
         }
@@ -526,7 +525,7 @@ int spellnum;
         break;
     case CLC_FIRE_PILLAR:
         pline("A pillar of fire strikes all around you!");
-        if (Fire_resistance) {
+        if (youResistFire()) {
             shieldeff(currentX(), currentY());
             dmg = 0;
         } else
@@ -545,7 +544,7 @@ int spellnum;
 
         pline("A bolt of lightning strikes down at you from above!");
         reflects = ureflects("It bounces off your %s%s.", "");
-        if (reflects || Shock_resistance) {
+        if (reflects || youResistShock()) {
             shieldeff(currentX(), currentY());
             dmg = 0;
             if (reflects)
@@ -651,7 +650,7 @@ int spellnum;
             impossible("no reason for monster to cast blindness spell?");
         break;
     case CLC_PARALYZE:
-        if (Antimagic || Free_action) {
+        if (youResistMagic() || Free_action) {
             shieldeff(currentX(), currentY());
             if (multi >= 0)
                 You("stiffen briefly.");
@@ -670,7 +669,7 @@ int spellnum;
         dmg = 0;
         break;
     case CLC_CONFUSE_YOU:
-        if (Antimagic) {
+        if (youResistMagic()) {
             shieldeff(currentX(), currentY());
             You_feel("momentarily dizzy.");
         } else {
@@ -698,7 +697,7 @@ int spellnum;
         }
         break;
     case CLC_OPEN_WOUNDS:
-        if (Antimagic) {
+        if (youResistMagic()) {
             shieldeff(currentX(), currentY());
             dmg = (dmg + 1) / 2;
         }

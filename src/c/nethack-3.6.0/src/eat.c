@@ -480,10 +480,10 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
            inducing critter (most likely Medusa; attacking a cockatrice via
            tentacle-touch should have been caught before reaching this far) */
         if (magr == &youmonst) {
-            if (!Stone_resistance && !Stoned)
+            if (!youResistStoning() && !Stoned)
                 make_stoned(5L, (char *) 0, KILLED_BY_AN, pd->mname);
         } else {
-            /* no need to check for poly_when_stoned or Stone_resistance;
+            /* no need to check for poly_when_stoned or youResistStoning;
                mind flayers don't have those capabilities */
             if (visflag)
                 pline("%s turns to stone!", Monnam(magr));
@@ -636,7 +636,7 @@ register int pm;
 {
     (void) maybe_cannibal(pm, TRUE);
     if (flesh_petrifies(&mons[pm])) {
-        if (!Stone_resistance
+        if (!youResistStoning()
             && !(poly_when_stoned(youmonst.data)
                  && polymon(PM_STONE_GOLEM))) {
             Sprintf(killer.name, "tasting %s meat", mons[pm].mname);
@@ -861,7 +861,7 @@ register struct permonst *ptr;
     case POISON_RES:
         debugpline0("Trying to give poison resistance");
         if (!(HPoison_resistance & FROMOUTSIDE)) {
-            You_feel(Poison_resistance ? "especially healthy." : "healthy.");
+            You_feel(youResistPoison() ? "especially healthy." : "healthy.");
             HPoison_resistance |= FROMOUTSIDE;
         }
         break;
@@ -1276,7 +1276,7 @@ const char *mesg;
 
         which = 0; /* 0=>plural, 1=>as-is, 2=>"the" prefix */
         if ((mnum == PM_COCKATRICE || mnum == PM_CHICKATRICE)
-            && (Stone_resistance || Hallucination)) {
+            && (youResistStoning() || Hallucination)) {
             what = "chicken";
             which = 1; /* suppress pluralization */
         } else if (Hallucination) {
@@ -1529,7 +1529,7 @@ struct obj *otmp;
     int tp = 0, mnum = otmp->corpsenm;
     long rotted = 0L;
     int retcode = 0;
-    boolean stoneable = (flesh_petrifies(&mons[mnum]) && !Stone_resistance
+    boolean stoneable = (flesh_petrifies(&mons[mnum]) && !youResistStoning()
                          && !poly_when_stoned(youmonst.data));
 
     /* KMH, conduct */
@@ -1556,7 +1556,7 @@ struct obj *otmp;
                   ? "fungoid vegetation"
                   : !vegetarian(&mons[mnum]) ? "meat" : "protoplasm",
               cannibal ? ", you cannibal" : "");
-        if (Sick_resistance) {
+        if (youResistSickness()) {
             pline("It doesn't seem at all sickening, though...");
         } else {
             long sick_time;
@@ -1573,20 +1573,20 @@ struct obj *otmp;
         else
             useupf(otmp, 1L);
         return 2;
-    } else if (acidic(&mons[mnum]) && !Acid_resistance) {
+    } else if (acidic(&mons[mnum]) && !youResistAcid()) {
         tp++;
         You("have a very bad case of stomach acid.");   /* not body_part() */
         losehp(rnd(15), "acidic corpse", KILLED_BY_AN); /* acid damage */
     } else if (poisonous(&mons[mnum]) && rn2(5)) {
         tp++;
         pline("Ecch - that must have been poisonous!");
-        if (!Poison_resistance) {
+        if (!youResistPoison()) {
             losestr(rnd(4));
             losehp(rnd(15), "poisonous corpse", KILLED_BY_AN);
         } else
             You("seem unaffected by the poison.");
         /* now any corpse left too long will make you mildly ill */
-    } else if ((rotted > 5L || (rotted > 3L && rn2(5))) && !Sick_resistance) {
+    } else if ((rotted > 5L || (rotted > 3L && rn2(5))) && !youResistSickness()) {
         tp++;
         You_feel("%ssick.", (Sick) ? "very " : "");
         losehp(rnd(8), "cadaver", KILLED_BY_AN);
@@ -1616,7 +1616,7 @@ struct obj *otmp;
         if (!retcode)
             consume_oeaten(otmp, 2); /* oeaten >>= 2 */
     } else if ((mnum == PM_COCKATRICE || mnum == PM_CHICKATRICE)
-               && (Stone_resistance || Hallucination)) {
+               && (youResistStoning() || Hallucination)) {
         pline("This tastes just like chicken!");
     } else if (mnum == PM_FLOATING_EYE && currentMonsterNumber() == PM_RAVEN) {
         You("peck the eyeball with delight.");
@@ -1742,7 +1742,7 @@ struct obj *otmp;
             pline("My, that was a %s %s!",
                   Hallucination ? "primo" : "yummy",
                   singular(otmp, xname));
-        } else if (otmp->otyp == APPLE && otmp->cursed && !Sleep_resistance) {
+        } else if (otmp->otyp == APPLE && otmp->cursed && !youResistSleep()) {
             ; /* skip core joke; feedback deferred til fpostfx() */
 
 #if defined(MAC) || defined(MACOSX)
@@ -1928,7 +1928,7 @@ struct obj *otmp;
             /* Give sleep resistance instead */
             if (!(HSleep_resistance & FROMOUTSIDE))
                 accessory_has_effect(otmp);
-            if (!Sleep_resistance)
+            if (!youResistSleep())
                 You_feel("wide awake.");
             HSleep_resistance |= FROMOUTSIDE;
             break;
@@ -2111,7 +2111,7 @@ struct obj *otmp;
         break;
     case EGG:
         if (flesh_petrifies(&mons[otmp->corpsenm])) {
-            if (!Stone_resistance
+            if (!youResistStoning()
                 && !(poly_when_stoned(youmonst.data)
                      && polymon(PM_STONE_GOLEM))) {
                 if (!Stoned) {
@@ -2130,7 +2130,7 @@ struct obj *otmp;
             make_vomiting(0L, TRUE);
         break;
     case APPLE:
-        if (otmp->cursed && !Sleep_resistance) {
+        if (otmp->cursed && !youResistSleep()) {
             /* Snow White; 'poisoned' applies to [a subset of] weapons,
                not food, so we substitute cursed; fortunately our hero
                won't have to wait for a prince to be rescued/revived */
@@ -2193,7 +2193,7 @@ struct obj *otmp;
 
     if (cadaver || otmp->otyp == EGG || otmp->otyp == TIN) {
         /* These checks must match those in eatcorpse() */
-        stoneorslime = (flesh_petrifies(&mons[mnum]) && !Stone_resistance
+        stoneorslime = (flesh_petrifies(&mons[mnum]) && !youResistStoning()
                         && !poly_when_stoned(youmonst.data));
 
         if (mnum == PM_GREEN_SLIME || otmp->otyp == GLOB_OF_GREEN_SLIME)
@@ -2215,7 +2215,7 @@ struct obj *otmp;
      * These problems with food should be checked in
      * order from most detrimental to least detrimental.
      */
-    if (cadaver && mnum != PM_ACID_BLOB && rotted > 5L && !Sick_resistance) {
+    if (cadaver && mnum != PM_ACID_BLOB && rotted > 5L && !youResistSickness()) {
         /* Tainted meat */
         Sprintf(buf, "%s like %s could be tainted! %s", foodsmell, it_or_they,
                 eat_it_anyway);
@@ -2241,7 +2241,7 @@ struct obj *otmp;
         else
             return 2;
     }
-    if (cadaver && poisonous(&mons[mnum]) && !Poison_resistance) {
+    if (cadaver && poisonous(&mons[mnum]) && !youResistPoison()) {
         /* poisonous */
         Sprintf(buf, "%s like %s might be poisonous! %s", foodsmell,
                 it_or_they, eat_it_anyway);
@@ -2250,7 +2250,7 @@ struct obj *otmp;
         else
             return 2;
     }
-    if (otmp->otyp == APPLE && otmp->cursed && !Sleep_resistance) {
+    if (otmp->otyp == APPLE && otmp->cursed && !youResistSleep()) {
         /* causes sleep, for long enough to be dangerous */
         Sprintf(buf, "%s like %s might have been poisoned. %s", foodsmell,
                 it_or_they, eat_it_anyway);
@@ -2264,7 +2264,7 @@ struct obj *otmp;
         else
             return 2;
     }
-    if (cadaver && acidic(&mons[mnum]) && !Acid_resistance) {
+    if (cadaver && acidic(&mons[mnum]) && !youResistAcid()) {
         Sprintf(buf, "%s rather acidic. %s", foodsmell, eat_it_anyway);
         if (yn_function(buf, ynchars, 'n') == 'n')
             return 1;
@@ -2306,8 +2306,8 @@ struct obj *otmp;
             return 2;
     }
 
-    if (cadaver && mnum != PM_ACID_BLOB && rotted > 5L && Sick_resistance) {
-        /* Tainted meat with Sick_resistance */
+    if (cadaver && mnum != PM_ACID_BLOB && rotted > 5L && youResistSickness()) {
+        /* Tainted meat with youResistSickness */
         Sprintf(buf, "%s like %s could be tainted! %s", foodsmell, it_or_they,
                 eat_it_anyway);
         if (yn_function(buf, ynchars, 'n') == 'n')
@@ -2439,7 +2439,7 @@ doeat()
 
         if (otmp->oclass == WEAPON_CLASS && otmp->opoisoned) {
             pline("Ecch - that must have been poisonous!");
-            if (!Poison_resistance) {
+            if (!youResistPoison()) {
                 losestr(rnd(4));
                 losehp(rnd(15), xname(otmp), KILLED_BY_AN);
             } else

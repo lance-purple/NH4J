@@ -2689,7 +2689,7 @@ struct monst *mtmp;
 
         /* most monsters won't hide under cockatrice corpse */
         if (otmp->nexthere || otmp->otyp != CORPSE
-            || (mtmp == &youmonst ? Stone_resistance : resists_ston(mtmp))
+            || (mtmp == &youmonst ? youResistStoning() : resists_ston(mtmp))
             || !touch_petrifies(&mons[otmp->corpsenm]))
             undetected = TRUE;
     }

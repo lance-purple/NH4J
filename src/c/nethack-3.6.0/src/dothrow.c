@@ -85,7 +85,7 @@ int shotlimit;
     }
     u_wipe_engr(2);
     if (!uarmg && obj->otyp == CORPSE && touch_petrifies(&mons[obj->corpsenm])
-        && !Stone_resistance) {
+        && !youResistStoning()) {
         You("throw %s with your bare %s.",
             corpse_xname(obj, (const char *) 0, CXN_PFX_THE),
             /* throwing with one hand, but pluralize since the
@@ -860,7 +860,7 @@ boolean hitsroof;
         obj = 0; /* it's now gone */
         switch (otyp) {
         case EGG:
-            if (petrifier && !Stone_resistance
+            if (petrifier && !youResistStoning()
                 && !(poly_when_stoned(youmonst.data)
                      && polymon(PM_STONE_GOLEM))) {
                 /* egg ends up "all over your face"; perhaps
@@ -922,7 +922,7 @@ boolean hitsroof;
                 if (flags.verbose)
                     Your("%s does not protect you.", helm_simple_name(uarmh));
             }
-        } else if (petrifier && !Stone_resistance
+        } else if (petrifier && !youResistStoning()
                    && !(poly_when_stoned(youmonst.data)
                         && polymon(PM_STONE_GOLEM))) {
         petrify:

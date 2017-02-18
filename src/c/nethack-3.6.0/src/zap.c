@@ -2128,7 +2128,7 @@ boolean ordinary;
     case WAN_STRIKING:
     case SPE_FORCE_BOLT:
         learn_it = TRUE;
-        if (Antimagic) {
+        if (youResistMagic()) {
             shieldeff(currentX(), currentY());
             pline("Boing!");
         } else {
@@ -2143,7 +2143,7 @@ boolean ordinary;
 
     case WAN_LIGHTNING:
         learn_it = TRUE;
-        if (!Shock_resistance) {
+        if (!youResistShock()) {
             You("shock yourself!");
             damage = d(12, 6);
             exercise(A_CON, FALSE);
@@ -2164,7 +2164,7 @@ boolean ordinary;
     case WAN_FIRE:
     case FIRE_HORN:
         learn_it = TRUE;
-        if (Fire_resistance) {
+        if (youResistFire()) {
             shieldeff(currentX(), currentY());
             You_feel("rather warm.");
             ugolemeffects(AD_FIRE, d(12, 6));
@@ -2184,7 +2184,7 @@ boolean ordinary;
     case SPE_CONE_OF_COLD:
     case FROST_HORN:
         learn_it = TRUE;
-        if (Cold_resistance) {
+        if (youResistCold()) {
             shieldeff(currentX(), currentY());
             You_feel("a little chill.");
             ugolemeffects(AD_COLD, d(12, 6));
@@ -2198,7 +2198,7 @@ boolean ordinary;
     case WAN_MAGIC_MISSILE:
     case SPE_MAGIC_MISSILE:
         learn_it = TRUE;
-        if (Antimagic) {
+        if (youResistMagic()) {
             shieldeff(currentX(), currentY());
             pline_The("missiles bounce!");
         } else {
@@ -2221,7 +2221,7 @@ boolean ordinary;
         break;
 
     case SPE_DRAIN_LIFE:
-        if (!Drain_resistance) {
+        if (!youResistDraining()) {
             learn_it = TRUE; /* (no effect for spells...) */
             losexp("life drainage");
         }
@@ -2267,7 +2267,7 @@ boolean ordinary;
     case WAN_SLEEP:
     case SPE_SLEEP:
         learn_it = TRUE;
-        if (Sleep_resistance) {
+        if (youResistSleep()) {
             shieldeff(currentX(), currentY());
             You("don't feel sleepy!");
         } else {
@@ -2559,7 +2559,7 @@ boolean youattack, allow_cancel_kill, self_cancel;
         "Some writing vanishes from %s head!";
     static const char your[] = "your"; /* should be extern */
 
-    if (youdefend ? (!youattack && Antimagic)
+    if (youdefend ? (!youattack && youResistMagic())
                   : resist(mdef, obj->oclass, 0, NOTELL))
         return FALSE; /* resisted cancellation */
 
@@ -3542,7 +3542,7 @@ xchar sx, sy;
 
     switch (abstyp % 10) {
     case ZT_MAGIC_MISSILE:
-        if (Antimagic) {
+        if (youResistMagic()) {
             shieldeff(sx, sy);
             pline_The("missiles bounce off!");
         } else {
@@ -3551,7 +3551,7 @@ xchar sx, sy;
         }
         break;
     case ZT_FIRE:
-        if (Fire_resistance) {
+        if (youResistFire()) {
             shieldeff(sx, sy);
             You("don't feel hot!");
             ugolemeffects(AD_FIRE, d(nd, 6));
@@ -3570,7 +3570,7 @@ xchar sx, sy;
         }
         break;
     case ZT_COLD:
-        if (Cold_resistance) {
+        if (youResistCold()) {
             shieldeff(sx, sy);
             You("don't feel cold.");
             ugolemeffects(AD_COLD, d(nd, 6));
@@ -3581,7 +3581,7 @@ xchar sx, sy;
             destroy_item(POTION_CLASS, AD_COLD);
         break;
     case ZT_SLEEP:
-        if (Sleep_resistance) {
+        if (youResistSleep()) {
             shieldeff(currentX(), currentY());
             You("don't feel sleepy.");
         } else {
@@ -3590,7 +3590,7 @@ xchar sx, sy;
         break;
     case ZT_DEATH:
         if (abstyp == ZT_BREATH(ZT_DEATH)) {
-            if (Disint_resistance) {
+            if (youResistDisintegration()) {
                 You("are not disintegrated.");
                 break;
             } else if (uarms) {
@@ -3614,7 +3614,7 @@ xchar sx, sy;
             shieldeff(sx, sy);
             You("seem unaffected.");
             break;
-        } else if (Antimagic) {
+        } else if (youResistMagic()) {
             shieldeff(sx, sy);
             You("aren't affected.");
             break;
@@ -3626,7 +3626,7 @@ xchar sx, sy;
         done(DIED);
         return; /* lifesaved */
     case ZT_LIGHTNING:
-        if (Shock_resistance) {
+        if (youResistShock()) {
             shieldeff(sx, sy);
             You("aren't affected.");
             ugolemeffects(AD_ELEC, d(nd, 6));
@@ -3643,7 +3643,7 @@ xchar sx, sy;
         poisoned("blast", A_DEX, "poisoned blast", 15, FALSE);
         break;
     case ZT_ACID:
-        if (Acid_resistance) {
+        if (youResistAcid()) {
             pline_The("acid doesn't hurt.");
             dam = 0;
         } else {
@@ -4565,7 +4565,7 @@ register int osym, dmgtyp;
                 skip++;
             break;
         case AD_FIRE:
-            xresist = (Fire_resistance && obj->oclass != POTION_CLASS
+            xresist = (youResistFire() && obj->oclass != POTION_CLASS
                        && obj->otyp != GLOB_OF_GREEN_SLIME);
 
             if (obj->otyp == SCR_FIRE || obj->otyp == SPE_FIREBALL)
@@ -4604,7 +4604,7 @@ register int osym, dmgtyp;
             }
             break;
         case AD_ELEC:
-            xresist = (Shock_resistance && obj->oclass != RING_CLASS);
+            xresist = (youResistShock() && obj->oclass != RING_CLASS);
             quan = obj->quan;
             switch (osym) {
             case RING_CLASS:

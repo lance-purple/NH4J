@@ -553,7 +553,7 @@ aligntyp resp_god;
                 pline("For some reason you're unaffected.");
             else
                 (void) ureflects("%s reflects from your %s.", "It");
-        } else if (Shock_resistance) {
+        } else if (youResistShock()) {
             shieldeff(currentX(), currentY());
             pline("It seems not to affect you.");
         } else
@@ -586,7 +586,7 @@ aligntyp resp_god;
             (void) destroy_arm(uarm);
         if (uarmu && !uarm && !uarmc)
             (void) destroy_arm(uarmu);
-        if (!Disint_resistance)
+        if (!youResistDisintegration())
             fry_by_god(resp_god, TRUE);
         else {
             You("bask in its %s glow for a minute...", NH_BLACK);
@@ -665,7 +665,7 @@ aligntyp resp_god;
     case 4:
     case 5:
         gods_angry(resp_god);
-        if (!Blind && !Antimagic)
+        if (!Blind && !youResistMagic())
             pline("%s glow surrounds you.", An(hcolor(NH_BLACK)));
         rndcurse();
         break;

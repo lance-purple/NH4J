@@ -117,7 +117,7 @@ struct obj *obj;
     char kbuf[BUFSZ];
 
     if (uarmg || obj->otyp != CORPSE || !touch_petrifies(&mons[obj->corpsenm])
-        || Stone_resistance)
+        || youResistStoning())
         return FALSE;
 
     /* Prevent wielding cockatrice when not wearing gloves --KAA */

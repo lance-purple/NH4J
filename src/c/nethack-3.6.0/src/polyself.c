@@ -683,11 +683,11 @@ int mntmp;
         setYourAttrMax(A_STR, STR18(100));
     }
 
-    if (Stone_resistance && Stoned) { /* parnes@eniac.seas.upenn.edu */
+    if (youResistStoning() && Stoned) { /* parnes@eniac.seas.upenn.edu */
         make_stoned(0L, "You no longer seem to be petrifying.", 0,
                     (char *) 0);
     }
-    if (Sick_resistance && Sick) {
+    if (youResistSickness() && Sick) {
         make_sick(0L, (char *) 0, FALSE, SICK_ALL);
         You("no longer feel sick.");
     }
@@ -757,7 +757,7 @@ int mntmp;
     else if (sticky && !sticks(youmonst.data))
         uunstick();
     if (u.usteed) {
-        if (touch_petrifies(u.usteed->data) && !Stone_resistance && rnl(3)) {
+        if (touch_petrifies(u.usteed->data) && !youResistStoning() && rnl(3)) {
             char buf[BUFSZ];
 
             pline("%s touch %s.", no_longer_petrify_resistant,

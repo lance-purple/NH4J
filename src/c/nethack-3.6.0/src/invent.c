@@ -2843,7 +2843,7 @@ will_feel_cockatrice(otmp, force_touch)
 struct obj *otmp;
 boolean force_touch;
 {
-    if ((Blind || force_touch) && !uarmg && !Stone_resistance
+    if ((Blind || force_touch) && !uarmg && !youResistStoning()
         && (otmp->otyp == CORPSE && touch_petrifies(&mons[otmp->corpsenm])))
         return TRUE;
     return FALSE;

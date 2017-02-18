@@ -268,7 +268,7 @@ drinkfountain()
             break;
         case 21: /* Poisonous */
             pline_The("water is contaminated!");
-            if (Poison_resistance) {
+            if (youResistPoison()) {
                 pline("Perhaps it is runoff from the nearby %s farm.",
                       fruitname(FALSE));
                 losehp(rnd(4), "unrefrigerated sip of juice", KILLED_BY_AN);
@@ -521,7 +521,7 @@ drinksink()
         break;
     case 2:
         You("take a sip of scalding hot water.");
-        if (Fire_resistance)
+        if (youResistFire())
             pline("It seems quite tasty.");
         else
             losehp(rnd(6), "sipping boiling water", KILLED_BY);

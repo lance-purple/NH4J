@@ -236,7 +236,7 @@ boolean thrown_weapon; /* thrown weapons are less deadly */
         pline("%s%s %s poisoned!", isupper(*reason) ? "" : "The ", reason,
               plural ? "were" : "was");
     }
-    if (Poison_resistance) {
+    if (youResistPoison()) {
         if (!strcmp(reason, "blast"))
             shieldeff(currentX(), currentY());
         pline_The("poison doesn't seem to affect you.");
@@ -1313,6 +1313,54 @@ boolean youAreUnaware() {
 
 boolean youAreAware() {
    return !youAreUnaware();
+}
+
+extern boolean youResistFire() {
+ return (HFire_resistance || EFire_resistance);
+}
+
+extern boolean youResistCold() {
+ return (HCold_resistance || ECold_resistance);
+}
+
+extern boolean youResistSleep() {
+  return (HSleep_resistance || ESleep_resistance);
+}
+
+extern boolean youResistDisintegration() {
+  return (HDisint_resistance || EDisint_resistance);
+}
+
+extern boolean youResistShock() {
+  return (HShock_resistance || EShock_resistance);
+}
+
+extern boolean youResistPoison() {
+  return (HPoison_resistance || EPoison_resistance);
+}
+
+extern boolean youResistDraining() {
+  return (HDrain_resistance || EDrain_resistance);
+}
+
+extern boolean youResistMagic() {
+  return (HAntimagic || EAntimagic);
+}
+
+extern boolean youResistAcid() {
+  return (HAcid_resistance || EAcid_resistance);
+}
+
+extern boolean youResistStoning() {
+  return (HStone_resistance || EStone_resistance);
+}
+
+extern boolean youResistSickness() {
+  return (HSick_resistance || defends(AD_DISE, uwep));
+}
+
+extern boolean youAreInvulnerable() {
+  return (u.uprops[INVULNERABLE].intrinsic);
 }
 
 /*attrib.c*/

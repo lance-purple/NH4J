@@ -103,9 +103,9 @@ boolean pushing;
                 You("find yourself on dry land again!");
             } else if (lava && distanceSquaredToYou(rx, ry) <= 2) {
                 int dmg;
-                You("are hit by molten lava%c", Fire_resistance ? '.' : '!');
+                You("are hit by molten lava%c", youResistFire() ? '.' : '!');
                 burn_away_slime();
-                dmg = d((Fire_resistance ? 1 : 3), 6);
+                dmg = d((youResistFire() ? 1 : 3), 6);
                 losehp(Maybe_Half_Phys(dmg), /* lava damage */
                        "molten lava", KILLED_BY);
             } else if (!fills_up && flags.verbose

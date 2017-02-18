@@ -1015,7 +1015,7 @@ unsigned trflags;
 
     case SLP_GAS_TRAP:
         seetrap(trap);
-        if (Sleep_resistance || breathless(youmonst.data)) {
+        if (youResistSleep() || breathless(youmonst.data)) {
             You("are enveloped in a cloud of gas!");
         } else {
             pline("A cloud of gas puts you to sleep!");
@@ -1333,7 +1333,7 @@ unsigned trflags;
         /* hero without magic resistance loses spell energy,
            hero with magic resistance takes damage instead;
            possibly non-intuitive but useful for play balance */
-        if (!Antimagic) {
+        if (!youResistMagic()) {
             drain_en(rnd(currentExperienceLevel()) + 1);
         } else {
             int dmgval2 = rnd(4), hp = areYouPolymorphed() ? currentHitPointsAsMonster() : currentHitPoints();
@@ -1378,7 +1378,7 @@ unsigned trflags;
                                        ? (const char *) "float"
                                        : locomotion(youmonst.data, "step"));
         You("%s onto a polymorph trap!", verbbuf);
-        if (Antimagic || Unchanging) {
+        if (youResistMagic() || Unchanging) {
             shieldeff(currentX(), currentY());
             You_feel("momentarily different.");
             /* Trap did nothing; don't remove it --KAA */
@@ -2649,7 +2649,7 @@ void
 instapetrify(str)
 const char *str;
 {
-    if (Stone_resistance)
+    if (youResistStoning())
         return;
     if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))
         return;
@@ -2692,23 +2692,23 @@ const char *arg;
     char kbuf[BUFSZ];
 
     if (uwep && uwep->otyp == CORPSE && touch_petrifies(&mons[uwep->corpsenm])
-        && !Stone_resistance) {
+        && !youResistStoning()) {
         pline("%s touch the %s corpse.", arg, mons[uwep->corpsenm].mname);
         Sprintf(kbuf, "%s corpse", an(mons[uwep->corpsenm].mname));
         instapetrify(kbuf);
         /* life-saved; unwield the corpse if we can't handle it */
-        if (!uarmg && !Stone_resistance)
+        if (!uarmg && !youResistStoning())
             uwepgone();
     }
     /* Or your secondary weapon, if wielded [hypothetical; we don't
        allow two-weapon combat when either weapon is a corpse] */
     if (usingTwoWeapons() && uswapwep && uswapwep->otyp == CORPSE
-        && touch_petrifies(&mons[uswapwep->corpsenm]) && !Stone_resistance) {
+        && touch_petrifies(&mons[uswapwep->corpsenm]) && !youResistStoning()) {
         pline("%s touch the %s corpse.", arg, mons[uswapwep->corpsenm].mname);
         Sprintf(kbuf, "%s corpse", an(mons[uswapwep->corpsenm].mname));
         instapetrify(kbuf);
         /* life-saved; unwield the corpse */
-        if (!uarmg && !Stone_resistance)
+        if (!uarmg && !youResistStoning())
             uswapwepgone();
     }
 }
@@ -2992,7 +2992,7 @@ struct obj *box; /* null for floor trap */
     if ((box && !carried(box)) ? is_pool(box->ox, box->oy) : underwater()) {
         pline("A cascade of steamy bubbles erupts from %s!",
               the(box ? xname(box) : surface(currentX(), currentY())));
-        if (Fire_resistance)
+        if (youResistFire())
             You("are uninjured.");
         else
             losehp(rnd(3), "boiling water", KILLED_BY);
@@ -3000,7 +3000,7 @@ struct obj *box; /* null for floor trap */
     }
     pline("A %s %s from %s!", tower_of_flame, box ? "bursts" : "erupts",
           the(box ? xname(box) : surface(currentX(), currentY())));
-    if (Fire_resistance) {
+    if (youResistFire()) {
         shieldeff(currentX(), currentY());
         num = rn2(2);
     } else if (areYouPolymorphed()) {
@@ -4096,7 +4096,7 @@ struct trap *ttmp;
     }
 
     /* is it a cockatrice?... */
-    if (touch_petrifies(mtmp->data) && !uarmg && !Stone_resistance) {
+    if (touch_petrifies(mtmp->data) && !uarmg && !youResistStoning()) {
         You("grab the trapped %s using your bare %s.", mtmp->data->mname,
             makeplural(body_part(HAND)));
 
@@ -4673,7 +4673,7 @@ boolean disarm;
             int dmg;
 
             You("are jolted by a surge of electricity!");
-            if (Shock_resistance) {
+            if (youResistShock()) {
                 shieldeff(currentX(), currentY());
                 You("don't seem to be affected.");
                 dmg = 0;
@@ -4987,7 +4987,7 @@ lava_effects()
     if (likes_lava(youmonst.data))
         return FALSE;
 
-    usurvive = Fire_resistance || (canYouWalkOnWater() && dmg < currentHitPoints());
+    usurvive = youResistFire() || (canYouWalkOnWater() && dmg < currentHitPoints());
     /*
      * A timely interrupt might manage to salvage your life
      * but not your gear.  For scrolls and potions this
@@ -5020,7 +5020,7 @@ lava_effects()
         iflags.in_lava_effects--;
     }
 
-    if (!Fire_resistance) {
+    if (!youResistFire()) {
         if (canYouWalkOnWater()) {
             pline_The("lava here burns you!");
             if (usurvive) {
@@ -5080,7 +5080,7 @@ lava_effects()
         You("find yourself back on solid %s.", surface(currentX(), currentY()));
         return TRUE;
     } else if (!canYouWalkOnWater() && (!currentlyTrapped() || currentTrapType() != TT_LAVA)) {
-        boil_away = !Fire_resistance;
+        boil_away = !youResistFire();
         /* if not fire resistant, sink_into_lava() will quickly be fatal;
            hero needs to escape immediately */
         setCurrentTrapTimeout(rn1(4, 4) + ((boil_away ? 2 : rn1(4, 12)) << 8));
@@ -5115,7 +5115,7 @@ sink_into_lava()
            enough to become stuck in lava, but it can happen without
            resistance if water walking boots allow survival and then
            get burned up; currentTrapTimeout() time will be quite short in that case */
-        if (!Fire_resistance)
+        if (!youResistFire())
             setCurrentHitPoints((currentHitPoints() + 2) / 3);
 
         setCurrentTrapTimeout(currentTrapTimeout() - (1 << 8));
