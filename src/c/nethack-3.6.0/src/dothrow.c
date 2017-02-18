@@ -1363,8 +1363,14 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
      * Certain items which don't in themselves do damage ignore tmp.
      * Distance and monster size affect chance to hit.
      */
-    tmp = -1 + currentLuckWithBonus() + find_mac(mon) + toHitModifier()
-          + maybe_polyd(youmonst.data->mlevel, currentExperienceLevel());
+    tmp = -1 + currentLuckWithBonus() + find_mac(mon) + toHitModifier();
+
+    if (areYouPolymorphed()) {
+        tmp += youmonst.data->mlevel;
+    } else {
+        tmp += currentExperienceLevel();
+    }
+
     if (ACURR(A_DEX) < 4)
         tmp -= 3;
     else if (ACURR(A_DEX) < 6)
@@ -1402,9 +1408,9 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
     }
 
     tmp += omon_adj(mon, obj, TRUE);
-    if (is_orc(mon->data)
-        && maybe_polyd(is_elf(youmonst.data), Race_if(PM_ELF)))
+    if (is_orc(mon->data) && areYouElvish()) {
         tmp++;
+    }
     if (guaranteed_hit) {
         tmp += 1000; /* Guaranteed hit */
     }

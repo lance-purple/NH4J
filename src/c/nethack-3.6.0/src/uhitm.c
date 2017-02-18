@@ -234,6 +234,23 @@ struct monst *mtmp;
     }
 }
 
+
+boolean areYouElvish() {
+    if (areYouPolymorphed()) {
+        return is_elf(youmonst.data);
+    } else {
+       	return Race_if(PM_ELF);
+    }
+}
+
+boolean areYouOrcish() {
+    if (areYouPolymorphed()) {
+        return is_orc(youmonst.data);
+    } else {
+       	return Race_if(PM_ORC);
+    }
+}
+
 int
 find_roll_to_hit(mtmp, aatyp, weapon, attk_count, role_roll_penalty)
 register struct monst *mtmp;
@@ -245,8 +262,13 @@ int *attk_count, *role_roll_penalty;
 
     *role_roll_penalty = 0; /* default is `none' */
 
-    tmp = 1 + currentLuckWithBonus() + abon() + find_mac(mtmp) + toHitModifier()
-          + maybe_polyd(youmonst.data->mlevel, currentExperienceLevel());
+    tmp = 1 + currentLuckWithBonus() + abon() + find_mac(mtmp) + toHitModifier();
+
+    if (areYouPolymorphed()) {
+        tmp += youmonst.data->mlevel;
+    } else {
+        tmp += currentExperienceLevel();
+    }
 
     /* some actions should occur only once during multiple attacks */
     if (!(*attk_count)++) {
@@ -279,9 +301,9 @@ int *attk_count, *role_roll_penalty;
         else if (!uwep && !uarms)
             tmp += (currentExperienceLevel() / 3) + 2;
     }
-    if (is_orc(mtmp->data)
-        && maybe_polyd(is_elf(youmonst.data), Race_if(PM_ELF)))
+    if (is_orc(mtmp->data) && areYouElvish()) {
         tmp++;
+    }
 
     /* encumbrance: with a lot of luggage, your agility diminishes */
     if ((tmp2 = near_capacity()) != 0)

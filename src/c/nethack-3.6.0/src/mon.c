@@ -3630,7 +3630,7 @@ struct permonst *mdat;
                 msg_given = TRUE;
                 break;
             case S_ORC:
-                if (maybe_polyd(is_orc(youmonst.data), Race_if(PM_ORC)))
+                if (areYouOrcish())
                     You("notice an attractive smell.");
                 else
                     pline("A foul stench makes you feel a little nauseated.");

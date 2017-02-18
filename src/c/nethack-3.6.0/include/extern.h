@@ -1040,6 +1040,8 @@ E void FDECL(increaseProtectionSpellPointCountdown, (int));
 E void FDECL(decreaseProtectionSpellPointCountdown, (int));
 
 E boolean FDECL(areYouPolymorphed, ());
+E boolean FDECL(areYouOrcish, ());
+E boolean FDECL(areYouElvish, ());
 
 E int FDECL(originalMonsterNumber, ());
 E void FDECL(setOriginalMonsterNumber, (int));
