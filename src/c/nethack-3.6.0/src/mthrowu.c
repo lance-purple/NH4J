@@ -65,7 +65,7 @@ const char *name; /* if null, then format `obj' */
         else
             You("are hit by %s%s", onm, exclam(dam));
 
-        if (obj && objects[obj->otyp].oc_material == SILVER && Hate_silver) {
+        if (obj && objects[obj->otyp].oc_material == SILVER && youHateSilver()) {
             /* extra damage already applied by dmgval() */
             pline_The("silver sears your flesh!");
             exercise(A_CON, FALSE);

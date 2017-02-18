@@ -690,7 +690,7 @@ struct monst *mon;
         touch_blasted = TRUE;
         dmg = d((Antimagic ? 2 : 4), (self_willed ? 10 : 4));
         /* add half (maybe quarter) of the usual silver damage bonus */
-        if (objects[obj->otyp].oc_material == SILVER && Hate_silver)
+        if (objects[obj->otyp].oc_material == SILVER && youHateSilver())
             tmp = rnd(10), dmg += Maybe_Half_Phys(tmp);
         Sprintf(buf, "touching %s", oart->name);
         losehp(dmg, buf, KILLED_BY); /* magic damage, not physical */
@@ -1882,7 +1882,7 @@ boolean loseit;    /* whether to drop it if hero can longer touch it */
         char buf[BUFSZ];
         int dmg = 0, tmp;
         boolean ag =
-                    (objects[obj->otyp].oc_material == SILVER && Hate_silver),
+                    (objects[obj->otyp].oc_material == SILVER && youHateSilver()),
                 bane = bane_applies(get_artifact(obj), &youmonst);
 
         /* nothing else to do if hero can successfully handle this object */

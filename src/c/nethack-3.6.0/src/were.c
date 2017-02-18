@@ -201,4 +201,8 @@ boolean purify;
         rehumanize();
 }
 
+boolean youHateSilver() {
+    return (lycanthropeType() >= LOW_PM || hates_silver(youmonst.data));
+}
+
 /*were.c*/

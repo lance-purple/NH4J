@@ -930,7 +930,7 @@ register struct attack *mattk;
                 if (!dmg)
                     break;
                 if (objects[otmp->otyp].oc_material == SILVER
-                    && Hate_silver) {
+                    && youHateSilver()) {
                     pline_The("silver sears your flesh!");
                     exercise(A_CON, FALSE);
                 }

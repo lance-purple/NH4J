@@ -1063,6 +1063,7 @@ E void FDECL(setInherentlyFemale, (boolean));
 
 E int FDECL(lycanthropeType, ());
 E void FDECL(setLycanthropeType, (int));
+E boolean FDECL(youHateSilver, ());
 
 E int FDECL(deathCount, ());
 E void FDECL(setDeathCount, (int));

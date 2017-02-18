@@ -2183,7 +2183,7 @@ int final;
     }
     if (Unchanging && areYouPolymorphed()) /* !areYouPolymorphed() handled above */
         you_can("not change from your current form", from_what(UNCHANGING));
-    if (Hate_silver)
+    if (youHateSilver())
         you_are("harmed by silver", "");
     /* movement and non-armor-based protection */
     if (Fast)
