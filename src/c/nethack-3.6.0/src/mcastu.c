@@ -308,6 +308,7 @@ boolean foundyou;
         break;
     case AD_MAGM:
         You("are hit by a shower of missiles!");
+        if (youResistMagic()) {
             shieldeff(currentX(), currentY());
             pline_The("missiles bounce off!");
             dmg = 0;
