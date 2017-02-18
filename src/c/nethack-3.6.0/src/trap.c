@@ -3072,7 +3072,7 @@ domagictrap()
             You_see("a flash of light!");
         } else
             You_hear("a deafening roar!");
-        incr_itimeout(&HDeaf, rn1(20, 30));
+        incrementYourIntrinsicTimeout(DEAF, rn1(20, 30));
         while (cnt--)
             (void) makemon((struct permonst *) 0, currentX(), currentY(), NO_MM_FLAGS);
     } else

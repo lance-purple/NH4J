@@ -9,51 +9,22 @@ boolean notonhead = FALSE;
 static NEARDATA int nothing, unkn;
 static NEARDATA const char beverages[] = { POTION_CLASS, 0 };
 
-STATIC_DCL long FDECL(itimeout, (long));
-STATIC_DCL long FDECL(itimeout_incr, (long, int));
 STATIC_DCL void NDECL(ghost_from_bottle);
 STATIC_DCL boolean
 FDECL(H2Opotion_dip, (struct obj *, struct obj *, BOOLEAN_P, const char *));
 STATIC_DCL short FDECL(mixtype, (struct obj *, struct obj *));
 
-/* force `val' to be within valid range for intrinsic timeout value */
-STATIC_OVL long
-itimeout(val)
-long val;
-{
-    if (val >= TIMEOUT)
-        val = TIMEOUT;
-    else if (val < 1)
-        val = 0;
-
-    return val;
-}
-
-/* increment `old' by `incr' and force result to be valid intrinsic timeout */
-STATIC_OVL long
-itimeout_incr(old, incr)
+static long itimeout_incr(old, incr)
 long old;
 int incr;
 {
-    return itimeout((old & TIMEOUT) + (long) incr);
-}
-
-/* set the timeout field of intrinsic `which' */
-void
-set_itimeout(which, val)
-long *which, val;
-{
-    *which &= ~TIMEOUT;
-    *which |= itimeout(val);
-}
-
-/* increment the timeout field of intrinsic `which' */
-void
-incr_itimeout(which, incr)
-long *which;
-int incr;
-{
-    set_itimeout(which, itimeout_incr(*which, incr));
+   long value = (old & TIMEOUT) + (long) incr;
+   if (value >= TIMEOUT) {
+     value = TIMEOUT;
+   } else if (value < 1) {
+     value = 0;
+   }
+   return value;
 }
 
 void
@@ -73,7 +44,7 @@ boolean talk;
     if ((xtime && !old) || (!xtime && old))
         context.botl = TRUE;
 
-    set_itimeout(&HConfusion, xtime);
+    setYourIntrinsicTimeout(CONFUSION, xtime);
 }
 
 void
@@ -102,7 +73,7 @@ boolean talk;
     if ((!xtime && old) || (xtime && !old))
         context.botl = TRUE;
 
-    set_itimeout(&HStun, xtime);
+    setYourIntrinsicTimeout(STUNNED, xtime);
 }
 
 void
@@ -132,7 +103,7 @@ int mask;
                 You_feel("%s worse.", xtime <= Sick / 2L ? "much" : "even");
             }
         }
-        set_itimeout(&Sick, xtime);
+        setYourIntrinsicTimeout(SICK, xtime);
 
         setSickWithFoodPoisoning(foodPoisoning);
         setSickWithIllness(illness);
@@ -150,11 +121,11 @@ int mask;
             if (talk) {
                 You_feel("somewhat better.");
             }
-            set_itimeout(&Sick, Sick * 2); /* approximation */
+            setYourIntrinsicTimeout(SICK, Sick * 2); /* approximation */
         } else {
             if (talk)
                 You_feel("cured.  What a relief!");
-            Sick = 0L; /* set_itimeout(&Sick, 0L) */
+            Sick = 0L; /* setYourIntrinsicTimeout(SICK, 0L) */
         }
         context.botl = TRUE;
     }
@@ -182,7 +153,7 @@ const char *msg;
             pline1(msg);
         context.botl = 1;
     }
-    set_itimeout(&Slimed, xtime);
+    setYourIntrinsicTimeout(SLIMED, xtime);
     if (!Slimed)
         dealloc_killer(find_delayed_killer(SLIMED));
 }
@@ -206,7 +177,7 @@ const char *killername;
             pline1(msg);
         /* context.botl = 1;   --- Stoned is not a status line item */
     }
-    set_itimeout(&Stoned, xtime);
+    setYourIntrinsicTimeout(STONED, xtime);
     if (!Stoned)
         dealloc_killer(find_delayed_killer(STONED));
     else if (!old)
@@ -227,7 +198,7 @@ boolean talk;
         if (talk)
             You_feel("much less nauseated now.");
 
-    set_itimeout(&Vomiting, xtime);
+    setYourIntrinsicTimeout(VOMITING, xtime);
 }
 
 static const char vismsg[] = "vision seems to %s for a moment but is %s now.";
@@ -301,7 +272,7 @@ boolean talk;
         }
     }
 
-    set_itimeout(&Blinded, xtime);
+    setYourIntrinsicTimeout(BLINDED, xtime);
 
     if (u_could_see ^ can_see_now) { /* one or the other but not both */
         context.botl = 1;
@@ -358,7 +329,7 @@ long mask; /* nonzero if resistance status should change by mask */
     } else {
         if (!EHalluc_resistance && (!!HHallucination != !!xtime))
             changed = TRUE;
-        set_itimeout(&HHallucination, xtime);
+        setYourIntrinsicTimeout(HALLUC, xtime);
 
         /* clearing temporary hallucination without toggling vision */
         if (!changed && !HHallucination && old && talk) {
@@ -427,7 +398,7 @@ boolean talk;
     if (toggled)
         context.botl = TRUE;
 
-    set_itimeout(&HDeaf, xtime);
+    setYourIntrinsicTimeout(DEAF, xtime);
 }
 
 STATIC_OVL void
@@ -701,7 +672,7 @@ register struct obj *otmp;
         if (otmp->blessed)
             HInvis |= FROMOUTSIDE;
         else
-            incr_itimeout(&HInvis, rn1(15, 31));
+            incrementYourIntrinsicTimeout(INVIS, rn1(15, 31));
         newsym(currentX(), currentY()); /* update position */
         if (otmp->cursed) {
             pline("For some reason, you feel your presence is known.");
@@ -736,7 +707,7 @@ register struct obj *otmp;
         if (otmp->blessed)
             HSee_invisible |= FROMOUTSIDE;
         else
-            incr_itimeout(&HSee_invisible, rn1(100, 750));
+            incrementYourIntrinsicTimeout(SEE_INVIS, rn1(100, 750));
         set_mimic_blocking(); /* do special mimic handling */
         see_monsters();       /* see invisible monsters */
         newsym(currentX(), currentY());   /* see yourself! */
@@ -784,7 +755,7 @@ register struct obj *otmp;
                 i = 1;
             else
                 i = rn1(40, 21);
-            incr_itimeout(&HDetect_monsters, i);
+            incrementYourIntrinsicTimeout(DETECT_MONSTERS, i);
             for (x = 1; x < COLNO; x++) {
                 for (y = 0; y < ROWNO; y++) {
                     if (levl[x][y].glyph == GLYPH_INVISIBLE) {
@@ -906,7 +877,7 @@ register struct obj *otmp;
             unkn++;
         }
         exercise(A_DEX, TRUE);
-        incr_itimeout(&HFast, rn1(10, 100 + 60 * bcsign(otmp)));
+        incrementYourIntrinsicTimeout(FAST, rn1(10, 100 + 60 * bcsign(otmp)));
         break;
     case POT_BLINDNESS:
         if (Blind)
@@ -983,10 +954,10 @@ register struct obj *otmp;
             HLevitation &= ~I_SPECIAL;
         if (!Levitation && !BLevitation) {
             /* kludge to ensure proper operation of float_up() */
-            set_itimeout(&HLevitation, 1L);
+            setYourIntrinsicTimeout(LEVITATION, 1L);
             float_up();
             /* reverse kludge */
-            set_itimeout(&HLevitation, 0L);
+            setYourIntrinsicTimeout(LEVITATION, 0L);
             if (otmp->cursed) {
                 if ((currentX() == xupstair && currentY() == yupstair)
                     || (sstairs.up && currentX() == sstairs.sx
@@ -1006,10 +977,10 @@ register struct obj *otmp;
         } else
             nothing++;
         if (otmp->blessed) {
-            incr_itimeout(&HLevitation, rn1(50, 250));
+            incrementYourIntrinsicTimeout(LEVITATION, rn1(50, 250));
             HLevitation |= I_SPECIAL;
         } else
-            incr_itimeout(&HLevitation, rn1(140, 10));
+            incrementYourIntrinsicTimeout(LEVITATION, rn1(140, 10));
         if (Levitation)
             spoteffects(FALSE); /* for sinks */
         float_vs_flight();
@@ -1632,7 +1603,7 @@ register struct obj *obj;
     case POT_SPEED:
         if (!Fast)
             Your("knees seem more flexible now.");
-        incr_itimeout(&HFast, rnd(5));
+        incrementYourIntrinsicTimeout(FAST, rnd(5));
         exercise(A_DEX, TRUE);
         break;
     case POT_BLINDNESS:
@@ -2022,7 +1993,7 @@ dodip()
         } else if (potion->cursed) {
             pline_The("potion spills and covers your %s with oil.",
                       makeplural(body_part(FINGER)));
-            incr_itimeout(&Glib, d(2, 10));
+            incrementYourIntrinsicTimeout(GLIB, d(2, 10));
         } else if (obj->oclass != WEAPON_CLASS && !is_weptool(obj)) {
             /* the following cases apply only to weapons */
             goto more_dips;

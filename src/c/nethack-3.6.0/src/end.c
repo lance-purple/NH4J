@@ -711,7 +711,7 @@ int how;
     if ((Sick & TIMEOUT) == 1L) {
         setSickWithFoodPoisoning(FALSE);
         setSickWithIllness(FALSE);
-        set_itimeout(&Sick, 0L);
+        setYourIntrinsicTimeout(SICK, 0L);
     }
     if (how == CHOKING)
         init_uhunger();

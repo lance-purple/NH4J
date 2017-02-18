@@ -547,7 +547,7 @@ struct obj *instr;
     case LEATHER_DRUM: /* Awaken monsters */
         You("beat a deafening row!");
         awaken_monsters(currentExperienceLevel() * 40);
-        incr_itimeout(&HDeaf, rn1(20, 30));
+        incrementYourIntrinsicTimeout(DEAF, rn1(20, 30));
         exercise(A_WIS, FALSE);
         break;
     default:

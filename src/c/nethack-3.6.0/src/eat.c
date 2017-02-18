@@ -951,7 +951,7 @@ register int pm;
         break;
     case PM_STALKER:
         if (!Invis) {
-            set_itimeout(&HInvis, (long) rn1(100, 50));
+            setYourIntrinsicTimeout(INVIS, (long) rn1(100, 50));
             if (!Blind && !BInvis)
                 self_invis_message();
         } else {
@@ -1327,7 +1327,7 @@ const char *mesg;
 
         if (tintxts[r].greasy) {
             /* Assume !Glib, because you can't open tins when Glib. */
-            incr_itimeout(&Glib, rnd(15));
+            incrementYourIntrinsicTimeout(GLIB, rnd(15));
             pline("Eating %s food made your %s very slippery.",
                   tintxts[r].txt, makeplural(body_part(FINGER)));
         }
@@ -1511,7 +1511,7 @@ struct obj *obj;
             what = "you slap against the",
             where = (u.usteed) ? "saddle" : surface(currentX(), currentY());
         pline_The("world spins and %s %s.", what, where);
-        incr_itimeout(&HDeaf, duration);
+        incrementYourIntrinsicTimeout(DEAF, duration);
         nomul(-duration);
         multi_reason = "unconscious from rotten food";
         nomovemsg = "You are conscious again.";
@@ -1885,7 +1885,7 @@ struct obj *otmp;
                 u.uprops[LEVITATION].intrinsic = oldprop;
                 if (!Levitation) {
                     float_up();
-                    incr_itimeout(&HLevitation, d(10, 20));
+                    incrementYourIntrinsicTimeout(LEVITATION, d(10, 20));
                     makeknown(typ);
                 }
                 break;
@@ -2817,7 +2817,7 @@ boolean incr;
                 You("faint from lack of food.");
                 if (!Levitation)
                     selftouch("Falling, you");
-                incr_itimeout(&HDeaf, duration);
+                incrementYourIntrinsicTimeout(DEAF, duration);
                 nomul(-duration);
                 multi_reason = "fainted from lack of food";
                 nomovemsg = "You regain consciousness.";

@@ -182,7 +182,7 @@ Boots_on(VOID_ARGS)
         break;
     case FUMBLE_BOOTS:
         if (!oldprop && !(HFumbling & ~TIMEOUT))
-            incr_itimeout(&HFumbling, rnd(20));
+            incrementYourIntrinsicTimeout(FUMBLING, rnd(20));
         break;
     case LEVITATION_BOOTS:
         if (!oldprop && !HLevitation && !BLevitation) {
@@ -484,7 +484,7 @@ Gloves_on(VOID_ARGS)
         break;
     case GAUNTLETS_OF_FUMBLING:
         if (!oldprop && !(HFumbling & ~TIMEOUT))
-            incr_itimeout(&HFumbling, rnd(20));
+            incrementYourIntrinsicTimeout(FUMBLING, rnd(20));
         break;
     case GAUNTLETS_OF_POWER:
         makeknown(uarmg->otyp);

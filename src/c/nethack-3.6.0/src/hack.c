@@ -1939,7 +1939,7 @@ boolean pick;
         if (trap && (HLevitation & TIMEOUT) == 1L && !ELevitation
             && !(HLevitation & ~TIMEOUT)) {
             if (rn2(2)) { /* defer timeout */
-                incr_itimeout(&HLevitation, 1L);
+                incrementYourIntrinsicTimeout(LEVITATION, 1L);
             } else { /* timeout early */
                 if (float_down(I_SPECIAL | TIMEOUT, 0L)) {
                     /* levitation has ended; we've already triggered

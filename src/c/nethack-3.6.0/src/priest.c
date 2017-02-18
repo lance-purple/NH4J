@@ -629,7 +629,7 @@ register struct monst *priest;
                 if (coaligned && currentAlignmentRecord() <= ALGN_SINNED)
                     adjalign(1);
                 verbalize("I bestow upon thee a blessing.");
-                incr_itimeout(&HClairvoyant, rn1(500, 500));
+                incrementYourIntrinsicTimeout(CLAIRVOYANT, rn1(500, 500));
             }
         } else if (offer < (currentExperienceLevel() * 600)
                    /* blessings is only active when Protection is

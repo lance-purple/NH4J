@@ -2243,8 +2243,6 @@ E void FDECL(ugolemeffects, (int, int));
 
 /* ### potion.c ### */
 
-E void FDECL(set_itimeout, (long *, long));
-E void FDECL(incr_itimeout, (long *, int));
 E void FDECL(make_confused, (long, BOOLEAN_P));
 E void FDECL(make_stunned, (long, BOOLEAN_P));
 E void FDECL(make_blinded, (long, BOOLEAN_P));
@@ -2737,6 +2735,10 @@ E void FDECL(restore_timers, (int, int, BOOLEAN_P, long));
 E void FDECL(relink_timers, (BOOLEAN_P));
 E int NDECL(wiz_timeout_queue);
 E void NDECL(timer_sanity_check);
+
+E long FDECL(yourIntrinsicTimeout, (int));
+E void FDECL(setYourIntrinsicTimeout, (int, long));
+E void FDECL(incrementYourIntrinsicTimeout, (int, long));
 
 /* ### topten.c ### */
 

@@ -332,25 +332,25 @@ nh_timeout()
                 break;
             case CONFUSION:
                 /* So make_confused works properly */
-                set_itimeout(&HConfusion, 1L);
+                setYourIntrinsicTimeout(CONFUSION, 1L);
                 make_confused(0L, TRUE);
                 if (!Confusion)
                     stop_occupation();
                 break;
             case STUNNED:
-                set_itimeout(&HStun, 1L);
+                setYourIntrinsicTimeout(STUNNED, 1L);
                 make_stunned(0L, TRUE);
                 if (!Stunned)
                     stop_occupation();
                 break;
             case BLINDED:
-                set_itimeout(&Blinded, 1L);
+                setYourIntrinsicTimeout(BLINDED, 1L);
                 make_blinded(0L, TRUE);
                 if (!Blind)
                     stop_occupation();
                 break;
             case DEAF:
-                set_itimeout(&HDeaf, 1L);
+                setYourIntrinsicTimeout(DEAF, 1L);
                 make_deaf(0L, TRUE);
                 if (!Deaf)
                     stop_occupation();
@@ -375,19 +375,19 @@ nh_timeout()
                 stop_occupation();
                 break;
             case HALLUC:
-                set_itimeout(&HHallucination, 1L);
+                setYourIntrinsicTimeout(HALLUC, 1L);
                 (void) make_hallucinated(0L, TRUE, 0L);
                 if (!Hallucination)
                     stop_occupation();
                 break;
             case SLEEPY:
                 if (unconscious() || youResistSleep()) {
-                    incr_itimeout(&HSleepy, rnd(100));
+                    incrementYourIntrinsicTimeout(SLEEPY, rnd(100));
                 } else if (Sleepy) {
                     You("fall asleep.");
                     sleeptime = rnd(20);
                     fall_asleep(-sleeptime, TRUE);
-                    incr_itimeout(&HSleepy, sleeptime + rnd(100));
+                    incrementYourIntrinsicTimeout(SLEEPY, sleeptime + rnd(100));
                 }
                 break;
             case LEVITATION:
@@ -426,7 +426,7 @@ nh_timeout()
                    counter if that's the only fumble reason */
                 HFumbling &= ~FROMOUTSIDE;
                 if (Fumbling)
-                    incr_itimeout(&HFumbling, rnd(20));
+                    incrementYourIntrinsicTimeout(FUMBLING, rnd(20));
                 break;
             case DETECT_MONSTERS:
                 see_monsters();
@@ -449,7 +449,7 @@ boolean wakeup_msg;
     if (wakeup_msg && multi == how_long) {
         /* caller can follow with a direct call to Hear_again() if
            there's a need to override this when wakeup_msg is true */
-        incr_itimeout(&HDeaf, how_long);
+        incrementYourIntrinsicTimeout(DEAF, how_long);
         afternmv = Hear_again; /* this won't give any messages */
     }
     /* early wakeup from combat won't be possible until next monster turn */
@@ -1294,7 +1294,7 @@ do_storms()
         /* Inside a cloud during a thunder storm is deafening. */
         /* Even if already deaf, we sense the thunder's vibrations. */
         pline("Kaboom!!!  Boom!!  Boom!!");
-        incr_itimeout(&HDeaf, rn1(20, 30));
+        incrementYourIntrinsicTimeout(DEAF, rn1(20, 30));
         if (!invulnerableWhilePraying()) {
             stop_occupation();
             nomul(-3);
@@ -2026,5 +2026,32 @@ boolean ghostly;
         }
     }
 }
+
+long yourIntrinsicTimeout(index)
+int index;
+{
+    return u.uprops[index].intrinsic & TIMEOUT;
+}
+
+void setYourIntrinsicTimeout(index, value)
+int index;
+long value;
+{
+    if (value >= TIMEOUT) {
+        value = TIMEOUT;
+    } else if (value < 1) {
+        value = 0;
+    }
+    u.uprops[index].intrinsic &= ~TIMEOUT;
+    u.uprops[index].intrinsic |= value;
+}	
+
+void incrementYourIntrinsicTimeout(index, incr)
+int index;
+long incr;
+{
+    long timeout = yourIntrinsicTimeout(index);
+    setYourIntrinsicTimeout(index, timeout + incr);
+}	
 
 /*timeout.c*/
