@@ -399,7 +399,7 @@ gotobj:
 
                 otmp->cursed = 0;
                 /* can't charm you without first waking you */
-                if (Unaware)
+                if (youAreUnaware())
                     unmul((char *) 0);
                 slowly = (armordelay >= 1 || multi < 0);
                 if (flags.female)

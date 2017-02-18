@@ -930,6 +930,8 @@ E void FDECL(setCurrentTrapTimeout, (int));
 
 E long FDECL(sleepingSinceMove, ());
 E void FDECL(setSleepingSinceMove, (long));
+E boolean FDECL(youAreAware, ());
+E boolean FDECL(youAreUnaware, ());
 
 E boolean FDECL(underwater, ());
 E void FDECL(setUnderwater, (boolean));

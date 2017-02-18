@@ -22,7 +22,7 @@ mb_trapped(mtmp)
 struct monst *mtmp;
 {
     if (flags.verbose) {
-        if (cansee(mtmp->mx, mtmp->my) && !Unaware)
+        if (cansee(mtmp->mx, mtmp->my) && youAreAware())
             pline("KABOOM!!  You see a door explode.");
         else if (!Deaf)
             You_hear("a distant explosion.");

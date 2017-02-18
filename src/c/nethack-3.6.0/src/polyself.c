@@ -349,7 +349,7 @@ newman()
     if (Stoned)
         make_stoned(0L, (char *) 0, 0, (char *) 0);
     if (currentHitPoints() <= 0) {
-        if (Polymorph_control) { /* even when Stunned || Unaware */
+        if (Polymorph_control) { /* even when stunned or unaware */
             if (currentHitPoints() <= 0)
                 setCurrentHitPoints(1);
         } else {
@@ -394,13 +394,13 @@ int psflags;
     boolean forcecontrol = (psflags == 1), monsterpoly = (psflags == 2),
             draconian = (uarm && Is_dragon_armor(uarm)),
             iswere = (lycanthropeType() >= LOW_PM), isvamp = is_vampire(youmonst.data),
-            controllable_poly = Polymorph_control && !(Stunned || Unaware);
+            controllable_poly = Polymorph_control && !(Stunned || youAreUnaware());
 
     if (Unchanging) {
         pline("You fail to transform!");
         return;
     }
-    /* being Stunned|Unaware doesn't negate this aspect of Poly_control */
+    /* being stunned or unaware doesn't negate this aspect of Poly_control */
     if (!Polymorph_control && !forcecontrol && !draconian && !iswere
         && !isvamp) {
         if (rn2(20) > ACURR(A_CON)) {

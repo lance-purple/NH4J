@@ -181,7 +181,7 @@ VA_DECL(const char *, line)
     char *tmp;
     VA_START(line);
     VA_INIT(line, const char *);
-    if (Unaware)
+    if (youAreUnaware())
         YouPrefix(tmp, "You dream that you feel ", line);
     else
         YouPrefix(tmp, "You feel ", line);
@@ -234,7 +234,7 @@ VA_DECL(const char *, line)
     VA_INIT(line, const char *);
     if (underwater())
         YouPrefix(tmp, "You barely hear ", line);
-    else if (Unaware)
+    else if (youAreUnaware())
         YouPrefix(tmp, "You dream that you hear ", line);
     else
         YouPrefix(tmp, "You hear ", line);
@@ -250,7 +250,7 @@ VA_DECL(const char *, line)
 
     VA_START(line);
     VA_INIT(line, const char *);
-    if (Unaware)
+    if (youAreUnaware())
         YouPrefix(tmp, "You dream that you see ", line);
     else if (Blind) /* caller should have caught this... */
         YouPrefix(tmp, "You sense ", line);

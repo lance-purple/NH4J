@@ -347,12 +347,4 @@ extern boolean canYouWalkOnWater();
 
 #define Lifesaved u.uprops[LIFESAVED].extrinsic
 
-/*
- * Some pseudo-properties.
- */
-
-/* unconscious() includes u.usleep but not is_fainted(); the multi test is
-   redundant but allows the function calls to be skipped most of the time */
-#define Unaware (multi < 0 && (unconscious() || is_fainted()))
-
 #endif /* YOUPROP_H */

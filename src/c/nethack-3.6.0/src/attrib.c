@@ -1305,4 +1305,14 @@ void decreaseYourAttrChangeTimeout(int index, xchar delta) {
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, delta);
 }
 
+/* unconscious() includes u.usleep but not is_fainted(); the multi test is
+   redundant but allows the function calls to be skipped most of the time */
+boolean youAreUnaware() {
+   return (multi < 0 && (unconscious() || is_fainted()));
+}
+
+boolean youAreAware() {
+   return !youAreUnaware();
+}
+
 /*attrib.c*/

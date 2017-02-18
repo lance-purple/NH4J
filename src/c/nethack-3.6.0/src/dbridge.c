@@ -516,7 +516,7 @@ boolean chunks;
         return TRUE;
 
     if (is_flyer(etmp->edata)
-        && (is_u(etmp) ? !Unaware
+        && (is_u(etmp) ? youAreAware()
                        : (etmp->emon->mcanmove && !etmp->emon->msleeping)))
         /* flying requires mobility */
         misses = 5; /* out of 8 */
@@ -546,7 +546,7 @@ struct entity *etmp;
 {
     int tmp = 4; /* out of 10 */
 
-    if (is_u(etmp) ? (Unaware || Fumbling)
+    if (is_u(etmp) ? (youAreUnaware() || Fumbling)
                    : (!etmp->emon->mcanmove || etmp->emon->msleeping
                       || !etmp->edata->mmove || etmp->emon->wormno))
         return FALSE;

@@ -63,7 +63,7 @@ boolean talk;
 {
     long old = HConfusion;
 
-    if (Unaware)
+    if (youAreUnaware())
         talk = FALSE;
 
     if (!xtime && old) {
@@ -83,7 +83,7 @@ boolean talk;
 {
     long old = HStun;
 
-    if (Unaware)
+    if (youAreUnaware())
         talk = FALSE;
 
     if (!xtime && old) {
@@ -117,7 +117,7 @@ int mask;
     long old = Sick;
 
 #if 0
-    if (Unaware)
+    if (youAreUnaware())
         talk = FALSE;
 #endif
     if (xtime > 0L) {
@@ -174,7 +174,7 @@ const char *msg;
     long old = Slimed;
 
 #if 0
-    if (Unaware)
+    if (youAreUnaware())
         msg = 0;
 #endif
     if ((!xtime && old) || (xtime && !old)) {
@@ -198,7 +198,7 @@ const char *killername;
     long old = Stoned;
 
 #if 0
-    if (Unaware)
+    if (youAreUnaware())
         msg = 0;
 #endif
     if ((!xtime && old) || (xtime && !old)) {
@@ -220,7 +220,7 @@ boolean talk;
 {
     long old = Vomiting;
 
-    if (Unaware)
+    if (youAreUnaware())
         talk = FALSE;
 
     if (!xtime && old)
@@ -249,7 +249,7 @@ boolean talk;
     can_see_now = !Blind;
     Blinded = old; /* restore */
 
-    if (Unaware)
+    if (youAreUnaware())
         talk = FALSE;
 
     if (can_see_now && !u_could_see) { /* regaining sight */
@@ -340,7 +340,7 @@ long mask; /* nonzero if resistance status should change by mask */
     boolean changed = 0;
     const char *message, *verb;
 
-    if (Unaware)
+    if (youAreUnaware())
         talk = FALSE;
 
     message = (!xtime) ? "Everything %s SO boring now."
@@ -410,7 +410,7 @@ boolean talk;
     long old = HDeaf;
     boolean toggled = FALSE;
 
-    if (Unaware)
+    if (youAreUnaware())
         talk = FALSE;
 
     if (!xtime && old) {
@@ -1636,12 +1636,12 @@ register struct obj *obj;
         exercise(A_DEX, TRUE);
         break;
     case POT_BLINDNESS:
-        if (!Blind && !Unaware) {
+        if (!Blind && !youAreUnaware()) {
             kn++;
             pline("It suddenly gets dark.");
         }
         make_blinded(itimeout_incr(Blinded, rnd(5)), FALSE);
-        if (!Blind && !Unaware)
+        if (!Blind && youAreAware())
             Your1(vision_clears);
         break;
     case POT_WATER:

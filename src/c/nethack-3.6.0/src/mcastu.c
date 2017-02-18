@@ -600,7 +600,7 @@ int spellnum;
             char *arg; /* [not const: upstart(N==1 ? an() : makeplural())] */
             const char *what = (let == S_SNAKE) ? "snake" : "insect";
 
-            if (newseen <= oldseen || Unaware) {
+            if (newseen <= oldseen || youAreUnaware()) {
                 /* unseen caster fails or summons unseen critters,
                    or unconscious hero ("You dream that you hear...") */
                 You_hear("someone summoning %s.", makeplural(what));
