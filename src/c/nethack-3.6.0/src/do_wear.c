@@ -649,7 +649,7 @@ Shirt_off(VOID_ARGS)
 
 /* This must be done in worn.c, because one of the possible intrinsics
  * conferred is fire resistance, and we have to immediately set
- * HFire_resistance in worn.c since worn.c will check it before returning.
+ * fire resistance in worn.c since worn.c will check it before returning.
  */
 STATIC_PTR
 int

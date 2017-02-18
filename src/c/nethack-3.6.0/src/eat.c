@@ -822,47 +822,47 @@ register struct permonst *ptr;
     switch (type) {
     case FIRE_RES:
         debugpline0("Trying to give fire resistance");
-        if (!(HFire_resistance & FROMOUTSIDE)) {
+        if (!(yourIntrinsicHasMask(FIRE_RES, FROMOUTSIDE))) {
             You(Hallucination ? "be chillin'." : "feel a momentary chill.");
-            HFire_resistance |= FROMOUTSIDE;
+            setYourIntrinsicMask(FIRE_RES, FROMOUTSIDE);
         }
         break;
     case SLEEP_RES:
         debugpline0("Trying to give sleep resistance");
-        if (!(HSleep_resistance & FROMOUTSIDE)) {
+        if (!(yourIntrinsicHasMask(SLEEP_RES, FROMOUTSIDE))) {
             You_feel("wide awake.");
-            HSleep_resistance |= FROMOUTSIDE;
+            setYourIntrinsicMask(SLEEP_RES, FROMOUTSIDE);
         }
         break;
     case COLD_RES:
         debugpline0("Trying to give cold resistance");
-        if (!(HCold_resistance & FROMOUTSIDE)) {
+        if (!(yourIntrinsicHasMask(COLD_RES, FROMOUTSIDE))) {
             You_feel("full of hot air.");
-            HCold_resistance |= FROMOUTSIDE;
+            setYourIntrinsicMask(COLD_RES, FROMOUTSIDE);
         }
         break;
     case DISINT_RES:
         debugpline0("Trying to give disintegration resistance");
-        if (!(HDisint_resistance & FROMOUTSIDE)) {
+        if (!(yourIntrinsicHasMask(DISINT_RES, FROMOUTSIDE))) {
             You_feel(Hallucination ? "totally together, man." : "very firm.");
-            HDisint_resistance |= FROMOUTSIDE;
+            setYourIntrinsicMask(DISINT_RES, FROMOUTSIDE);
         }
         break;
     case SHOCK_RES: /* shock (electricity) resistance */
         debugpline0("Trying to give shock resistance");
-        if (!(HShock_resistance & FROMOUTSIDE)) {
+        if (!(yourIntrinsicHasMask(SHOCK_RES, FROMOUTSIDE))) {
             if (Hallucination)
                 You_feel("grounded in reality.");
             else
                 Your("health currently feels amplified!");
-            HShock_resistance |= FROMOUTSIDE;
+            setYourIntrinsicMask(SHOCK_RES, FROMOUTSIDE);
         }
         break;
     case POISON_RES:
         debugpline0("Trying to give poison resistance");
-        if (!(HPoison_resistance & FROMOUTSIDE)) {
+        if (!(yourIntrinsicHasMask(POISON_RES, FROMOUTSIDE))) {
             You_feel(youResistPoison() ? "especially healthy." : "healthy.");
-            HPoison_resistance |= FROMOUTSIDE;
+            setYourIntrinsicMask(POISON_RES, FROMOUTSIDE);
         }
         break;
     case TELEPORT:
@@ -1926,11 +1926,11 @@ struct obj *otmp;
             break;
         case RIN_FREE_ACTION:
             /* Give sleep resistance instead */
-            if (!(HSleep_resistance & FROMOUTSIDE))
+            if (!(yourIntrinsicHasMask(SLEEP_RES, FROMOUTSIDE)))
                 accessory_has_effect(otmp);
             if (!youResistSleep())
                 You_feel("wide awake.");
-            HSleep_resistance |= FROMOUTSIDE;
+            setYourIntrinsicMask(SLEEP_RES, FROMOUTSIDE);
             break;
         case AMULET_OF_CHANGE:
             accessory_has_effect(otmp);

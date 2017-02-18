@@ -717,12 +717,13 @@ gcrownu()
     int sp_no;
 #define ok_wep(o) ((o) && ((o)->oclass == WEAPON_CLASS || is_weptool(o)))
 
-    HSee_invisible |= FROMOUTSIDE;
-    HFire_resistance |= FROMOUTSIDE;
-    HCold_resistance |= FROMOUTSIDE;
-    HShock_resistance |= FROMOUTSIDE;
-    HSleep_resistance |= FROMOUTSIDE;
-    HPoison_resistance |= FROMOUTSIDE;
+    setYourIntrinsicMask(SEE_INVIS, FROMOUTSIDE);
+    setYourIntrinsicMask(FIRE_RES, FROMOUTSIDE);
+    setYourIntrinsicMask(COLD_RES, FROMOUTSIDE);
+    setYourIntrinsicMask(SHOCK_RES, FROMOUTSIDE);
+    setYourIntrinsicMask(SLEEP_RES, FROMOUTSIDE);
+    setYourIntrinsicMask(POISON_RES, FROMOUTSIDE);
+
     godvoice(currentAlignmentType(), (char *) 0);
 
     obj = ok_wep(uwep) ? uwep : 0;

@@ -1315,24 +1315,57 @@ boolean youAreAware() {
    return !youAreUnaware();
 }
 
+
+extern long yourExtrinsic(int index) {
+  return u.uprops[index].extrinsic;
+}
+
+extern void setYourExtrinsic(int index, long value) {
+  u.uprops[index].extrinsic = value;
+}
+
+
+extern long yourIntrinsic(int index) {
+  return u.uprops[index].intrinsic;
+}
+
+extern void setYourIntrinsic(int index, long value) {
+  u.uprops[index].intrinsic = value;
+}
+
+extern boolean yourIntrinsicHasMask(int index, long mask) {
+  return ((yourIntrinsic(index) & mask) != 0);
+}
+
+extern void setYourIntrinsicMask(int index, long mask) {
+  long curr = yourIntrinsic(index);
+  setYourIntrinsic(index, (curr | mask));
+}
+
+extern void unsetYourIntrinsicMask(int index, long mask) {
+  long curr = yourIntrinsic(index);
+  setYourIntrinsic(index, (curr & ~mask));
+}
+
+
 extern boolean youResistFire() {
- return (HFire_resistance || EFire_resistance);
+ return (yourExtrinsic(FIRE_RES) || yourIntrinsic(FIRE_RES));
 }
 
 extern boolean youResistCold() {
- return (HCold_resistance || ECold_resistance);
+ return (yourExtrinsic(COLD_RES) || yourIntrinsic(COLD_RES));
 }
 
 extern boolean youResistSleep() {
-  return (HSleep_resistance || ESleep_resistance);
+ return (yourExtrinsic(SLEEP_RES) || yourIntrinsic(SLEEP_RES));
 }
 
 extern boolean youResistDisintegration() {
-  return (HDisint_resistance || EDisint_resistance);
+ return (yourExtrinsic(DISINT_RES) || yourIntrinsic(DISINT_RES));
 }
 
 extern boolean youResistShock() {
-  return (HShock_resistance || EShock_resistance);
+ return (yourExtrinsic(SHOCK_RES) || yourIntrinsic(SHOCK_RES));
 }
 
 extern boolean youResistPoison() {
@@ -1340,27 +1373,27 @@ extern boolean youResistPoison() {
 }
 
 extern boolean youResistDraining() {
-  return (HDrain_resistance || EDrain_resistance);
+ return (yourExtrinsic(DRAIN_RES) || yourIntrinsic(DRAIN_RES));
 }
 
 extern boolean youResistMagic() {
-  return (HAntimagic || EAntimagic);
+ return (yourExtrinsic(ANTIMAGIC) || yourIntrinsic(ANTIMAGIC));
 }
 
 extern boolean youResistAcid() {
-  return (HAcid_resistance || EAcid_resistance);
+ return (yourExtrinsic(ACID_RES) || yourIntrinsic(ACID_RES));
 }
 
 extern boolean youResistStoning() {
-  return (HStone_resistance || EStone_resistance);
+ return (yourExtrinsic(STONE_RES) || yourIntrinsic(STONE_RES));
 }
 
 extern boolean youResistSickness() {
-  return (HSick_resistance || defends(AD_DISE, uwep));
+ return (yourExtrinsic(SICK_RES) || yourIntrinsic(SICK_RES));
 }
 
 extern boolean youAreInvulnerable() {
-  return (u.uprops[INVULNERABLE].intrinsic);
+ return (yourIntrinsic(INVULNERABLE));
 }
 
 /*attrib.c*/

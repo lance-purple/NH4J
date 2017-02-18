@@ -391,8 +391,8 @@ attrcurse()
 {
     switch (rnd(11)) {
     case 1:
-        if (HFire_resistance & INTRINSIC) {
-            HFire_resistance &= ~INTRINSIC;
+        if (yourIntrinsicHasMask(FIRE_RES, INTRINSIC)) {
+            unsetYourIntrinsicMask(FIRE_RES, INTRINSIC);
             You_feel("warmer.");
             break;
         }
@@ -403,8 +403,8 @@ attrcurse()
             break;
         }
     case 3:
-        if (HPoison_resistance & INTRINSIC) {
-            HPoison_resistance &= ~INTRINSIC;
+        if (yourIntrinsicHasMask(POISON_RES, INTRINSIC)) {
+            unsetYourIntrinsicMask(POISON_RES, INTRINSIC);
             You_feel("a little sick!");
             break;
         }
@@ -417,8 +417,8 @@ attrcurse()
             break;
         }
     case 5:
-        if (HCold_resistance & INTRINSIC) {
-            HCold_resistance &= ~INTRINSIC;
+        if (yourIntrinsicHasMask(COLD_RES, INTRINSIC)) {
+            unsetYourIntrinsicMask(COLD_RES, INTRINSIC);
             You_feel("cooler.");
             break;
         }

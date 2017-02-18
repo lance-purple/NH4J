@@ -124,6 +124,11 @@ E int FDECL(is_innate, (int));
 E char *FDECL(from_what, (int));
 E void FDECL(uchangealign, (int, int));
 
+E long FDECL(yourIntrinsic, (int));
+E boolean FDECL(yourIntrinsicHasMask, (int, long));
+E void FDECL(setYourIntrinsicMask, (int, long));
+E void FDECL(unsetYourIntrinsicMask, (int, long));
+
 E boolean FDECL(youResistFire, ());
 E boolean FDECL(youResistCold, ());
 E boolean FDECL(youResistSleep, ());
