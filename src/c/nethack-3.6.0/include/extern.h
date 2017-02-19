@@ -153,6 +153,11 @@ E boolean FDECL(youAreBeingPunished, ());
 E boolean FDECL(youAreStunned, ());
 E boolean FDECL(youAreConfused, ());
 E boolean FDECL(youAreHallucinating, ());
+E boolean FDECL(youAreTemporarilyBlinded, ());
+E boolean FDECL(youAreBlindfolded, ());
+E boolean FDECL(youAreBlindDueToBlindfold, ());
+E boolean FDECL(youCannotSee, ());
+E boolean FDECL(youCanSee, ());
 
 /* ### ball.c ### */
 

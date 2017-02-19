@@ -922,13 +922,13 @@ coord *cc;
         ;
         break;
     case 2:
-        if (!Blind)
+        if (youCanSee())
             pline(Hallucination ? "Dude!  The living dead!"
                                 : "The grave's owner is very upset!");
         (void) makemon(mkclass(S_ZOMBIE, 0), dig_x, dig_y, NO_MM_FLAGS);
         break;
     case 3:
-        if (!Blind)
+        if (youCanSee())
             pline(Hallucination ? "I want my mummy!"
                                 : "You've disturbed a tomb!");
         (void) makemon(mkclass(S_MUMMY, 0), dig_x, dig_y, NO_MM_FLAGS);
@@ -1510,21 +1510,21 @@ zap_dig()
                     }
                     room->typ = ROOM;
                     unblock_point(zx, zy); /* vision */
-                } else if (!Blind)
+                } else if (youCanSee())
                     pline_The("wall glows then fades.");
                 break;
             } else if (IS_TREE(room->typ)) { /* check trees before stone */
                 if (!(room->wall_info & W_NONDIGGABLE)) {
                     room->typ = ROOM;
                     unblock_point(zx, zy); /* vision */
-                } else if (!Blind)
+                } else if (youCanSee())
                     pline_The("tree shudders but is unharmed.");
                 break;
             } else if (room->typ == STONE || room->typ == SCORR) {
                 if (!(room->wall_info & W_NONDIGGABLE)) {
                     room->typ = CORR;
                     unblock_point(zx, zy); /* vision */
-                } else if (!Blind)
+                } else if (youCanSee())
                     pline_The("rock glows then fades.");
                 break;
             }

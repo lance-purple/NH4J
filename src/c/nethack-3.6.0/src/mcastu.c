@@ -638,13 +638,13 @@ int spellnum;
     }
     case CLC_BLIND_YOU:
         /* note: resists_blnd() doesn't apply here */
-        if (!Blinded) {
+        if (!youAreTemporarilyBlinded()) {
             int num_eyes = eyecount(youmonst.data);
             pline("Scales cover your %s!", (num_eyes == 1)
                                                ? body_part(EYE)
                                                : makeplural(body_part(EYE)));
             make_blinded(Half_spell_damage ? 100L : 200L, FALSE);
-            if (!Blind)
+            if (youCanSee())
                 Your1(vision_clears);
             dmg = 0;
         } else
@@ -826,7 +826,7 @@ int spellnum;
         if (!mcouldseeu && spellnum == CLC_INSECTS)
             return TRUE;
         /* blindness spell on blinded player */
-        if (Blinded && spellnum == CLC_BLIND_YOU)
+        if (youAreTemporarilyBlinded() && spellnum == CLC_BLIND_YOU)
             return TRUE;
     }
     return FALSE;

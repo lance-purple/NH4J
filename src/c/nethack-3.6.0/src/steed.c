@@ -228,7 +228,7 @@ boolean force;      /* Quietly force this animal */
     }
 
     /* Can the player reach and see the monster? */
-    if (!mtmp || (!force && ((Blind && !Blind_telepat) || mtmp->mundetected
+    if (!mtmp || (!force && ((youCannotSee() && !Blind_telepat) || mtmp->mundetected
                              || mtmp->m_ap_type == M_AP_FURNITURE
                              || mtmp->m_ap_type == M_AP_OBJECT))) {
         pline("I see nobody there.");

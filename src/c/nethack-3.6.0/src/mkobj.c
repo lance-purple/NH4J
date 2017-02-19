@@ -1178,7 +1178,7 @@ int old_range;
         /* simplifying assumptions:  hero is wielding this object;
            artifacts have to be in use to emit light and monsters'
            gear won't change bless or curse state */
-        if (!Blind && get_obj_location(obj, &ox, &oy, 0)) {
+        if (youCanSee() && get_obj_location(obj, &ox, &oy, 0)) {
             *buf = '\0';
             if (iflags.last_msg == PLNMSG_OBJ_GLOWS)
                 /* we just saw "The <obj> glows <color>." from dipping */

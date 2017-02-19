@@ -133,7 +133,7 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
      */
     if (!canspotmon(mtmp) && !glyph_is_warning(glyph_at(bhitpos.x, bhitpos.y))
         && !glyph_is_invisible(levl[bhitpos.x][bhitpos.y].glyph)
-        && !(!Blind && mtmp->mundetected && hides_under(mtmp->data))) {
+        && !(youCanSee() && mtmp->mundetected && hides_under(mtmp->data))) {
         pline("Wait!  There's %s there you can't see!", something);
         map_invisible(bhitpos.x, bhitpos.y);
         /* if it was an invisible mimic, treat it as if we stumbled
@@ -172,10 +172,10 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
             seemimic(mtmp);
             return FALSE;
         }
-        if (!((Blind ? Blind_telepat : Unblind_telepat) || Detect_monsters)) {
+        if (!((youCannotSee() ? Blind_telepat : Unblind_telepat) || Detect_monsters)) {
             struct obj *obj;
 
-            if (Blind || (is_pool(mtmp->mx, mtmp->my) && !underwater()))
+            if (youCannotSee() || (is_pool(mtmp->mx, mtmp->my) && !underwater()))
                 pline("Wait!  There's a hidden monster there!");
             else if ((obj = level.objects[mtmp->mx][mtmp->my]) != 0)
                 pline("Wait!  There's %s hiding under %s!",
@@ -891,7 +891,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                                              ? AT_SPIT
                                              : AT_WEAP),
                                  obj)) {
-                        if (Blind) {
+                        if (youCannotSee()) {
                             pline(obj->otyp == CREAM_PIE ? "Splat!"
                                                          : "Splash!");
                         } else if (obj->otyp == BLINDING_VENOM) {
@@ -1430,7 +1430,7 @@ register struct attack *mattk;
     }
     switch (mattk->adtyp) {
     case AD_STUN:
-        if (!Blind)
+        if (youCanSee())
             pline("%s %s for a moment.", Monnam(mdef),
                   makeplural(stagger(pd, "stagger")));
         mdef->mstun = 1;
@@ -1478,10 +1478,10 @@ register struct attack *mattk;
             tmp = 0;
             break;
         }
-        if (!Blind)
+        if (youCanSee())
             pline("%s is %s!", Monnam(mdef), on_fire(pd, mattk));
         if (pd == &mons[PM_STRAW_GOLEM] || pd == &mons[PM_PAPER_GOLEM]) {
-            if (!Blind)
+            if (youCanSee())
                 pline("%s burns completely!", Monnam(mdef));
             xkilled(mdef, 2);
             tmp = 0;
@@ -1491,7 +1491,7 @@ register struct attack *mattk;
         tmp += destroy_mitem(mdef, SCROLL_CLASS, AD_FIRE);
         tmp += destroy_mitem(mdef, SPBOOK_CLASS, AD_FIRE);
         if (resists_fire(mdef)) {
-            if (!Blind)
+            if (youCanSee())
                 pline_The("fire doesn't heat %s!", mon_nam(mdef));
             golemeffects(mdef, AD_FIRE, tmp);
             shieldeff(mdef->mx, mdef->my);
@@ -1505,11 +1505,11 @@ register struct attack *mattk;
             tmp = 0;
             break;
         }
-        if (!Blind)
+        if (youCanSee())
             pline("%s is covered in frost!", Monnam(mdef));
         if (resists_cold(mdef)) {
             shieldeff(mdef->mx, mdef->my);
-            if (!Blind)
+            if (youCanSee())
                 pline_The("frost doesn't chill %s!", mon_nam(mdef));
             golemeffects(mdef, AD_COLD, tmp);
             tmp = 0;
@@ -1521,11 +1521,11 @@ register struct attack *mattk;
             tmp = 0;
             break;
         }
-        if (!Blind)
+        if (youCanSee())
             pline("%s is zapped!", Monnam(mdef));
         tmp += destroy_mitem(mdef, WAND_CLASS, AD_ELEC);
         if (resists_elec(mdef)) {
-            if (!Blind)
+            if (youCanSee())
                 pline_The("zap doesn't shock %s!", mon_nam(mdef));
             golemeffects(mdef, AD_ELEC, tmp);
             shieldeff(mdef->mx, mdef->my);
@@ -1585,7 +1585,7 @@ register struct attack *mattk;
         break;
     case AD_BLND:
         if (can_blnd(&youmonst, mdef, mattk->aatyp, (struct obj *) 0)) {
-            if (!Blind && mdef->mcansee)
+            if (youCanSee() && mdef->mcansee)
                 pline("%s is blinded.", Monnam(mdef));
             mdef->mcansee = 0;
             tmp += mdef->mblinded;
@@ -1598,7 +1598,7 @@ register struct attack *mattk;
     case AD_CURS:
         if (night() && !rn2(10) && !mdef->mcan) {
             if (pd == &mons[PM_CLAY_GOLEM]) {
-                if (!Blind)
+                if (youCanSee())
                     pline("Some writing vanishes from %s head!",
                           s_suffix(mon_nam(mdef)));
                 xkilled(mdef, 0);
@@ -1723,14 +1723,14 @@ register struct attack *mattk;
         break;
     case AD_PLYS:
         if (!negated && mdef->mcanmove && !rn2(3) && tmp < mdef->mhp) {
-            if (!Blind)
+            if (youCanSee())
                 pline("%s is frozen by you!", Monnam(mdef));
             paralyze_monst(mdef, rnd(10));
         }
         break;
     case AD_SLEE:
         if (!negated && !mdef->msleeping && sleep_monst(mdef, rnd(10), -1)) {
-            if (!Blind)
+            if (youCanSee())
                 pline("%s is put to sleep by you!", Monnam(mdef));
             slept_monst(mdef);
         }
@@ -2329,7 +2329,7 @@ boolean wep_was_destroyed;
         break;
     case AD_ACID:
         if (mhit && rn2(2)) {
-            if (Blind || !flags.verbose)
+            if (youCannotSee() || !flags.verbose)
                 You("are splashed!");
             else
                 You("are splashed by %s acid!", s_suffix(mon_nam(mon)));
@@ -2599,7 +2599,7 @@ struct monst *mtmp;
     if (!u.ustuck && !mtmp->mflee && dmgtype(mtmp->data, AD_STCK))
         u.ustuck = mtmp;
 
-    if (Blind) {
+    if (youCannotSee()) {
         if (!Blind_telepat)
             what = generic; /* with default fmt */
         else if (mtmp->m_ap_type == M_AP_MONSTER)
@@ -2640,14 +2640,14 @@ struct monst *mon;
     if (!abilityToConfuseMonsters() || mon->mconf)
         return;
     if (abilityToConfuseMonsters() == 1) {
-        if (Blind) {
+        if (youCannotSee()) {
             Your("%s stop tingling.", hands);
         }
         else {
             Your("%s stop glowing %s.", hands, hcolor(NH_RED));
         }
     } else {
-        if (Blind)
+        if (youCannotSee())
             pline_The("tingling in your %s lessens.", hands);
         else
             Your("%s no longer glow so brightly %s.", hands, hcolor(NH_RED));

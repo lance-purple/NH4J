@@ -939,7 +939,7 @@ boolean called;
         Strcat(strcat(buf, adjective), " ");
     if (do_invis)
         Strcat(buf, "invisible ");
-    if (do_saddle && (mtmp->misc_worn_check & W_SADDLE) && !Blind
+    if (do_saddle && (mtmp->misc_worn_check & W_SADDLE) && youCanSee()
         && !Hallucination)
         Strcat(buf, "saddled ");
     if (buf[0] != 0)

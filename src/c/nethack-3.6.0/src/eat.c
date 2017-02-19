@@ -887,7 +887,7 @@ register struct permonst *ptr;
                                    : "a strange mental acuity.");
             HTelepat |= FROMOUTSIDE;
             /* If blind, make sure monsters show up. */
-            if (Blind)
+            if (youCannotSee())
                 see_monsters();
         }
         break;
@@ -952,7 +952,7 @@ register int pm;
     case PM_STALKER:
         if (!Invis) {
             setYourIntrinsicTimeout(INVIS, (long) rn1(100, 50));
-            if (!Blind && !BInvis)
+            if (youCanSee() && !BInvis)
                 self_invis_message();
         } else {
             if (!(HInvis & INTRINSIC))
@@ -1335,7 +1335,7 @@ const char *mesg;
     } else { /* spinach... */
         if (tin->cursed) {
             pline("It contains some decaying%s%s substance.",
-                  Blind ? "" : " ", Blind ? "" : hcolor(NH_GREEN));
+                  youCannotSee() ? "" : " ", youCannotSee() ? "" : hcolor(NH_GREEN));
         } else {
             pline("It contains spinach.");
             tin->dknown = tin->known = 1;
@@ -1494,16 +1494,16 @@ struct obj *obj;
         else
             You_feel("rather %s.", body_part(LIGHT_HEADED));
         make_confused(yourIntrinsic(CONFUSION) + d(2, 4), FALSE);
-    } else if (!rn2(4) && !Blind) {
+    } else if (!rn2(4) && youCanSee()) {
         pline("Everything suddenly goes dark.");
         make_blinded((long) d(2, 10), FALSE);
-        if (!Blind)
+        if (youCanSee())
             Your1(vision_clears);
     } else if (!rn2(3)) {
         const char *what, *where;
         int duration = rnd(10);
 
-        if (!Blind)
+        if (youCanSee())
             what = "goes", where = "dark";
         else if (Levitation || areYouOnAirLevel() || areYouOnWaterLevel())
             what = "you lose control of", where = "yourself";
@@ -1862,7 +1862,7 @@ struct obj *otmp;
                 set_mimic_blocking();
                 see_monsters();
                 if (Invis && !oldprop && !ESee_invisible
-                    && !perceives(youmonst.data) && !Blind) {
+                    && !perceives(youmonst.data) && youCanSee()) {
                     newsym(currentX(), currentY());
                     pline("Suddenly you can see yourself.");
                     makeknown(typ);
@@ -1870,7 +1870,7 @@ struct obj *otmp;
                 break;
             case RIN_INVISIBILITY:
                 if (!oldprop && !EInvis && !BInvis && !See_invisible
-                    && !Blind) {
+                    && youCanSee()) {
                     newsym(currentX(), currentY());
                     Your("body takes on a %s transparency...",
                          Hallucination ? "normal" : "strange");
@@ -2078,7 +2078,7 @@ struct obj *otmp;
         break;
     case FORTUNE_COOKIE:
         outrumor(bcsign(otmp), BY_COOKIE);
-        if (!Blind) {
+        if (youCanSee()) {
             incrementLiteracyCount(1);
 	}
         break;

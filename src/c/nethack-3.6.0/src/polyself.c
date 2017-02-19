@@ -148,7 +148,7 @@ const char *fmt, *arg;
 {
     boolean sticky = (sticks(youmonst.data) && u.ustuck && !swallowed()),
             was_mimicking = (youmonst.m_ap_type == M_AP_OBJECT);
-    boolean was_blind = !!Blind;
+    boolean was_blind = !!youCannotSee();
 
     if (areYouPolymorphed()) {
         /* restore old attribs */
@@ -207,8 +207,8 @@ const char *fmt, *arg;
     if (currentlyTrapped() && currentTrapType() == TT_PIT) {
         setCurrentTrapTimeout(rn1(6, 2)); /* time to escape resets */
     }
-    if (was_blind && !Blind) { /* reverting from eyeless */
-        Blinded = 1L;
+    if (was_blind && youCanSee()) { /* reverting from eyeless */
+        setYourIntrinsic(BLINDED, 1L);
         make_blinded(0L, TRUE); /* remove blindness */
     }
     check_strangling(TRUE);
@@ -595,7 +595,7 @@ polymon(mntmp)
 int mntmp;
 {
     boolean sticky = sticks(youmonst.data) && u.ustuck && !swallowed(),
-            was_blind = !!Blind, dochange = FALSE;
+            was_blind = !!youCannotSee(), dochange = FALSE;
     int mlvl;
 
     if (mvitals[mntmp].mvflags & G_GENOD) { /* allow G_EXTINCT */
@@ -746,8 +746,8 @@ int mntmp;
     if (currentlyTrapped() && currentTrapType() == TT_PIT) {
         setCurrentTrapTimeout(rn1(6, 2)); /* time to escape resets */
     }
-    if (was_blind && !Blind) { /* previous form was eyeless */
-        Blinded = 1L;
+    if (was_blind && youCanSee()) { /* previous form was eyeless */
+        setYourIntrinsic(BLINDED, 1L);
         make_blinded(0L, TRUE); /* remove blindness */
     }
     newsym(currentX(), currentY()); /* Change symbol */
@@ -1292,7 +1292,7 @@ dogaze()
         return 0;
     }
 
-    if (Blind) {
+    if (youCannotSee()) {
         You_cant("see anything to gaze at.");
         return 0;
     } else if (Hallucination) {

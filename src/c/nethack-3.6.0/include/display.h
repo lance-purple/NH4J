@@ -32,7 +32,7 @@
      /* 1. the monster has a brain to sense            */  \
      (!mindless(mon->data))                                \
      /* AND     2a. hero is blind and telepathic       */  \
-      && ((Blind && Blind_telepat)                         \
+      && ((youCannotSee() && Blind_telepat)                \
           /* OR 2b. hero is using a telepathy inducing */  \
           /*        object and in range                */  \
           || (Unblind_telepat                              \
@@ -73,7 +73,7 @@
  * canseemon() or canspotmon() which already check that.
  */
 #define see_with_infrared(mon)                        \
-    (!Blind && Infravision && mon && infravisible(mon->data) \
+    (youCanSee() && Infravision && mon && infravisible(mon->data) \
      && couldsee(mon->mx, mon->my))
 
 /*
@@ -111,7 +111,7 @@
 #define knowninvisible(mon)                                               \
     (mtmp->minvis                                                         \
      && ((cansee(mon->mx, mon->my) && (See_invisible || Detect_monsters)) \
-         || (!Blind && (HTelepat & ~INTRINSIC)                            \
+         || (youCanSee() && (HTelepat & ~INTRINSIC)                            \
              && distanceSquaredToYou(mon->mx, mon->my) <= (BOLT_LIM * BOLT_LIM))))
 
 /*
@@ -135,7 +135,7 @@
  * unable to see.  So when blind, being invisible won't affect your
  * self-perception, and when swallowed, the enclosing monster touches.
  */
-#define canseeself() (Blind || swallowed() || (!Invisible && !lurking()))
+#define canseeself() (youCannotSee() || swallowed() || (!Invisible && !lurking()))
 #define senseself() (Unblind_telepat || Detect_monsters)
 #define canspotself() (canseeself() || senseself())
 

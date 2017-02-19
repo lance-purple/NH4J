@@ -209,16 +209,16 @@ make_blinded(xtime, talk)
 long xtime;
 boolean talk;
 {
-    long old = Blinded;
+    long priorBlinded = yourIntrinsic(BLINDED);
     boolean u_could_see, can_see_now;
     const char *eyes;
 
     /* we need to probe ahead in case the Eyes of the Overworld
        are or will be overriding blindness */
-    u_could_see = !Blind;
-    Blinded = xtime ? 1L : 0L;
-    can_see_now = !Blind;
-    Blinded = old; /* restore */
+    u_could_see = !yourIntrinsic(BLINDED);
+    setYourIntrinsic(BLINDED, (xtime ? 1L : 0L));
+    can_see_now = !yourIntrinsic(BLINDED);
+    setYourIntrinsic(BLINDED, priorBlinded); /* restore */
 
     if (youAreUnaware())
         talk = FALSE;
@@ -230,12 +230,12 @@ boolean talk;
             else
                 You("can see again.");
         }
-    } else if (old && !xtime) {
+    } else if (priorBlinded && !xtime) {
         /* clearing temporary blindness without toggling blindness */
         if (talk) {
             if (!haseyes(youmonst.data)) {
                 strange_feeling((struct obj *) 0, (char *) 0);
-            } else if (Blindfolded) {
+            } else if (youAreBlindfolded()) {
                 eyes = body_part(EYE);
                 if (eyecount(youmonst.data) != 1)
                     eyes = makeplural(eyes);
@@ -256,12 +256,12 @@ boolean talk;
         /* Before the hero goes blind, set the ball&chain variables. */
         if (youAreBeingPunished())
             set_bc(0);
-    } else if (!old && xtime) {
+    } else if (!priorBlinded && xtime) {
         /* setting temporary blindness without toggling blindness */
         if (talk) {
             if (!haseyes(youmonst.data)) {
                 strange_feeling((struct obj *) 0, (char *) 0);
-            } else if (Blindfolded) {
+            } else if (youAreBlindfolded()) {
                 eyes = body_part(EYE);
                 if (eyecount(youmonst.data) != 1)
                     eyes = makeplural(eyes);
@@ -316,7 +316,7 @@ long mask; /* nonzero if resistance status should change by mask */
 
     message = (!xtime) ? "Everything %s SO boring now."
                        : "Oh wow!  Everything %s so cosmic!";
-    verb = (!Blind) ? "looks" : "feels";
+    verb = (youCanSee()) ? "looks" : "feels";
 
     if (mask) {
         if (HHallucination)
@@ -335,7 +335,7 @@ long mask; /* nonzero if resistance status should change by mask */
         if (!changed && !HHallucination && old && talk) {
             if (!haseyes(youmonst.data)) {
                 strange_feeling((struct obj *) 0, (char *) 0);
-            } else if (Blind) {
+            } else if (youCannotSee()) {
                 const char *eyes = body_part(EYE);
 
                 if (eyecount(youmonst.data) != 1)
@@ -410,7 +410,7 @@ ghost_from_bottle()
         pline("This bottle turns out to be empty.");
         return;
     }
-    if (Blind) {
+    if (youCannotSee()) {
         pline("As you open the bottle, %s emerges.", something);
         return;
     }
@@ -664,7 +664,7 @@ register struct obj *otmp;
         }
         /* FALLTHRU */
     case POT_INVISIBILITY:
-        if (Invis || Blind || BInvis) {
+        if (Invis || youCannotSee() || BInvis) {
             nothing++;
         } else {
             self_invis_message();
@@ -681,7 +681,7 @@ register struct obj *otmp;
         break;
     case POT_SEE_INVISIBLE: /* tastes like fruit juice in Rogue */
     case POT_FRUIT_JUICE: {
-        int msg = Invisible && !Blind;
+        int msg = Invisible && youCanSee();
 
         unkn++;
         if (otmp->cursed)
@@ -711,7 +711,7 @@ register struct obj *otmp;
         set_mimic_blocking(); /* do special mimic handling */
         see_monsters();       /* see invisible monsters */
         newsym(currentX(), currentY());   /* see yourself! */
-        if (msg && !Blind) {  /* Blind possible if polymorphed */
+        if (msg && youCanSee()) {  /* Blind possible if polymorphed */
             You("can see through yourself, but you are visible!");
             unkn--;
         }
@@ -880,11 +880,11 @@ register struct obj *otmp;
         incrementYourIntrinsicTimeout(FAST, rn1(10, 100 + 60 * bcsign(otmp)));
         break;
     case POT_BLINDNESS:
-        if (Blind)
+        if (youCannotSee())
             nothing++;
-        make_blinded(itimeout_incr(Blinded,
+        make_blinded(itimeout_incr(yourIntrinsic(BLINDED),
                                    rn1(200, 250 - 125 * bcsign(otmp))),
-                     (boolean) !Blind);
+                     (boolean) youCanSee());
         break;
     case POT_GAIN_LEVEL:
         if (otmp->cursed) {
@@ -1286,7 +1286,7 @@ boolean your_fault;
     } else if (hit_saddle && saddle) {
         char *mnam, buf[BUFSZ], saddle_glows[BUFSZ];
         boolean affected = FALSE;
-        boolean useeit = !Blind && canseemon(mon) && cansee(mon->mx, mon->my);
+        boolean useeit = youCanSee() && canseemon(mon) && cansee(mon->mx, mon->my);
 
         mnam = x_monnam(mon, ARTICLE_THE, (char *) 0,
                         (SUPPRESS_IT | SUPPRESS_SADDLE), FALSE);
@@ -1571,7 +1571,7 @@ register struct obj *obj;
         make_confused(itimeout_incr(yourIntrinsic(CONFUSION), rnd(5)), FALSE);
         break;
     case POT_INVISIBILITY:
-        if (!Blind && !Invis) {
+        if (youCanSee() && !Invis) {
             kn++;
             pline("For an instant you %s!",
                   See_invisible ? "could see right through yourself"
@@ -1607,12 +1607,12 @@ register struct obj *obj;
         exercise(A_DEX, TRUE);
         break;
     case POT_BLINDNESS:
-        if (!Blind && !youAreUnaware()) {
+        if (youCanSee() && !youAreUnaware()) {
             kn++;
             pline("It suddenly gets dark.");
         }
-        make_blinded(itimeout_incr(Blinded, rnd(5)), FALSE);
-        if (!Blind && youAreAware())
+        make_blinded(itimeout_incr(yourIntrinsic(BLINDED), rnd(5)), FALSE);
+        if (youCanSee() && youAreAware())
             Your1(vision_clears);
         break;
     case POT_WATER:
@@ -1807,7 +1807,7 @@ dodip()
     }
     potion->in_use = TRUE; /* assume it will be used up */
     if (potion->otyp == POT_WATER) {
-        boolean useeit = !Blind || (obj == ublindf && Blindfolded_only);
+        boolean useeit = youCanSee() || (obj == ublindf && youAreBlindDueToBlindfold());
         const char *obj_glows = Yobjnam2(obj, "glow");
 
         if (H2Opotion_dip(potion, obj, useeit, obj_glows))
@@ -1894,7 +1894,7 @@ dodip()
         }
 
         obj->blessed = obj->cursed = obj->bknown = 0;
-        if (Blind || Hallucination)
+        if (youCannotSee() || Hallucination)
             obj->dknown = 0;
 
         if ((mixture = mixtype(obj, potion)) != 0) {
@@ -1918,7 +1918,7 @@ dodip()
             default:
                 useupall(obj);
                 useup(potion);
-                if (!Blind)
+                if (youCanSee())
                     pline_The("mixture glows brightly and evaporates.");
                 return 1;
             }
@@ -1926,8 +1926,8 @@ dodip()
         obj->odiluted = (obj->otyp != POT_WATER);
 
         if (obj->otyp == POT_WATER && !Hallucination) {
-            pline_The("mixture bubbles%s.", Blind ? "" : ", then clears");
-        } else if (!Blind) {
+            pline_The("mixture bubbles%s.", youCannotSee() ? "" : ", then clears");
+        } else if (youCanSee()) {
             pline_The("mixture looks %s.",
                       hcolor(OBJ_DESCR(objects[obj->otyp])));
         }
@@ -1946,7 +1946,7 @@ dodip()
     }
 
     if (potion->otyp == POT_ACID && obj->otyp == CORPSE
-        && obj->corpsenm == PM_LICHEN && !Blind) {
+        && obj->corpsenm == PM_LICHEN && youCanSee()) {
         pline("%s %s %s around the edges.", The(cxname(obj)),
               otense(obj, "turn"),
               potion->odiluted ? hcolor(NH_ORANGE) : hcolor(NH_RED));
@@ -2085,7 +2085,7 @@ more_dips:
         else
             singlepotion->cursed = obj->cursed; /* odiluted left as-is */
         singlepotion->bknown = FALSE;
-        if (Blind) {
+        if (youCannotSee()) {
             singlepotion->dknown = FALSE;
         } else {
             singlepotion->dknown = !Hallucination;
@@ -2158,7 +2158,7 @@ struct obj *obj;
         return;
     }
 
-    if (!Blind) {
+    if (youCanSee()) {
         pline("In a cloud of smoke, %s emerges!", a_monnam(mtmp));
         pline("%s speaks.", Monnam(mtmp));
     } else {

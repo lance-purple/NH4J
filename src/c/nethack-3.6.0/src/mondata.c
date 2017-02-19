@@ -139,7 +139,7 @@ struct monst *mon;
     long slotmask;
     struct obj *o;
 
-    if (is_you ? (Blind || youAreUnaware())
+    if (is_you ? (youCannotSee() || youAreUnaware())
                : (mon->mblinded || !mon->mcansee || !haseyes(ptr)
                   /* BUG: temporary sleep sets mfrozen, but since
                           paralysis does too, we can't check it */
@@ -201,7 +201,7 @@ struct obj *obj; /* aatyp == AT_WEAP, AT_SPIT */
     case AT_NONE:
         /* an object is used (thrown/spit/other) */
         if (obj && (obj->otyp == CREAM_PIE)) {
-            if (is_you && Blindfolded)
+            if (is_you && youAreBlindfolded())
                 return FALSE;
         } else if (obj && (obj->otyp == BLINDING_VENOM)) {
             /* all ublindf, including LENSES, protect, cream-pies too */
@@ -217,7 +217,7 @@ struct obj *obj; /* aatyp == AT_WEAP, AT_SPIT */
         break;
 
     case AT_ENGL:
-        if (is_you && (Blindfolded || youAreUnaware() || creamed()))
+        if (is_you && (youAreBlindfolded() || youAreUnaware() || creamed()))
             return FALSE;
         if (!is_you && mdef->msleeping)
             return FALSE;

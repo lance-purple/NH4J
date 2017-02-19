@@ -319,7 +319,7 @@ int x, y;
     if (ep && ep->engr_txt[0]) {
         switch (ep->engr_type) {
         case DUST:
-            if (!Blind) {
+            if (youCanSee()) {
                 sensed = 1;
                 pline("%s is written here in the %s.", Something,
                       is_ice(x, y) ? "frost" : "dust");
@@ -327,21 +327,21 @@ int x, y;
             break;
         case ENGRAVE:
         case HEADSTONE:
-            if (!Blind || can_reach_floor(TRUE)) {
+            if (youCanSee() || can_reach_floor(TRUE)) {
                 sensed = 1;
                 pline("%s is engraved here on the %s.", Something,
                       surface(x, y));
             }
             break;
         case BURN:
-            if (!Blind || can_reach_floor(TRUE)) {
+            if (youCanSee() || can_reach_floor(TRUE)) {
                 sensed = 1;
                 pline("Some text has been %s into the %s here.",
                       is_ice(x, y) ? "melted" : "burned", surface(x, y));
             }
             break;
         case MARK:
-            if (!Blind) {
+            if (youCanSee()) {
                 sensed = 1;
                 pline("There's some graffiti on the %s here.", surface(x, y));
             }
@@ -351,7 +351,7 @@ int x, y;
              * "What's it say?"
              * "It says... `See you next Wednesday.'" -- Thriller
              */
-            if (!Blind) {
+            if (youCanSee()) {
                 sensed = 1;
                 You_see("a message scrawled in blood here.");
             }
@@ -369,7 +369,7 @@ int x, y;
                 et = buf;
             } else
                 et = ep->engr_txt;
-            You("%s: \"%s\".", (Blind) ? "feel the words" : "read", et);
+            You("%s: \"%s\".", (youCannotSee()) ? "feel the words" : "read", et);
             if (context.run > 1)
                 nomul(0);
         }
@@ -656,20 +656,20 @@ doengrave()
                     "The wand unsuccessfully fights your attempt to write!");
                 break;
             case WAN_SLOW_MONSTER:
-                if (!Blind) {
+                if (youCanSee()) {
                     Sprintf(post_engr_text, "The bugs on the %s slow down!",
                             surface(currentX(), currentY()));
                 }
                 break;
             case WAN_SPEED_MONSTER:
-                if (!Blind) {
+                if (youCanSee()) {
                     Sprintf(post_engr_text, "The bugs on the %s speed up!",
                             surface(currentX(), currentY()));
                 }
                 break;
             case WAN_POLYMORPH:
                 if (oep) {
-                    if (!Blind) {
+                    if (youCanSee()) {
                         type = (xchar) 0; /* random */
                         (void) random_engraving(buf);
                     }
@@ -685,7 +685,7 @@ doengrave()
             /* RAY wands */
             case WAN_MAGIC_MISSILE:
                 ptext = TRUE;
-                if (!Blind) {
+                if (youCanSee()) {
                     Sprintf(post_engr_text,
                             "The %s is riddled by bullet holes!",
                             surface(currentX(), currentY()));
@@ -694,13 +694,13 @@ doengrave()
             /* can't tell sleep from death - Eric Backus */
             case WAN_SLEEP:
             case WAN_DEATH:
-                if (!Blind) {
+                if (youCanSee()) {
                     Sprintf(post_engr_text, "The bugs on the %s stop moving!",
                             surface(currentX(), currentY()));
                 }
                 break;
             case WAN_COLD:
-                if (!Blind)
+                if (youCanSee())
                     Strcpy(post_engr_text,
                            "A few ice cubes drop from the wand.");
                 if (!oep || (oep->engr_type != BURN))
@@ -708,7 +708,7 @@ doengrave()
             case WAN_CANCELLATION:
             case WAN_MAKE_INVISIBLE:
                 if (oep && oep->engr_type != HEADSTONE) {
-                    if (!Blind)
+                    if (youCanSee())
                         pline_The("engraving on the %s vanishes!",
                                   surface(currentX(), currentY()));
                     dengr = TRUE;
@@ -716,7 +716,7 @@ doengrave()
                 break;
             case WAN_TELEPORTATION:
                 if (oep && oep->engr_type != HEADSTONE) {
-                    if (!Blind)
+                    if (youCanSee())
                         pline_The("engraving on the %s vanishes!",
                                   surface(currentX(), currentY()));
                     teleengr = TRUE;
@@ -732,7 +732,7 @@ doengrave()
                     doknown = TRUE;
                 }
                 Strcpy(post_engr_text,
-                       Blind
+                       youCannotSee()
                           ? "You hear drilling!"
                           : IS_GRAVE(levl[currentX()][currentY()].typ)
                              ? "Chips fly out from the headstone."
@@ -752,7 +752,7 @@ doengrave()
                         pline("This %s is a wand of fire!", xname(otmp));
                     doknown = TRUE;
                 }
-                Strcpy(post_engr_text, Blind ? "You feel the wand heat up."
+                Strcpy(post_engr_text, youCannotSee() ? "You feel the wand heat up."
                                              : "Flames fly from the wand.");
                 break;
             case WAN_LIGHTNING:
@@ -763,7 +763,7 @@ doengrave()
                         pline("This %s is a wand of lightning!", xname(otmp));
                     doknown = TRUE;
                 }
-                if (!Blind) {
+                if (youCanSee()) {
                     Strcpy(post_engr_text, "Lightning arcs from the wand.");
                     doblind = TRUE;
                 } else
@@ -820,7 +820,7 @@ doengrave()
                     || oep->engr_type == MARK) {
                     if (is_wet_towel(otmp))
                         dry_a_towel(otmp, -1, TRUE);
-                    if (!Blind)
+                    if (youCanSee())
                         You("wipe out the message here.");
                     else
                         pline("%s %s.", Yobjnam2(otmp, "get"),
@@ -886,7 +886,7 @@ doengrave()
     }
     if (zapwand && (otmp->spe < 0)) {
         pline("%s %sturns to dust.", The(xname(otmp)),
-              Blind ? "" : "glows violently, then ");
+              youCannotSee() ? "" : "glows violently, then ");
         if (!IS_GRAVE(levl[currentX()][currentY()].typ))
             You(
     "are not going to get anywhere trying to write in the %s with your dust.",
@@ -913,7 +913,7 @@ doengrave()
             /* no choice, only append */
             c = 'y';
         } else if (type == oep->engr_type
-                   && (!Blind || oep->engr_type == BURN
+                   && (youCanSee() || oep->engr_type == BURN
                        || oep->engr_type == ENGRAVE)) {
             c = yn_function("Do you want to add to the current engraving?",
                             ynqchars, 'y');
@@ -923,11 +923,11 @@ doengrave()
             }
         }
 
-        if (c == 'n' || Blind) {
+        if (c == 'n' || youCannotSee()) {
             if (oep->engr_type == DUST
                 || oep->engr_type == ENGR_BLOOD
                 || oep->engr_type == MARK) {
-                if (!Blind) {
+                if (youCanSee()) {
                     You("wipe out the message that was %s here.",
                         (oep->engr_type == DUST)
                             ? "written in the dust"
@@ -948,7 +948,7 @@ doengrave()
                     surface(currentX(), currentY()));
                 return 1;
             } else if (type != oep->engr_type || c == 'n') {
-                if (!Blind || can_reach_floor(TRUE))
+                if (youCanSee() || can_reach_floor(TRUE))
                     You("will overwrite the current message.");
                 eow = TRUE;
             }
@@ -1006,7 +1006,7 @@ doengrave()
 
     if (len == 0 || index(ebuf, '\033')) {
         if (zapwand) {
-            if (!Blind)
+            if (youCanSee())
                 pline("%s, then %s.", Tobjnam(otmp, "glow"),
                       otense(otmp, "fade"));
             return 1;
@@ -1027,7 +1027,7 @@ doengrave()
         if (*sp == ' ')
             continue;
         if (((type == DUST || type == ENGR_BLOOD) && !rn2(25))
-            || (Blind && !rn2(11)) || (youAreConfused() && !rn2(7))
+            || (youCannotSee() && !rn2(11)) || (youAreConfused() && !rn2(7))
             || (youAreStunned() && !rn2(4)) || (Hallucination && !rn2(2)))
             *sp = ' ' + rnd(96 - 2); /* ASCII '!' thru '~'
                                         (excludes ' ' and DEL) */
@@ -1134,7 +1134,7 @@ doengrave()
     if (doblind && !resists_blnd(&youmonst)) {
         You("are blinded by the flash!");
         make_blinded((long) rnd(50), FALSE);
-        if (!Blind)
+        if (youCanSee())
             Your1(vision_clears);
     }
     return 1;

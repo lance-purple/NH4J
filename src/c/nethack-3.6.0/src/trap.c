@@ -272,7 +272,7 @@ int ef_flags;
         if (flags.verbose && print) {
             if (victim == &youmonst)
                 Your("%s %s completely %s.", ostr,
-                     vtense(ostr, Blind ? "feel" : "look"), msg[type]);
+                     vtense(ostr, youCannotSee() ? "feel" : "look"), msg[type]);
             else if (vismon)
                 pline("%s %s %s completely %s.", s_suffix(Monnam(victim)),
                       ostr, vtense(ostr, "look"), msg[type]);
@@ -459,7 +459,7 @@ boolean td; /* td == TRUE : trap door or hole */
 
     /* we'll fall even while levitating in Sokoban; otherwise, if we
        won't fall and won't be told that we aren't falling, give up now */
-    if (Blind && Levitation && !Sokoban)
+    if (youCannotSee() && Levitation && !Sokoban)
         return;
 
     bottom = levelsInCurrentDungeon();
@@ -683,7 +683,7 @@ int *fail_reason;
     } else { /* cause == ANIMATE_NORMAL */
         You("find %s posing as a statue.",
             canspotmon(mon) ? a_monnam(mon) : something);
-        if (!canspotmon(mon) && Blind)
+        if (!canspotmon(mon) && youCannotSee())
             map_invisible(x, y);
         stop_occupation();
     }
@@ -881,7 +881,7 @@ unsigned trflags;
             obfree(otmp, (struct obj *) 0);
         } else {
             place_object(otmp, currentX(), currentY());
-            if (!Blind)
+            if (youCanSee())
                 otmp->dknown = 1;
             stackobj(otmp);
             newsym(currentX(), currentY());
@@ -915,7 +915,7 @@ unsigned trflags;
             obfree(otmp, (struct obj *) 0);
         } else {
             place_object(otmp, currentX(), currentY());
-            if (!Blind)
+            if (youCanSee())
                 otmp->dknown = 1;
             stackobj(otmp);
             newsym(currentX(), currentY());
@@ -949,7 +949,7 @@ unsigned trflags;
                 }
             }
 
-            if (!Blind)
+            if (youCanSee())
                 otmp->dknown = 1;
             stackobj(otmp);
             newsym(currentX(), currentY()); /* map the rock */
@@ -961,7 +961,7 @@ unsigned trflags;
 
     case SQKY_BOARD: /* stepped on a squeaky board */
         if ((Levitation || Flying) && !forcetrap) {
-            if (!Blind) {
+            if (youCanSee()) {
                 seetrap(trap);
                 if (Hallucination)
                     You("notice a crease in the linoleum.");
@@ -2624,7 +2624,7 @@ register struct monst *mtmp;
             }
             break;
         case VIBRATING_SQUARE:
-            if (see_it && !Blind) {
+            if (see_it && youCanSee()) {
                 if (in_sight)
                     pline("You see a strange vibration beneath %s %s.",
                           s_suffix(mon_nam(mtmp)),
@@ -2982,7 +2982,7 @@ STATIC_OVL void
 dofiretrap(box)
 struct obj *box; /* null for floor trap */
 {
-    boolean see_it = !Blind;
+    boolean see_it = youCanSee();
     int num, alt;
 
     /* Bug: for box case, the equivalent of burn_floor_objects() ought
@@ -3066,9 +3066,9 @@ domagictrap()
         if (!resists_blnd(&youmonst)) {
             You("are momentarily blinded by a flash of light!");
             make_blinded((long) rn1(5, 10), FALSE);
-            if (!Blind)
+            if (youCanSee())
                 Your1(vision_clears);
-        } else if (!Blind) {
+        } else if (youCanSee()) {
             You_see("a flash of light!");
         } else
             You_hear("a deafening roar!");
@@ -3167,7 +3167,7 @@ xchar x, y;
 {
     int chance;
     struct obj *otmp, *ncobj;
-    int in_sight = !Blind && couldsee(x, y); /* Don't care if it's lit */
+    int in_sight = youCanSee() && couldsee(x, y); /* Don't care if it's lit */
     int dindx;
 
     /* object might light in a controlled manner */
@@ -3263,7 +3263,7 @@ xchar x, y;
             ++num;
     }
 
-    if (num && (Blind && !couldsee(x, y)))
+    if (num && (youCannotSee() && !couldsee(x, y)))
         You("smell smoke.");
     return num;
 }
@@ -3290,7 +3290,7 @@ struct obj *obj;
             && obj->otyp != SCR_MAIL
 #endif
             ) {
-            if (!Blind) {
+            if (youCanSee()) {
                 if (victim == &youmonst)
                     pline("Your %s.", aobjnam(obj, "fade"));
                 else if (vismon)
@@ -3398,7 +3398,7 @@ boolean force;
             boolean one = (obj->quan == 1L), update = carried(obj),
                     exploded = FALSE;
 
-            if (Blind && !carried(obj))
+            if (youCannotSee() && !carried(obj))
                 obj->dknown = 0;
             if (acid_ctx.ctx_valid)
                 exploded = ((obj->dknown ? acid_ctx.dkn_boom
@@ -3741,7 +3741,7 @@ struct trap *ttmp;
         chance = 30;
     if (youAreConfused() || Hallucination)
         chance++;
-    if (Blind)
+    if (youCannotSee())
         chance++;
     if (youAreStunned())
         chance += 2;
@@ -4344,7 +4344,7 @@ boolean force;
 
     switch (levl[x][y].doormask) {
     case D_NODOOR:
-        You("%s no door there.", Blind ? "feel" : "see");
+        You("%s no door there.", youCannotSee() ? "feel" : "see");
         return 0;
     case D_ISOPEN:
         pline("This door is safely open.");
@@ -4701,7 +4701,7 @@ boolean disarm;
         case 1:
         case 0:
             pline("A cloud of %s gas billows from %s.",
-                  Blind ? blindgas[rn2(SIZE(blindgas))] : rndcolor(),
+                  youCannotSee() ? blindgas[rn2(SIZE(blindgas))] : rndcolor(),
                   the(xname(obj)));
             if (!youAreStunned()) {
                 if (Hallucination)
@@ -4709,7 +4709,7 @@ boolean disarm;
                 else
                     You("%s%s...", stagger(youmonst.data, "stagger"),
                         Halluc_resistance ? ""
-                                          : Blind ? " and get dizzy"
+                                          : youCannotSee() ? " and get dizzy"
                                                   : " and your vision blurs");
             }
             make_stunned(yourIntrinsicTimeout(STUNNED) + (long) rn1(7, 16), FALSE);
@@ -5044,7 +5044,7 @@ lava_effects()
         for (obj = invent; obj; obj = obj2) {
             obj2 = obj->nobj;
             /* above, we set in_use for objects which are to be destroyed */
-            if (obj->otyp == SPE_BOOK_OF_THE_DEAD && !Blind) {
+            if (obj->otyp == SPE_BOOK_OF_THE_DEAD && youCanSee()) {
                 if (usurvive)
                     pline("%s glows a strange %s, but remains intact.",
                           The(xname(obj)), hcolor("dark red"));

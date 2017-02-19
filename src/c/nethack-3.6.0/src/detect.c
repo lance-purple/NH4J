@@ -910,7 +910,7 @@ struct obj **optr;
     int oops;
     struct obj *obj = *optr;
 
-    if (Blind) {
+    if (youCannotSee()) {
         pline("Too bad you can't see %s.", the(xname(obj)));
         return;
     }
@@ -927,8 +927,8 @@ struct obj **optr;
         case 3:
             if (!resists_blnd(&youmonst)) {
                 pline("%s your vision!", Tobjnam(obj, "damage"));
-                make_blinded((Blinded & TIMEOUT) + (long) rnd(100), FALSE);
-                if (!Blind)
+                make_blinded(yourIntrinsicTimeout(BLINDED) + (long) rnd(100), FALSE);
+                if (youCanSee())
                     Your1(vision_clears);
             } else {
                 pline("%s your vision.", Tobjnam(obj, "assault"));
@@ -1278,7 +1278,7 @@ openit()
 
     if (swallowed()) {
         if (is_animal(u.ustuck->data)) {
-            if (Blind)
+            if (youCannotSee())
                 pline("Its mouth opens!");
             else
                 pline("%s opens its mouth!", Monnam(u.ustuck));
@@ -1350,7 +1350,7 @@ register int aflag; /* intrinsic autosearch vs explicit searching */
         int fund = (uwep && uwep->oartifact
                     && spec_ability(uwep, SPFX_SEARCH)) ? uwep->spe : 0;
 
-        if (ublindf && ublindf->otyp == LENSES && !Blind)
+        if (ublindf && ublindf->otyp == LENSES && youCanSee())
             fund += 2; /* JDS: lenses help searching */
         if (fund > 5)
             fund = 5;
@@ -1361,7 +1361,7 @@ register int aflag; /* intrinsic autosearch vs explicit searching */
                 if (x == currentX() && y == currentY())
                     continue;
 
-                if (Blind && !aflag)
+                if (youCannotSee() && !aflag)
                     feel_location(x, y);
                 if (levl[x][y].typ == SDOOR) {
                     if (rnl(7 - fund))
@@ -1417,10 +1417,10 @@ register int aflag; /* intrinsic autosearch vs explicit searching */
                         }
                     }
 
-                    /* see if an invisible monster has moved--if Blind,
+                    /* see if an invisible monster has moved--if blind,
                      * feel_location() already did it
                      */
-                    if (!aflag && !mtmp && !Blind
+                    if (!aflag && !mtmp && youCanSee()
                         && glyph_is_invisible(levl[x][y].glyph)) {
                         unmap_object(x, y);
                         newsym(x, y);

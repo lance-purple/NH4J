@@ -351,7 +351,7 @@ char c;
         str = "lawful";
         break;
     case 'x':
-        str = Blind ? "sense" : "see";
+        str = youCannotSee() ? "sense" : "see";
         break;
     case 'Z':
         str = dungeons[0].dname;

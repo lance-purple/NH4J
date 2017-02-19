@@ -436,7 +436,7 @@ struct obj *scroll;
     }
 
     /* don't show trap if "Sorry..." */
-    if (!Blinded)
+    if (!youAreTemporarilyBlinded())
         make_blinded(0L, FALSE);
 
     if ((haveSpecialItem(SPECIAL_ITEM_AMULET) || areYouOnAWizardTowerLevel()) && !rn2(3)) {
@@ -887,7 +887,7 @@ struct trap *trap;
         You_feel("a wrenching sensation.");
         return;
     }
-    if (!Blind)
+    if (youCanSee())
         You("are momentarily blinded by a flash of light.");
     else
         You("are momentarily disoriented.");

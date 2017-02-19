@@ -571,7 +571,7 @@ intervene()
         You_feel("vaguely nervous.");
         break;
     case 2:
-        if (!Blind)
+        if (youCanSee())
             You("notice a %s glow surrounding you.", hcolor(NH_BLACK));
         rndcurse();
         break;

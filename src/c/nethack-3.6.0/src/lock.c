@@ -404,9 +404,9 @@ struct obj *pick;
         }
         if (!IS_DOOR(door->typ)) {
             if (is_drawbridge_wall(cc.x, cc.y) >= 0)
-                You("%s no lock on the drawbridge.", Blind ? "feel" : "see");
+                You("%s no lock on the drawbridge.", youCannotSee() ? "feel" : "see");
             else
-                You("%s no door there.", Blind ? "feel" : "see");
+                You("%s no door there.", youCannotSee() ? "feel" : "see");
             return PICKLOCK_LEARNED_SOMETHING;
         }
         switch (door->doormask) {
@@ -593,7 +593,7 @@ int x, y;
 
     door = &levl[cc.x][cc.y];
     portcullis = (is_drawbridge_wall(cc.x, cc.y) >= 0);
-    if (Blind) {
+    if (youCannotSee()) {
         int oldglyph = door->glyph;
         schar oldlastseentyp = lastseentyp[cc.x][cc.y];
 
@@ -610,7 +610,7 @@ int x, y;
         else if (portcullis || door->typ == DRAWBRIDGE_DOWN)
             pline_The("drawbridge is already open.");
         else
-            You("%s no door there.", Blind ? "feel" : "see");
+            You("%s no door there.", youCannotSee() ? "feel" : "see");
         return res;
     }
 
@@ -736,7 +736,7 @@ doclose()
 
     door = &levl[x][y];
     portcullis = (is_drawbridge_wall(x, y) >= 0);
-    if (Blind) {
+    if (youCannotSee()) {
         int oldglyph = door->glyph;
         schar oldlastseentyp = lastseentyp[x][y];
 
@@ -753,7 +753,7 @@ doclose()
             There("is no obvious way to close the drawbridge.");
         else {
         nodoor:
-            You("%s no door there.", Blind ? "feel" : "see");
+            You("%s no door there.", youCannotSee() ? "feel" : "see");
         }
         return res;
     }
@@ -1001,17 +1001,17 @@ struct obj *otmp;
     long save_Blinded;
 
     if (otmp->oclass == POTION_CLASS) {
-        You("%s %s shatter!", Blind ? "hear" : "see", an(bottlename()));
+        You("%s %s shatter!", youCannotSee() ? "hear" : "see", an(bottlename()));
         if (!breathless(youmonst.data) || haseyes(youmonst.data))
             potionbreathe(otmp);
         return;
     }
     /* We have functions for distant and singular names, but not one */
     /* which does _both_... */
-    save_Blinded = Blinded;
-    Blinded = 1;
+    save_Blinded = yourIntrinsic(BLINDED);
+    setYourIntrinsic(BLINDED, 1L);
     thing = singular(otmp, xname);
-    Blinded = save_Blinded;
+    setYourIntrinsic(BLINDED, save_Blinded);
     switch (objects[otmp->otyp].oc_material) {
     case PAPER:
         disposition = "is torn to shreds";

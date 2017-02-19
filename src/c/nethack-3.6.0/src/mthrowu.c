@@ -54,13 +54,13 @@ const char *name; /* if null, then format `obj' */
     is_acid = (obj && obj->otyp == ACID_VENOM);
 
     if (armorClass() + tlev <= rnd(20)) {
-        if (Blind || !flags.verbose)
+        if (youCannotSee() || !flags.verbose)
             pline("It misses.");
         else
             You("are almost hit by %s.", onm);
         return 0;
     } else {
-        if (Blind || !flags.verbose)
+        if (youCannotSee() || !flags.verbose)
             You("are hit%s", exclam(dam));
         else
             You("are hit by %s%s", onm, exclam(dam));
@@ -359,7 +359,7 @@ struct obj *obj;         /* missile (or stack providing it) */
                 break;
             }
             if (singleobj->oclass == POTION_CLASS) {
-                if (!Blind)
+                if (youCanSee())
                     singleobj->dknown = 1;
                 potionhit(&youmonst, singleobj, FALSE);
                 break;
@@ -416,7 +416,7 @@ struct obj *obj;         /* missile (or stack providing it) */
                                  singleobj)) {
                 blindinc = rnd(25);
                 if (singleobj->otyp == CREAM_PIE) {
-                    if (!Blind)
+                    if (youCanSee())
                         pline("Yecch!  You've been creamed.");
                     else
                         pline("There's %s sticky all over your %s.",
@@ -427,7 +427,7 @@ struct obj *obj;         /* missile (or stack providing it) */
                     if (eyecount(youmonst.data) != 1)
                         eyes = makeplural(eyes);
                     /* venom in the eyes */
-                    if (!Blind)
+                    if (youCanSee())
                         pline_The("venom blinds you.");
                     else
                         Your("%s %s.", eyes, vtense(eyes, "sting"));
@@ -471,8 +471,8 @@ struct obj *obj;         /* missile (or stack providing it) */
 
     if (blindinc) {
         increaseCreamed(blindinc);
-        make_blinded(Blinded + (long) blindinc, FALSE);
-        if (!Blind)
+        make_blinded(yourIntrinsic(BLINDED) + (long) blindinc, FALSE);
+        if (youCanSee())
             Your1(vision_clears);
     }
 }

@@ -70,7 +70,7 @@ char *outbuf;
         Sprintf(race, "%s ", urace.adj);
     Sprintf(outbuf, "%s%s%s called %s",
             /* being blinded may hide invisibility from self */
-            (Invis && (senseself() || !Blind)) ? "invisible " : "", race,
+            (Invis && (senseself() || youCanSee())) ? "invisible " : "", race,
             mons[currentMonsterNumber()].mname, plname);
     if (u.usteed)
         Sprintf(eos(outbuf), ", mounted on %s", y_monnam(u.usteed));
@@ -110,7 +110,7 @@ struct obj **obj_p;
             otmp->corpsenm = MCORPSENM(mtmp);
     }
     /* if located at adjacent spot, mark it as having been seen up close */
-    if (otmp && distanceSquaredToYou(x, y) <= 2 && !Blind && !Hallucination)
+    if (otmp && distanceSquaredToYou(x, y) <= 2 && youCanSee() && !Hallucination)
         otmp->dknown = 1;
 
     *obj_p = otmp;
@@ -278,7 +278,7 @@ char *buf, *monbuf;
            (even if you could also see yourself via other means).
            Sensing self while blind or swallowed is treated as if it
            were by normal vision (cf canseeself()). */
-        if ((Invisible || lurking()) && !Blind && !swallowed()) {
+        if ((Invisible || lurking()) && youCanSee() && !swallowed()) {
             unsigned how = 0;
 
             if (Infravision)
@@ -301,7 +301,7 @@ char *buf, *monbuf;
     } else if (swallowed()) {
         /* all locations when swallowed other than the hero are the monster */
         Sprintf(buf, "interior of %s",
-                Blind ? "a monster" : a_monnam(u.ustuck));
+                youCannotSee() ? "a monster" : a_monnam(u.ustuck));
         pm = u.ustuck->data;
     } else if (glyph_is_monster(glyph)) {
         bhitpos.x = x;

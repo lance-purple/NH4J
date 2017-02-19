@@ -175,7 +175,7 @@ slime_dialogue()
 
         if (index(buf, '%')) {
             if (i == 4L) {  /* "you are turning green" */
-                if (!Blind) /* [what if you're already green?] */
+                if (youCanSee()) /* [what if you're already green?] */
                     pline(buf, hcolor(NH_GREEN));
             } else
                 pline(buf,
@@ -258,7 +258,7 @@ nh_timeout()
             setProtectionSpellPointCountdown(protectionSpellPointDuration());
             decreaseArmorBonusFromProtectionSpell(1);
             find_ac();
-            if (!Blind)
+            if (youCanSee())
                 Norep("The %s haze around you %s.", hcolor(NH_GOLDEN),
                       armorBonusFromProtectionSpell() ? "becomes less dense" : "disappears");
         }
@@ -346,7 +346,7 @@ nh_timeout()
             case BLINDED:
                 setYourIntrinsicTimeout(BLINDED, 1L);
                 make_blinded(0L, TRUE);
-                if (!Blind)
+                if (youCanSee())
                     stop_occupation();
                 break;
             case DEAF:
@@ -357,7 +357,7 @@ nh_timeout()
                 break;
             case INVIS:
                 newsym(currentX(), currentY());
-                if (!Invis && !BInvis && !Blind) {
+                if (!Invis && !BInvis && youCanSee()) {
                     You(!See_invisible
                             ? "are no longer invisible."
                             : "can no longer see through yourself.");
@@ -715,7 +715,7 @@ slip_or_trip()
         what = (iflags.last_msg == PLNMSG_ONE_ITEM_HERE)
                 ? ((otmp->quan == 1L) ? "it"
                       : Hallucination ? "they" : "them")
-                : (otmp->dknown || !Blind)
+                : (otmp->dknown || youCanSee())
                       ? doname(otmp)
                       : ((otmp2 = sobj_at(ROCK, currentX(), currentY())) == 0
                              ? something
@@ -864,7 +864,7 @@ long timeout;
 
     /* only interested in INVENT, FLOOR, and MINVENT */
     if (get_obj_location(obj, &x, &y, 0)) {
-        canseeit = !Blind && cansee(x, y);
+        canseeit = youCanSee() && cansee(x, y);
         /* set `whose[]' to be "Your " or "Fred's " or "The goblin's " */
         (void) Shk_Your(whose, obj);
     } else {
@@ -1047,7 +1047,7 @@ long timeout;
                     /* post message */
                     pline(Hallucination
                               ? (many ? "They shriek!" : "It shrieks!")
-                              : Blind ? "" : (many ? "Their flames die."
+                              : youCannotSee() ? "" : (many ? "Their flames die."
                                                    : "Its flame dies."));
                 }
             }

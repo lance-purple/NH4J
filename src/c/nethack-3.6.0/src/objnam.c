@@ -211,10 +211,10 @@ char *FDECL((*func), (OBJ_P));
 {
     char *str;
 
-    long save_Blinded = Blinded;
-    Blinded = 1;
+    long save_Blinded = yourIntrinsic(BLINDED);
+    setYourIntrinsic(BLINDED, 1);
     str = (*func)(obj);
-    Blinded = save_Blinded;
+    setYourIntrinsic(BLINDED, save_Blinded);
     return str;
 }
 
@@ -271,7 +271,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
      */
     if (!nn && ocl->oc_uses_known && ocl->oc_unique)
         obj->known = 0;
-    if (!Blind)
+    if (youCanSee())
         obj->dknown = TRUE;
     if (Role_if(PM_PRIEST))
         obj->bknown = TRUE;
@@ -960,7 +960,7 @@ boolean with_price;
             if (warn_obj_cnt && obj == uwep && (EWarn_of_mon & W_WEP) != 0L) {
                 /* presumably can be felt when blind */
                 Strcat(bp, " (glowing");
-                if (!Blind)
+                if (youCanSee())
                     Sprintf(eos(bp), " %s", glow_color(obj->oartifact));
                 Strcat(bp, ")");
             }

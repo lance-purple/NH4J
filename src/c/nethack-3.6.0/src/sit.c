@@ -226,7 +226,7 @@ dosit()
                 verbalize(
                  "A curse upon thee for sitting upon this most holy throne!");
                 if (currentLuckWithBonus() > 0) {
-                    make_blinded(Blinded + rn1(100, 250), TRUE);
+                    make_blinded(yourIntrinsic(BLINDED) + rn1(100, 250), TRUE);
                 } else
                     rndcurse();
                 break;
@@ -377,7 +377,7 @@ rndcurse()
             unbless(otmp);
         else
             curse(otmp);
-        if (!Blind) {
+        if (youCanSee()) {
             pline("%s %s.", Yobjnam2(otmp, "glow"),
                   hcolor(otmp->cursed ? NH_BLACK : (const char *) "brown"));
             otmp->bknown = TRUE;
@@ -411,7 +411,7 @@ attrcurse()
     case 4:
         if (HTelepat & INTRINSIC) {
             HTelepat &= ~INTRINSIC;
-            if (Blind && !Blind_telepat)
+            if (youCannotSee() && !Blind_telepat)
                 see_monsters(); /* Can't sense mons anymore! */
             Your("senses fail!");
             break;

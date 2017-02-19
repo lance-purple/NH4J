@@ -1151,7 +1151,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
     boolean youdefend = (mdef == &youmonst);
     boolean vis = (!youattack && magr && cansee(magr->mx, magr->my))
                   || (!youdefend && cansee(mdef->mx, mdef->my))
-                  || (youattack && swallowed() && mdef == u.ustuck && !Blind);
+                  || (youattack && swallowed() && mdef == u.ustuck && youCanSee());
     boolean realizes_damage;
     const char *wepdesc;
     static const char you[] = "you";
@@ -1362,7 +1362,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
         } else { /* youdefend */
             int oldhpmax = maximumHitPoints();
 
-            if (Blind)
+            if (youCannotSee())
                 You_feel("an %s drain your %s!",
                          (otmp->oartifact == ART_STORMBRINGER)
                             ? "unholy blade"
@@ -1447,7 +1447,7 @@ struct obj *obj;
 
             if (areYouPolymorphed())
                 healamt = (maximumHitPointsAsMonster() + 1 - currentHitPointsAsMonster()) / 2;
-            if (healamt || Sick || Slimed || Blinded > creamed())
+            if (healamt || Sick || Slimed || yourIntrinsic(BLINDED) > creamed())
                 You_feel("better.");
             else
                 goto nothing_special;
@@ -1461,7 +1461,7 @@ struct obj *obj;
                 make_sick(0L, (char *) 0, FALSE, SICK_ALL);
             if (Slimed)
                 make_slimed(0L, (char *) 0);
-            if (Blinded > creamed())
+            if (yourIntrinsic(BLINDED) > creamed())
                 make_blinded(creamed(), FALSE);
             context.botl = 1;
             break;
@@ -1556,7 +1556,7 @@ struct obj *obj;
                 || newlev.dnum == currentDungeonNumber() || !next_to_u()) {
                 You_feel("very disoriented for a moment.");
             } else {
-                if (!Blind)
+                if (youCanSee())
                     You("are surrounded by a shimmering sphere!");
                 else
                     You_feel("weightless for a moment.");
@@ -1632,7 +1632,7 @@ struct obj *obj;
                 (void) float_down(I_SPECIAL | TIMEOUT, W_ARTI);
             break;
         case INVIS:
-            if (BInvis || Blind)
+            if (BInvis || youCannotSee())
                 goto nothing_special;
             newsym(currentX(), currentY());
             if (on)
@@ -1854,10 +1854,10 @@ int orc_count; /* new count (warn_obj_cnt is old count); -1 is a flag value */
             /* -1 means that blindness has just been toggled; give a
                'continue' message that eventual 'stop' message will match */
             pline("%s is %s.", bare_artifactname(uwep),
-                  !Blind ? "glowing" : "quivering");
+                  youCanSee() ? "glowing" : "quivering");
         } else if (orc_count > 0 && warn_obj_cnt == 0) {
             /* 'start' message */
-            if (!Blind)
+            if (youCanSee())
                 pline("%s %s %s!", bare_artifactname(uwep),
                       otense(uwep, "glow"), glow_color(uwep->oartifact));
             else
@@ -1865,7 +1865,7 @@ int orc_count; /* new count (warn_obj_cnt is old count); -1 is a flag value */
         } else if (orc_count == 0 && warn_obj_cnt > 0) {
             /* 'stop' message */
             pline("%s stops %s.", bare_artifactname(uwep),
-                  !Blind ? "glowing" : "quivering");
+                  youCanSee() ? "glowing" : "quivering");
         }
     }
 }

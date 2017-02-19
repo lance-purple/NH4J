@@ -496,7 +496,7 @@ void
 feel_newsym(x, y)
 xchar x, y;
 {
-    if (Blind)
+    if (youCannotSee())
         feel_location(x, y);
     else
         newsym(x, y);
@@ -1104,7 +1104,7 @@ int mode;
     for (x = currentX() - 1; x <= currentX() + 1; x++)
         for (y = currentY() - 1; y <= currentY() + 1; y++)
             if (isok(x, y) && is_pool(x, y)) {
-                if (Blind && !(x == currentX() && y == currentY()))
+                if (youCannotSee() && !(x == currentX() && y == currentY()))
                     show_glyph(x, y, cmap_to_glyph(S_stone));
                 else
                     newsym(x, y);

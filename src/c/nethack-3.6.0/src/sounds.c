@@ -996,7 +996,7 @@ dochat()
         return 0;
     }
 
-    if (!Blind && (otmp = shop_object(currentX(), currentY())) != (struct obj *) 0) {
+    if (youCanSee() && (otmp = shop_object(currentX(), currentY())) != (struct obj *) 0) {
         /* standing on something in a shop and chatting causes the shopkeeper
            to describe the price(s).  This can inhibit other chatting inside
            a shop, but that shouldn't matter much.  shop_object() returns an
@@ -1052,7 +1052,7 @@ dochat()
     if ((!mtmp || mtmp->mundetected)
         && (otmp = vobj_at(tx, ty)) != 0 && otmp->otyp == STATUE) {
         /* Talking to a statue */
-        if (!Blind) {
+        if (youCanSee()) {
             pline_The("%s seems not to notice you.",
                       /* if hallucinating, you can't tell it's a statue */
                       Hallucination ? rndmonnam((char *) 0) : "statue");

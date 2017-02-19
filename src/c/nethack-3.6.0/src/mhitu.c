@@ -38,7 +38,7 @@ register struct attack *mattk;
     /* If same gender, "engagingly" for nymph, normal msg for others */
     if ((compat = could_seduce(mtmp, &youmonst, mattk)) && !mtmp->mcan
         && !mtmp->mspec_used) {
-        pline("%s %s you %s.", Monnam(mtmp), Blind ? "talks to" : "smiles at",
+        pline("%s %s you %s.", Monnam(mtmp), youCannotSee() ? "talks to" : "smiles at",
               compat == 2 ? "engagingly" : "seductively");
     } else
         switch (mattk->aatyp) {
@@ -95,7 +95,7 @@ mswings(mtmp, otemp)
 struct monst *mtmp;
 struct obj *otemp;
 {
-    if (flags.verbose && !Blind && mon_visible(mtmp)) {
+    if (flags.verbose && youCanSee() && mon_visible(mtmp)) {
         pline("%s %s %s%s %s.", Monnam(mtmp),
               (objects[otemp->otyp].oc_dir & PIERCE) ? "thrusts" : "swings",
               (otemp->quan > 1L) ? "one of " : "", mhis(mtmp), xname(otemp));
@@ -861,12 +861,12 @@ register struct attack *mattk;
      */
     if (mtmp->mundetected && (hides_under(mdat) || mdat->mlet == S_EEL)) {
         mtmp->mundetected = 0;
-        if (!(Blind ? Blind_telepat : Unblind_telepat)) {
+        if (!(youCannotSee() ? Blind_telepat : Unblind_telepat)) {
             struct obj *obj;
             const char *what;
 
             if ((obj = level.objects[mtmp->mx][mtmp->my]) != 0) {
-                if (Blind && !obj->dknown)
+                if (youCannotSee() && !obj->dknown)
                     what = something;
                 else if (is_pool(mtmp->mx, mtmp->my) && !underwater())
                     what = "the water";
@@ -1023,7 +1023,7 @@ register struct attack *mattk;
             if (youResistSleep())
                 break;
             fall_asleep(-rnd(10), TRUE);
-            if (Blind)
+            if (youCannotSee())
                 You("are put to sleep!");
             else
                 You("are put to sleep by %s!", mon_nam(mtmp));
@@ -1031,10 +1031,10 @@ register struct attack *mattk;
         break;
     case AD_BLND:
         if (can_blnd(mtmp, &youmonst, mattk->aatyp, (struct obj *) 0)) {
-            if (!Blind)
+            if (youCanSee())
                 pline("%s blinds you!", Monnam(mtmp));
-            make_blinded(Blinded + (long) dmg, FALSE);
-            if (!Blind)
+            make_blinded(yourIntrinsic(BLINDED) + (long) dmg, FALSE);
+            if (!yourIntrinsic(BLINDED))
                 Your1(vision_clears);
         }
         dmg = 0;
@@ -1095,7 +1095,7 @@ register struct attack *mattk;
             if (Free_action) {
                 You("momentarily stiffen.");
             } else {
-                if (Blind)
+                if (youCannotSee())
                     You("are frozen!");
                 else
                     You("are frozen by %s!", mon_nam(mtmp));
@@ -1265,7 +1265,7 @@ register struct attack *mattk;
                 (void) rloc(mtmp, TRUE);
             return 3;
         } else if (mtmp->mcan) {
-            if (!Blind) {
+            if (youCanSee()) {
                 pline("%s tries to %s you, but you seem %s.",
                       Adjmonnam(mtmp, "plain"),
                       flags.female ? "charm" : "seduce",
@@ -1413,7 +1413,7 @@ register struct attack *mattk;
             break;
         if (!mtmp->mcan && !rn2(10)) {
             if (!Deaf) {
-                if (Blind)
+                if (youCannotSee())
                     You_hear("laughter.");
                 else
                     pline("%s chuckles.", Monnam(mtmp));
@@ -1627,7 +1627,7 @@ gulp_blnd_check()
 {
     struct attack *mattk;
 
-    if (!Blinded && swallowed()
+    if (!youAreTemporarilyBlinded() && swallowed()
         && (mattk = attacktype_fordmg(u.ustuck->data, AT_ENGL, AD_BLND))
         && can_blnd(u.ustuck, &youmonst, mattk->aatyp, (struct obj *) 0)) {
         increaseTimeSinceBeingSwallowed(1); /* compensate for gulpmu change */
@@ -1791,16 +1791,16 @@ register struct attack *mattk;
         break;
     case AD_BLND:
         if (can_blnd(mtmp, &youmonst, mattk->aatyp, (struct obj *) 0)) {
-            if (!Blind) {
-                long was_blinded = Blinded;
-                if (!Blinded)
+            if (youCanSee()) {
+                long was_blinded = yourIntrinsic(BLINDED);
+                if (!was_blinded)
                     You_cant("see in here!");
                 make_blinded((long) tmp, FALSE);
-                if (!was_blinded && !Blind)
+                if (!was_blinded && !yourIntrinsic(BLINDED))
                     Your1(vision_clears);
             } else
                 /* keep him blind until disgorged */
-                make_blinded(Blinded + 1, FALSE);
+                make_blinded(yourIntrinsic(BLINDED) + 1, FALSE);
         }
         tmp = 0;
         break;
@@ -1939,7 +1939,7 @@ boolean ufound;
                 if (mon_visible(mtmp) || (rnd(tmp /= 2) > currentExperienceLevel())) {
                     You("are blinded by a blast of light!");
                     make_blinded((long) tmp, FALSE);
-                    if (!Blind)
+                    if (youCanSee())
                         Your1(vision_clears);
                 } else if (flags.verbose)
                     You("get the impression it was not terribly bright.");
@@ -1947,7 +1947,7 @@ boolean ufound;
             break;
 
         case AD_HALU:
-            not_affected |= Blind || (currentMonsterNumber() == PM_BLACK_LIGHT
+            not_affected |= youCannotSee() || (currentMonsterNumber() == PM_BLACK_LIGHT
                                       || currentMonsterNumber() == PM_VIOLET_FUNGUS
                                       || dmgtype(youmonst.data, AD_STUN));
             if (!not_affected) {
@@ -2110,7 +2110,7 @@ register struct attack *mattk;
                 /* not blind at this point implies you're wearing
                    the Eyes of the Overworld; make them block this
                    particular stun attack too */
-                if (!Blind)
+                if (youCanSee())
                     Your1(vision_clears);
                 else
                     make_stunned((long) d(1, 3), TRUE);
@@ -2274,7 +2274,7 @@ register struct monst *mon;
         return 0;
     }
 
-    if (Blind)
+    if (youCannotSee())
         pline("It caresses you...");
     else
         You_feel("very attracted to %s.", mon_nam(mon));
@@ -2306,7 +2306,7 @@ register struct monst *mon;
                     continue;
             } else
                 pline("%s decides she'd like %s, and takes it.",
-                      Blind ? "She" : Monnam(mon), yname(ring));
+                      youCannotSee() ? "She" : Monnam(mon), yname(ring));
             makeknown(RIN_ADORNMENT);
             if (ring == uleft || ring == uright)
                 Ring_gone(ring);
@@ -2340,27 +2340,27 @@ register struct monst *mon;
                     continue;
             } else {
                 pline("%s decides you'd look prettier wearing %s,",
-                      Blind ? "He" : Monnam(mon), yname(ring));
+                      youCannotSee() ? "He" : Monnam(mon), yname(ring));
                 pline("and puts it on your finger.");
             }
             makeknown(RIN_ADORNMENT);
             if (!uright) {
                 pline("%s puts %s on your right %s.",
-                      Blind ? "He" : Monnam(mon), the(xname(ring)),
+                      youCannotSee() ? "He" : Monnam(mon), the(xname(ring)),
                       body_part(HAND));
                 setworn(ring, RIGHT_RING);
             } else if (!uleft) {
                 pline("%s puts %s on your left %s.",
-                      Blind ? "He" : Monnam(mon), the(xname(ring)),
+                      youCannotSee() ? "He" : Monnam(mon), the(xname(ring)),
                       body_part(HAND));
                 setworn(ring, LEFT_RING);
             } else if (uright && uright->otyp != RIN_ADORNMENT) {
-                pline("%s replaces %s with %s.", Blind ? "He" : Monnam(mon),
+                pline("%s replaces %s with %s.", youCannotSee() ? "He" : Monnam(mon),
                       yname(uright), yname(ring));
                 Ring_gone(uright);
                 setworn(ring, RIGHT_RING);
             } else if (uleft && uleft->otyp != RIN_ADORNMENT) {
-                pline("%s replaces %s with %s.", Blind ? "He" : Monnam(mon),
+                pline("%s replaces %s with %s.", youCannotSee() ? "He" : Monnam(mon),
                       yname(uleft), yname(ring));
                 Ring_gone(uleft);
                 setworn(ring, LEFT_RING);
@@ -2373,10 +2373,10 @@ register struct monst *mon;
 
     if (!uarmc && !uarmf && !uarmg && !uarms && !uarmh && !uarmu)
         pline("%s murmurs sweet nothings into your ear.",
-              Blind ? (fem ? "She" : "He") : Monnam(mon));
+              youCannotSee() ? (fem ? "She" : "He") : Monnam(mon));
     else
         pline("%s murmurs in your ear, while helping you undress.",
-              Blind ? (fem ? "She" : "He") : Monnam(mon));
+              youCannotSee() ? (fem ? "She" : "He") : Monnam(mon));
     mayberem(uarmc, cloak_simple_name(uarmc));
     if (!uarmc)
         mayberem(uarm, "suit");
@@ -2485,7 +2485,7 @@ register struct monst *mon;
         ;
     else if (rn2(20) < ACURR(A_CHA)) {
         pline("%s demands that you pay %s, but you refuse...",
-              noit_Monnam(mon), Blind ? (fem ? "her" : "him") : mhim(mon));
+              noit_Monnam(mon), youCannotSee() ? (fem ? "her" : "him") : mhim(mon));
     } else if (currentMonsterNumber() == PM_LEPRECHAUN)
         pline("%s tries to take your money, but fails...", noit_Monnam(mon));
     else {
@@ -2652,7 +2652,7 @@ register struct attack *mattk;
                     tmp = 127;
                 if (mtmp->mcansee && haseyes(mtmp->data) && rn2(3)
                     && (perceives(mtmp->data) || !Invis)) {
-                    if (Blind)
+                    if (youCannotSee())
                         pline("As a blind %s, you cannot defend yourself.",
                               youmonst.data->mname);
                     else {

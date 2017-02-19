@@ -970,7 +970,7 @@ coord *cc;
         int xofs = nx;
         int yofs = ny;
         int dx,dy;
-        int bl = (in_mklev || Blind) ? 1 : 0;
+        int bl = (in_mklev || youCannotSee()) ? 1 : 0;
 
         for ( ; bl < 2; bl++) {
             for (dx = 0; dx < COLNO; dx++)

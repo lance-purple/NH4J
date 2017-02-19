@@ -118,7 +118,7 @@ struct obj *obj;
         } else {
             /* in case it was picked up while blind and then zapped without
                examining inventory after regaining sight (bypassing xname) */
-            if (!Blind)
+            if (youCanSee())
                 obj->dknown = 1;
             /* make the discovery iff we know what we're manipulating */
             if (obj->dknown)
@@ -273,7 +273,7 @@ struct obj *otmp;
         wake = FALSE; /* don't want immediate counterattack */
         if (swallowed() && mtmp == u.ustuck) {
             if (is_animal(mtmp->data)) {
-                if (Blind)
+                if (youCannotSee())
                     You_feel("a sudden rush of air!");
                 else
                     pline("%s opens its mouth!", Monnam(mtmp));
@@ -349,7 +349,7 @@ struct obj *otmp;
         reveal_invis = TRUE;
         if (sleep_monst(mtmp, d(1 + otmp->spe, 12), WAND_CLASS))
             slept_monst(mtmp);
-        if (!Blind)
+        if (youCanSee())
             learn_it = TRUE;
         break;
     case SPE_STONE_TO_FLESH:
@@ -1891,7 +1891,7 @@ struct obj *obj, *otmp;
                     if (Hallucination && !Deaf) {
                         You_hear("the sound of a defibrillator.");
                         learn_it = TRUE;
-                    } else if (!Blind) {
+                    } else if (youCanSee()) {
                         You("observe %s %s change dramatically.",
                             s_suffix(an(mons[corpsenm].mname)),
                             nonliving(&mons[corpsenm]) ? "motility"
@@ -2007,7 +2007,7 @@ register struct obj *obj;
     case WAN_LIGHT:
     case SPE_LIGHT:
         litroom(TRUE, obj);
-        if (!Blind)
+        if (youCanSee())
             known = TRUE;
         if (lightdamage(obj, TRUE, 5))
             known = TRUE;
@@ -2016,7 +2016,7 @@ register struct obj *obj;
     case SPE_DETECT_UNSEEN:
         if (!findit())
             return;
-        if (!Blind)
+        if (youCanSee())
             known = TRUE;
         break;
     case WAN_CREATE_MONSTER:
@@ -2086,7 +2086,7 @@ dozap()
         exercise(A_STR, FALSE);
         return 1;
     } else if (!(objects[obj->otyp].oc_dir == NODIR) && !getdir((char *) 0)) {
-        if (!Blind)
+        if (youCanSee())
             pline("%s glows and fades.", The(xname(obj)));
         /* make him pay for knowing !NODIR */
     } else if (!directionX() && !directionY() && !directionZ()
@@ -2232,7 +2232,7 @@ boolean ordinary;
         /* have to test before changing HInvis but must change
          * HInvis before doing newsym().
          */
-        int msg = !Invis && !Blind && !BInvis;
+        int msg = !Invis && youCanSee() && !BInvis;
 
         if (BInvis && uarmc->otyp == MUMMY_WRAPPING) {
             /* A mummy wrapping absorbs it and protects you */
@@ -2475,7 +2475,7 @@ long duration;
     if (!resists_blnd(&youmonst)) {
         You(are_blinded_by_the_flash);
         make_blinded(duration, FALSE);
-        if (!Blind)
+        if (youCanSee())
             Your1(vision_clears);
         return TRUE;
     }
@@ -2578,7 +2578,7 @@ boolean youattack, allow_cancel_kill, self_cancel;
     /* now handle special cases */
     if (youdefend) {
         if (areYouPolymorphed()) {
-            if ((currentMonsterNumber() == PM_CLAY_GOLEM) && !Blind)
+            if ((currentMonsterNumber() == PM_CLAY_GOLEM) && youCanSee())
                 pline(writing_vanishes, your);
 
             if (Unchanging)
@@ -2694,9 +2694,9 @@ struct obj *obj; /* wand or spell */
                 ; /* now stuck in web or bear trap */
             } else if (striking && ttmp->ttyp == TRAPDOOR) {
                 /* striking transforms trapdoor into hole */
-                if (Blind && !ttmp->tseen) {
+                if (youCannotSee() && !ttmp->tseen) {
                     pline("%s beneath you shatters.", Something);
-                } else if (!ttmp->tseen) { /* => !Blind */
+                } else if (!ttmp->tseen) { /* => youCanSee() */
                     pline("There's a trapdoor beneath you; it shatters.");
                 } else {
                     pline("The trapdoor beneath you shatters.");
@@ -2710,7 +2710,7 @@ struct obj *obj; /* wand or spell */
             } else if (!striking && ttmp->ttyp == HOLE) {
                 /* locking transforms hole into trapdoor */
                 ttmp->ttyp = TRAPDOOR;
-                if (Blind || !ttmp->tseen) {
+                if (youCannotSee() || !ttmp->tseen) {
                     pline("Some %s swirls beneath you.",
                           is_ice(x, y) ? "frost" : "dust");
                 } else {
@@ -3124,7 +3124,7 @@ struct obj **pobj; /* object tossed/used, set to NULL
         if (skiprange_start && (range == skiprange_start) && allow_skip) {
             if (is_pool(bhitpos.x, bhitpos.y) && !mtmp) {
                 in_skip = TRUE;
-                if (!Blind)
+                if (youCanSee())
                     pline("%s %s%s.", Yname2(obj), otense(obj, "skip"),
                           skipcount ? " again" : "");
                 else
@@ -3140,7 +3140,7 @@ struct obj **pobj; /* object tossed/used, set to NULL
                 if (range > 3) /* another bounce? */
                     skiprange(range, &skiprange_start, &skiprange_end);
             } else if (mtmp && M_IN_WATER(mtmp->data)) {
-                if ((!Blind && canseemon(mtmp)) || sensemon(mtmp))
+                if ((youCanSee() && canseemon(mtmp)) || sensemon(mtmp))
                     pline("%s %s over %s.", Yname2(obj), otense(obj, "pass"),
                           mon_nam(mtmp));
             }
@@ -3959,7 +3959,7 @@ register int dx, dy;
                 range -= 2;
                 pline("%s hits you!", The(fltxt));
                 if (Reflecting) {
-                    if (!Blind) {
+                    if (youCanSee()) {
                         (void) ureflects("But %s reflects from your %s!",
                                          "it");
                     } else
@@ -3970,7 +3970,7 @@ register int dx, dy;
                 } else {
                     zhitu(type, nd, fltxt, sx, sy);
                 }
-            } else if (!Blind) {
+            } else if (youCanSee()) {
                 pline("%s whizzes by you!", The(fltxt));
             } else if (abstype == ZT_LIGHTNING) {
                 Your("%s tingles.", body_part(ARM));
@@ -4422,7 +4422,7 @@ short exploding_wand_typ;
     if (OBJ_AT(x, y) && abstype == ZT_FIRE)
         if (burn_floor_objects(x, y, FALSE, type > 0) && couldsee(x, y)) {
             newsym(x, y);
-            You("%s of smoke.", !Blind ? "see a puff" : "smell a whiff");
+            You("%s of smoke.", youCanSee() ? "see a puff" : "smell a whiff");
         }
     if ((mon = m_at(x, y)) != 0) {
         /* Cannot use wakeup() which also angers the monster */
@@ -4572,7 +4572,7 @@ register int osym, dmgtyp;
                 skip++;
             if (obj->otyp == SPE_BOOK_OF_THE_DEAD) {
                 skip++;
-                if (!Blind)
+                if (youCanSee())
                     pline("%s glows a strange %s, but remains intact.",
                           The(xname(obj)), hcolor("dark red"));
             }

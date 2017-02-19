@@ -517,7 +517,7 @@ const char *drop_fmt, *drop_arg, *hold_msg;
 {
     char buf[BUFSZ];
 
-    if (!Blind)
+    if (youCanSee())
         obj->dknown = 1; /* maximize mergibility */
     if (obj->oartifact) {
         /* place_object may change these */
@@ -1852,7 +1852,7 @@ learn_unseen_invent()
 {
     struct obj *otmp;
 
-    if (Blind)
+    if (youCannotSee())
         return; /* sanity check */
 
     for (otmp = invent; otmp; otmp = otmp->nobj) {
@@ -2681,7 +2681,7 @@ boolean picked_some;
 {
     struct obj *otmp;
     struct trap *trap;
-    const char *verb = Blind ? "feel" : "see";
+    const char *verb = youCannotSee() ? "feel" : "see";
     const char *dfeature = (char *) 0;
     char fbuf[BUFSZ], fbuf2[BUFSZ];
     winid tmpwin;
@@ -2695,7 +2695,7 @@ boolean picked_some;
         Sprintf(fbuf, "Contents of %s %s", s_suffix(mon_nam(mtmp)),
                 mbodypart(mtmp, STOMACH));
         /* Skip "Contents of " by using fbuf index 12 */
-        You("%s to %s what is lying in %s.", Blind ? "try" : "look around",
+        You("%s to %s what is lying in %s.", youCannotSee() ? "try" : "look around",
             verb, &fbuf[12]);
         otmp = mtmp->minvent;
         if (otmp) {
@@ -2705,14 +2705,14 @@ boolean picked_some;
                 if (otmp->otyp == CORPSE)
                     feel_cockatrice(otmp, FALSE);
             }
-            if (Blind)
+            if (youCannotSee())
                 Strcpy(fbuf, "You feel");
             Strcat(fbuf, ":");
             (void) display_minventory(mtmp, MINV_ALL, fbuf);
         } else {
             You("%s no objects here.", verb);
         }
-        return !!Blind;
+        return !!youCannotSee();
     }
     if (!skip_objects && (trap = t_at(currentX(), currentY())) && trap->tseen)
         There("is %s here.",
@@ -2723,17 +2723,17 @@ boolean picked_some;
     if (dfeature && !strcmp(dfeature, "pool of water") && underwater())
         dfeature = 0;
 
-    if (Blind) {
+    if (youCannotSee()) {
         boolean drift = areYouOnAirLevel() || areYouOnWaterLevel();
 
         if (dfeature && !strncmp(dfeature, "altar ", 6)) {
             /* don't say "altar" twice, dfeature has more info */
             You("try to feel what is here.");
         } else {
-            const char *where = (Blind && !can_reach_floor(TRUE))
+            const char *where = (youCannotSee() && !can_reach_floor(TRUE))
                                     ? "lying beneath you"
                                     : "lying here on the ",
-                       *onwhat = (Blind && !can_reach_floor(TRUE))
+                       *onwhat = (youCannotSee() && !can_reach_floor(TRUE))
                                      ? ""
                                      : surface(currentX(), currentY());
 
@@ -2756,9 +2756,9 @@ boolean picked_some;
         if (dfeature)
             pline1(fbuf);
         read_engr_at(currentX(), currentY()); /* Eric Backus */
-        if (!skip_objects && (Blind || !dfeature))
+        if (!skip_objects && (youCannotSee() || !dfeature))
             You("%s no objects here.", verb);
-        return !!Blind;
+        return !!youCannotSee();
     }
     /* we know there is something here */
 
@@ -2811,7 +2811,7 @@ boolean picked_some;
         }
         Sprintf(buf, "%s that %s here:",
                 picked_some ? "Other things" : "Things",
-                Blind ? "you feel" : "are");
+                youCannotSee() ? "you feel" : "are");
         putstr(tmpwin, 0, buf);
         for (; otmp; otmp = otmp->nexthere) {
             if (otmp->otyp == CORPSE && will_feel_cockatrice(otmp, FALSE)) {
@@ -2828,7 +2828,7 @@ boolean picked_some;
             feel_cockatrice(otmp, FALSE);
         read_engr_at(currentX(), currentY()); /* Eric Backus */
     }
-    return !!Blind;
+    return !!youCannotSee();
 }
 
 /* the ':' command - explicitly look at what is here, including all objects */
@@ -2843,7 +2843,7 @@ will_feel_cockatrice(otmp, force_touch)
 struct obj *otmp;
 boolean force_touch;
 {
-    if ((Blind || force_touch) && !uarmg && !youResistStoning()
+    if ((youCannotSee() || force_touch) && !uarmg && !youResistStoning()
         && (otmp->otyp == CORPSE && touch_petrifies(&mons[otmp->corpsenm])))
         return TRUE;
     return FALSE;

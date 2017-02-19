@@ -333,7 +333,7 @@ int mechanism;
         /* deal with various things that prevent reading */
         if (is_fainted() && mechanism == BY_COOKIE)
             return;
-        else if (Blind) {
+        else if (youCannotSee()) {
             if (mechanism == BY_COOKIE)
                 pline(fortune_msg);
             pline("What a pity that you cannot read it!");

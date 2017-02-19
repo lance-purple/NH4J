@@ -114,7 +114,7 @@ struct obj *obj;
                 increaseCreamed(rn1(10, 3));
                 pline("Yecch! Your %s %s gunk on it!", body_part(FACE),
                       (old ? "has more" : "now has"));
-                make_blinded(Blinded + (long) creamed() - old, TRUE);
+                make_blinded(yourIntrinsic(BLINDED) + (long) creamed() - old, TRUE);
             } else {
                 const char *what;
 
@@ -147,12 +147,14 @@ struct obj *obj;
             dry_a_towel(obj, -1, drying_feedback);
         return 1;
     } else if (creamed()) {
-        Blinded -= creamed();
+        long updated = yourIntrinsic(BLINDED) - creamed();
+        setYourIntrinsic(BLINDED, updated);
+
         setCreamed(0);
-        if (!Blinded) {
+        if (!yourIntrinsic(BLINDED)) {
             pline("You've got the glop off.");
             if (!gulp_blnd_check()) {
-                Blinded = 1;
+                setYourIntrinsic(BLINDED, 1L);
                 make_blinded(0L, TRUE);
             }
         } else {
@@ -256,7 +258,7 @@ int rx, ry, *resp;
         const char *what, *how;
 
         mptr = &mons[statue->corpsenm];
-        if (Blind) { /* ignore statue->dknown; it'll always be set */
+        if (youCannotSee()) { /* ignore statue->dknown; it'll always be set */
             Sprintf(buf, "%s %s",
                     (rx == currentX() && ry == currentY()) ? "This" : "That",
                     humanoid(mptr) ? "person" : "creature");
@@ -783,11 +785,11 @@ struct obj *obj;
     if (!getdir((char *) 0))
         return 0;
     invis_mirror = Invis;
-    useeit = !Blind && (!invis_mirror || See_invisible);
+    useeit = youCanSee() && (!invis_mirror || See_invisible);
     uvisage = beautiful();
     mirror = simpleonames(obj); /* "mirror" or "looking glass" */
     if (obj->cursed && !rn2(2)) {
-        if (!Blind)
+        if (youCanSee())
             pline_The("%s fogs up and doesn't reflect!", mirror);
         return 1;
     }
@@ -918,7 +920,7 @@ struct obj *obj;
         if (vis)
             pline("%s is frightened by its reflection.", Monnam(mtmp));
         monflee(mtmp, d(2, 4), FALSE, FALSE);
-    } else if (!Blind) {
+    } else if (youCanSee()) {
         if (mtmp->minvis && !See_invisible)
             ;
         else if ((mtmp->minvis && !perceives(mtmp->data))
@@ -1084,7 +1086,7 @@ register struct obj *obj;
         return;
     }
     if (swallowed() || obj->cursed) {
-        if (!Blind)
+        if (youCanSee())
             pline_The("%s %s for a moment, then %s.", s, vtense(s, "flicker"),
                       vtense(s, "die"));
         return;
@@ -1092,12 +1094,12 @@ register struct obj *obj;
     if (obj->spe < 7) {
         There("%s only %d %s in %s.", vtense(s, "are"), obj->spe, s,
               the(xname(obj)));
-        if (!Blind)
+        if (youCanSee())
             pline("%s lit.  %s dimly.", obj->spe == 1 ? "It is" : "They are",
                   Tobjnam(obj, "shine"));
     } else {
         pline("%s's %s burn%s", The(xname(obj)), s,
-              (Blind ? "." : " brightly!"));
+              (youCannotSee() ? "." : " brightly!"));
     }
     if (!invocation_pos(currentX(), currentY()) || On_stairs(currentX(), currentY())) {
         pline_The("%s %s being rapidly consumed!", s, vtense(s, "are"));
@@ -1107,7 +1109,7 @@ register struct obj *obj;
         obj->age = (obj->age + 1L) / 2L;
     } else {
         if (obj->spe == 7) {
-            if (Blind)
+            if (youCannotSee())
                 pline("%s a strange warmth!", Tobjnam(obj, "radiate"));
             else
                 pline("%s with a strange light!", Tobjnam(obj, "glow"));
@@ -1199,7 +1201,7 @@ struct obj *otmp;
         boolean many = candle ? (otmp->quan > 1L) : (otmp->spe > 1);
 
         (void) get_obj_location(otmp, &x, &y, 0);
-        if (otmp->where == OBJ_MINVENT ? cansee(x, y) : !Blind)
+        if (otmp->where == OBJ_MINVENT ? cansee(x, y) : youCanSee())
             pline("%s%scandle%s flame%s extinguished.", Shk_Your(buf, otmp),
                   (candle ? "" : "candelabrum's "), (many ? "s'" : "'s"),
                   (many ? "s are" : " is"));
@@ -1222,7 +1224,7 @@ struct obj *obj;
         if (obj->otyp == OIL_LAMP || obj->otyp == MAGIC_LAMP
             || obj->otyp == BRASS_LANTERN || obj->otyp == POT_OIL) {
             (void) get_obj_location(obj, &x, &y, 0);
-            if (obj->where == OBJ_MINVENT ? cansee(x, y) : !Blind)
+            if (obj->where == OBJ_MINVENT ? cansee(x, y) : youCanSee())
                 pline("%s %s out!", Yname2(obj), otense(obj, "go"));
             end_burn(obj, TRUE);
             return TRUE;
@@ -1254,7 +1256,7 @@ struct obj *obj;
         if ((obj->otyp == OIL_LAMP || obj->otyp == MAGIC_LAMP
              || obj->otyp == BRASS_LANTERN) && obj->cursed && !rn2(2))
             return FALSE;
-        if (obj->where == OBJ_MINVENT ? cansee(x, y) : !Blind)
+        if (obj->where == OBJ_MINVENT ? cansee(x, y) : youCanSee())
             pline("%s %s light!", Yname2(obj), otense(obj, "catch"));
         if (obj->otyp == POT_OIL)
             makeknown(obj->otyp);
@@ -1301,7 +1303,7 @@ struct obj *obj;
         return;
     }
     if (obj->cursed && !rn2(2)) {
-        if (!Blind)
+        if (youCanSee())
             pline("%s for a moment, then %s.", Tobjnam(obj, "flicker"),
                   otense(obj, "die"));
     } else {
@@ -1311,7 +1313,7 @@ struct obj *obj;
             pline("%slamp is now on.", Shk_Your(buf, obj));
         } else { /* candle(s) */
             pline("%s flame%s %s%s", s_suffix(Yname2(obj)), plur(obj->quan),
-                  otense(obj, "burn"), Blind ? "." : " brightly!");
+                  otense(obj, "burn"), youCannotSee() ? "." : " brightly!");
             if (obj->unpaid && costly_spot(currentX(), currentY())
                 && obj->age == 20L * (long) objects[obj->otyp].oc_cost) {
                 const char *ithem = (obj->quan > 1L) ? "them" : "it";
@@ -1357,7 +1359,7 @@ struct obj *obj; /* obj is a potion of oil */
         obj = splitobj(obj, 1L);
 
     You("light %spotion.%s", shk_your(buf, obj),
-        Blind ? "" : "  It gives off a dim light.");
+        youCannotSee() ? "" : "  It gives off a dim light.");
 
     if (obj->unpaid && costly_spot(currentX(), currentY())) {
         /* Normally, we shouldn't both partially and fully charge
@@ -1418,7 +1420,7 @@ dorub()
             makeknown(MAGIC_LAMP);
             update_inventory();
         } else if (rn2(2)) {
-            You("%s smoke.", !Blind ? "see a puff of" : "smell");
+            You("%s smoke.", youCanSee() ? "see a puff of" : "smell");
         } else
             pline1(nothing_happens);
     } else if (obj->otyp == BRASS_LANTERN) {
@@ -1747,7 +1749,7 @@ struct obj *obj;
                       xname(obj), TRUE, SICK_NONVOMITABLE);
             break;
         case 1:
-            make_blinded((Blinded & TIMEOUT) + lcount, TRUE);
+            make_blinded(yourIntrinsicTimeout(BLINDED) + lcount, TRUE);
             break;
         case 2:
             if (!youAreConfused())
@@ -1787,7 +1789,7 @@ struct obj *obj;
     /* collect property troubles */
     if (TimedTrouble(Sick))
         prop_trouble(SICK);
-    if (TimedTrouble(Blinded) > (long) creamed()
+    if (TimedTrouble(yourIntrinsic(BLINDED)) > (long) creamed()
         && !(swallowed()
              && attacktype_fordmg(u.ustuck->data, AT_ENGL, AD_BLND)))
         prop_trouble(BLINDED);
@@ -1969,7 +1971,7 @@ long timeout;
 
         switch (figurine->where) {
         case OBJ_INVENT:
-            if (Blind || suppress_see)
+            if (youCannotSee() || suppress_see)
                 You_feel("%s %s from your pack!", something,
                          locomotion(mtmp->data, "drop"));
             else
@@ -2179,7 +2181,7 @@ struct obj *tstone;
     static const char coins_gems[3] = { COIN_CLASS, GEM_CLASS, 0 };
 
     /* in case it was acquired while blinded */
-    if (!Blind)
+    if (youCanSee())
         tstone->dknown = 1;
     /* when the touchstone is fully known, don't bother listing extra
        junk as likely candidates for rubbing */
@@ -2199,7 +2201,7 @@ struct obj *tstone;
     if (tstone->otyp == TOUCHSTONE && tstone->cursed
         && obj->oclass == GEM_CLASS && !is_graystone(obj)
         && !obj_resists(obj, 80, 100)) {
-        if (Blind)
+        if (youCannotSee())
             pline("You feel something shatter.");
         else if (Hallucination)
             pline("Oh, wow, look at the pretty shards.");
@@ -2210,7 +2212,7 @@ struct obj *tstone;
         return;
     }
 
-    if (Blind) {
+    if (youCannotSee()) {
         pline(scritch);
         return;
     } else if (Hallucination) {
@@ -2349,7 +2351,7 @@ struct obj *otmp;
     tmp = ACURR(A_DEX);
     trapinfo.time_needed =
         (tmp > 17) ? 2 : (tmp > 12) ? 3 : (tmp > 7) ? 4 : 5;
-    if (Blind)
+    if (youCannotSee())
         trapinfo.time_needed *= 2;
     tmp = ACURR(A_STR);
     if (ttyp == BEAR_TRAP && tmp < 18)
@@ -2887,7 +2889,7 @@ STATIC_OVL int
 use_cream_pie(obj)
 struct obj *obj;
 {
-    boolean wasblind = Blind;
+    boolean wasblind = youCannotSee();
     boolean wascreamed = creamed();
     boolean several = FALSE;
 
@@ -2904,11 +2906,11 @@ struct obj *obj;
     if (can_blnd((struct monst *) 0, &youmonst, AT_WEAP, obj)) {
         int blindinc = rnd(25);
         increaseCreamed(blindinc);
-        make_blinded(Blinded + (long) blindinc, FALSE);
-        if (!Blind || (Blind && wasblind))
+        make_blinded(yourIntrinsic(BLINDED) + (long) blindinc, FALSE);
+        if (youCanSee() || (youCannotSee() && wasblind))
             pline("There's %ssticky goop all over your %s.",
                   wascreamed ? "more " : "", body_part(FACE));
-        else /* Blind  && !wasblind */
+        else /* youCannotSee()  && !wasblind */
             You_cant("see through all the sticky goop on your %s.",
                      body_part(FACE));
     }
@@ -3442,7 +3444,7 @@ doapply()
             use_magic_whistle(obj);
             /* sometimes the blessing will be worn off */
             if (!rn2(49)) {
-                if (!Blind) {
+                if (youCanSee()) {
                     pline("%s %s.", Yobjnam2(obj, "glow"), hcolor("brown"));
                     obj->bknown = 1;
                 }

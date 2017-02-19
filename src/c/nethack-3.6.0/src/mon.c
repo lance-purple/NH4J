@@ -410,7 +410,7 @@ unsigned corpseflags;
      *  The code in hitmu() substitutes the word "something"
      *  if the corpses obj->dknown is 0.
      */
-    if (Blind && !sensemon(mtmp))
+    if (youCannotSee() && !sensemon(mtmp))
         obj->dknown = 0;
 
     stackobj(obj);
@@ -2240,7 +2240,7 @@ cleanup:
         HTelepat &= ~INTRINSIC;
         change_luck(-2);
         You("murderer!");
-        if (Blind && !Blind_telepat)
+        if (youCannotSee() && !Blind_telepat)
             see_monsters(); /* Can't sense monsters any more. */
     }
     if ((mtmp->mpeaceful && !rn2(2)) || mtmp->mtame)
@@ -2333,7 +2333,7 @@ struct monst *mtmp;
         mtmp->mstrategy &= ~STRAT_APPEARMSG; /* one chance only */
         if (!couldspot && canspotmon(mtmp))
             pline("%s suddenly %s!", Amonnam(mtmp),
-                  !Blind ? "appears" : "arrives");
+                  youCanSee() ? "appears" : "arrives");
     }
     return;
 }
@@ -3479,7 +3479,7 @@ boolean silent;
                 if (nct)
                     pline_The("guard%s get%s angry!", nct == 1 ? "" : "s",
                               nct == 1 ? "s" : "");
-                else if (!Blind)
+                else if (youCanSee())
                     You_see("%sangry guard%s approaching!",
                             sct == 1 ? "an " : "", sct > 1 ? "s" : "");
             } else

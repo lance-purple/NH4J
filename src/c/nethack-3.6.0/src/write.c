@@ -125,7 +125,7 @@ register struct obj *pen;
                   : (paper->oclass == SPBOOK_CLASS)
                      ? "spellbook"
                      : "scroll";
-    if (Blind) {
+    if (youCannotSee()) {
         if (!paper->dknown) {
             You("don't know if that %s is blank or not.", typeword);
             return 1;
@@ -310,7 +310,7 @@ found:
     }
     /* can write scrolls when blind, but requires luck too;
        attempts to write books when blind are caught above */
-    if (Blind && rnl(3)) {
+    if (youCannotSee() && rnl(3)) {
         /* writing while blind usually fails regardless of
            whether the target scroll is known; even if we
            have passed the write-an-unknown scroll test

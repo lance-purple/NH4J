@@ -550,7 +550,7 @@ freshly_entered_shop_deserted()
             }
         }
 
-    if (Blind && !(Blind_telepat || Detect_monsters))
+    if (youCannotSee() && !(Blind_telepat || Detect_monsters))
         ++n; /* force feedback to be less specific */
 
     pline("This shop %s %s.", (m < n) ? "seems to be" : "is",
@@ -654,7 +654,7 @@ u_freshly_entered_shop()
                     if (mattock->otyp == DWARVISH_MATTOCK)
                         ++cnt;
                 /* [ALI] Shopkeeper identifies mattock(s) */
-                if (!Blind)
+                if (youCanSee())
                     makeknown(DWARVISH_MATTOCK);
             }
             verbalize(NOTANGRY(shkp)
@@ -1232,7 +1232,7 @@ dopay()
         goto proceed;
     }
 
-    if ((!sk && (!Blind || Blind_telepat)) || (!Blind && !seensk)) {
+    if ((!sk && (youCanSee() || Blind_telepat)) || (youCanSee() && !seensk)) {
         There("appears to be no shopkeeper here to receive your payment.");
         return 0;
     }

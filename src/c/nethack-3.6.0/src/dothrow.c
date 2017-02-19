@@ -830,7 +830,7 @@ boolean hitsroof;
     } else if (hitsroof) {
         if (breaktest(obj)) {
             pline("%s hits the %s.", Doname2(obj), ceiling(currentX(), currentY()));
-            breakmsg(obj, !Blind);
+            breakmsg(obj, youCanSee());
             breakobj(obj, currentX(), currentY(), TRUE, TRUE);
             return FALSE;
         }
@@ -855,7 +855,7 @@ boolean hitsroof;
                     && can_blnd(&youmonst, &youmonst, AT_WEAP, obj))
                        ? rnd(25)
                        : 0;
-        breakmsg(obj, !Blind);
+        breakmsg(obj, youCanSee());
         breakobj(obj, currentX(), currentY(), TRUE, TRUE);
         obj = 0; /* it's now gone */
         switch (otyp) {
@@ -873,11 +873,11 @@ boolean hitsroof;
         case BLINDING_VENOM:
             pline("You've got it all over your %s!", body_part(FACE));
             if (blindinc) {
-                if (otyp == BLINDING_VENOM && !Blind)
+                if (otyp == BLINDING_VENOM && youCanSee())
                     pline("It blinds you!");
                 increaseCreamed(blindinc);
-                make_blinded(Blinded + (long) blindinc, FALSE);
-                if (!Blind)
+                make_blinded(yourIntrinsic(BLINDED) + (long) blindinc, FALSE);
+                if (youCanSee())
                     Your1(vision_clears);
             }
             break;
@@ -985,7 +985,7 @@ boolean
 {
     register struct monst *mon;
     register int range, urange;
-    boolean crossbowing, impaired = (youAreConfused() || youAreStunned() || Blind
+    boolean crossbowing, impaired = (youAreConfused() || youAreStunned() || youCannotSee()
                                      || Hallucination || Fumbling);
 
     notonhead = FALSE; /* reset potentially stale value */
@@ -1184,16 +1184,16 @@ boolean
             } else {
                 int dmg = rn2(2);
                 if (!dmg) {
-                    pline(Blind ? "%s lands %s your %s."
+                    pline(youCannotSee() ? "%s lands %s your %s."
                                 : "%s back to you, landing %s your %s.",
-                          Blind ? Something : Tobjnam(obj, "return"),
+                          youCannotSee() ? Something : Tobjnam(obj, "return"),
                           Levitation ? "beneath" : "at",
                           makeplural(body_part(FOOT)));
                 } else {
                     dmg += rnd(3);
-                    pline(Blind ? "%s your %s!"
+                    pline(youCannotSee() ? "%s your %s!"
                                 : "%s back toward you, hitting your %s!",
-                          Tobjnam(obj, Blind ? "hit" : "fly"),
+                          Tobjnam(obj, youCannotSee() ? "hit" : "fly"),
                           body_part(ARM));
                     (void) artifact_hit((struct monst *) 0, &youmonst, obj,
                                         &dmg, 0);
@@ -1679,7 +1679,7 @@ register struct obj *obj;
     ret = 1;
 
 nopick:
-    if (!Blind)
+    if (youCanSee())
         pline1(buf);
     if (!tele_restrict(mon))
         (void) rloc(mon, TRUE);
@@ -1724,7 +1724,7 @@ struct obj *obj;
 xchar x, y;          /* object location (ox, oy may not be right) */
 boolean from_invent; /* thrown or dropped by player; maybe on shop bill */
 {
-    boolean in_view = Blind ? FALSE : (from_invent || cansee(x, y));
+    boolean in_view = youCannotSee() ? FALSE : (from_invent || cansee(x, y));
     if (!breaktest(obj))
         return 0;
     breakmsg(obj, in_view);
@@ -1742,7 +1742,7 @@ breaks(obj, x, y)
 struct obj *obj;
 xchar x, y; /* object location (ox, oy may not be right) */
 {
-    boolean in_view = Blind ? FALSE : cansee(x, y);
+    boolean in_view = youCannotSee() ? FALSE : cansee(x, y);
 
     if (!breaktest(obj))
         return 0;

@@ -210,7 +210,7 @@ in_trouble()
             && (!Unchanging || ((otmp = unchanger()) != 0 && otmp->cursed)))
             return TROUBLE_UNUSEABLE_HANDS;
     }
-    if (Blindfolded && ublindf->cursed)
+    if (youAreBlindfolded() && ublindf->cursed)
         return TROUBLE_CURSED_BLINDFOLD;
 
     /*
@@ -229,7 +229,7 @@ in_trouble()
             return TROUBLE_SADDLE;
     }
 
-    if (Blinded > 1 && haseyes(youmonst.data)
+    if (yourIntrinsic(BLINDED) > 1 && haseyes(youmonst.data)
         && (!swallowed()
             || !attacktype_fordmg(u.ustuck->data, AT_ENGL, AD_BLND)))
         return TROUBLE_BLIND;
@@ -463,7 +463,7 @@ int trouble;
             impossible("fix_worst_trouble: nothing to uncurse.");
             return;
         }
-        if (!Blind || (otmp == ublindf && Blindfolded_only)) {
+        if (youCanSee() || (otmp == ublindf && youAreBlindDueToBlindfold())) {
             pline("%s %s.",
                   what ? what : (const char *) Yobjnam2(otmp, "softly glow"),
                   hcolor(NH_AMBER));
@@ -512,7 +512,7 @@ int trouble;
         break;
     case TROUBLE_SADDLE:
         otmp = which_armor(u.usteed, W_SADDLE);
-        if (!Blind) {
+        if (youCanSee()) {
             pline("%s %s.", Yobjnam2(otmp, "softly glow"), hcolor(NH_AMBER));
             otmp->bknown = TRUE;
         }
@@ -549,7 +549,7 @@ aligntyp resp_god;
         pline("Suddenly, a bolt of lightning strikes you!");
         if (Reflecting) {
             shieldeff(currentX(), currentY());
-            if (Blind)
+            if (youCannotSee())
                 pline("For some reason you're unaffected.");
             else
                 (void) ureflects("%s reflects from your %s.", "It");
@@ -666,7 +666,7 @@ aligntyp resp_god;
     case 4:
     case 5:
         gods_angry(resp_god);
-        if (!Blind && !youResistMagic())
+        if (youCanSee() && !youResistMagic())
             pline("%s glow surrounds you.", An(hcolor(NH_BLACK)));
         rndcurse();
         break;
@@ -696,7 +696,7 @@ static void
 at_your_feet(str)
 const char *str;
 {
-    if (Blind)
+    if (youCannotSee())
         str = Something;
     if (swallowed()) {
         /* barrier between you and the floor */
@@ -704,7 +704,7 @@ const char *str;
               s_suffix(mon_nam(u.ustuck)), mbodypart(u.ustuck, STOMACH));
     } else {
         pline("%s %s %s your %s!", str,
-              Blind ? "lands" : vtense(str, "appear"),
+              youCannotSee() ? "lands" : vtense(str, "appear"),
               Levitation ? "beneath" : "at", makeplural(body_part(FOOT)));
     }
 }
@@ -786,7 +786,7 @@ gcrownu()
         if (class_gift != STRANGE_OBJECT) {
             ; /* already got bonus above */
         } else if (obj && obj->otyp == LONG_SWORD && !obj->oartifact) {
-            if (!Blind)
+            if (youCanSee())
                 Your("sword shines brightly for a moment.");
             obj = oname(obj, artiname(ART_EXCALIBUR));
             if (obj && obj->oartifact == ART_EXCALIBUR)
@@ -972,7 +972,7 @@ aligntyp g_align;
                             otense(uwep, "are"));
 
                 if (uwep->cursed) {
-                    if (!Blind) {
+                    if (youCanSee()) {
                         pline("%s %s%s.", Yobjnam2(uwep, "softly glow"),
                               hcolor(NH_AMBER), repair_buf);
                         iflags.last_msg = PLNMSG_OBJ_GLOWS;
@@ -983,7 +983,7 @@ aligntyp g_align;
                     uwep->bknown = TRUE;
                     *repair_buf = '\0';
                 } else if (!uwep->blessed) {
-                    if (!Blind) {
+                    if (youCanSee()) {
                         pline("%s with %s aura%s.",
                               Yobjnam2(uwep, "softly glow"),
                               an(hcolor(NH_LIGHT_BLUE)), repair_buf);
@@ -1004,7 +1004,7 @@ aligntyp g_align;
                        or uncurse (which has already given a message) */
                     if (*repair_buf)
                         pline("%s as good as new!",
-                              Yobjnam2(uwep, Blind ? "feel" : "look"));
+                              Yobjnam2(uwep, youCannotSee() ? "feel" : "look"));
                 }
                 update_inventory();
             }
@@ -1033,7 +1033,7 @@ aligntyp g_align;
             }
         /* Otherwise, falls into next case */
         case 2:
-            if (!Blind)
+            if (youCanSee())
                 You("are surrounded by %s glow.", an(hcolor(NH_GOLDEN)));
             /* if any levels have been lost (and not yet regained),
                treat this effect like blessed full healing */
@@ -1061,13 +1061,13 @@ aligntyp g_align;
             register struct obj *otmp;
             int any = 0;
 
-            if (Blind)
+            if (youCannotSee())
                 You_feel("the power of %s.", u_gname());
             else
                 You("are surrounded by %s aura.", an(hcolor(NH_LIGHT_BLUE)));
             for (otmp = invent; otmp; otmp = otmp->nobj) {
                 if (otmp->cursed) {
-                    if (!Blind) {
+                    if (youCanSee()) {
                         pline("%s %s.", Yobjnam2(otmp, "softly glow"),
                               hcolor(NH_AMBER));
                         iflags.last_msg = PLNMSG_OBJ_GLOWS;
@@ -1090,7 +1090,7 @@ aligntyp g_align;
             if (!(HTelepat & INTRINSIC)) {
                 HTelepat |= FROMOUTSIDE;
                 pline(msg, "Telepathy");
-                if (Blind)
+                if (youCannotSee())
                     see_monsters();
             } else if (!(HFast & INTRINSIC)) {
                 HFast |= FROMOUTSIDE;
@@ -1171,7 +1171,7 @@ boolean bless_water;
 {
     register struct obj *otmp;
     register long changed = 0;
-    boolean other = FALSE, bc_known = !(Blind || Hallucination);
+    boolean other = FALSE, bc_known = !(youCannotSee() || Hallucination);
 
     for (otmp = level.objects[currentX()][currentY()]; otmp; otmp = otmp->nexthere) {
         /* turn water into (un)holy water */
@@ -1184,7 +1184,7 @@ boolean bless_water;
         } else if (otmp->oclass == POTION_CLASS)
             other = TRUE;
     }
-    if (!Blind && changed) {
+    if (youCanSee() && changed) {
         pline("%s potion%s on the altar glow%s %s for a moment.",
               ((other && changed > 1L) ? "Some of the"
                                        : (other ? "One of the" : "The")),
@@ -1246,7 +1246,7 @@ register struct obj *otmp;
      "sacrifice collapses into a cloud of dancing particles and fades away!");
             break;
         }
-    else if (Blind && currentAlignmentType() == A_LAWFUL)
+    else if (youCannotSee() && currentAlignmentType() == A_LAWFUL)
         Your("sacrifice disappears!");
     else
         Your("sacrifice is consumed in a %s!",
@@ -1591,7 +1591,7 @@ dosacrifice()
                     levl[currentX()][currentY()].altarmask =
                         levl[currentX()][currentY()].altarmask
                         | (Align2amask(currentAlignmentType()));
-                    if (!Blind)
+                    if (youCanSee())
                         pline_The("altar glows %s.",
                                   hcolor((currentAlignmentType() == A_LAWFUL)
                                             ? NH_WHITE
@@ -1699,7 +1699,7 @@ dosacrifice()
                     exercise(A_WIS, TRUE);
                     /* make sure we can use this weapon */
                     unrestrict_weapon_skill(weapon_type(otmp));
-                    if (!Hallucination && !Blind) {
+                    if (!Hallucination && youCanSee()) {
                         otmp->dknown = 1;
                         makeknown(otmp->otyp);
                         discover_artifact(otmp->oartifact);
@@ -1711,7 +1711,7 @@ dosacrifice()
             if (currentLuck() < 0)
                 setCurrentLuck(0);
             if (currentLuck() != saved_luck) {
-                if (Blind)
+                if (youCannotSee())
                     You("think %s brushed your %s.", something,
                         body_part(FOOT));
                 else
@@ -1808,7 +1808,7 @@ dopray()
 
     if (p_type == 3 && !areYouInHell()) {
         /* if you've been true to your god you can't die while you pray */
-        if (!Blind)
+        if (youCanSee())
             You("are surrounded by a shimmering light.");
         setInvulnerableWhilePraying(TRUE);
     }

@@ -265,7 +265,7 @@ char *objnambuf;
     if (!invent || (inv_cnt(FALSE) == 1 && uskin)) {
     nothing_to_steal:
         /* Not even a thousand men in armor can strip a naked man. */
-        if (Blind)
+        if (youCannotSee())
             pline("Somebody tries to rob you, but finds nothing to steal.");
         else
             pline("%s tries to rob you, but there is nothing to steal!",
@@ -487,7 +487,7 @@ register struct obj *otmp;
        the light to be extinguished rather than letting it shine thru */
     if (obj_sheds_light(otmp) && attacktype(mtmp->data, AT_ENGL)) {
         /* this is probably a burning object that you dropped or threw */
-        if (swallowed() && mtmp == u.ustuck && !Blind)
+        if (swallowed() && mtmp == u.ustuck && youCanSee())
             pline("%s out.", Tobjnam(otmp, "go"));
         snuff_otmp = TRUE;
     }

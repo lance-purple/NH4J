@@ -2437,7 +2437,7 @@ recalc_mapseen()
     mptr->flags.knownbones = 0;
     mptr->flags.sokosolved = areYouOnASokobanLevel() && !Sokoban;
     /* mptr->flags.bigroom retains previous value when hero can't see */
-    if (!Blind)
+    if (youCanSee())
         mptr->flags.bigroom = areYouOnBigRoomLevel();
     else if (mptr->flags.forgot)
         mptr->flags.bigroom = 0;

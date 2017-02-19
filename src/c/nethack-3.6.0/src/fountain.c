@@ -37,7 +37,7 @@ dowatersnakes()
     struct monst *mtmp;
 
     if (!(mvitals[PM_WATER_MOCCASIN].mvflags & G_GONE)) {
-        if (!Blind)
+        if (youCanSee())
             pline("An endless stream of %s pours forth!",
                   Hallucination ? makeplural(rndmonnam(NULL)) : "snakes");
         else
@@ -60,7 +60,7 @@ dowaterdemon()
     if (!(mvitals[PM_WATER_DEMON].mvflags & G_GONE)) {
         if ((mtmp = makemon(&mons[PM_WATER_DEMON], currentX(), currentY(),
                             NO_MM_FLAGS)) != 0) {
-            if (!Blind)
+            if (youCanSee())
                 You("unleash %s!", a_monnam(mtmp));
             else
                 You_feel("the presence of evil.");
@@ -88,14 +88,14 @@ dowaternymph()
     if (!(mvitals[PM_WATER_NYMPH].mvflags & G_GONE)
         && (mtmp = makemon(&mons[PM_WATER_NYMPH], currentX(), currentY(),
                            NO_MM_FLAGS)) != 0) {
-        if (!Blind)
+        if (youCanSee())
             You("attract %s!", a_monnam(mtmp));
         else
             You_hear("a seductive voice.");
         mtmp->msleeping = 0;
         if (t_at(mtmp->mx, mtmp->my))
             (void) mintrap(mtmp);
-    } else if (!Blind)
+    } else if (youCanSee())
         pline("A large bubble rises to the surface and pops.");
     else
         You_hear("a loud pop.");
@@ -152,7 +152,7 @@ genericptr_t poolcnt;
 STATIC_OVL void
 dofindgem()
 {
-    if (!Blind)
+    if (youCanSee())
         You("spot a gem in the sparkling waters!");
     else
         You_feel("a gem here!");
@@ -296,7 +296,7 @@ drinkfountain()
             break;
         }
         case 25: /* See invisible */
-            if (Blind) {
+            if (youCannotSee()) {
                 if (Invisible) {
                     You("feel transparent.");
                 } else {
@@ -412,7 +412,7 @@ register struct obj *obj;
     case 19:
     case 20: /* Uncurse the item */
         if (obj->cursed) {
-            if (!Blind)
+            if (youCanSee())
                 pline_The("water glows for a moment.");
             uncurse(obj);
         } else {
@@ -479,7 +479,7 @@ register struct obj *obj;
         (void) mkgold((long) (rnd((levelsInCurrentDungeon() - currentDungeonLevel()
                                    + 1) * 2) + 5),
                       currentX(), currentY());
-        if (!Blind)
+        if (youCanSee())
             pline("Far below you, you see coins glistening in the water.");
         exercise(A_WIS, TRUE);
         newsym(currentX(), currentY());
@@ -534,7 +534,7 @@ drinksink()
             mtmp = makemon(&mons[PM_SEWER_RAT], currentX(), currentY(), NO_MM_FLAGS);
             if (mtmp)
                 pline("Eek!  There's %s in the sink!",
-                      (Blind || !canspotmon(mtmp)) ? "something squirmy"
+                      (youCannotSee() || !canspotmon(mtmp)) ? "something squirmy"
                                                    : a_monnam(mtmp));
         }
         break;
@@ -548,8 +548,8 @@ drinksink()
         } while (!otmp);
         otmp->cursed = otmp->blessed = 0;
         pline("Some %s liquid flows from the faucet.",
-              Blind ? "odd" : hcolor(OBJ_DESCR(objects[otmp->otyp])));
-        otmp->dknown = !(Blind || Hallucination);
+              youCannotSee() ? "odd" : hcolor(OBJ_DESCR(objects[otmp->otyp])));
+        otmp->dknown = !(youCannotSee() || Hallucination);
         otmp->quan++;       /* Avoid panic upon useup() */
         otmp->fromsink = 1; /* kludge for docall() */
         (void) dopotion(otmp);

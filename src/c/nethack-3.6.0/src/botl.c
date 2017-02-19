@@ -114,7 +114,7 @@ bot2()
         if (sickWithIllness())
             Sprintf(nb = eos(nb), " Ill");
     }
-    if (Blind)
+    if (youCannotSee())
         Sprintf(nb = eos(nb), " Blind");
     if (youAreStunned())
         Sprintf(nb = eos(nb), " Stun");
@@ -538,7 +538,7 @@ bot()
 
     /* Conditions */
 
-    if (Blind)
+    if (youCannotSee())
         blstats[idx][BL_CONDITION].a.a_ulong |= BL_MASK_BLIND;
     else
         blstats[idx][BL_CONDITION].a.a_ulong &= ~BL_MASK_BLIND;

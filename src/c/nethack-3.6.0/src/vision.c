@@ -535,7 +535,7 @@ int control;
     if (swallowed() || control == 2) {
         /* do nothing -- get_unused_cs() nulls out the new work area */
         ;
-    } else if (Blind) {
+    } else if (youCannotSee()) {
         /*
          * Calculate the could_see array even when blind so that monsters
          * can see you, even if you can't see them.  Note that the current

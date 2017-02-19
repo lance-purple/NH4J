@@ -881,7 +881,7 @@ int how;
     if (Lifesaved && (how <= GENOCIDED)) {
         pline("But wait...");
         makeknown(AMULET_OF_LIFE_SAVING);
-        Your("medallion %s!", !Blind ? "begins to glow" : "feels warm");
+        Your("medallion %s!", youCanSee() ? "begins to glow" : "feels warm");
         if (how == CHOKING)
             You("vomit ...");
         You_feel("much better!");

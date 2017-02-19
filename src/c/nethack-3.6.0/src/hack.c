@@ -112,14 +112,14 @@ moverock()
         ry = currentY() + 2 * directionY();
         nomul(0);
         if (Levitation || areYouOnAirLevel()) {
-            if (Blind)
+            if (youCannotSee())
                 feel_location(sx, sy);
             You("don't have enough leverage to push %s.", the(xname(otmp)));
             /* Give them a chance to climb over it? */
             return -1;
         }
         if (verysmall(youmonst.data) && !u.usteed) {
-            if (Blind)
+            if (youCannotSee())
                 feel_location(sx, sy);
             pline("You're too small to push that %s.", xname(otmp));
             goto cannot_push;
@@ -133,7 +133,7 @@ moverock()
 
             /* KMH -- Sokoban doesn't let you push boulders diagonally */
             if (Sokoban && directionX() && directionY()) {
-                if (Blind)
+                if (youCannotSee())
                     feel_location(sx, sy);
                 pline("%s won't roll diagonally on this %s.",
                       The(xname(otmp)), surface(sx, sy));
@@ -147,7 +147,7 @@ moverock()
                 && (!mtmp->mtrapped
                     || !(ttmp && ((ttmp->ttyp == PIT)
                                   || (ttmp->ttyp == SPIKED_PIT))))) {
-                if (Blind)
+                if (youCannotSee())
                     feel_location(sx, sy);
                 if (canspotmon(mtmp))
                     pline("There's %s on the other side.", a_monnam(mtmp));
@@ -189,17 +189,17 @@ moverock()
                     /* vision kludge to get messages right;
                        the pit will temporarily be seen even
                        if this is one among multiple boulders */
-                    if (!Blind)
+                    if (youCanSee())
                         viz_array[ry][rx] |= IN_SIGHT;
                     if (!flooreffects(otmp, rx, ry, "fall")) {
                         place_object(otmp, rx, ry);
                     }
-                    if (mtmp && !Blind)
+                    if (mtmp && youCanSee())
                         newsym(rx, ry);
                     return sobj_at(BOULDER, sx, sy) ? -1 : 0;
                 case HOLE:
                 case TRAPDOOR:
-                    if (Blind)
+                    if (youCannotSee())
                         pline("Kerplunk!  You no longer feel %s.",
                               the(xname(otmp)));
                     else
@@ -293,7 +293,7 @@ moverock()
             if (glyph_is_invisible(levl[rx][ry].glyph))
                 unmap_object(rx, ry);
             movobj(otmp, rx, ry); /* does newsym(rx,ry) */
-            if (Blind) {
+            if (youCannotSee()) {
                 feel_location(rx, ry);
                 feel_location(sx, sy);
             } else {
@@ -306,7 +306,7 @@ moverock()
                       upstart(y_monnam(u.usteed)), the(xname(otmp)));
             else
                 You("try to move %s, but in vain.", the(xname(otmp)));
-            if (Blind)
+            if (youCannotSee())
                 feel_location(sx, sy);
         cannot_push:
             if (throws_rocks(youmonst.data)) {
@@ -674,7 +674,7 @@ int mode;
      *  Check for physical obstacles.  First, the place we are going.
      */
     if (IS_ROCK(tmpr->typ) || tmpr->typ == IRONBARS) {
-        if (Blind && mode == DO_MOVE)
+        if (youCannotSee() && mode == DO_MOVE)
             feel_location(x, y);
         if (Passes_walls && may_passwall(x, y)) {
             ; /* do nothing */
@@ -714,7 +714,7 @@ int mode;
         }
     } else if (IS_DOOR(tmpr->typ)) {
         if (closed_door(x, y)) {
-            if (Blind && mode == DO_MOVE)
+            if (youCannotSee() && mode == DO_MOVE)
                 feel_location(x, y);
             if (Passes_walls)
                 ; /* do nothing */
@@ -735,7 +735,7 @@ int mode;
                         context.door_opened = context.move =
                             doopen_indir(x, y);
                     } else if (x == ux || y == uy) {
-                        if (Blind || youAreStunned() || ACURR(A_DEX) < 10
+                        if (youCannotSee() || youAreStunned() || ACURR(A_DEX) < 10
                             || Fumbling) {
                             if (u.usteed) {
                                 You_cant("lead %s through that closed door.",
@@ -756,7 +756,7 @@ int mode;
             if (dx && dy && !Passes_walls
                 && (!doorless_door(x, y) || block_door(x, y))) {
                 /* Diagonal moves into a door are not allowed. */
-                if (Blind && mode == DO_MOVE)
+                if (youCannotSee() && mode == DO_MOVE)
                     feel_location(x, y);
                 return FALSE;
             }
@@ -809,7 +809,7 @@ int mode;
     }
 
     if (sobj_at(BOULDER, x, y) && (Sokoban || !Passes_walls)) {
-        if (!(Blind || Hallucination) && (context.run >= 2)
+        if (!(youCannotSee() || Hallucination) && (context.run >= 2)
             && mode != TEST_TRAV)
             return FALSE;
         if (mode == DO_MOVE) {
@@ -936,7 +936,7 @@ boolean guess;
                     }
                     if (test_move(x, y, nx - x, ny - y, TEST_TRAV)
                         && (levl[nx][ny].seenv
-                            || (!Blind && couldsee(nx, ny)))) {
+                            || (youCanSee() && couldsee(nx, ny)))) {
                         if (nx == ux && ny == uy) {
                             if (!guess) {
                                 setDirectionX(x - ux);
@@ -1317,7 +1317,7 @@ domove()
             return;
         }
         if (((trap = t_at(x, y)) && trap->tseen)
-            || (Blind && !Levitation && !Flying && !is_clinger(youmonst.data)
+            || (youCannotSee() && !Levitation && !Flying && !is_clinger(youmonst.data)
                 && is_pool_or_lava(x, y) && levl[x][y].seenv)) {
             if (context.run >= 2) {
                 nomul(0);
@@ -1376,7 +1376,7 @@ domove()
         if (mtmp) {
             /* Don't attack if you're running, and can see it */
             /* We should never get here if forcefight */
-            if (context.run && ((!Blind && mon_visible(mtmp)
+            if (context.run && ((youCanSee() && mon_visible(mtmp)
                                  && ((mtmp->m_ap_type != M_AP_FURNITURE
                                       && mtmp->m_ap_type != M_AP_OBJECT)
                                      || Protection_from_shape_changers))
@@ -1773,7 +1773,7 @@ invocation_message()
         setSteppedOnVibratingSquare(TRUE);
         if (otmp && otmp->spe == 7 && otmp->lamplit)
             pline("%s %s!", The(xname(otmp)),
-                  Blind ? "throbs palpably" : "glows with a strange light");
+                  youCannotSee() ? "throbs palpably" : "glows with a strange light");
     }
 }
 
@@ -2020,7 +2020,7 @@ boolean pick;
                       ceiling(currentX(), currentY()));
             else if (mtmp->mpeaceful) {
                 You("surprise %s!",
-                    Blind && !sensemon(mtmp) ? something : a_monnam(mtmp));
+                    youCannotSee() && !sensemon(mtmp) ? something : a_monnam(mtmp));
                 mtmp->mpeaceful = 0;
             } else
                 pline("%s attacks you by surprise!", Amonnam(mtmp));
@@ -2246,8 +2246,8 @@ register boolean newlev;
             pline("Welcome to David's treasure zoo!");
             break;
         case SWAMP:
-            pline("It %s rather %s down here.", Blind ? "feels" : "looks",
-                  Blind ? "humid" : "muddy");
+            pline("It %s rather %s down here.", youCannotSee() ? "feels" : "looks",
+                  youCannotSee() ? "humid" : "muddy");
             break;
         case COURT:
             You("enter an opulent throne room!");
@@ -2360,7 +2360,7 @@ dopickup()
                 pline("But it's kind of slimy, so you drop it.");
             } else
                 You("don't %s anything in here to pick up.",
-                    Blind ? "feel" : "see");
+                    youCannotSee() ? "feel" : "see");
             return 1;
         } else {
             int tmpcount = -count;
@@ -2408,7 +2408,7 @@ dopickup()
             You("cannot reach the bottom of the pit.");
         else if (u.usteed && P_SKILL(P_RIDING) < P_BASIC)
             rider_cant_reach();
-        else if (Blind && !can_reach_floor(TRUE))
+        else if (youCannotSee() && !can_reach_floor(TRUE))
             You("cannot reach anything here.");
         else
             You("cannot reach the %s.", surface(currentX(), currentY()));
@@ -2436,7 +2436,7 @@ lookaround()
         return;
     }
 
-    if (Blind || context.run == 0)
+    if (youCannotSee() || context.run == 0)
         return;
     for (x = currentX() - 1; x <= currentX() + 1; x++)
         for (y = currentY() - 1; y <= currentY() + 1; y++) {

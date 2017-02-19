@@ -830,7 +830,7 @@ genericptr_t p2;
     struct monst *mtmp;
 
     if (p2 == (genericptr_t) 0) { /* That means the player */
-        if (!Blind)
+        if (youCanSee())
             You("bump into %s. Ouch!",
                 Hallucination ? "an invisible tree"
                               : "some kind of invisible wall");
@@ -926,7 +926,7 @@ genericptr_t p2;
     if (p2 == (genericptr_t) 0) { /* This means *YOU* Bozo! */
         if (invulnerableWhilePraying() || nonliving(youmonst.data) || Breathless)
             return FALSE;
-        if (!Blind) {
+        if (youCanSee()) {
             Your("%s sting.", makeplural(body_part(EYE)));
             make_blinded(1L, FALSE);
         }
@@ -1064,7 +1064,7 @@ region_safety()
         pline_The("gas cloud has dissipated.");
     }
     /* maybe cure blindness too */
-    if ((Blinded & TIMEOUT) == 1L)
+    if (yourIntrinsicTimeout(BLINDED) == 1L)
         make_blinded(0L, TRUE);
 }
 

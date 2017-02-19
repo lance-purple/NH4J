@@ -774,7 +774,7 @@ int propidx; /* special cases can have negative values */
                                              : ysimple_name(obj));
             else if (propidx == BLINDED && permanentlyBlind())
                 Sprintf(buf, " from birth");
-            else if (propidx == BLINDED && Blindfolded_only)
+            else if (propidx == BLINDED && youAreBlindDueToBlindfold())
                 Sprintf(buf, because_of, ysimple_name(ublindf));
 
             /* remove some verbosity and/or redundancy */
@@ -1424,6 +1424,34 @@ extern boolean youAreConfused() {
 
 extern boolean youAreHallucinating() {
  return (yourIntrinsic(HALLUC));
+}
+
+extern boolean youAreTemporarilyBlinded() {
+ return (yourIntrinsic(BLINDED));
+}
+
+/* you are blind because of a cover */
+extern boolean youAreBlindfolded() {
+    return (ublindf && ublindf->otyp != LENSES);
+}
+
+/* you are blind because of a blindfold, and *only* that */
+extern boolean youAreBlindDueToBlindfold() {
+    return (youAreBlindfolded() && ublindf->oartifact != ART_EYES_OF_THE_OVERWORLD 
+     && !permanentlyBlind() && !youAreTemporarilyBlinded() && haseyes(youmonst.data));
+}
+
+/* you cannot see for whatever reason */
+extern boolean youCannotSee() {
+    return ((permanentlyBlind() || youAreTemporarilyBlinded() || youAreBlindfolded()
+      || !haseyes(youmonst.data)) 
+     && !(ublindf && ublindf->oartifact == ART_EYES_OF_THE_OVERWORLD));
+    /* ...the Eyes operate even when you really are blind
+           or don't have any eyes */
+}
+
+extern boolean youCanSee() {
+    return !youCannotSee();
 }
 
 /*attrib.c*/

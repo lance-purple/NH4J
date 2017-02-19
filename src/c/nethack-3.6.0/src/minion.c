@@ -196,7 +196,7 @@ boolean talk;
         if (talk) {
             pline_The("voice of %s booms:", align_gname(alignment));
             verbalize("Thou shalt pay for thine indiscretion!");
-            if (!Blind)
+            if (youCanSee())
                 pline("%s appears before you.", Amonnam(mon));
             mon->mstrategy &= ~STRAT_APPEARMSG;
         }
@@ -442,7 +442,7 @@ gain_guardian_angel()
             && (mtmp = mk_roamer(&mons[PM_ANGEL], currentAlignmentType(), mm.x, mm.y,
                                  TRUE)) != 0) {
             mtmp->mstrategy &= ~STRAT_APPEARMSG;
-            if (!Blind)
+            if (youCanSee())
                 pline("An angel appears near you.");
             else
                 You_feel("the presence of a friendly angel near you.");

@@ -1698,18 +1698,18 @@ int final;
         you_are("confused", "");
     if (Hallucination)
         you_are("hallucinating", "");
-    if (Blind) {
+    if (youCannotSee()) {
         /* from_what() (currently wizard-mode only) checks !haseyes()
            before permanentlyBlind, so we should too */
         Sprintf(buf, "%s blind",
                 !haseyes(youmonst.data) ? "innately"
                 : permanentlyBlind() ? "permanently"
                   /* better phrasing desperately wanted... */
-                  : Blindfolded_only ? "deliberately"
+                  : youAreBlindDueToBlindfold() ? "deliberately"
                     : "temporarily");
-        if (wizard && (Blinded & TIMEOUT) != 0L
+        if (wizard && youAreTemporarilyBlinded()
             && !permanentlyBlind() && haseyes(youmonst.data))
-            Sprintf(eos(buf), " (%ld)", (Blinded & TIMEOUT));
+            Sprintf(eos(buf), " (%ld)", yourIntrinsicTimeout(BLINDED));
         /* !haseyes: avoid "you are innately blind innately" */
         you_are(buf, !haseyes(youmonst.data) ? "" : from_what(BLINDED));
     }
@@ -1964,10 +1964,10 @@ int final;
         you_can("recognize detrimental food", "");
 
     /*** Vision and senses ***/
-    if (!Blind && (Blinded || !haseyes(youmonst.data)))
+    if (youCanSee() && (youAreTemporarilyBlinded() || !haseyes(youmonst.data)))
         you_can("see", from_what(-BLINDED)); /* Eyes of the Overworld */
     if (See_invisible) {
-        if (!Blind)
+        if (youCanSee())
             enl_msg(You_, "see", "saw", " invisible", from_what(SEE_INVIS));
         else
             enl_msg(You_, "will see", "would have seen",

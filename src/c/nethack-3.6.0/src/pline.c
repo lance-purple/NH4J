@@ -252,7 +252,7 @@ VA_DECL(const char *, line)
     VA_INIT(line, const char *);
     if (youAreUnaware())
         YouPrefix(tmp, "You dream that you see ", line);
-    else if (Blind) /* caller should have caught this... */
+    else if (youCannotSee()) /* caller should have caught this... */
         YouPrefix(tmp, "You sense ", line);
     else
         YouPrefix(tmp, "You see ", line);
@@ -492,10 +492,10 @@ ustatusline()
         Strcat(info, ", nauseated"); /* !"nauseous" */
     if (youAreConfused())
         Strcat(info, ", confused");
-    if (Blind) {
+    if (youCannotSee()) {
         Strcat(info, ", blind");
         if (creamed()) {
-            if ((long) creamed() < Blinded || Blindfolded
+            if ((long) creamed() < yourIntrinsic(BLINDED) || youAreBlindfolded()
                 || !haseyes(youmonst.data))
                 Strcat(info, ", cover");
             Strcat(info, "ed by sticky goop");
@@ -568,7 +568,7 @@ struct obj *otmp2;
     boolean inpack = carried(otmp) || carried(otmp2);
 
     /* the player will know something happened inside his own inventory */
-    if ((!Blind && visible) || inpack) {
+    if ((youCanSee() && visible) || inpack) {
         if (Hallucination) {
             if (onfloor) {
                 You_see("parts of the floor melting!");

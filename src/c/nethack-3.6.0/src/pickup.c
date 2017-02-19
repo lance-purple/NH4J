@@ -1370,7 +1370,7 @@ boolean telekinesis; /* not picking it up directly by hand */
 
     /* In case of auto-pickup, where we haven't had a chance
        to look at it yet; affects docall(SCR_SCARE_MONSTER). */
-    if (!Blind)
+    if (youCanSee())
         obj->dknown = 1;
 
     if (obj == uchain) { /* do not pick up attached chain */
@@ -2155,7 +2155,7 @@ struct obj *item;
     if (item->dknown)
         pline("%s %s vanished!", Doname2(item), otense(item, "have"));
     else
-        You("%s %s disappear!", Blind ? "notice" : "see", doname(item));
+        You("%s %s disappear!", youCannotSee() ? "notice" : "see", doname(item));
 
     if (currentlyOccupiedShops(0) && (shkp = shop_keeper(currentlyOccupiedShops(0))) != 0) {
         if (held ? (boolean) item->unpaid : costly_spot(currentX(), currentY()))

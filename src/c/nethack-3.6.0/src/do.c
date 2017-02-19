@@ -80,14 +80,14 @@ boolean pushing;
                     Strcpy(whobuf, y_monnam(u.usteed));
                 pline("%s %s %s into the %s.", upstart(whobuf),
                       vtense(whobuf, "push"), the(xname(otmp)), what);
-                if (flags.verbose && !Blind)
+                if (flags.verbose && youCanSee())
                     pline("Now you can cross it!");
                 /* no splashing in this case */
             }
         }
         if (!fills_up || !pushing) { /* splashing occurs */
             if (!inWater()) {
-                if (pushing ? !Blind : cansee(rx, ry)) {
+                if (pushing ? youCanSee() : cansee(rx, ry)) {
                     There("is a large splash as %s %s the %s.",
                           the(xname(otmp)), fills_up ? "fills" : "falls into",
                           what);
@@ -109,7 +109,7 @@ boolean pushing;
                 losehp(Maybe_Half_Phys(dmg), /* lava damage */
                        "molten lava", KILLED_BY);
             } else if (!fills_up && flags.verbose
-                       && (pushing ? !Blind : cansee(rx, ry)))
+                       && (pushing ? youCanSee() : cansee(rx, ry)))
                 pline("It sinks without a trace!");
         }
 
@@ -171,9 +171,9 @@ const char *verb;
             }
         }
         if (*verb) {
-            if (Blind && (x == currentX()) && (y == currentY())) {
+            if (youCannotSee() && (x == currentX()) && (y == currentY())) {
                 You_hear("a CRASH! beneath you.");
-            } else if (!Blind && cansee(x, y)) {
+            } else if (youCanSee() && cansee(x, y)) {
                 pline_The("boulder %s%s.", t->tseen ? "" : "triggers and ",
                           t->ttyp == TRAPDOOR
                               ? "plugs a trap door"
@@ -194,7 +194,7 @@ const char *verb;
         /* Reasonably bulky objects (arbitrary) splash when dropped.
          * If you're floating above the water even small things make
          * noise.  Stuff dropped near fountains always misses */
-        if ((Blind || (Levitation || Flying)) && !Deaf
+        if ((youCannotSee() || (Levitation || Flying)) && !Deaf
             && ((x == currentX()) && (y == currentY()))) {
             if (!underwater()) {
                 if (weight(obj) > 9) {
@@ -209,7 +209,7 @@ const char *verb;
         return water_damage(obj, NULL, FALSE) == ER_DESTROYED;
     } else if (currentX() == x && currentY() == y && (t = t_at(x, y)) != 0
                && uteetering_at_seen_pit(t)) {
-        if (Blind && !Deaf)
+        if (youCannotSee() && !Deaf)
             You_hear("%s tumble downwards.", the(xname(obj)));
         else
             pline("%s %s into %s pit.", The(xname(obj)),
@@ -234,7 +234,7 @@ void
 doaltarobj(obj)
 register struct obj *obj;
 {
-    if (Blind)
+    if (youCannotSee())
         return;
 
     if (obj->oclass != COIN_CLASS) {
@@ -395,7 +395,7 @@ register struct obj *obj;
             otmp2 = otmp->nexthere;
             if (otmp != uball && otmp != uchain
                 && !obj_resists(otmp, 1, 99)) {
-                if (!Blind) {
+                if (youCanSee()) {
                     pline("Suddenly, %s %s from the sink!", doname(otmp),
                           otense(otmp, "vanish"));
                     ideed = TRUE;
@@ -412,7 +412,7 @@ register struct obj *obj;
         ideed = FALSE;
         break;
     }
-    if (!Blind && !ideed && obj->otyp != RIN_HUNGER) {
+    if (youCanSee() && !ideed && obj->otyp != RIN_HUNGER) {
         ideed = TRUE;
         switch (obj->otyp) { /* effects that need eyes */
         case RIN_ADORNMENT:
@@ -673,7 +673,7 @@ boolean with_impact;
         else if (level.flags.has_shop)
             sellobj(obj, currentX(), currentY());
         stackobj(obj);
-        if (Blind && Levitation)
+        if (youCannotSee() && Levitation)
             map_object(obj, 0);
         newsym(currentX(), currentY()); /* remap location under self */
     }
@@ -890,7 +890,7 @@ dodown()
         }
         if (BLevitation) {
             ; /* weren't actually floating after all */
-        } else if (Blind) {
+        } else if (youCannotSee()) {
             /* Avoid alerting player to an unknown stair or ladder.
              * Changes the message for a covered, known staircase
              * too; staircase knowledge is not stored anywhere.
@@ -1460,7 +1460,7 @@ boolean at_stairs, falling, portal;
         else
             mesg = fam_msgs[which];
         if (mesg && index(mesg, '%')) {
-            Sprintf(buf, mesg, !Blind ? "looks" : "seems");
+            Sprintf(buf, mesg, youCanSee() ? "looks" : "seems");
             mesg = buf;
         }
         if (mesg)
@@ -1678,7 +1678,7 @@ struct obj *corpse;
             } else if (container_where == OBJ_INVENT && container) {
                 Strcpy(sackname, an(xname(container)));
                 pline("%s %s out of %s in your pack!",
-                      Blind ? Something : Amonnam(mtmp),
+                      youCannotSee() ? Something : Amonnam(mtmp),
                       locomotion(mtmp->data, "writhes"), sackname);
             } else if (container_where == OBJ_FLOOR && container
                        && cansee(mtmp->mx, mtmp->my)) {
@@ -1760,15 +1760,18 @@ wipeoff(VOID_ARGS)
         setCreamed(0);
     else
         decreaseCreamed(4);
-    if (Blinded < 4)
-        Blinded = 0;
-    else
-        Blinded -= 4;
-    if (!Blinded) {
+
+    long updated = yourIntrinsicTimeout(BLINDED) - 4;
+    if (updated < 0) {
+        updated = 0L;
+    }
+    setYourIntrinsicTimeout(BLINDED, updated);
+
+    if (!yourIntrinsicTimeout(BLINDED)) {
         pline("You've got the glop off.");
         setCreamed(0);
         if (!gulp_blnd_check()) {
-            Blinded = 1;
+            setYourIntrinsicTimeout(BLINDED, 1L);
             make_blinded(0L, TRUE);
         }
         return 0;

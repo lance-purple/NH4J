@@ -93,7 +93,7 @@ register struct obj *obj;
     setworn(obj, W_WEP);
     if (uwep == obj && artifact_light(olduwep) && olduwep->lamplit) {
         end_burn(olduwep, FALSE);
-        if (!Blind)
+        if (youCanSee())
             pline("%s shining.", Tobjnam(olduwep, "stop"));
     }
     /* Note: Explicitly wielding a pick-axe will not give a "bashing"
@@ -188,7 +188,7 @@ struct obj *wep;
 
         if (artifact_light(wep) && !wep->lamplit) {
             begin_burn(wep, FALSE);
-            if (!Blind)
+            if (youCanSee())
                 pline("%s to shine %s!", Tobjnam(wep, "begin"),
                       arti_light_description(wep));
         }
@@ -557,7 +557,7 @@ uwepgone()
     if (uwep) {
         if (artifact_light(uwep) && uwep->lamplit) {
             end_burn(uwep, FALSE);
-            if (!Blind)
+            if (youCanSee())
                 pline("%s shining.", Tobjnam(uwep, "stop"));
         }
         setworn((struct obj *) 0, W_WEP);
@@ -661,14 +661,14 @@ register int amount;
     if (has_oname(uwep))
         wepname = ONAME(uwep);
     if (amount < 0 && uwep->oartifact && restrict_name(uwep, wepname)) {
-        if (!Blind)
+        if (youCanSee())
             pline("%s %s.", Yobjnam2(uwep, "faintly glow"), color);
         return 1;
     }
     /* there is a (soft) upper and lower limit to uwep->spe */
     if (((uwep->spe > 5 && amount >= 0) || (uwep->spe < -5 && amount < 0))
         && rn2(3)) {
-        if (!Blind)
+        if (youCanSee())
             pline("%s %s for a while and then %s.",
                   Yobjnam2(uwep, "violently glow"), color,
                   otense(uwep, "evaporate"));
@@ -678,7 +678,7 @@ register int amount;
         useupall(uwep); /* let all of them disappear */
         return 1;
     }
-    if (!Blind) {
+    if (youCanSee()) {
         xtime = (amount * amount == 1) ? "moment" : "while";
         pline("%s %s for a %s.",
               Yobjnam2(uwep, amount == 0 ? "violently glow" : "glow"), color,

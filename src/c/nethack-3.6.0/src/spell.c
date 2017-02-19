@@ -133,7 +133,7 @@ struct obj *bp;
         aggravate();
         break;
     case 2:
-        make_blinded(Blinded + rn1(100, 250), TRUE);
+        make_blinded(yourIntrinsic(BLINDED) + rn1(100, 250), TRUE);
         break;
     case 3:
         take_gold();
@@ -783,7 +783,7 @@ cast_protection()
     gain = loglev - armorBonusFromProtectionSpell() / (4 - min(3, natac));
 
     if (gain > 0) {
-        if (!Blind) {
+        if (youCanSee()) {
             int rmtyp;
             const char *hgolden = hcolor(NH_GOLDEN), *atmosphere;
 

@@ -384,7 +384,7 @@ boolean resuming;
 
         clear_splitobjs();
         find_ac();
-        if (!context.mv || Blind) {
+        if (!context.mv || youCannotSee()) {
             /* redo monsters if hallu or wearing a helm of telepathy */
             if (Hallucination) { /* update screen randomly */
                 see_monsters();
