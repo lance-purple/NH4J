@@ -58,7 +58,7 @@ boolean forceshow;
             forceshow = TRUE;
         if ((currentX() == fcx && currentY() == fcy && grd->mhp > 0)
             || (!forceshow && couldsee(fcx, fcy))
-            || (Punished && !carried(uball) && uball->ox == fcx
+            || (youAreBeingPunished() && !carried(uball) && uball->ox == fcx
                 && uball->oy == fcy))
             return FALSE;
 

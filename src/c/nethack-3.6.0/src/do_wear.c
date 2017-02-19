@@ -1092,7 +1092,7 @@ register struct obj *otmp;
         if (flags.verbose)
             You_cant("see any more.");
         /* set ball&chain variables before the hero goes blind */
-        if (Punished)
+        if (youAreBeingPunished())
             set_bc(0);
     } else if (already_blind && !Blind) {
         changed = TRUE;
@@ -1142,7 +1142,7 @@ register struct obj *otmp;
             /* "You were wearing the Eyes of the Overworld." */
             You_cant("see anything now!");
             /* set ball&chain variables before the hero goes blind */
-            if (Punished)
+            if (youAreBeingPunished())
                 set_bc(0);
         }
     } else if (was_blind) {

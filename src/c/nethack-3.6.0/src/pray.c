@@ -216,7 +216,7 @@ in_trouble()
     /*
      * minor troubles
      */
-    if (Punished || (currentlyTrapped() && currentTrapType() == TT_BURIEDBALL))
+    if (youAreBeingPunished() || (currentlyTrapped() && currentTrapType() == TT_BURIEDBALL))
         return TROUBLE_PUNISHED;
     if (Cursed_obj(uarmg, GAUNTLETS_OF_FUMBLING)
         || Cursed_obj(uarmf, FUMBLE_BOOTS))
@@ -658,7 +658,7 @@ aligntyp resp_god;
         losexp((char *) 0);
         break;
     case 6:
-        if (!Punished) {
+        if (!youAreBeingPunished()) {
             gods_angry(resp_god);
             punish((struct obj *) 0);
             break;

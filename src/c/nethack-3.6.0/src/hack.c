@@ -1535,7 +1535,7 @@ domove()
     }
 
     /* Move ball and chain.  */
-    if (Punished)
+    if (youAreBeingPunished())
         if (!drag_ball(x, y, &bc_control, &ballx, &bally, &chainx, &chainy,
                        &cause_delay, TRUE))
             return;
@@ -1696,7 +1696,7 @@ domove()
         invocation_message();
     }
 
-    if (Punished) /* put back ball and chain */
+    if (youAreBeingPunished()) /* put back ball and chain */
         move_bc(0, bc_control, ballx, bally, chainx, chainy);
 
     spoteffects(TRUE);

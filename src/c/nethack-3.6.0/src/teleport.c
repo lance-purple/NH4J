@@ -252,7 +252,7 @@ boolean allow_drag;
         /* unearth it */
         buried_ball_to_punishment();
     }
-    ball_active = (Punished && uball->where != OBJ_FREE),
+    ball_active = (youAreBeingPunished() && uball->where != OBJ_FREE),
     ball_still_in_range = FALSE;
 
     /* If they have to move the ball, then drag if allow_drag is true;
@@ -297,7 +297,7 @@ boolean allow_drag;
     if (swallowed()) {
         setSwallowed(FALSE);
         setTimeSinceBeingSwallowed(0);
-        if (Punished && !ball_active) {
+        if (youAreBeingPunished() && !ball_active) {
             /* ensure ball placement, like unstuck */
             ball_active = TRUE;
             allow_drag = FALSE;

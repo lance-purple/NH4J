@@ -2080,7 +2080,7 @@ struct monst *mtmp;
             setCurrentY(mtmp->my);
             setSwallowed(FALSE);
             setTimeSinceBeingSwallowed(0);
-            if (Punished && uchain->where != OBJ_FLOOR)
+            if (youAreBeingPunished() && uchain->where != OBJ_FLOOR)
                 placebc();
             vision_full_recalc = 1;
             docrt();

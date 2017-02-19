@@ -2341,7 +2341,7 @@ boolean ordinary;
         break;
     case WAN_OPENING:
     case SPE_KNOCK:
-        if (Punished) {
+        if (youAreBeingPunished()) {
             learn_it = TRUE;
             unpunish();
         }

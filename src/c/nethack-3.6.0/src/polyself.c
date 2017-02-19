@@ -828,7 +828,7 @@ int mntmp;
     }
     if (amorphous(youmonst.data) || is_whirly(youmonst.data)
         || unsolid(youmonst.data)) {
-        if (Punished) {
+        if (youAreBeingPunished()) {
             You("slip out of the iron chain.");
             unpunish();
         } else if (currentlyTrapped() && currentTrapType() == TT_BURIEDBALL) {
@@ -1123,7 +1123,7 @@ dospit()
 int
 doremove()
 {
-    if (!Punished) {
+    if (!youAreBeingPunished()) {
         if (currentlyTrapped() && currentTrapType() == TT_BURIEDBALL) {
             pline_The("ball and chain are buried firmly in the %s.",
                       surface(currentX(), currentY()));

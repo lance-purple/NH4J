@@ -147,6 +147,8 @@ E boolean FDECL(youResistStoning, ());
 E boolean FDECL(youResistSickness, ());
 E boolean FDECL(youAreInvulnerable, ());
 
+E boolean FDECL(youAreBeingPunished, ());
+
 /* ### ball.c ### */
 
 E void FDECL(ballrelease, (BOOLEAN_P));

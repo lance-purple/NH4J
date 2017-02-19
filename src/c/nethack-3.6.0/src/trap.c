@@ -1169,7 +1169,7 @@ unsigned trflags;
                                    : "fell into a pit",
                            NO_KILLER_PREFIX);
             }
-            if (Punished && !carried(uball)) {
+            if (youAreBeingPunished() && !carried(uball)) {
                 unplacebc();
                 ballfall();
                 placebc();
@@ -2832,7 +2832,7 @@ long hmask, emask; /* might cancel timeout */
         return 1;
     }
 
-    if (Punished && !carried(uball)
+    if (youAreBeingPunished() && !carried(uball)
         && (is_pool(uball->ox, uball->oy)
             || ((trap = t_at(uball->ox, uball->oy))
                 && ((trap->ttyp == PIT) || (trap->ttyp == SPIKED_PIT)
@@ -3489,7 +3489,7 @@ boolean *lostsome;
 {
     int invc = inv_cnt(TRUE);
 
-    while (near_capacity() > (Punished ? UNENCUMBERED : SLT_ENCUMBER)) {
+    while (near_capacity() > (youAreBeingPunished() ? UNENCUMBERED : SLT_ENCUMBER)) {
         register struct obj *obj, *otmp = (struct obj *) 0;
         register int i;
 
@@ -3585,7 +3585,7 @@ drown()
                     You("touch bottom.");
             }
         }
-        if (Punished) {
+        if (youAreBeingPunished()) {
             unplacebc();
             placebc();
         }
@@ -3803,7 +3803,7 @@ struct trap *ttmp;
 
     bx = by = cx = cy = 0; /* lint suppression */
     /* we know there's no monster in the way, and we're not trapped */
-    if (!Punished
+    if (!youAreBeingPunished()
         || drag_ball(x, y, &bc, &bx, &by, &cx, &cy, &unused, TRUE)) {
         setOriginalX(currentX());
         setOriginalY(currentY());
@@ -3813,7 +3813,7 @@ struct trap *ttmp;
         newsym(originalX(), originalY());
         vision_recalc(1);
         check_leash(originalX(), originalY());
-        if (Punished)
+        if (youAreBeingPunished())
             move_bc(0, bc, bx, by, cx, cy);
         /* marking the trap unseen forces dotrap() to treat it like a new
            discovery and prevents pickup() -> look_here() -> check_here()
@@ -4618,7 +4618,7 @@ boolean disarm;
              * being invalid once the chain is gone.
              * Deal with ball & chain right now instead.
              */
-            if (Punished && !carried(uball)
+            if (youAreBeingPunished() && !carried(uball)
                 && ((uchain->ox == currentX() && uchain->oy == currentY())
                     || (uball->ox == currentX() && uball->oy == currentY())))
                 unpunish();

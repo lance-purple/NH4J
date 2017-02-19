@@ -21,8 +21,6 @@
  */
 
 /*** Troubles ***/
-/* Pseudo-property */
-#define Punished (uball != 0)
 
 /* Those implemented solely as timeouts (we use just intrinsic) */
 #define HStun u.uprops[STUNNED].intrinsic

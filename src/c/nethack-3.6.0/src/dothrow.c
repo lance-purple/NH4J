@@ -703,7 +703,7 @@ boolean verbose;
      * bother with all of that, assume that there is no slack in the chain
      * for diagonal movement, give the player a message and return.
      */
-    if (Punished && !carried(uball)) {
+    if (youAreBeingPunished() && !carried(uball)) {
         You_feel("a tug from the iron ball.");
         nomul(0);
         return;

@@ -1410,4 +1410,8 @@ extern boolean youAreInvulnerable() {
  return (yourIntrinsic(INVULNERABLE));
 }
 
+extern boolean youAreBeingPunished() {
+ return (uball != 0);
+}
+
 /*attrib.c*/

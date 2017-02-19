@@ -627,7 +627,7 @@ xchar x, y;
     } else {
         _map_location(x, y, 1);
 
-        if (Punished) {
+        if (youAreBeingPunished()) {
             /*
              * A ball or chain is only felt if it is first on the object
              * location list.  Otherwise, we need to clear the felt bit ---

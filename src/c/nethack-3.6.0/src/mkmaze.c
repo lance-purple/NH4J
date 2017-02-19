@@ -975,7 +975,7 @@ movebubbles()
 
     if (areYouOnWaterLevel()) {
         /* keep attached ball&chain separate from bubble objects */
-        if (Punished)
+        if (youAreBeingPunished())
             unplacebc();
 
         /*
@@ -1089,7 +1089,7 @@ movebubbles()
     }
 
     /* put attached ball&chain back */
-    if (areYouOnWaterLevel() && Punished)
+    if (areYouOnWaterLevel() && youAreBeingPunished())
         placebc();
     vision_full_recalc = 1;
 }

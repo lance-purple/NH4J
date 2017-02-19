@@ -254,7 +254,7 @@ boolean talk;
                 pline("A cloud of darkness falls upon you.");
         }
         /* Before the hero goes blind, set the ball&chain variables. */
-        if (Punished)
+        if (youAreBeingPunished())
             set_bc(0);
     } else if (!old && xtime) {
         /* setting temporary blindness without toggling blindness */

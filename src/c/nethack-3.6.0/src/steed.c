@@ -234,10 +234,10 @@ boolean force;      /* Quietly force this animal */
         pline("I see nobody there.");
         return (FALSE);
     }
-    if (swallowed() || u.ustuck || currentlyTrapped() || Punished
+    if (swallowed() || u.ustuck || currentlyTrapped() || youAreBeingPunished()
         || !test_move(currentX(), currentY(), mtmp->mx - currentX(), mtmp->my - currentY(),
                       TEST_MOVE)) {
-        if (Punished || !(swallowed() || u.ustuck || currentlyTrapped()))
+        if (youAreBeingPunished() || !(swallowed() || u.ustuck || currentlyTrapped()))
             You("are unable to swing your %s over.", body_part(LEG));
         else
             You("are stuck here for now.");

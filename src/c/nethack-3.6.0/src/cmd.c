@@ -1712,7 +1712,7 @@ int final;
         you_are("deaf", from_what(DEAF));
 
     /* external troubles, more or less */
-    if (Punished) {
+    if (youAreBeingPunished()) {
         if (uball) {
             Sprintf(buf, "chained to %s", ansimpleoname(uball));
         } else {

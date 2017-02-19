@@ -1659,7 +1659,7 @@ register struct attack *mattk;
             && sobj_at(BOULDER, currentX(), currentY()))
             return 0;
 
-        if (Punished)
+        if (youAreBeingPunished())
             unplacebc(); /* ball&chain go away */
         remove_monster(omx, omy);
         mtmp->mtrapped = 0; /* no longer on old trap */
@@ -1702,7 +1702,7 @@ register struct attack *mattk;
             minstapetrify(mtmp, TRUE);
             /* normally unstuck() would do this, but we're not
                fully swallowed yet so that won't work here */
-            if (Punished)
+            if (youAreBeingPunished())
                 placebc();
             u.ustuck = 0;
             return (mtmp->mhp > 0) ? 0 : 2;

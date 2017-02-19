@@ -1173,7 +1173,7 @@ boolean at_stairs, falling, portal;
         impact_drop((struct obj *) 0, currentX(), currentY(), newlevel->dlevel);
 
     check_special_room(TRUE); /* probably was a trap door */
-    if (Punished)
+    if (youAreBeingPunished())
         unplacebc();
     setCurrentTrapTimeout(0); /* needed in level_tele */
     fill_pit(currentX(), currentY());
@@ -1303,7 +1303,7 @@ boolean at_stairs, falling, portal;
             /* you climb up the {stairs|ladder};
                fly up the stairs; fly up along the ladder */
             pline("%s %s up%s the %s.",
-                  (Punished && !Levitation) ? "With great effort you" : "You",
+                  (youAreBeingPunished() && !Levitation) ? "With great effort you" : "You",
                   Flying ? "fly" : "climb",
                   (Flying && at_ladder) ? " along" : "",
                   at_ladder ? "ladder" : "stairs");
@@ -1320,10 +1320,10 @@ boolean at_stairs, falling, portal;
                 if (flags.verbose)
                     You("fly down %s.",
                         at_ladder ? "along the ladder" : "the stairs");
-            } else if (near_capacity() > UNENCUMBERED || Punished
+            } else if (near_capacity() > UNENCUMBERED || youAreBeingPunished()
                        || Fumbling) {
                 You("fall down the %s.", at_ladder ? "ladder" : "stairs");
-                if (Punished) {
+                if (youAreBeingPunished()) {
                     drag_down();
                     ballrelease(FALSE);
                 }
@@ -1345,13 +1345,13 @@ boolean at_stairs, falling, portal;
     } else { /* trap door or level_tele or In_endgame */
         u_on_rndspot((up ? 1 : 0) | (was_in_W_tower ? 2 : 0));
         if (falling) {
-            if (Punished)
+            if (youAreBeingPunished())
                 ballfall();
             selftouch("Falling, you");
         }
     }
 
-    if (Punished)
+    if (youAreBeingPunished())
         placebc();
     obj_delivery(FALSE);
     losedogs();

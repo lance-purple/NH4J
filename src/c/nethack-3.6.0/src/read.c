@@ -861,7 +861,7 @@ STATIC_OVL void
 forget(howmuch)
 int howmuch;
 {
-    if (Punished) {
+    if (youAreBeingPunished()) {
         setFeltBall(FALSE);
         setFeltChain(FALSE);
     }
@@ -1285,7 +1285,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
                 }
             }
         }
-        if (Punished && !confused)
+        if (youAreBeingPunished() && !confused)
             unpunish();
         if (currentlyTrapped() && currentTrapType() == TT_BURIEDBALL) {
             buried_ball_to_freedom();
@@ -1891,7 +1891,7 @@ struct obj *obj;
      *  blind, then we have to pick up and replace the ball and chain so
      *  that we don't remember them if they are out of sight.
      */
-    if (Punished && !on && !Blind)
+    if (youAreBeingPunished() && !on && !Blind)
         move_bc(1, 0, uball->ox, uball->oy, uchain->ox, uchain->oy);
 
     if (areYouOnRogueLevel()) {
@@ -1924,7 +1924,7 @@ struct obj *obj;
         vision_recalc(2);
 
         /* replace ball&chain */
-        if (Punished && !on)
+        if (youAreBeingPunished() && !on)
             move_bc(0, 0, uball->ox, uball->oy, uchain->ox, uchain->oy);
     }
 
@@ -2262,7 +2262,7 @@ struct obj *sobj;
     /* KMH -- Punishment is still okay when you are riding */
     if (!reuse_ball)
         You("are being punished for your misbehavior!");
-    if (Punished) {
+    if (youAreBeingPunished()) {
         Your("iron ball gets heavier.");
         uball->owt += 160 * (1 + sobj->cursed);
         return;
