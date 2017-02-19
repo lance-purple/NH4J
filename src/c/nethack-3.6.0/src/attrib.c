@@ -17,81 +17,81 @@ static const char
 
 static const struct innate {
     schar ulevel;
-    long *ability;
+    int intrinsic;
     const char *gainstr, *losestr;
-} arc_abil[] = { { 1, &(HStealth), "", "" },
-                 { 1, &(HFast), "", "" },
-                 { 10, &(HSearching), "perceptive", "" },
+} arc_abil[] = { { 1, STEALTH, "", "" },
+                 { 1, FAST, "", "" },
+                 { 10, SEARCHING, "perceptive", "" },
                  { 0, 0, 0, 0 } },
 
-  bar_abil[] = { { 1, &(HPoison_resistance), "", "" },
-                 { 7, &(HFast), "quick", "slow" },
-                 { 15, &(HStealth), "stealthy", "" },
+  bar_abil[] = { { 1, POISON_RES, "", "" },
+                 { 7, FAST, "quick", "slow" },
+                 { 15, STEALTH, "stealthy", "" },
                  { 0, 0, 0, 0 } },
 
-  cav_abil[] = { { 7, &(HFast), "quick", "slow" },
-                 { 15, &(HWarning), "sensitive", "" },
+  cav_abil[] = { { 7, FAST, "quick", "slow" },
+                 { 15, WARNING, "sensitive", "" },
                  { 0, 0, 0, 0 } },
 
-  hea_abil[] = { { 1, &(HPoison_resistance), "", "" },
-                 { 15, &(HWarning), "sensitive", "" },
+  hea_abil[] = { { 1, POISON_RES, "", "" },
+                 { 15, WARNING, "sensitive", "" },
                  { 0, 0, 0, 0 } },
 
-  kni_abil[] = { { 7, &(HFast), "quick", "slow" }, { 0, 0, 0, 0 } },
+  kni_abil[] = { { 7, FAST, "quick", "slow" }, { 0, 0, 0, 0 } },
 
-  mon_abil[] = { { 1, &(HFast), "", "" },
-                 { 1, &(HSleep_resistance), "", "" },
-                 { 1, &(HSee_invisible), "", "" },
-                 { 3, &(HPoison_resistance), "healthy", "" },
-                 { 5, &(HStealth), "stealthy", "" },
-                 { 7, &(HWarning), "sensitive", "" },
-                 { 9, &(HSearching), "perceptive", "unaware" },
-                 { 11, &(HFire_resistance), "cool", "warmer" },
-                 { 13, &(HCold_resistance), "warm", "cooler" },
-                 { 15, &(HShock_resistance), "insulated", "conductive" },
-                 { 17, &(HTeleport_control), "controlled", "uncontrolled" },
+  mon_abil[] = { { 1, FAST, "", "" },
+                 { 1, SLEEP_RES, "", "" },
+                 { 1, SEE_INVIS, "", "" },
+                 { 3, POISON_RES, "healthy", "" },
+                 { 5, STEALTH, "stealthy", "" },
+                 { 7, WARNING, "sensitive", "" },
+                 { 9, SEARCHING, "perceptive", "unaware" },
+                 { 11, FIRE_RES, "cool", "warmer" },
+                 { 13, COLD_RES, "warm", "cooler" },
+                 { 15, SHOCK_RES, "insulated", "conductive" },
+                 { 17, TELEPORT_CONTROL, "controlled", "uncontrolled" },
                  { 0, 0, 0, 0 } },
 
-  pri_abil[] = { { 15, &(HWarning), "sensitive", "" },
-                 { 20, &(HFire_resistance), "cool", "warmer" },
+  pri_abil[] = { { 15, WARNING, "sensitive", "" },
+                 { 20, FIRE_RES, "cool", "warmer" },
                  { 0, 0, 0, 0 } },
 
-  ran_abil[] = { { 1, &(HSearching), "", "" },
-                 { 7, &(HStealth), "stealthy", "" },
-                 { 15, &(HSee_invisible), "", "" },
+  ran_abil[] = { { 1, SEARCHING, "", "" },
+                 { 7, STEALTH, "stealthy", "" },
+                 { 15, SEE_INVIS, "", "" },
                  { 0, 0, 0, 0 } },
 
-  rog_abil[] = { { 1, &(HStealth), "", "" },
-                 { 10, &(HSearching), "perceptive", "" },
+  rog_abil[] = { { 1, STEALTH, "", "" },
+                 { 10, SEARCHING, "perceptive", "" },
                  { 0, 0, 0, 0 } },
 
-  sam_abil[] = { { 1, &(HFast), "", "" },
-                 { 15, &(HStealth), "stealthy", "" },
+  sam_abil[] = { { 1, FAST, "", "" },
+                 { 15, STEALTH, "stealthy", "" },
                  { 0, 0, 0, 0 } },
 
-  tou_abil[] = { { 10, &(HSearching), "perceptive", "" },
-                 { 20, &(HPoison_resistance), "hardy", "" },
+  tou_abil[] = { { 10, SEARCHING, "perceptive", "" },
+                 { 20, POISON_RES, "hardy", "" },
                  { 0, 0, 0, 0 } },
 
-  val_abil[] = { { 1, &(HCold_resistance), "", "" },
-                 { 1, &(HStealth), "", "" },
-                 { 7, &(HFast), "quick", "slow" },
+  val_abil[] = { { 1, COLD_RES, "", "" },
+                 { 1, STEALTH, "", "" },
+                 { 7, FAST, "quick", "slow" },
                  { 0, 0, 0, 0 } },
 
-  wiz_abil[] = { { 15, &(HWarning), "sensitive", "" },
-                 { 17, &(HTeleport_control), "controlled", "uncontrolled" },
+  wiz_abil[] = { { 15, WARNING, "sensitive", "" },
+                 { 17, TELEPORT_CONTROL, "controlled", "uncontrolled" },
                  { 0, 0, 0, 0 } },
 
   /* Intrinsics conferred by race */
-    elf_abil[] = { { 4, &(HSleep_resistance), "awake", "tired" },
+    elf_abil[] = { { 4, SLEEP_RES, "awake", "tired" },
                    { 0, 0, 0, 0 } },
 
-  orc_abil[] = { { 1, &(HPoison_resistance), "", "" }, { 0, 0, 0, 0 } };
+  orc_abil[] = { { 1, POISON_RES, "", "" }, { 0, 0, 0, 0 } };
 
 STATIC_DCL void NDECL(exerper);
-STATIC_DCL void FDECL(postadjabil, (long *));
-STATIC_DCL const struct innate *FDECL(check_innate_abil, (long *, long));
-STATIC_DCL int FDECL(innately, (long *));
+STATIC_DCL void FDECL(postadjabil, (int));
+STATIC_DCL const struct innate *FDECL(check_innate_abil, (int, long));
+STATIC_DCL int FDECL(innately, (int));
 
 /* adjust an attribute; return TRUE if change is made, FALSE otherwise */
 boolean
@@ -637,18 +637,16 @@ redist_attr()
 
 STATIC_OVL
 void
-postadjabil(ability)
-long *ability;
+postadjabil(intrinsic)
+int intrinsic;
 {
-    if (!ability)
-        return;
-    if (ability == &(HWarning) || ability == &(HSee_invisible))
+    if ((intrinsic == WARNING) || (intrinsic == SEE_INVIS))
         see_monsters();
 }
 
 STATIC_OVL const struct innate *
-check_innate_abil(ability, frommask)
-long *ability;
+check_innate_abil(intrinsic, frommask)
+int intrinsic;
 long frommask;
 {
     const struct innate *abil = 0;
@@ -712,8 +710,8 @@ long frommask;
             break;
         }
 
-    while (abil && abil->ability) {
-        if ((abil->ability == ability) && (currentExperienceLevel() >= abil->ulevel))
+    while (abil && abil->intrinsic) {
+        if ((abil->intrinsic == intrinsic) && (currentExperienceLevel() >= abil->ulevel))
             return abil;
         abil++;
     }
@@ -726,25 +724,25 @@ long frommask;
  * otherwise returns 0
  */
 STATIC_OVL int
-innately(ability)
-long *ability;
+innately(intrinsic)
+int intrinsic;
 {
     const struct innate *iptr;
 
-    if ((iptr = check_innate_abil(ability, FROMRACE)) != 0)
+    if ((iptr = check_innate_abil(intrinsic, FROMRACE)) != 0)
         return 1;
-    else if ((iptr = check_innate_abil(ability, FROMEXPER)) != 0)
+    else if ((iptr = check_innate_abil(intrinsic, FROMEXPER)) != 0)
         return (iptr->ulevel == 1) ? 1 : 2;
     return 0;
 }
 
 int
-is_innate(propidx)
-int propidx;
+is_innate(intrinsic)
+int intrinsic;
 {
-    if (propidx == BLINDED && !haseyes(youmonst.data))
+    if (intrinsic == BLINDED && !haseyes(youmonst.data))
         return 1;
-    return innately(&u.uprops[propidx].intrinsic);
+    return innately(intrinsic);
 }
 
 char *
@@ -881,15 +879,15 @@ int oldlevel, newlevel;
 
     while (abil || rabil) {
         /* Have we finished with the intrinsics list? */
-        if (!abil || !abil->ability) {
+        if (!abil || !abil->intrinsic) {
             /* Try the race intrinsics */
-            if (!rabil || !rabil->ability)
+            if (!rabil || !rabil->intrinsic)
                 break;
             abil = rabil;
             rabil = 0;
             mask = FROMRACE;
         }
-        prevabil = *(abil->ability);
+        prevabil = yourIntrinsic(abil->intrinsic);
         if (oldlevel < abil->ulevel && newlevel >= abil->ulevel) {
             /* Abilities gained at level 1 can never be lost
              * via level loss, only via means that remove _any_
@@ -897,25 +895,27 @@ int oldlevel, newlevel;
              * an outside source is devoid of meaning, so we set
              * FROMOUTSIDE to avoid such gains.
              */
-            if (abil->ulevel == 1)
-                *(abil->ability) |= (mask | FROMOUTSIDE);
-            else
-                *(abil->ability) |= mask;
-            if (!(*(abil->ability) & INTRINSIC & ~mask)) {
+            if (abil->ulevel == 1) {
+                setYourIntrinsicMask(abil->intrinsic, (mask | FROMOUTSIDE));
+	    } else {
+                setYourIntrinsicMask(abil->intrinsic, mask);
+	    }
+
+            if (!(yourIntrinsic(abil->intrinsic) & INTRINSIC & ~mask)) {
                 if (*(abil->gainstr))
                     You_feel("%s!", abil->gainstr);
             }
         } else if (oldlevel >= abil->ulevel && newlevel < abil->ulevel) {
-            *(abil->ability) &= ~mask;
-            if (!(*(abil->ability) & INTRINSIC)) {
+            unsetYourIntrinsicMask(abil->intrinsic, mask);
+            if (!(yourIntrinsicHasMask(abil->intrinsic, INTRINSIC))) {
                 if (*(abil->losestr))
                     You_feel("%s!", abil->losestr);
                 else if (*(abil->gainstr))
                     You_feel("less %s!", abil->gainstr);
             }
         }
-        if (prevabil != *(abil->ability)) /* it changed */
-            postadjabil(abil->ability);
+        if (prevabil != yourIntrinsic(abil->intrinsic)) /* it changed */
+            postadjabil(abil->intrinsic);
         abil++;
     }
 
@@ -1369,7 +1369,7 @@ extern boolean youResistShock() {
 }
 
 extern boolean youResistPoison() {
-  return (HPoison_resistance || EPoison_resistance);
+ return (yourExtrinsic(POISON_RES) || yourIntrinsic(POISON_RES));
 }
 
 extern boolean youResistDraining() {

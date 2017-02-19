@@ -22,39 +22,25 @@
 
 /*** Resistances to troubles ***/
 /* With intrinsics and extrinsics */
-#define HFire_resistance u.uprops[FIRE_RES].intrinsic
 #define EFire_resistance u.uprops[FIRE_RES].extrinsic
 
-#define HCold_resistance u.uprops[COLD_RES].intrinsic
 #define ECold_resistance u.uprops[COLD_RES].extrinsic
 
-#define HSleep_resistance u.uprops[SLEEP_RES].intrinsic
 #define ESleep_resistance u.uprops[SLEEP_RES].extrinsic
 
-#define HDisint_resistance u.uprops[DISINT_RES].intrinsic
 #define EDisint_resistance u.uprops[DISINT_RES].extrinsic
 
-#define HShock_resistance u.uprops[SHOCK_RES].intrinsic
 #define EShock_resistance u.uprops[SHOCK_RES].extrinsic
 
-#define HPoison_resistance u.uprops[POISON_RES].intrinsic
 #define EPoison_resistance u.uprops[POISON_RES].extrinsic
 
-#define HDrain_resistance u.uprops[DRAIN_RES].intrinsic
 #define EDrain_resistance u.uprops[DRAIN_RES].extrinsic
 
-/* Hxxx due to FROMFORM only */
-#define HAntimagic u.uprops[ANTIMAGIC].intrinsic
 #define EAntimagic u.uprops[ANTIMAGIC].extrinsic
 
-#define HAcid_resistance u.uprops[ACID_RES].intrinsic
 #define EAcid_resistance u.uprops[ACID_RES].extrinsic
 
-#define HStone_resistance u.uprops[STONE_RES].intrinsic
 #define EStone_resistance u.uprops[STONE_RES].extrinsic
-
-/* Intrinsics only */
-#define HSick_resistance u.uprops[SICK_RES].intrinsic
 
 
 /*** Troubles ***/
