@@ -1430,7 +1430,7 @@ register struct attack *mattk;
     case AD_STUN:
         hitmsg(mtmp, mattk);
         if (!mtmp->mcan && !rn2(4)) {
-            make_stunned((HStun & TIMEOUT) + (long) dmg, TRUE);
+            make_stunned(yourIntrinsicTimeout(STUNNED) + (long) dmg, TRUE);
             dmg /= 2;
         }
         break;
@@ -1462,11 +1462,11 @@ register struct attack *mattk;
         hitmsg(mtmp, mattk);
         if (!mtmp->mcan && !rn2(4) && !mtmp->mspec_used) {
             mtmp->mspec_used = mtmp->mspec_used + (dmg + rn2(6));
-            if (Confusion)
+            if (youAreConfused())
                 You("are getting even more confused.");
             else
                 You("are getting confused.");
-            make_confused(HConfusion + dmg, FALSE);
+            make_confused(yourIntrinsic(CONFUSION) + dmg, FALSE);
         }
         dmg = 0;
         break;
@@ -2066,11 +2066,11 @@ register struct attack *mattk;
                 int conf = d(3, 4);
 
                 mtmp->mspec_used = mtmp->mspec_used + (conf + rn2(6));
-                if (!Confusion)
+                if (!youAreConfused())
                     pline("%s gaze confuses you!", s_suffix(Monnam(mtmp)));
                 else
                     You("are getting more and more confused.");
-                make_confused(HConfusion + conf, FALSE);
+                make_confused(yourIntrinsic(CONFUSION) + conf, FALSE);
                 stop_occupation();
             }
         }
@@ -2086,7 +2086,7 @@ register struct attack *mattk;
 
                 mtmp->mspec_used = mtmp->mspec_used + (stun + rn2(6));
                 pline("%s stares piercingly at you!", Monnam(mtmp));
-                make_stunned((HStun & TIMEOUT) + (long) stun, TRUE);
+                make_stunned(yourIntrinsicTimeout(STUNNED) + (long) stun, TRUE);
                 stop_occupation();
             }
         }

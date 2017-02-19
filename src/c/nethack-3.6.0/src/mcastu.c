@@ -450,15 +450,15 @@ int spellnum;
     case MGC_STUN_YOU:
         if (youResistMagic() || Free_action) {
             shieldeff(currentX(), currentY());
-            if (!Stunned)
+            if (!youAreStunned())
                 You_feel("momentarily disoriented.");
             make_stunned(1L, FALSE);
         } else {
-            You(Stunned ? "struggle to keep your balance." : "reel...");
+            You(youAreStunned() ? "struggle to keep your balance." : "reel...");
             dmg = d(ACURR(A_DEX) < 12 ? 6 : 4, 4);
             if (Half_spell_damage)
                 dmg = (dmg + 1) / 2;
-            make_stunned((HStun & TIMEOUT) + (long) dmg, FALSE);
+            make_stunned(yourIntrinsicTimeout(STUNNED) + (long) dmg, FALSE);
         }
         dmg = 0;
         break;
@@ -674,12 +674,12 @@ int spellnum;
             shieldeff(currentX(), currentY());
             You_feel("momentarily dizzy.");
         } else {
-            boolean oldprop = !!Confusion;
+            boolean oldprop = !!youAreConfused();
 
             dmg = (int) mtmp->m_lev;
             if (Half_spell_damage)
                 dmg = (dmg + 1) / 2;
-            make_confused(HConfusion + dmg, TRUE);
+            make_confused(yourIntrinsic(CONFUSION) + dmg, TRUE);
             if (Hallucination)
                 You_feel("%s!", oldprop ? "trippier" : "trippy");
             else

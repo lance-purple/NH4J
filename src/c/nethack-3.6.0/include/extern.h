@@ -125,11 +125,13 @@ E char *FDECL(from_what, (int));
 E void FDECL(uchangealign, (int, int));
 
 E long FDECL(yourIntrinsic, (int));
+E void FDECL(setYourIntrinsic, (int, long));
 E boolean FDECL(yourIntrinsicHasMask, (int, long));
 E void FDECL(setYourIntrinsicMask, (int, long));
 E void FDECL(unsetYourIntrinsicMask, (int, long));
 
 E long FDECL(yourExtrinsic, (int));
+E void FDECL(setYourExtrinsic, (int, long));
 E boolean FDECL(yourExtrinsicHasMask, (int, long));
 E void FDECL(setYourExtrinsicMask, (int, long));
 E void FDECL(unsetYourExtrinsicMask, (int, long));
@@ -148,6 +150,9 @@ E boolean FDECL(youResistSickness, ());
 E boolean FDECL(youAreInvulnerable, ());
 
 E boolean FDECL(youAreBeingPunished, ());
+E boolean FDECL(youAreStunned, ());
+E boolean FDECL(youAreConfused, ());
+E boolean FDECL(youAreHallucinating, ());
 
 /* ### ball.c ### */
 

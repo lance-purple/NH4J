@@ -346,7 +346,7 @@ register struct obj *obj;
         You_hear("your heart beat.");
         return res;
     }
-    if (Stunned || (Confusion && !rn2(5)))
+    if (youAreStunned() || (youAreConfused() && !rn2(5)))
         confdir();
     if (!directionX() && !directionY()) {
         ustatusline();
@@ -813,7 +813,7 @@ struct obj *obj;
                 You("don't have a reflection.");
             else if (currentMonsterNumber() == PM_UMBER_HULK) {
                 pline("Huh?  That doesn't look like you!");
-                make_confused(HConfusion + d(3, 4), FALSE);
+                make_confused(yourIntrinsic(CONFUSION) + d(3, 4), FALSE);
             } else if (Hallucination)
                 You(look_str, hcolor((char *) 0));
             else if (Sick)
@@ -1723,6 +1723,10 @@ struct obj *obj;
         impossible("Tinning failed.");
 }
 
+static long TimedTrouble(long intrinsic) {
+    return ((intrinsic) && !((intrinsic) & ~TIMEOUT)) ? ((intrinsic) & TIMEOUT) : 0L;
+}
+
 void
 use_unicorn_horn(obj)
 struct obj *obj;
@@ -1738,7 +1742,7 @@ struct obj *obj;
 
         switch (rn2(13) / 2) { /* case 6 is half as likely as the others */
         case 0:
-            make_sick((Sick & TIMEOUT) ? (Sick & TIMEOUT) / 3L + 1L
+            make_sick(yourIntrinsicTimeout(SICK) ? yourIntrinsicTimeout(SICK) / 3L + 1L
                                        : (long) rn1(ACURR(A_CON), 20),
                       xname(obj), TRUE, SICK_NONVOMITABLE);
             break;
@@ -1746,25 +1750,25 @@ struct obj *obj;
             make_blinded((Blinded & TIMEOUT) + lcount, TRUE);
             break;
         case 2:
-            if (!Confusion)
+            if (!youAreConfused())
                 You("suddenly feel %s.",
                     Hallucination ? "trippy" : "confused");
-            make_confused((HConfusion & TIMEOUT) + lcount, TRUE);
+            make_confused(yourIntrinsicTimeout(CONFUSION) + lcount, TRUE);
             break;
         case 3:
-            make_stunned((HStun & TIMEOUT) + lcount, TRUE);
+            make_stunned(yourIntrinsicTimeout(STUNNED) + lcount, TRUE);
             break;
         case 4:
             (void) adjattrib(rn2(A_MAX), -1, FALSE);
             break;
         case 5:
-            (void) make_hallucinated((HHallucination & TIMEOUT) + lcount,
+            (void) make_hallucinated(yourIntrinsicTimeout(HALLUC) + lcount,
                                      TRUE, 0L);
             break;
         case 6:
             if (Deaf) /* make_deaf() won't give feedback when already deaf */
                 pline("Nothing seems to happen.");
-            make_deaf((HDeaf & TIMEOUT) + lcount, TRUE);
+            make_deaf(yourIntrinsicTimeout(DEAF) + lcount, TRUE);
             break;
         }
         return;
@@ -1777,7 +1781,6 @@ struct obj *obj;
 #define attr2trbl(Y) (Y)
 #define prop_trouble(X) trouble_list[trouble_count++] = prop2trbl(X)
 #define attr_trouble(Y) trouble_list[trouble_count++] = attr2trbl(Y)
-#define TimedTrouble(P) (((P) && !((P) & ~TIMEOUT)) ? ((P) & TIMEOUT) : 0L)
 
     trouble_count = unfixable_trbl = did_prop = did_attr = 0;
 
@@ -1792,11 +1795,11 @@ struct obj *obj;
         prop_trouble(HALLUC);
     if (TimedTrouble(Vomiting))
         prop_trouble(VOMITING);
-    if (TimedTrouble(HConfusion))
+    if (TimedTrouble(yourIntrinsic(CONFUSION)))
         prop_trouble(CONFUSION);
-    if (TimedTrouble(HStun))
+    if (TimedTrouble(yourIntrinsic(STUNNED)))
         prop_trouble(STUNNED);
-    if (TimedTrouble(HDeaf))
+    if (TimedTrouble(yourIntrinsic(DEAF)))
         prop_trouble(DEAF);
 
     unfixable_trbl = unfixable_trouble_count(TRUE);
@@ -1907,7 +1910,6 @@ struct obj *obj;
 #undef attr2trbl
 #undef prop_trouble
 #undef attr_trouble
-#undef TimedTrouble
 }
 
 /*
@@ -2305,7 +2307,7 @@ struct obj *otmp;
 
     if (nohands(youmonst.data))
         what = "without hands";
-    else if (Stunned)
+    else if (youAreStunned())
         what = "while stunned";
     else if (swallowed())
         what =
@@ -2458,7 +2460,7 @@ struct obj *obj;
         rx = mtmp->mx;
         ry = mtmp->my;
     } else {
-        if (Stunned || (Confusion && !rn2(5)))
+        if (youAreStunned() || (youAreConfused() && !rn2(5)))
             confdir();
         rx = currentX() + directionX();
         ry = currentY() + directionY();
@@ -3570,7 +3572,7 @@ boolean is_horn;
         unfixable_trbl++;
     /* lycanthropy is undesirable, but it doesn't actually make you feel bad */
 
-    if (!is_horn || (Confusion & ~TIMEOUT))
+    if (!is_horn || yourIntrinsicHasMask(CONFUSION, (~TIMEOUT)))
         unfixable_trbl++;
     if (!is_horn || (Sick & ~TIMEOUT))
         unfixable_trbl++;
@@ -3578,9 +3580,9 @@ boolean is_horn;
         unfixable_trbl++;
     if (!is_horn || (Vomiting & ~TIMEOUT))
         unfixable_trbl++;
-    if (!is_horn || (HStun & ~TIMEOUT))
+    if (!is_horn || yourIntrinsicHasMask(STUNNED, (~TIMEOUT)))
         unfixable_trbl++;
-    if (!is_horn || (HDeaf & ~TIMEOUT))
+    if (!is_horn || yourIntrinsicHasMask(DEAF, (~TIMEOUT)))
         unfixable_trbl++;
 
     return unfixable_trbl;

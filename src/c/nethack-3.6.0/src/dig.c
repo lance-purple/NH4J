@@ -1043,7 +1043,7 @@ struct obj *obj;
         context.botl = 1;
         return 1;
     } else if (directionZ() == 0) {
-        if (Stunned || (Confusion && !rn2(5)))
+        if (youAreStunned() || (youAreConfused() && !rn2(5)))
             confdir();
         rx = currentX() + directionX();
         ry = currentY() + directionY();

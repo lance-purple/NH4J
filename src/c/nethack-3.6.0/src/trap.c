@@ -3136,14 +3136,14 @@ domagictrap()
         }
         case 20: { /* uncurse stuff */
             struct obj pseudo;
-            long save_conf = HConfusion;
+            long priorConfusion = yourIntrinsic(CONFUSION);
 
             pseudo = zeroobj; /* neither cursed nor blessed,
                                  and zero out oextra */
             pseudo.otyp = SCR_REMOVE_CURSE;
-            HConfusion = 0L;
+            setYourIntrinsic(CONFUSION, 0L);
             (void) seffects(&pseudo);
-            HConfusion = save_conf;
+            setYourIntrinsic(CONFUSION, priorConfusion);
             break;
         }
         default:
@@ -3739,11 +3739,11 @@ struct trap *ttmp;
     /* Only spiders know how to deal with webs reliably */
     if (ttmp->ttyp == WEB && !webmaker(youmonst.data))
         chance = 30;
-    if (Confusion || Hallucination)
+    if (youAreConfused() || Hallucination)
         chance++;
     if (Blind)
         chance++;
-    if (Stunned)
+    if (youAreStunned())
         chance += 2;
     if (Fumbling)
         chance *= 2;
@@ -4162,7 +4162,7 @@ boolean force;
     struct trap *ttmp;
     struct monst *mtmp;
     const char *trapdescr;
-    boolean here, useplural, confused = (Confusion || Hallucination),
+    boolean here, useplural, confused = (youAreConfused() || Hallucination),
                              trap_skipped = FALSE, deal_with_floor_trap;
     int boxcnt = 0;
     char the_trap[BUFSZ], qbuf[QBUFSZ];
@@ -4703,7 +4703,7 @@ boolean disarm;
             pline("A cloud of %s gas billows from %s.",
                   Blind ? blindgas[rn2(SIZE(blindgas))] : rndcolor(),
                   the(xname(obj)));
-            if (!Stunned) {
+            if (!youAreStunned()) {
                 if (Hallucination)
                     pline("What a groovy feeling!");
                 else
@@ -4712,7 +4712,7 @@ boolean disarm;
                                           : Blind ? " and get dizzy"
                                                   : " and your vision blurs");
             }
-            make_stunned((HStun & TIMEOUT) + (long) rn1(7, 16), FALSE);
+            make_stunned(yourIntrinsicTimeout(STUNNED) + (long) rn1(7, 16), FALSE);
             (void) make_hallucinated(
                 (HHallucination & TIMEOUT) + (long) rn1(5, 16), FALSE, 0L);
             break;
@@ -4900,7 +4900,7 @@ int bodypart;
     exercise(A_STR, FALSE);
     if (bodypart)
         exercise(A_CON, FALSE);
-    make_stunned((HStun & TIMEOUT) + (long) dmg, TRUE);
+    make_stunned(yourIntrinsicTimeout(STUNNED) + (long) dmg, TRUE);
 }
 
 /* Monster is hit by trap. */

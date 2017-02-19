@@ -172,7 +172,7 @@ void
 you_were()
 {
     char qbuf[QBUFSZ];
-    boolean controllable_poly = Polymorph_control && !(Stunned || youAreUnaware());
+    boolean controllable_poly = Polymorph_control && !(youAreStunned() || youAreUnaware());
 
     if (Unchanging || (currentMonsterNumber() == lycanthropeType()))
         return;
@@ -190,7 +190,7 @@ void
 you_unwere(purify)
 boolean purify;
 {
-    boolean controllable_poly = Polymorph_control && !(Stunned || youAreUnaware());
+    boolean controllable_poly = Polymorph_control && !(youAreStunned() || youAreUnaware());
 
     if (purify) {
         You_feel("purified.");

@@ -444,7 +444,7 @@ struct obj *scroll;
         if (!wizard || yn("Override?") != 'y')
             return FALSE;
     }
-    if ((Teleport_control && !Stunned) || wizard) {
+    if ((Teleport_control && !youAreStunned()) || wizard) {
         if (unconscious()) {
             pline("Being unconscious, you cannot control your teleport.");
         } else {
@@ -519,7 +519,7 @@ dotele()
         if (!Teleportation || (currentExperienceLevel() < (Role_if(PM_WIZARD) ? 8 : 12)
                                && !can_teleport(youmonst.data))) {
             /* Try to use teleport away spell. */
-            if (objects[SPE_TELEPORT_AWAY].oc_name_known && !Confusion)
+            if (objects[SPE_TELEPORT_AWAY].oc_name_known && !youAreConfused())
                 for (sp_no = 0; sp_no < MAXSPELL; sp_no++)
                     if (spl_book[sp_no].sp_id == SPE_TELEPORT_AWAY) {
                         castit = TRUE;
@@ -600,7 +600,7 @@ level_tele()
         You_feel("very disoriented for a moment.");
         return;
     }
-    if ((Teleport_control && !Stunned) || wizard) {
+    if ((Teleport_control && !youAreStunned()) || wizard) {
         char qbuf[BUFSZ];
         int trycnt = 0;
 
@@ -614,14 +614,14 @@ level_tele()
             }
             getlin(qbuf, buf);
             if (!strcmp(buf, "\033")) { /* cancelled */
-                if (Confusion && rnl(5)) {
+                if (youAreConfused() && rnl(5)) {
                     pline("Oops...");
                     goto random_levtport;
                 }
                 return;
             } else if (!strcmp(buf, "*")) {
                 goto random_levtport;
-            } else if (Confusion && rnl(5)) {
+            } else if (youAreConfused() && rnl(5)) {
                 pline("Oops...");
                 goto random_levtport;
             }

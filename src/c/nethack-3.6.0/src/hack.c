@@ -730,12 +730,12 @@ int mode;
                     if (amorphous(youmonst.data))
                         You(
    "try to ooze under the door, but can't squeeze your possessions through.");
-                    if (flags.autoopen && !context.run && !Confusion
-                        && !Stunned && !Fumbling) {
+                    if (flags.autoopen && !context.run && !youAreConfused()
+                        && !youAreStunned() && !Fumbling) {
                         context.door_opened = context.move =
                             doopen_indir(x, y);
                     } else if (x == ux || y == uy) {
-                        if (Blind || Stunned || ACURR(A_DEX) < 10
+                        if (Blind || youAreStunned() || ACURR(A_DEX) < 10
                             || Fumbling) {
                             if (u.usteed) {
                                 You_cant("lead %s through that closed door.",
@@ -1289,7 +1289,7 @@ domove()
 
         x = currentX() + directionX();
         y = currentY() + directionY();
-        if (Stunned || (Confusion && !rn2(5))) {
+        if (youAreStunned() || (youAreConfused() && !rn2(5))) {
             register int tries = 0;
 
             do {

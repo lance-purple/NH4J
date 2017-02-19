@@ -121,8 +121,8 @@
  * definition here is convenient.
  */
 #define is_safepet(mon)                                                   \
-    (mon && mon->mtame && canspotmon(mon) && flags.safe_dog && !Confusion \
-     && !Hallucination && !Stunned)
+    (mon && mon->mtame && canspotmon(mon) && flags.safe_dog && !youAreConfused() \
+     && !Hallucination && !youAreStunned())
 
 /*
  * canseeself()

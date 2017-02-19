@@ -433,7 +433,7 @@ STATIC_OVL int
 do_improvisation(instr)
 struct obj *instr;
 {
-    int damage, do_spec = !Confusion;
+    int damage, do_spec = !yourIntrinsic(CONFUSION);
 #if defined(MAC) || defined(AMIGA) || defined(VPIX_MUSIC) || defined(PCMUSIC)
     struct obj itmp;
 

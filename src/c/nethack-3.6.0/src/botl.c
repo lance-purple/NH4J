@@ -106,7 +106,7 @@ bot2()
         Sprintf(nb = eos(nb), " ");
         Strcat(newbot2, hu_stat[currentHungerState()]);
     }
-    if (Confusion)
+    if (youAreConfused())
         Sprintf(nb = eos(nb), " Conf");
     if (Sick) {
         if (sickWithFoodPoisoning())
@@ -116,7 +116,7 @@ bot2()
     }
     if (Blind)
         Sprintf(nb = eos(nb), " Blind");
-    if (Stunned)
+    if (youAreStunned())
         Sprintf(nb = eos(nb), " Stun");
     if (Hallucination)
         Sprintf(nb = eos(nb), " Hallu");
@@ -543,7 +543,7 @@ bot()
     else
         blstats[idx][BL_CONDITION].a.a_ulong &= ~BL_MASK_BLIND;
 
-    if (Confusion)
+    if (youAreConfused())
         blstats[idx][BL_CONDITION].a.a_ulong |= BL_MASK_CONF;
     else
         blstats[idx][BL_CONDITION].a.a_ulong &= ~BL_MASK_CONF;
@@ -563,7 +563,7 @@ bot()
     else
         blstats[idx][BL_CONDITION].a.a_ulong &= ~BL_MASK_HALLU;
 
-    if (Stunned)
+    if (youAreStunned())
         blstats[idx][BL_CONDITION].a.a_ulong |= BL_MASK_STUNNED;
     else
         blstats[idx][BL_CONDITION].a.a_ulong &= ~BL_MASK_STUNNED;

@@ -32,16 +32,16 @@ make_confused(xtime, talk)
 long xtime;
 boolean talk;
 {
-    long old = HConfusion;
+    long priorConfusion = yourIntrinsicTimeout(CONFUSION);
 
     if (youAreUnaware())
         talk = FALSE;
 
-    if (!xtime && old) {
+    if (!xtime && priorConfusion) {
         if (talk)
             You_feel("less %s now.", Hallucination ? "trippy" : "confused");
     }
-    if ((xtime && !old) || (!xtime && old))
+    if ((xtime && !priorConfusion) || (!xtime && priorConfusion))
         context.botl = TRUE;
 
     setYourIntrinsicTimeout(CONFUSION, xtime);
@@ -52,17 +52,17 @@ make_stunned(xtime, talk)
 long xtime;
 boolean talk;
 {
-    long old = HStun;
+    long priorStunned = yourIntrinsicTimeout(STUNNED);
 
     if (youAreUnaware())
         talk = FALSE;
 
-    if (!xtime && old) {
+    if (!xtime && priorStunned) {
         if (talk)
             You_feel("%s now.",
                      Hallucination ? "less wobbly" : "a bit steadier");
     }
-    if (xtime && !old) {
+    if (xtime && !priorStunned) {
         if (talk) {
             if (u.usteed)
                 You("wobble in the saddle.");
@@ -70,7 +70,7 @@ boolean talk;
                 You("%s...", stagger(youmonst.data, "stagger"));
         }
     }
-    if ((!xtime && old) || (xtime && !old))
+    if ((!xtime && priorStunned) || (xtime && !priorStunned))
         context.botl = TRUE;
 
     setYourIntrinsicTimeout(STUNNED, xtime);
@@ -626,7 +626,7 @@ register struct obj *otmp;
               otmp->odiluted ? "watered down " : "",
               Hallucination ? "dandelion wine" : "liquid fire");
         if (!otmp->blessed)
-            make_confused(itimeout_incr(HConfusion, d(3, 8)), FALSE);
+            make_confused(itimeout_incr(yourIntrinsic(CONFUSION), d(3, 8)), FALSE);
         /* the whiskey makes us feel better */
         if (!otmp->odiluted)
             healup(1, 0, FALSE, FALSE);
@@ -829,7 +829,7 @@ register struct obj *otmp;
         }
         break;
     case POT_CONFUSION:
-        if (!Confusion) {
+        if (!youAreConfused()) {
             if (Hallucination) {
                 pline("What a trippy feeling!");
                 unkn++;
@@ -837,7 +837,7 @@ register struct obj *otmp;
                 pline("Huh, What?  Where am I?");
         } else
             nothing++;
-        make_confused(itimeout_incr(HConfusion,
+        make_confused(itimeout_incr(yourIntrinsic(CONFUSION),
                                     rn1(7, 16 - 8 * bcsign(otmp))),
                       FALSE);
         break;
@@ -1566,9 +1566,9 @@ register struct obj *obj;
         break;
     case POT_CONFUSION:
     case POT_BOOZE:
-        if (!Confusion)
+        if (!youAreConfused())
             You_feel("somewhat dizzy.");
-        make_confused(itimeout_incr(HConfusion, rnd(5)), FALSE);
+        make_confused(itimeout_incr(yourIntrinsic(CONFUSION), rnd(5)), FALSE);
         break;
     case POT_INVISIBILITY:
         if (!Blind && !Invis) {

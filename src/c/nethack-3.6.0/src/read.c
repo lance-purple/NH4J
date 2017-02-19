@@ -305,7 +305,7 @@ doread()
         }
     }
 
-    confused = (Confusion != 0);
+    confused = youAreConfused();
 #ifdef MAIL
     if (scroll->otyp == SCR_MAIL) {
         confused = FALSE; /* override */
@@ -958,7 +958,7 @@ seffects(sobj)
 struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
 {
     int cval, otyp = sobj->otyp;
-    boolean confused = (Confusion != 0), sblessed = sobj->blessed,
+    boolean confused = youAreConfused(), sblessed = sobj->blessed,
             scursed = sobj->cursed, already_known, old_erodeproof,
             new_erodeproof;
     struct obj *otmp;
@@ -1140,21 +1140,21 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
                 otmp->spe += -1;
                 adj_abon(otmp, -1);
             }
-            make_stunned((HStun & TIMEOUT) + (long) rn1(10, 10), TRUE);
+            make_stunned(yourIntrinsicTimeout(STUNNED) + (long) rn1(10, 10), TRUE);
         }
     } break;
     case SCR_CONFUSE_MONSTER:
     case SPE_CONFUSE_MONSTER:
         if (youmonst.data->mlet != S_HUMAN || scursed) {
-            if (!HConfusion)
+            if (!yourIntrinsic(CONFUSION))
                 You_feel("confused.");
-            make_confused(HConfusion + rnd(100), FALSE);
+            make_confused(yourIntrinsic(CONFUSION) + rnd(100), FALSE);
         } else if (confused) {
             if (!sblessed) {
                 Your("%s begin to %s%s.", makeplural(body_part(HAND)),
                      Blind ? "tingle" : "glow ",
                      Blind ? "" : hcolor(NH_PURPLE));
-                make_confused(HConfusion + rnd(100), FALSE);
+                make_confused(yourIntrinsic(CONFUSION) + rnd(100), FALSE);
             } else {
                 pline("A %s%s surrounds your %s.",
                       Blind ? "" : hcolor(NH_RED),
@@ -1390,7 +1390,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
         if (sblessed)
             do_class_genocide();
         else
-            do_genocide(!scursed | (2 * !!Confusion));
+            do_genocide(!scursed | (2 * !!yourIntrinsic(CONFUSION)));
         break;
     case SCR_LIGHT:
         if (!confused || rn2(5)) {
@@ -1495,7 +1495,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
                 pline("Wow!  Modern art.");
             else
                 Your("%s spins in bewilderment.", body_part(HEAD));
-            make_confused(HConfusion + rnd(30), FALSE);
+            make_confused(yourIntrinsic(CONFUSION) + rnd(30), FALSE);
             break;
         }
         if (sblessed) {
@@ -1512,16 +1512,16 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
         if (level.flags.nommap) {
             Your("%s spins as %s blocks the spell!", body_part(HEAD),
                  something);
-            make_confused(HConfusion + rnd(30), FALSE);
+            make_confused(yourIntrinsic(CONFUSION) + rnd(30), FALSE);
             break;
         }
         pline("A map coalesces in your mind!");
         cval = (scursed && !confused);
         if (cval)
-            HConfusion = 1; /* to screw up map */
+            setYourIntrinsic(CONFUSION, 1L); /* to screw up map */
         do_mapping();
         if (cval) {
-            HConfusion = 0; /* restore */
+            setYourIntrinsic(CONFUSION, 0L); /* restore */
             pline("Unfortunately, you can't grasp the details.");
         }
         break;

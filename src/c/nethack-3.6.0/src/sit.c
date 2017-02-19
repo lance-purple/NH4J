@@ -234,7 +234,7 @@ dosit()
                 if (currentLuckWithBonus() < 0 || (HSee_invisible & INTRINSIC)) {
                     if (level.flags.nommap) {
                         pline("A terrible drone fills your head!");
-                        make_confused((HConfusion & TIMEOUT) + (long) rnd(30),
+                        make_confused(yourIntrinsicTimeout(CONFUSION) + (long) rnd(30),
                                       FALSE);
                     } else {
                         pline("An image forms in your mind.");
@@ -264,7 +264,7 @@ dosit()
                 break;
             case 13:
                 Your("mind turns into a pretzel!");
-                make_confused((HConfusion & TIMEOUT) + (long) rn1(7, 16),
+                make_confused(yourIntrinsicTimeout(CONFUSION) + (long) rn1(7, 16),
                               FALSE);
                 break;
             default:

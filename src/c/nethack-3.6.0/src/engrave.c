@@ -1027,8 +1027,8 @@ doengrave()
         if (*sp == ' ')
             continue;
         if (((type == DUST || type == ENGR_BLOOD) && !rn2(25))
-            || (Blind && !rn2(11)) || (Confusion && !rn2(7))
-            || (Stunned && !rn2(4)) || (Hallucination && !rn2(2)))
+            || (Blind && !rn2(11)) || (youAreConfused() && !rn2(7))
+            || (youAreStunned() && !rn2(4)) || (Hallucination && !rn2(2)))
             *sp = ' ' + rnd(96 - 2); /* ASCII '!' thru '~'
                                         (excludes ' ' and DEL) */
     }

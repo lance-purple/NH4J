@@ -112,7 +112,7 @@ struct obj *otmp;
         chance += 30;
         break;
     }
-    if (Confusion || Fumbling || Glib)
+    if (youAreConfused() || Fumbling || Glib)
         chance -= 20;
     else if (uarmg && (s = OBJ_DESCR(objects[uarmg->otyp])) != (char *) 0
              && !strncmp(s, "riding ", 7))
@@ -300,7 +300,7 @@ boolean force;      /* Quietly force this animal */
         return (FALSE);
     }
     if (!force
-        && (Confusion || Fumbling || Glib || Wounded_legs || otmp->cursed
+        && (youAreConfused() || Fumbling || Glib || Wounded_legs || otmp->cursed
             || (currentExperienceLevel() + mtmp->mtame < rnd(MAXULEV / 2 + 5)))) {
         if (Levitation) {
             pline("%s slips away from you.", Monnam(mtmp));
@@ -419,7 +419,7 @@ int forceit;
     struct trap *t;
 
     /* avoid known traps (i == 0) and boulders, but allow them as a backup */
-    if (reason != DISMOUNT_BYCHOICE || Stunned || Confusion || Fumbling)
+    if (reason != DISMOUNT_BYCHOICE || youAreStunned() || youAreConfused() || Fumbling)
         i = 1;
     for (; !found && i < 2; ++i) {
         for (x = currentX() - 1; x <= currentX() + 1; x++)

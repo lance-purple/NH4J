@@ -964,10 +964,10 @@ register int pm;
         /*FALLTHRU*/
     case PM_YELLOW_LIGHT:
     case PM_GIANT_BAT:
-        make_stunned((HStun & TIMEOUT) + 30L, FALSE);
+        make_stunned(yourIntrinsicTimeout(STUNNED) + 30L, FALSE);
         /*FALLTHRU*/
     case PM_BAT:
-        make_stunned((HStun & TIMEOUT) + 30L, FALSE);
+        make_stunned(yourIntrinsicTimeout(STUNNED) + 30L, FALSE);
         break;
     case PM_GIANT_MIMIC:
         tmp += 10;
@@ -1016,9 +1016,9 @@ register int pm;
         }
         break;
     case PM_LIZARD:
-        if ((HStun & TIMEOUT) > 2)
+        if (yourIntrinsicTimeout(STUNNED) > 2)
             make_stunned(2L, FALSE);
-        if ((HConfusion & TIMEOUT) > 2)
+        if (yourIntrinsicTimeout(CONFUSION) > 2)
             make_confused(2L, FALSE);
         break;
     case PM_CHAMELEON:
@@ -1493,7 +1493,7 @@ struct obj *obj;
             You_feel("rather trippy.");
         else
             You_feel("rather %s.", body_part(LIGHT_HEADED));
-        make_confused(HConfusion + d(2, 4), FALSE);
+        make_confused(yourIntrinsic(CONFUSION) + d(2, 4), FALSE);
     } else if (!rn2(4) && !Blind) {
         pline("Everything suddenly goes dark.");
         make_blinded((long) d(2, 10), FALSE);
@@ -2376,7 +2376,7 @@ doeat()
         pline("Ulch - that %s was rustproofed!", xname(otmp));
         /* The regurgitated object's rustproofing is gone now */
         otmp->oerodeproof = 0;
-        make_stunned((HStun & TIMEOUT) + (long) rn2(10), TRUE);
+        make_stunned(yourIntrinsicTimeout(STUNNED) + (long) rn2(10), TRUE);
         You("spit %s out onto the %s.", the(xname(otmp)),
             surface(currentX(), currentY()));
         if (carried(otmp)) {

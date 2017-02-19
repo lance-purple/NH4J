@@ -22,13 +22,6 @@
 
 /*** Troubles ***/
 
-/* Those implemented solely as timeouts (we use just intrinsic) */
-#define HStun u.uprops[STUNNED].intrinsic
-#define Stunned HStun
-
-#define HConfusion u.uprops[CONFUSION].intrinsic
-#define Confusion HConfusion
-
 #define Blinded u.uprops[BLINDED].intrinsic
 #define Blindfolded (ublindf && ublindf->otyp != LENSES)
 /* ...means blind because of a cover */

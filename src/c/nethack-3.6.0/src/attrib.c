@@ -453,9 +453,9 @@ exerper()
 
         if (Sick || Vomiting)
             exercise(A_CON, FALSE);
-        if (Confusion || Hallucination)
+        if (youAreConfused() || youAreHallucinating())
             exercise(A_WIS, FALSE);
-        if ((Wounded_legs && !u.usteed) || Fumbling || HStun)
+        if ((Wounded_legs && !u.usteed) || Fumbling || youAreStunned())
             exercise(A_DEX, FALSE);
     }
 }
@@ -1412,6 +1412,18 @@ extern boolean youAreInvulnerable() {
 
 extern boolean youAreBeingPunished() {
  return (uball != 0);
+}
+
+extern boolean youAreStunned() {
+ return (yourIntrinsic(STUNNED));
+}
+
+extern boolean youAreConfused() {
+ return (yourIntrinsic(CONFUSION));
+}
+
+extern boolean youAreHallucinating() {
+ return (yourIntrinsic(HALLUC));
 }
 
 /*attrib.c*/

@@ -394,7 +394,7 @@ int psflags;
     boolean forcecontrol = (psflags == 1), monsterpoly = (psflags == 2),
             draconian = (uarm && Is_dragon_armor(uarm)),
             iswere = (lycanthropeType() >= LOW_PM), isvamp = is_vampire(youmonst.data),
-            controllable_poly = Polymorph_control && !(Stunned || youAreUnaware());
+            controllable_poly = Polymorph_control && !(youAreStunned() || youAreUnaware());
 
     if (Unchanging) {
         pline("You fail to transform!");
@@ -1319,10 +1319,10 @@ dogaze()
                        || mtmp->m_ap_type == M_AP_OBJECT) {
                 looked--;
                 continue;
-            } else if (flags.safe_dog && mtmp->mtame && !Confusion) {
+            } else if (flags.safe_dog && mtmp->mtame && !youAreConfused()) {
                 You("avoid gazing at %s.", y_monnam(mtmp));
             } else {
-                if (flags.confirm && mtmp->mpeaceful && !Confusion) {
+                if (flags.confirm && mtmp->mpeaceful && !youAreConfused()) {
                     Sprintf(qbuf, "Really %s %s?",
                             (adtyp == AD_CONF) ? "confuse" : "attack",
                             mon_nam(mtmp));

@@ -87,12 +87,12 @@ vomiting_dialogue()
         txt = vomiting_texts[1];
         break;
     case 6:
-        make_stunned((HStun & TIMEOUT) + (long) d(2, 4), FALSE);
+        make_stunned(yourIntrinsicTimeout(STUNNED) + (long) d(2, 4), FALSE);
         if (!Popeye(VOMITING))
             stop_occupation();
     /*FALLTHRU*/
     case 9:
-        make_confused((HConfusion & TIMEOUT) + (long) d(2, 4), FALSE);
+        make_confused(yourIntrinsicTimeout(CONFUSION) + (long) d(2, 4), FALSE);
         if (multi > 0)
             nomul(0);
         break;
@@ -334,13 +334,13 @@ nh_timeout()
                 /* So make_confused works properly */
                 setYourIntrinsicTimeout(CONFUSION, 1L);
                 make_confused(0L, TRUE);
-                if (!Confusion)
+                if (!youAreConfused())
                     stop_occupation();
                 break;
             case STUNNED:
                 setYourIntrinsicTimeout(STUNNED, 1L);
                 make_stunned(0L, TRUE);
-                if (!Stunned)
+                if (!youAreStunned())
                     stop_occupation();
                 break;
             case BLINDED:

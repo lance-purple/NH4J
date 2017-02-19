@@ -294,7 +294,7 @@ register struct obj *sobj;
     register struct obj *obj;
     register struct monst *mtmp;
     register int ct = 0, ctu = 0;
-    boolean confused = (Confusion || (sobj && sobj->cursed)), stale;
+    boolean confused = (youAreConfused() || (sobj && sobj->cursed)), stale;
     char oclass = confused ? POTION_CLASS : FOOD_CLASS;
     const char *what = confused ? something : "food";
 
@@ -438,7 +438,7 @@ int class;            /* an object class, 0 for all */
     if (sym && iflags.bouldersym && sym == iflags.bouldersym)
         boulder = ROCK_CLASS;
 
-    if (Hallucination || (Confusion && class == SCROLL_CLASS))
+    if (Hallucination || (youAreConfused() && class == SCROLL_CLASS))
         Strcpy(stuff, something);
     else
         Strcpy(stuff, class ? def_oc_syms[class].name : "objects");
@@ -922,7 +922,7 @@ struct obj **optr;
             break;
         case 2:
             pline("%s you!", Tobjnam(obj, "confuse"));
-            make_confused((HConfusion & TIMEOUT) + (long) rnd(100), FALSE);
+            make_confused((yourIntrinsicTimeout(CONFUSION) + (long) rnd(100)), FALSE);
             break;
         case 3:
             if (!resists_blnd(&youmonst)) {
@@ -1053,7 +1053,7 @@ register int x, y;
     struct trap *t;
     int oldglyph;
 
-    if (Confusion && rn2(7))
+    if (youAreConfused() && rn2(7))
         return;
     lev = &levl[x][y];
 
@@ -1484,7 +1484,7 @@ reveal_terrain(full, which_subset)
 int full; /* wizard|explore modes allow player to request full map */
 int which_subset; /* when not full, whether to suppress objs and/or traps */
 {
-    if ((Hallucination || Stunned || Confusion) && !full) {
+    if ((Hallucination || youAreStunned() || youAreConfused()) && !full) {
         You("are too disoriented for this.");
     } else {
         int x, y, glyph, levl_glyph, default_glyph;

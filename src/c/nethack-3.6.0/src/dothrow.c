@@ -111,7 +111,7 @@ int shotlimit;
         && (is_ammo(obj) ? matching_launcher(obj, uwep)
                          /* otherwise any stackable (non-ammo) weapon */
                          : obj->oclass == WEAPON_CLASS)
-        && !(Confusion || Stunned)) {
+        && !(youAreConfused() || youAreStunned())) {
         /* some roles don't get a volley bonus until becoming expert */
         weakmultishot = (Role_if(PM_WIZARD) || Role_if(PM_PRIEST)
                          || (Role_if(PM_HEALER) && skill != P_KNIFE)
@@ -985,7 +985,7 @@ boolean
 {
     register struct monst *mon;
     register int range, urange;
-    boolean crossbowing, impaired = (Confusion || Stunned || Blind
+    boolean crossbowing, impaired = (youAreConfused() || youAreStunned() || Blind
                                      || Hallucination || Fumbling);
 
     notonhead = FALSE; /* reset potentially stale value */

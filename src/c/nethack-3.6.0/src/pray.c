@@ -240,11 +240,11 @@ in_trouble()
         return TROUBLE_WOUNDED_LEGS;
     if (currentHungerState() >= HUNGRY)
         return TROUBLE_HUNGRY;
-    if (HStun & TIMEOUT)
+    if (yourIntrinsicTimeout(STUNNED))
         return TROUBLE_STUNNED;
-    if (HConfusion & TIMEOUT)
+    if (yourIntrinsicTimeout(CONFUSION))
         return TROUBLE_CONFUSED;
-    if (HHallucination & TIMEOUT)
+    if (yourIntrinsicTimeout(HALLUC))
         return TROUBLE_HALLUCINATION;
     return 0;
 }
@@ -1932,7 +1932,7 @@ doturn()
             && (is_undead(mtmp->data) || is_vampshifter(mtmp)
                 || (is_demon(mtmp->data) && (currentExperienceLevel() > (MAXULEV / 2))))) {
             mtmp->msleeping = 0;
-            if (Confusion) {
+            if (youAreConfused()) {
                 if (!once++)
                     pline("Unfortunately, your voice falters.");
                 mtmp->mflee = 0;

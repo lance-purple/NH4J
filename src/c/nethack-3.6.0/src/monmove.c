@@ -101,7 +101,7 @@ register struct monst *mtmp;
 
     /* a similar check is in monster_nearby() in hack.c */
     /* check whether hero notices monster and stops current activity */
-    if (occupation && !rd && !Confusion && (!mtmp->mpeaceful || Hallucination)
+    if (occupation && !rd && !youAreConfused() && (!mtmp->mpeaceful || Hallucination)
         /* it's close enough to be a threat */
         && distanceSquaredToYou(x, y) <= (BOLT_LIM + 1) * (BOLT_LIM + 1)
         /* and either couldn't see it before, or it was too far away */

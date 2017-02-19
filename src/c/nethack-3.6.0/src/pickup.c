@@ -1631,7 +1631,7 @@ doloot()
         You("have no hands!"); /* not `body_part(HAND)' */
         return 0;
     }
-    if (Confusion) {
+    if (youAreConfused()) {
         if (rn2(6) && reverse_loot())
             return 1;
         if (rn2(2)) {
@@ -1737,7 +1737,7 @@ lootcont:
         /* always use a turn when choosing a direction is impaired,
            even if you've successfully targetted a saddled creature
            and then answered "no" to the "remove its saddle?" prompt */
-        if (Confusion || Stunned)
+        if (youAreConfused() || youAreStunned())
             timepassed = 1;
 
         /* Preserve pre-3.3.1 behaviour for containers.

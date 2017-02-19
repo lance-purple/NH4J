@@ -193,8 +193,8 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
         wakeup(mtmp);
     }
 
-    if (flags.confirm && mtmp->mpeaceful && !Confusion && !Hallucination
-        && !Stunned) {
+    if (flags.confirm && mtmp->mpeaceful && !youAreConfused() && !Hallucination
+        && !youAreStunned()) {
         /* Intelligent chaotic weapons (Stormbringer) want blood */
         if (wep && wep->oartifact == ART_STORMBRINGER) {
             override_confirmation = TRUE;
@@ -1261,7 +1261,7 @@ struct obj *obj;   /* weapon */
 {
     int skill_rating, joust_dieroll;
 
-    if (Fumbling || Stunned)
+    if (Fumbling || youAreStunned())
         return 0;
     /* sanity check; lance must be wielded in order to joust */
     if (obj != uwep && (obj != uswapwep || !usingTwoWeapons()))
@@ -2487,7 +2487,7 @@ boolean wep_was_destroyed;
             }
             break;
         case AD_STUN: /* specifically yellow mold */
-            if (!Stunned)
+            if (!youAreStunned())
                 make_stunned((long) tmp, TRUE);
             break;
         case AD_FIRE:

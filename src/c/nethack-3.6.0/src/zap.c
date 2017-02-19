@@ -2288,7 +2288,7 @@ boolean ordinary;
     case SPE_TELEPORT_AWAY:
         tele();
         /* same criteria as when mounted (zap_steed) */
-        if ((Teleport_control && !Stunned) || !couldsee(originalX(), originalY())
+        if ((Teleport_control && !youAreStunned()) || !couldsee(originalX(), originalY())
             || distanceSquaredToYou(originalX(), originalY()) >= 16)
             learn_it = TRUE;
         break;
@@ -2315,8 +2315,8 @@ boolean ordinary;
         (void) unturn_dead(&youmonst);
         if (is_undead(youmonst.data)) {
             You_feel("frightened and %sstunned.",
-                     Stunned ? "even more " : "");
-            make_stunned((HStun & TIMEOUT) + (long) rnd(30), FALSE);
+                     youAreStunned() ? "even more " : "");
+            make_stunned(yourIntrinsicTimeout(STUNNED) + (long) rnd(30), FALSE);
         } else
             You("shudder in dread.");
         break;
@@ -2508,7 +2508,7 @@ struct obj *obj; /* wand or spell */
         /* you go together */
         tele();
         /* same criteria as when unmounted (zapyourself) */
-        if ((Teleport_control && !Stunned) || !couldsee(originalX(), originalY())
+        if ((Teleport_control && !youAreStunned()) || !couldsee(originalX(), originalY())
             || distanceSquaredToYou(originalX(), originalY()) >= 16)
             learnwand(obj);
         steedhit = TRUE;

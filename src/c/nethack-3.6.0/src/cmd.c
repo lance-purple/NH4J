@@ -607,16 +607,21 @@ wiz_map(VOID_ARGS)
 {
     if (wizard) {
         struct trap *t;
-        long save_Hconf = HConfusion, save_Hhallu = HHallucination;
+        long priorConfusion = yourIntrinsic(CONFUSION);
+        long priorHallucination = yourIntrinsic(HALLUC);
 
-        HConfusion = HHallucination = 0L;
+        setYourIntrinsic(CONFUSION, 0L);
+        setYourIntrinsic(HALLUC, 0L);
+
         for (t = ftrap; t != 0; t = t->ntrap) {
             t->tseen = 1;
             map_trap(t, TRUE);
         }
         do_mapping();
-        HConfusion = save_Hconf;
-        HHallucination = save_Hhallu;
+
+        setYourIntrinsic(CONFUSION, priorConfusion);
+        setYourIntrinsic(HALLUC, priorHallucination);
+
     } else
         pline("Unavailable command '%s'.",
               visctrl((int) cmd_from_func(wiz_map)));
@@ -1687,9 +1692,9 @@ int final;
     }
     if (Vomiting)
         you_are("nauseated", "");
-    if (Stunned)
+    if (youAreStunned())
         you_are("stunned", "");
-    if (Confusion)
+    if (youAreConfused())
         you_are("confused", "");
     if (Hallucination)
         you_are("hallucinating", "");
@@ -3606,7 +3611,7 @@ retry:
         You_cant("orient yourself that direction.");
         return 0;
     }
-    if (!directionZ() && (Stunned || (Confusion && !rn2(5))))
+    if (!directionZ() && (youAreStunned() || (youAreConfused() && !rn2(5))))
         confdir();
     return 1;
 }

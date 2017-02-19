@@ -140,7 +140,7 @@ struct obj *bp;
         break;
     case 4:
         pline("These runes were just too much to comprehend.");
-        make_confused(HConfusion + rn1(7, 16), FALSE);
+        make_confused(yourIntrinsic(CONFUSION) + rn1(7, 16), FALSE);
         break;
     case 5:
         pline_The("book was coated with contact poison!");
@@ -336,7 +336,7 @@ learn(VOID_ARGS)
     /* JDS: lenses give 50% faster reading; 33% smaller read time */
     if (context.spbook.delay && ublindf && ublindf->otyp == LENSES && rn2(2))
         context.spbook.delay++;
-    if (Confusion) { /* became confused while learning */
+    if (youAreConfused()) { /* became confused while learning */
         (void) confused_book(book);
         context.spbook.book = 0; /* no longer studying */
         context.spbook.o_id = 0;
@@ -428,7 +428,7 @@ study_book(spellbook)
 register struct obj *spellbook;
 {
     int booktype = spellbook->otyp;
-    boolean confused = (Confusion != 0);
+    boolean confused = youAreConfused();
     boolean too_hard = FALSE;
 
     /* attempting to read dull book may make hero fall asleep */
@@ -628,7 +628,7 @@ STATIC_OVL boolean
 rejectcasting()
 {
     /* rejections which take place before selecting a particular spell */
-    if (Stunned) {
+    if (youAreStunned()) {
         You("are too impaired to cast a spell.");
         return TRUE;
     } else if (!freehand()) {
@@ -828,14 +828,14 @@ spell_backfire(spell)
 int spell;
 {
     long duration = (long) ((spellev(spell) + 1) * 3), /* 6..24 */
-         old_stun = (HStun & TIMEOUT), old_conf = (HConfusion & TIMEOUT);
+         old_stun = yourIntrinsicTimeout(STUNNED), old_conf = yourIntrinsicTimeout(CONFUSION);
 
     /* Prior to 3.4.1, only effect was confusion; it still predominates.
      *
      * 3.6.0: this used to override pre-existing confusion duration
      * (cases 0..8) and pre-existing stun duration (cases 4..9);
      * increase them instead.   (Hero can no longer cast spells while
-     * Stunned, so the potential increment to stun duration here is
+     * stunned, so the potential increment to stun duration here is
      * just hypothetical.)
      */
     switch (rn2(10)) {
@@ -870,7 +870,7 @@ boolean atme;
 {
     int energy, damage, chance, n, intell;
     int skill, role_skill;
-    boolean confused = (Confusion != 0);
+    boolean confused = youAreConfused();
     boolean physical_damage = FALSE;
     struct obj *pseudo;
     coord cc;
@@ -1227,7 +1227,7 @@ losespells()
     /* lose anywhere from zero to all known spells;
        if confused, use the worse of two die rolls */
     nzap = rn2(n + 1);
-    if (Confusion) {
+    if (youAreConfused()) {
         i = rn2(n + 1);
         if (i > nzap)
             nzap = i;

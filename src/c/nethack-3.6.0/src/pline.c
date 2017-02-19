@@ -490,7 +490,7 @@ ustatusline()
         Strcat(info, ", being strangled");
     if (Vomiting)
         Strcat(info, ", nauseated"); /* !"nauseous" */
-    if (Confusion)
+    if (youAreConfused())
         Strcat(info, ", confused");
     if (Blind) {
         Strcat(info, ", blind");
@@ -501,7 +501,7 @@ ustatusline()
             Strcat(info, "ed by sticky goop");
         } /* note: "goop" == "glop"; variation is intentional */
     }
-    if (Stunned)
+    if (youAreStunned())
         Strcat(info, ", stunned");
     if (!u.usteed && Wounded_legs) {
         const char *what = body_part(LEG);
