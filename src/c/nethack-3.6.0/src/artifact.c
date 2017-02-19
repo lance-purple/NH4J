@@ -25,8 +25,8 @@ STATIC_DCL int FDECL(arti_invoke, (struct obj *));
 STATIC_DCL boolean
 FDECL(Mb_hit, (struct monst * magr, struct monst *mdef, struct obj *, int *,
                int, BOOLEAN_P, char *));
-STATIC_DCL unsigned long FDECL(abil_to_spfx, (long *));
-STATIC_DCL uchar FDECL(abil_to_adtyp, (long *));
+STATIC_DCL unsigned long FDECL(extrinsic_to_spfx, (int));
+STATIC_DCL uchar FDECL(extrinsic_to_adtyp, (int));
 STATIC_DCL boolean FDECL(untouchable, (struct obj *, BOOLEAN_P));
 
 /* The amount added to the victim's total hit points to insure that the
@@ -466,7 +466,7 @@ register struct obj *otmp;
 boolean on;
 long wp_mask;
 {
-    long *mask = 0;
+    int extrinsic = 0;
     register const struct artifact *oart = get_artifact(otmp);
     register uchar dtyp;
     register long spfx;
@@ -478,19 +478,19 @@ long wp_mask;
     dtyp = (wp_mask != W_ART) ? oart->defn.adtyp : oart->cary.adtyp;
 
     if (dtyp == AD_FIRE)
-        mask = &EFire_resistance;
+        extrinsic = FIRE_RES;
     else if (dtyp == AD_COLD)
-        mask = &ECold_resistance;
+        extrinsic = COLD_RES;
     else if (dtyp == AD_ELEC)
-        mask = &EShock_resistance;
+        extrinsic = SHOCK_RES;
     else if (dtyp == AD_MAGM)
-        mask = &EAntimagic;
+        extrinsic = ANTIMAGIC;
     else if (dtyp == AD_DISN)
-        mask = &EDisint_resistance;
+        extrinsic = DISINT_RES;
     else if (dtyp == AD_DRST)
-        mask = &EPoison_resistance;
+        extrinsic = POISON_RES;
 
-    if (mask && wp_mask == W_ART && !on) {
+    if (extrinsic && wp_mask == W_ART && !on) {
         /* find out if some other artifact also confers this intrinsic */
         /* if so, leave the mask alone */
         register struct obj *obj;
@@ -498,16 +498,17 @@ long wp_mask;
             if (obj != otmp && obj->oartifact) {
                 register const struct artifact *art = get_artifact(obj);
                 if (art->cary.adtyp == dtyp) {
-                    mask = (long *) 0;
+                    extrinsic = 0;
                     break;
                 }
             }
     }
-    if (mask) {
-        if (on)
-            *mask |= wp_mask;
-        else
-            *mask &= ~wp_mask;
+    if (extrinsic) {
+        if (on) {
+            setYourExtrinsicMask(extrinsic, wp_mask);
+	} else {
+            unsetYourExtrinsicMask(extrinsic, wp_mask);
+	}
     }
 
     /* intrinsics from the spfx field; there could be more than one */
@@ -523,10 +524,11 @@ long wp_mask;
     }
 
     if (spfx & SPFX_SEARCH) {
-        if (on)
-            ESearching |= wp_mask;
-        else
-            ESearching &= ~wp_mask;
+        if (on) {
+            setYourExtrinsicMask(SEARCHING, wp_mask);
+	} else {
+            unsetYourExtrinsicMask(SEARCHING, wp_mask);
+	}
     }
     if (spfx & SPFX_HALRES) {
         /* make_hallucinated must (re)set the mask itself to get
@@ -1726,54 +1728,54 @@ struct obj *otmp;
 }
 
 STATIC_OVL uchar
-abil_to_adtyp(abil)
-long *abil;
+extrinsic_to_adtyp(extrinsic)
+int extrinsic;
 {
     struct abil2adtyp_tag {
-        long *abil;
+        int extrinsic;
         uchar adtyp;
     } abil2adtyp[] = {
-        { &EFire_resistance, AD_FIRE },
-        { &ECold_resistance, AD_COLD },
-        { &EShock_resistance, AD_ELEC },
-        { &EAntimagic, AD_MAGM },
-        { &EDisint_resistance, AD_DISN },
-        { &EPoison_resistance, AD_DRST },
+        { FIRE_RES, AD_FIRE },
+        { COLD_RES, AD_COLD },
+        { SHOCK_RES, AD_ELEC },
+        { ANTIMAGIC, AD_MAGM },
+        { DISINT_RES, AD_DISN },
+        { POISON_RES, AD_DRST },
     };
     int k;
 
     for (k = 0; k < SIZE(abil2adtyp); k++) {
-        if (abil2adtyp[k].abil == abil)
+        if (abil2adtyp[k].extrinsic == extrinsic)
             return abil2adtyp[k].adtyp;
     }
     return 0;
 }
 
 STATIC_OVL unsigned long
-abil_to_spfx(abil)
-long *abil;
+extrinsic_to_spfx(extrinsic)
+int extrinsic;
 {
     static const struct abil2spfx_tag {
-        long *abil;
+        int extrinsic;
         unsigned long spfx;
     } abil2spfx[] = {
-        { &ESearching, SPFX_SEARCH },
-        { &EHalluc_resistance, SPFX_HALRES },
-        { &ETelepat, SPFX_ESP },
-        { &EStealth, SPFX_STLTH },
-        { &ERegeneration, SPFX_REGEN },
-        { &ETeleport_control, SPFX_TCTRL },
-        { &EWarn_of_mon, SPFX_WARN },
-        { &EWarning, SPFX_WARN },
-        { &EEnergy_regeneration, SPFX_EREGEN },
-        { &EHalf_spell_damage, SPFX_HSPDAM },
-        { &EHalf_physical_damage, SPFX_HPHDAM },
-        { &EReflecting, SPFX_REFLECT },
+        { SEARCHING, SPFX_SEARCH },
+        { HALLUC_RES, SPFX_HALRES },
+        { TELEPAT, SPFX_ESP },
+        { STEALTH, SPFX_STLTH },
+        { REGENERATION, SPFX_REGEN },
+        { TELEPORT_CONTROL, SPFX_TCTRL },
+        { WARN_OF_MON, SPFX_WARN },
+        { WARNING, SPFX_WARN },
+        { ENERGY_REGENERATION, SPFX_EREGEN },
+        { HALF_SPDAM, SPFX_HSPDAM },
+        { HALF_PHDAM, SPFX_HPHDAM },
+        { REFLECTING, SPFX_REFLECT },
     };
     int k;
 
     for (k = 0; k < SIZE(abil2spfx); k++) {
-        if (abil2spfx[k].abil == abil)
+        if (abil2spfx[k].extrinsic == extrinsic)
             return abil2spfx[k].spfx;
     }
     return 0L;
@@ -1783,8 +1785,8 @@ long *abil;
  * Return the first item that is conveying a particular intrinsic.
  */
 struct obj *
-what_gives(abil)
-long *abil;
+whatGivesExtrinsic(extrinsic)
+int extrinsic;
 {
     struct obj *obj;
     uchar dtyp;
@@ -1798,13 +1800,13 @@ long *abil;
 
     if (usingTwoWeapons())
         wornmask |= W_SWAPWEP;
-    dtyp = abil_to_adtyp(abil);
-    spfx = abil_to_spfx(abil);
-    wornbits = (wornmask & *abil);
+    dtyp = extrinsic_to_adtyp(extrinsic);
+    spfx = extrinsic_to_spfx(extrinsic);
+    wornbits = (wornmask & yourExtrinsic(extrinsic));
 
     for (obj = invent; obj; obj = obj->nobj) {
         if (obj->oartifact
-            && (abil != &EWarn_of_mon || context.warntype.obj)) {
+            && (extrinsic != WARN_OF_MON || context.warntype.obj)) {
             const struct artifact *art = get_artifact(obj);
 
             if (art) {

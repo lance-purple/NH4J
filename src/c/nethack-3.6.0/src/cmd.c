@@ -1302,7 +1302,7 @@ int propindx; /* index of a property which can be conveyed by worn item */
     register struct obj *o;
     long mask = W_ARMOR | W_AMUL | W_RING | W_TOOL;
 
-    /* simpler than from_what()/what_gives(); we don't attempt to
+    /* simpler than from_what()/whatGivesExtrinsic(); we don't attempt to
        handle artifacts and we deliberately ignore wielded items */
     for (o = invent; o; o = o->nobj) {
         if (!(o->owornmask & mask))

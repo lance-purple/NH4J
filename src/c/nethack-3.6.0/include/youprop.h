@@ -20,29 +20,6 @@
  * intrinsic conferred by being polymorphed.]
  */
 
-/*** Resistances to troubles ***/
-/* With intrinsics and extrinsics */
-#define EFire_resistance u.uprops[FIRE_RES].extrinsic
-
-#define ECold_resistance u.uprops[COLD_RES].extrinsic
-
-#define ESleep_resistance u.uprops[SLEEP_RES].extrinsic
-
-#define EDisint_resistance u.uprops[DISINT_RES].extrinsic
-
-#define EShock_resistance u.uprops[SHOCK_RES].extrinsic
-
-#define EPoison_resistance u.uprops[POISON_RES].extrinsic
-
-#define EDrain_resistance u.uprops[DRAIN_RES].extrinsic
-
-#define EAntimagic u.uprops[ANTIMAGIC].extrinsic
-
-#define EAcid_resistance u.uprops[ACID_RES].extrinsic
-
-#define EStone_resistance u.uprops[STONE_RES].extrinsic
-
-
 /*** Troubles ***/
 /* Pseudo-property */
 #define Punished (uball != 0)

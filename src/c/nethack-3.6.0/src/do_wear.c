@@ -304,7 +304,7 @@ Cloak_on(VOID_ARGS)
         break;
     /* Alchemy smock gives poison _and_ acid resistance */
     case ALCHEMY_SMOCK:
-        EAcid_resistance |= WORN_CLOAK;
+        setYourExtrinsicMask(ACID_RES, WORN_CLOAK);
         break;
     default:
         impossible(unknown_type, c_cloak, uarmc->otyp);
@@ -355,7 +355,7 @@ Cloak_off(VOID_ARGS)
         break;
     /* Alchemy smock gives poison _and_ acid resistance */
     case ALCHEMY_SMOCK:
-        EAcid_resistance &= ~WORN_CLOAK;
+        unsetYourExtrinsicMask(ACID_RES, WORN_CLOAK);
         break;
     default:
         impossible(unknown_type, c_cloak, otyp);

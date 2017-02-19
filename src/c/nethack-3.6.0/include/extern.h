@@ -93,7 +93,7 @@ E boolean FDECL(artifact_light, (struct obj *));
 E long FDECL(spec_m2, (struct obj *));
 E boolean FDECL(artifact_has_invprop, (struct obj *, UCHAR_P));
 E long FDECL(arti_cost, (struct obj *));
-E struct obj *FDECL(what_gives, (long *));
+E struct obj *FDECL(whatGivesExtrinsic, (int));
 E const char *FDECL(glow_color, (int));
 E void FDECL(Sting_effects, (int));
 E int FDECL(retouch_object, (struct obj **, BOOLEAN_P));
@@ -128,6 +128,11 @@ E long FDECL(yourIntrinsic, (int));
 E boolean FDECL(yourIntrinsicHasMask, (int, long));
 E void FDECL(setYourIntrinsicMask, (int, long));
 E void FDECL(unsetYourIntrinsicMask, (int, long));
+
+E long FDECL(yourExtrinsic, (int));
+E boolean FDECL(yourExtrinsicHasMask, (int, long));
+E void FDECL(setYourExtrinsicMask, (int, long));
+E void FDECL(unsetYourExtrinsicMask, (int, long));
 
 E boolean FDECL(youResistFire, ());
 E boolean FDECL(youResistCold, ());

@@ -768,7 +768,7 @@ int propidx; /* special cases can have negative values */
             else if (innate == 1)
                 Strcpy(buf, " innately");
             else if (wizard
-                     && (obj = what_gives(&u.uprops[propidx].extrinsic)))
+                     && (obj = whatGivesExtrinsic(propidx)))
                 Sprintf(buf, because_of, obj->oartifact
                                              ? bare_artifactname(obj)
                                              : ysimple_name(obj));
@@ -786,7 +786,7 @@ int propidx; /* special cases can have negative values */
 
         } else { /* negative property index */
             /* if more blocking capabilities get implemented we'll need to
-               replace this with what_blocks() comparable to what_gives() */
+               replace this with what_blocks() comparable to whatGivesExtrinsic() */
             switch (-propidx) {
             case BLINDED:
                 if (ublindf
@@ -1322,6 +1322,20 @@ extern long yourExtrinsic(int index) {
 
 extern void setYourExtrinsic(int index, long value) {
   u.uprops[index].extrinsic = value;
+}
+
+extern boolean yourExtrinsicHasMask(int index, long mask) {
+  return ((yourExtrinsic(index) & mask) != 0);
+}
+
+extern void setYourExtrinsicMask(int index, long mask) {
+  long curr = yourExtrinsic(index);
+  setYourExtrinsic(index, (curr | mask));
+}
+
+extern void unsetYourExtrinsicMask(int index, long mask) {
+  long curr = yourExtrinsic(index);
+  setYourExtrinsic(index, (curr & ~mask));
 }
 
 

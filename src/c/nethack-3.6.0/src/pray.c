@@ -576,12 +576,13 @@ aligntyp resp_god;
          * the impudent mortal, like black dragon breath -3.
          */
         if (uarms && !(EReflecting & W_ARMS)
-            && !(EDisint_resistance & W_ARMS))
+            && !(yourExtrinsicHasMask(DISINT_RES, W_ARMS)))
             (void) destroy_arm(uarms);
-        if (uarmc && !(EReflecting & W_ARMC)
-            && !(EDisint_resistance & W_ARMC))
+        if (uarmc && !(yourExtrinsicHasMask(REFLECTING, W_ARMC))
+            && !(yourExtrinsicHasMask(DISINT_RES, W_ARMC)))
             (void) destroy_arm(uarmc);
-        if (uarm && !(EReflecting & W_ARM) && !(EDisint_resistance & W_ARM)
+        if (uarm && !(yourExtrinsicHasMask(REFLECTING, W_ARM))
+            && !(yourExtrinsicHasMask(DISINT_RES, W_ARM))
             && !uarmc)
             (void) destroy_arm(uarm);
         if (uarmu && !uarm && !uarmc)
