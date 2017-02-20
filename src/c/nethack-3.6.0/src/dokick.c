@@ -242,7 +242,7 @@ xchar x, y;
             clumsy = TRUE;
     }
 
-    if (Fumbling)
+    if (youKeepFumbling())
         clumsy = TRUE;
 
     else if (uarm && objects[uarm->otyp].oc_bulky && ACURR(A_DEX) < rnd(25))
@@ -505,7 +505,7 @@ xchar x, y;
         return 1;
     }
 
-    if (Fumbling && !rn2(3)) {
+    if (youKeepFumbling() && !rn2(3)) {
         Your("clumsy kick missed.");
         return 1;
     }
@@ -772,9 +772,9 @@ dokick()
         } else {
             return 0;
         }
-    } else if (Wounded_legs) {
+    } else if (youHaveWoundedLegs()) {
         /* note: jump() has similar code */
-        long wl = (EWounded_legs & BOTH_SIDES);
+        long wl = (yourExtrinsic(WOUNDED_LEGS) & BOTH_SIDES);
         const char *bp = body_part(LEG);
 
         if (wl == BOTH_SIDES)
@@ -1148,7 +1148,7 @@ dokick()
             if (Levitation)
                 goto dumb;
             if (rn2(5)) {
-                if (!Deaf)
+                if (!youAreDeaf())
                     pline("Klunk!  The pipes vibrate noisily.");
                 else
                     pline("Klunk!");

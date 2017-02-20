@@ -555,7 +555,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
     if (mon->ispriest && !rn2(2))
         ghod_hitsu(mon);
     if (anger_guards)
-        (void) angry_guards(!!Deaf);
+        (void) angry_guards(youAreDeaf());
     return result;
 }
 
@@ -1261,7 +1261,7 @@ struct obj *obj;   /* weapon */
 {
     int skill_rating, joust_dieroll;
 
-    if (Fumbling || youAreStunned())
+    if (youKeepFumbling() || youAreStunned())
         return 0;
     /* sanity check; lance must be wielded in order to joust */
     if (obj != uwep && (obj != uswapwep || !usingTwoWeapons()))

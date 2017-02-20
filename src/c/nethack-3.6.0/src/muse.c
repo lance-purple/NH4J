@@ -138,7 +138,7 @@ struct obj *obj;
         && !rn2(WAND_BACKFIRE_CHANCE)) {
         int dam = d(obj->spe + 2, 6);
 
-        if (!Deaf) {
+        if (!youAreDeaf()) {
             if (vis)
                 pline("%s zaps %s, which suddenly explodes!", Monnam(mon),
                       an(xname(obj)));
@@ -164,7 +164,7 @@ struct obj *otmp;
 boolean self;
 {
     if (!canseemon(mtmp)) {
-        if (!Deaf)
+        if (!youAreDeaf())
             You_hear("a %s zap.", (distanceSquaredToYou(mtmp->mx, mtmp->my)
                                    <= (BOLT_LIM + 1) * (BOLT_LIM + 1))
                                       ? "nearby"
@@ -188,7 +188,7 @@ struct obj *otmp;
     short saverole;
     unsigned savebknown;
 
-    if (!vismon && Deaf)
+    if (!vismon && youAreDeaf())
         return; /* no feedback */
 
     otmp->dknown = 1; /* seeing or hearing it read reveals its label */
@@ -227,7 +227,7 @@ struct obj *otmp;
     if (canseemon(mtmp)) {
         otmp->dknown = 1;
         pline("%s drinks %s!", Monnam(mtmp), singular(otmp, doname));
-    } else if (!Deaf)
+    } else if (!youAreDeaf())
         You_hear("a chugging sound.");
 }
 
@@ -639,7 +639,7 @@ struct monst *mtmp;
     case MUSE_BUGLE:
         if (vismon)
             pline("%s plays %s!", Monnam(mtmp), doname(otmp));
-        else if (!Deaf)
+        else if (!youAreDeaf())
             You_hear("a bugle playing reveille!");
         awaken_soldiers(mtmp);
         return 2;
@@ -744,7 +744,7 @@ struct monst *mtmp;
                   surface(mtmp->mx, mtmp->my));
             pline("%s %s through...", Monnam(mtmp),
                   is_flyer(mtmp->data) ? "dives" : "falls");
-        } else if (!Deaf)
+        } else if (!youAreDeaf())
             You_hear("%s crash through the %s.", something,
                      surface(mtmp->mx, mtmp->my));
         /* we made sure that there is a level for mtmp to go to */
@@ -2212,7 +2212,7 @@ boolean stoning;
                                        : "eats",
               distant_name(obj, doname));
         obj->quan = save_quan;
-    } else if (!Deaf)
+    } else if (!youAreDeaf())
         You_hear("%s.",
                  (obj->oclass == POTION_CLASS) ? "drinking" : "chewing");
 

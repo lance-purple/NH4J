@@ -31,7 +31,7 @@ dosounds()
 #endif
     struct monst *mtmp;
 
-    if (Deaf || !flags.acoustics || swallowed() || underwater())
+    if (youAreDeaf() || !flags.acoustics || swallowed() || underwater())
         return;
 
     hallu = youAreHallucinating() ? 1 : 0;
@@ -499,7 +499,7 @@ register struct monst *mtmp;
     int msound = ptr->msound;
 
     /* presumably nearness and sleep checks have already been made */
-    if (Deaf)
+    if (youAreDeaf())
         return 0;
     if (is_silent(ptr))
         return 0;
@@ -991,7 +991,7 @@ dochat()
         Your("speech is unintelligible underwater.");
         return 0;
     }
-    if (Deaf) {
+    if (youAreDeaf()) {
         pline("How can you hold a conversation when you cannot hear?");
         return 0;
     }

@@ -181,7 +181,7 @@ Boots_on(VOID_ARGS)
         toggle_stealth(uarmf, oldprop, TRUE);
         break;
     case FUMBLE_BOOTS:
-        if (!oldprop && !(HFumbling & ~TIMEOUT))
+        if (!oldprop && !yourIntrinsicHasMask(FUMBLING, ~TIMEOUT))
             incrementYourIntrinsicTimeout(FUMBLING, rnd(20));
         break;
     case LEVITATION_BOOTS:
@@ -234,8 +234,10 @@ Boots_off(VOID_ARGS)
         toggle_stealth(otmp, oldprop, FALSE);
         break;
     case FUMBLE_BOOTS:
-        if (!oldprop && !(HFumbling & ~TIMEOUT))
-            HFumbling = EFumbling = 0;
+        if (!oldprop && !yourIntrinsicHasMask(FUMBLING, ~TIMEOUT)) {
+            setYourIntrinsic(FUMBLING, 0L);
+            setYourExtrinsic(FUMBLING, 0L);
+        }
         break;
     case LEVITATION_BOOTS:
         if (!oldprop && !HLevitation && !BLevitation
@@ -483,7 +485,7 @@ Gloves_on(VOID_ARGS)
     case LEATHER_GLOVES:
         break;
     case GAUNTLETS_OF_FUMBLING:
-        if (!oldprop && !(HFumbling & ~TIMEOUT))
+        if (!oldprop && !yourIntrinsicHasMask(FUMBLING, ~TIMEOUT))
             incrementYourIntrinsicTimeout(FUMBLING, rnd(20));
         break;
     case GAUNTLETS_OF_POWER:
@@ -536,8 +538,10 @@ Gloves_off(VOID_ARGS)
     case LEATHER_GLOVES:
         break;
     case GAUNTLETS_OF_FUMBLING:
-        if (!oldprop && !(HFumbling & ~TIMEOUT))
-            HFumbling = EFumbling = 0;
+        if (!oldprop && !yourIntrinsicHasMask(FUMBLING, ~TIMEOUT)) {
+            setYourIntrinsic(FUMBLING, 0L);
+            setYourExtrinsic(FUMBLING, 0L);
+        }
         break;
     case GAUNTLETS_OF_POWER:
         makeknown(uarmg->otyp);
@@ -735,12 +739,13 @@ Amulet_on()
         }
         break;
     case AMULET_OF_RESTFUL_SLEEP: {
-        long newnap = (long) rnd(100), oldnap = (HSleepy & TIMEOUT);
+        long newnap = (long) rnd(100), oldnap = yourIntrinsicTimeout(SLEEPY);
 
         /* avoid clobbering FROMOUTSIDE bit, which might have
            gotten set by previously eating one of these amulets */
-        if (newnap < oldnap || oldnap == 0L)
-            HSleepy = (HSleepy & ~TIMEOUT) | newnap;
+        if (newnap < oldnap || oldnap == 0L) {
+	    setYourIntrinsicTimeout(SLEEPY, newnap);
+	}
     } break;
     case AMULET_OF_YENDOR:
         break;
@@ -789,9 +794,9 @@ Amulet_off()
         break;
     case AMULET_OF_RESTFUL_SLEEP:
         setworn((struct obj *) 0, W_AMUL);
-        /* HSleepy = 0L; -- avoid clobbering FROMOUTSIDE bit */
-        if (!ESleepy && !(HSleepy & ~TIMEOUT))
-            HSleepy &= ~TIMEOUT; /* clear timeout bits */
+        /* setYourIntrinsic(SLEEPY, 0L); -- avoid clobbering FROMOUTSIDE bit */
+        if (!yourExtrinsic(SLEEPY) && !yourIntrinsicHasMask(SLEEPY, ~TIMEOUT))
+            unsetYourIntrinsicMask(SLEEPY, TIMEOUT); /* clear timeout bits */
         return;
     case AMULET_OF_YENDOR:
         break;

@@ -731,12 +731,12 @@ int mode;
                         You(
    "try to ooze under the door, but can't squeeze your possessions through.");
                     if (flags.autoopen && !context.run && !youAreConfused()
-                        && !youAreStunned() && !Fumbling) {
+                        && !youAreStunned() && !youKeepFumbling()) {
                         context.door_opened = context.move =
                             doopen_indir(x, y);
                     } else if (x == ux || y == uy) {
                         if (youCannotSee() || youAreStunned() || ACURR(A_DEX) < 10
-                            || Fumbling) {
+                            || youKeepFumbling()) {
                             if (u.usteed) {
                                 You_cant("lead %s through that closed door.",
                                          y_monnam(u.usteed));
@@ -1279,13 +1279,15 @@ domove()
                 || is_clinger(youmonst.data) || is_whirly(youmonst.data))
                 on_ice = FALSE;
             else if (!rn2(youResistCold() ? 3 : 2)) {
-                HFumbling |= FROMOUTSIDE;
-                HFumbling &= ~TIMEOUT;
-                HFumbling += 1; /* slip on next move */
+                setYourIntrinsicMask(FUMBLING, FROMOUTSIDE);
+                unsetYourIntrinsicMask(FUMBLING, TIMEOUT);
+                /* slip on next move */
+                setYourIntrinsic(FUMBLING, yourIntrinsic(FUMBLING) + 1L);
             }
         }
-        if (!on_ice && (HFumbling & FROMOUTSIDE))
-            HFumbling &= ~FROMOUTSIDE;
+        if (!on_ice && (yourIntrinsicHasMask(FUMBLING, FROMOUTSIDE))) {
+            unsetYourIntrinsicMask(FUMBLING, FROMOUTSIDE);
+        }
 
         x = currentX() + directionX();
         y = currentY() + directionY();
@@ -2753,9 +2755,9 @@ weight_cap()
         if (carrcap > MAX_CARR_CAP)
             carrcap = MAX_CARR_CAP;
         if (!Flying) {
-            if (EWounded_legs & LEFT_SIDE)
+            if (yourExtrinsic(WOUNDED_LEGS) & LEFT_SIDE)
                 carrcap -= 100;
-            if (EWounded_legs & RIGHT_SIDE)
+            if (yourExtrinsic(WOUNDED_LEGS) & RIGHT_SIDE)
                 carrcap -= 100;
         }
         if (carrcap < 0)

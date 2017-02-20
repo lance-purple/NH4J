@@ -840,7 +840,7 @@ unsigned trflags;
                 defsyms[trap_to_defsym(ttype)].explanation);
             return;
         }
-        if (!Fumbling && ttype != MAGIC_PORTAL && ttype != VIBRATING_SQUARE
+        if (!youKeepFumbling() && ttype != MAGIC_PORTAL && ttype != VIBRATING_SQUARE
             && ttype != ANTI_MAGIC && !forcebungle && !plunged && !adj_pit
             && (!rn2(5) || ((ttype == PIT || ttype == SPIKED_PIT)
                             && is_clinger(youmonst.data)))) {
@@ -971,8 +971,8 @@ unsigned trflags;
         } else {
             seetrap(trap);
             pline("A board beneath you %s%s%s.",
-                  Deaf ? "vibrates" : "squeaks ",
-                  Deaf ? "" : trapnote(trap, 0), Deaf ? "" : " loudly");
+                  youAreDeaf() ? "vibrates" : "squeaks ",
+                  youAreDeaf() ? "" : trapnote(trap, 0), youAreDeaf() ? "" : " loudly");
             wake_nearby();
         }
         break;
@@ -2174,7 +2174,7 @@ register struct monst *mtmp;
                 break;
             /* stepped on a squeaky board */
             if (in_sight) {
-                if (!Deaf) {
+                if (!youAreDeaf()) {
                     pline("A board beneath %s squeaks %s loudly.",
                           mon_nam(mtmp), trapnote(trap, 0));
                     seetrap(trap);
@@ -3745,7 +3745,7 @@ struct trap *ttmp;
         chance++;
     if (youAreStunned())
         chance += 2;
-    if (Fumbling)
+    if (youKeepFumbling())
         chance *= 2;
     /* Your own traps are better known than others. */
     if (ttmp && ttmp->madeby_u)
@@ -4308,7 +4308,7 @@ boolean force;
                             ch = ACURR(A_DEX) + currentExperienceLevel();
                             if (Role_if(PM_ROGUE))
                                 ch *= 2;
-                            if (!force && (confused || Fumbling
+                            if (!force && (confused || youKeepFumbling()
                                            || rnd(75 + level_difficulty() / 2)
                                                   > ch)) {
                                 (void) chest_trap(otmp, FINGER, TRUE);
@@ -4364,7 +4364,7 @@ boolean force;
         if (levl[x][y].doormask & D_TRAPPED) {
             ch = 15 + (Role_if(PM_ROGUE) ? currentExperienceLevel() * 3 : currentExperienceLevel());
             exercise(A_DEX, TRUE);
-            if (!force && (confused || Fumbling
+            if (!force && (confused || youKeepFumbling()
                            || rnd(75 + level_difficulty() / 2) > ch)) {
                 You("set it off!");
                 b_trapped("door", FINGER);

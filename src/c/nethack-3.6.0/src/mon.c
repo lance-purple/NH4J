@@ -2425,7 +2425,7 @@ m_respond(mtmp)
 struct monst *mtmp;
 {
     if (mtmp->data->msound == MS_SHRIEK) {
-        if (!Deaf) {
+        if (!youAreDeaf()) {
             pline("%s shrieks.", Monnam(mtmp));
             stop_occupation();
         }
@@ -2468,7 +2468,7 @@ struct monst *mtmp;
     if (couldsee(mtmp->mx, mtmp->my)) {
         if (humanoid(mtmp->data) || mtmp->isshk || mtmp->isgd)
             pline("%s gets angry!", Monnam(mtmp));
-        else if (flags.verbose && !Deaf)
+        else if (flags.verbose && !youAreDeaf())
             growl(mtmp);
     }
 

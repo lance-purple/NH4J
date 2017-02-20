@@ -551,7 +551,7 @@ resurrect()
     if (mtmp) {
         mtmp->mtame = mtmp->mpeaceful = 0; /* paranoia */
         set_malign(mtmp);
-        if (!Deaf) {
+        if (!youAreDeaf()) {
             pline("A voice booms out...");
             verbalize("So thou thought thou couldst %s me, fool.", verb);
         }
@@ -622,7 +622,7 @@ void
 cuss(mtmp)
 register struct monst *mtmp;
 {
-    if (Deaf)
+    if (youAreDeaf())
         return;
     if (mtmp->iswiz) {
         if (!rn2(5)) /* typical bad guy action */

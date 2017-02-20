@@ -303,7 +303,7 @@ register struct obj *obj;
     if (nohands(youmonst.data)) {
         You("have no hands!"); /* not `body_part(HAND)' */
         return 0;
-    } else if (Deaf) {
+    } else if (youAreDeaf()) {
         You_cant("hear anything!");
         return 0;
     } else if (!freehand()) {
@@ -1548,8 +1548,8 @@ int magic; /* 0=Physical, otherwise skill level */
     } else if (!magic && (currentNutrition() <= 100 || ACURR(A_STR) < 6)) {
         You("lack the strength to jump!");
         return 0;
-    } else if (!magic && Wounded_legs) {
-        long wl = (Wounded_legs & BOTH_SIDES);
+    } else if (!magic && youHaveWoundedLegs()) {
+        long wl = (yourExtrinsic(WOUNDED_LEGS) & BOTH_SIDES);
         const char *bp = body_part(LEG);
 
         if (wl == BOTH_SIDES)
@@ -1768,7 +1768,7 @@ struct obj *obj;
                                      TRUE, 0L);
             break;
         case 6:
-            if (Deaf) /* make_deaf() won't give feedback when already deaf */
+            if (youAreDeaf()) /* make_deaf() won't give feedback when already deaf */
                 pline("Nothing seems to happen.");
             make_deaf(yourIntrinsicTimeout(DEAF) + lcount, TRUE);
             break;
@@ -2117,7 +2117,7 @@ struct obj *obj;
     }
 
     if (obj->spe > 0) {
-        if ((obj->cursed || Fumbling) && !rn2(2)) {
+        if ((obj->cursed || youKeepFumbling()) && !rn2(2)) {
             consume_obj_charge(obj, TRUE);
 
             pline("%s from your %s.", Tobjnam(obj, "slip"),
@@ -2361,7 +2361,7 @@ struct obj *otmp;
     if (u.usteed && P_SKILL(P_RIDING) < P_BASIC) {
         boolean chance;
 
-        if (Fumbling || otmp->cursed)
+        if (youKeepFumbling() || otmp->cursed)
             chance = (rnl(10) > 3);
         else
             chance = (rnl(10) > 5);
@@ -2424,7 +2424,7 @@ set_trap()
         if (!trapinfo.force_bungle)
             You("finish arming %s.",
                 the(defsyms[trap_to_defsym(what_trap(ttyp))].explanation));
-        if (((otmp->cursed || Fumbling) && (rnl(10) > 5))
+        if (((otmp->cursed || youKeepFumbling()) && (rnl(10) > 5))
             || trapinfo.force_bungle)
             dotrap(ttmp,
                    (unsigned) (trapinfo.force_bungle ? FORCEBUNGLE : 0));
@@ -2481,7 +2481,7 @@ struct obj *obj;
         proficient--;
     else if (ACURR(A_DEX) >= 14)
         proficient += (ACURR(A_DEX) - 14);
-    if (Fumbling)
+    if (youKeepFumbling())
         --proficient;
     if (proficient > 3)
         proficient = 3;
@@ -2530,7 +2530,7 @@ struct obj *obj;
         context.botl = 1;
         return 1;
 
-    } else if ((Fumbling || youHaveSlipperyFingers()) && !rn2(5)) {
+    } else if ((youKeepFumbling() || youHaveSlipperyFingers()) && !rn2(5)) {
         pline_The("bullwhip slips out of your %s.", body_part(HAND));
         dropx(obj);
 
@@ -2599,7 +2599,7 @@ struct obj *obj;
         if (otmp) {
             char onambuf[BUFSZ];
             const char *mon_hand;
-            boolean gotit = proficient && (!Fumbling || !rn2(10));
+            boolean gotit = proficient && (!youKeepFumbling() || !rn2(10));
 
             Strcpy(onambuf, cxname(otmp));
             if (gotit) {
@@ -3568,7 +3568,7 @@ boolean is_horn;
         unfixable_trbl++;
     if (youAreBeingStrangled())
         unfixable_trbl++;
-    if (Wounded_legs && !u.usteed)
+    if (youHaveWoundedLegs() && !u.usteed)
         unfixable_trbl++;
     if (youAreTurningToSlime())
         unfixable_trbl++;

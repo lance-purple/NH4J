@@ -352,7 +352,7 @@ nh_timeout()
             case DEAF:
                 setYourIntrinsicTimeout(DEAF, 1L);
                 make_deaf(0L, TRUE);
-                if (!Deaf)
+                if (!youAreDeaf())
                     stop_occupation();
                 break;
             case INVIS:
@@ -383,7 +383,7 @@ nh_timeout()
             case SLEEPY:
                 if (unconscious() || youResistSleep()) {
                     incrementYourIntrinsicTimeout(SLEEPY, rnd(100));
-                } else if (Sleepy) {
+                } else if (youAreSleepy()) {
                     You("fall asleep.");
                     sleeptime = rnd(20);
                     fall_asleep(-sleeptime, TRUE);
@@ -424,8 +424,8 @@ nh_timeout()
                 }
                 /* from outside means slippery ice; don't reset
                    counter if that's the only fumble reason */
-                HFumbling &= ~FROMOUTSIDE;
-                if (Fumbling)
+                unsetYourIntrinsicMask(FUMBLING, FROMOUTSIDE);
+                if (youKeepFumbling())
                     incrementYourIntrinsicTimeout(FUMBLING, rnd(20));
                 break;
             case DETECT_MONSTERS:
@@ -603,7 +603,7 @@ long timeout;
                 pline("%s cries sound like \"%s%s\"",
                       siblings ? "Their" : "Its",
                       flags.female ? "mommy" : "daddy", egg->spe ? "." : "?");
-            } else if (mon->data->mlet == S_DRAGON && !Deaf) {
+            } else if (mon->data->mlet == S_DRAGON && !youAreDeaf()) {
                 verbalize("Gleep!"); /* Mything eggs :-) */
             }
             break;

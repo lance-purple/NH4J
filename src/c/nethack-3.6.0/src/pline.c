@@ -228,7 +228,7 @@ VA_DECL(const char *, line)
 {
     char *tmp;
 
-    if (Deaf || !flags.acoustics)
+    if (youAreDeaf() || !flags.acoustics)
         return;
     VA_START(line);
     VA_INIT(line, const char *);
@@ -503,9 +503,9 @@ ustatusline()
     }
     if (youAreStunned())
         Strcat(info, ", stunned");
-    if (!u.usteed && Wounded_legs) {
+    if (!u.usteed && youHaveWoundedLegs()) {
         const char *what = body_part(LEG);
-        if ((Wounded_legs & BOTH_SIDES) == BOTH_SIDES)
+        if ((yourExtrinsic(WOUNDED_LEGS) & BOTH_SIDES) == BOTH_SIDES)
             what = makeplural(what);
         Sprintf(eos(info), ", injured %s", what);
     }

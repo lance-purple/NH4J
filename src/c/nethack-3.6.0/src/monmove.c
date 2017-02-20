@@ -24,7 +24,7 @@ struct monst *mtmp;
     if (flags.verbose) {
         if (cansee(mtmp->mx, mtmp->my) && youAreAware())
             pline("KABOOM!!  You see a door explode.");
-        else if (!Deaf)
+        else if (!youAreDeaf())
             You_hear("a distant explosion.");
     }
     wake_nearto(mtmp->mx, mtmp->my, 7 * 7);
@@ -76,7 +76,7 @@ register struct monst *mtmp;
             if (couldsee(mtmp->mx, mtmp->my)) {
                 if (levl[x][y].looted & D_WARNED) {
                     mon_yells(mtmp, "Halt, thief!  You're under arrest!");
-                    (void) angry_guards(!!Deaf);
+                    (void) angry_guards(youAreDeaf());
                 } else {
                     mon_yells(mtmp, "Hey, stop picking that lock!");
                     levl[x][y].looted |= D_WARNED;
@@ -810,7 +810,7 @@ register int after;
 
 #ifdef MAIL
     if (ptr == &mons[PM_MAIL_DAEMON]) {
-        if (!Deaf && canseemon(mtmp))
+        if (!youAreDeaf() && canseemon(mtmp))
             verbalize("I'm late!");
         mongone(mtmp);
         return 2;
@@ -1237,7 +1237,7 @@ postmov:
                                       Monnam(mtmp));
                             else if (canseeit)
                                 You_see("a door unlock and open.");
-                            else if (!Deaf)
+                            else if (!youAreDeaf())
                                 You_hear("a door unlock and open.");
                         }
                         here->doormask = D_ISOPEN;
@@ -1257,7 +1257,7 @@ postmov:
                                 pline("%s opens a door.", Monnam(mtmp));
                             else if (canseeit)
                                 You_see("a door open.");
-                            else if (!Deaf)
+                            else if (!youAreDeaf())
                                 You_hear("a door open.");
                         }
                         here->doormask = D_ISOPEN;
@@ -1279,7 +1279,7 @@ postmov:
                                       Monnam(mtmp));
                             else if (canseeit)
                                 You_see("a door crash open.");
-                            else if (!Deaf)
+                            else if (!youAreDeaf())
                                 You_hear("a door crash open.");
                         }
                         if (here->doormask & D_LOCKED && !rn2(2))

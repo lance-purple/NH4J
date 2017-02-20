@@ -378,7 +378,7 @@ make_deaf(xtime, talk)
 long xtime;
 boolean talk;
 {
-    long old = HDeaf;
+    long old = yourIntrinsic(DEAF);
     boolean toggled = FALSE;
 
     if (youAreUnaware())
@@ -862,7 +862,7 @@ register struct obj *otmp;
         }
         break;
     case POT_SPEED:
-        if (Wounded_legs && !otmp->cursed && !u.usteed) {
+        if (youHaveWoundedLegs() && !otmp->cursed && !u.usteed) {
             /* heal_legs() would heal steeds legs */
             heal_legs();
             unkn++;
@@ -1938,7 +1938,7 @@ dodip()
            it has a side-effect of merging 'obj' into another compatible
            stack if there is one, so we do it even when no split has
            been made in order to get the merge result for both cases;
-           as a consequence, mixing while Fumbling drops the mixture */
+           as a consequence, mixing while fumbling drops the mixture */
         freeinv(obj);
         (void) hold_another_object(obj, "You drop %s!", doname(obj),
                                    (const char *) 0);

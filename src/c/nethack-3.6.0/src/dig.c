@@ -267,7 +267,7 @@ dig(VOID_ARGS)
             return 0;
         }
     }
-    if (Fumbling && !rn2(3)) {
+    if (youKeepFumbling() && !rn2(3)) {
         switch (rn2(3)) {
         case 0:
             if (!welded(uwep)) {
@@ -322,7 +322,7 @@ dig(VOID_ARGS)
                           sizeof context.digging);
             return 0;
         } else if (ttmp && ttmp->ttyp == BEAR_TRAP && currentlyTrapped()) {
-            if (rnl(7) > (Fumbling ? 1 : 4)) {
+            if (rnl(7) > (youKeepFumbling() ? 1 : 4)) {
                 char kbuf[BUFSZ];
                 int dmg = dmgval(uwep, &youmonst) + dbon();
 
@@ -1217,7 +1217,7 @@ boolean zap;
         if (mtmp) {
             if (zap || context.digging.warned) {
                 verbalize("Halt, vandal!  You're under arrest!");
-                (void) angry_guards(!!Deaf);
+                (void) angry_guards(youAreDeaf());
             } else {
                 const char *str;
 

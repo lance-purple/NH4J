@@ -1224,7 +1224,7 @@ genericptr_t num;
                 b_trapped("door", 0);
             else
                 Norep("You %s an explosion!",
-                      cansee(zx, zy) ? "see" : (!Deaf ? "hear"
+                      cansee(zx, zy) ? "see" : (!youAreDeaf() ? "hear"
                                                       : "feel the shock of"));
             wake_nearto(zx, zy, 11 * 11);
             levl[zx][zy].doormask = D_NODOOR;

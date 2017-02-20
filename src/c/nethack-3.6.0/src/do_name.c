@@ -466,7 +466,7 @@ do_mname()
     if (mtmp->data->geno & G_UNIQ)
         pline("%s doesn't like being called names!", upstart(monnambuf));
     else if (mtmp->isshk
-             && !(Deaf || mtmp->msleeping || !mtmp->mcanmove
+             && !(youAreDeaf() || mtmp->msleeping || !mtmp->mcanmove
                   || mtmp->data->msound <= MS_ANIMAL))
         verbalize("I'm %s, not %s.", shkname(mtmp), buf);
     else if (mtmp->ispriest || mtmp->isminion || mtmp->isshk)

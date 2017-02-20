@@ -920,7 +920,7 @@ fumaroles()
                 loud = TRUE;
         }
     }
-    if (snd && !Deaf)
+    if (snd && !youAreDeaf())
         Norep("You hear a %swhoosh!", loud ? "loud " : "");
 }
 

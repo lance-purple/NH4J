@@ -1713,7 +1713,7 @@ int final;
         /* !haseyes: avoid "you are innately blind innately" */
         you_are(buf, !haseyes(youmonst.data) ? "" : from_what(BLINDED));
     }
-    if (Deaf)
+    if (youAreDeaf())
         you_are("deaf", from_what(DEAF));
 
     /* external troubles, more or less */
@@ -1769,8 +1769,8 @@ int final;
             you_are(buf, "");
         }
     }
-    if (Wounded_legs) {
-        /* when mounted, Wounded_legs applies to steed rather than to
+    if (youHaveWoundedLegs()) {
+        /* when mounted, wounded legs apply to steed rather than to
            hero; we only report steed's wounded legs in wizard mode */
         if (u.usteed) { /* not `Riding' here */
             if (wizard && steedname) {
@@ -1787,20 +1787,20 @@ int final;
         Sprintf(buf, "slippery %s", makeplural(body_part(FINGER)));
         you_have(buf, "");
     }
-    if (Fumbling) {
+    if (youKeepFumbling()) {
         if (magic || cause_known(FUMBLING))
             enl_msg(You_, "fumble", "fumbled", "", from_what(FUMBLING));
     }
-    if (Sleepy) {
+    if (youAreSleepy()) {
         if (magic || cause_known(SLEEPY)) {
             Strcpy(buf, from_what(SLEEPY));
             if (wizard)
-                Sprintf(eos(buf), " (%ld)", (HSleepy & TIMEOUT));
+                Sprintf(eos(buf), " (%ld)", yourIntrinsicTimeout(SLEEPY));
             enl_msg("You ", "fall", "fell", " asleep uncontrollably", buf);
         }
     }
     /* hunger/nutrition */
-    if (Hunger) {
+    if (youHunger()) {
         if (magic || cause_known(HUNGER))
             enl_msg(You_, "hunger", "hungered", " rapidly",
                     from_what(HUNGER));

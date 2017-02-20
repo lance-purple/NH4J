@@ -812,7 +812,7 @@ register int after; /* this is extra fast monster movement */
 
             if ((info[i] & ALLOW_TRAPS) && (trap = t_at(nx, ny))) {
                 if (mtmp->mleashed) {
-                    if (!Deaf)
+                    if (!youAreDeaf())
                         whimper(mtmp);
                 } else
                     /* 1/40 chance of stepping on it anyway, in case

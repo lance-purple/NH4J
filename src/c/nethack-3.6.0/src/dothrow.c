@@ -117,7 +117,7 @@ int shotlimit;
                          || (Role_if(PM_HEALER) && skill != P_KNIFE)
                          || (Role_if(PM_TOURIST) && skill != -P_DART)
                          /* poor dexterity also inhibits multishot */
-                         || Fumbling || ACURR(A_DEX) <= 6);
+                         || youKeepFumbling() || ACURR(A_DEX) <= 6);
 
         /* Bonus if the player is proficient in this weapon... */
         switch (P_SKILL(weapon_type(obj))) {
@@ -986,7 +986,7 @@ boolean
     register struct monst *mon;
     register int range, urange;
     boolean crossbowing, impaired = (youAreConfused() || youAreStunned() || youCannotSee()
-                                     || youAreHallucinating() || Fumbling);
+                                     || youAreHallucinating() || youKeepFumbling());
 
     notonhead = FALSE; /* reset potentially stale value */
     if ((obj->cursed || obj->greased) && (directionX() || directionY()) && !rn2(7)) {

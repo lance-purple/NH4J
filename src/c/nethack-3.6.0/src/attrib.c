@@ -455,7 +455,7 @@ exerper()
             exercise(A_CON, FALSE);
         if (youAreConfused() || youAreHallucinating())
             exercise(A_WIS, FALSE);
-        if ((Wounded_legs && !u.usteed) || Fumbling || youAreStunned())
+        if ((youHaveWoundedLegs() && !u.usteed) || youKeepFumbling() || youAreStunned())
             exercise(A_DEX, FALSE);
     }
 }
@@ -1480,6 +1480,26 @@ extern boolean youAreTurningToSlime() {
 
 extern boolean youAreBeingStrangled() {
  return (yourIntrinsic(STRANGLED));
+}
+
+extern boolean youAreDeaf() {
+ return (yourIntrinsic(DEAF) || yourExtrinsic(DEAF));
+}
+
+extern boolean youKeepFumbling() {
+ return (yourIntrinsic(FUMBLING) || yourExtrinsic(FUMBLING));
+}
+
+extern boolean youHaveWoundedLegs() {
+ return (yourIntrinsic(WOUNDED_LEGS) || yourExtrinsic(WOUNDED_LEGS));
+}
+
+extern boolean youAreSleepy() {
+ return (yourIntrinsic(SLEEPY) || yourExtrinsic(SLEEPY));
+}
+
+extern boolean youHunger() {
+ return (yourIntrinsic(HUNGER) || yourExtrinsic(HUNGER));
 }
 
 /*attrib.c*/

@@ -336,7 +336,7 @@ register boolean nearshop;
     if (!shkp)
         return;
 
-    if (!Deaf)
+    if (!youAreDeaf())
         pline("An alarm sounds!");
 
     nokops = ((mvitals[PM_KEYSTONE_KOP].mvflags & G_GONE)
@@ -344,8 +344,8 @@ register boolean nearshop;
               && (mvitals[PM_KOP_LIEUTENANT].mvflags & G_GONE)
               && (mvitals[PM_KOP_KAPTAIN].mvflags & G_GONE));
 
-    if (!angry_guards(!!Deaf) && nokops) {
-        if (flags.verbose && !Deaf)
+    if (!angry_guards(youAreDeaf()) && nokops) {
+        if (flags.verbose && !youAreDeaf())
             pline("But no one seems to respond to it.");
         return;
     }
@@ -3389,7 +3389,7 @@ boolean croaked;
                   trapmsg);
         else if (inside_shop(currentX(), currentY()) == ESHK(shkp)->shoproom)
             You_feel("more claustrophobic than before.");
-        else if (!Deaf && !rn2(10))
+        else if (!youAreDeaf() && !rn2(10))
             Norep("The dungeon acoustics noticeably change.");
     }
     if (stop_picking)
@@ -3889,7 +3889,7 @@ boolean cant_mollify;
          * yanked the hapless critter out of the way.
          */
         if (MON_AT(x, y)) {
-            if (!Deaf && !animal) {
+            if (!youAreDeaf() && !animal) {
                 You_hear("an angry voice:");
                 verbalize("Out of my way, scum!");
                 wait_synch();

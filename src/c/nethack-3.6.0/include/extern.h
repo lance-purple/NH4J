@@ -166,6 +166,12 @@ E boolean FDECL(youAreTurningToStone, ());
 E boolean FDECL(youAreTurningToSlime, ());
 E boolean FDECL(youAreBeingStrangled, ());
 
+E boolean FDECL(youAreDeaf, ());
+E boolean FDECL(youKeepFumbling, ());
+E boolean FDECL(youHaveWoundedLegs, ());
+E boolean FDECL(youAreSleepy, ());
+E boolean FDECL(youHunger, ());
+
 /* ### ball.c ### */
 
 E void FDECL(ballrelease, (BOOLEAN_P));

@@ -279,7 +279,7 @@ int expltype;
             str = "explosion";
             generic = TRUE;
         }
-        if (!Deaf && olet != SCROLL_CLASS)
+        if (!youAreDeaf() && olet != SCROLL_CLASS)
             You_hear("a blast.");
     }
 

@@ -1836,7 +1836,7 @@ struct obj *obj, *otmp;
         case SPE_FORCE_BOLT:
             /* learn the type if you see or hear something break
                (the sound could be implicit) */
-            maybelearnit = cansee(obj->ox, obj->oy) || !Deaf;
+            maybelearnit = cansee(obj->ox, obj->oy) || !youAreDeaf();
             if (obj->otyp == BOULDER) {
                 if (cansee(obj->ox, obj->oy))
                     pline_The("boulder falls apart.");
@@ -1888,7 +1888,7 @@ struct obj *obj, *otmp;
 
                 res = !!revive(obj, TRUE);
                 if (res && Role_if(PM_HEALER)) {
-                    if (youAreHallucinating() && !Deaf) {
+                    if (youAreHallucinating() && !youAreDeaf()) {
                         You_hear("the sound of a defibrillator.");
                         learn_it = TRUE;
                     } else if (youCanSee()) {
@@ -3212,7 +3212,7 @@ struct obj **pobj; /* object tossed/used, set to NULL
             case SPE_FORCE_BOLT:
                 if (doorlock(obj, bhitpos.x, bhitpos.y)) {
                     if (cansee(bhitpos.x, bhitpos.y)
-                        || (obj->otyp == WAN_STRIKING && !Deaf))
+                        || (obj->otyp == WAN_STRIKING && !youAreDeaf()))
                         learnwand(obj);
                     if (levl[bhitpos.x][bhitpos.y].doormask == D_BROKEN
                         && *in_rooms(bhitpos.x, bhitpos.y, SHOPBASE)) {
@@ -3341,7 +3341,7 @@ int dx, dy;
             break;
         }
         if (bhitpos.x == currentX() && bhitpos.y == currentY()) { /* ct == 9 */
-            if (Fumbling || rn2(20) >= ACURR(A_DEX)) {
+            if (youKeepFumbling() || rn2(20) >= ACURR(A_DEX)) {
                 /* we hit ourselves */
                 (void) thitu(10 + obj->spe, dmgval(obj, &youmonst), obj,
                              "boomerang");
@@ -3356,7 +3356,7 @@ int dx, dy;
         tmp_at(bhitpos.x, bhitpos.y);
         delay_output();
         if (IS_SINK(levl[bhitpos.x][bhitpos.y].typ)) {
-            if (!Deaf)
+            if (!youAreDeaf())
                 pline("Klonk!");
             break; /* boomerang falls on sink */
         }

@@ -16,7 +16,7 @@ register struct monst *mon;
             && !rn2(night() ? (flags.moonphase == FULL_MOON ? 3 : 30)
                             : (flags.moonphase == FULL_MOON ? 10 : 50))) {
             new_were(mon); /* change into animal form */
-            if (!Deaf && !canseemon(mon)) {
+            if (!youAreDeaf() && !canseemon(mon)) {
                 const char *howler;
 
                 switch (monsndx(mon->data)) {

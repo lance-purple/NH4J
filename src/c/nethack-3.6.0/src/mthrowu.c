@@ -681,7 +681,7 @@ struct attack *mattk;
     struct obj *otmp;
 
     if (mtmp->mcan) {
-        if (!Deaf)
+        if (!youAreDeaf())
             pline("A dry rattle comes from %s throat.",
                   s_suffix(mon_nam(mtmp)));
         return 0;
@@ -726,7 +726,7 @@ struct attack *mattk;
 
     if (lined_up(mtmp)) {
         if (mtmp->mcan) {
-            if (!Deaf) {
+            if (!youAreDeaf()) {
                 if (canseemon(mtmp))
                     pline("%s coughs.", Monnam(mtmp));
                 else

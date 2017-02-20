@@ -69,7 +69,7 @@ register struct attack *mattk;
 {
     boolean farq = (distanceSquaredToYou(magr->mx, magr->my) > 15);
 
-    if (!Deaf && (farq != far_noise || moves - noisetime > 10)) {
+    if (!youAreDeaf() && (farq != far_noise || moves - noisetime > 10)) {
         far_noise = farq;
         noisetime = moves;
         You_hear("%s%s.",
@@ -785,7 +785,7 @@ register struct attack *mattk;
                 You(brief_feeling, "queasy");
             return MM_AGR_DIED;
         }
-        if (flags.verbose && !Deaf)
+        if (flags.verbose && !youAreDeaf())
             verbalize("Burrrrp!");
         tmp = mdef->mhp;
         /* Use up amulet of life saving */
@@ -1112,7 +1112,7 @@ register struct attack *mattk;
                 return (MM_DEF_DIED
                         | (grow_up(magr, mdef) ? 0 : MM_AGR_DIED));
             }
-            if (!Deaf) {
+            if (!youAreDeaf()) {
                 if (!vis)
                     You_hear("laughter.");
                 else

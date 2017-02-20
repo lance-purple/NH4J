@@ -425,7 +425,7 @@ int roomno;
         sanctum = (priest->data == &mons[PM_HIGH_PRIEST]
                    && (areYouOnSanctumLevel() || areYouInEndgame()));
         can_speak = (priest->mcanmove && !priest->msleeping);
-        if (can_speak && !Deaf && moves >= epri_p->intone_time) {
+        if (can_speak && !youAreDeaf() && moves >= epri_p->intone_time) {
             unsigned save_priest = priest->ispriest;
 
             /* don't reveal the altar's owner upon temple entry in
@@ -459,7 +459,7 @@ int roomno;
                     !shrined ? "desecrated" : "sacred");
             msg1 = buf;
         }
-        if (msg1 && can_speak && !Deaf) {
+        if (msg1 && can_speak && !youAreDeaf()) {
             verbalize1(msg1);
             if (msg2)
                 verbalize1(msg2);

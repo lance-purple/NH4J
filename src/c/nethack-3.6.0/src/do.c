@@ -91,7 +91,7 @@ boolean pushing;
                     There("is a large splash as %s %s the %s.",
                           the(xname(otmp)), fills_up ? "fills" : "falls into",
                           what);
-                } else if (!Deaf)
+                } else if (!youAreDeaf())
                     You_hear("a%s splash.", lava ? " sizzling" : "");
                 wake_nearto(rx, ry, 40);
             }
@@ -194,7 +194,7 @@ const char *verb;
         /* Reasonably bulky objects (arbitrary) splash when dropped.
          * If you're floating above the water even small things make
          * noise.  Stuff dropped near fountains always misses */
-        if ((youCannotSee() || (Levitation || Flying)) && !Deaf
+        if ((youCannotSee() || (Levitation || Flying)) && !youAreDeaf()
             && ((x == currentX()) && (y == currentY()))) {
             if (!underwater()) {
                 if (weight(obj) > 9) {
@@ -209,7 +209,7 @@ const char *verb;
         return water_damage(obj, NULL, FALSE) == ER_DESTROYED;
     } else if (currentX() == x && currentY() == y && (t = t_at(x, y)) != 0
                && uteetering_at_seen_pit(t)) {
-        if (youCannotSee() && !Deaf)
+        if (youCannotSee() && !youAreDeaf())
             You_hear("%s tumble downwards.", the(xname(obj)));
         else
             pline("%s %s into %s pit.", The(xname(obj)),
@@ -1321,7 +1321,7 @@ boolean at_stairs, falling, portal;
                     You("fly down %s.",
                         at_ladder ? "along the ladder" : "the stairs");
             } else if (near_capacity() > UNENCUMBERED || youAreBeingPunished()
-                       || Fumbling) {
+                       || youKeepFumbling()) {
                 You("fall down the %s.", at_ladder ? "ladder" : "stairs");
                 if (youAreBeingPunished()) {
                     drag_down();
@@ -1810,21 +1810,22 @@ register int timex;
      * Caller is also responsible for adjusting messages.
      */
 
-    if (!Wounded_legs) {
+    if (!youHaveWoundedLegs()) {
         decreaseYourTemporaryAttrChange(A_DEX, 1);
         context.botl = 1;
     }
 
-    if (!Wounded_legs || (HWounded_legs & TIMEOUT))
-        HWounded_legs = timex;
-    EWounded_legs = side;
+    if (!youHaveWoundedLegs() || yourIntrinsicTimeout(WOUNDED_LEGS))
+        setYourIntrinsicTimeout(WOUNDED_LEGS, timex);
+
+    setYourExtrinsic(WOUNDED_LEGS, side);
     (void) encumber_msg();
 }
 
 void
 heal_legs()
 {
-    if (Wounded_legs) {
+    if (youHaveWoundedLegs()) {
         if (yourTemporaryAttrChange(A_DEX) < 0) {
             increaseYourTemporaryAttrChange(A_DEX, 1);
             context.botl = 1;
@@ -1833,16 +1834,17 @@ heal_legs()
         if (!u.usteed) {
             const char *legs = body_part(LEG);
 
-            if ((EWounded_legs & BOTH_SIDES) == BOTH_SIDES)
+            if ((yourExtrinsic(WOUNDED_LEGS) & BOTH_SIDES) == BOTH_SIDES)
                 legs = makeplural(legs);
             /* this used to say "somewhat better" but that was
                misleading since legs are being fully healed */
             Your("%s %s better.", legs, vtense(legs, "feel"));
         }
 
-        HWounded_legs = EWounded_legs = 0;
+        setYourIntrinsic(WOUNDED_LEGS, 0L);
+        setYourExtrinsic(WOUNDED_LEGS, 0L);
 
-        /* Wounded_legs reduces carrying capacity, so we want
+        /* Wounded legs reduce carrying capacity, so we want
            an encumbrance check when they're healed.  However,
            while dismounting, first steed's legs get healed,
            then hero is dropped to floor and a new encumbrance

@@ -236,7 +236,7 @@ in_trouble()
     for (i = 0; i < A_MAX; i++)
         if (yourCurrentAttr(i) < yourAttrMax(i))
             return TROUBLE_POISONED;
-    if (Wounded_legs && !u.usteed)
+    if (youHaveWoundedLegs() && !u.usteed)
         return TROUBLE_WOUNDED_LEGS;
     if (currentHungerState() >= HUNGRY)
         return TROUBLE_HUNGRY;
@@ -1515,7 +1515,7 @@ dosacrifice()
             return 1;
         } else {
             /* don't you dare try to fool the gods */
-            if (Deaf)
+            if (youAreDeaf())
                 pline("Oh, no."); /* didn't hear thunderclap */
             change_luck(-3);
             adjalign(-1);

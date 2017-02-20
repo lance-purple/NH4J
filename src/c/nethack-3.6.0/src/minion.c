@@ -399,7 +399,7 @@ struct monst *mon; /* if null, angel hasn't been created yet */
 
     if (mon) {
         if (canspotmon(mon)) {
-            if (!Deaf) {
+            if (!youAreDeaf()) {
                 pline("%s rebukes you, saying:", Monnam(mon));
                 verbalize("Since you desire conflict, have some more!");
             } else {

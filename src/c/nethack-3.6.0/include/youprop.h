@@ -22,27 +22,6 @@
 
 /*** Troubles ***/
 
-/* Timeout, plus a worn mask */
-#define HDeaf u.uprops[DEAF].intrinsic
-#define EDeaf u.uprops[DEAF].extrinsic
-#define Deaf (HDeaf || EDeaf)
-
-#define HFumbling u.uprops[FUMBLING].intrinsic
-#define EFumbling u.uprops[FUMBLING].extrinsic
-#define Fumbling (HFumbling || EFumbling)
-
-#define HWounded_legs u.uprops[WOUNDED_LEGS].intrinsic
-#define EWounded_legs u.uprops[WOUNDED_LEGS].extrinsic
-#define Wounded_legs (HWounded_legs || EWounded_legs)
-
-#define HSleepy u.uprops[SLEEPY].intrinsic
-#define ESleepy u.uprops[SLEEPY].extrinsic
-#define Sleepy (HSleepy || ESleepy)
-
-#define HHunger u.uprops[HUNGER].intrinsic
-#define EHunger u.uprops[HUNGER].extrinsic
-#define Hunger (HHunger || EHunger)
-
 /*** Vision and senses ***/
 #define HSee_invisible u.uprops[SEE_INVIS].intrinsic
 #define ESee_invisible u.uprops[SEE_INVIS].extrinsic

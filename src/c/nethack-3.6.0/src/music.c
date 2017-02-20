@@ -391,7 +391,7 @@ int force;
                             selftouch("Falling, you");
                         } else if (currentlyTrapped() && currentTrapType() == TT_PIT) {
                             boolean keepfooting =
-                                ((Fumbling && !rn2(5))
+                                ((youKeepFumbling() && !rn2(5))
                                  || (!rnl(Role_if(PM_ARCHEOLOGIST) ? 3 : 9))
                                  || ((ACURR(A_DEX) > 7) && rn2(5)));
                             You("are jostled around violently!");
@@ -657,7 +657,7 @@ struct obj *instr;
                                     open_drawbridge(x, y);
                                 return 1;
                             }
-            } else if (!Deaf) {
+            } else if (!youAreDeaf()) {
                 if (knowledgeOfPasstune() < 1)
                     setKnowledgeOfPasstune(1);
                 /* Okay, it wasn't the right tune, but perhaps

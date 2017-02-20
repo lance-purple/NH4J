@@ -1957,14 +1957,16 @@ struct obj *otmp;
             choke(otmp);
             break;
         case AMULET_OF_RESTFUL_SLEEP: { /* another bad idea! */
-            long newnap = (long) rnd(100), oldnap = (HSleepy & TIMEOUT);
+            long newnap = (long) rnd(100);
+	    long oldnap = yourIntrinsicTimeout(SLEEPY);
 
-            if (!(HSleepy & FROMOUTSIDE))
+            if (!yourIntrinsicHasMask(SLEEPY, FROMOUTSIDE))
                 accessory_has_effect(otmp);
-            HSleepy |= FROMOUTSIDE;
+            setYourIntrinsicMask(SLEEPY, FROMOUTSIDE);
             /* might also be wearing one; use shorter of two timeouts */
-            if (newnap < oldnap || oldnap == 0L)
-                HSleepy = (HSleepy & ~TIMEOUT) | newnap;
+            if (newnap < oldnap || oldnap == 0L) {
+                setYourIntrinsicTimeout(SLEEPY, newnap);
+	    }
             break;
         }
         case RIN_SUSTAIN_ABILITY:
@@ -2140,7 +2142,7 @@ struct obj *otmp;
                won't have to wait for a prince to be rescued/revived */
             if (Race_if(PM_DWARF) && youAreHallucinating())
                 verbalize("Heigh-ho, ho-hum, I think I'll skip work today.");
-            else if (Deaf || !flags.acoustics)
+            else if (youAreDeaf() || !flags.acoustics)
                 You("fall asleep.");
             else
                 You_hear("sinister laughter as you fall asleep...");
@@ -2636,7 +2638,7 @@ gethungry()
             decreaseCurrentNutrition(1);
         }
     } else { /* even turns */
-        if (Hunger) {
+        if (youHunger()) {
             decreaseCurrentNutrition(1);
         }
         /* Conflict uses up food too */ 

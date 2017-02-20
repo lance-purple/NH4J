@@ -1724,7 +1724,7 @@ boolean confused, byu;
                 if (canspotmon(mtmp))
                     pline("Fortunately, %s is wearing a hard helmet.",
                           mon_nam(mtmp));
-                else if (!Deaf)
+                else if (!youAreDeaf())
                     You_hear("a clanging sound.");
                 if (mdmg > 2)
                     mdmg = 2;
@@ -2154,7 +2154,7 @@ int how;
                 adjalign(sgn(currentAlignmentType()));
 
             if (!(ptr->geno & G_GENO)) {
-                if (!Deaf) {
+                if (!youAreDeaf()) {
                     /* fixme: unconditional "caverns" will be silly in some
                      * circumstances */
                     if (flags.verbose)

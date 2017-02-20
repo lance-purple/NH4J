@@ -65,7 +65,7 @@ boolean undirected;
 
         pline("%s points %s.", Monnam(mtmp), point_msg);
     } else if ((!(moves % 4) || !rn2(4))) {
-        if (!Deaf)
+        if (!youAreDeaf())
             Norep("You hear a mumbled curse.");
     }
 }
@@ -249,7 +249,7 @@ boolean foundyou;
 
     nomul(0);
     if (rn2(ml * 10) < (mtmp->mconf ? 100 : 20)) { /* fumbled attack */
-        if (canseemon(mtmp) && !Deaf)
+        if (canseemon(mtmp) && !youAreDeaf())
             pline_The("air crackles around %s.", mon_nam(mtmp));
         return (0);
     }
@@ -607,7 +607,7 @@ int spellnum;
             } else {
                 /* unseen caster summoned seen critter(s) */
                 arg = (newseen == oldseen + 1) ? an(what) : makeplural(what);
-                if (!Deaf)
+                if (!youAreDeaf())
                     You_hear("someone summoning something, and %s %s.", arg,
                              vtense(arg, "appear"));
                 else

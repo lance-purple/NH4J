@@ -112,7 +112,7 @@ struct obj *otmp;
         chance += 30;
         break;
     }
-    if (youAreConfused() || Fumbling || youHaveSlipperyFingers())
+    if (youAreConfused() || youKeepFumbling() || youHaveSlipperyFingers())
         chance -= 20;
     else if (uarmg && (s = OBJ_DESCR(objects[uarmg->otyp])) != (char *) 0
              && !strncmp(s, "riding ", 7))
@@ -202,17 +202,19 @@ boolean force;      /* Quietly force this animal */
      * can mount a steed, then dismount immediately to
      * heal leg damage, because leg damage is always
      * healed upon dismount (Wounded_legs context switch).
-     * By preventing a hero with Wounded_legs from
+     * By preventing a hero with wounded legs from
      * mounting a steed, the potential for abuse is
      * reduced.  However, dismounting still immediately
      * heals the steed's wounded legs.  [In 3.4.3 and
      * earlier, that unintentionally made the hero's
      * temporary 1 point Dex loss become permanent.]
      */
-    if (Wounded_legs) {
+    if (youHaveWoundedLegs()) {
         Your("%s are in no shape for riding.", makeplural(body_part(LEG)));
-        if (force && wizard && yn("Heal your legs?") == 'y')
-            HWounded_legs = EWounded_legs = 0;
+        if (force && wizard && yn("Heal your legs?") == 'y') {
+            setYourIntrinsic(WOUNDED_LEGS, 0L);
+            setYourExtrinsic(WOUNDED_LEGS, 0L);
+	}
         else
             return (FALSE);
     }
@@ -300,7 +302,7 @@ boolean force;      /* Quietly force this animal */
         return (FALSE);
     }
     if (!force
-        && (youAreConfused() || Fumbling || youHaveSlipperyFingers() || Wounded_legs || otmp->cursed
+        && (youAreConfused() || youKeepFumbling() || youHaveSlipperyFingers() || youHaveWoundedLegs() || otmp->cursed
             || (currentExperienceLevel() + mtmp->mtame < rnd(MAXULEV / 2 + 5)))) {
         if (Levitation) {
             pline("%s slips away from you.", Monnam(mtmp));
@@ -419,7 +421,7 @@ int forceit;
     struct trap *t;
 
     /* avoid known traps (i == 0) and boulders, but allow them as a backup */
-    if (reason != DISMOUNT_BYCHOICE || youAreStunned() || youAreConfused() || Fumbling)
+    if (reason != DISMOUNT_BYCHOICE || youAreStunned() || youAreConfused() || youKeepFumbling())
         i = 1;
     for (; !found && i < 2; ++i) {
         for (x = currentX() - 1; x <= currentX() + 1; x++)
@@ -461,7 +463,7 @@ int reason; /* Player was thrown off etc. */
     struct obj *otmp;
     coord cc;
     const char *verb = "fall";
-    boolean repair_leg_damage = (Wounded_legs != 0L);
+    boolean repair_leg_damage = youHaveWoundedLegs();
     unsigned save_utrap = currentlyTrapped();
     boolean have_spot = landing_spot(&cc, reason, 0);
 
@@ -480,7 +482,7 @@ int reason; /* Player was thrown off etc. */
         if (!have_spot)
             have_spot = landing_spot(&cc, reason, 1);
         losehp(Maybe_Half_Phys(rn1(10, 10)), "riding accident", KILLED_BY_AN);
-        set_wounded_legs(BOTH_SIDES, (int) HWounded_legs + rn1(5, 5));
+        set_wounded_legs(BOTH_SIDES, (int) yourIntrinsic(WOUNDED_LEGS) + rn1(5, 5));
         repair_leg_damage = FALSE;
         break;
     case DISMOUNT_POLY:
@@ -517,7 +519,7 @@ int reason; /* Player was thrown off etc. */
         } else
             You("dismount %s.", mon_nam(mtmp));
     }
-    /* While riding, Wounded_legs refers to the steed's legs;
+    /* While riding, YouHaveWoundedLegs() refers to the steed's legs;
        after dismounting, it reverts to the hero's legs. */
     if (repair_leg_damage) {
         /* [TODO: make heal_legs() take a parameter to handle this] */

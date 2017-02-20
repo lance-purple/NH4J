@@ -416,7 +416,7 @@ invault()
         }
         verbalize("I don't know you.");
         umoney = money_cnt(invent);
-        if (Deaf) {
+        if (youAreDeaf()) {
             ;
         } else if (!umoney && !hidden_gold()) {
             verbalize("Please follow me.");
@@ -599,7 +599,7 @@ register struct monst *grd;
     }
     if (egrd->fcend == 1) {
         if (u_in_vault && (u_carry_gold || um_dist(grd->mx, grd->my, 1))) {
-            if (egrd->warncnt == 3 && !Deaf)
+            if (egrd->warncnt == 3 && !youAreDeaf())
                 verbalize("I repeat, %sfollow me!",
                           u_carry_gold
                               ? (!umoney ? "drop that hidden money and "
@@ -608,7 +608,7 @@ register struct monst *grd;
             if (egrd->warncnt == 7) {
                 m = grd->mx;
                 n = grd->my;
-                if (!Deaf)
+                if (!youAreDeaf())
                     verbalize("You've been warned, knave!");
                 mnexto(grd);
                 levl[m][n].typ = egrd->fakecorr[0].ftyp;
@@ -641,7 +641,7 @@ register struct monst *grd;
                         x_monnam(grd, ARTICLE_A, "angry", 0, FALSE));
                 return -1;
             } else {
-                if (!Deaf)
+                if (!youAreDeaf())
                     verbalize("Well, begone.");
                 wallify_vault(grd);
                 egrd->gddone = 1;
@@ -668,11 +668,11 @@ register struct monst *grd;
             }
             if (egrd->warncnt < 6) {
                 egrd->warncnt = 6;
-                if (!Deaf)
+                if (!youAreDeaf())
                     verbalize("Drop all your gold, scoundrel!");
                 return 0;
             } else {
-                if (!Deaf)
+                if (!youAreDeaf())
                     verbalize("So be it, rogue!");
                 grd->mpeaceful = 0;
                 return -1;
@@ -699,7 +699,7 @@ register struct monst *grd;
         } else {
             /* just for insurance... */
             if (MON_AT(m, n) && m != grd->mx && n != grd->my) {
-                if (!Deaf)
+                if (!youAreDeaf())
                     verbalize("Out of my way, scum!");
                 (void) rloc(m_at(m, n), FALSE);
             }
@@ -723,7 +723,7 @@ register struct monst *grd;
         return 0;
     }
     if (um_dist(grd->mx, grd->my, 1) || egrd->gddone) {
-        if (!egrd->gddone && !rn2(10) && !Deaf && !swallowed()
+        if (!egrd->gddone && !rn2(10) && !youAreDeaf() && !swallowed()
             && !(u.ustuck && !sticks(youmonst.data)))
             verbalize("Move along!");
         restfakecorr(grd);
