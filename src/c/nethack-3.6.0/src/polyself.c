@@ -126,16 +126,16 @@ boolean on;
         if (uamul && uamul->otyp == AMULET_OF_STRANGULATION
             && can_be_strangled(&youmonst)) {
             Your("%s %s your %s!", simpleonames(uamul),
-                 Strangled ? "still constricts" : "begins constricting",
+                 youAreBeingStrangled() ? "still constricts" : "begins constricting",
                  body_part(NECK)); /* "throat" */
-            Strangled = 6L;
+            setYourIntrinsic(STRANGLED, 6L);
             makeknown(AMULET_OF_STRANGULATION);
         }
 
     /* off -- maybe block strangling */
     } else {
-        if (Strangled && !can_be_strangled(&youmonst)) {
-            Strangled = 0L;
+        if (youAreBeingStrangled() && !can_be_strangled(&youmonst)) {
+            setYourIntrinsic(STRANGLED, 0L);
             You("are no longer being strangled.");
         }
     }
@@ -344,9 +344,9 @@ newman()
     /* [should alignment record be tweaked too?] */
 
     setCurrentNutrition(rn1(500, 500));
-    if (Sick)
+    if (youAreSick())
         make_sick(0L, (char *) 0, FALSE, SICK_ALL);
-    if (Stoned)
+    if (youAreTurningToStone())
         make_stoned(0L, (char *) 0, 0, (char *) 0);
     if (currentHitPoints() <= 0) {
         if (Polymorph_control) { /* even when stunned or unaware */
@@ -370,7 +370,7 @@ newman()
             (inherentlyFemale() && urace.individual.f)
                 ? urace.individual.f
                 : (urace.individual.m) ? urace.individual.m : urace.noun);
-    if (Slimed) {
+    if (youAreTurningToSlime()) {
         Your("body transforms, but there is still slime on you.");
         make_slimed(10L, (const char *) 0);
     }
@@ -665,7 +665,7 @@ int mntmp;
         else
             You_feel("like a new %s!", mons[mntmp].mname);
     }
-    if (Stoned && poly_when_stoned(&mons[mntmp])) {
+    if (youAreTurningToStone() && poly_when_stoned(&mons[mntmp])) {
         /* poly_when_stoned already checked stone golem genocide */
         mntmp = PM_STONE_GOLEM;
         make_stoned(0L, "You turn to stone!", 0, (char *) 0);
@@ -683,15 +683,15 @@ int mntmp;
         setYourAttrMax(A_STR, STR18(100));
     }
 
-    if (youResistStoning() && Stoned) { /* parnes@eniac.seas.upenn.edu */
+    if (youResistStoning() && youAreTurningToStone()) { /* parnes@eniac.seas.upenn.edu */
         make_stoned(0L, "You no longer seem to be petrifying.", 0,
                     (char *) 0);
     }
-    if (youResistSickness() && Sick) {
+    if (youResistSickness() && youAreSick()) {
         make_sick(0L, (char *) 0, FALSE, SICK_ALL);
         You("no longer feel sick.");
     }
-    if (Slimed) {
+    if (youAreTurningToSlime()) {
         if (flaming(youmonst.data)) {
             make_slimed(0L, "The slime burns away!");
         } else if (mntmp == PM_GREEN_SLIME) {
@@ -701,7 +701,7 @@ int mntmp;
     }
     check_strangling(FALSE); /* maybe stop strangling */
     if (nohands(youmonst.data))
-        Glib = 0;
+        setYourIntrinsic(SLIPPERY_FINGERS, 0);
 
     /*
     mlvl = adj_lev(&mons[mntmp]);
@@ -1065,7 +1065,7 @@ dobreathe()
 {
     struct attack *mattk;
 
-    if (Strangled) {
+    if (youAreBeingStrangled()) {
         You_cant("breathe.  Sorry.");
         return 0;
     }

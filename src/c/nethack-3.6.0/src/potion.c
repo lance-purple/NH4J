@@ -85,7 +85,7 @@ int mask;
 {
     boolean foodPoisoning = (mask & SICK_VOMITABLE);
     boolean illness       = (mask & SICK_NONVOMITABLE);
-    long old = Sick;
+    long old = yourIntrinsic(SICK);
 
 #if 0
     if (youAreUnaware())
@@ -100,7 +100,7 @@ int mask;
         } else {
             /* already sick */
             if (talk) {
-                You_feel("%s worse.", xtime <= Sick / 2L ? "much" : "even");
+                You_feel("%s worse.", xtime <= yourIntrinsic(SICK) / 2L ? "much" : "even");
             }
         }
         setYourIntrinsicTimeout(SICK, xtime);
@@ -121,16 +121,16 @@ int mask;
             if (talk) {
                 You_feel("somewhat better.");
             }
-            setYourIntrinsicTimeout(SICK, Sick * 2); /* approximation */
+            setYourIntrinsicTimeout(SICK, yourIntrinsic(SICK) * 2); /* approximation */
         } else {
             if (talk)
                 You_feel("cured.  What a relief!");
-            Sick = 0L; /* setYourIntrinsicTimeout(SICK, 0L) */
+            setYourIntrinsic(SICK, 0L); /* setYourIntrinsicTimeout(SICK, 0L) */
         }
         context.botl = TRUE;
     }
 
-    if (Sick) {
+    if (youAreSick()) {
         exercise(A_CON, FALSE);
         delayed_killer(SICK, KILLED_BY_AN, cause);
     } else
@@ -142,7 +142,7 @@ make_slimed(xtime, msg)
 long xtime;
 const char *msg;
 {
-    long old = Slimed;
+    long old = yourIntrinsic(SLIMED);
 
 #if 0
     if (youAreUnaware())
@@ -154,7 +154,7 @@ const char *msg;
         context.botl = 1;
     }
     setYourIntrinsicTimeout(SLIMED, xtime);
-    if (!Slimed)
+    if (!youAreTurningToSlime())
         dealloc_killer(find_delayed_killer(SLIMED));
 }
 
@@ -166,7 +166,7 @@ const char *msg;
 int killedby;
 const char *killername;
 {
-    long old = Stoned;
+    long old = yourIntrinsic(STONED);
 
 #if 0
     if (youAreUnaware())
@@ -178,7 +178,7 @@ const char *killername;
         /* context.botl = 1;   --- Stoned is not a status line item */
     }
     setYourIntrinsicTimeout(STONED, xtime);
-    if (!Stoned)
+    if (!youAreTurningToStone())
         dealloc_killer(find_delayed_killer(STONED));
     else if (!old)
         delayed_killer(STONED, killedby, killername);
@@ -189,7 +189,7 @@ make_vomiting(xtime, talk)
 long xtime;
 boolean talk;
 {
-    long old = Vomiting;
+    long old = yourIntrinsic(VOMITING);
 
     if (youAreUnaware())
         talk = FALSE;
@@ -430,7 +430,7 @@ dodrink()
     register struct obj *otmp;
     const char *potion_descr;
 
-    if (Strangled) {
+    if (youAreBeingStrangled()) {
         pline("If you can't breathe air, how can you drink liquid?");
         return 0;
     }
@@ -1051,7 +1051,7 @@ register struct obj *otmp;
             losehp(Maybe_Half_Phys(dmg), "potion of acid", KILLED_BY_AN);
             exercise(A_CON, FALSE);
         }
-        if (Stoned)
+        if (youAreTurningToStone())
             fix_petrification();
         unkn++; /* holy/unholy water can burn like acid too */
         break;
@@ -1993,7 +1993,7 @@ dodip()
         } else if (potion->cursed) {
             pline_The("potion spills and covers your %s with oil.",
                       makeplural(body_part(FINGER)));
-            incrementYourIntrinsicTimeout(GLIB, d(2, 10));
+            incrementYourIntrinsicTimeout(SLIPPERY_FINGERS, d(2, 10));
         } else if (obj->oclass != WEAPON_CLASS && !is_weptool(obj)) {
             /* the following cases apply only to weapons */
             goto more_dips;

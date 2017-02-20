@@ -112,7 +112,7 @@ struct obj *otmp;
         chance += 30;
         break;
     }
-    if (youAreConfused() || Fumbling || Glib)
+    if (youAreConfused() || Fumbling || youHaveSlipperyFingers())
         chance -= 20;
     else if (uarmg && (s = OBJ_DESCR(objects[uarmg->otyp])) != (char *) 0
              && !strncmp(s, "riding ", 7))
@@ -300,7 +300,7 @@ boolean force;      /* Quietly force this animal */
         return (FALSE);
     }
     if (!force
-        && (youAreConfused() || Fumbling || Glib || Wounded_legs || otmp->cursed
+        && (youAreConfused() || Fumbling || youHaveSlipperyFingers() || Wounded_legs || otmp->cursed
             || (currentExperienceLevel() + mtmp->mtame < rnd(MAXULEV / 2 + 5)))) {
         if (Levitation) {
             pline("%s slips away from you.", Monnam(mtmp));

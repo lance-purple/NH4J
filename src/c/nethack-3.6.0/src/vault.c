@@ -371,7 +371,7 @@ invault()
             mongone(guard);
             return;
         }
-        if (Strangled || is_silent(youmonst.data) || multi < 0) {
+        if (youAreBeingStrangled() || is_silent(youmonst.data) || multi < 0) {
             /* [we ought to record whether this this message has already
                been given in order to vary it upon repeat visits, but
                discarding the monster and its egd data renders that hard] */

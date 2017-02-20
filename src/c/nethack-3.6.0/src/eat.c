@@ -234,7 +234,7 @@ struct obj *food;
 
     exercise(A_CON, FALSE);
 
-    if (Breathless || (!Strangled && !rn2(20))) {
+    if (Breathless || (!youAreBeingStrangled() && !rn2(20))) {
         /* choking by eating AoS doesn't involve stuffing yourself */
         if (food && food->otyp == AMULET_OF_STRANGULATION) {
             You("choke, but recover your composure.");
@@ -480,7 +480,7 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
            inducing critter (most likely Medusa; attacking a cockatrice via
            tentacle-touch should have been caught before reaching this far) */
         if (magr == &youmonst) {
-            if (!youResistStoning() && !Stoned)
+            if (!youResistStoning() && !youAreTurningToStone())
                 make_stoned(5L, (char *) 0, KILLED_BY_AN, pd->mname);
         } else {
             /* no need to check for poly_when_stoned or youResistStoning;
@@ -663,7 +663,7 @@ register int pm;
         }
         break;
     case PM_LIZARD:
-        if (Stoned)
+        if (youAreTurningToStone())
             fix_petrification();
         break;
     case PM_DEATH:
@@ -685,14 +685,14 @@ register int pm;
         return;
     }
     case PM_GREEN_SLIME:
-        if (!Slimed && !Unchanging && !slimeproof(youmonst.data)) {
+        if (!youAreTurningToSlime() && !Unchanging && !slimeproof(youmonst.data)) {
             You("don't feel very well.");
             make_slimed(10L, (char *) 0);
             delayed_killer(SLIMED, KILLED_BY_AN, "");
         }
     /* Fall through */
     default:
-        if (acidic(&mons[pm]) && Stoned)
+        if (acidic(&mons[pm]) && youAreTurningToStone())
             fix_petrification();
         break;
     }
@@ -1326,8 +1326,8 @@ const char *mesg;
             lesshungry(tintxts[r].nut);
 
         if (tintxts[r].greasy) {
-            /* Assume !Glib, because you can't open tins when Glib. */
-            incrementYourIntrinsicTimeout(GLIB, rnd(15));
+            /* Assume you don't have slippery fingers, because you can't open tins when you do. */
+            incrementYourIntrinsicTimeout(SLIPPERY_FINGERS, rnd(15));
             pline("Eating %s food made your %s very slippery.",
                   tintxts[r].txt, makeplural(body_part(FINGER)));
         }
@@ -1445,7 +1445,7 @@ struct obj *otmp;
     } else {
     no_opener:
         pline("It is not so easy to open this tin.");
-        if (Glib) {
+        if (youHaveSlipperyFingers()) {
             pline_The("tin slips from your %s.",
                       makeplural(body_part(FINGER)));
             if (otmp->quan > 1L) {
@@ -1563,8 +1563,12 @@ struct obj *otmp;
 
             sick_time = (long) rn1(10, 10);
             /* make sure new ill doesn't result in improvement */
-            if (Sick && (sick_time > Sick))
-                sick_time = (Sick > 1L) ? Sick - 1L : 1L;
+            if (youAreSick() && (sick_time > yourIntrinsic(SICK))) {
+                sick_time = yourIntrinsic(SICK) - 1L;
+                if (sick_time < 1L) {
+		    sick_time = 1L;
+                }
+	    }
             make_sick(sick_time, corpse_xname(otmp, "rotted", CXN_NORMAL),
                       TRUE, SICK_VOMITABLE);
         }
@@ -1588,7 +1592,7 @@ struct obj *otmp;
         /* now any corpse left too long will make you mildly ill */
     } else if ((rotted > 5L || (rotted > 3L && rn2(5))) && !youResistSickness()) {
         tp++;
-        You_feel("%ssick.", (Sick) ? "very " : "");
+        You_feel("%ssick.", (youAreSick()) ? "very " : "");
         losehp(rnd(8), "cadaver", KILLED_BY_AN);
     }
 
@@ -1773,7 +1777,7 @@ struct obj *otmp;
 #endif
         } else if (otmp->otyp == EGG && stale_egg(otmp)) {
             pline("Ugh.  Rotten egg."); /* perhaps others like it */
-            make_vomiting((Vomiting & TIMEOUT) + (long) d(10, 4), TRUE);
+            make_vomiting(yourIntrinsicTimeout(VOMITING) + (long) d(10, 4), TRUE);
         } else {
         give_feedback:
             pline("This %s is %s", singular(otmp, xname),
@@ -2114,7 +2118,7 @@ struct obj *otmp;
             if (!youResistStoning()
                 && !(poly_when_stoned(youmonst.data)
                      && polymon(PM_STONE_GOLEM))) {
-                if (!Stoned) {
+                if (!youAreTurningToStone()) {
                     Sprintf(killer.name, "%s egg",
                             mons[otmp->corpsenm].mname);
                     make_stoned(5L, (char *) 0, KILLED_BY_AN, killer.name);
@@ -2124,9 +2128,9 @@ struct obj *otmp;
         }
         break;
     case EUCALYPTUS_LEAF:
-        if (Sick && !otmp->cursed)
+        if (youAreSick() && !otmp->cursed)
             make_sick(0L, (char *) 0, TRUE, SICK_ALL);
-        if (Vomiting && !otmp->cursed)
+        if (youAreVomiting() && !otmp->cursed)
             make_vomiting(0L, TRUE);
         break;
     case APPLE:
@@ -2326,7 +2330,7 @@ doeat()
     int basenutrit; /* nutrition of full item */
     boolean dont_start = FALSE, nodelicious = FALSE;
 
-    if (Strangled) {
+    if (youAreBeingStrangled()) {
         pline("If you can't breathe air, how can you consume solids?");
         return 0;
     }

@@ -470,7 +470,7 @@ ustatusline()
     char info[BUFSZ];
 
     info[0] = '\0';
-    if (Sick) {
+    if (youAreSick()) {
         Strcat(info, ", dying from");
         if (sickWithFoodPoisoning()) {
             Strcat(info, " food poisoning");
@@ -482,13 +482,13 @@ ustatusline()
             Strcat(info, " illness");
         }
     }
-    if (Stoned)
+    if (youAreTurningToStone())
         Strcat(info, ", solidifying");
-    if (Slimed)
+    if (youAreTurningToSlime())
         Strcat(info, ", becoming slimy");
-    if (Strangled)
+    if (youAreBeingStrangled())
         Strcat(info, ", being strangled");
-    if (Vomiting)
+    if (youAreVomiting)
         Strcat(info, ", nauseated"); /* !"nauseous" */
     if (youAreConfused())
         Strcat(info, ", confused");
@@ -509,7 +509,7 @@ ustatusline()
             what = makeplural(what);
         Sprintf(eos(info), ", injured %s", what);
     }
-    if (Glib)
+    if (youHaveSlipperyFingers())
         Sprintf(eos(info), ", slippery %s", makeplural(body_part(HAND)));
     if (currentlyTrapped())
         Strcat(info, ", trapped");

@@ -101,8 +101,8 @@ struct obj *obj;
 
         switch (rn2(3)) {
         case 2:
-            old = Glib;
-            incrementYourIntrinsicTimeout(GLIB, rn1(10, 3));
+            old = yourIntrinsic(SLIPPERY_FINGERS);
+            incrementYourIntrinsicTimeout(SLIPPERY_FINGERS, rn1(10, 3));
             Your("%s %s!", makeplural(body_part(HAND)),
                  (old ? "are filthier than ever" : "get slimy"));
             if (is_wet_towel(obj))
@@ -140,8 +140,8 @@ struct obj *obj;
         }
     }
 
-    if (Glib) {
-        Glib = 0;
+    if (youHaveSlipperyFingers()) {
+        setYourIntrinsic(SLIPPERY_FINGERS, 0L);
         You("wipe off your %s.", makeplural(body_part(HAND)));
         if (is_wet_towel(obj))
             dry_a_towel(obj, -1, drying_feedback);
@@ -818,7 +818,7 @@ struct obj *obj;
                 make_confused(yourIntrinsic(CONFUSION) + d(3, 4), FALSE);
             } else if (Hallucination)
                 You(look_str, hcolor((char *) 0));
-            else if (Sick)
+            else if (youAreSick())
                 You(look_str, "peaked");
             else if (currentHungerState() >= WEAK)
                 You(look_str, "undernourished");
@@ -1787,7 +1787,7 @@ struct obj *obj;
     trouble_count = unfixable_trbl = did_prop = did_attr = 0;
 
     /* collect property troubles */
-    if (TimedTrouble(Sick))
+    if (TimedTrouble(yourIntrinsic(SICK)))
         prop_trouble(SICK);
     if (TimedTrouble(yourIntrinsic(BLINDED)) > (long) creamed()
         && !(swallowed()
@@ -1795,7 +1795,7 @@ struct obj *obj;
         prop_trouble(BLINDED);
     if (TimedTrouble(HHallucination))
         prop_trouble(HALLUC);
-    if (TimedTrouble(Vomiting))
+    if (TimedTrouble(yourIntrinsic(VOMITING)))
         prop_trouble(VOMITING);
     if (TimedTrouble(yourIntrinsic(CONFUSION)))
         prop_trouble(CONFUSION);
@@ -2109,7 +2109,7 @@ struct obj *obj;
 {
     struct obj *otmp;
 
-    if (Glib) {
+    if (youHaveSlipperyFingers()) {
         pline("%s from your %s.", Tobjnam(obj, "slip"),
               makeplural(body_part(FINGER)));
         dropx(obj);
@@ -2136,12 +2136,12 @@ struct obj *obj;
             You("cover %s with a thick layer of grease.", yname(otmp));
             otmp->greased = 1;
             if (obj->cursed && !nohands(youmonst.data)) {
-                incrementYourIntrinsicTimeout(GLIB, rnd(15));
+                incrementYourIntrinsicTimeout(SLIPPERY_FINGERS, rnd(15));
                 pline("Some of the grease gets all over your %s.",
                       makeplural(body_part(HAND)));
             }
         } else {
-            incrementYourIntrinsicTimeout(GLIB, rnd(15));
+            incrementYourIntrinsicTimeout(SLIPPERY_FINGERS, rnd(15));
             You("coat your %s with grease.", makeplural(body_part(FINGER)));
         }
     } else {
@@ -2530,7 +2530,7 @@ struct obj *obj;
         context.botl = 1;
         return 1;
 
-    } else if ((Fumbling || Glib) && !rn2(5)) {
+    } else if ((Fumbling || youHaveSlipperyFingers()) && !rn2(5)) {
         pline_The("bullwhip slips out of your %s.", body_part(HAND));
         dropx(obj);
 
@@ -3564,23 +3564,23 @@ boolean is_horn;
 {
     int unfixable_trbl = 0;
 
-    if (Stoned)
+    if (youAreTurningToStone())
         unfixable_trbl++;
-    if (Strangled)
+    if (youAreBeingStrangled())
         unfixable_trbl++;
     if (Wounded_legs && !u.usteed)
         unfixable_trbl++;
-    if (Slimed)
+    if (youAreTurningToSlime())
         unfixable_trbl++;
     /* lycanthropy is undesirable, but it doesn't actually make you feel bad */
 
     if (!is_horn || yourIntrinsicHasMask(CONFUSION, (~TIMEOUT)))
         unfixable_trbl++;
-    if (!is_horn || (Sick & ~TIMEOUT))
+    if (!is_horn || yourIntrinsicHasMask(SICK, ~TIMEOUT))
         unfixable_trbl++;
     if (!is_horn || (HHallucination & ~TIMEOUT))
         unfixable_trbl++;
-    if (!is_horn || (Vomiting & ~TIMEOUT))
+    if (!is_horn || yourIntrinsicHasMask(VOMITING, ~TIMEOUT))
         unfixable_trbl++;
     if (!is_horn || yourIntrinsicHasMask(STUNNED, (~TIMEOUT)))
         unfixable_trbl++;

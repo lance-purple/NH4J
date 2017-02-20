@@ -1669,28 +1669,28 @@ int final;
         youhiding(TRUE, final);
 
     /* internal troubles, mostly in the order that prayer ranks them */
-    if (Stoned)
+    if (youAreTurningToStone())
         you_are("turning to stone", "");
-    if (Slimed)
+    if (youAreTurningToSlime())
         you_are("turning into slime", "");
-    if (Strangled) {
+    if (youAreBeingStrangled()) {
         if (buried()) {
             you_are("buried", "");
         } else {
             Strcpy(buf, "being strangled");
             if (wizard)
-                Sprintf(eos(buf), " (%ld)", (Strangled & TIMEOUT));
+                Sprintf(eos(buf), " (%ld)", yourIntrinsicTimeout(STRANGLED));
             you_are(buf, from_what(STRANGLED));
         }
     }
-    if (Sick) {
+    if (youAreSick()) {
         /* prayer lumps these together; botl puts Ill before FoodPois */
         if (sickWithFoodPoisoning())
             you_are("terminally sick from illness", "");
         if (sickWithIllness())
             you_are("terminally sick from food poisoning", "");
     }
-    if (Vomiting)
+    if (youAreVomiting())
         you_are("nauseated", "");
     if (youAreStunned())
         you_are("stunned", "");
@@ -1783,7 +1783,7 @@ int final;
             you_have(buf, "");
         }
     }
-    if (Glib) {
+    if (youHaveSlipperyFingers()) {
         Sprintf(buf, "slippery %s", makeplural(body_part(FINGER)));
         you_have(buf, "");
     }

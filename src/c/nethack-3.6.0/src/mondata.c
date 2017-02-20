@@ -318,7 +318,7 @@ register struct monst *mtmp;
         && (breathless(mtmp->data) || verysmall(mtmp->data)
             || !has_head(mtmp->data) || mtmp->data->mlet == S_EEL))
         return FALSE;
-    if ((mtmp == &youmonst) && Strangled)
+    if ((mtmp == &youmonst) && youAreBeingStrangled())
         return FALSE;
     return TRUE;
 }

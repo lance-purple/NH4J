@@ -979,7 +979,7 @@ dochat()
         pline("As %s, you cannot speak.", an(youmonst.data->mname));
         return 0;
     }
-    if (Strangled) {
+    if (youAreBeingStrangled()) {
         You_cant("speak.  You're choking!");
         return 0;
     }

@@ -2385,7 +2385,7 @@ boolean ordinary;
             learn_it = TRUE;
             (void) polymon(PM_FLESH_GOLEM);
         }
-        if (Stoned) {
+        if (youAreTurningToStone()) {
             learn_it = TRUE;
             fix_petrification(); /* saved! */
         }

@@ -708,7 +708,7 @@ int how;
         newuhs(FALSE);
     }
     /* cure impending doom of sickness hero won't have time to fix */
-    if ((Sick & TIMEOUT) == 1L) {
+    if (yourIntrinsicTimeout(SICK) == 1L) {
         setSickWithFoodPoisoning(FALSE);
         setSickWithIllness(FALSE);
         setYourIntrinsicTimeout(SICK, 0L);

@@ -502,8 +502,8 @@ can_twoweapon()
     else if (uswapwep->otyp == CORPSE && cant_wield_corpse(uswapwep)) {
         /* [Note: NOT_WEAPON() check prevents ever getting here...] */
         ; /* must be life-saved to reach here; return FALSE */
-    } else if (Glib || uswapwep->cursed) {
-        if (!Glib)
+    } else if (youHaveSlipperyFingers() || uswapwep->cursed) {
+        if (!youHaveSlipperyFingers())
             uswapwep->bknown = TRUE;
         drop_uswapwep();
     } else

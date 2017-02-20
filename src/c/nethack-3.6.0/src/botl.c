@@ -108,7 +108,7 @@ bot2()
     }
     if (youAreConfused())
         Sprintf(nb = eos(nb), " Conf");
-    if (Sick) {
+    if (youAreSick()) {
         if (sickWithFoodPoisoning())
             Sprintf(nb = eos(nb), " FoodPois");
         if (sickWithIllness())
@@ -120,7 +120,7 @@ bot2()
         Sprintf(nb = eos(nb), " Stun");
     if (Hallucination)
         Sprintf(nb = eos(nb), " Hallu");
-    if (Slimed)
+    if (youAreTurningToSlime())
         Sprintf(nb = eos(nb), " Slime");
     if (cap > UNENCUMBERED)
         Sprintf(nb = eos(nb), " %s", enc_stat[cap]);
@@ -548,12 +548,12 @@ bot()
     else
         blstats[idx][BL_CONDITION].a.a_ulong &= ~BL_MASK_CONF;
 
-    if (Sick && sickWithFoodPoisoning())
+    if (youAreSick() && sickWithFoodPoisoning())
         blstats[idx][BL_CONDITION].a.a_ulong |= BL_MASK_FOODPOIS;
     else
         blstats[idx][BL_CONDITION].a.a_ulong &= ~BL_MASK_FOODPOIS;
 
-    if (Sick && sickWithIllness())
+    if (youAreSick() && sickWithIllness())
         blstats[idx][BL_CONDITION].a.a_ulong |= BL_MASK_ILL;
     else
         blstats[idx][BL_CONDITION].a.a_ulong &= ~BL_MASK_ILL;
@@ -568,7 +568,7 @@ bot()
     else
         blstats[idx][BL_CONDITION].a.a_ulong &= ~BL_MASK_STUNNED;
 
-    if (Slimed)
+    if (youAreTurningToSlime())
         blstats[idx][BL_CONDITION].a.a_ulong |= BL_MASK_SLIMED;
     else
         blstats[idx][BL_CONDITION].a.a_ulong &= ~BL_MASK_SLIMED;

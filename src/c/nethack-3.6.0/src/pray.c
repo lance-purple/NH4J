@@ -163,15 +163,15 @@ in_trouble()
     /*
      * major troubles
      */
-    if (Stoned)
+    if (youAreTurningToStone())
         return TROUBLE_STONED;
-    if (Slimed)
+    if (youAreTurningToSlime())
         return TROUBLE_SLIMED;
-    if (Strangled)
+    if (youAreBeingStrangled())
         return TROUBLE_STRANGLED;
     if (currentlyTrapped() && currentTrapType() == TT_LAVA)
         return TROUBLE_LAVA;
-    if (Sick)
+    if (youAreSick())
         return TROUBLE_SICK;
     if (currentHungerState() >= WEAK)
         return TROUBLE_STARVING;
@@ -331,7 +331,7 @@ int trouble;
             useup(uamul);
         }
         You("can breathe again.");
-        Strangled = 0;
+        setYourIntrinsic(STRANGLED, 0L);
         context.botl = 1;
         break;
     case TROUBLE_LAVA:

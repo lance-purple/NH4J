@@ -745,7 +745,7 @@ struct permonst *mdat;
         You_feel("a slight illness.");
         return FALSE;
     } else {
-        make_sick(Sick ? Sick / 3L + 1L : (long) rn1(ACURR(A_CON), 20),
+        make_sick(youAreSick() ? yourIntrinsic(SICK) / 3L + 1L : (long) rn1(ACURR(A_CON), 20),
                   mdat->mname, TRUE, SICK_NONVOMITABLE);
         return TRUE;
     }
@@ -918,7 +918,7 @@ register struct attack *mattk;
                     dmg = 1;
                     pline("%s hits you with the %s corpse.", Monnam(mtmp),
                           mons[otmp->corpsenm].mname);
-                    if (!Stoned)
+                    if (!youAreTurningToStone())
                         goto do_stone;
                 }
                 dmg += dmgval(otmp, &youmonst);
@@ -1165,7 +1165,7 @@ register struct attack *mattk;
                 if (!rn2(10)
                     || (flags.moonphase == NEW_MOON && !have_lizard())) {
                 do_stone:
-                    if (!Stoned && !youResistStoning()
+                    if (!youAreTurningToStone() && !youResistStoning()
                         && !(poly_when_stoned(youmonst.data)
                              && polymon(PM_STONE_GOLEM))) {
                         int kformat = KILLED_BY_AN;
@@ -1385,7 +1385,7 @@ register struct attack *mattk;
                 exercise(A_STR, TRUE);
             if (!rn2(3))
                 exercise(A_CON, TRUE);
-            if (Sick)
+            if (youAreSick())
                 make_sick(0L, (char *) 0, FALSE, SICK_ALL);
             context.botl = 1;
             if (goaway) {
@@ -1526,7 +1526,7 @@ register struct attack *mattk;
                    || youmonst.data == &mons[PM_GREEN_SLIME]) {
             You("are unaffected.");
             dmg = 0;
-        } else if (!Slimed) {
+        } else if (!youAreTurningToSlime()) {
             You("don't feel very well.");
             make_slimed(10L, (char *) 0);
             delayed_killer(SLIMED, KILLED_BY_AN, mtmp->data->mname);

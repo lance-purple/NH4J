@@ -1190,7 +1190,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
             (void) destroy_mitem(mdef, SCROLL_CLASS, AD_FIRE);
         if (!rn2(7))
             (void) destroy_mitem(mdef, SPBOOK_CLASS, AD_FIRE);
-        if (youdefend && Slimed)
+        if (youdefend && youAreTurningToSlime())
             burn_away_slime();
         return realizes_damage;
     }
@@ -1447,7 +1447,7 @@ struct obj *obj;
 
             if (areYouPolymorphed())
                 healamt = (maximumHitPointsAsMonster() + 1 - currentHitPointsAsMonster()) / 2;
-            if (healamt || Sick || Slimed || yourIntrinsic(BLINDED) > creamed())
+            if (healamt || youAreSick() || youAreTurningToSlime() || yourIntrinsic(BLINDED) > creamed())
                 You_feel("better.");
             else
                 goto nothing_special;
@@ -1457,9 +1457,9 @@ struct obj *obj;
                 else
                     increaseCurrentHitPoints(healamt);
             }
-            if (Sick)
+            if (youAreSick())
                 make_sick(0L, (char *) 0, FALSE, SICK_ALL);
-            if (Slimed)
+            if (youAreTurningToSlime())
                 make_slimed(0L, (char *) 0);
             if (yourIntrinsic(BLINDED) > creamed())
                 make_blinded(creamed(), FALSE);

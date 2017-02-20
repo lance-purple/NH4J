@@ -700,7 +700,7 @@ Amulet_on()
     case FAKE_AMULET_OF_YENDOR:
         break;
     case AMULET_OF_UNCHANGING:
-        if (Slimed)
+        if (youAreTurningToSlime())
             make_slimed(0L, (char *) 0);
         break;
     case AMULET_OF_CHANGE: {
@@ -731,7 +731,7 @@ Amulet_on()
         if (can_be_strangled(&youmonst)) {
             makeknown(AMULET_OF_STRANGULATION);
             pline("It constricts your throat!");
-            Strangled = 6L;
+            setYourIntrinsic(STRANGLED, 6L);
         }
         break;
     case AMULET_OF_RESTFUL_SLEEP: {
@@ -779,12 +779,12 @@ Amulet_off()
         }
         break;
     case AMULET_OF_STRANGULATION:
-        if (Strangled) {
+        if (youAreBeingStrangled()) {
             if (Breathless)
                 Your("%s is no longer constricted!", body_part(NECK));
             else
                 You("can breathe more easily!");
-            Strangled = 0L;
+            setYourIntrinsic(STRANGLED, 0L);
         }
         break;
     case AMULET_OF_RESTFUL_SLEEP:
@@ -2195,7 +2195,7 @@ register struct obj *otmp;
                 c_gloves, is_sword(uwep) ? c_sword : c_weapon);
             uwep->bknown = TRUE;
             return 0;
-        } else if (Glib) {
+        } else if (youHaveSlipperyFingers()) {
             You_cant("take off the slippery %s with your slippery %s.",
                      c_gloves, makeplural(body_part(FINGER)));
             return 0;

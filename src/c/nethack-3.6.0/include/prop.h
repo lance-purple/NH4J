@@ -29,7 +29,7 @@
 #define STONED 18
 #define STRANGLED 19
 #define VOMITING 20
-#define GLIB 21
+#define SLIPPERY_FINGERS 21
 #define SLIMED 22
 #define HALLUC 23
 #define HALLUC_RES 24

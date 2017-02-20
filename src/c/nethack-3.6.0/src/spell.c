@@ -1130,9 +1130,9 @@ boolean atme;
         healup(0, 0, FALSE, TRUE);
         break;
     case SPE_CURE_SICKNESS:
-        if (Sick)
+        if (youAreSick())
             You("are no longer ill.");
-        if (Slimed)
+        if (youAreTurningToSlime())
             make_slimed(0L, "The slime disappears!");
         healup(0, 0, TRUE, FALSE);
         break;

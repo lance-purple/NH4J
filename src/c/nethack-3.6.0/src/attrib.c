@@ -451,7 +451,7 @@ exerper()
         if (HRegeneration)
             exercise(A_STR, TRUE);
 
-        if (Sick || Vomiting)
+        if (youAreSick() || youAreVomiting())
             exercise(A_CON, FALSE);
         if (youAreConfused() || youAreHallucinating())
             exercise(A_WIS, FALSE);
@@ -1452,6 +1452,30 @@ extern boolean youCannotSee() {
 
 extern boolean youCanSee() {
     return !youCannotSee();
+}
+
+extern boolean youAreSick() {
+ return (yourIntrinsic(SICK));
+}
+
+extern boolean youAreVomiting() {
+ return (yourIntrinsic(VOMITING));
+}
+
+extern boolean youHaveSlipperyFingers() {
+ return (yourIntrinsic(SLIPPERY_FINGERS));
+}
+
+extern boolean youAreTurningToStone() {
+ return (yourIntrinsic(STONED));
+}
+
+extern boolean youAreTurningToSlime() {
+ return (yourIntrinsic(SLIMED));
+}
+
+extern boolean youAreBeingStrangled() {
+ return (yourIntrinsic(STRANGLED));
 }
 
 /*attrib.c*/

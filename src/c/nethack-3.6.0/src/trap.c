@@ -5128,7 +5128,7 @@ sink_into_lava()
         } else if (! youMoved()) {
             /* can't fully turn into slime while in lava, but might not
                have it be burned away until you've come awfully close */
-            if (Slimed && rnd(10 - 1) >= (int) (Slimed & TIMEOUT)) {
+            if (youAreTurningToSlime() && rnd(10 - 1) >= (int) yourIntrinsicTimeout(SLIMED)) {
                 pline(sink_deeper);
                 burn_away_slime();
             } else {

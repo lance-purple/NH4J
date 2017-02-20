@@ -176,7 +176,7 @@ boolean resuming;
                     /* once-per-turn things go here */
                     /********************************/
 
-                    if (Glib)
+                    if (youHaveSlipperyFingers())
                         glibr();
                     nh_timeout();
                     run_regions();

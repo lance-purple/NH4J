@@ -26,7 +26,7 @@ static NEARDATA const char *const stoned_texts[] = {
 STATIC_OVL void
 stoned_dialogue()
 {
-    register long i = (Stoned & TIMEOUT);
+    register long i = yourIntrinsicTimeout(STONED);
 
     if (i > 0L && i <= SIZE(stoned_texts)) {
         char buf[BUFSZ];
@@ -75,7 +75,7 @@ STATIC_OVL void
 vomiting_dialogue()
 {
     const char *txt = 0;
-    long v = (Vomiting & TIMEOUT);
+    long v = yourIntrinsicTimeout(VOMITING);
 
     /* note: nhtimeout() hasn't decremented timed properties for the
        current turn yet, so we use Vomiting-1 here */
@@ -136,7 +136,7 @@ static NEARDATA const char *const choke_texts2[] = {
 STATIC_OVL void
 choke_dialogue()
 {
-    register long i = (Strangled & TIMEOUT);
+    register long i = yourIntrinsicTimeout(STRANGLED);
 
     if (i > 0 && i <= SIZE(choke_texts)) {
         if (Breathless || !rn2(50))
@@ -164,9 +164,9 @@ static NEARDATA const char *const slime_texts[] = {
 STATIC_OVL void
 slime_dialogue()
 {
-    register long i = (Slimed & TIMEOUT) / 2L;
+    register long i = yourIntrinsicTimeout(SLIMED) / 2L;
 
-    if (((Slimed & TIMEOUT) % 2L) && i >= 0L && i < SIZE(slime_texts)) {
+    if ((yourIntrinsicTimeout(SLIMED) % 2L) && i >= 0L && i < SIZE(slime_texts)) {
         char buf[BUFSZ];
 
         Strcpy(buf, slime_texts[SIZE(slime_texts) - i - 1L]);
@@ -196,7 +196,7 @@ slime_dialogue()
 void
 burn_away_slime()
 {
-    if (Slimed) {
+    if (youAreTurningToSlime()) {
         make_slimed(0L, "The slime that covers you is burned away!");
     }
 }
@@ -230,13 +230,13 @@ nh_timeout()
     }
     if (invulnerableWhilePraying())
         return; /* things past this point could kill you */
-    if (Stoned)
+    if (youAreTurningToStone())
         stoned_dialogue();
-    if (Slimed)
+    if (youAreTurningToSlime())
         slime_dialogue();
-    if (Vomiting)
+    if (youAreVomiting())
         vomiting_dialogue();
-    if (Strangled)
+    if (youAreBeingStrangled())
         choke_dialogue();
     if (timeRemainingAsMonster() > 0) {
         decreaseTimeRemainingAsMonster(1);

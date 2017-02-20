@@ -107,7 +107,7 @@ register struct obj *pen;
     if (nohands(youmonst.data)) {
         You("need hands to be able to write!");
         return 0;
-    } else if (Glib) {
+    } else if (youHaveSlipperyFingers()) {
         pline("%s from your %s.", Tobjnam(pen, "slip"),
               makeplural(body_part(FINGER)));
         dropx(pen);

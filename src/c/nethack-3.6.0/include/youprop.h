@@ -22,13 +22,6 @@
 
 /*** Troubles ***/
 
-#define Sick u.uprops[SICK].intrinsic
-#define Stoned u.uprops[STONED].intrinsic
-#define Strangled u.uprops[STRANGLED].intrinsic
-#define Vomiting u.uprops[VOMITING].intrinsic
-#define Glib u.uprops[GLIB].intrinsic
-#define Slimed u.uprops[SLIMED].intrinsic /* [Tom] */
-
 /* Hallucination is solely a timeout */
 #define HHallucination u.uprops[HALLUC].intrinsic
 #define HHalluc_resistance u.uprops[HALLUC_RES].intrinsic

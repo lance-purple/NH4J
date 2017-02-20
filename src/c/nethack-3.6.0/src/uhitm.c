@@ -1671,7 +1671,7 @@ register struct attack *mattk;
             pline("%s doesn't seem harmed.", Monnam(mdef));
             tmp = 0;
             if (!Unchanging && pd == &mons[PM_GREEN_SLIME]) {
-                if (!Slimed) {
+                if (!youAreTurningToSlime()) {
                     You("suck in some slime and don't feel very well.");
                     make_slimed(10L, (char *) 0);
                 }
@@ -2235,7 +2235,7 @@ register struct monst *mon;
                     if (sum[i] == 2 && (mon->data->mlet == S_ZOMBIE
                                         || mon->data->mlet == S_MUMMY)
                         && rn2(5) && !youResistSickness()) {
-                        You_feel("%ssick.", (Sick) ? "very " : "");
+                        You_feel("%ssick.", (youAreSick()) ? "very " : "");
                         mdamageu(mon, rnd(8));
                     }
                 }

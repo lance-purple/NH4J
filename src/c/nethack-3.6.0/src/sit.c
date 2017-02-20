@@ -102,7 +102,7 @@ dosit()
             } else if (currentTrapType() == TT_LAVA) {
                 /* Must have fire resistance or they'd be dead already */
                 You("sit in the lava!");
-                if (Slimed)
+                if (youAreTurningToSlime())
                     burn_away_slime();
                 setCurrentTrapTimeout(currentTrapTimeout() + rnd(4));
                 losehp(d(2, 10), "sitting in lava",
