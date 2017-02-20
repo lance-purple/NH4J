@@ -888,16 +888,16 @@ boolean called;
     if (mtmp->ispriest || mtmp->isminion) {
         char priestnambuf[BUFSZ];
         char *name;
-        long save_prop = EHalluc_resistance;
+        long save_prop = yourExtrinsic(HALLUC_RES);
         unsigned save_invis = mtmp->minvis;
 
         /* when true name is wanted, explicitly block Hallucination */
         if (!do_hallu)
-            EHalluc_resistance = 1L;
+            setYourExtrinsic(HALLUC_RES, 1L);
         if (!do_invis)
             mtmp->minvis = 0;
         name = priestname(mtmp, priestnambuf);
-        EHalluc_resistance = save_prop;
+        setYourExtrinsic(HALLUC_RES, save_prop);
         mtmp->minvis = save_invis;
         if (article == ARTICLE_NONE && !strncmp(name, "the ", 4))
             name += 4;

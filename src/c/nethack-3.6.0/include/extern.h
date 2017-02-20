@@ -147,6 +147,7 @@ E boolean FDECL(youResistMagic, ());
 E boolean FDECL(youResistAcid, ());
 E boolean FDECL(youResistStoning, ());
 E boolean FDECL(youResistSickness, ());
+E boolean FDECL(youResistHallucination, ());
 E boolean FDECL(youAreInvulnerable, ());
 
 E boolean FDECL(youAreBeingPunished, ());

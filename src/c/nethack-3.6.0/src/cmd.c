@@ -1957,7 +1957,7 @@ int final;
         you_are("immune to sickness", from_what(SICK_RES));
     if (youResistStoning())
         you_are("petrification resistant", from_what(STONE_RES));
-    if (Halluc_resistance)
+    if (youResistHallucination())
         enl_msg(You_, "resist", "resisted", " hallucinations",
                 from_what(HALLUC_RES));
     if (canSenseUnsafeFood())

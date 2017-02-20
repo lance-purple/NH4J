@@ -323,11 +323,11 @@ long mask; /* nonzero if resistance status should change by mask */
             changed = TRUE;
 
         if (!xtime)
-            EHalluc_resistance |= mask;
+            setYourExtrinsicMask(HALLUC_RES, mask);
         else
-            EHalluc_resistance &= ~mask;
+            unsetYourExtrinsicMask(HALLUC_RES, mask);
     } else {
-        if (!EHalluc_resistance && (!!HHallucination != !!xtime))
+        if (!yourExtrinsic(HALLUC_RES) && (!!HHallucination != !!xtime))
             changed = TRUE;
         setYourIntrinsicTimeout(HALLUC, xtime);
 
@@ -563,7 +563,7 @@ register struct obj *otmp;
         }
         break;
     case POT_HALLUCINATION:
-        if (Hallucination || Halluc_resistance)
+        if (Hallucination || youResistHallucination())
             nothing++;
         (void) make_hallucinated(
             itimeout_incr(HHallucination, rn1(200, 600 - 300 * bcsign(otmp))),

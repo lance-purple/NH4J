@@ -4708,7 +4708,7 @@ boolean disarm;
                     pline("What a groovy feeling!");
                 else
                     You("%s%s...", stagger(youmonst.data, "stagger"),
-                        Halluc_resistance ? ""
+                        youResistHallucination() ? ""
                                           : youCannotSee() ? " and get dizzy"
                                                   : " and your vision blurs");
             }

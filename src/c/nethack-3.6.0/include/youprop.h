@@ -24,10 +24,10 @@
 
 /* Hallucination is solely a timeout */
 #define HHallucination u.uprops[HALLUC].intrinsic
-#define HHalluc_resistance u.uprops[HALLUC_RES].intrinsic
+/*#define HHalluc_resistance u.uprops[HALLUC_RES].intrinsic
 #define EHalluc_resistance u.uprops[HALLUC_RES].extrinsic
-#define Halluc_resistance (HHalluc_resistance || EHalluc_resistance)
-#define Hallucination (HHallucination && !Halluc_resistance)
+#define Halluc_resistance (HHalluc_resistance || EHalluc_resistance) */
+#define Hallucination (HHallucination && !youResistHallucination())
 
 /* Timeout, plus a worn mask */
 #define HDeaf u.uprops[DEAF].intrinsic

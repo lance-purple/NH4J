@@ -1406,6 +1406,10 @@ extern boolean youResistSickness() {
  return (yourExtrinsic(SICK_RES) || yourIntrinsic(SICK_RES));
 }
 
+extern boolean youResistHallucination() {
+ return (yourExtrinsic(HALLUC_RES) || yourIntrinsic(HALLUC_RES));
+}
+
 extern boolean youAreInvulnerable() {
  return (yourIntrinsic(INVULNERABLE));
 }
