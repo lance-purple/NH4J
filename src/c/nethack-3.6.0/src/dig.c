@@ -923,13 +923,13 @@ coord *cc;
         break;
     case 2:
         if (youCanSee())
-            pline(Hallucination ? "Dude!  The living dead!"
+            pline(youAreHallucinating() ? "Dude!  The living dead!"
                                 : "The grave's owner is very upset!");
         (void) makemon(mkclass(S_ZOMBIE, 0), dig_x, dig_y, NO_MM_FLAGS);
         break;
     case 3:
         if (youCanSee())
-            pline(Hallucination ? "I want my mummy!"
+            pline(youAreHallucinating() ? "I want my mummy!"
                                 : "You've disturbed a tomb!");
         (void) makemon(mkclass(S_MUMMY, 0), dig_x, dig_y, NO_MM_FLAGS);
         break;
@@ -1334,7 +1334,7 @@ boolean unexpected;
      */
 
     if (unexpected) {
-        if (!Hallucination)
+        if (!youAreHallucinating())
             You_feel("an unexpected draft.");
         else
             /* U.S. classification system uses 1-A for eligible to serve
@@ -1346,7 +1346,7 @@ boolean unexpected;
                       || ACURR(A_INT) < 6 || ACURR(A_WIS) < 6) ? "4-F"
                                                                : "1-A");
     } else {
-        if (!Hallucination) {
+        if (!youAreHallucinating()) {
             You_feel("a draft.");
         } else {
             /* "marching" is deliberately ambiguous; it might mean drills

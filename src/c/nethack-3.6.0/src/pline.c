@@ -552,7 +552,7 @@ void
 self_invis_message()
 {
     pline("%s %s.",
-          Hallucination ? "Far out, man!  You" : "Gee!  All of a sudden, you",
+          youAreHallucinating() ? "Far out, man!  You" : "Gee!  All of a sudden, you",
           See_invisible ? "can see right through yourself"
                         : "can't see yourself");
 }
@@ -569,7 +569,7 @@ struct obj *otmp2;
 
     /* the player will know something happened inside his own inventory */
     if ((youCanSee() && visible) || inpack) {
-        if (Hallucination) {
+        if (youAreHallucinating()) {
             if (onfloor) {
                 You_see("parts of the floor melting!");
             } else if (inpack) {

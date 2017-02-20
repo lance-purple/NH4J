@@ -386,7 +386,7 @@ boolean resuming;
         find_ac();
         if (!context.mv || youCannotSee()) {
             /* redo monsters if hallu or wearing a helm of telepathy */
-            if (Hallucination) { /* update screen randomly */
+            if (youAreHallucinating()) { /* update screen randomly */
                 see_monsters();
                 see_objects();
                 see_traps();

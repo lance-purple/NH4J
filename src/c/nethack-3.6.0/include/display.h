@@ -122,7 +122,7 @@
  */
 #define is_safepet(mon)                                                   \
     (mon && mon->mtame && canspotmon(mon) && flags.safe_dog && !youAreConfused() \
-     && !Hallucination && !youAreStunned())
+     && !youAreHallucinating() && !youAreStunned())
 
 /*
  * canseeself()
@@ -158,9 +158,9 @@
  * If hallucinating, choose a random object/monster, otherwise, use the one
  * given.
  */
-#define what_obj(obj) (Hallucination ? random_object() : obj)
-#define what_mon(mon) (Hallucination ? random_monster() : mon)
-#define what_trap(trp) (Hallucination ? random_trap() : trp)
+#define what_obj(obj) (youAreHallucinating() ? random_object() : obj)
+#define what_mon(mon) (youAreHallucinating() ? random_monster() : mon)
+#define what_trap(trp) (youAreHallucinating() ? random_trap() : trp)
 
 /*
  * covers_objects()
@@ -288,7 +288,7 @@ extern void display_self();
 #define obj_to_glyph(obj) \
     (((obj)->otyp == STATUE)                                            \
          ? statue_to_glyph(obj)                                         \
-         : Hallucination                                                \
+         : youAreHallucinating()                                                \
                ? random_obj_to_glyph()                                  \
                : ((obj)->otyp == CORPSE)                                \
                      ? (int) (obj)->corpsenm + GLYPH_BODY_OFF           \
@@ -298,7 +298,7 @@ extern void display_self();
 /*       represent and look like monsters when you are hallucinating. */
 
 #define statue_to_glyph(obj)                          \
-    (Hallucination ? random_monster() + GLYPH_MON_OFF \
+    (youAreHallucinating() ? random_monster() + GLYPH_MON_OFF \
                    : (int) (obj)->corpsenm + GLYPH_STATUE_OFF)
 
 #define cmap_to_glyph(cmap_idx) ((int) (cmap_idx) + GLYPH_CMAP_OFF)

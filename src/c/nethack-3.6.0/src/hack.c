@@ -809,7 +809,7 @@ int mode;
     }
 
     if (sobj_at(BOULDER, x, y) && (Sokoban || !Passes_walls)) {
-        if (!(youCannotSee() || Hallucination) && (context.run >= 2)
+        if (!(youCannotSee() || youAreHallucinating()) && (context.run >= 2)
             && mode != TEST_TRAV)
             return FALSE;
         if (mode == DO_MOVE) {
@@ -1417,7 +1417,7 @@ domove()
             if (mtmp->m_ap_type && !Protection_from_shape_changers
                 && !sensemon(mtmp))
                 stumble_onto_mimic(mtmp);
-            else if (mtmp->mpeaceful && !Hallucination)
+            else if (mtmp->mpeaceful && !youAreHallucinating())
                 pline("Pardon me, %s.", m_monnam(mtmp));
             else
                 You("move right into %s.", mon_nam(mtmp));
@@ -1449,7 +1449,7 @@ domove()
                player is attempting to attack it [and boulder
                handling below is suitable for handling that] */
             if (glyph_is_statue(glyph)
-                || (Hallucination && glyph_is_monster(glyph)))
+                || (youAreHallucinating() && glyph_is_monster(glyph)))
                 boulder = sobj_at(STATUE, x, y);
 
             /* force fight at boulder/statue or wall/door while wielding
@@ -2617,7 +2617,7 @@ monster_nearby()
                 continue;
             if ((mtmp = m_at(x, y)) && mtmp->m_ap_type != M_AP_FURNITURE
                 && mtmp->m_ap_type != M_AP_OBJECT
-                && (!mtmp->mpeaceful || Hallucination)
+                && (!mtmp->mpeaceful || youAreHallucinating())
                 && (!is_hider(mtmp->data) || !mtmp->mundetected)
                 && !noattacks(mtmp->data) && mtmp->mcanmove
                 && !mtmp->msleeping  /* aplvax!jcn */

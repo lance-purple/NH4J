@@ -1004,7 +1004,7 @@ char *hittee;              /* target's name: "you" or mon_nam(mdef) */
     }
 
     /* give the hit message prior to inflicting the effects */
-    verb = mb_verb[!!Hallucination][attack_indx];
+    verb = mb_verb[!!youAreHallucinating()][attack_indx];
     if (youattack || youdefend || vis) {
         result = TRUE;
         pline_The("magic-absorbing blade %s %s!",
@@ -1307,7 +1307,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                 *dmgptr = 2 * mdef->mhp + FATAL_DAMAGE_MODIFIER;
                 pline(behead_msg[rn2(SIZE(behead_msg))], wepdesc,
                       mon_nam(mdef));
-                if (Hallucination && !flags.female)
+                if (youAreHallucinating() && !flags.female)
                     pline("Good job Henry, but that wasn't Anne.");
                 otmp->dknown = TRUE;
                 return TRUE;
@@ -1637,7 +1637,7 @@ struct obj *obj;
             newsym(currentX(), currentY());
             if (on)
                 Your("body takes on a %s transparency...",
-                     Hallucination ? "normal" : "strange");
+                     youAreHallucinating() ? "normal" : "strange");
             else
                 Your("body seems to unfade...");
             break;

@@ -398,7 +398,7 @@ int how;
                     *champtr = ((mtmp->cham >= LOW_PM)
                                    ? &mons[mtmp->cham]
                                    : mptr);
-    boolean distorted = (boolean) (Hallucination && canspotmon(mtmp)),
+    boolean distorted = (boolean) (youAreHallucinating() && canspotmon(mtmp)),
             mimicker = (mtmp->m_ap_type == M_AP_MONSTER),
             imitator = (mptr != champtr || mimicker);
 
@@ -469,7 +469,7 @@ int how;
         killer.format = KILLED_BY;
     } else if (mtmp->ispriest || mtmp->isminion) {
         /* m_monnam() suppresses "the" prefix plus "invisible", and
-           it overrides the effect of Hallucination on priestname() */
+           it overrides the effect of hallucination on priestname() */
         Strcat(buf, m_monnam(mtmp));
     } else {
         Strcat(buf, mptr->mname);
@@ -1479,7 +1479,7 @@ boolean ask;
                         putstr(klwin, 0, buf);
                     }
             /*
-             * if (Hallucination)
+             * if (youAreHallucinating())
              *     putstr(klwin, 0, "and a partridge in a pear tree");
              */
             if (ntypes > 1) {

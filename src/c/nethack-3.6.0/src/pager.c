@@ -110,7 +110,7 @@ struct obj **obj_p;
             otmp->corpsenm = MCORPSENM(mtmp);
     }
     /* if located at adjacent spot, mark it as having been seen up close */
-    if (otmp && distanceSquaredToYou(x, y) <= 2 && youCanSee() && !Hallucination)
+    if (otmp && distanceSquaredToYou(x, y) <= 2 && youCanSee() && !youAreHallucinating())
         otmp->dknown = 1;
 
     *obj_p = otmp;
@@ -154,7 +154,7 @@ struct monst *mtmp;
 int x, y;
 {
     char *name, monnambuf[BUFSZ];
-    boolean accurate = !Hallucination;
+    boolean accurate = !youAreHallucinating();
 
     if (mtmp->data == &mons[PM_COYOTE] && accurate)
         name = coyotename(mtmp, monnambuf);
@@ -231,7 +231,7 @@ int x, y;
                     Strcat(monbuf, ", ");
             }
             if (how_seen & MONSEEN_WARNMON) {
-                if (Hallucination)
+                if (youAreHallucinating())
                     Strcat(monbuf, "paranoid delusion");
                 else
                     Sprintf(eos(monbuf), "warned of %s",
@@ -359,7 +359,7 @@ char *buf, *monbuf;
             break;
         }
 
-    return (pm && !Hallucination) ? pm : (struct permonst *) 0;
+    return (pm && !youAreHallucinating()) ? pm : (struct permonst *) 0;
 }
 
 /*
@@ -825,7 +825,7 @@ coord *click_cc;
             add_menu(win, NO_GLYPH, &any,
                      flags.lootabc ? 0 : any.a_char, 'n', ATR_NONE,
                      "something else (by symbol or name)", MENU_UNSELECTED);
-            if (!swallowed() && !Hallucination) {
+            if (!swallowed() && !youAreHallucinating()) {
                 any = zeroany;
                 add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE,
                          "", MENU_UNSELECTED);

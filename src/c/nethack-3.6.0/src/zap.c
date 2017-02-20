@@ -232,7 +232,7 @@ struct obj *otmp;
                 xkilled(mtmp, 3);
             } else if (newcham(mtmp, (struct permonst *) 0,
                                (otyp != POT_POLYMORPH), FALSE)) {
-                if (!Hallucination && canspotmon(mtmp))
+                if (!youAreHallucinating() && canspotmon(mtmp))
                     learn_it = TRUE;
             }
         }
@@ -1846,7 +1846,7 @@ struct obj *obj, *otmp;
             } else if (obj->otyp == STATUE) {
                 if (break_statue(obj)) {
                     if (cansee(obj->ox, obj->oy)) {
-                        if (Hallucination)
+                        if (youAreHallucinating())
                             pline_The("%s shatters.", rndmonnam(NULL));
                         else
                             pline_The("statue shatters.");
@@ -1888,7 +1888,7 @@ struct obj *obj, *otmp;
 
                 res = !!revive(obj, TRUE);
                 if (res && Role_if(PM_HEALER)) {
-                    if (Hallucination && !Deaf) {
+                    if (youAreHallucinating() && !Deaf) {
                         You_hear("the sound of a defibrillator.");
                         learn_it = TRUE;
                     } else if (youCanSee()) {
@@ -2774,7 +2774,7 @@ struct obj *obj; /* wand or spell */
             case SPE_STONE_TO_FLESH:
                 if (e->engr_type == ENGRAVE) {
                     /* only affects things in stone */
-                    pline_The(Hallucination
+                    pline_The(youAreHallucinating()
                                   ? "floor runs like butter!"
                                   : "edges on the floor get smoother.");
                     wipe_engr_at(x, y, d(2, 4), TRUE);

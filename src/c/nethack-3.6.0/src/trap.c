@@ -670,7 +670,7 @@ int *fail_reason;
                    ? xname(statue)
                    : "statue");
         pline("%s %s!", upstart(statuename), comes_to_life);
-    } else if (Hallucination) { /* They don't know it's a statue */
+    } else if (youAreHallucinating()) { /* They don't know it's a statue */
         pline_The("%s suddenly seems more animated.", rndmonnam((char *) 0));
     } else if (cause == ANIMATE_SHATTER) {
         if (cansee(x, y))
@@ -856,7 +856,7 @@ unsigned trflags;
         u.usteed->mtrapseen |= (1 << (ttype - 1));
         /* suppress article in various steed messages when using its
            name (which won't occur when hallucinating) */
-        if (has_mname(u.usteed) && !Hallucination)
+        if (has_mname(u.usteed) && !youAreHallucinating())
             steed_article = ARTICLE_NONE;
     }
 
@@ -963,7 +963,7 @@ unsigned trflags;
         if ((Levitation || Flying) && !forcetrap) {
             if (youCanSee()) {
                 seetrap(trap);
-                if (Hallucination)
+                if (youAreHallucinating())
                     You("notice a crease in the linoleum.");
                 else
                     You("notice a loose board below you.");
@@ -1717,7 +1717,7 @@ int style;
     switch (style) {
     case ROLL | LAUNCH_UNSEEN:
         if (otyp == BOULDER) {
-            You_hear(Hallucination ? "someone bowling."
+            You_hear(youAreHallucinating() ? "someone bowling."
                                    : "rumbling in the distance.");
         }
         style &= ~LAUNCH_UNSEEN;
@@ -2762,7 +2762,7 @@ float_up()
                                       : "spiral up into %s.",
             is_animal(u.ustuck->data) ? surface(currentX(), currentY())
                                       : mon_nam(u.ustuck));
-    } else if (Hallucination) {
+    } else if (youAreHallucinating()) {
         pline("Up, up, and awaaaay!  You're walking on air!");
     } else if (areYouOnAirLevel()) {
         You("gain control over your movements.");
@@ -2887,7 +2887,7 @@ long hmask, emask; /* might cancel timeout */
                      * The unexpected additional force of the air currents
                      * once levitation ceases knocks you off your feet.
                      */
-                    if (Hallucination)
+                    if (youAreHallucinating())
                         pline("Bummer!  You've crashed.");
                     else
                         You("fall over.");
@@ -2898,7 +2898,7 @@ long hmask, emask; /* might cancel timeout */
                 } else if (u.usteed && (is_floater(u.usteed->data)
                                         || is_flyer(u.usteed->data))) {
                     You("settle more firmly in the saddle.");
-                } else if (Hallucination) {
+                } else if (youAreHallucinating()) {
                     pline("Bummer!  You've %s.",
                           is_pool(currentX(), currentY())
                              ? "splashed down"
@@ -2972,7 +2972,7 @@ climb_pit()
         if (u.usteed)
             Norep("%s is still in a pit.", upstart(y_monnam(u.usteed)));
         else
-            Norep((Hallucination && !rn2(5))
+            Norep((youAreHallucinating() && !rn2(5))
                       ? "You've fallen, and you can't get up."
                       : "You are still in a pit.");
     }
@@ -3090,7 +3090,7 @@ domagictrap()
             pline("A shiver runs up and down your %s!", body_part(SPINE));
             break;
         case 14:
-            You_hear(Hallucination ? "the moon howling at you."
+            You_hear(youAreHallucinating() ? "the moon howling at you."
                                    : "distant howling.");
             break;
         case 15:
@@ -3102,7 +3102,7 @@ domagictrap()
                         : "");
             else
                 You("suddenly yearn for %s.",
-                    Hallucination
+                    youAreHallucinating()
                         ? "Cleveland"
                         : (areYouInTheQuestDungeon() || at_dgn_entrance("The Quest"))
                               ? "your nearby homeland"
@@ -3112,7 +3112,7 @@ domagictrap()
             Your("pack shakes violently!");
             break;
         case 17:
-            You(Hallucination ? "smell hamburgers." : "smell charred flesh.");
+            You(youAreHallucinating() ? "smell hamburgers." : "smell charred flesh.");
             break;
         case 18:
             You_feel("tired.");
@@ -3551,7 +3551,7 @@ drown()
         You("%s into the water%c", areYouOnWaterLevel() ? "plunge" : "fall",
             Amphibious || Swimming ? '.' : '!');
         if (!Swimming && !areYouOnWaterLevel())
-            You("sink like %s.", Hallucination ? "the Titanic" : "a rock");
+            You("sink like %s.", youAreHallucinating() ? "the Titanic" : "a rock");
     }
 
     water_damage_chain(invent, FALSE);
@@ -3579,7 +3579,7 @@ drown()
             if (flags.verbose)
                 pline("But you aren't drowning.");
             if (!areYouOnWaterLevel()) {
-                if (Hallucination)
+                if (youAreHallucinating())
                     Your("keel hits the bottom.");
                 else
                     You("touch bottom.");
@@ -3739,7 +3739,7 @@ struct trap *ttmp;
     /* Only spiders know how to deal with webs reliably */
     if (ttmp->ttyp == WEB && !webmaker(youmonst.data))
         chance = 30;
-    if (youAreConfused() || Hallucination)
+    if (youAreConfused() || youAreHallucinating())
         chance++;
     if (youCannotSee())
         chance++;
@@ -4162,7 +4162,7 @@ boolean force;
     struct trap *ttmp;
     struct monst *mtmp;
     const char *trapdescr;
-    boolean here, useplural, confused = (youAreConfused() || Hallucination),
+    boolean here, useplural, confused = (youAreConfused() || youAreHallucinating()),
                              trap_skipped = FALSE, deal_with_floor_trap;
     int boxcnt = 0;
     char the_trap[BUFSZ], qbuf[QBUFSZ];
@@ -4704,7 +4704,7 @@ boolean disarm;
                   youCannotSee() ? blindgas[rn2(SIZE(blindgas))] : rndcolor(),
                   the(xname(obj)));
             if (!youAreStunned()) {
-                if (Hallucination)
+                if (youAreHallucinating())
                     pline("What a groovy feeling!");
                 else
                     You("%s%s...", stagger(youmonst.data, "stagger"),
@@ -4714,7 +4714,7 @@ boolean disarm;
             }
             make_stunned(yourIntrinsicTimeout(STUNNED) + (long) rn1(7, 16), FALSE);
             (void) make_hallucinated(
-                (HHallucination & TIMEOUT) + (long) rn1(5, 16), FALSE, 0L);
+                yourIntrinsicTimeout(HALLUC) + (long) rn1(5, 16), FALSE, 0L);
             break;
         default:
             impossible("bad chest trap");

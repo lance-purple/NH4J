@@ -93,7 +93,7 @@ struct obj *obj;
                         pline(
                             "As %s opens the bottle, an enormous %s emerges!",
                               mon_nam(mon),
-                              Hallucination ? rndmonnam(NULL)
+                              youAreHallucinating() ? rndmonnam(NULL)
                                             : (const char *) "ghost");
                         pline("%s is frightened to death, and unable to move.",
                               Monnam(mon));
@@ -1810,7 +1810,7 @@ struct monst *mtmp;
             if (canspotmon(mtmp))
                 pline("%s body takes on a %s transparency.",
                       upstart(s_suffix(nambuf)),
-                      Hallucination ? "normal" : "strange");
+                      youAreHallucinating() ? "normal" : "strange");
             else
                 pline("Suddenly you cannot see %s.", nambuf);
             if (oseen)
@@ -2233,7 +2233,7 @@ boolean stoning;
         }
     }
     if (stoning && vis) {
-        if (Hallucination)
+        if (youAreHallucinating())
             pline("What a pity - %s just ruined a future piece of art!",
                   mon_nam(mon));
         else
@@ -2433,7 +2433,7 @@ struct monst *mon;
 {
     struct permonst *ptr = mon->data;
 
-    if (Hallucination)
+    if (youAreHallucinating())
         return FALSE;
 #ifdef TEXTCOLOR
     if (iflags.use_color)

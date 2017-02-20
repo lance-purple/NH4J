@@ -351,7 +351,7 @@ doread()
             pline(nodisappear ? "You read the scroll."
                               : "As you read the scroll, it disappears.");
         if (confused) {
-            if (Hallucination)
+            if (youAreHallucinating())
                 pline("Being so trippy, you screw up...");
             else
                 pline("Being confused, you %s the magic words...",
@@ -1221,7 +1221,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
     case SPE_REMOVE_CURSE: {
         register struct obj *obj;
 
-        You_feel(!Hallucination
+        You_feel(!youAreHallucinating()
                      ? (!confused ? "like someone is helping you."
                                   : "like you need some help.")
                      : (!confused ? "in touch with the Universal Oneness."
@@ -1491,7 +1491,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
     case SCR_MAGIC_MAPPING:
         if (level.flags.nommap) {
             Your("mind is filled with crazy lines!");
-            if (Hallucination)
+            if (youAreHallucinating())
                 pline("Wow!  Modern art.");
             else
                 Your("%s spins in bewilderment.", body_part(HEAD));
@@ -1529,7 +1529,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
         known = TRUE;
         forget((!sblessed ? ALL_SPELLS : 0)
                | (!confused || scursed ? ALL_MAP : 0));
-        if (Hallucination) /* Ommmmmm! */
+        if (youAreHallucinating()) /* Ommmmmm! */
             Your("mind releases itself from mundane concerns.");
         else if (!strncmpi(plname, "Maud", 4))
             pline(
@@ -2172,7 +2172,7 @@ int how;
     }
 
     which = "all ";
-    if (Hallucination) {
+    if (youAreHallucinating()) {
         if (areYouPolymorphed())
             Strcpy(buf, youmonst.data->mname);
         else {

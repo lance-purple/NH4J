@@ -118,7 +118,7 @@ bot2()
         Sprintf(nb = eos(nb), " Blind");
     if (youAreStunned())
         Sprintf(nb = eos(nb), " Stun");
-    if (Hallucination)
+    if (youAreHallucinating())
         Sprintf(nb = eos(nb), " Hallu");
     if (youAreTurningToSlime())
         Sprintf(nb = eos(nb), " Slime");
@@ -558,7 +558,7 @@ bot()
     else
         blstats[idx][BL_CONDITION].a.a_ulong &= ~BL_MASK_ILL;
 
-    if (Hallucination)
+    if (youAreHallucinating())
         blstats[idx][BL_CONDITION].a.a_ulong |= BL_MASK_HALLU;
     else
         blstats[idx][BL_CONDITION].a.a_ulong &= ~BL_MASK_HALLU;

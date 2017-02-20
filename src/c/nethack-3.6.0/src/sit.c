@@ -289,7 +289,7 @@ dosit()
 
         if (!flags.female) {
             pline("%s can't lay eggs!",
-                  Hallucination
+                  youAreHallucinating()
                       ? "You may think you are a platypus, but a male still"
                       : "Males");
             return 0;
@@ -431,7 +431,7 @@ attrcurse()
     case 7:
         if (HSee_invisible & INTRINSIC) {
             HSee_invisible &= ~INTRINSIC;
-            You("%s!", Hallucination ? "tawt you taw a puttie tat"
+            You("%s!", youAreHallucinating() ? "tawt you taw a puttie tat"
                                      : "thought you saw something");
             break;
         }

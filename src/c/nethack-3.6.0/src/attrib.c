@@ -1100,9 +1100,9 @@ int reason; /* 0==conversion, 1==helm-of-OA on, 2==helm-of-OA off */
         /* putting on or taking off a helm of opposite alignment */
         setCurrentAlignmentType((aligntyp) newalign);
         if (reason == 1)
-            Your("mind oscillates %s.", Hallucination ? "wildly" : "briefly");
+            Your("mind oscillates %s.", youAreHallucinating() ? "wildly" : "briefly");
         else if (reason == 2)
-            Your("mind is %s.", Hallucination
+            Your("mind is %s.", youAreHallucinating()
                                     ? "much of a muchness"
                                     : "back in sync with your body");
     }
@@ -1426,10 +1426,6 @@ extern boolean youAreConfused() {
  return (yourIntrinsic(CONFUSION));
 }
 
-extern boolean youAreHallucinating() {
- return (yourIntrinsic(HALLUC));
-}
-
 extern boolean youAreTemporarilyBlinded() {
  return (yourIntrinsic(BLINDED));
 }
@@ -1464,6 +1460,10 @@ extern boolean youAreSick() {
 
 extern boolean youAreVomiting() {
  return (yourIntrinsic(VOMITING));
+}
+
+extern boolean youAreHallucinating() {
+ return (yourIntrinsic(HALLUC) && !youResistHallucination());
 }
 
 extern boolean youHaveSlipperyFingers() {

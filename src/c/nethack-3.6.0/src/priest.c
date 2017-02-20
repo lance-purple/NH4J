@@ -308,7 +308,7 @@ struct monst *mon;
  *      - aligned priests without ispriest are roamers
  *              they have isminion set and use emin rather than epri
  *      - minions do not have ispriest but have isminion and emin
- *      - caller needs to inhibit Hallucination if it wants to force
+ *      - caller needs to inhibit hallucination if it wants to force
  *              the true name even when under that influence
  */
 char *
@@ -316,7 +316,7 @@ priestname(mon, pname)
 register struct monst *mon;
 char *pname; /* caller-supplied output buffer */
 {
-    boolean do_hallu = Hallucination,
+    boolean do_hallu = youAreHallucinating(),
             aligned_priest = mon->data == &mons[PM_ALIGNED_PRIEST],
             high_priest = mon->data == &mons[PM_HIGH_PRIEST];
     char whatcode = '\0';
@@ -339,7 +339,7 @@ char *pname; /* caller-supplied output buffer */
         } else {
             if (high_priest)
                 Strcat(pname, "high ");
-            if (Hallucination)
+            if (youAreHallucinating())
                 what = "poohbah";
             else if (mon->female)
                 what = "priestess";
@@ -431,7 +431,7 @@ int roomno;
             /* don't reveal the altar's owner upon temple entry in
                the endgame; for the Sanctum, the next message names
                Moloch so suppress the "of Moloch" for him here too */
-            if (sanctum && !Hallucination)
+            if (sanctum && !youAreHallucinating())
                 priest->ispriest = 0;
             pline("%s intones:",
                   canseemon(priest) ? Monnam(priest) : "A nearby voice");

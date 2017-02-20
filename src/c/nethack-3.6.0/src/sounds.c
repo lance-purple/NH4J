@@ -34,7 +34,7 @@ dosounds()
     if (Deaf || !flags.acoustics || swallowed() || underwater())
         return;
 
-    hallu = Hallucination ? 1 : 0;
+    hallu = youAreHallucinating() ? 1 : 0;
 
     if (level.flags.nfountains && !rn2(400)) {
         static const char *const fountain_msg[4] = {
@@ -359,7 +359,7 @@ register struct monst *mtmp;
         return;
 
     /* presumably nearness and soundok checks have already been made */
-    if (Hallucination)
+    if (youAreHallucinating())
         growl_verb = h_sounds[rn2(SIZE(h_sounds))];
     else
         growl_verb = growl_sound(mtmp);
@@ -382,7 +382,7 @@ register struct monst *mtmp;
         return;
 
     /* presumably nearness and soundok checks have already been made */
-    if (Hallucination)
+    if (youAreHallucinating())
         yelp_verb = h_sounds[rn2(SIZE(h_sounds))];
     else
         switch (mtmp->data->msound) {
@@ -425,7 +425,7 @@ register struct monst *mtmp;
         return;
 
     /* presumably nearness and soundok checks have already been made */
-    if (Hallucination)
+    if (youAreHallucinating())
         whimper_verb = h_sounds[rn2(SIZE(h_sounds))];
     else
         switch (mtmp->data->msound) {
@@ -516,7 +516,7 @@ register struct monst *mtmp;
                  || same_race(ptr, &mons[Race_switch]))) /* unpoly'd form */
         msound = MS_HUMANOID;
     /* silliness, with slight chance to interfere with shopping */
-    else if (Hallucination && mon_is_gecko(mtmp))
+    else if (youAreHallucinating() && mon_is_gecko(mtmp))
         msound = MS_SELL;
 
     /* be sure to do this before talking; the monster might teleport away, in
@@ -537,7 +537,7 @@ register struct monst *mtmp;
         quest_chat(mtmp);
         break;
     case MS_SELL: /* pitch, pay, total */
-        if (!Hallucination || (mtmp->isshk && !rn2(2))) {
+        if (!youAreHallucinating() || (mtmp->isshk && !rn2(2))) {
             shk_chat(mtmp);
         } else {
             /* approximation of GEICO's advertising slogan (it actually
@@ -1055,7 +1055,7 @@ dochat()
         if (youCanSee()) {
             pline_The("%s seems not to notice you.",
                       /* if hallucinating, you can't tell it's a statue */
-                      Hallucination ? rndmonnam((char *) 0) : "statue");
+                      youAreHallucinating() ? rndmonnam((char *) 0) : "statue");
         }
         return 0;
     }

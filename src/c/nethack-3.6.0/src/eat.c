@@ -163,11 +163,11 @@ eatmupdate()
     if (!eatmbuf || nomovemsg != eatmbuf)
         return;
 
-    if (is_obj_mappear(&youmonst,ORANGE) && !Hallucination) {
+    if (is_obj_mappear(&youmonst,ORANGE) && !youAreHallucinating()) {
         /* revert from hallucinatory to "normal" mimicking */
         altmsg = "You now prefer mimicking yourself.";
         altapp = GOLD_PIECE;
-    } else if (is_obj_mappear(&youmonst,GOLD_PIECE) && Hallucination) {
+    } else if (is_obj_mappear(&youmonst,GOLD_PIECE) && youAreHallucinating()) {
         /* won't happen; anything which might make immobilized
            hero begin hallucinating (black light attack, theft
            of Grayswandir) will terminate the mimicry first */
@@ -703,7 +703,7 @@ fix_petrification()
 {
     char buf[BUFSZ];
 
-    if (Hallucination)
+    if (youAreHallucinating())
         Sprintf(buf, "What a pity--you just ruined a future piece of %sart!",
                 ACURR(A_CHA) > 15 ? "fine " : "");
     else
@@ -823,7 +823,7 @@ register struct permonst *ptr;
     case FIRE_RES:
         debugpline0("Trying to give fire resistance");
         if (!(yourIntrinsicHasMask(FIRE_RES, FROMOUTSIDE))) {
-            You(Hallucination ? "be chillin'." : "feel a momentary chill.");
+            You(youAreHallucinating() ? "be chillin'." : "feel a momentary chill.");
             setYourIntrinsicMask(FIRE_RES, FROMOUTSIDE);
         }
         break;
@@ -844,14 +844,14 @@ register struct permonst *ptr;
     case DISINT_RES:
         debugpline0("Trying to give disintegration resistance");
         if (!(yourIntrinsicHasMask(DISINT_RES, FROMOUTSIDE))) {
-            You_feel(Hallucination ? "totally together, man." : "very firm.");
+            You_feel(youAreHallucinating() ? "totally together, man." : "very firm.");
             setYourIntrinsicMask(DISINT_RES, FROMOUTSIDE);
         }
         break;
     case SHOCK_RES: /* shock (electricity) resistance */
         debugpline0("Trying to give shock resistance");
         if (!(yourIntrinsicHasMask(SHOCK_RES, FROMOUTSIDE))) {
-            if (Hallucination)
+            if (youAreHallucinating())
                 You_feel("grounded in reality.");
             else
                 Your("health currently feels amplified!");
@@ -868,14 +868,14 @@ register struct permonst *ptr;
     case TELEPORT:
         debugpline0("Trying to give teleport");
         if (!(HTeleportation & FROMOUTSIDE)) {
-            You_feel(Hallucination ? "diffuse." : "very jumpy.");
+            You_feel(youAreHallucinating() ? "diffuse." : "very jumpy.");
             HTeleportation |= FROMOUTSIDE;
         }
         break;
     case TELEPORT_CONTROL:
         debugpline0("Trying to give teleport control");
         if (!(HTeleport_control & FROMOUTSIDE)) {
-            You_feel(Hallucination ? "centered in your personal space."
+            You_feel(youAreHallucinating() ? "centered in your personal space."
                                    : "in control of yourself.");
             HTeleport_control |= FROMOUTSIDE;
         }
@@ -883,7 +883,7 @@ register struct permonst *ptr;
     case TELEPAT:
         debugpline0("Trying to give telepathy");
         if (!(HTelepat & FROMOUTSIDE)) {
-            You_feel(Hallucination ? "in touch with the cosmos."
+            You_feel(youAreHallucinating() ? "in touch with the cosmos."
                                    : "a strange mental acuity.");
             HTelepat |= FROMOUTSIDE;
             /* If blind, make sure monsters show up. */
@@ -982,14 +982,14 @@ register int pm;
 
             incrementPolyselfCount(1); /* you're changing form */
             You_cant("resist the temptation to mimic %s.",
-                     Hallucination ? "an orange" : "a pile of gold");
+                     youAreHallucinating() ? "an orange" : "a pile of gold");
             /* A pile of gold can't ride. */
             if (u.usteed)
                 dismount_steed(DISMOUNT_FELL);
             nomul(-tmp);
             multi_reason = "pretending to be a pile of gold";
             Sprintf(buf,
-                    Hallucination
+                    youAreHallucinating()
                        ? "You suddenly dread being peeled and mimic %s again!"
                        : "You now prefer mimicking %s again.",
                     an(areYouPolymorphed() ? youmonst.data->mname : urace.noun));
@@ -998,7 +998,7 @@ register int pm;
             afternmv = eatmdone;
             /* ??? what if this was set before? */
             youmonst.m_ap_type = M_AP_OBJECT;
-            youmonst.mappearance = Hallucination ? ORANGE : GOLD_PIECE;
+            youmonst.mappearance = youAreHallucinating() ? ORANGE : GOLD_PIECE;
             newsym(currentX(), currentY());
             curs_on_u();
             /* make gold symbol show up now */
@@ -1057,7 +1057,7 @@ register int pm;
         if (dmgtype(ptr, AD_STUN) || dmgtype(ptr, AD_HALU)
             || pm == PM_VIOLET_FUNGUS) {
             pline("Oh wow!  Great stuff!");
-            (void) make_hallucinated((HHallucination & TIMEOUT) + 200L, FALSE,
+            (void) make_hallucinated(yourIntrinsicTimeout(HALLUC) + 200L, FALSE,
                                      0L);
         }
 
@@ -1276,10 +1276,10 @@ const char *mesg;
 
         which = 0; /* 0=>plural, 1=>as-is, 2=>"the" prefix */
         if ((mnum == PM_COCKATRICE || mnum == PM_CHICKATRICE)
-            && (youResistStoning() || Hallucination)) {
+            && (youResistStoning() || youAreHallucinating())) {
             what = "chicken";
             which = 1; /* suppress pluralization */
-        } else if (Hallucination) {
+        } else if (youAreHallucinating()) {
             what = rndmonnam(NULL);
         } else {
             what = mons[mnum].mname;
@@ -1297,7 +1297,7 @@ const char *mesg;
         if (yn("Eat it?") == 'n') {
             if (flags.verbose)
                 You("discard the open tin.");
-            if (!Hallucination)
+            if (!youAreHallucinating())
                 tin->dknown = tin->known = 1;
             costly_tin(COST_OPEN);
             goto use_up_tin;
@@ -1355,7 +1355,7 @@ const char *mesg;
         setFoodlessConduct(FALSE); /* don't need vegan/vegetarian checks for spinach */
         if (!tin->cursed)
             pline("This makes you feel like %s!",
-                  Hallucination ? "Swee'pea" : "Popeye");
+                  youAreHallucinating() ? "Swee'pea" : "Popeye");
         gainstr(tin, 0, FALSE);
 
         costly_tin(COST_OPEN);
@@ -1489,7 +1489,7 @@ struct obj *obj;
 {
     pline("Blecch!  Rotten %s!", foodword(obj));
     if (!rn2(4)) {
-        if (Hallucination)
+        if (youAreHallucinating())
             You_feel("rather trippy.");
         else
             You_feel("rather %s.", body_part(LIGHT_HEADED));
@@ -1620,7 +1620,7 @@ struct obj *otmp;
         if (!retcode)
             consume_oeaten(otmp, 2); /* oeaten >>= 2 */
     } else if ((mnum == PM_COCKATRICE || mnum == PM_CHICKATRICE)
-               && (youResistStoning() || Hallucination)) {
+               && (youResistStoning() || youAreHallucinating())) {
         pline("This tastes just like chicken!");
     } else if (mnum == PM_FLOATING_EYE && currentMonsterNumber() == PM_RAVEN) {
         You("peck the eyeball with delight.");
@@ -1636,7 +1636,7 @@ struct obj *otmp;
               type_is_pname(&mons[mnum])
                  ? "" : the_unique_pm(&mons[mnum]) ? "The " : "This ",
               food_xname(otmp, FALSE),
-              Hallucination
+              youAreHallucinating()
                   ? (yummy ? ((currentMonsterNumber() == PM_TIGER) ? "is gr-r-reat"
                                                       : "is gnarly")
                            : "is grody")
@@ -1708,7 +1708,7 @@ struct obj *otmp;
     switch (otmp->otyp) {
     case FOOD_RATION:
         if (currentNutrition() <= 200)
-            pline(Hallucination ? "Oh wow, like, superior, man!"
+            pline(youAreHallucinating() ? "Oh wow, like, superior, man!"
                                 : "That food really hit the spot!");
         else if (currentNutrition() <= 700)
             pline("That satiated your %s!", body_part(STOMACH));
@@ -1717,7 +1717,7 @@ struct obj *otmp;
         if (carnivorous(youmonst.data) && !humanoid(youmonst.data)) {
             pline("That tripe ration was surprisingly good!");
 	} else if (areYouOrcish()) {
-            pline(Hallucination ? "Tastes great! Less filling!"
+            pline(youAreHallucinating() ? "Tastes great! Less filling!"
                                 : "Mmm, tripe... not bad!");
 	} else {
             pline("Yak - dog food!");
@@ -1744,7 +1744,7 @@ struct obj *otmp;
         if (otmp->otyp == SLIME_MOLD && !otmp->cursed
             && otmp->spe == context.current_fruit) {
             pline("My, that was a %s %s!",
-                  Hallucination ? "primo" : "yummy",
+                  youAreHallucinating() ? "primo" : "yummy",
                   singular(otmp, xname));
         } else if (otmp->otyp == APPLE && otmp->cursed && !youResistSleep()) {
             ; /* skip core joke; feedback deferred til fpostfx() */
@@ -1759,7 +1759,7 @@ struct obj *otmp;
 
 #ifdef UNIX
         } else if (otmp->otyp == APPLE || otmp->otyp == PEAR) {
-            if (!Hallucination) {
+            if (!youAreHallucinating()) {
                 pline("Core dumped.");
             } else {
                 /* This is based on an old Usenet joke, a fake a.out manual
@@ -1782,12 +1782,12 @@ struct obj *otmp;
         give_feedback:
             pline("This %s is %s", singular(otmp, xname),
                   otmp->cursed
-                     ? (Hallucination ? "grody!" : "terrible!")
+                     ? (youAreHallucinating() ? "grody!" : "terrible!")
                      : (otmp->otyp == CRAM_RATION
                         || otmp->otyp == K_RATION
                         || otmp->otyp == C_RATION)
                         ? "bland."
-                        : Hallucination ? "gnarly!" : "delicious!");
+                        : youAreHallucinating() ? "gnarly!" : "delicious!");
         }
         break; /* default */
     } /* switch */
@@ -1877,7 +1877,7 @@ struct obj *otmp;
                     && youCanSee()) {
                     newsym(currentX(), currentY());
                     Your("body takes on a %s transparency...",
-                         Hallucination ? "normal" : "strange");
+                         youAreHallucinating() ? "normal" : "strange");
                     makeknown(typ);
                 }
                 break;
@@ -2017,7 +2017,7 @@ eatspecial()
     /* KMH -- idea by "Tommy the Terrorist" */
     if (otmp->otyp == TRIDENT && !otmp->cursed) {
         /* sugarless chewing gum which used to be heavily advertised on TV */
-        pline(Hallucination ? "Four out of five dentists agree."
+        pline(youAreHallucinating() ? "Four out of five dentists agree."
                             : "That was pure chewing satisfaction!");
         exercise(A_WIS, TRUE);
     }
@@ -2138,7 +2138,7 @@ struct obj *otmp;
             /* Snow White; 'poisoned' applies to [a subset of] weapons,
                not food, so we substitute cursed; fortunately our hero
                won't have to wait for a prince to be rescued/revived */
-            if (Race_if(PM_DWARF) && Hallucination)
+            if (Race_if(PM_DWARF) && youAreHallucinating())
                 verbalize("Heigh-ho, ho-hum, I think I'll skip work today.");
             else if (Deaf || !flags.acoustics)
                 You("fall asleep.");
@@ -2848,7 +2848,7 @@ boolean incr;
             losestr(-1);
         switch (newhs) {
         case HUNGRY:
-            if (Hallucination) {
+            if (youAreHallucinating()) {
                 You((!incr) ? "now have a lesser case of the munchies."
                             : "are getting the munchies.");
             } else
@@ -2862,7 +2862,7 @@ boolean incr;
             context.travel = context.travel1 = context.mv = context.run = 0;
             break;
         case WEAK:
-            if (Hallucination)
+            if (youAreHallucinating())
                 pline((!incr) ? "You still have the munchies."
               : "The munchies are interfering with your motor capabilities.");
             else if (incr && (Role_if(PM_WIZARD) || Race_if(PM_ELF)

@@ -803,7 +803,7 @@ long amount;
 {
     const char *res;
 
-    res = Hallucination ? currencies[rn2(SIZE(currencies))] : "zorkmid";
+    res = youAreHallucinating() ? currencies[rn2(SIZE(currencies))] : "zorkmid";
     if (amount != 1L)
         res = makeplural(res);
     return res;

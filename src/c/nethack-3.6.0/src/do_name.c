@@ -420,7 +420,7 @@ do_mname()
     register struct monst *mtmp;
     char qbuf[QBUFSZ];
 
-    if (Hallucination) {
+    if (youAreHallucinating()) {
         You("would never recognize it anyway.");
         return;
     }
@@ -762,13 +762,13 @@ namefloorobj()
     /* note well: 'obj' might be as instance of STRANGE_OBJECT if target
        is a mimic; passing that to xname (directly or via simpleonames)
        would yield "glorkum" so we need to handle it explicitly; it will
-       always fail the Hallucination test and pass the !callable test,
+       always fail the hallucination test and pass the !callable test,
        resulting in the "can't be assigned a type name" message */
     Strcpy(buf, (obj->otyp != STRANGE_OBJECT)
                  ? simpleonames(obj)
                  : obj_descr[STRANGE_OBJECT].oc_name);
     use_plural = (obj->quan > 1L);
-    if (Hallucination) {
+    if (youAreHallucinating()) {
         const char *unames[6];
         char tmpbuf[BUFSZ];
 
@@ -869,7 +869,7 @@ boolean called;
     if (article == ARTICLE_YOUR && !mtmp->mtame)
         article = ARTICLE_THE;
 
-    do_hallu = Hallucination && !(suppress & SUPPRESS_HALLUCINATION);
+    do_hallu = youAreHallucinating() && !(suppress & SUPPRESS_HALLUCINATION);
     do_invis = mtmp->minvis && !(suppress & SUPPRESS_INVISIBLE);
     do_it = !canspotmon(mtmp) && article != ARTICLE_YOUR
             && !program_state.gameover && mtmp != u.usteed
@@ -891,7 +891,7 @@ boolean called;
         long save_prop = yourExtrinsic(HALLUC_RES);
         unsigned save_invis = mtmp->minvis;
 
-        /* when true name is wanted, explicitly block Hallucination */
+        /* when true name is wanted, explicitly block hallucination */
         if (!do_hallu)
             setYourExtrinsic(HALLUC_RES, 1L);
         if (!do_invis)
@@ -940,7 +940,7 @@ boolean called;
     if (do_invis)
         Strcat(buf, "invisible ");
     if (do_saddle && (mtmp->misc_worn_check & W_SADDLE) && youCanSee()
-        && !Hallucination)
+        && !youAreHallucinating())
         Strcat(buf, "saddled ");
     if (buf[0] != 0)
         has_adjectives = TRUE;
@@ -1140,7 +1140,7 @@ char *outbuf;
     /* high priest(ess)'s identity is concealed on the Astral Plane,
        unless you're adjacent (overridden for hallucination which does
        its own obfuscation) */
-    if (mon->data == &mons[PM_HIGH_PRIEST] && !Hallucination
+    if (mon->data == &mons[PM_HIGH_PRIEST] && !youAreHallucinating()
         && areYouOnAstralLevel() && distanceSquaredToYou(mon->mx, mon->my) > 2) {
         Strcpy(outbuf, article == ARTICLE_THE ? "the " : "");
         Strcat(outbuf, mon->female ? "high priestess" : "high priest");
@@ -1240,7 +1240,7 @@ const char *
 hcolor(colorpref)
 const char *colorpref;
 {
-    return (Hallucination || !colorpref) ? hcolors[rn2(SIZE(hcolors))]
+    return (youAreHallucinating() || !colorpref) ? hcolors[rn2(SIZE(hcolors))]
                                          : colorpref;
 }
 
@@ -1250,7 +1250,7 @@ rndcolor()
 {
     int k = rn2(CLR_MAX);
 
-    return Hallucination ? hcolor((char *) 0)
+    return youAreHallucinating() ? hcolor((char *) 0)
                          : (k == NO_COLOR) ? "colorless"
                                            : c_obj_colors[k];
 }

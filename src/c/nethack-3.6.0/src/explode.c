@@ -91,7 +91,7 @@ int expltype;
 
     if (olet == MON_EXPLODE) {
         str = killer.name;
-        do_hallu = Hallucination && strstri(str, "'s explosion");
+        do_hallu = youAreHallucinating() && strstri(str, "'s explosion");
         adtyp = AD_PHYS;
     } else
         switch (abs(type) % 10) {

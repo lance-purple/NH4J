@@ -1782,7 +1782,7 @@ register struct attack *mattk;
             You("are covered with a seemingly harmless goo.");
             tmp = 0;
         } else {
-            if (Hallucination)
+            if (youAreHallucinating())
                 pline("Ouch!  You've been slimed!");
             else
                 You("are covered in slime!  It burns!");
@@ -1952,13 +1952,13 @@ boolean ufound;
                                       || dmgtype(youmonst.data, AD_STUN));
             if (!not_affected) {
                 boolean chg;
-                if (!Hallucination)
+                if (!youAreHallucinating())
                     You("are caught in a blast of kaleidoscopic light!");
                 /* avoid hallucinating the black light as it dies */
                 mondead(mtmp);    /* remove it from map now */
                 kill_agr = FALSE; /* already killed (maybe lifesaved) */
                 chg =
-                    make_hallucinated(HHallucination + (long) tmp, FALSE, 0L);
+                    make_hallucinated(yourIntrinsic(HALLUC) + (long) tmp, FALSE, 0L);
                 You("%s.", chg ? "are freaked out" : "seem unaffected");
             }
             break;
@@ -2002,7 +2002,7 @@ register struct attack *mattk;
        appropriate to what's currently being displayed, giving
        ordinary monsters a gaze attack when hero thinks he or she
        is facing a gazing creature, but let's not go that far...] */
-    if (Hallucination && rn2(4))
+    if (youAreHallucinating() && rn2(4))
         cancelled = TRUE;
 
     switch (mattk->adtyp) {
@@ -2176,7 +2176,7 @@ register struct attack *mattk;
         break;
     }
     if (react >= 0) {
-        if (Hallucination && rn2(3))
+        if (youAreHallucinating() && rn2(3))
             react = rn2(SIZE(reactions));
         /* cancelled/hallucinatory feedback; monster might look "confused",
            "stunned",&c but we don't actually set corresponding attribute */

@@ -249,7 +249,7 @@ register struct obj *obj;
         There("is %s flash as %s %s the altar.",
               an(hcolor(obj->blessed ? NH_AMBER : NH_BLACK)), doname(obj),
               otense(obj, "hit"));
-        if (!Hallucination)
+        if (!youAreHallucinating())
             obj->bknown = 1;
     } else {
         pline("%s %s on the altar.", Doname2(obj), otense(obj, "land"));
@@ -362,7 +362,7 @@ register struct obj *obj;
         break;
     case RIN_AGGRAVATE_MONSTER:
         pline("Several %s buzz angrily around the sink.",
-              Hallucination ? makeplural(rndmonnam(NULL)) : "flies");
+              youAreHallucinating() ? makeplural(rndmonnam(NULL)) : "flies");
         break;
     case RIN_SHOCK_RESISTANCE:
         pline("Static electricity surrounds the sink.");
@@ -429,7 +429,7 @@ register struct obj *obj;
             break;
         case RIN_SEE_INVISIBLE:
             You_see("some %s in the sink.",
-                    Hallucination ? "oxygen molecules" : "air");
+                    youAreHallucinating() ? "oxygen molecules" : "air");
             break;
         case RIN_STEALTH:
             pline_The("sink seems to blend into the floor for a moment.");
@@ -1455,7 +1455,7 @@ boolean at_stairs, falling, portal;
         char buf[BUFSZ];
         int which = rn2(4);
 
-        if (Hallucination)
+        if (youAreHallucinating())
             mesg = halu_fam_msgs[which];
         else
             mesg = fam_msgs[which];

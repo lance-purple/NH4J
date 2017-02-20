@@ -100,7 +100,7 @@ register struct monst *mon;
         return;
     }
 
-    if (canseemon(mon) && !Hallucination)
+    if (canseemon(mon) && !youAreHallucinating())
         pline("%s changes into a %s.", Monnam(mon),
               is_human(&mons[pm]) ? "human" : mons[pm].mname + 4);
 

@@ -475,7 +475,7 @@ int trouble;
         break;
     case TROUBLE_POISONED:
         /* override Fixed_abil; ignore items which confer that */
-        if (Hallucination)
+        if (youAreHallucinating())
             pline("There's a tiger in your tank.");
         else
             You_feel("in good health again.");
@@ -643,7 +643,7 @@ aligntyp resp_god;
     case 0:
     case 1:
         You_feel("that %s is %s.", align_gname(resp_god),
-                 Hallucination ? "bummed" : "displeased");
+                 youAreHallucinating() ? "bummed" : "displeased");
         break;
     case 2:
     case 3:
@@ -876,10 +876,10 @@ aligntyp g_align;
 
     You_feel("that %s is %s.", align_gname(g_align),
              (currentAlignmentRecord() >= DEVOUT)
-                 ? Hallucination ? "pleased as punch" : "well-pleased"
+                 ? youAreHallucinating() ? "pleased as punch" : "well-pleased"
                  : (currentAlignmentRecord() >= STRIDENT)
-                       ? Hallucination ? "ticklish" : "pleased"
-                       : Hallucination ? "full" : "satisfied");
+                       ? youAreHallucinating() ? "ticklish" : "pleased"
+                       : youAreHallucinating() ? "full" : "satisfied");
 
     /* not your deity */
     if (on_altar() && p_aligntyp != currentAlignmentType()) {
@@ -1171,7 +1171,7 @@ boolean bless_water;
 {
     register struct obj *otmp;
     register long changed = 0;
-    boolean other = FALSE, bc_known = !(youCannotSee() || Hallucination);
+    boolean other = FALSE, bc_known = !(youCannotSee() || youAreHallucinating());
 
     for (otmp = level.objects[currentX()][currentY()]; otmp; otmp = otmp->nexthere) {
         /* turn water into (un)holy water */
@@ -1233,7 +1233,7 @@ STATIC_OVL void
 consume_offering(otmp)
 register struct obj *otmp;
 {
-    if (Hallucination)
+    if (youAreHallucinating())
         switch (rn2(3)) {
         case 0:
             Your("sacrifice sprouts wings and a propeller and roars away!");
@@ -1442,7 +1442,7 @@ dosacrifice()
                 gods_upset(A_NONE);
             else
                 You_feel("%s.",
-                         Hallucination
+                         youAreHallucinating()
                             ? "homesick"
                             /* if on track, give a big hint */
                             : (altaralign == currentAlignmentType())
@@ -1509,7 +1509,7 @@ dosacrifice()
         You_hear("a nearby thunderclap.");
         if (!otmp->known) {
             You("realize you have made a %s.",
-                Hallucination ? "boo-boo" : "mistake");
+                youAreHallucinating() ? "boo-boo" : "mistake");
             otmp->known = TRUE;
             change_luck(-1);
             return 1;
@@ -1629,20 +1629,20 @@ dosacrifice()
             if (divineWrath() != saved_anger) {
                 if (divineWrath()) {
                     pline("%s seems %s.", u_gname(),
-                          Hallucination ? "groovy" : "slightly mollified");
+                          youAreHallucinating() ? "groovy" : "slightly mollified");
 
                     if (currentLuck() < 0)
                         change_luck(1);
                 } else {
                     pline("%s seems %s.", u_gname(),
-                          Hallucination ? "cosmic (not a new fact)"
+                          youAreHallucinating() ? "cosmic (not a new fact)"
                                         : "mollified");
 
                     if (currentLuck() < 0)
                         setCurrentLuck(0);
                 }
             } else { /* not satisfied yet */
-                if (Hallucination)
+                if (youAreHallucinating())
                     pline_The("gods seem tall.");
                 else
                     You("have a feeling of inadequacy.");
@@ -1661,14 +1661,14 @@ dosacrifice()
                 setTimeToNextBlessing(0);
             if (timeToNextBlessing() != saved_cnt) {
                 if (timeToNextBlessing()) {
-                    if (Hallucination)
+                    if (youAreHallucinating())
                         You("realize that the gods are not like you and I.");
                     else
                         You("have a hopeful feeling.");
                     if (currentLuck() < 0)
                         change_luck(1);
                 } else {
-                    if (Hallucination)
+                    if (youAreHallucinating())
                         pline("Overall, there is a smell of fried onions.");
                     else
                         You("have a feeling of reconciliation.");
@@ -1699,7 +1699,7 @@ dosacrifice()
                     exercise(A_WIS, TRUE);
                     /* make sure we can use this weapon */
                     unrestrict_weapon_skill(weapon_type(otmp));
-                    if (!Hallucination && youCanSee()) {
+                    if (!youAreHallucinating() && youCanSee()) {
                         otmp->dknown = 1;
                         makeknown(otmp->otyp);
                         discover_artifact(otmp->oartifact);
@@ -1715,7 +1715,7 @@ dosacrifice()
                     You("think %s brushed your %s.", something,
                         body_part(FOOT));
                 else
-                    You(Hallucination
+                    You(youAreHallucinating()
                     ? "see crabgrass at your %s.  A funny thing in a dungeon."
                             : "glimpse a four-leaf clover at your %s.",
                         makeplural(body_part(FOOT)));
@@ -2056,7 +2056,7 @@ aligntyp alignment;
     const char *gnam = NULL;
     int which;
 
-    if (!Hallucination)
+    if (!youAreHallucinating())
         return align_gname(alignment);
 
     /* The priest may not have initialized god names. If this is the

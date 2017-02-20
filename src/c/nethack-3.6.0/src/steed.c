@@ -192,7 +192,7 @@ boolean force;      /* Quietly force this animal */
     }
 
     /* Is the player in the right form? */
-    if (Hallucination && !force) {
+    if (youAreHallucinating() && !force) {
         pline("Maybe you should find a designated driver.");
         return (FALSE);
     }
@@ -512,7 +512,7 @@ int reason; /* Player was thrown off etc. */
         if (!has_mname(mtmp)) {
             pline("You've been through the dungeon on %s with no name.",
                   an(mtmp->data->mname));
-            if (Hallucination)
+            if (youAreHallucinating())
                 pline("It felt good to get out of the rain.");
         } else
             You("dismount %s.", mon_nam(mtmp));

@@ -500,7 +500,7 @@ xchar x, y;
         if (!trap->tseen)
             find_trap(trap);
         You_cant("kick %s that's in a %s!", something,
-                 Hallucination ? "tizzy" : (trap->ttyp == WEB) ? "web"
+                 youAreHallucinating() ? "tizzy" : (trap->ttyp == WEB) ? "web"
                                                                : "pit");
         return 1;
     }

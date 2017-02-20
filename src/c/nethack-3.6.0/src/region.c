@@ -832,7 +832,7 @@ genericptr_t p2;
     if (p2 == (genericptr_t) 0) { /* That means the player */
         if (youCanSee())
             You("bump into %s. Ouch!",
-                Hallucination ? "an invisible tree"
+                youAreHallucinating() ? "an invisible tree"
                               : "some kind of invisible wall");
         else
             pline("Ouch!");

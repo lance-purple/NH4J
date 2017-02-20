@@ -379,7 +379,7 @@ register struct edog *edog;
                 pline("%s starves.", Monnam(mtmp));
             else
                 You_feel("%s for a moment.",
-                         Hallucination ? "bummed" : "sad");
+                         youAreHallucinating() ? "bummed" : "sad");
             mondied(mtmp);
             return  TRUE;
         }

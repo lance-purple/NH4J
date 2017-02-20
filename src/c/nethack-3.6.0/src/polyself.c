@@ -1295,7 +1295,7 @@ dogaze()
     if (youCannotSee()) {
         You_cant("see anything to gaze at.");
         return 0;
-    } else if (Hallucination) {
+    } else if (youAreHallucinating()) {
         You_cant("gaze at anything you can see.");
         return 0;
     }

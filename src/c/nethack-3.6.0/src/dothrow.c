@@ -986,7 +986,7 @@ boolean
     register struct monst *mon;
     register int range, urange;
     boolean crossbowing, impaired = (youAreConfused() || youAreStunned() || youCannotSee()
-                                     || Hallucination || Fumbling);
+                                     || youAreHallucinating() || Fumbling);
 
     notonhead = FALSE; /* reset potentially stale value */
     if ((obj->cursed || obj->greased) && (directionX() || directionY()) && !rn2(7)) {
@@ -1761,7 +1761,7 @@ xchar x, y;
         && (mtmp = makemon(&mons[rn2(3) ? PM_HOMUNCULUS : PM_IMP], x, y,
                            NO_MM_FLAGS)) != 0) {
         if (canspotmon(mtmp))
-            pline("%s is released!", Hallucination
+            pline("%s is released!", youAreHallucinating()
                                          ? An(rndmonnam(NULL))
                                          : "The picture-painting demon");
         mtmp->mpeaceful = !obj->cursed;

@@ -193,7 +193,7 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
         wakeup(mtmp);
     }
 
-    if (flags.confirm && mtmp->mpeaceful && !youAreConfused() && !Hallucination
+    if (flags.confirm && mtmp->mpeaceful && !youAreConfused() && !youAreHallucinating()
         && !youAreStunned()) {
         /* Intelligent chaotic weapons (Stormbringer) want blood */
         if (wep && wep->oartifact == ART_STORMBRINGER) {
@@ -2441,7 +2441,7 @@ boolean wep_was_destroyed;
                     } else if (Free_action) {
                         You("momentarily stiffen under %s gaze!",
                             s_suffix(mon_nam(mon)));
-                    } else if (Hallucination && rn2(4)) {
+                    } else if (youAreHallucinating() && rn2(4)) {
                         pline("%s looks %s%s.", Monnam(mon),
                               !rn2(2) ? "" : "rather ",
                               !rn2(2) ? "numb" : "stupified");

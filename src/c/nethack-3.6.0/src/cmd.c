@@ -1696,7 +1696,7 @@ int final;
         you_are("stunned", "");
     if (youAreConfused())
         you_are("confused", "");
-    if (Hallucination)
+    if (youAreHallucinating())
         you_are("hallucinating", "");
     if (youCannotSee()) {
         /* from_what() (currently wizard-mode only) checks !haseyes()

@@ -2264,7 +2264,7 @@ cleanup:
         adjalign((int) (ALIGNLIM / 4));
     } else if (mdat->msound == MS_GUARDIAN) { /* Bad */
         adjalign(-(int) (ALIGNLIM / 8));
-        if (!Hallucination)
+        if (!youAreHallucinating())
             pline("That was probably a bad idea...");
         else
             pline("Whoopsie-daisy!");
@@ -2278,7 +2278,7 @@ cleanup:
     } else if (mtmp->mtame) {
         adjalign(-15); /* bad!! */
         /* your god is mighty displeased... */
-        if (!Hallucination)
+        if (!youAreHallucinating())
             You_hear("the rumble of distant thunder...");
         else
             You_hear("the studio audience applaud!");
@@ -2489,7 +2489,7 @@ struct monst *mtmp;
                     ++got_mad;
             }
         }
-        if (got_mad && !Hallucination)
+        if (got_mad && !youAreHallucinating())
             pline_The("%s appear%s to be angry too...",
                       got_mad == 1 ? q_guardian->mname
                                    : makeplural(q_guardian->mname),

@@ -820,7 +820,7 @@ struct monst *mtmp;
 {
     const char *shknm = ESHK(mtmp)->shknam;
 
-    if (Hallucination && !program_state.gameover) {
+    if (youAreHallucinating() && !program_state.gameover) {
         const char *const *nlp;
         int num;
 
@@ -861,7 +861,7 @@ boolean override_hallucination;
 {
     const char *shknm;
 
-    if (Hallucination && !override_hallucination)
+    if (youAreHallucinating() && !override_hallucination)
         return FALSE;
     if (!shkp->isshk)
         return FALSE;

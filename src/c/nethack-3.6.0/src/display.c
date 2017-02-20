@@ -247,7 +247,7 @@ register int show;
         /* MRKR: While hallucinating, statues are seen as random monsters */
         /*       but remembered as random objects.                        */
 
-        if (Hallucination && obj->otyp == STATUE) {
+        if (youAreHallucinating() && obj->otyp == STATUE) {
             levl[x][y].glyph = random_obj_to_glyph();
         } else {
             levl[x][y].glyph = glyph;
@@ -437,7 +437,7 @@ xchar worm_tail;            /* mon is actually a worm tail */
                 num = detected_monnum_to_glyph(what_mon(PM_LONG_WORM_TAIL));
             else
                 num = detected_mon_to_glyph(mon);
-        } else if (mon->mtame && !Hallucination) {
+        } else if (mon->mtame && !youAreHallucinating()) {
             if (worm_tail)
                 num = petnum_to_glyph(PM_LONG_WORM_TAIL);
             else
@@ -474,7 +474,7 @@ register struct monst *mon;
             wl = WARNCOUNT - 1;
         /* 3.4.1: this really ought to be rn2(WARNCOUNT), but value "0"
            isn't handled correctly by the what_is routine so avoid it */
-        if (Hallucination)
+        if (youAreHallucinating())
             wl = rn1(WARNCOUNT - 1, 1);
         glyph = warning_to_glyph(wl);
     } else if (MATCH_WARN_OF_MON(mon)) {

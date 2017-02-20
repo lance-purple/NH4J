@@ -202,7 +202,7 @@ int rx, ry, *resp;
     if (!corpse && !statue) {
         ; /* nothing to do */
 
-    } else if (Hallucination) {
+    } else if (youAreHallucinating()) {
         if (!corpse) {
             /* it's a statue */
             Strcpy(buf, "You're both stoned");
@@ -376,7 +376,7 @@ register struct obj *obj;
             case M_AP_OBJECT:
                 what = simple_typename(mtmp->mappearance);
                 break;
-            case M_AP_MONSTER: /* ignore Hallucination here */
+            case M_AP_MONSTER: /* ignore hallucination here */
                 what = mons[mtmp->mappearance].mname;
                 break;
             case M_AP_FURNITURE:
@@ -451,7 +451,7 @@ struct obj *obj;
 
         /* it's magic!  it works underwater too (at a higher pitch) */
         You(whistle_str,
-            Hallucination ? "normal" : underwater() ? "strange, high-pitched"
+            youAreHallucinating() ? "normal" : underwater() ? "strange, high-pitched"
                                                   : "strange");
         for (mtmp = fmon; mtmp; mtmp = nextmon) {
             nextmon = mtmp->nmon; /* trap might kill mon */
@@ -801,11 +801,11 @@ struct obj *obj;
                 if (Free_action) {
                     You("stiffen momentarily under your gaze.");
                 } else {
-                    if (Hallucination)
+                    if (youAreHallucinating())
                         pline("Yow!  The %s stares back!", mirror);
                     else
                         pline("Yikes!  You've frozen yourself!");
-                    if (!Hallucination || !rn2(4)) {
+                    if (!youAreHallucinating() || !rn2(4)) {
                         nomul(-rnd(MAXULEV + 6 - currentExperienceLevel()));
                         multi_reason = "gazing into a mirror";
                     }
@@ -816,7 +816,7 @@ struct obj *obj;
             else if (currentMonsterNumber() == PM_UMBER_HULK) {
                 pline("Huh?  That doesn't look like you!");
                 make_confused(yourIntrinsic(CONFUSION) + d(3, 4), FALSE);
-            } else if (Hallucination)
+            } else if (youAreHallucinating())
                 You(look_str, hcolor((char *) 0));
             else if (youAreSick())
                 You(look_str, "peaked");
@@ -835,7 +835,7 @@ struct obj *obj;
     }
     if (underwater()) {
         if (useeit)
-            You(Hallucination ? "give the fish a chance to fix their makeup."
+            You(youAreHallucinating() ? "give the fish a chance to fix their makeup."
                               : "reflect the murky water.");
         return 1;
     }
@@ -1754,7 +1754,7 @@ struct obj *obj;
         case 2:
             if (!youAreConfused())
                 You("suddenly feel %s.",
-                    Hallucination ? "trippy" : "confused");
+                    youAreHallucinating() ? "trippy" : "confused");
             make_confused(yourIntrinsicTimeout(CONFUSION) + lcount, TRUE);
             break;
         case 3:
@@ -1793,7 +1793,7 @@ struct obj *obj;
         && !(swallowed()
              && attacktype_fordmg(u.ustuck->data, AT_ENGL, AD_BLND)))
         prop_trouble(BLINDED);
-    if (TimedTrouble(HHallucination))
+    if (TimedTrouble(yourIntrinsic(HALLUC)))
         prop_trouble(HALLUC);
     if (TimedTrouble(yourIntrinsic(VOMITING)))
         prop_trouble(VOMITING);
@@ -2203,7 +2203,7 @@ struct obj *tstone;
         && !obj_resists(obj, 80, 100)) {
         if (youCannotSee())
             pline("You feel something shatter.");
-        else if (Hallucination)
+        else if (youAreHallucinating())
             pline("Oh, wow, look at the pretty shards.");
         else
             pline("A sharp crack shatters %s%s.",
@@ -2215,7 +2215,7 @@ struct obj *tstone;
     if (youCannotSee()) {
         pline(scritch);
         return;
-    } else if (Hallucination) {
+    } else if (youAreHallucinating()) {
         pline("Oh wow, man: Fractals!");
         return;
     }
@@ -2897,7 +2897,7 @@ struct obj *obj;
         several = TRUE;
         obj = splitobj(obj, 1L);
     }
-    if (Hallucination)
+    if (youAreHallucinating())
         You("give yourself a facial.");
     else
         pline("You immerse your %s in %s%s.", body_part(FACE),
@@ -3578,7 +3578,7 @@ boolean is_horn;
         unfixable_trbl++;
     if (!is_horn || yourIntrinsicHasMask(SICK, ~TIMEOUT))
         unfixable_trbl++;
-    if (!is_horn || (HHallucination & ~TIMEOUT))
+    if (!is_horn || yourIntrinsicHasMask(HALLUC, ~TIMEOUT))
         unfixable_trbl++;
     if (!is_horn || yourIntrinsicHasMask(VOMITING, ~TIMEOUT))
         unfixable_trbl++;

@@ -438,7 +438,7 @@ int class;            /* an object class, 0 for all */
     if (sym && iflags.bouldersym && sym == iflags.bouldersym)
         boulder = ROCK_CLASS;
 
-    if (Hallucination || (youAreConfused() && class == SCROLL_CLASS))
+    if (youAreHallucinating() || (youAreConfused() && class == SCROLL_CLASS))
         Strcpy(stuff, something);
     else
         Strcpy(stuff, class ? def_oc_syms[class].name : "objects");
@@ -625,7 +625,7 @@ int mclass;                /* monster class, 0 for all */
 
     if (!mcnt) {
         if (otmp)
-            strange_feeling(otmp, Hallucination
+            strange_feeling(otmp, youAreHallucinating()
                                       ? "You get the heebie jeebies."
                                       : "You feel threatened.");
         return 1;
@@ -677,7 +677,7 @@ struct trap *trap;
 xchar x, y;
 int src_cursed;
 {
-    if (Hallucination || src_cursed) {
+    if (youAreHallucinating() || src_cursed) {
         struct obj obj; /* fake object */
 
         obj.oextra = (struct oextra *) 0;
@@ -938,7 +938,7 @@ struct obj **optr;
         case 4:
             pline("%s your mind!", Tobjnam(obj, "zap"));
             (void) make_hallucinated(
-                (HHallucination & TIMEOUT) + (long) rnd(100), FALSE, 0L);
+                yourIntrinsicTimeout(HALLUC) + (long) rnd(100), FALSE, 0L);
             break;
         case 5:
             pline("%s!", Tobjnam(obj, "explode"));
@@ -954,7 +954,7 @@ struct obj **optr;
         return;
     }
 
-    if (Hallucination) {
+    if (youAreHallucinating()) {
         if (!obj->spe) {
             pline("All you see is funky %s haze.", hcolor((char *) 0));
         } else {
@@ -1484,7 +1484,7 @@ reveal_terrain(full, which_subset)
 int full; /* wizard|explore modes allow player to request full map */
 int which_subset; /* when not full, whether to suppress objs and/or traps */
 {
-    if ((Hallucination || youAreStunned() || youAreConfused()) && !full) {
+    if ((youAreHallucinating() || youAreStunned() || youAreConfused()) && !full) {
         You("are too disoriented for this.");
     } else {
         int x, y, glyph, levl_glyph, default_glyph;

@@ -179,7 +179,7 @@ slime_dialogue()
                     pline(buf, hcolor(NH_GREEN));
             } else
                 pline(buf,
-                      an(Hallucination ? rndmonnam(NULL) : "green slime"));
+                      an(youAreHallucinating() ? rndmonnam(NULL) : "green slime"));
         } else
             pline1(buf);
     }
@@ -377,7 +377,7 @@ nh_timeout()
             case HALLUC:
                 setYourIntrinsicTimeout(HALLUC, 1L);
                 (void) make_hallucinated(0L, TRUE, 0L);
-                if (!Hallucination)
+                if (!youAreHallucinating())
                     stop_occupation();
                 break;
             case SLEEPY:
@@ -714,13 +714,13 @@ slip_or_trip()
         */
         what = (iflags.last_msg == PLNMSG_ONE_ITEM_HERE)
                 ? ((otmp->quan == 1L) ? "it"
-                      : Hallucination ? "they" : "them")
+                      : youAreHallucinating() ? "they" : "them")
                 : (otmp->dknown || youCanSee())
                       ? doname(otmp)
                       : ((otmp2 = sobj_at(ROCK, currentX(), currentY())) == 0
                              ? something
                              : (otmp2->quan == 1L ? "a rock" : "some rocks"));
-        if (Hallucination) {
+        if (youAreHallucinating()) {
             what = strcpy(buf, what);
             buf[0] = highc(buf[0]);
             pline("Egads!  %s bite%s your %s!", what,
@@ -747,11 +747,11 @@ slip_or_trip()
             switch (rn2(4)) {
             case 1:
                 You("trip over your own %s.",
-                    Hallucination ? "elbow" : makeplural(body_part(FOOT)));
+                    youAreHallucinating() ? "elbow" : makeplural(body_part(FOOT)));
                 break;
             case 2:
                 You("slip %s.",
-                    Hallucination ? "on a banana peel" : "and nearly fall");
+                    youAreHallucinating() ? "on a banana peel" : "and nearly fall");
                 break;
             case 3:
                 You("flounder.");
@@ -807,7 +807,7 @@ struct obj *obj;
     switch (obj->where) {
     case OBJ_INVENT:
         Your("lantern is getting dim.");
-        if (Hallucination)
+        if (youAreHallucinating())
             pline("Batteries have not been invented yet.");
         break;
     case OBJ_FLOOR:
@@ -1045,7 +1045,7 @@ long timeout;
                     }
 
                     /* post message */
-                    pline(Hallucination
+                    pline(youAreHallucinating()
                               ? (many ? "They shriek!" : "It shrieks!")
                               : youCannotSee() ? "" : (many ? "Their flames die."
                                                    : "Its flame dies."));

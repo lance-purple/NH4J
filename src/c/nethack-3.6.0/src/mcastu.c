@@ -84,7 +84,7 @@ int spellval;
     switch (spellval) {
     case 24:
     case 23:
-        if (youResistMagic() || Hallucination)
+        if (youResistMagic() || youAreHallucinating())
             return MGC_PSI_BOLT;
     /* else FALL THROUGH */
     case 22:
@@ -358,7 +358,7 @@ int spellnum;
         if (nonliving(youmonst.data) || is_demon(youmonst.data)) {
             You("seem no deader than before.");
         } else if (!youResistMagic() && rn2(mtmp->m_lev) > 12) {
-            if (Hallucination) {
+            if (youAreHallucinating()) {
                 You("have an out of body experience.");
             } else {
                 killer.format = KILLED_BY_AN;
@@ -680,7 +680,7 @@ int spellnum;
             if (Half_spell_damage)
                 dmg = (dmg + 1) / 2;
             make_confused(yourIntrinsic(CONFUSION) + dmg, TRUE);
-            if (Hallucination)
+            if (youAreHallucinating())
                 You_feel("%s!", oldprop ? "trippier" : "trippy");
             else
                 You_feel("%sconfused!", oldprop ? "more " : "");

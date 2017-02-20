@@ -101,7 +101,7 @@ register struct monst *mtmp;
 
     /* a similar check is in monster_nearby() in hack.c */
     /* check whether hero notices monster and stops current activity */
-    if (occupation && !rd && !youAreConfused() && (!mtmp->mpeaceful || Hallucination)
+    if (occupation && !rd && !youAreConfused() && (!mtmp->mpeaceful || youAreHallucinating())
         /* it's close enough to be a threat */
         && distanceSquaredToYou(x, y) <= (BOLT_LIM + 1) * (BOLT_LIM + 1)
         /* and either couldn't see it before, or it was too far away */
@@ -358,7 +358,7 @@ register struct monst *mtmp;
     quest_stat_check(mtmp);
 
     if (!mtmp->mcanmove || (mtmp->mstrategy & STRAT_WAITMASK)) {
-        if (Hallucination)
+        if (youAreHallucinating())
             newsym(mtmp->mx, mtmp->my);
         if (mtmp->mcanmove && (mtmp->mstrategy & STRAT_CLOSE)
             && !mtmp->msleeping && monnear(mtmp, currentX(), currentY()))
@@ -368,7 +368,7 @@ register struct monst *mtmp;
 
     /* there is a chance we will wake it */
     if (mtmp->msleeping && !disturb(mtmp)) {
-        if (Hallucination)
+        if (youAreHallucinating())
             newsym(mtmp->mx, mtmp->my);
         return 0;
     }
@@ -576,7 +576,7 @@ toofar:
             /* During hallucination, monster appearance should
              * still change - even if it doesn't move.
              */
-            if (Hallucination)
+            if (youAreHallucinating())
                 newsym(mtmp->mx, mtmp->my);
             break;
         case 1: /* monster moved */
