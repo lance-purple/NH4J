@@ -392,7 +392,7 @@ boolean resuming;
                 see_traps();
                 if (swallowed())
                     showHeroBeingSwallowed(0);
-            } else if (Unblind_telepat) {
+            } else if (youHaveTelepathyWhenNotBlind()) {
                 see_monsters();
             } else if (Warning || Warn_of_mon)
                 see_monsters();

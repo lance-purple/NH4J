@@ -542,9 +542,9 @@ long wp_mask;
     }
     if (spfx & SPFX_ESP) {
         if (on)
-            ETelepat |= wp_mask;
+            setYourExtrinsicMask(TELEPAT, wp_mask);
         else
-            ETelepat &= ~wp_mask;
+            unsetYourExtrinsicMask(TELEPAT, wp_mask);
         see_monsters();
     }
     if (spfx & SPFX_STLTH) {

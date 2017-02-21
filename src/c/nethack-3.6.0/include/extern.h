@@ -172,6 +172,10 @@ E boolean FDECL(youHaveWoundedLegs, ());
 E boolean FDECL(youAreSleepy, ());
 E boolean FDECL(youHunger, ());
 
+E boolean FDECL(youCanSeeInvisible, ());
+E boolean FDECL(youHaveTelepathyWhenBlind, ());
+E boolean FDECL(youHaveTelepathyWhenNotBlind, ());
+
 /* ### ball.c ### */
 
 E void FDECL(ballrelease, (BOOLEAN_P));

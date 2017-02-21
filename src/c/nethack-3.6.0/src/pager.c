@@ -283,7 +283,7 @@ char *buf, *monbuf;
 
             if (Infravision)
                 how |= 1;
-            if (Unblind_telepat)
+            if (youHaveTelepathyWhenNotBlind())
                 how |= 2;
             if (Detect_monsters)
                 how |= 4;

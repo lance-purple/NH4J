@@ -172,7 +172,7 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
             seemimic(mtmp);
             return FALSE;
         }
-        if (!((youCannotSee() ? Blind_telepat : Unblind_telepat) || Detect_monsters)) {
+        if (!((youCannotSee() ? youHaveTelepathyWhenBlind() : youHaveTelepathyWhenNotBlind()) || Detect_monsters)) {
             struct obj *obj;
 
             if (youCannotSee() || (is_pool(mtmp->mx, mtmp->my) && !underwater()))
@@ -1962,7 +1962,7 @@ register struct attack *mattk;
                         /* setting afternmv = end_engulf is tempting,
                          * but will cause problems if the player is
                          * attacked (which uses his real location) or
-                         * if his See_invisible wears off
+                         * if his youCanSeeInvisible() wears off
                          */
                         You("digest %s.", mon_nam(mdef));
                         if (Slow_digestion)
@@ -2600,7 +2600,7 @@ struct monst *mtmp;
         u.ustuck = mtmp;
 
     if (youCannotSee()) {
-        if (!Blind_telepat)
+        if (!youHaveTelepathyWhenBlind())
             what = generic; /* with default fmt */
         else if (mtmp->m_ap_type == M_AP_MONSTER)
             what = a_monnam(mtmp); /* differs from what was sensed */
@@ -2615,7 +2615,7 @@ struct monst *mtmp;
 
         /* cloned Wiz starts out mimicking some other monster and
            might make himself invisible before being revealed */
-        if (mtmp->minvis && !See_invisible)
+        if (mtmp->minvis && !youCanSeeInvisible())
             what = generic;
         else
             what = a_monnam(mtmp);

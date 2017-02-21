@@ -231,7 +231,7 @@ dosit()
                     rndcurse();
                 break;
             case 10:
-                if (currentLuckWithBonus() < 0 || (HSee_invisible & INTRINSIC)) {
+                if (currentLuckWithBonus() < 0 || yourIntrinsicHasMask(SEE_INVIS, INTRINSIC)) {
                     if (level.flags.nommap) {
                         pline("A terrible drone fills your head!");
                         make_confused(yourIntrinsicTimeout(CONFUSION) + (long) rnd(30),
@@ -242,7 +242,7 @@ dosit()
                     }
                 } else {
                     Your("vision becomes clear.");
-                    HSee_invisible |= FROMOUTSIDE;
+                    setYourIntrinsicMask(SEE_INVIS, FROMOUTSIDE);
                     newsym(currentX(), currentY());
                 }
                 break;
@@ -409,9 +409,9 @@ attrcurse()
             break;
         }
     case 4:
-        if (HTelepat & INTRINSIC) {
-            HTelepat &= ~INTRINSIC;
-            if (youCannotSee() && !Blind_telepat)
+        if (yourIntrinsicHasMask(TELEPAT, INTRINSIC)) {
+            unsetYourIntrinsicMask(TELEPAT, INTRINSIC);
+            if (youCannotSee() && !youHaveTelepathyWhenBlind())
                 see_monsters(); /* Can't sense mons anymore! */
             Your("senses fail!");
             break;
@@ -429,8 +429,8 @@ attrcurse()
             break;
         }
     case 7:
-        if (HSee_invisible & INTRINSIC) {
-            HSee_invisible &= ~INTRINSIC;
+        if (yourIntrinsicHasMask(SEE_INVIS, INTRINSIC)) {
+            unsetYourIntrinsicMask(SEE_INVIS, INTRINSIC);
             You("%s!", youAreHallucinating() ? "tawt you taw a puttie tat"
                                      : "thought you saw something");
             break;

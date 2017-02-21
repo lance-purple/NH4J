@@ -1502,4 +1502,16 @@ extern boolean youHunger() {
  return (yourIntrinsic(HUNGER) || yourExtrinsic(HUNGER));
 }
 
+extern boolean youCanSeeInvisible() {
+ return (yourIntrinsic(SEE_INVIS) || yourExtrinsic(SEE_INVIS));
+}
+
+extern boolean youHaveTelepathyWhenBlind() {
+ return (yourIntrinsic(TELEPAT) || yourExtrinsic(TELEPAT));
+}
+
+extern boolean youHaveTelepathyWhenNotBlind() {
+ return (yourExtrinsic(TELEPAT));
+}
+
 /*attrib.c*/

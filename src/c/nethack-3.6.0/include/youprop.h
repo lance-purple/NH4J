@@ -23,14 +23,6 @@
 /*** Troubles ***/
 
 /*** Vision and senses ***/
-#define HSee_invisible u.uprops[SEE_INVIS].intrinsic
-#define ESee_invisible u.uprops[SEE_INVIS].extrinsic
-#define See_invisible (yourIntrinsic(SEE_INVIS) || yourExtrinsic(SEE_INVIS))
-
-#define HTelepat u.uprops[TELEPAT].intrinsic
-#define ETelepat u.uprops[TELEPAT].extrinsic
-#define Blind_telepat (yourIntrinsic(TELEPAT) || yourExtrinsic(TELEPAT))
-#define Unblind_telepat (ETelepat)
 
 #define HWarning u.uprops[WARNING].intrinsic
 #define EWarning u.uprops[WARNING].extrinsic
@@ -68,7 +60,7 @@
 #define EInvis u.uprops[INVIS].extrinsic
 #define BInvis u.uprops[INVIS].blocked
 #define Invis ((yourIntrinsic(INVIS) || yourExtrinsic(INVIS)) && !BInvis)
-#define Invisible (Invis && !See_invisible)
+#define Invisible (Invis && !youCanSeeInvisible())
 /* Note: invisibility also hides inventory and steed */
 
 #define EDisplaced u.uprops[DISPLACED].extrinsic

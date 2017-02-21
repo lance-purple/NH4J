@@ -1680,14 +1680,14 @@ struct monst *mtmp;
          */
         nomore(MUSE_WAN_MAKE_INVISIBLE);
         if (obj->otyp == WAN_MAKE_INVISIBLE && obj->spe > 0 && !mtmp->minvis
-            && !mtmp->invis_blkd && (!mtmp->mpeaceful || See_invisible)
+            && !mtmp->invis_blkd && (!mtmp->mpeaceful || youCanSeeInvisible())
             && (!attacktype(mtmp->data, AT_GAZE) || mtmp->mcan)) {
             m.misc = obj;
             m.has_misc = MUSE_WAN_MAKE_INVISIBLE;
         }
         nomore(MUSE_POT_INVISIBILITY);
         if (obj->otyp == POT_INVISIBILITY && !mtmp->minvis
-            && !mtmp->invis_blkd && (!mtmp->mpeaceful || See_invisible)
+            && !mtmp->invis_blkd && (!mtmp->mpeaceful || youCanSeeInvisible())
             && (!attacktype(mtmp->data, AT_GAZE) || mtmp->mcan)) {
             m.misc = obj;
             m.has_misc = MUSE_POT_INVISIBILITY;
@@ -1995,7 +1995,7 @@ struct monst *mtmp;
             return 0;
         return rn2(6) ? POT_SPEED : WAN_SPEED_MONSTER;
     case 1:
-        if (mtmp->mpeaceful && !See_invisible)
+        if (mtmp->mpeaceful && !youCanSeeInvisible())
             return 0;
         return rn2(6) ? POT_INVISIBILITY : WAN_MAKE_INVISIBLE;
     case 2:

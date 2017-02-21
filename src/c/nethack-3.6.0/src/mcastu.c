@@ -441,7 +441,7 @@ int spellnum;
         if (!mtmp->minvis && !mtmp->invis_blkd) {
             if (canseemon(mtmp))
                 pline("%s suddenly %s!", Monnam(mtmp),
-                      !See_invisible ? "disappears" : "becomes transparent");
+                      !youCanSeeInvisible() ? "disappears" : "becomes transparent");
             mon_set_minvis(mtmp);
             dmg = 0;
         } else
@@ -784,7 +784,7 @@ int spellnum;
            same as when monsters drink potions of invisibility.  This doesn't
            really make a lot of sense, but lets the player avoid hitting
            peaceful monsters by mistake */
-        if (mtmp->mpeaceful && !See_invisible && spellnum == MGC_DISAPPEAR)
+        if (mtmp->mpeaceful && !youCanSeeInvisible() && spellnum == MGC_DISAPPEAR)
             return TRUE;
         /* healing when already healed */
         if (mtmp->mhp == mtmp->mhpmax && spellnum == MGC_CURE_SELF)

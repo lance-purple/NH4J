@@ -176,7 +176,7 @@ register struct rm *lev;
             return 1;
 
     /* Mimics mimicing a door or boulder block light. */
-    if ((mon = m_at(x, y)) && (!mon->minvis || See_invisible)
+    if ((mon = m_at(x, y)) && (!mon->minvis || youCanSeeInvisible())
         && (is_door_mappear(mon) || is_obj_mappear(mon,BOULDER)))
         return 1;
 
@@ -2806,7 +2806,7 @@ struct monst *mon;
     if (useemon && mon->minvis)
         how_seen |= MONSEEN_SEEINVIS;
     /* infravision */
-    if ((!mon->minvis || See_invisible) && see_with_infrared(mon))
+    if ((!mon->minvis || youCanSeeInvisible()) && see_with_infrared(mon))
         how_seen |= MONSEEN_INFRAVIS;
     /* telepathy */
     if (tp_sensemon(mon))

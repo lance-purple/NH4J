@@ -2237,10 +2237,10 @@ cleanup:
     if (is_human(mdat) && (!always_hostile(mdat) && mtmp->malign <= 0)
         && (mndx < PM_ARCHEOLOGIST || mndx > PM_WIZARD)
         && currentAlignmentType() != A_CHAOTIC) {
-        HTelepat &= ~INTRINSIC;
+        unsetYourIntrinsicMask(TELEPAT, INTRINSIC);
         change_luck(-2);
         You("murderer!");
-        if (youCannotSee() && !Blind_telepat)
+        if (youCannotSee() && !youHaveTelepathyWhenBlind())
             see_monsters(); /* Can't sense monsters any more. */
     }
     if ((mtmp->mpeaceful && !rn2(2)) || mtmp->mtame)

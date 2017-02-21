@@ -2453,7 +2453,7 @@ lookaround()
 
             if ((mtmp = m_at(x, y)) && mtmp->m_ap_type != M_AP_FURNITURE
                 && mtmp->m_ap_type != M_AP_OBJECT
-                && (!mtmp->minvis || See_invisible) && !mtmp->mundetected) {
+                && (!mtmp->minvis || youCanSeeInvisible()) && !mtmp->mundetected) {
                 if ((context.run != 1 && !mtmp->mtame)
                     || (x == currentX() + directionX() && y == currentY() + directionY()))
                     goto stop;

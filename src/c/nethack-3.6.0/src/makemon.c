@@ -2024,7 +2024,7 @@ register struct monst *mtmp;
             appear = areYouOnRogueLevel() ? S_hwall : S_hcdoor;
         else
             appear = areYouOnRogueLevel() ? S_vwall : S_vcdoor;
-        if (!mtmp->minvis || See_invisible)
+        if (!mtmp->minvis || youCanSeeInvisible())
             block_point(mx, my); /* vision */
     } else if (level.flags.is_maze_lev && !areYouOnASokobanLevel() && rn2(2)) {
         ap_type = M_AP_OBJECT;
@@ -2032,7 +2032,7 @@ register struct monst *mtmp;
     } else if (roomno < 0 && !t_at(mx, my)) {
         ap_type = M_AP_OBJECT;
         appear = BOULDER;
-        if (!mtmp->minvis || See_invisible)
+        if (!mtmp->minvis || youCanSeeInvisible())
             block_point(mx, my); /* vision */
     } else if (rt == ZOO || rt == VAULT) {
         ap_type = M_AP_OBJECT;

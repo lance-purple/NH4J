@@ -861,7 +861,7 @@ register struct attack *mattk;
      */
     if (mtmp->mundetected && (hides_under(mdat) || mdat->mlet == S_EEL)) {
         mtmp->mundetected = 0;
-        if (!(youCannotSee() ? Blind_telepat : Unblind_telepat)) {
+        if (!(youCannotSee() ? youHaveTelepathyWhenBlind() : youHaveTelepathyWhenNotBlind())) {
             struct obj *obj;
             const char *what;
 
@@ -2231,7 +2231,7 @@ struct attack *mattk;
         genagr = gender(magr);
     }
     if (mdef == &youmonst) {
-        defperc = (See_invisible != 0);
+        defperc = (youCanSeeInvisible() != 0);
         gendef = poly_gender();
     } else {
         defperc = perceives(mdef->data);

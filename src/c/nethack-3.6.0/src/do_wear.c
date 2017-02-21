@@ -132,8 +132,8 @@ boolean on;
             /* actively sensing nearby monsters via telepathy or extended
                monster detection overrides vision considerations because
                hero also senses self in this situation */
-            || (Unblind_telepat
-                || (Blind_telepat && youCannotSee())
+            || (youHaveTelepathyWhenNotBlind()
+                || (youHaveTelepathyWhenBlind() && youCannotSee())
                 || Detect_monsters))) {
         makeknown(obj->otyp);
 
@@ -287,7 +287,7 @@ Cloak_on(VOID_ARGS)
         /* Note: it's already being worn, so we have to cheat here. */
         if ((HInvis || EInvis) && youCanSee()) {
             newsym(currentX(), currentY());
-            You("can %s!", See_invisible ? "no longer see through yourself"
+            You("can %s!", youCanSeeInvisible() ? "no longer see through yourself"
                                          : see_yourself);
         }
         break;
@@ -298,7 +298,7 @@ Cloak_on(VOID_ARGS)
             makeknown(uarmc->otyp);
             newsym(currentX(), currentY());
             pline("Suddenly you can%s yourself.",
-                  See_invisible ? " see through" : "not see");
+                  youCanSeeInvisible() ? " see through" : "not see");
         }
         break;
     case OILSKIN_CLOAK:
@@ -342,7 +342,7 @@ Cloak_off(VOID_ARGS)
     case MUMMY_WRAPPING:
         if (Invis && youCanSee()) {
             newsym(currentX(), currentY());
-            You("can %s.", See_invisible ? "see through yourself"
+            You("can %s.", youCanSeeInvisible() ? "see through yourself"
                                          : "no longer see yourself");
         }
         break;
@@ -351,7 +351,7 @@ Cloak_off(VOID_ARGS)
             makeknown(CLOAK_OF_INVISIBILITY);
             newsym(currentX(), currentY());
             pline("Suddenly you can %s.",
-                  See_invisible ? "no longer see through yourself"
+                  youCanSeeInvisible() ? "no longer see through yourself"
                                 : see_yourself);
         }
         break;
@@ -890,7 +890,7 @@ register struct obj *obj;
         set_mimic_blocking(); /* do special mimic handling */
         see_monsters();
 
-        if (Invis && !oldprop && !HSee_invisible && youCanSee()) {
+        if (Invis && !oldprop && !yourIntrinsic(SEE_INVIS) && youCanSee()) {
             newsym(currentX(), currentY());
             pline("Suddenly you are transparent, but there!");
             learnring(obj, TRUE);
@@ -998,7 +998,7 @@ boolean gone;
         break;
     case RIN_SEE_INVISIBLE:
         /* Make invisible monsters go away */
-        if (!See_invisible) {
+        if (!youCanSeeInvisible()) {
             set_mimic_blocking(); /* do special mimic handling */
             see_monsters();
         }
@@ -1013,7 +1013,7 @@ boolean gone;
         if (!Invis && !BInvis && youCanSee()) {
             newsym(currentX(), currentY());
             Your("body seems to unfade%s.",
-                 See_invisible ? " completely" : "..");
+                 youCanSeeInvisible() ? " completely" : "..");
             learnring(obj, TRUE);
         }
         break;
@@ -1113,7 +1113,7 @@ register struct obj *otmp;
     }
     if (changed) {
         /* blindness has just been toggled */
-        if (Blind_telepat || Infravision)
+        if (youHaveTelepathyWhenBlind() || Infravision)
             see_monsters();
         vision_full_recalc = 1; /* recalc vision limits */
         if (youCanSee())
@@ -1158,7 +1158,7 @@ register struct obj *otmp;
     }
     if (changed) {
         /* blindness has just been toggled */
-        if (Blind_telepat || Infravision)
+        if (youHaveTelepathyWhenBlind() || Infravision)
             see_monsters();
         vision_full_recalc = 1; /* recalc vision limits */
         if (youCanSee())

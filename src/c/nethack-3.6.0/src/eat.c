@@ -882,10 +882,10 @@ register struct permonst *ptr;
         break;
     case TELEPAT:
         debugpline0("Trying to give telepathy");
-        if (!(HTelepat & FROMOUTSIDE)) {
+        if (!(yourIntrinsicHasMask(TELEPAT, FROMOUTSIDE))) {
             You_feel(youAreHallucinating() ? "in touch with the cosmos."
                                    : "a strange mental acuity.");
-            HTelepat |= FROMOUTSIDE;
+            setYourIntrinsicMask(TELEPAT, FROMOUTSIDE);
             /* If blind, make sure monsters show up. */
             if (youCannotSee())
                 see_monsters();
@@ -958,7 +958,7 @@ register int pm;
             if (!(HInvis & INTRINSIC))
                 You_feel("hidden!");
             HInvis |= FROMOUTSIDE;
-            HSee_invisible |= FROMOUTSIDE;
+            setYourIntrinsicMask(SEE_INVIS, FROMOUTSIDE);
         }
         newsym(currentX(), currentY());
         /*FALLTHRU*/
@@ -1865,7 +1865,7 @@ struct obj *otmp;
             case RIN_SEE_INVISIBLE:
                 set_mimic_blocking();
                 see_monsters();
-                if (Invis && !oldprop && !ESee_invisible
+                if (Invis && !oldprop && !yourIntrinsic(SEE_INVIS)
                     && !perceives(youmonst.data) && youCanSee()) {
                     newsym(currentX(), currentY());
                     pline("Suddenly you can see yourself.");
@@ -1873,7 +1873,7 @@ struct obj *otmp;
                 }
                 break;
             case RIN_INVISIBILITY:
-                if (!oldprop && !EInvis && !BInvis && !See_invisible
+                if (!oldprop && !EInvis && !BInvis && !youCanSeeInvisible()
                     && youCanSee()) {
                     newsym(currentX(), currentY());
                     Your("body takes on a %s transparency...",

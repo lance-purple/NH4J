@@ -284,7 +284,7 @@ boolean talk;
            secret door; hero was blinded by vapors but then
            got the message "a door appears in the wall") */
         vision_recalc(0);
-        if (Blind_telepat || Infravision)
+        if (youHaveTelepathyWhenBlind() || Infravision)
             see_monsters();
 
         /* avoid either of the sequences
@@ -705,7 +705,7 @@ register struct obj *otmp;
             make_blinded(0L, TRUE);
         }
         if (otmp->blessed)
-            HSee_invisible |= FROMOUTSIDE;
+            setYourIntrinsicMask(SEE_INVIS, FROMOUTSIDE);
         else
             incrementYourIntrinsicTimeout(SEE_INVIS, rn1(100, 750));
         set_mimic_blocking(); /* do special mimic handling */
@@ -1574,7 +1574,7 @@ register struct obj *obj;
         if (youCanSee() && !Invis) {
             kn++;
             pline("For an instant you %s!",
-                  See_invisible ? "could see right through yourself"
+                  youCanSeeInvisible() ? "could see right through yourself"
                                 : "couldn't see yourself");
         }
         break;

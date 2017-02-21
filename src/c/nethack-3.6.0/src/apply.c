@@ -785,7 +785,7 @@ struct obj *obj;
     if (!getdir((char *) 0))
         return 0;
     invis_mirror = Invis;
-    useeit = youCanSee() && (!invis_mirror || See_invisible);
+    useeit = youCanSee() && (!invis_mirror || youCanSeeInvisible());
     uvisage = beautiful();
     mirror = simpleonames(obj); /* "mirror" or "looking glass" */
     if (obj->cursed && !rn2(2)) {
@@ -921,7 +921,7 @@ struct obj *obj;
             pline("%s is frightened by its reflection.", Monnam(mtmp));
         monflee(mtmp, d(2, 4), FALSE, FALSE);
     } else if (youCanSee()) {
-        if (mtmp->minvis && !See_invisible)
+        if (mtmp->minvis && !youCanSeeInvisible())
             ;
         else if ((mtmp->minvis && !perceives(mtmp->data))
                  /* redundant: can't get here if these are true */
@@ -1953,7 +1953,7 @@ long timeout;
         Sprintf(monnambuf, "%s", an(m_monnam(mtmp)));
 
         and_vanish[0] = '\0';
-        if ((mtmp->minvis && !See_invisible)
+        if ((mtmp->minvis && !youCanSeeInvisible())
             || (mtmp->data->mlet == S_MIMIC
                 && mtmp->m_ap_type != M_AP_NOTHING))
             suppress_see = TRUE;

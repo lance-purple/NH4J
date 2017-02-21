@@ -550,7 +550,7 @@ freshly_entered_shop_deserted()
             }
         }
 
-    if (youCannotSee() && !(Blind_telepat || Detect_monsters))
+    if (youCannotSee() && !(youHaveTelepathyWhenBlind() || Detect_monsters))
         ++n; /* force feedback to be less specific */
 
     pline("This shop %s %s.", (m < n) ? "seems to be" : "is",
@@ -1232,7 +1232,7 @@ dopay()
         goto proceed;
     }
 
-    if ((!sk && (youCanSee() || Blind_telepat)) || (youCanSee() && !seensk)) {
+    if ((!sk && (youCanSee() || youHaveTelepathyWhenBlind())) || (youCanSee() && !seensk)) {
         There("appears to be no shopkeeper here to receive your payment.");
         return 0;
     }

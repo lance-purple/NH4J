@@ -32,10 +32,10 @@
      /* 1. the monster has a brain to sense            */  \
      (!mindless(mon->data))                                \
      /* AND     2a. hero is blind and telepathic       */  \
-      && ((youCannotSee() && Blind_telepat)                \
+      && ((youCannotSee() && youHaveTelepathyWhenBlind())                \
           /* OR 2b. hero is using a telepathy inducing */  \
           /*        object and in range                */  \
-          || (Unblind_telepat                              \
+          || (youHaveTelepathyWhenNotBlind()                              \
               && (distanceSquaredToYou(mon->mx, mon->my) <= (BOLT_LIM * BOLT_LIM)))))
 
 #define sensemon(mon) \
@@ -60,7 +60,7 @@
  */
 #define mon_visible(mon) \
     (/* The hero can see the monster IF the monster                     */ \
-     (!mon->minvis || See_invisible)  /*     1. is not invisible        */ \
+     (!mon->minvis || youCanSeeInvisible())  /*     1. is not invisible        */ \
      && !mon->mundetected             /* AND 2. not an undetected hider */ \
      && !(mon->mburied || buried()))  /* AND 3. neither you nor it is buried */
 
@@ -110,8 +110,8 @@
  */
 #define knowninvisible(mon)                                               \
     (mtmp->minvis                                                         \
-     && ((cansee(mon->mx, mon->my) && (See_invisible || Detect_monsters)) \
-         || (youCanSee() && (HTelepat & ~INTRINSIC)                            \
+     && ((cansee(mon->mx, mon->my) && (youCanSeeInvisible() || Detect_monsters)) \
+         || (youCanSee() && (yourIntrinsicHasMask(TELEPAT, ~INTRINSIC))                            \
              && distanceSquaredToYou(mon->mx, mon->my) <= (BOLT_LIM * BOLT_LIM))))
 
 /*
@@ -136,7 +136,7 @@
  * self-perception, and when swallowed, the enclosing monster touches.
  */
 #define canseeself() (youCannotSee() || swallowed() || (!Invisible && !lurking()))
-#define senseself() (Unblind_telepat || Detect_monsters)
+#define senseself() (youHaveTelepathyWhenNotBlind() || Detect_monsters)
 #define canspotself() (canseeself() || senseself())
 
 /*

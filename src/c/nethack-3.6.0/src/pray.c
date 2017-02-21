@@ -1087,8 +1087,8 @@ aligntyp g_align;
 
             godvoice(currentAlignmentType(),
                      "Thou hast pleased me with thy progress,");
-            if (!(HTelepat & INTRINSIC)) {
-                HTelepat |= FROMOUTSIDE;
+            if (!(yourIntrinsicHasMask(TELEPAT, INTRINSIC))) {
+                setYourIntrinsicMask(TELEPAT, FROMOUTSIDE);
                 pline(msg, "Telepathy");
                 if (youCannotSee())
                     see_monsters();

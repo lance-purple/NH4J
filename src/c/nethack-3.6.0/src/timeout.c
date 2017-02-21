@@ -358,7 +358,7 @@ nh_timeout()
             case INVIS:
                 newsym(currentX(), currentY());
                 if (!Invis && !BInvis && youCanSee()) {
-                    You(!See_invisible
+                    You(!youCanSeeInvisible()
                             ? "are no longer invisible."
                             : "can no longer see through yourself.");
                     stop_occupation();

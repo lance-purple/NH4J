@@ -752,7 +752,7 @@ register int x, y;
             mon = m_at(x, y);
             worm_tail = is_worm_tail(mon);
             see_it =
-                mon && (worm_tail ? (!mon->minvis || See_invisible)
+                mon && (worm_tail ? (!mon->minvis || youCanSeeInvisible())
                                   : (mon_visible(mon)) || tp_sensemon(mon)
                                         || MATCH_WARN_OF_MON(mon));
             if (mon && (see_it || (!worm_tail && Detect_monsters))) {
@@ -1194,7 +1194,7 @@ see_monsters()
 
 /*
  * Block/unblock light depending on what a mimic is mimicing and if it's
- * invisible or not.  Should be called only when the state of See_invisible
+ * invisible or not.  Should be called only when the state of youCanSeeInvisible()
  * changes.
  */
 void
@@ -1207,7 +1207,7 @@ set_mimic_blocking()
             continue;
         if (mon->minvis && (is_door_mappear(mon)
                             || is_obj_mappear(mon,BOULDER))) {
-            if (See_invisible)
+            if (youCanSeeInvisible())
                 block_point(mon->mx, mon->my);
             else
                 unblock_point(mon->mx, mon->my);

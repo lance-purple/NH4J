@@ -1966,14 +1966,14 @@ int final;
     /*** Vision and senses ***/
     if (youCanSee() && (youAreTemporarilyBlinded() || !haseyes(youmonst.data)))
         you_can("see", from_what(-BLINDED)); /* Eyes of the Overworld */
-    if (See_invisible) {
+    if (youCanSeeInvisible()) {
         if (youCanSee())
             enl_msg(You_, "see", "saw", " invisible", from_what(SEE_INVIS));
         else
             enl_msg(You_, "will see", "would have seen",
                     " invisible when not blind", from_what(SEE_INVIS));
     }
-    if (Blind_telepat)
+    if (youHaveTelepathyWhenBlind())
         you_are("telepathic", from_what(TELEPAT));
     if (Warning)
         you_are("warned", from_what(WARNING));
