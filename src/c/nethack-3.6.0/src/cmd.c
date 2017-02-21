@@ -2009,9 +2009,9 @@ int final;
         you_are("warned of undead", from_what(WARN_UNDEAD));
     if (youHaveAutomaticSearching())
         you_have("automatic searching", from_what(SEARCHING));
-    if (Clairvoyant)
+    if (youAreClairvoyant())
         you_are("clairvoyant", from_what(CLAIRVOYANT));
-    else if ((HClairvoyant || EClairvoyant) && youAreBlockedFrom(CLAIRVOYANT)) {
+    else if ((yourIntrinsic(CLAIRVOYANT) || yourExtrinsic(CLAIRVOYANT)) && youAreBlockedFrom(CLAIRVOYANT)) {
         Strcpy(buf, from_what(-CLAIRVOYANT));
         if (!strncmp(buf, " because of ", 12))
             /* overwrite substring; strncpy doesn't add terminator */

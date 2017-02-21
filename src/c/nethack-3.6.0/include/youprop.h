@@ -23,10 +23,6 @@
 
 /*** Vision and senses ***/
 
-#define HClairvoyant u.uprops[CLAIRVOYANT].intrinsic
-#define EClairvoyant u.uprops[CLAIRVOYANT].extrinsic
-#define Clairvoyant ((yourIntrinsic(CLAIRVOYANT) || yourExtrinsic(CLAIRVOYANT)) && !youAreBlockedFrom(CLAIRVOYANT))
-
 #define HInfravision u.uprops[INFRAVISION].intrinsic
 #define EInfravision u.uprops[INFRAVISION].extrinsic
 #define Infravision (yourIntrinsic(INFRAVISION) || yourExtrinsic(INFRAVISION))

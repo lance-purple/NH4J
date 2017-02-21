@@ -185,6 +185,7 @@ E boolean FDECL(youSenseWarnings, ());
 E boolean FDECL(youAreWarnedOfMonsters, ());
 E boolean FDECL(youAreWarnedOfUndead, ());
 E boolean FDECL(youHaveAutomaticSearching, ());
+E boolean FDECL(youAreClairvoyant, ());
 
 /* ### ball.c ### */
 

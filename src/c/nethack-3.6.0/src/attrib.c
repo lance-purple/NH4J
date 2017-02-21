@@ -1548,4 +1548,8 @@ extern boolean youHaveAutomaticSearching() {
  return (yourIntrinsic(SEARCHING) || yourExtrinsic(SEARCHING));
 }
 
+extern boolean youAreClairvoyant() {
+  return (yourIntrinsic(CLAIRVOYANT) || yourExtrinsic(CLAIRVOYANT)) && !youAreBlockedFrom(CLAIRVOYANT);
+}
+
 /*attrib.c*/

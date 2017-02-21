@@ -364,7 +364,7 @@ boolean resuming;
             if (context.bypasses) {
                 clear_bypasses();
             }
-            if ((haveSpecialItem(SPECIAL_ITEM_AMULET) || Clairvoyant) && !areYouInEndgame()
+            if ((haveSpecialItem(SPECIAL_ITEM_AMULET) || youAreClairvoyant()) && !areYouInEndgame()
                 && !youAreBlockedFrom(CLAIRVOYANT) && !(moves % 15) && !rn2(2)) {
                 do_vicinity_map();
             }
