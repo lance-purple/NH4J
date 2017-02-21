@@ -284,7 +284,7 @@ boolean talk;
            secret door; hero was blinded by vapors but then
            got the message "a door appears in the wall") */
         vision_recalc(0);
-        if (youHaveTelepathyWhenBlind() || Infravision)
+        if (youHaveTelepathyWhenBlind() || youHaveInfravision())
             see_monsters();
 
         /* avoid either of the sequences

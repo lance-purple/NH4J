@@ -1552,4 +1552,8 @@ extern boolean youAreClairvoyant() {
   return (yourIntrinsic(CLAIRVOYANT) || yourExtrinsic(CLAIRVOYANT)) && !youAreBlockedFrom(CLAIRVOYANT);
 }
 
+extern boolean youHaveInfravision() {
+ return (yourIntrinsic(INFRAVISION) || yourExtrinsic(INFRAVISION));
+}
+
 /*attrib.c*/

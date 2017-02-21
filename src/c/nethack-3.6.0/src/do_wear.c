@@ -1113,7 +1113,7 @@ register struct obj *otmp;
     }
     if (changed) {
         /* blindness has just been toggled */
-        if (youHaveTelepathyWhenBlind() || Infravision)
+        if (youHaveTelepathyWhenBlind() || youHaveInfravision())
             see_monsters();
         vision_full_recalc = 1; /* recalc vision limits */
         if (youCanSee())
@@ -1158,7 +1158,7 @@ register struct obj *otmp;
     }
     if (changed) {
         /* blindness has just been toggled */
-        if (youHaveTelepathyWhenBlind() || Infravision)
+        if (youHaveTelepathyWhenBlind() || youHaveInfravision())
             see_monsters();
         vision_full_recalc = 1; /* recalc vision limits */
         if (youCanSee())

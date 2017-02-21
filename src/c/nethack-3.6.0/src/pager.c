@@ -281,7 +281,7 @@ char *buf, *monbuf;
         if ((Invisible || lurking()) && youCanSee() && !swallowed()) {
             unsigned how = 0;
 
-            if (Infravision)
+            if (youHaveInfravision())
                 how |= 1;
             if (youHaveTelepathyWhenNotBlind())
                 how |= 2;

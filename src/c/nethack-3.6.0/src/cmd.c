@@ -2018,7 +2018,7 @@ int final;
             (void) strncpy(buf, " if not for ", 12);
         enl_msg(You_, "could be", "could have been", " clairvoyant", buf);
     }
-    if (Infravision)
+    if (youHaveInfravision())
         you_have("infravision", from_what(INFRAVISION));
     if (Detect_monsters)
         you_are("sensing the presence of monsters", "");

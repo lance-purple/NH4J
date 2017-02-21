@@ -73,7 +73,7 @@
  * canseemon() or canspotmon() which already check that.
  */
 #define see_with_infrared(mon)                        \
-    (youCanSee() && Infravision && mon && infravisible(mon->data) \
+    (youCanSee() && youHaveInfravision() && mon && infravisible(mon->data) \
      && couldsee(mon->mx, mon->my))
 
 /*

@@ -23,10 +23,6 @@
 
 /*** Vision and senses ***/
 
-#define HInfravision u.uprops[INFRAVISION].intrinsic
-#define EInfravision u.uprops[INFRAVISION].extrinsic
-#define Infravision (yourIntrinsic(INFRAVISION) || yourExtrinsic(INFRAVISION))
-
 #define HDetect_monsters u.uprops[DETECT_MONSTERS].intrinsic
 #define EDetect_monsters u.uprops[DETECT_MONSTERS].extrinsic
 #define Detect_monsters (yourIntrinsic(DETECT_MONSTERS) || yourExtrinsic(DETECT_MONSTERS))
