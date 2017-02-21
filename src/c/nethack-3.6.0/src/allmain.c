@@ -311,7 +311,7 @@ boolean resuming;
                         }
                     }
 
-                    if (Searching && multi >= 0)
+                    if (youHaveAutomaticSearching() && multi >= 0)
                         (void) dosearch0(1);
                     dosounds();
                     do_storms();

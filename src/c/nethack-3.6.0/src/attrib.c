@@ -446,7 +446,7 @@ exerper()
     /* status checks */
     if (!(moves % 5)) {
         debugpline0("exerper: Status checks");
-        if ((HClairvoyant & (INTRINSIC | TIMEOUT)) && !BClairvoyant)
+        if (yourIntrinsicHasMask(CLAIRVOYANT, (INTRINSIC | TIMEOUT)) && !BClairvoyant)
             exercise(A_WIS, TRUE);
         if (HRegeneration)
             exercise(A_STR, TRUE);
@@ -1524,6 +1524,10 @@ extern boolean youAreWarnedOfMonsters() {
 
 extern boolean youAreWarnedOfUndead() {
  return (yourIntrinsic(WARN_UNDEAD) || yourExtrinsic(WARN_UNDEAD));
+}
+
+extern boolean youHaveAutomaticSearching() {
+ return (yourIntrinsic(SEARCHING) || yourExtrinsic(SEARCHING));
 }
 
 /*attrib.c*/

@@ -2007,7 +2007,7 @@ int final;
     }
     if (youAreWarnedOfUndead())
         you_are("warned of undead", from_what(WARN_UNDEAD));
-    if (Searching)
+    if (youHaveAutomaticSearching())
         you_have("automatic searching", from_what(SEARCHING));
     if (Clairvoyant)
         you_are("clairvoyant", from_what(CLAIRVOYANT));

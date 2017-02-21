@@ -24,10 +24,6 @@
 
 /*** Vision and senses ***/
 
-#define HSearching u.uprops[SEARCHING].intrinsic
-#define ESearching u.uprops[SEARCHING].extrinsic
-#define Searching (yourIntrinsic(SEARCHING) || yourExtrinsic(SEARCHING))
-
 #define HClairvoyant u.uprops[CLAIRVOYANT].intrinsic
 #define EClairvoyant u.uprops[CLAIRVOYANT].extrinsic
 #define BClairvoyant u.uprops[CLAIRVOYANT].blocked

@@ -178,6 +178,7 @@ E boolean FDECL(youHaveTelepathyWhenNotBlind, ());
 E boolean FDECL(youSenseWarnings, ());
 E boolean FDECL(youAreWarnedOfMonsters, ());
 E boolean FDECL(youAreWarnedOfUndead, ());
+E boolean FDECL(youHaveAutomaticSearching, ());
 
 /* ### ball.c ### */
 
