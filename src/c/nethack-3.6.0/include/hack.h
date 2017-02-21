@@ -147,7 +147,7 @@ NEARDATA extern coord bhitpos; /* place where throw or zap hits or stops */
 #define HMON_DRAGGED 4 /* attached iron ball, pulled into mon */
 
 #define MATCH_WARN_OF_MON(mon)                                               \
-    (Warn_of_mon && ((context.warntype.obj                                   \
+    (youAreWarnedOfMonsters() && ((context.warntype.obj                                   \
                       && (context.warntype.obj & (mon)->data->mflags2))      \
                      || (context.warntype.polyd                              \
                          && (context.warntype.polyd & (mon)->data->mflags2)) \

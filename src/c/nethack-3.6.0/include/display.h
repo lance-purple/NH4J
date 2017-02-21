@@ -47,7 +47,7 @@
  */
 
 #define mon_warning(mon)                                                 \
-    (Warning && !(mon)->mpeaceful && (distanceSquaredToYou((mon)->mx, (mon)->my) < 100) \
+    (youSenseWarnings() && !(mon)->mpeaceful && (distanceSquaredToYou((mon)->mx, (mon)->my) < 100) \
      && (((int) ((mon)->m_lev / 4)) >= context.warnlevel))
 
 /*

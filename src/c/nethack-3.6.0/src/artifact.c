@@ -568,18 +568,18 @@ long wp_mask;
     if (spfx & SPFX_WARN) {
         if (spec_m2(otmp)) {
             if (on) {
-                EWarn_of_mon |= wp_mask;
+                setYourExtrinsicMask(WARN_OF_MON, wp_mask);
                 context.warntype.obj |= spec_m2(otmp);
             } else {
-                EWarn_of_mon &= ~wp_mask;
+                unsetYourExtrinsicMask(WARN_OF_MON, wp_mask);
                 context.warntype.obj &= ~spec_m2(otmp);
             }
             see_monsters();
         } else {
             if (on)
-                EWarning |= wp_mask;
+                setYourExtrinsicMask(WARNING, wp_mask);
             else
-                EWarning &= ~wp_mask;
+                unsetYourExtrinsicMask(WARNING, wp_mask);
         }
     }
     if (spfx & SPFX_EREGEN) {

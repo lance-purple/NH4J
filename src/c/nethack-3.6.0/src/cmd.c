@@ -1975,16 +1975,16 @@ int final;
     }
     if (youHaveTelepathyWhenBlind())
         you_are("telepathic", from_what(TELEPAT));
-    if (Warning)
+    if (youSenseWarnings())
         you_are("warned", from_what(WARNING));
-    if (Warn_of_mon && context.warntype.obj) {
+    if (youAreWarnedOfMonsters() && context.warntype.obj) {
         Sprintf(buf, "aware of the presence of %s",
                 (context.warntype.obj & M2_ORC) ? "orcs"
                 : (context.warntype.obj & M2_ELF) ? "elves"
                 : (context.warntype.obj & M2_DEMON) ? "demons" : something);
         you_are(buf, from_what(WARN_OF_MON));
     }
-    if (Warn_of_mon && context.warntype.polyd) {
+    if (youAreWarnedOfMonsters() && context.warntype.polyd) {
         Sprintf(buf, "aware of the presence of %s",
                 ((context.warntype.polyd & (M2_HUMAN | M2_ELF))
                  == (M2_HUMAN | M2_ELF))
@@ -2000,12 +2000,12 @@ int final;
                                             : "certain monsters");
         you_are(buf, "");
     }
-    if (Warn_of_mon && context.warntype.speciesidx) {
+    if (youAreWarnedOfMonsters() && context.warntype.speciesidx) {
         Sprintf(buf, "aware of the presence of %s",
                 makeplural(mons[context.warntype.speciesidx].mname));
         you_are(buf, from_what(WARN_OF_MON));
     }
-    if (Undead_warning)
+    if (youAreWarnedOfUndead())
         you_are("warned of undead", from_what(WARN_UNDEAD));
     if (Searching)
         you_have("automatic searching", from_what(SEARCHING));

@@ -394,7 +394,7 @@ boolean resuming;
                     showHeroBeingSwallowed(0);
             } else if (youHaveTelepathyWhenNotBlind()) {
                 see_monsters();
-            } else if (Warning || Warn_of_mon)
+            } else if (youSenseWarnings() || youAreWarnedOfMonsters())
                 see_monsters();
 
             if (vision_full_recalc)

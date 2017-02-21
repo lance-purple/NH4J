@@ -293,7 +293,7 @@ boolean talk;
            by giving "Sting is quivering" when becoming blind or
            "Sting is glowing" when regaining sight so that the eventual
            "stops" message matches */
-        if (warn_obj_cnt && uwep && (EWarn_of_mon & W_WEP) != 0L)
+        if (warn_obj_cnt && uwep && (yourExtrinsic(WARN_OF_MON) & W_WEP) != 0L)
             Sting_effects(-1);
         /* update dknown flag for inventory picked up while blind */
         if (can_see_now)

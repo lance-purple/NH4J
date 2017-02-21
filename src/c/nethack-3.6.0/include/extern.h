@@ -175,6 +175,9 @@ E boolean FDECL(youHunger, ());
 E boolean FDECL(youCanSeeInvisible, ());
 E boolean FDECL(youHaveTelepathyWhenBlind, ());
 E boolean FDECL(youHaveTelepathyWhenNotBlind, ());
+E boolean FDECL(youSenseWarnings, ());
+E boolean FDECL(youAreWarnedOfMonsters, ());
+E boolean FDECL(youAreWarnedOfUndead, ());
 
 /* ### ball.c ### */
 

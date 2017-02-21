@@ -1514,4 +1514,16 @@ extern boolean youHaveTelepathyWhenNotBlind() {
  return (yourExtrinsic(TELEPAT));
 }
 
+extern boolean youSenseWarnings() {
+ return (yourIntrinsic(WARNING) || yourExtrinsic(WARNING));
+}
+
+extern boolean youAreWarnedOfMonsters() {
+ return (yourIntrinsic(WARN_OF_MON) || yourExtrinsic(WARN_OF_MON));
+}
+
+extern boolean youAreWarnedOfUndead() {
+ return (yourIntrinsic(WARN_UNDEAD) || yourExtrinsic(WARN_UNDEAD));
+}
+
 /*attrib.c*/

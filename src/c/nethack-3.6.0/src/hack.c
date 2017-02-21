@@ -1980,7 +1980,7 @@ boolean pick;
             (void) pickup(1);
     }
     /* Warning alerts you to ice danger */
-    if (Warning && is_ice(currentX(), currentY())) {
+    if (youSenseWarnings() && is_ice(currentX(), currentY())) {
         static const char *const icewarnings[] = {
             "The ice seems very soft and slushy.",
             "You feel the ice shift beneath you!",

@@ -957,7 +957,7 @@ boolean with_price;
                 hand_s = makeplural(hand_s);
             Sprintf(eos(bp), " (weapon in %s)", hand_s);
 
-            if (warn_obj_cnt && obj == uwep && (EWarn_of_mon & W_WEP) != 0L) {
+            if (warn_obj_cnt && obj == uwep && ((yourExtrinsic(WARN_OF_MON) & W_WEP) != 0L)) {
                 /* presumably can be felt when blind */
                 Strcat(bp, " (glowing");
                 if (youCanSee())

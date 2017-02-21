@@ -24,18 +24,6 @@
 
 /*** Vision and senses ***/
 
-#define HWarning u.uprops[WARNING].intrinsic
-#define EWarning u.uprops[WARNING].extrinsic
-#define Warning (yourIntrinsic(WARNING) || yourExtrinsic(WARNING))
-
-/* Warning for a specific type of monster */
-#define HWarn_of_mon u.uprops[WARN_OF_MON].intrinsic
-#define EWarn_of_mon u.uprops[WARN_OF_MON].extrinsic
-#define Warn_of_mon (yourIntrinsic(WARN_OF_MON) || yourExtrinsic(WARN_OF_MON))
-
-#define HUndead_warning u.uprops[WARN_UNDEAD].intrinsic
-#define Undead_warning (yourIntrinsic(WARN_UNDEAD))
-
 #define HSearching u.uprops[SEARCHING].intrinsic
 #define ESearching u.uprops[SEARCHING].extrinsic
 #define Searching (yourIntrinsic(SEARCHING) || yourExtrinsic(SEARCHING))

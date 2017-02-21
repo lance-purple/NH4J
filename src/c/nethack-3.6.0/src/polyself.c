@@ -1820,18 +1820,18 @@ struct permonst *mptr;
     case PM_VAMPIRE:
     case PM_VAMPIRE_LORD:
         context.warntype.polyd = M2_HUMAN | M2_ELF;
-        HWarn_of_mon |= FROMRACE;
+        setYourIntrinsicMask(WARN_OF_MON, FROMRACE);
         return TRUE;
     }
     if (warnidx) {
         context.warntype.speciesidx = warnidx;
         context.warntype.species = &mons[warnidx];
-        HWarn_of_mon |= FROMRACE;
+        setYourIntrinsicMask(WARN_OF_MON, FROMRACE);
         return TRUE;
     }
     context.warntype.speciesidx = 0;
     context.warntype.species = 0;
-    HWarn_of_mon &= ~FROMRACE;
+    unsetYourIntrinsicMask(WARN_OF_MON, FROMRACE);
     return FALSE;
 }
 
