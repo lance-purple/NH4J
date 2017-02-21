@@ -365,7 +365,7 @@ boolean resuming;
                 clear_bypasses();
             }
             if ((haveSpecialItem(SPECIAL_ITEM_AMULET) || Clairvoyant) && !areYouInEndgame()
-                && !BClairvoyant && !(moves % 15) && !rn2(2)) {
+                && !youAreBlockedFrom(CLAIRVOYANT) && !(moves % 15) && !rn2(2)) {
                 do_vicinity_map();
             }
             if (currentlyTrapped() && (currentTrapType() == TT_LAVA)) {

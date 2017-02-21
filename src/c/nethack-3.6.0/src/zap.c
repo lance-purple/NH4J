@@ -2232,9 +2232,9 @@ boolean ordinary;
         /* have to test before changing HInvis but must change
          * HInvis before doing newsym().
          */
-        int msg = !Invis && youCanSee() && !BInvis;
+        int msg = !Invis && youCanSee() && !youAreBlockedFrom(INVIS);
 
-        if (BInvis && uarmc->otyp == MUMMY_WRAPPING) {
+        if (youAreBlockedFrom(INVIS) && uarmc->otyp == MUMMY_WRAPPING) {
             /* A mummy wrapping absorbs it and protects you */
             You_feel("rather itchy under %s.", yname(uarmc));
             break;

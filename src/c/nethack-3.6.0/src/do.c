@@ -888,7 +888,7 @@ dodown()
                 return 1; /* did something, effectively moved */
             }
         }
-        if (BLevitation) {
+        if (youAreBlockedFrom(LEVITATION)) {
             ; /* weren't actually floating after all */
         } else if (youCannotSee()) {
             /* Avoid alerting player to an unknown stair or ladder.

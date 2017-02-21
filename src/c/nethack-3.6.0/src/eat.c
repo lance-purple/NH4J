@@ -952,7 +952,7 @@ register int pm;
     case PM_STALKER:
         if (!Invis) {
             setYourIntrinsicTimeout(INVIS, (long) rn1(100, 50));
-            if (youCanSee() && !BInvis)
+            if (youCanSee() && !youAreBlockedFrom(INVIS))
                 self_invis_message();
         } else {
             if (!(HInvis & INTRINSIC))
@@ -1873,7 +1873,7 @@ struct obj *otmp;
                 }
                 break;
             case RIN_INVISIBILITY:
-                if (!oldprop && !EInvis && !BInvis && !youCanSeeInvisible()
+                if (!oldprop && !EInvis && !youAreBlockedFrom(INVIS) && !youCanSeeInvisible()
                     && youCanSee()) {
                     newsym(currentX(), currentY());
                     Your("body takes on a %s transparency...",

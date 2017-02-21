@@ -14,7 +14,6 @@
  * Reorganized and rewritten for >32-bit properties.
  * HXxx refers to intrinsic bitfields while in human form.
  * EXxx refers to extrinsic bitfields from worn objects.
- * BXxx refers to the cause of the property being blocked.
  * Xxx refers to any source, including polymorph forms.
  * [Post-3.4.3: HXxx now includes a FROMFORM bit to handle
  * intrinsic conferred by being polymorphed.]
@@ -26,8 +25,7 @@
 
 #define HClairvoyant u.uprops[CLAIRVOYANT].intrinsic
 #define EClairvoyant u.uprops[CLAIRVOYANT].extrinsic
-#define BClairvoyant u.uprops[CLAIRVOYANT].blocked
-#define Clairvoyant ((yourIntrinsic(CLAIRVOYANT) || yourExtrinsic(CLAIRVOYANT)) && !BClairvoyant)
+#define Clairvoyant ((yourIntrinsic(CLAIRVOYANT) || yourExtrinsic(CLAIRVOYANT)) && !youAreBlockedFrom(CLAIRVOYANT))
 
 #define HInfravision u.uprops[INFRAVISION].intrinsic
 #define EInfravision u.uprops[INFRAVISION].extrinsic
@@ -42,8 +40,7 @@
 
 #define HInvis u.uprops[INVIS].intrinsic
 #define EInvis u.uprops[INVIS].extrinsic
-#define BInvis u.uprops[INVIS].blocked
-#define Invis ((yourIntrinsic(INVIS) || yourExtrinsic(INVIS)) && !BInvis)
+#define Invis ((yourIntrinsic(INVIS) || yourExtrinsic(INVIS)) && !youAreBlockedFrom(INVIS))
 #define Invisible (Invis && !youCanSeeInvisible())
 /* Note: invisibility also hides inventory and steed */
 
@@ -52,8 +49,7 @@
 
 #define HStealth u.uprops[STEALTH].intrinsic
 #define EStealth u.uprops[STEALTH].extrinsic
-#define BStealth u.uprops[STEALTH].blocked
-#define Stealth ((yourIntrinsic(STEALTH) || yourExtrinsic(STEALTH)) && !BStealth)
+#define Stealth ((yourIntrinsic(STEALTH) || yourExtrinsic(STEALTH)) && !youAreBlockedFrom(STEALTH))
 
 #define HAggravate_monster u.uprops[AGGRAVATE_MONSTER].intrinsic
 #define EAggravate_monster u.uprops[AGGRAVATE_MONSTER].extrinsic
@@ -78,8 +74,7 @@
 
 #define HLevitation u.uprops[LEVITATION].intrinsic
 #define ELevitation u.uprops[LEVITATION].extrinsic
-#define BLevitation u.uprops[LEVITATION].blocked
-#define Levitation ((yourIntrinsic(LEVITATION) || yourExtrinsic(LEVITATION)) && !BLevitation)
+#define Levitation ((yourIntrinsic(LEVITATION) || yourExtrinsic(LEVITATION)) && !youAreBlockedFrom(LEVITATION))
 /* Can't touch surface, can't go under water; overrides all others */
 #define Lev_at_will                                                    \
     (((yourIntrinsic(LEVITATION) & I_SPECIAL) != 0L || (yourExtrinsic(LEVITATION) & W_ARTI) != 0L) \
@@ -88,10 +83,9 @@
 
 #define HFlying u.uprops[FLYING].intrinsic
 #define EFlying u.uprops[FLYING].extrinsic
-#define BFlying u.uprops[FLYING].blocked
 #define Flying                                                      \
     ((yourIntrinsic(FLYING) || yourExtrinsic(FLYING) || (u.usteed && is_flyer(u.usteed->data))) \
-     && !BFlying)
+     && !youAreBlockedFrom(FLYING))
 /* May touch surface; does not override any others */
 
 extern boolean canYouWalkOnWater();

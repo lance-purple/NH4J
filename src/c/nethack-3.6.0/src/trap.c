@@ -2780,7 +2780,7 @@ float_up()
     }
     if (Flying)
         You("are no longer able to control your flight.");
-    BFlying |= I_SPECIAL;
+    setYourBlockerMask(FLYING, I_SPECIAL);
     return;
 }
 
@@ -2811,16 +2811,16 @@ long hmask, emask; /* might cancel timeout */
     ELevitation &= ~emask;
     if (Levitation)
         return 0; /* maybe another ring/potion/boots */
-    if (BLevitation) {
+    if (youAreBlockedFrom(LEVITATION)) {
         /* Levitation is blocked, so hero is not actually floating
            hence shouldn't have float_down effects and feedback */
         float_vs_flight(); /* before nomul() rather than after */
         return 0;
     }
     nomul(0); /* stop running or resting */
-    if (BFlying) {
+    if (youAreBlockedFrom(FLYING)) {
         /* controlled flight no longer overridden by levitation */
-        BFlying &= ~I_SPECIAL;
+        unsetYourBlockerMask(FLYING, I_SPECIAL);
         if (Flying) {
             You("have stopped levitating and are now flying.");
             return 1;

@@ -136,6 +136,12 @@ E boolean FDECL(yourExtrinsicHasMask, (int, long));
 E void FDECL(setYourExtrinsicMask, (int, long));
 E void FDECL(unsetYourExtrinsicMask, (int, long));
 
+E boolean FDECL(youAreBlockedFrom, (int));
+E long FDECL(yourBlocker, (int));
+E void FDECL(setYourBlocker, (int, long));
+E void FDECL(setYourBlockerMask, (int, long));
+E void FDECL(unsetYourBlockerMask, (int, long));
+
 E boolean FDECL(youResistFire, ());
 E boolean FDECL(youResistCold, ());
 E boolean FDECL(youResistSleep, ());

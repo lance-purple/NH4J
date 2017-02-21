@@ -1632,7 +1632,7 @@ struct obj *obj;
                 (void) float_down(I_SPECIAL | TIMEOUT, W_ARTI);
             break;
         case INVIS:
-            if (BInvis || youCannotSee())
+            if (youAreBlockedFrom(INVIS) || youCannotSee())
                 goto nothing_special;
             newsym(currentX(), currentY());
             if (on)

@@ -658,13 +658,13 @@ register struct obj *otmp;
         break;
     case SPE_INVISIBILITY:
         /* spell cannot penetrate mummy wrapping */
-        if (BInvis && uarmc->otyp == MUMMY_WRAPPING) {
+        if (youAreBlockedFrom(INVIS) && uarmc->otyp == MUMMY_WRAPPING) {
             You_feel("rather itchy under %s.", yname(uarmc));
             break;
         }
         /* FALLTHRU */
     case POT_INVISIBILITY:
-        if (Invis || youCannotSee() || BInvis) {
+        if (Invis || youCannotSee() || youAreBlockedFrom(INVIS)) {
             nothing++;
         } else {
             self_invis_message();
@@ -952,7 +952,7 @@ register struct obj *otmp;
     case SPE_LEVITATION:
         if (otmp->cursed)
             HLevitation &= ~I_SPECIAL;
-        if (!Levitation && !BLevitation) {
+        if (!Levitation && !youAreBlockedFrom(LEVITATION)) {
             /* kludge to ensure proper operation of float_up() */
             setYourIntrinsicTimeout(LEVITATION, 1L);
             float_up();

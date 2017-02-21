@@ -88,7 +88,7 @@ boolean on;
 
     if (!oldprop /* extrinsic stealth from something else */
         && !HStealth /* intrinsic stealth */
-        && !BStealth) { /* stealth blocked by something */
+        && !youAreBlockedFrom(STEALTH)) { /* stealth blocked by something */
         if (obj->otyp == RIN_STEALTH)
             learnring(obj, TRUE);
         else
@@ -185,12 +185,12 @@ Boots_on(VOID_ARGS)
             incrementYourIntrinsicTimeout(FUMBLING, rnd(20));
         break;
     case LEVITATION_BOOTS:
-        if (!oldprop && !HLevitation && !BLevitation) {
+        if (!oldprop && !HLevitation && !youAreBlockedFrom(LEVITATION)) {
             makeknown(uarmf->otyp);
             float_up();
             spoteffects(FALSE);
         } else {
-            float_vs_flight(); /* maybe toggle (BFlying & I_SPECIAL) */
+            float_vs_flight(); /* maybe toggle (youAreBlockedFrom(FLYING) & I_SPECIAL) */
         }
         break;
     default:
@@ -240,12 +240,12 @@ Boots_off(VOID_ARGS)
         }
         break;
     case LEVITATION_BOOTS:
-        if (!oldprop && !HLevitation && !BLevitation
+        if (!oldprop && !HLevitation && !youAreBlockedFrom(LEVITATION)
             && !context.takeoff.cancelled_don) {
             (void) float_down(0L, 0L);
             makeknown(otyp);
         } else {
-            float_vs_flight(); /* maybe toggle (BFlying & I_SPECIAL) */
+            float_vs_flight(); /* maybe toggle (youAreBlockedFrom(FLYING) & I_SPECIAL) */
         }
         break;
     case LOW_BOOTS:
@@ -897,19 +897,19 @@ register struct obj *obj;
         }
         break;
     case RIN_INVISIBILITY:
-        if (!oldprop && !HInvis && !BInvis && youCanSee()) {
+        if (!oldprop && !HInvis && !youAreBlockedFrom(INVIS) && youCanSee()) {
             learnring(obj, TRUE);
             newsym(currentX(), currentY());
             self_invis_message();
         }
         break;
     case RIN_LEVITATION:
-        if (!oldprop && !HLevitation && !BLevitation) {
+        if (!oldprop && !HLevitation && !youAreBlockedFrom(LEVITATION)) {
             float_up();
             learnring(obj, TRUE);
             spoteffects(FALSE); /* for sinks */
         } else {
-            float_vs_flight(); /* maybe toggle (BFlying & I_SPECIAL) */
+            float_vs_flight(); /* maybe toggle (youAreBlockedFrom(FLYING) & I_SPECIAL) */
         }
         break;
     case RIN_GAIN_STRENGTH:
@@ -1010,7 +1010,7 @@ boolean gone;
         }
         break;
     case RIN_INVISIBILITY:
-        if (!Invis && !BInvis && youCanSee()) {
+        if (!Invis && !youAreBlockedFrom(INVIS) && youCanSee()) {
             newsym(currentX(), currentY());
             Your("body seems to unfade%s.",
                  youCanSeeInvisible() ? " completely" : "..");
@@ -1018,12 +1018,12 @@ boolean gone;
         }
         break;
     case RIN_LEVITATION:
-        if (!BLevitation) {
+        if (!youAreBlockedFrom(LEVITATION)) {
             (void) float_down(0L, 0L);
             if (!Levitation)
                 learnring(obj, TRUE);
         } else {
-            float_vs_flight(); /* maybe toggle (BFlying & I_SPECIAL) */
+            float_vs_flight(); /* maybe toggle (youAreBlockedFrom(FLYING) & I_SPECIAL) */
         }
         break;
     case RIN_GAIN_STRENGTH:

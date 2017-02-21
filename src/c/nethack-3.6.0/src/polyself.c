@@ -109,9 +109,9 @@ float_vs_flight()
     /* floating overrides flight; normally float_up() and float_down()
        handle this, but sometimes they're skipped */
     if (HLevitation || ELevitation)
-        BFlying |= I_SPECIAL;
+        setYourBlockerMask(FLYING, I_SPECIAL);
     else
-        BFlying &= ~I_SPECIAL;
+        unsetYourBlockerMask(FLYING, I_SPECIAL);
 }
 
 /* for changing into form that's immune to strangulation */

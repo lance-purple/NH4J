@@ -1140,7 +1140,7 @@ boolean atme;
         (void) make_familiar((struct obj *) 0, currentX(), currentY(), FALSE);
         break;
     case SPE_CLAIRVOYANCE:
-        if (!BClairvoyant)
+        if (!youAreBlockedFrom(CLAIRVOYANT))
             do_vicinity_map();
         /* at present, only one thing blocks clairvoyance */
         else if (uarmh && uarmh->otyp == CORNUTHAUM)

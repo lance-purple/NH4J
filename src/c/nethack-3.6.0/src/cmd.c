@@ -2011,7 +2011,7 @@ int final;
         you_have("automatic searching", from_what(SEARCHING));
     if (Clairvoyant)
         you_are("clairvoyant", from_what(CLAIRVOYANT));
-    else if ((HClairvoyant || EClairvoyant) && BClairvoyant) {
+    else if ((HClairvoyant || EClairvoyant) && youAreBlockedFrom(CLAIRVOYANT)) {
         Strcpy(buf, from_what(-CLAIRVOYANT));
         if (!strncmp(buf, " because of ", 12))
             /* overwrite substring; strncpy doesn't add terminator */
@@ -2047,7 +2047,7 @@ int final;
         you_are("invisible to others", from_what(INVIS));
     /* ordinarily "visible" is redundant; this is a special case for
        the situation when invisibility would be an expected attribute */
-    else if ((HInvis || EInvis) && BInvis)
+    else if ((HInvis || EInvis) && youAreBlockedFrom(INVIS))
         you_are("visible", from_what(-INVIS));
     if (Displaced)
         you_are("displaced", from_what(DISPLACED));
@@ -2067,20 +2067,20 @@ int final;
     if (Teleport_control)
         you_have("teleport control", from_what(TELEPORT_CONTROL));
     /* actively levitating handled earlier as a status condition */
-    if (BLevitation) { /* levitation is blocked */
-        long save_BLev = BLevitation;
+    if (youAreBlockedFrom(LEVITATION)) { /* levitation is blocked */
+        long save_BLev = yourBlocker(LEVITATION);
 
-        BLevitation = 0L;
+        setYourBlocker(LEVITATION, 0L);
         if (Levitation)
             enl_msg(You_, "would levitate", "would have levitated",
                     if_surroundings_permitted, "");
-        BLevitation = save_BLev;
+        setYourBlocker(LEVITATION, save_BLev);
     }
     /* actively flying handled earlier as a status condition */
-    if (BFlying) { /* flight is blocked */
-        long save_BFly = BFlying;
+    if (youAreBlockedFrom(FLYING)) { /* flight is blocked */
+        long save_BFly = yourBlocker(FLYING);
 
-        BFlying = 0L;
+        setYourBlocker(FLYING, 0L);
         if (Flying)
             enl_msg(You_, "would fly", "would have flown",
                     Levitation
@@ -2090,7 +2090,7 @@ int final;
                           /* both surroundings and [latent] levitation */
                           : " if circumstances permitted",
                     "");
-        BFlying = save_BFly;
+        setYourBlocker(FLYING, save_BFly);
     }
     /* actively walking on water handled earlier as a status condition */
     if (canYouWalkOnWater() && !walking_on_water())

@@ -357,7 +357,7 @@ nh_timeout()
                 break;
             case INVIS:
                 newsym(currentX(), currentY());
-                if (!Invis && !BInvis && youCanSee()) {
+                if (!Invis && !youAreBlockedFrom(INVIS) && youCanSee()) {
                     You(!youCanSeeInvisible()
                             ? "are no longer invisible."
                             : "can no longer see through yourself.");

@@ -1793,9 +1793,9 @@ switch_terrain()
         /* called from spoteffects(), skip float_down() */
         if (Levitation)
             You_cant("levitate in here.");
-        BLevitation |= FROMOUTSIDE;
-    } else if (BLevitation) {
-        BLevitation &= ~FROMOUTSIDE;
+        setYourBlockerMask(LEVITATION, FROMOUTSIDE);
+    } else if (youAreBlockedFrom(LEVITATION)) {
+        unsetYourBlockerMask(LEVITATION, FROMOUTSIDE);
         if (Levitation)
             float_up();
     }
@@ -1803,10 +1803,10 @@ switch_terrain()
     if (blocklev) {
         if (Flying)
             You_cant("fly in here.");
-        BFlying |= FROMOUTSIDE;
-    } else if (BFlying) {
-        BFlying &= ~FROMOUTSIDE;
-        float_vs_flight(); /* maybe toggle (BFlying & I_SPECIAL) */
+        setYourBlockerMask(FLYING, FROMOUTSIDE);
+    } else if (youAreBlockedFrom(FLYING)) {
+        unsetYourBlockerMask(FLYING, FROMOUTSIDE);
+        float_vs_flight(); /* maybe toggle (yourBlocker(FLYING) & I_SPECIAL) */
         /* [minor bug: we don't know whether this is beginning flight or
            resuming it; that could be tracked so that this message could
            be adjusted to "resume flying", but isn't worth the effort...] */

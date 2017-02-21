@@ -446,7 +446,7 @@ exerper()
     /* status checks */
     if (!(moves % 5)) {
         debugpline0("exerper: Status checks");
-        if (yourIntrinsicHasMask(CLAIRVOYANT, (INTRINSIC | TIMEOUT)) && !BClairvoyant)
+        if (yourIntrinsicHasMask(CLAIRVOYANT, (INTRINSIC | TIMEOUT)) && !youAreBlockedFrom(CLAIRVOYANT))
             exercise(A_WIS, TRUE);
         if (HRegeneration)
             exercise(A_STR, TRUE);
@@ -1315,7 +1315,6 @@ boolean youAreAware() {
    return !youAreUnaware();
 }
 
-
 extern long yourExtrinsic(int index) {
   return u.uprops[index].extrinsic;
 }
@@ -1338,7 +1337,6 @@ extern void unsetYourExtrinsicMask(int index, long mask) {
   setYourExtrinsic(index, (curr & ~mask));
 }
 
-
 extern long yourIntrinsic(int index) {
   return u.uprops[index].intrinsic;
 }
@@ -1359,6 +1357,26 @@ extern void setYourIntrinsicMask(int index, long mask) {
 extern void unsetYourIntrinsicMask(int index, long mask) {
   long curr = yourIntrinsic(index);
   setYourIntrinsic(index, (curr & ~mask));
+}
+
+extern long yourBlocker(int index) {
+  return u.uprops[index].blocked;
+}
+
+extern void setYourBlocker(int index, long value) {
+  u.uprops[index].blocked = value;
+}
+
+extern void setYourBlockerMask(int index, long mask) {
+  u.uprops[index].blocked |= mask;
+}
+
+extern void unsetYourBlockerMask(int index, long mask) {
+  u.uprops[index].blocked &= ~mask;
+}
+
+extern boolean youAreBlockedFrom(int index) {
+  return (0 != yourBlocker(index));
 }
 
 
