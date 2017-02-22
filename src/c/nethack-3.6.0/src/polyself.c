@@ -1311,7 +1311,7 @@ dogaze()
             continue;
         if (canseemon(mtmp) && couldsee(mtmp->mx, mtmp->my)) {
             looked++;
-            if (Invis && !perceives(mtmp->data)) {
+            if (youAreInvisibleToOthers() && !perceives(mtmp->data)) {
                 pline("%s seems not to notice your gaze.", Monnam(mtmp));
             } else if (mtmp->minvis && !youCanSeeInvisible()) {
                 You_cant("see where to gaze at %s.", Monnam(mtmp));

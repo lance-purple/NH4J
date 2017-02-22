@@ -549,9 +549,9 @@ long wp_mask;
     }
     if (spfx & SPFX_STLTH) {
         if (on)
-            EStealth |= wp_mask;
+            setYourExtrinsicMask(STEALTH, wp_mask);
         else
-            EStealth &= ~wp_mask;
+            unsetYourExtrinsicMask(STEALTH, wp_mask);
     }
     if (spfx & SPFX_REGEN) {
         if (on)

@@ -1095,8 +1095,8 @@ aligntyp g_align;
             } else if (!(HFast & INTRINSIC)) {
                 HFast |= FROMOUTSIDE;
                 pline(msg, "Speed");
-            } else if (!(HStealth & INTRINSIC)) {
-                HStealth |= FROMOUTSIDE;
+            } else if (!yourIntrinsicHasMask(STEALTH, INTRINSIC)) {
+                setYourIntrinsicMask(STEALTH, FROMOUTSIDE);
                 pline(msg, "Stealth");
             } else {
                 if (!(HProtection & INTRINSIC)) {
@@ -1391,7 +1391,7 @@ dosacrifice()
             pline("So this is how you repay loyalty?");
             adjalign(-3);
             value = -1;
-            HAggravate_monster |= FROMOUTSIDE;
+            setYourIntrinsicMask(AGGRAVATE_MONSTER, FROMOUTSIDE);
         } else if (is_undead(ptr)) { /* Not demons--no demon corpses */
             if (currentAlignmentType() != A_CHAOTIC)
                 value += 1;

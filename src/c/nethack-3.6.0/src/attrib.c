@@ -1556,4 +1556,37 @@ extern boolean youHaveInfravision() {
  return (yourIntrinsic(INFRAVISION) || yourExtrinsic(INFRAVISION));
 }
 
+extern boolean youCanDetectMonsters() {
+ return (yourIntrinsic(DETECT_MONSTERS) || yourExtrinsic(DETECT_MONSTERS));
+}
+
+extern boolean youAreAdorned() {
+ return (yourExtrinsic(ADORNED));
+}
+
+extern boolean youAreInvisibleToOthers() {
+ return ((yourIntrinsic(INVIS) || yourExtrinsic(INVIS)) && !youAreBlockedFrom(INVIS));
+}
+
+/* Note: invisibility also hides inventory and steed */
+extern boolean youAreFullyInvisible() {
+ return (youAreInvisibleToOthers() && !youCanSeeInvisible());
+}
+
+extern boolean youAppearDisplaced() {
+ return (yourExtrinsic(DISPLACED));
+}
+
+extern boolean youAreStealthy() {
+ return ((yourIntrinsic(STEALTH) || yourExtrinsic(STEALTH)) && !youAreBlockedFrom(STEALTH));
+}
+
+extern boolean youAggravateMonsters() {
+ return (yourIntrinsic(AGGRAVATE_MONSTER) || yourExtrinsic(AGGRAVATE_MONSTER));
+}
+
+extern boolean youCauseConflict() {
+ return (yourIntrinsic(CONFLICT) || yourExtrinsic(CONFLICT));
+}
+
 /*attrib.c*/

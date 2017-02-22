@@ -187,6 +187,14 @@ E boolean FDECL(youAreWarnedOfUndead, ());
 E boolean FDECL(youHaveAutomaticSearching, ());
 E boolean FDECL(youAreClairvoyant, ());
 E boolean FDECL(youHaveInfravision, ());
+E boolean FDECL(youCanDetectMonsters, ());
+E boolean FDECL(youAreAdorned, ());
+E boolean FDECL(youAreInvisibleToOthers, ());
+E boolean FDECL(youAreFullyInvisible, ());
+E boolean FDECL(youAppearDisplaced, ());
+E boolean FDECL(youAreStealthy, ());
+E boolean FDECL(youAggravateMonsters, ());
+E boolean FDECL(youCauseConflict, ());
 
 /* ### ball.c ### */
 

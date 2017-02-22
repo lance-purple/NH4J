@@ -784,7 +784,7 @@ struct obj *obj;
 
     if (!getdir((char *) 0))
         return 0;
-    invis_mirror = Invis;
+    invis_mirror = youAreInvisibleToOthers();
     useeit = youCanSee() && (!invis_mirror || youCanSeeInvisible());
     uvisage = beautiful();
     mirror = simpleonames(obj); /* "mirror" or "looking glass" */
@@ -1524,7 +1524,7 @@ int magic; /* 0=Physical, otherwise skill level */
         pline("This calls for swimming, not jumping!");
         return 0;
     } else if (u.ustuck) {
-        if (u.ustuck->mtame && !Conflict && !u.ustuck->mconf) {
+        if (u.ustuck->mtame && !youCauseConflict() && !u.ustuck->mconf) {
             You("pull free from %s.", mon_nam(u.ustuck));
             u.ustuck = 0;
             return 1;

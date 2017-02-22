@@ -428,7 +428,7 @@ gain_guardian_angel()
 
     Hear_again(); /* attempt to cure any deafness now (divine
                      message will be heard even if that fails) */
-    if (Conflict) {
+    if (youCauseConflict()) {
         pline("A voice booms:");
         verbalize("Thy desire for conflict shall be fulfilled!");
         /* send in some hostile angels instead */

@@ -755,7 +755,7 @@ register int x, y;
                 mon && (worm_tail ? (!mon->minvis || youCanSeeInvisible())
                                   : (mon_visible(mon)) || tp_sensemon(mon)
                                         || MATCH_WARN_OF_MON(mon));
-            if (mon && (see_it || (!worm_tail && Detect_monsters))) {
+            if (mon && (see_it || (!worm_tail && youCanDetectMonsters()))) {
                 if (mon->mtrapped) {
                     struct trap *trap = t_at(x, y);
                     int tt = trap ? trap->ttyp : NO_TRAP;
@@ -791,7 +791,7 @@ register int x, y;
                    && ((see_it = (tp_sensemon(mon) || MATCH_WARN_OF_MON(mon)
                                   || (see_with_infrared(mon)
                                       && mon_visible(mon))))
-                       || Detect_monsters)) {
+                       || youCanDetectMonsters())) {
             /* Monsters are printed every time. */
             /* This also gets rid of any invisibility glyph */
             display_monster(x, y, mon, see_it ? 0 : DETECTED,

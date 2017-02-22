@@ -151,7 +151,7 @@ register struct attack *mattk;
     compat = ((mattk->adtyp == AD_SEDU || mattk->adtyp == AD_SSEX)
               && could_seduce(mtmp, &youmonst, (struct attack *) 0));
 
-    if (!mtmp->mcansee || (Invis && !perceives(mtmp->data))) {
+    if (!mtmp->mcansee || (youAreInvisibleToOthers() && !perceives(mtmp->data))) {
         const char *swings =
             mattk->aatyp == AT_BITE
                 ? "snaps"
@@ -182,11 +182,11 @@ register struct attack *mattk;
                 break;
             }
 
-    } else if (Displaced) {
+    } else if (youAppearDisplaced()) {
         if (compat)
             pline("%s smiles %s at your %sdisplaced image...", Monnam(mtmp),
                   compat == 2 ? "engagingly" : "seductively",
-                  Invis ? "invisible " : "");
+                  youAreInvisibleToOthers() ? "invisible " : "");
         else
             pline("%s strikes at your %sdisplaced image and misses you!",
                   /* Note: if you're both invisible and displaced,
@@ -194,7 +194,7 @@ register struct attack *mattk;
                    * displaced image, since the displaced image is also
                    * invisible.
                    */
-                  Monnam(mtmp), Invis ? "invisible " : "");
+                  Monnam(mtmp), youAreInvisibleToOthers() ? "invisible " : "");
 
     } else if (underwater()) {
         /* monsters may miss especially on water level where
@@ -498,7 +498,7 @@ register struct monst *mtmp;
     tmp += mtmp->m_lev;
     if (multi < 0)
         tmp += 4;
-    if ((Invis && !perceives(mdat)) || !mtmp->mcansee)
+    if ((youAreInvisibleToOthers() && !perceives(mdat)) || !mtmp->mcansee)
         tmp -= 2;
     if (mtmp->mtrapped)
         tmp -= 2;
@@ -601,7 +601,7 @@ register struct monst *mtmp;
         case AT_TUCH:
         case AT_BUTT:
         case AT_TENT:
-            if (!range2 && (!MON_WEP(mtmp) || mtmp->mconf || Conflict
+            if (!range2 && (!MON_WEP(mtmp) || mtmp->mconf || youCauseConflict()
                             || !touch_petrifies(youmonst.data))) {
                 if (foundyou) {
                     if (tmp > (j = rnd(20 + i))) {
@@ -2223,7 +2223,7 @@ struct attack *mattk;
         return 0;
     if (magr == &youmonst) {
         pagr = youmonst.data;
-        agrinvis = (Invis != 0);
+        agrinvis = youAreInvisibleToOthers();
         genagr = poly_gender();
     } else {
         pagr = magr->data;
@@ -2231,7 +2231,7 @@ struct attack *mattk;
         genagr = gender(magr);
     }
     if (mdef == &youmonst) {
-        defperc = (youCanSeeInvisible() != 0);
+        defperc = youCanSeeInvisible();
         gendef = poly_gender();
     } else {
         defperc = perceives(mdef->data);
@@ -2651,7 +2651,7 @@ register struct attack *mattk;
                 if (!rn2(4))
                     tmp = 127;
                 if (mtmp->mcansee && haseyes(mtmp->data) && rn2(3)
-                    && (perceives(mtmp->data) || !Invis)) {
+                    && (perceives(mtmp->data) || !youAreInvisibleToOthers())) {
                     if (youCannotSee())
                         pline("As a blind %s, you cannot defend yourself.",
                               youmonst.data->mname);

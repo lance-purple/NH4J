@@ -2815,7 +2815,7 @@ struct monst *mon;
     if (useemon && xraydist > 0 && distanceSquaredToYou(mon->mx, mon->my) <= xraydist)
         how_seen |= MONSEEN_XRAYVIS;
     /* extended detection */
-    if (Detect_monsters)
+    if (youCanDetectMonsters())
         how_seen |= MONSEEN_DETECT;
     /* class-/type-specific warning */
     if (MATCH_WARN_OF_MON(mon))

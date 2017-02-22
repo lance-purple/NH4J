@@ -648,7 +648,7 @@ register int after; /* this is extra fast monster movement */
     udist = distanceSquaredToYou(omx, omy);
     /* Let steeds eat and maybe throw rider during Conflict */
     if (mtmp == u.usteed) {
-        if (Conflict && !resist(mtmp, RING_CLASS, 0, 0)) {
+        if (youCauseConflict() && !resist(mtmp, RING_CLASS, 0, 0)) {
             dismount_steed(DISMOUNT_THROWN);
             return 1;
         }
@@ -687,7 +687,7 @@ register int after; /* this is extra fast monster movement */
         allowflags |= ALLOW_ROCK;
     if (is_displacer(mtmp->data))
         allowflags |= ALLOW_MDISP;
-    if (Conflict && !resist(mtmp, RING_CLASS, 0, 0)) {
+    if (youCauseConflict() && !resist(mtmp, RING_CLASS, 0, 0)) {
         allowflags |= ALLOW_U;
         if (!has_edog) {
             /* Guardian angel refuses to be conflicted; rather,
@@ -698,7 +698,7 @@ register int after; /* this is extra fast monster movement */
         }
     }
 #if 0 /* [this is now handled in dochug()] */
-    if (!Conflict && !mtmp->mconf
+    if (!youCauseConflict() && !mtmp->mconf
         && mtmp == u.ustuck && !sticks(youmonst.data)) {
         unstuck(mtmp); /* swallowed case handled above */
         You("get released!");
@@ -765,7 +765,7 @@ register int after; /* this is extra fast monster movement */
                 || ((mtmp->mhp * 4 < mtmp->mhpmax
                      || mtmp2->data->msound == MS_GUARDIAN
                      || mtmp2->data->msound == MS_LEADER) && mtmp2->mpeaceful
-                    && !Conflict)
+                    && !youCauseConflict())
                 || (touch_petrifies(mtmp2->data) && !resists_ston(mtmp)))
                 continue;
 

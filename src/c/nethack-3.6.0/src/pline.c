@@ -517,7 +517,7 @@ ustatusline()
         Strcat(info, Very_fast ? ", very fast" : ", fast");
     if (lurking())
         Strcat(info, ", concealed");
-    if (Invis)
+    if (youAreInvisibleToOthers())
         Strcat(info, ", invisible");
     if (u.ustuck) {
         if (sticks(youmonst.data))

@@ -423,8 +423,8 @@ attrcurse()
             break;
         }
     case 6:
-        if (HInvis & INTRINSIC) {
-            HInvis &= ~INTRINSIC;
+        if (yourIntrinsicHasMask(INVIS, INTRINSIC)) {
+            unsetYourIntrinsicMask(INVIS, INTRINSIC);
             You_feel("paranoid.");
             break;
         }
@@ -442,8 +442,8 @@ attrcurse()
             break;
         }
     case 9:
-        if (HStealth & INTRINSIC) {
-            HStealth &= ~INTRINSIC;
+        if (yourIntrinsicHasMask(STEALTH, INTRINSIC)) {
+            unsetYourIntrinsicMask(STEALTH, INTRINSIC);
             You_feel("clumsy.");
             break;
         }
@@ -455,8 +455,8 @@ attrcurse()
             break;
         }
     case 11:
-        if (HAggravate_monster & INTRINSIC) {
-            HAggravate_monster &= ~INTRINSIC;
+        if (yourIntrinsicHasMask(AGGRAVATE_MONSTER, INTRINSIC)) {
+            unsetYourIntrinsicMask(AGGRAVATE_MONSTER, INTRINSIC);
             You_feel("less attractive.");
             break;
         }

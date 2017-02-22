@@ -19,38 +19,6 @@
  * intrinsic conferred by being polymorphed.]
  */
 
-/*** Troubles ***/
-
-/*** Vision and senses ***/
-
-#define HDetect_monsters u.uprops[DETECT_MONSTERS].intrinsic
-#define EDetect_monsters u.uprops[DETECT_MONSTERS].extrinsic
-#define Detect_monsters (yourIntrinsic(DETECT_MONSTERS) || yourExtrinsic(DETECT_MONSTERS))
-
-/*** Appearance and behavior ***/
-#define Adornment u.uprops[ADORNED].extrinsic
-
-#define HInvis u.uprops[INVIS].intrinsic
-#define EInvis u.uprops[INVIS].extrinsic
-#define Invis ((yourIntrinsic(INVIS) || yourExtrinsic(INVIS)) && !youAreBlockedFrom(INVIS))
-#define Invisible (Invis && !youCanSeeInvisible())
-/* Note: invisibility also hides inventory and steed */
-
-#define EDisplaced u.uprops[DISPLACED].extrinsic
-#define Displaced EDisplaced
-
-#define HStealth u.uprops[STEALTH].intrinsic
-#define EStealth u.uprops[STEALTH].extrinsic
-#define Stealth ((yourIntrinsic(STEALTH) || yourExtrinsic(STEALTH)) && !youAreBlockedFrom(STEALTH))
-
-#define HAggravate_monster u.uprops[AGGRAVATE_MONSTER].intrinsic
-#define EAggravate_monster u.uprops[AGGRAVATE_MONSTER].extrinsic
-#define Aggravate_monster (yourIntrinsic(AGGRAVATE_MONSTER) || yourExtrinsic(AGGRAVATE_MONSTER))
-
-#define HConflict u.uprops[CONFLICT].intrinsic
-#define EConflict u.uprops[CONFLICT].extrinsic
-#define Conflict (yourIntrinsic(CONFLICT) || yourExtrinsic(CONFLICT))
-
 /*** Transportation ***/
 #define HJumping u.uprops[JUMPING].intrinsic
 #define EJumping u.uprops[JUMPING].extrinsic

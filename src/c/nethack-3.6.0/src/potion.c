@@ -664,13 +664,13 @@ register struct obj *otmp;
         }
         /* FALLTHRU */
     case POT_INVISIBILITY:
-        if (Invis || youCannotSee() || youAreBlockedFrom(INVIS)) {
+        if (youAreInvisibleToOthers() || youCannotSee() || youAreBlockedFrom(INVIS)) {
             nothing++;
         } else {
             self_invis_message();
         }
         if (otmp->blessed)
-            HInvis |= FROMOUTSIDE;
+            setYourIntrinsicMask(INVIS, FROMOUTSIDE);
         else
             incrementYourIntrinsicTimeout(INVIS, rn1(15, 31));
         newsym(currentX(), currentY()); /* update position */
@@ -681,7 +681,7 @@ register struct obj *otmp;
         break;
     case POT_SEE_INVISIBLE: /* tastes like fruit juice in Rogue */
     case POT_FRUIT_JUICE: {
-        int msg = Invisible && youCanSee();
+        boolean msg = youAreFullyInvisible() && youCanSee();
 
         unkn++;
         if (otmp->cursed)
@@ -747,11 +747,11 @@ register struct obj *otmp;
         if (otmp->blessed) {
             int x, y;
 
-            if (Detect_monsters)
+            if (youCanDetectMonsters())
                 nothing++;
             unkn++;
             /* after a while, repeated uses become less effective */
-            if ((HDetect_monsters & TIMEOUT) >= 300L)
+            if (yourIntrinsicTimeout(DETECT_MONSTERS) >= 300L)
                 i = 1;
             else
                 i = rn1(40, 21);
@@ -1571,7 +1571,7 @@ register struct obj *obj;
         make_confused(itimeout_incr(yourIntrinsic(CONFUSION), rnd(5)), FALSE);
         break;
     case POT_INVISIBILITY:
-        if (youCanSee() && !Invis) {
+        if (youCanSee() && !youAreInvisibleToOthers()) {
             kn++;
             pline("For an instant you %s!",
                   youCanSeeInvisible() ? "could see right through yourself"

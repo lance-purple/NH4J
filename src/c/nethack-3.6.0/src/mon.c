@@ -690,7 +690,7 @@ movemon()
         }
 
         /* continue if the monster died fighting */
-        if (Conflict && !mtmp->iswiz && mtmp->mcansee) {
+        if (youCauseConflict() && !mtmp->iswiz && mtmp->mcansee) {
             /* Note:
              *  Conflict does not take effect in the first round.
              *  Therefore, A monster when stepping into the area will
@@ -1247,13 +1247,13 @@ nexttry: /* eels prefer the water, but if there is no water nearby,
                 && (lavaok || !is_lava(nx, ny))) {
                 int dispx, dispy;
                 boolean monseeu = (mon->mcansee
-                                   && (!Invis || perceives(mdat)));
+                                   && (!youAreInvisibleToOthers() || perceives(mdat)));
                 boolean checkobj = OBJ_AT(nx, ny);
 
                 /* Displacement also displaces the Elbereth/scare monster,
                  * as long as you are visible.
                  */
-                if (Displaced && monseeu && mon->mux == nx && mon->muy == ny) {
+                if (youAppearDisplaced() && monseeu && mon->mux == nx && mon->muy == ny) {
                     dispx = currentX();
                     dispy = currentY();
                 } else {

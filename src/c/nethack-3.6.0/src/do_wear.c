@@ -87,7 +87,7 @@ boolean on;
         return;
 
     if (!oldprop /* extrinsic stealth from something else */
-        && !HStealth /* intrinsic stealth */
+        && !yourIntrinsic(STEALTH) /* intrinsic stealth */
         && !youAreBlockedFrom(STEALTH)) { /* stealth blocked by something */
         if (obj->otyp == RIN_STEALTH)
             learnring(obj, TRUE);
@@ -128,13 +128,13 @@ boolean on;
            we'll notice that monsters have trouble spotting the hero */
         && ((youCanSee()         /* see anything */
              && !swallowed() /* see surroundings */
-             && !Invisible) /* see self */
+             && !youAreFullyInvisible()) /* see self */
             /* actively sensing nearby monsters via telepathy or extended
                monster detection overrides vision considerations because
                hero also senses self in this situation */
             || (youHaveTelepathyWhenNotBlind()
                 || (youHaveTelepathyWhenBlind() && youCannotSee())
-                || Detect_monsters))) {
+                || youCanDetectMonsters()))) {
         makeknown(obj->otyp);
 
         You_feel("that monsters%s have difficulty pinpointing your location.",
@@ -285,7 +285,7 @@ Cloak_on(VOID_ARGS)
         break;
     case MUMMY_WRAPPING:
         /* Note: it's already being worn, so we have to cheat here. */
-        if ((HInvis || EInvis) && youCanSee()) {
+        if ((yourIntrinsic(INVIS) || yourExtrinsic(INVIS)) && youCanSee()) {
             newsym(currentX(), currentY());
             You("can %s!", youCanSeeInvisible() ? "no longer see through yourself"
                                          : see_yourself);
@@ -294,7 +294,7 @@ Cloak_on(VOID_ARGS)
     case CLOAK_OF_INVISIBILITY:
         /* since cloak of invisibility was worn, we know mummy wrapping
            wasn't, so no need to check `oldprop' against blocked */
-        if (!oldprop && !HInvis && youCanSee()) {
+        if (!oldprop && !yourIntrinsic(INVIS) && youCanSee()) {
             makeknown(uarmc->otyp);
             newsym(currentX(), currentY());
             pline("Suddenly you can%s yourself.",
@@ -340,14 +340,14 @@ Cloak_off(VOID_ARGS)
         toggle_displacement(otmp, oldprop, FALSE);
         break;
     case MUMMY_WRAPPING:
-        if (Invis && youCanSee()) {
+        if (youAreInvisibleToOthers() && youCanSee()) {
             newsym(currentX(), currentY());
             You("can %s.", youCanSeeInvisible() ? "see through yourself"
                                          : "no longer see yourself");
         }
         break;
     case CLOAK_OF_INVISIBILITY:
-        if (!oldprop && !HInvis && youCanSee()) {
+        if (!oldprop && !yourIntrinsic(INVIS) && youCanSee()) {
             makeknown(CLOAK_OF_INVISIBILITY);
             newsym(currentX(), currentY());
             pline("Suddenly you can %s.",
@@ -890,14 +890,14 @@ register struct obj *obj;
         set_mimic_blocking(); /* do special mimic handling */
         see_monsters();
 
-        if (Invis && !oldprop && !yourIntrinsic(SEE_INVIS) && youCanSee()) {
+        if (youAreInvisibleToOthers() && !oldprop && !yourIntrinsic(SEE_INVIS) && youCanSee()) {
             newsym(currentX(), currentY());
             pline("Suddenly you are transparent, but there!");
             learnring(obj, TRUE);
         }
         break;
     case RIN_INVISIBILITY:
-        if (!oldprop && !HInvis && !youAreBlockedFrom(INVIS) && youCanSee()) {
+        if (!oldprop && !yourIntrinsic(INVIS) && !youAreBlockedFrom(INVIS) && youCanSee()) {
             learnring(obj, TRUE);
             newsym(currentX(), currentY());
             self_invis_message();
@@ -991,7 +991,7 @@ boolean gone;
     case MEAT_RING:
         break;
     case RIN_STEALTH:
-        toggle_stealth(obj, (EStealth & ~mask), FALSE);
+        toggle_stealth(obj, (yourExtrinsic(STEALTH) & ~mask), FALSE);
         break;
     case RIN_WARNING:
         see_monsters();
@@ -1003,14 +1003,14 @@ boolean gone;
             see_monsters();
         }
 
-        if (Invisible && youCanSee()) {
+        if (youAreFullyInvisible() && youCanSee()) {
             newsym(currentX(), currentY());
             pline("Suddenly you cannot see yourself.");
             learnring(obj, TRUE);
         }
         break;
     case RIN_INVISIBILITY:
-        if (!Invis && !youAreBlockedFrom(INVIS) && youCanSee()) {
+        if (!youAreInvisibleToOthers() && !youAreBlockedFrom(INVIS) && youCanSee()) {
             newsym(currentX(), currentY());
             Your("body seems to unfade%s.",
                  youCanSeeInvisible() ? " completely" : "..");

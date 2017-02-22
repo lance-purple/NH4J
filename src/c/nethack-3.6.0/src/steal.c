@@ -276,10 +276,10 @@ char *objnambuf;
     monkey_business = is_animal(mtmp->data);
     if (monkey_business || uarmg) {
         ; /* skip ring special cases */
-    } else if (Adornment & LEFT_RING) {
+    } else if (yourExtrinsic(ADORNED) & LEFT_RING) {
         otmp = uleft;
         goto gotobj;
-    } else if (Adornment & RIGHT_RING) {
+    } else if (yourExtrinsic(ADORNED) & RIGHT_RING) {
         otmp = uright;
         goto gotobj;
     }

@@ -2020,14 +2020,14 @@ int final;
     }
     if (youHaveInfravision())
         you_have("infravision", from_what(INFRAVISION));
-    if (Detect_monsters)
+    if (youCanDetectMonsters())
         you_are("sensing the presence of monsters", "");
     if (abilityToConfuseMonsters()) {
         you_are("going to confuse monsters", "");
     }
 
     /*** Appearance and behavior ***/
-    if (Adornment) {
+    if (youAreAdorned()) {
         int adorn = 0;
 
         if (uleft && uleft->otyp == RIN_ADORNMENT)
@@ -2041,22 +2041,22 @@ int final;
                 (adorn > 0) ? "more " : (adorn < 0) ? "less " : "");
         you_are(buf, from_what(ADORNED));
     }
-    if (Invisible)
+    if (youAreFullyInvisible())
         you_are("invisible", from_what(INVIS));
-    else if (Invis)
+    else if (youAreInvisibleToOthers())
         you_are("invisible to others", from_what(INVIS));
     /* ordinarily "visible" is redundant; this is a special case for
        the situation when invisibility would be an expected attribute */
-    else if ((HInvis || EInvis) && youAreBlockedFrom(INVIS))
+    else if ((yourIntrinsic(INVIS) || yourExtrinsic(INVIS)) && youAreBlockedFrom(INVIS))
         you_are("visible", from_what(-INVIS));
-    if (Displaced)
+    if (youAppearDisplaced())
         you_are("displaced", from_what(DISPLACED));
-    if (Stealth)
+    if (youAreStealthy())
         you_are("stealthy", from_what(STEALTH));
-    if (Aggravate_monster)
+    if (youAggravateMonsters())
         enl_msg("You aggravate", "", "d", " monsters",
                 from_what(AGGRAVATE_MONSTER));
-    if (Conflict)
+    if (youCauseConflict())
         enl_msg("You cause", "", "d", " conflict", from_what(CONFLICT));
 
     /*** Transportation ***/

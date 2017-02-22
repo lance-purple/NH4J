@@ -150,7 +150,7 @@ struct monst *mtmp;
      * Astral Plane; the influence of the Valar only reaches so far.  */
     return (epresent
             && ((currentX() == x && currentY() == y)
-                || (Displaced && mtmp->mux == x && mtmp->muy == y))
+                || (youAppearDisplaced() && mtmp->mux == x && mtmp->muy == y))
             && !(mtmp->isshk || mtmp->isgd || !mtmp->mcansee
                  || mtmp->mpeaceful || mtmp->data->mlet == S_HUMAN
                  || mtmp->data == &mons[PM_MINOTAUR]
@@ -198,14 +198,14 @@ register struct monst *mtmp;
      *      (1/7 and mon is not mimicing furniture or object)
      */
     if (couldsee(mtmp->mx, mtmp->my) && distanceSquaredToYou(mtmp->mx, mtmp->my) <= 100
-        && (!Stealth || (mtmp->data == &mons[PM_ETTIN] && rn2(10)))
+        && (!youAreStealthy() || (mtmp->data == &mons[PM_ETTIN] && rn2(10)))
         && (!(mtmp->data->mlet == S_NYMPH
               || mtmp->data == &mons[PM_JABBERWOCK]
 #if 0 /* DEFERRED */
               || mtmp->data == &mons[PM_VORPAL_JABBERWOCK]
 #endif
               || mtmp->data->mlet == S_LEPRECHAUN) || !rn2(50))
-        && (Aggravate_monster
+        && (youAggravateMonsters()
             || (mtmp->data->mlet == S_DOG || mtmp->data->mlet == S_HUMAN)
             || (!rn2(7) && mtmp->m_ap_type != M_AP_FURNITURE
                 && mtmp->m_ap_type != M_AP_OBJECT))) {
@@ -292,7 +292,7 @@ int *inrange, *nearby, *scared;
      * running into you by accident but possibly attacking the spot
      * where it guesses you are.
      */
-    if (!mtmp->mcansee || (Invis && !perceives(mtmp->data))) {
+    if (!mtmp->mcansee || (youAreInvisibleToOthers() && !perceives(mtmp->data))) {
         seescaryx = mtmp->mux;
         seescaryy = mtmp->muy;
     } else {
@@ -403,7 +403,7 @@ register struct monst *mtmp;
         mtmp->mflee = 0;
 
     /* cease conflict-induced swallow/grab if conflict has ended */
-    if (mtmp == u.ustuck && mtmp->mpeaceful && !mtmp->mconf && !Conflict) {
+    if (mtmp == u.ustuck && mtmp->mpeaceful && !mtmp->mconf && !youCauseConflict()) {
         release_hero(mtmp);
         return 0; /* uses up monster's turn */
     }
@@ -468,7 +468,7 @@ register struct monst *mtmp;
         }
         pline("A wave of psychic energy pours over you!");
         if (mtmp->mpeaceful
-            && (!Conflict || resist(mtmp, RING_CLASS, 0, 0))) {
+            && (!youCauseConflict() || resist(mtmp, RING_CLASS, 0, 0))) {
             pline("It feels quite soothing.");
         } else if (!invulnerableWhilePraying()) {
             register boolean m_sen = sensemon(mtmp);
@@ -511,7 +511,7 @@ toofar:
     /* If monster is nearby you, and has to wield a weapon, do so.   This
      * costs the monster a move, of course.
      */
-    if ((!mtmp->mpeaceful || Conflict) && inrange
+    if ((!mtmp->mpeaceful || youCauseConflict()) && inrange
         && dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) <= 8
         && attacktype(mdat, AT_WEAP)) {
         struct obj *mw_tmp;
@@ -540,7 +540,7 @@ toofar:
         || (mtmp->minvis && !rn2(3))
         || (mdat->mlet == S_LEPRECHAUN && !findgold(invent)
             && (findgold(mtmp->minvent) || rn2(2)))
-        || (is_wanderer(mdat) && !rn2(4)) || (Conflict && !mtmp->iswiz)
+        || (is_wanderer(mdat) && !rn2(4)) || (youCauseConflict() && !mtmp->iswiz)
         || (!mtmp->mcansee && !rn2(4)) || mtmp->mpeaceful) {
         /* Possibly cast an undirected spell if not attacking you */
         /* note that most of the time castmu() will pick a directed
@@ -607,7 +607,7 @@ toofar:
     /*  Now, attack the player if possible - one attack set per monst
      */
 
-    if (!mtmp->mpeaceful || (Conflict && !resist(mtmp, RING_CLASS, 0, 0))) {
+    if (!mtmp->mpeaceful || (youCauseConflict() && !resist(mtmp, RING_CLASS, 0, 0))) {
         if (inrange && !noattacks(mdat) && currentHitPoints() > 0 && !scared && tmp != 3)
             if (mattacku(mtmp))
                 return 1; /* monster died (e.g. exploded) */
@@ -844,7 +844,7 @@ not_special:
                               && (dist2(omx, omy, gx, gy) <= 36));
 
         if (!mtmp->mcansee
-            || (should_see && Invis && !perceives(ptr) && rn2(11))
+            || (should_see && youAreInvisibleToOthers() && !perceives(ptr) && rn2(11))
             || is_obj_mappear(&youmonst,STRANGE_OBJECT) || lurking()
             || (is_obj_mappear(&youmonst,GOLD_PIECE) && !likes_gold(ptr))
             || (mtmp->mpeaceful && !mtmp->isshk) /* allow shks to follow */
@@ -997,14 +997,14 @@ not_special:
 
     /* don't tunnel if hostile and close enough to prefer a weapon */
     if (can_tunnel && needspick(ptr)
-        && ((!mtmp->mpeaceful || Conflict)
+        && ((!mtmp->mpeaceful || youCauseConflict())
             && dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) <= 8))
         can_tunnel = FALSE;
 
     nix = omx;
     niy = omy;
     flag = 0L;
-    if (mtmp->mpeaceful && (!Conflict || resist(mtmp, RING_CLASS, 0, 0)))
+    if (mtmp->mpeaceful && (!youCauseConflict() || resist(mtmp, RING_CLASS, 0, 0)))
         flag |= (ALLOW_SANCT | ALLOW_SSM);
     else
         flag |= ALLOW_U;
@@ -1446,7 +1446,7 @@ register struct monst *mtmp;
     if (mx == currentX() && my == currentY())
         goto found_you;
 
-    notseen = (!mtmp->mcansee || (Invis && !perceives(mtmp->data)));
+    notseen = (!mtmp->mcansee || (youAreInvisibleToOthers() && !perceives(mtmp->data)));
     /* add cases as required.  eg. Displacement ... */
     if (notseen || underwater()) {
         /* Xorns can smell quantities of valuable metal
@@ -1455,7 +1455,7 @@ register struct monst *mtmp;
             disp = 0;
         else
             disp = 1;
-    } else if (Displaced) {
+    } else if (youAppearDisplaced()) {
         disp = couldsee(mx, my) ? 2 : 1;
     } else
         disp = 0;
@@ -1464,7 +1464,7 @@ register struct monst *mtmp;
 
     /* without something like the following, invisibility and displacement
        are too powerful */
-    gotu = notseen ? !rn2(3) : Displaced ? !rn2(4) : FALSE;
+    gotu = notseen ? !rn2(3) : youAppearDisplaced() ? !rn2(4) : FALSE;
 
     if (!gotu) {
         register int try_cnt = 0;

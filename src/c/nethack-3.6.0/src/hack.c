@@ -1365,7 +1365,7 @@ domove()
                     }
                 /*FALLTHRU*/
                 default:
-                    if (u.ustuck->mtame && !Conflict && !u.ustuck->mconf)
+                    if (u.ustuck->mtame && !youCauseConflict() && !u.ustuck->mconf)
                         goto pull_free;
                     You("cannot escape from %s!", mon_nam(u.ustuck));
                     nomul(0);
@@ -2337,7 +2337,7 @@ register boolean newlev;
                 for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
                     if (DEADMONSTER(mtmp))
                         continue;
-                    if (!Stealth && !rn2(3))
+                    if (!youAreStealthy() && !rn2(3))
                         mtmp->msleeping = 0;
                 }
         }

@@ -1034,7 +1034,7 @@ struct monst *mtmp;
     if (!mtmp->mtame)
         return;
 
-    if (Aggravate_monster || Conflict)
+    if (youAggravateMonsters() || youCauseConflict())
         mtmp->mtame /= 2;
     else
         mtmp->mtame--;

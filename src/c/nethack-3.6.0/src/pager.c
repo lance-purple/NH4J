@@ -70,7 +70,7 @@ char *outbuf;
         Sprintf(race, "%s ", urace.adj);
     Sprintf(outbuf, "%s%s%s called %s",
             /* being blinded may hide invisibility from self */
-            (Invis && (senseself() || youCanSee())) ? "invisible " : "", race,
+            (youAreInvisibleToOthers() && (senseself() || youCanSee())) ? "invisible " : "", race,
             mons[currentMonsterNumber()].mname, plname);
     if (u.usteed)
         Sprintf(eos(outbuf), ", mounted on %s", y_monnam(u.usteed));
@@ -278,14 +278,14 @@ char *buf, *monbuf;
            (even if you could also see yourself via other means).
            Sensing self while blind or swallowed is treated as if it
            were by normal vision (cf canseeself()). */
-        if ((Invisible || lurking()) && youCanSee() && !swallowed()) {
+        if ((youAreFullyInvisible() || lurking()) && youCanSee() && !swallowed()) {
             unsigned how = 0;
 
             if (youHaveInfravision())
                 how |= 1;
             if (youHaveTelepathyWhenNotBlind())
                 how |= 2;
-            if (Detect_monsters)
+            if (youCanDetectMonsters())
                 how |= 4;
 
             if (how)

@@ -172,7 +172,7 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
             seemimic(mtmp);
             return FALSE;
         }
-        if (!((youCannotSee() ? youHaveTelepathyWhenBlind() : youHaveTelepathyWhenNotBlind()) || Detect_monsters)) {
+        if (!((youCannotSee() ? youHaveTelepathyWhenBlind() : youHaveTelepathyWhenNotBlind()) || youCanDetectMonsters())) {
             struct obj *obj;
 
             if (youCannotSee() || (is_pool(mtmp->mx, mtmp->my) && !underwater()))
@@ -1852,7 +1852,7 @@ STATIC_OVL void
 start_engulf(mdef)
 struct monst *mdef;
 {
-    if (!Invisible) {
+    if (!youAreFullyInvisible()) {
         map_location(currentX(), currentY(), TRUE);
         tmp_at(DISP_ALWAYS, mon_to_glyph(&youmonst));
         tmp_at(mdef->mx, mdef->my);
@@ -1865,7 +1865,7 @@ struct monst *mdef;
 STATIC_OVL void
 end_engulf()
 {
-    if (!Invisible) {
+    if (!youAreFullyInvisible()) {
         tmp_at(DISP_END, 0);
         newsym(currentX(), currentY());
     }

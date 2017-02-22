@@ -550,7 +550,7 @@ freshly_entered_shop_deserted()
             }
         }
 
-    if (youCannotSee() && !(youHaveTelepathyWhenBlind() || Detect_monsters))
+    if (youCannotSee() && !(youHaveTelepathyWhenBlind() || youCanDetectMonsters()))
         ++n; /* force feedback to be less specific */
 
     pline("This shop %s %s.", (m < n) ? "seems to be" : "is",
@@ -611,7 +611,7 @@ u_freshly_entered_shop()
     if (muteshk(shkp) || eshkp->following)
         return; /* no dialog */
 
-    if (Invis) {
+    if (youAreInvisibleToOthers()) {
         pline("%s senses your presence.", shkname(shkp));
         verbalize("Invisible customers are not welcome!");
         return;
@@ -3553,8 +3553,8 @@ register struct monst *shkp;
 
     if ((udist = distanceSquaredToYou(omx, omy)) < 3 && (shkp->data != &mons[PM_GRID_BUG]
                                           || (omx == currentX() || omy == currentY()))) {
-        if (ANGRY(shkp) || (Conflict && !resist(shkp, RING_CLASS, 0, 0))) {
-            if (Displaced)
+        if (ANGRY(shkp) || (youCauseConflict() && !resist(shkp, RING_CLASS, 0, 0))) {
+            if (youAppearDisplaced())
                 Your("displaced image doesn't fool %s!", mon_nam(shkp));
             (void) mattacku(shkp);
             return 0;
@@ -3608,7 +3608,7 @@ register struct monst *shkp;
         avoid = FALSE;
     } else {
 #define GDIST(x, y) (dist2(x, y, gx, gy))
-        if (Invis || u.usteed) {
+        if (youAreInvisibleToOthers() || u.usteed) {
             avoid = FALSE;
         } else {
             uondoor = (currentX() == eshkp->shd.x && currentY() == eshkp->shd.y);
@@ -3925,7 +3925,7 @@ boolean cant_mollify;
         return;
     }
 
-    if (Invis)
+    if (youAreInvisibleToOthers())
         Your("invisibility does not fool %s!", shkname(shkp));
     Sprintf(qbuf, "%sYou did %ld %s worth of damage!%s  Pay?",
             !animal ? cad(TRUE) : "", cost_of_damage,
@@ -4350,7 +4350,7 @@ register xchar x, y;
         && shkp->mcanmove && !shkp->msleeping
         && (ESHK(shkp)->debit || ESHK(shkp)->billct || ESHK(shkp)->robbed)) {
         pline("%s%s blocks your way!", shkname(shkp),
-              Invis ? " senses your motion and" : "");
+              youAreInvisibleToOthers() ? " senses your motion and" : "");
         return TRUE;
     }
     return FALSE;
@@ -4384,10 +4384,10 @@ register xchar x, y;
 
     if (shkp->mx == sx && shkp->my == sy && shkp->mcanmove && !shkp->msleeping
         && (x == sx - 1 || x == sx + 1 || y == sy - 1 || y == sy + 1)
-        && (Invis || carrying(PICK_AXE) || carrying(DWARVISH_MATTOCK)
+        && (youAreInvisibleToOthers() || carrying(PICK_AXE) || carrying(DWARVISH_MATTOCK)
             || u.usteed)) {
         pline("%s%s blocks your way!", shkname(shkp),
-              Invis ? " senses your motion and" : "");
+              youAreInvisibleToOthers() ? " senses your motion and" : "");
         return TRUE;
     }
     return FALSE;

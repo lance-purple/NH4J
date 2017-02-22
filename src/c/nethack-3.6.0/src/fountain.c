@@ -297,7 +297,7 @@ drinkfountain()
         }
         case 25: /* See invisible */
             if (youCannotSee()) {
-                if (Invisible) {
+                if (youAreFullyInvisible()) {
                     You("feel transparent.");
                 } else {
                     You("feel very self-conscious.");

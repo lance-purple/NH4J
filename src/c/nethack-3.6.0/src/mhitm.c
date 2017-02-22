@@ -384,7 +384,7 @@ register struct monst *magr, *mdef;
              * have a weapon instead.  This instinct doesn't work for
              * players, or under conflict or confusion.
              */
-            if (!magr->mconf && !Conflict && otmp && mattk->aatyp != AT_WEAP
+            if (!magr->mconf && !youCauseConflict() && otmp && mattk->aatyp != AT_WEAP
                 && touch_petrifies(mdef->data)) {
                 strike = 0;
                 break;

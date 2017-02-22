@@ -623,7 +623,7 @@ boolean allowmsg;
                 You("have a bad feeling deep inside.");
             You("cannibal!  You will regret this!");
         }
-        HAggravate_monster |= FROMOUTSIDE;
+        setYourIntrinsicMask(AGGRAVATE_MONSTER, FROMOUTSIDE);
         change_luck(-rn1(4, 2)); /* -5..-2 */
         return TRUE;
     }
@@ -659,7 +659,7 @@ register int pm;
         /* cannibals are allowed to eat domestic animals without penalty */
         if (!CANNIBAL_ALLOWED()) {
             You_feel("that eating the %s was a bad idea.", mons[pm].mname);
-            HAggravate_monster |= FROMOUTSIDE;
+            setYourIntrinsicMask(AGGRAVATE_MONSTER, FROMOUTSIDE);
         }
         break;
     case PM_LIZARD:
@@ -950,14 +950,15 @@ register int pm;
         context.botl = 1;
         break;
     case PM_STALKER:
-        if (!Invis) {
+        if (!youAreInvisibleToOthers()) {
             setYourIntrinsicTimeout(INVIS, (long) rn1(100, 50));
             if (youCanSee() && !youAreBlockedFrom(INVIS))
                 self_invis_message();
         } else {
-            if (!(HInvis & INTRINSIC))
+            if (!yourIntrinsicHasMask(INVIS, INTRINSIC)) {
                 You_feel("hidden!");
-            HInvis |= FROMOUTSIDE;
+	    }
+            setYourIntrinsicMask(INVIS, FROMOUTSIDE);
             setYourIntrinsicMask(SEE_INVIS, FROMOUTSIDE);
         }
         newsym(currentX(), currentY());
@@ -1865,7 +1866,7 @@ struct obj *otmp;
             case RIN_SEE_INVISIBLE:
                 set_mimic_blocking();
                 see_monsters();
-                if (Invis && !oldprop && !yourIntrinsic(SEE_INVIS)
+                if (youAreInvisibleToOthers() && !oldprop && !yourIntrinsic(SEE_INVIS)
                     && !perceives(youmonst.data) && youCanSee()) {
                     newsym(currentX(), currentY());
                     pline("Suddenly you can see yourself.");
@@ -1873,7 +1874,7 @@ struct obj *otmp;
                 }
                 break;
             case RIN_INVISIBILITY:
-                if (!oldprop && !EInvis && !youAreBlockedFrom(INVIS) && !youCanSeeInvisible()
+                if (!oldprop && !yourExtrinsic(INVIS) && !youAreBlockedFrom(INVIS) && !youCanSeeInvisible()
                     && youCanSee()) {
                     newsym(currentX(), currentY());
                     Your("body takes on a %s transparency...",
@@ -2642,7 +2643,7 @@ gethungry()
             decreaseCurrentNutrition(1);
         }
         /* Conflict uses up food too */ 
-        if (HConflict || (EConflict & (~W_ARTI))) {
+        if (yourIntrinsic(CONFLICT) || (yourExtrinsic(CONFLICT) & (~W_ARTI))) {
             decreaseCurrentNutrition(1);
         }
         /* +0 charged rings don't do anything, so don't affect hunger */

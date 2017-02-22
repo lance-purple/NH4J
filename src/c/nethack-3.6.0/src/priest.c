@@ -219,9 +219,9 @@ register struct monst *priest;
     gy += rn1(3, -1);
 
     if (!priest->mpeaceful
-        || (Conflict && !resist(priest, RING_CLASS, 0, 0))) {
+        || (youCauseConflict() && !resist(priest, RING_CLASS, 0, 0))) {
         if (monnear(priest, currentX(), currentY())) {
-            if (Displaced)
+            if (youAppearDisplaced())
                 Your("displaced image doesn't fool %s!", mon_nam(priest));
             (void) mattacku(priest);
             return 0;
@@ -233,7 +233,7 @@ register struct monst *priest;
             }
             avoid = FALSE;
         }
-    } else if (Invis)
+    } else if (youAreInvisibleToOthers())
         avoid = FALSE;
 
     return move_special(priest, FALSE, TRUE, FALSE, avoid, omx, omy, gx, gy);

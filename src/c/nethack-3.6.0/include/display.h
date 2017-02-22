@@ -39,7 +39,7 @@
               && (distanceSquaredToYou(mon->mx, mon->my) <= (BOLT_LIM * BOLT_LIM)))))
 
 #define sensemon(mon) \
-    (tp_sensemon(mon) || Detect_monsters || MATCH_WARN_OF_MON(mon))
+    (tp_sensemon(mon) || youCanDetectMonsters() || MATCH_WARN_OF_MON(mon))
 
 /*
  * mon_warning() is used to warn of any dangerous monsters in your
@@ -110,7 +110,7 @@
  */
 #define knowninvisible(mon)                                               \
     (mtmp->minvis                                                         \
-     && ((cansee(mon->mx, mon->my) && (youCanSeeInvisible() || Detect_monsters)) \
+     && ((cansee(mon->mx, mon->my) && (youCanSeeInvisible() || youCanDetectMonsters())) \
          || (youCanSee() && (yourIntrinsicHasMask(TELEPAT, ~INTRINSIC))                            \
              && distanceSquaredToYou(mon->mx, mon->my) <= (BOLT_LIM * BOLT_LIM))))
 
@@ -135,8 +135,8 @@
  * unable to see.  So when blind, being invisible won't affect your
  * self-perception, and when swallowed, the enclosing monster touches.
  */
-#define canseeself() (youCannotSee() || swallowed() || (!Invisible && !lurking()))
-#define senseself() (youHaveTelepathyWhenNotBlind() || Detect_monsters)
+#define canseeself() (youCannotSee() || swallowed() || (!youAreFullyInvisible() && !lurking()))
+#define senseself() (youHaveTelepathyWhenNotBlind() || youCanDetectMonsters())
 #define canspotself() (canseeself() || senseself())
 
 /*

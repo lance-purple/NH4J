@@ -2229,10 +2229,10 @@ boolean ordinary;
         break;
 
     case WAN_MAKE_INVISIBLE: {
-        /* have to test before changing HInvis but must change
-         * HInvis before doing newsym().
+        /* have to test before changing yourIntrinsic(INVIS) but must change
+         * yourIntrinsic(INVIS) before doing newsym().
          */
-        int msg = !Invis && youCanSee() && !youAreBlockedFrom(INVIS);
+        int msg = !youAreInvisibleToOthers() && youCanSee() && !youAreBlockedFrom(INVIS);
 
         if (youAreBlockedFrom(INVIS) && uarmc->otyp == MUMMY_WRAPPING) {
             /* A mummy wrapping absorbs it and protects you */
@@ -2240,7 +2240,7 @@ boolean ordinary;
             break;
         }
         if (ordinary || !rn2(10)) { /* permanent */
-            HInvis |= FROMOUTSIDE;
+            setYourIntrinsicMask(INVIS, FROMOUTSIDE);
         } else { /* temporary */
             incrementYourIntrinsicTimeout(INVIS, d(obj->spe, 250));
         }

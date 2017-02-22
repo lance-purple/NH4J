@@ -53,12 +53,12 @@ boolean undirected;
 
         if (undirected)
             point_msg = "all around, then curses";
-        else if ((Invis && !perceives(mtmp->data)
+        else if ((youAreInvisibleToOthers() && !perceives(mtmp->data)
                   && (mtmp->mux != currentX() || mtmp->muy != currentY()))
                  || is_obj_mappear(&youmonst, STRANGE_OBJECT)
                  || lurking())
             point_msg = "and curses in your general direction";
-        else if (Displaced && (mtmp->mux != currentX() || mtmp->muy != currentY()))
+        else if (youAppearDisplaced() && (mtmp->mux != currentX() || mtmp->muy != currentY()))
             point_msg = "and curses at your displaced image";
         else
             point_msg = "at you, then curses";
@@ -258,10 +258,10 @@ boolean foundyou;
               canspotmon(mtmp) ? Monnam(mtmp) : "Something",
               is_undirected_spell(mattk->adtyp, spellnum)
                   ? ""
-                  : (Invisible && !perceives(mtmp->data)
+                  : (youAreFullyInvisible() && !perceives(mtmp->data)
                      && (mtmp->mux != currentX() || mtmp->muy != currentY()))
                         ? " at a spot near you"
-                        : (Displaced
+                        : (youAppearDisplaced()
                            && (mtmp->mux != currentX() || mtmp->muy != currentY()))
                               ? " at your displaced image"
                               : " at you");
@@ -392,10 +392,10 @@ int spellnum;
 
             /* messages not quite right if plural monsters created but
                only a single monster is seen */
-            if (Invisible && !perceives(mtmp->data)
+            if (youAreFullyInvisible() && !perceives(mtmp->data)
                 && (mtmp->mux != currentX() || mtmp->muy != currentY()))
                 pline("%s around a spot near you!", mappear);
-            else if (Displaced && (mtmp->mux != currentX() || mtmp->muy != currentY()))
+            else if (youAppearDisplaced() && (mtmp->mux != currentX() || mtmp->muy != currentY()))
                 pline("%s around your displaced image!", mappear);
             else
                 pline("%s from nowhere!", mappear);
@@ -593,7 +593,7 @@ int spellnum;
 
         /* not canspotmon(), which includes unseen things sensed via warning
          */
-        seecaster = canseemon(mtmp) || tp_sensemon(mtmp) || Detect_monsters;
+        seecaster = canseemon(mtmp) || tp_sensemon(mtmp) || youCanDetectMonsters();
 
         fmt = 0;
         if (!seecaster) {
@@ -623,10 +623,10 @@ int spellnum;
             fmt = "%s casts at a clump of sticks, but nothing happens.";
         else if (let == S_SNAKE)
             fmt = "%s transforms a clump of sticks into snakes!";
-        else if (Invisible && !perceives(mtmp->data)
+        else if (youAreFullyInvisible() && !perceives(mtmp->data)
                  && (mtmp->mux != currentX() || mtmp->muy != currentY()))
             fmt = "%s summons insects around a spot near you!";
-        else if (Displaced && (mtmp->mux != currentX() || mtmp->muy != currentY()))
+        else if (youAppearDisplaced() && (mtmp->mux != currentX() || mtmp->muy != currentY()))
             fmt = "%s summons insects around your displaced image!";
         else
             fmt = "%s summons insects!";
