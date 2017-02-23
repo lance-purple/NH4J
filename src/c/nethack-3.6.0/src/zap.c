@@ -2253,7 +2253,7 @@ boolean ordinary;
     }
 
     case WAN_SPEED_MONSTER:
-        if (!(HFast & INTRINSIC)) {
+        if (!(yourIntrinsicHasMask(FAST, INTRINSIC))) {
             learn_it = TRUE;
             if (!Fast)
                 You("speed up.");
@@ -2261,7 +2261,7 @@ boolean ordinary;
                 Your("quickness feels more natural.");
             exercise(A_DEX, TRUE);
         }
-        HFast |= FROMOUTSIDE;
+        setYourIntrinsicMask(FAST, FROMOUTSIDE);
         break;
 
     case WAN_SLEEP:
@@ -2278,7 +2278,7 @@ boolean ordinary;
 
     case WAN_SLOW_MONSTER:
     case SPE_SLOW_MONSTER:
-        if (HFast & (TIMEOUT | INTRINSIC)) {
+        if (yourIntrinsicHasMask(FAST, (TIMEOUT | INTRINSIC))) {
             learn_it = TRUE;
             u_slow_down();
         }

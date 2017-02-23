@@ -397,8 +397,8 @@ attrcurse()
             break;
         }
     case 2:
-        if (HTeleportation & INTRINSIC) {
-            HTeleportation &= ~INTRINSIC;
+        if (yourIntrinsicHasMask(TELEPORT, INTRINSIC)) {
+            unsetYourIntrinsicMask(TELEPORT, INTRINSIC);
             You_feel("less jumpy.");
             break;
         }
@@ -436,8 +436,8 @@ attrcurse()
             break;
         }
     case 8:
-        if (HFast & INTRINSIC) {
-            HFast &= ~INTRINSIC;
+        if (yourIntrinsicHasMask(FAST, INTRINSIC)) {
+            unsetYourIntrinsicMask(FAST, INTRINSIC);
             You_feel("slower.");
             break;
         }
@@ -449,8 +449,8 @@ attrcurse()
         }
     case 10:
         /* intrinsic protection is just disabled, not set back to 0 */
-        if (HProtection & INTRINSIC) {
-            HProtection &= ~INTRINSIC;
+        if (yourIntrinsicHasMask(PROTECTION, INTRINSIC)) {
+            unsetYourIntrinsicMask(PROTECTION, INTRINSIC);
             You_feel("vulnerable.");
             break;
         }

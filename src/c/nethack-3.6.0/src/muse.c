@@ -2128,24 +2128,24 @@ ureflects(fmt, str)
 const char *fmt, *str;
 {
     /* Check from outermost to innermost objects */
-    if (EReflecting & W_ARMS) {
+    if (yourExtrinsicHasMask(REFLECTING, W_ARMS)) {
         if (fmt && str) {
             pline(fmt, str, "shield");
             makeknown(SHIELD_OF_REFLECTION);
         }
         return TRUE;
-    } else if (EReflecting & W_WEP) {
+    } else if (yourExtrinsicHasMask(REFLECTING, W_WEP)) {
         /* Due to wielded artifact weapon */
         if (fmt && str)
             pline(fmt, str, "weapon");
         return TRUE;
-    } else if (EReflecting & W_AMUL) {
+    } else if (yourExtrinsicHasMask(REFLECTING, W_AMUL)) {
         if (fmt && str) {
             pline(fmt, str, "medallion");
             makeknown(AMULET_OF_REFLECTION);
         }
         return TRUE;
-    } else if (EReflecting & W_ARM) {
+    } else if (yourExtrinsicHasMask(REFLECTING, W_ARM)) {
         if (fmt && str)
             pline(fmt, str, uskin ? "luster" : "armor");
         return TRUE;

@@ -575,7 +575,7 @@ aligntyp resp_god;
         /* disintegrate shield and body armor before disintegrating
          * the impudent mortal, like black dragon breath -3.
          */
-        if (uarms && !(EReflecting & W_ARMS)
+        if (uarms && !(yourExtrinsicHasMask(REFLECTING, W_ARMS))
             && !(yourExtrinsicHasMask(DISINT_RES, W_ARMS)))
             (void) destroy_arm(uarms);
         if (uarmc && !(yourExtrinsicHasMask(REFLECTING, W_ARMC))
@@ -1092,15 +1092,15 @@ aligntyp g_align;
                 pline(msg, "Telepathy");
                 if (youCannotSee())
                     see_monsters();
-            } else if (!(HFast & INTRINSIC)) {
-                HFast |= FROMOUTSIDE;
+            } else if (!(yourIntrinsicHasMask(FAST, INTRINSIC))) {
+                setYourIntrinsicMask(FAST, FROMOUTSIDE);
                 pline(msg, "Speed");
             } else if (!yourIntrinsicHasMask(STEALTH, INTRINSIC)) {
                 setYourIntrinsicMask(STEALTH, FROMOUTSIDE);
                 pline(msg, "Stealth");
             } else {
-                if (!(HProtection & INTRINSIC)) {
-                    HProtection |= FROMOUTSIDE;
+                if (!(yourIntrinsicHasMask(PROTECTION, INTRINSIC))) {
+                    setYourIntrinsicMask(PROTECTION, FROMOUTSIDE);
                     if (!blessings()) {
                         setBlessings(rn1(3, 2));
                     }

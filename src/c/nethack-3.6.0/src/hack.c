@@ -513,21 +513,23 @@ dosinkfall()
 {
     register struct obj *obj;
     int dmg;
-    boolean lev_boots = (uarmf && uarmf->otyp == LEVITATION_BOOTS),
-            innate_lev = ((HLevitation & (FROMOUTSIDE | FROMFORM)) != 0L),
-            ufall = (!innate_lev && !(HFlying || EFlying)); /* BFlying */
+    boolean lev_boots = (uarmf && uarmf->otyp == LEVITATION_BOOTS);
+    boolean innate_lev = yourIntrinsicHasMask(LEVITATION, (FROMOUTSIDE | FROMFORM));
+    boolean ufall = (!innate_lev && !(yourIntrinsic(FLYING) || yourExtrinsic(FLYING))); /* BFlying */
 
     if (!ufall) {
         You(innate_lev ? "wobble unsteadily for a moment."
                        : "gain control of your flight.");
     } else {
-        long save_ELev = ELevitation, save_HLev = HLevitation;
+        long save_HLev = yourIntrinsic(LEVITATION);
+        long save_ELev = yourExtrinsic(LEVITATION);
 
         /* fake removal of levitation in advance so that final
            disclosure will be right in case this turns out to
            be fatal; fortunately the fact that rings and boots
            are really still worn has no effect on bones data */
-        ELevitation = HLevitation = 0L;
+        setYourIntrinsic(LEVITATION, 0L);
+        setYourExtrinsic(LEVITATION, 0L);
         You("crash to the floor!");
         dmg = rn1(8, 25 - (int) ACURR(A_CON));
         losehp(Maybe_Half_Phys(dmg), fell_on_sink, NO_KILLER_PREFIX);
@@ -540,8 +542,8 @@ dosinkfall()
                        NO_KILLER_PREFIX);
                 exercise(A_CON, FALSE);
             }
-        ELevitation = save_ELev;
-        HLevitation = save_HLev;
+        setYourIntrinsic(LEVITATION, save_HLev);
+        setYourExtrinsic(LEVITATION, save_ELev);
     }
 
     /*
@@ -563,9 +565,9 @@ dosinkfall()
     }
 
     /* remove worn levitation items */
-    ELevitation &= ~W_ARTI;
-    HLevitation &= ~(I_SPECIAL | TIMEOUT);
-    HLevitation++;
+    unsetYourExtrinsicMask(LEVITATION, W_ARTI);
+    unsetYourIntrinsicMask(LEVITATION, (I_SPECIAL | TIMEOUT));
+    setYourIntrinsic(LEVITATION, yourIntrinsic(LEVITATION)+1);
     if (uleft && uleft->otyp == RIN_LEVITATION) {
         obj = uleft;
         Ring_off(obj);
@@ -581,7 +583,7 @@ dosinkfall()
         (void) Boots_off();
         off_msg(obj);
     }
-    HLevitation--;
+    setYourIntrinsic(LEVITATION, yourIntrinsic(LEVITATION)-1);
     /* probably moot; we're either still levitating or went
        through float_down(), but make sure BFlying is up to date */
     float_vs_flight();
@@ -1938,8 +1940,8 @@ boolean pick;
            turn, allowing it to do so could give the perception
            that a trap here is being triggered twice, so adjust
            the timeout to prevent that */
-        if (trap && (HLevitation & TIMEOUT) == 1L && !ELevitation
-            && !(HLevitation & ~TIMEOUT)) {
+        if (trap && (yourIntrinsicTimeout(LEVITATION) == 1L) && !yourExtrinsic(LEVITATION)
+            && !(yourIntrinsicHasMask(LEVITATION, ~TIMEOUT))) {
             if (rn2(2)) { /* defer timeout */
                 incrementYourIntrinsicTimeout(LEVITATION, 1L);
             } else { /* timeout early */

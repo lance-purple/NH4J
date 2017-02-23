@@ -722,7 +722,7 @@ u_init()
         knows_class(ARMOR_CLASS);
         /* give knights chess-like mobility
          * -- idea from wooledge@skybridge.scl.cwru.edu */
-        HJumping |= FROMOUTSIDE;
+        setYourIntrinsicMask(JUMPING, FROMOUTSIDE);
         skill_init(Skill_K);
         break;
     case PM_MONK:

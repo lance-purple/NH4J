@@ -564,7 +564,7 @@ register struct obj *obj;
             boolean levhack = finesse_ahriman(obj);
 
             if (levhack)
-                ELevitation = W_ART; /* other than W_ARTI */
+                setYourExtrinsic(LEVITATION, W_ART); /* other than W_ARTI */
             if (flags.verbose)
                 You("drop %s.", doname(obj));
             /* Ensure update when we drop gold objects */
@@ -866,10 +866,10 @@ dodown()
     }
     /* Levitation might be blocked, but player can still use '>' to
        turn off controlled levitation */
-    if (HLevitation || ELevitation) {
-        if ((HLevitation & I_SPECIAL) || (ELevitation & W_ARTI)) {
+    if (yourIntrinsic(LEVITATION) || yourExtrinsic(LEVITATION)) {
+        if ((yourIntrinsicHasMask(LEVITATION, I_SPECIAL)) || (yourExtrinsicHasMask(LEVITATION, W_ARTI))) {
             /* end controlled levitation */
-            if (ELevitation & W_ARTI) {
+            if (yourExtrinsicHasMask(LEVITATION, W_ARTI)) {
                 struct obj *obj;
 
                 for (obj = invent; obj; obj = obj->nobj) {
@@ -883,7 +883,7 @@ dodown()
             }
             if (float_down(I_SPECIAL | TIMEOUT, W_ARTI)) {
                 return 1; /* came down, so moved */
-            } else if (!HLevitation && !ELevitation) {
+            } else if (!yourIntrinsic(LEVITATION) && !yourExtrinsic(LEVITATION)) {
                 Your("latent levitation ceases.");
                 return 1; /* did something, effectively moved */
             }

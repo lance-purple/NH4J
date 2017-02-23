@@ -951,7 +951,7 @@ register struct obj *otmp;
     case POT_LEVITATION:
     case SPE_LEVITATION:
         if (otmp->cursed)
-            HLevitation &= ~I_SPECIAL;
+            unsetYourIntrinsicMask(LEVITATION, I_SPECIAL);
         if (!Levitation && !youAreBlockedFrom(LEVITATION)) {
             /* kludge to ensure proper operation of float_up() */
             setYourIntrinsicTimeout(LEVITATION, 1L);
@@ -978,7 +978,7 @@ register struct obj *otmp;
             nothing++;
         if (otmp->blessed) {
             incrementYourIntrinsicTimeout(LEVITATION, rn1(50, 250));
-            HLevitation |= I_SPECIAL;
+            setYourIntrinsicMask(LEVITATION, I_SPECIAL);
         } else
             incrementYourIntrinsicTimeout(LEVITATION, rn1(140, 10));
         if (Levitation)

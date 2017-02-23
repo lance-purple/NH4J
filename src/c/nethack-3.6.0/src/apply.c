@@ -1444,7 +1444,7 @@ is_valid_jump_pos(x, y, magic, showmsg)
 int x, y, magic;
 boolean showmsg;
 {
-    if (!magic && !(HJumping & ~INTRINSIC) && !EJumping && distanceSquaredToYou(x, y) != 5) {
+    if (!magic && !(yourIntrinsicHasMask(JUMPING, ~INTRINSIC)) && !yourExtrinsic(JUMPING) && distanceSquaredToYou(x, y) != 5) {
         /* The Knight jumping restriction still applies when riding a
          * horse.  After all, what shape is the knight piece in chess?
          */

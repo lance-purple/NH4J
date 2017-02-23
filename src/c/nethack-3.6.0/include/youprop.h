@@ -20,44 +20,28 @@
  */
 
 /*** Transportation ***/
-#define HJumping u.uprops[JUMPING].intrinsic
-#define EJumping u.uprops[JUMPING].extrinsic
 #define Jumping (yourIntrinsic(JUMPING) || yourExtrinsic(JUMPING))
 
-#define HTeleportation u.uprops[TELEPORT].intrinsic
-#define ETeleportation u.uprops[TELEPORT].extrinsic
 #define Teleportation (yourIntrinsic(TELEPORT) || yourExtrinsic(TELEPORT))
 
-#define HTeleport_control u.uprops[TELEPORT_CONTROL].intrinsic
-#define ETeleport_control u.uprops[TELEPORT_CONTROL].extrinsic
 #define Teleport_control (yourIntrinsic(TELEPORT_CONTROL) || yourExtrinsic(TELEPORT_CONTROL))
 
-#define HLevitation u.uprops[LEVITATION].intrinsic
-#define ELevitation u.uprops[LEVITATION].extrinsic
 #define Levitation ((yourIntrinsic(LEVITATION) || yourExtrinsic(LEVITATION)) && !youAreBlockedFrom(LEVITATION))
 /* Can't touch surface, can't go under water; overrides all others */
 #define Lev_at_will                                                    \
     (((yourIntrinsic(LEVITATION) & I_SPECIAL) != 0L || (yourExtrinsic(LEVITATION) & W_ARTI) != 0L) \
      && (yourIntrinsic(LEVITATION) & ~(I_SPECIAL | TIMEOUT)) == 0L                   \
-     && (ELevitation & ~W_ARTI) == 0L)
+     && (yourExtrinsic(LEVITATION) & ~W_ARTI) == 0L)
 
-#define HFlying u.uprops[FLYING].intrinsic
-#define EFlying u.uprops[FLYING].extrinsic
 #define Flying                                                      \
     ((yourIntrinsic(FLYING) || yourExtrinsic(FLYING) || (u.usteed && is_flyer(u.usteed->data))) \
      && !youAreBlockedFrom(FLYING))
 /* May touch surface; does not override any others */
 
-extern boolean canYouWalkOnWater();
-
-#define HSwimming u.uprops[SWIMMING].intrinsic
-#define ESwimming u.uprops[SWIMMING].extrinsic /* [Tom] */
 #define Swimming \
     (yourIntrinsic(SWIMMING) || yourExtrinsic(SWIMMING) || (u.usteed && is_swimmer(u.usteed->data)))
 /* Get wet, don't go under water unless if amphibious */
 
-#define HMagical_breathing u.uprops[MAGICAL_BREATHING].intrinsic
-#define EMagical_breathing u.uprops[MAGICAL_BREATHING].extrinsic
 #define Amphibious \
     (yourIntrinsic(MAGICAL_BREATHING) || yourExtrinsic(MAGICAL_BREATHING) || amphibious(youmonst.data))
 /* Get wet, may go under surface */
@@ -65,17 +49,11 @@ extern boolean canYouWalkOnWater();
 #define Breathless \
     (yourIntrinsic(MAGICAL_BREATHING) || yourExtrinsic(MAGICAL_BREATHING) || breathless(youmonst.data))
 
-#define HPasses_walls u.uprops[PASSES_WALLS].intrinsic
-#define EPasses_walls u.uprops[PASSES_WALLS].extrinsic
 #define Passes_walls (yourIntrinsic(PASSES_WALLS) || yourExtrinsic(PASSES_WALLS))
 
 /*** Physical attributes ***/
-#define HSlow_digestion u.uprops[SLOW_DIGESTION].intrinsic
-#define ESlow_digestion u.uprops[SLOW_DIGESTION].extrinsic
 #define Slow_digestion (yourIntrinsic(SLOW_DIGESTION) || yourExtrinsic(SLOW_DIGESTION)) /* KMH */
 
-#define HHalf_spell_damage u.uprops[HALF_SPDAM].intrinsic
-#define EHalf_spell_damage u.uprops[HALF_SPDAM].extrinsic
 #define Half_spell_damage (yourIntrinsic(HALF_SPDAM) || yourExtrinsic(HALF_SPDAM))
 
 /*
@@ -120,48 +98,26 @@ extern boolean canYouWalkOnWater();
  *   Any passive attack                              [most don't qualify]
  */
 
-#define HHalf_physical_damage u.uprops[HALF_PHDAM].intrinsic
-#define EHalf_physical_damage u.uprops[HALF_PHDAM].extrinsic
 #define Half_physical_damage (yourIntrinsic(HALF_PHDAM) || yourExtrinsic(HALF_PHDAM))
 
-#define HRegeneration u.uprops[REGENERATION].intrinsic
-#define ERegeneration u.uprops[REGENERATION].extrinsic
 #define Regeneration (yourIntrinsic(REGENERATION) || yourExtrinsic(REGENERATION))
 
-#define HEnergy_regeneration u.uprops[ENERGY_REGENERATION].intrinsic
-#define EEnergy_regeneration u.uprops[ENERGY_REGENERATION].extrinsic
 #define Energy_regeneration (yourIntrinsic(ENERGY_REGENERATION) || yourExtrinsic(ENERGY_REGENERATION))
 
-#define HProtection u.uprops[PROTECTION].intrinsic
-#define EProtection u.uprops[PROTECTION].extrinsic
 #define Protection (yourIntrinsic(PROTECTION) || yourExtrinsic(PROTECTION))
 
-#define HProtection_from_shape_changers \
-    u.uprops[PROT_FROM_SHAPE_CHANGERS].intrinsic
-#define EProtection_from_shape_changers \
-    u.uprops[PROT_FROM_SHAPE_CHANGERS].extrinsic
 #define Protection_from_shape_changers \
     (yourIntrinsic(PROT_FROM_SHAPE_CHANGERS) || yourExtrinsic(PROT_FROM_SHAPE_CHANGERS))
 
-#define HPolymorph u.uprops[POLYMORPH].intrinsic
-#define EPolymorph u.uprops[POLYMORPH].extrinsic
 #define Polymorph (yourIntrinsic(POLYMORPH) || yourExtrinsic(POLYMORPH))
 
-#define HPolymorph_control u.uprops[POLYMORPH_CONTROL].intrinsic
-#define EPolymorph_control u.uprops[POLYMORPH_CONTROL].extrinsic
 #define Polymorph_control (yourIntrinsic(POLYMORPH_CONTROL) || yourExtrinsic(POLYMORPH_CONTROL))
 
-#define HUnchanging u.uprops[UNCHANGING].intrinsic
-#define EUnchanging u.uprops[UNCHANGING].extrinsic
 #define Unchanging (yourIntrinsic(UNCHANGING) || yourExtrinsic(UNCHANGING)) /* KMH */
 
-#define HFast u.uprops[FAST].intrinsic
-#define EFast u.uprops[FAST].extrinsic
 #define Fast (yourIntrinsic(FAST) || yourExtrinsic(FAST))
 #define Very_fast ((yourIntrinsic(FAST) & ~INTRINSIC)) || yourExtrinsic(FAST)
 
-#define HReflecting u.uprops[REFLECTING].intrinsic
-#define EReflecting u.uprops[REFLECTING].extrinsic
 #define Reflecting (yourIntrinsic(REFLECTING) || yourExtrinsic(REFLECTING))
 
 #define Free_action yourExtrinsic(FREE_ACTION) /* [Tom] */

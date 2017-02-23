@@ -636,12 +636,12 @@ register struct monst *priest;
                       enabled via something other than worn gear
                       (theft by gremlin clears the intrinsic but not
                       its former magnitude, making it recoverable) */
-                   && (!(HProtection & INTRINSIC)
+                   && (!(yourIntrinsicHasMask(PROTECTION, INTRINSIC))
                        || (blessings() < 20
                            && (blessings() < 9 || !rn2(blessings()))))) {
             verbalize("Thy devotion has been rewarded.");
-            if (!(HProtection & INTRINSIC)) {
-                HProtection |= FROMOUTSIDE;
+            if (!(yourIntrinsicHasMask(PROTECTION, INTRINSIC))) {
+                setYourIntrinsicMask(PROTECTION, FROMOUTSIDE);
                 if (!blessings()) {
                     setBlessings(rn1(3, 2));
                 }

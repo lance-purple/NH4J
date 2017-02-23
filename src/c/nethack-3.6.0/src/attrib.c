@@ -448,7 +448,7 @@ exerper()
         debugpline0("exerper: Status checks");
         if (yourIntrinsicHasMask(CLAIRVOYANT, (INTRINSIC | TIMEOUT)) && !youAreBlockedFrom(CLAIRVOYANT))
             exercise(A_WIS, TRUE);
-        if (HRegeneration)
+        if (yourIntrinsic(REGENERATION))
             exercise(A_STR, TRUE);
 
         if (youAreSick() || youAreVomiting())

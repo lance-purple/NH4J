@@ -555,15 +555,15 @@ long wp_mask;
     }
     if (spfx & SPFX_REGEN) {
         if (on)
-            ERegeneration |= wp_mask;
+            setYourExtrinsicMask(REGENERATION, wp_mask);
         else
-            ERegeneration &= ~wp_mask;
+            unsetYourExtrinsicMask(REGENERATION, wp_mask);
     }
     if (spfx & SPFX_TCTRL) {
         if (on)
-            ETeleport_control |= wp_mask;
+            setYourExtrinsicMask(TELEPORT_CONTROL, wp_mask);
         else
-            ETeleport_control &= ~wp_mask;
+            unsetYourExtrinsicMask(TELEPORT_CONTROL, wp_mask);
     }
     if (spfx & SPFX_WARN) {
         if (spec_m2(otmp)) {
@@ -584,21 +584,21 @@ long wp_mask;
     }
     if (spfx & SPFX_EREGEN) {
         if (on)
-            EEnergy_regeneration |= wp_mask;
+            setYourExtrinsicMask(ENERGY_REGENERATION, wp_mask);
         else
-            EEnergy_regeneration &= ~wp_mask;
+            unsetYourExtrinsicMask(ENERGY_REGENERATION, wp_mask);
     }
     if (spfx & SPFX_HSPDAM) {
         if (on)
-            EHalf_spell_damage |= wp_mask;
+            setYourExtrinsicMask(HALF_SPDAM, wp_mask);
         else
-            EHalf_spell_damage &= ~wp_mask;
+            unsetYourExtrinsicMask(HALF_SPDAM, wp_mask);
     }
     if (spfx & SPFX_HPHDAM) {
         if (on)
-            EHalf_physical_damage |= wp_mask;
+            setYourExtrinsicMask(HALF_PHDAM, wp_mask);
         else
-            EHalf_physical_damage &= ~wp_mask;
+            unsetYourExtrinsicMask(HALF_PHDAM, wp_mask);
     }
     if (spfx & SPFX_XRAY) {
         /* this assumes that no one else is using xray_range */
@@ -612,15 +612,15 @@ long wp_mask;
     }
     if ((spfx & SPFX_REFLECT) && (wp_mask & W_WEP)) {
         if (on)
-            EReflecting |= wp_mask;
+            setYourExtrinsicMask(REFLECTING, wp_mask);
         else
-            EReflecting &= ~wp_mask;
+            unsetYourExtrinsicMask(REFLECTING, wp_mask);
     }
     if (spfx & SPFX_PROTECT) {
         if (on)
-            EProtection |= wp_mask;
+            setYourExtrinsicMask(PROTECTION, wp_mask);
         else
-            EProtection &= ~wp_mask;
+            unsetYourExtrinsicMask(PROTECTION, wp_mask);
     }
 
     if (wp_mask == W_ART && !on && oart->inv_prop) {
@@ -1659,7 +1659,7 @@ struct obj *obj;
     /* if we aren't levitating or this isn't an artifact which confers
        levitation via #invoke then freeinv() won't toggle levitation */
     if (!Levitation || (oart = get_artifact(obj)) == 0
-        || oart->inv_prop != LEVITATION || !(ELevitation & W_ARTI))
+        || oart->inv_prop != LEVITATION || !(yourExtrinsicHasMask(LEVITATION, W_ARTI)))
         return FALSE;
 
     /* arti_invoke(off) -> float_down() clears I_SPECIAL|TIMEOUT & W_ARTI;
@@ -1668,8 +1668,8 @@ struct obj *obj;
        both conferring levitation--safe, since if there were two of them,
        invoking the 2nd would negate the 1st rather than stack with it) */
     save_Lev = u.uprops[LEVITATION];
-    HLevitation &= ~(I_SPECIAL | TIMEOUT);
-    ELevitation &= ~W_ARTI;
+    unsetYourIntrinsicMask(LEVITATION, (I_SPECIAL | TIMEOUT));
+    unsetYourExtrinsicMask(LEVITATION, W_ARTI);
     result = (boolean) !Levitation;
     u.uprops[LEVITATION] = save_Lev;
     return result;

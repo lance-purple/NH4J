@@ -38,7 +38,7 @@ stoned_dialogue()
     }
     switch ((int) i) {
     case 5: /* slowing down */
-        HFast = 0L;
+        setYourIntrinsic(FAST, 0L);
         if (multi > 0)
             nomul(0);
         break;
@@ -184,7 +184,7 @@ slime_dialogue()
             pline1(buf);
     }
     if (i == 3L) {  /* limbs becoming oozy */
-        HFast = 0L; /* lose intrinsic speed */
+        setYourIntrinsic(FAST, 0L); /* lose intrinsic speed */
         if (!Popeye(SLIMED))
             stop_occupation();
         if (multi > 0)

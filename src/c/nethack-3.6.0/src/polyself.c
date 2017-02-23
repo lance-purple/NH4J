@@ -108,7 +108,7 @@ float_vs_flight()
 {
     /* floating overrides flight; normally float_up() and float_down()
        handle this, but sometimes they're skipped */
-    if (HLevitation || ELevitation)
+    if (yourIntrinsic(LEVITATION) || yourExtrinsic(LEVITATION))
         setYourBlockerMask(FLYING, I_SPECIAL);
     else
         unsetYourBlockerMask(FLYING, I_SPECIAL);

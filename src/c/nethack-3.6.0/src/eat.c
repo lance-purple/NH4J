@@ -867,17 +867,17 @@ register struct permonst *ptr;
         break;
     case TELEPORT:
         debugpline0("Trying to give teleport");
-        if (!(HTeleportation & FROMOUTSIDE)) {
+        if (!(yourIntrinsicHasMask(TELEPORT, FROMOUTSIDE))) {
             You_feel(youAreHallucinating() ? "diffuse." : "very jumpy.");
-            HTeleportation |= FROMOUTSIDE;
+            setYourIntrinsicMask(TELEPORT, FROMOUTSIDE);
         }
         break;
     case TELEPORT_CONTROL:
         debugpline0("Trying to give teleport control");
-        if (!(HTeleport_control & FROMOUTSIDE)) {
+        if (!(yourIntrinsicHasMask(TELEPORT_CONTROL, FROMOUTSIDE))) {
             You_feel(youAreHallucinating() ? "centered in your personal space."
                                    : "in control of yourself.");
-            HTeleport_control |= FROMOUTSIDE;
+            setYourIntrinsicMask(TELEPORT_CONTROL, FROMOUTSIDE);
         }
         break;
     case TELEPAT:
@@ -1008,11 +1008,11 @@ register int pm;
         break;
     case PM_QUANTUM_MECHANIC:
         Your("velocity suddenly seems very uncertain!");
-        if (HFast & INTRINSIC) {
-            HFast &= ~INTRINSIC;
+        if (yourIntrinsicHasMask(FAST, INTRINSIC)) {
+            unsetYourIntrinsicMask(FAST, INTRINSIC);
             You("seem slower.");
         } else {
-            HFast |= FROMOUTSIDE;
+            setYourIntrinsicMask(FAST, FROMOUTSIDE);
             You("seem faster.");
         }
         break;
@@ -1924,7 +1924,7 @@ struct obj *otmp;
             break;
         case RIN_PROTECTION:
             accessory_has_effect(otmp);
-            HProtection |= FROMOUTSIDE;
+            setYourIntrinsicMask(PROTECTION, FROMOUTSIDE);
             setBlessings(bounded_increase(blessings(), otmp->spe,
                                           RIN_PROTECTION));
             context.botl = 1;
@@ -2631,8 +2631,8 @@ gethungry()
 
     if (moves % 2) { /* odd turns */
         /* Regeneration uses up food, unless due to an artifact */
-        if ((HRegeneration & ~FROMFORM)
-            || (ERegeneration & ~(W_ARTI | W_WEP))) {
+        if (yourIntrinsicHasMask(REGENERATION, ~FROMFORM)
+            || yourExtrinsicHasMask(REGENERATION, ~(W_ARTI | W_WEP))) {
             decreaseCurrentNutrition(1);
         }
         if (near_capacity() > SLT_ENCUMBER) {

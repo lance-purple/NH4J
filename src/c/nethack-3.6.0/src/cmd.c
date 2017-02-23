@@ -2121,7 +2121,7 @@ int final;
             prot += uleft->spe;
         if (uright && uright->otyp == RIN_PROTECTION)
             prot += uright->spe;
-        if (HProtection & INTRINSIC)
+        if (yourIntrinsicHasMask(PROTECTION,INTRINSIC))
             prot += blessings();
         prot += armorBonusFromProtectionSpell();
         if (prot)

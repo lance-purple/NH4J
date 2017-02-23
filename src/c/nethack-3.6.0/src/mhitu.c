@@ -124,7 +124,7 @@ struct attack *mattk;
 void
 u_slow_down()
 {
-    HFast = 0L;
+    setYourIntrinsicMask(FAST, 0L);
     if (!Fast)
         You("slow down.");
     else /* speed boots */
@@ -796,8 +796,8 @@ struct monst *mon;
     struct obj *o;
     long wearmask;
     int armpro, mc = 0;
-    boolean is_you = (mon == &youmonst),
-            gotprot = is_you ? (EProtection != 0L)
+    boolean is_you = (mon == &youmonst);
+    boolean gotprot = is_you ? (yourExtrinsic(PROTECTION) != 0L)
                              /* high priests have innate protection */
                              : (mon->data == &mons[PM_HIGH_PRIEST]);
 
@@ -827,7 +827,7 @@ struct monst *mon;
     } else if (mc < 1) {
         /* intrinsic Protection is weaker (play balance; obtaining divine
            protection is too easy); it confers minimum mc 1 instead of 0 */
-        if ((is_you && ((HProtection && blessings()) || armorBonusFromProtectionSpell()))
+        if ((is_you && ((yourIntrinsic(PROTECTION) && blessings()) || armorBonusFromProtectionSpell()))
             /* aligned priests and angels have innate intrinsic Protection */
             || (mon->data == &mons[PM_ALIGNED_PRIEST] || is_minion(mon->data)))
             mc = 1;
@@ -1449,7 +1449,7 @@ register struct attack *mattk;
         break;
     case AD_SLOW:
         hitmsg(mtmp, mattk);
-        if (uncancelled && HFast && !defends(AD_SLOW, uwep) && !rn2(4))
+        if (uncancelled && yourIntrinsic(FAST) && !defends(AD_SLOW, uwep) && !rn2(4))
             u_slow_down();
         break;
     case AD_DREN:
@@ -2159,7 +2159,7 @@ register struct attack *mattk;
         break;
     case AD_SLOW:
         if (canseemon(mtmp) && couldsee(mtmp->mx, mtmp->my) && mtmp->mcansee
-            && (HFast & (INTRINSIC | TIMEOUT)) && !defends(AD_SLOW, uwep)
+            && (yourIntrinsicHasMask(FAST, (INTRINSIC | TIMEOUT))) && !defends(AD_SLOW, uwep)
             && !rn2(4)) {
             if (cancelled) {
                 react = 7; /* "dulled" */

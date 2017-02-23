@@ -726,7 +726,7 @@ int how;
     }
     context.botl = 1;
     setAriseFromGraveAsMonster(NON_PM);
-    HUnchanging = 0L;
+    setYourIntrinsic(UNCHANGING, 0L);
     curs_on_u();
 }
 

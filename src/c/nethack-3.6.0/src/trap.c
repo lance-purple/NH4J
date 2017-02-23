@@ -2807,8 +2807,8 @@ long hmask, emask; /* might cancel timeout */
     d_level current_dungeon_level;
     boolean no_msg = FALSE;
 
-    HLevitation &= ~hmask;
-    ELevitation &= ~emask;
+    unsetYourIntrinsicMask(LEVITATION, hmask);
+    unsetYourExtrinsicMask(LEVITATION, emask);
     if (Levitation)
         return 0; /* maybe another ring/potion/boots */
     if (youAreBlockedFrom(LEVITATION)) {

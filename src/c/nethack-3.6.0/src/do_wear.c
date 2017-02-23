@@ -171,10 +171,10 @@ Boots_on(VOID_ARGS)
     case SPEED_BOOTS:
         /* Speed boots are still better than intrinsic speed, */
         /* though not better than potion speed */
-        if (!oldprop && !(HFast & TIMEOUT)) {
+        if (!oldprop && !(yourIntrinsicHasMask(FAST, TIMEOUT))) {
             makeknown(uarmf->otyp);
             You_feel("yourself speed up%s.",
-                     (oldprop || HFast) ? " a bit more" : "");
+                     (oldprop || yourIntrinsic(FAST)) ? " a bit more" : "");
         }
         break;
     case ELVEN_BOOTS:
@@ -185,7 +185,7 @@ Boots_on(VOID_ARGS)
             incrementYourIntrinsicTimeout(FUMBLING, rnd(20));
         break;
     case LEVITATION_BOOTS:
-        if (!oldprop && !HLevitation && !youAreBlockedFrom(LEVITATION)) {
+        if (!oldprop && !yourIntrinsic(LEVITATION) && !youAreBlockedFrom(LEVITATION)) {
             makeknown(uarmf->otyp);
             float_up();
             spoteffects(FALSE);
@@ -240,7 +240,7 @@ Boots_off(VOID_ARGS)
         }
         break;
     case LEVITATION_BOOTS:
-        if (!oldprop && !HLevitation && !youAreBlockedFrom(LEVITATION)
+        if (!oldprop && !yourIntrinsic(LEVITATION) && !youAreBlockedFrom(LEVITATION)
             && !context.takeoff.cancelled_don) {
             (void) float_down(0L, 0L);
             makeknown(otyp);
@@ -772,7 +772,7 @@ Amulet_off()
         break;
     case AMULET_OF_MAGICAL_BREATHING:
         if (underwater()) {
-            /* HMagical_breathing must be set off
+            /* intrinsic magical breathing must be set off
                 before calling drown() */
             setworn((struct obj *) 0, W_AMUL);
             if (!breathless(youmonst.data) && !amphibious(youmonst.data)
@@ -904,7 +904,7 @@ register struct obj *obj;
         }
         break;
     case RIN_LEVITATION:
-        if (!oldprop && !HLevitation && !youAreBlockedFrom(LEVITATION)) {
+        if (!oldprop && !yourIntrinsic(LEVITATION) && !youAreBlockedFrom(LEVITATION)) {
             float_up();
             learnring(obj, TRUE);
             spoteffects(FALSE); /* for sinks */
@@ -1990,7 +1990,7 @@ find_ac()
         uac -= uright->spe;
 
     /* armor class from other sources */
-    if (HProtection & INTRINSIC)
+    if (yourIntrinsicHasMask(PROTECTION, INTRINSIC))
         uac -= blessings();
     uac -= armorBonusFromProtectionSpell();
 
