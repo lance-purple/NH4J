@@ -373,7 +373,7 @@ int force;
                                 }
                         }
                     } else if (x == currentX() && y == currentY()) {
-                        if (Levitation || Flying
+                        if (youAreLevitating() || youAreFlying()
                             || is_clinger(youmonst.data)) {
                             if (!tu_pit) { /* no pit here previously */
                                 pline("A chasm opens up under you!");

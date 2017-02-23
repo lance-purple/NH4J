@@ -274,7 +274,7 @@ boolean resuming;
                     }
 
                     if (!invulnerableWhilePraying()) {
-                        if (Teleportation && !rn2(85)) {
+                        if (youCanTeleport() && !rn2(85)) {
                             xchar old_ux = currentX();
                             xchar old_uy = currentY();
                             tele();

@@ -1121,7 +1121,7 @@ register struct attack *mattk;
          * still _can_ attack you when you're flying or mounted.
          * [FIXME: why can't a flying attacker overcome this?]
          */
-        if (u.usteed || Levitation || Flying) {
+        if (u.usteed || youAreLevitating() || youAreFlying()) {
             pline("%s tries to reach your %s %s!", Monnam(mtmp), sidestr,
                   body_part(LEG));
             dmg = 0;
@@ -1199,7 +1199,7 @@ register struct attack *mattk;
                     u.ustuck = mtmp;
                 }
             } else if (u.ustuck == mtmp) {
-                if (is_pool(mtmp->mx, mtmp->my) && !Swimming && !Amphibious) {
+                if (is_pool(mtmp->mx, mtmp->my) && !youCanSwim() && !youAreAmphibious()) {
                     boolean moat = (levl[mtmp->mx][mtmp->my].typ != POOL)
                                    && (levl[mtmp->mx][mtmp->my].typ != WATER)
                                    && !areYouOnMedusaLevel()
@@ -1765,12 +1765,12 @@ register struct attack *mattk;
             You("are laden with moisture and %s",
                 flaming(youmonst.data)
                     ? "are smoldering out!"
-                    : Breathless ? "find it mildly uncomfortable."
+                    : youNeedNotBreathe() ? "find it mildly uncomfortable."
                                  : amphibious(youmonst.data)
                                        ? "feel comforted."
                                        : "can barely breathe!");
             /* NB: Amphibious includes Breathless */
-            if (Amphibious && !flaming(youmonst.data))
+            if (youAreAmphibious() && !flaming(youmonst.data))
                 tmp = 0;
         } else {
             You("are pummeled with debris!");

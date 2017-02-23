@@ -158,7 +158,7 @@ xchar x, y;
     /* anger target even if wild miss will occur */
     setmangry(mon);
 
-    if (Levitation && !rn2(3) && verysmall(mon->data)
+    if (youAreLevitating() && !rn2(3) && verysmall(mon->data)
         && !is_flyer(mon->data)) {
         pline("Floating in the air, you miss wildly!");
         exercise(A_DEX, FALSE);
@@ -495,7 +495,7 @@ xchar x, y;
         return 0;
 
     if ((trap = t_at(x, y)) != 0
-        && (((trap->ttyp == PIT || trap->ttyp == SPIKED_PIT) && !Passes_walls)
+        && (((trap->ttyp == PIT || trap->ttyp == SPIKED_PIT) && !youCanPassThroughWalls())
             || trap->ttyp == WEB)) {
         if (!trap->tseen)
             find_trap(trap);
@@ -796,7 +796,7 @@ dokick()
         no_kick = TRUE;
         switch (currentTrapType()) {
         case TT_PIT:
-            if (!Passes_walls)
+            if (!youCanPassThroughWalls())
                 pline("There's not enough room to kick down here.");
             else
                 no_kick = FALSE;
@@ -847,11 +847,11 @@ dokick()
         }
         return 1;
     } else if (currentlyTrapped() && currentTrapType() == TT_PIT) {
-        /* must be Passes_walls */
+        /* must be able to pass through walls  */
         You("kick at the side of the pit.");
         return 1;
     }
-    if (Levitation) {
+    if (youAreLevitating()) {
         int xx, yy;
 
         xx = currentX() - directionX();
@@ -923,7 +923,7 @@ dokick()
             map_invisible(x, y);
         }
         /* recoil if floating */
-        if ((areYouOnAirLevel() || Levitation) && context.move) {
+        if ((areYouOnAirLevel() || youAreLevitating()) && context.move) {
             int range;
 
             range =
@@ -948,7 +948,7 @@ dokick()
         return 1;
     }
 
-    if (OBJ_AT(x, y) && (!Levitation || areYouOnAirLevel()
+    if (OBJ_AT(x, y) && (!youAreLevitating() || areYouOnAirLevel()
                          || areYouOnWaterLevel() || sobj_at(BOULDER, x, y))) {
         if (kick_object(x, y)) {
             if (areYouOnAirLevel())
@@ -960,7 +960,7 @@ dokick()
 
     if (!IS_DOOR(maploc->typ)) {
         if (maploc->typ == SDOOR) {
-            if (!Levitation && rn2(30) < avrg_attrib) {
+            if (!youAreLevitating() && rn2(30) < avrg_attrib) {
                 cvt_sdoor_to_door(maploc); /* ->typ = DOOR */
                 pline("Crash!  %s a secret door!",
                       /* don't "kick open" when it's locked
@@ -984,7 +984,7 @@ dokick()
                 goto ouch;
         }
         if (maploc->typ == SCORR) {
-            if (!Levitation && rn2(30) < avrg_attrib) {
+            if (!youAreLevitating() && rn2(30) < avrg_attrib) {
                 pline("Crash!  You kick open a secret passage!");
                 exercise(A_DEX, TRUE);
                 maploc->typ = CORR;
@@ -996,7 +996,7 @@ dokick()
         }
         if (IS_THRONE(maploc->typ)) {
             register int i;
-            if (Levitation)
+            if (youAreLevitating())
                 goto dumb;
             if ((currentLuckWithBonus() < 0 || maploc->doormask) && !rn2(3)) {
                 maploc->typ = ROOM;
@@ -1038,7 +1038,7 @@ dokick()
             goto ouch;
         }
         if (IS_ALTAR(maploc->typ)) {
-            if (Levitation)
+            if (youAreLevitating())
                 goto dumb;
             You("kick %s.", (youCannotSee() ? something : "the altar"));
             if (!rn2(3))
@@ -1048,7 +1048,7 @@ dokick()
             return 1;
         }
         if (IS_FOUNTAIN(maploc->typ)) {
-            if (Levitation)
+            if (youAreLevitating())
                 goto dumb;
             You("kick %s.", (youCannotSee() ? something : "the fountain"));
             if (!rn2(3))
@@ -1063,7 +1063,7 @@ dokick()
             return 1;
         }
         if (IS_GRAVE(maploc->typ)) {
-            if (Levitation)
+            if (youAreLevitating())
                 goto dumb;
             if (rn2(4))
                 goto ouch;
@@ -1145,7 +1145,7 @@ dokick()
                                   ? PM_INCUBUS
                                   : PM_SUCCUBUS;
 
-            if (Levitation)
+            if (youAreLevitating())
                 goto dumb;
             if (rn2(5)) {
                 if (!youAreDeaf())
@@ -1214,7 +1214,7 @@ dokick()
                 set_wounded_legs(RIGHT_SIDE, 5 + rnd(5));
             dmg = rnd(ACURR(A_CON) > 15 ? 3 : 5);
             losehp(Maybe_Half_Phys(dmg), kickstr(buf), KILLED_BY);
-            if (areYouOnAirLevel() || Levitation)
+            if (areYouOnAirLevel() || youAreLevitating())
                 hurtle(-directionX(), -directionY(), rn1(2, 4), TRUE); /* assume it's heavy */
             return 1;
         }
@@ -1234,13 +1234,13 @@ dokick()
             exercise(A_STR, FALSE);
             set_wounded_legs(RIGHT_SIDE, 5 + rnd(5));
         }
-        if ((areYouOnAirLevel() || Levitation) && rn2(2))
+        if ((areYouOnAirLevel() || youAreLevitating()) && rn2(2))
             hurtle(-directionX(), -directionY(), 1, TRUE);
         return 1; /* uses a turn */
     }
 
     /* not enough leverage to kick open doors while levitating */
-    if (Levitation)
+    if (youAreLevitating())
         goto ouch;
 
     exercise(A_DEX, TRUE);

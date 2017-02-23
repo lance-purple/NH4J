@@ -97,7 +97,7 @@ boolean on;
         if (on) {
             if (!is_boots(obj))
                 You("move very quietly.");
-            else if (Levitation || Flying)
+            else if (youAreLevitating() || youAreFlying())
                 You("float imperceptibly.");
             else
                 You("walk very quietly.");
@@ -221,7 +221,7 @@ Boots_off(VOID_ARGS)
     case WATER_WALKING_BOOTS:
         /* check for lava since fireproofed boots make it viable */
         if ((is_pool(currentX(), currentY()) || is_lava(currentX(), currentY()))
-            && !Levitation && !Flying && !is_clinger(youmonst.data)
+            && !youAreLevitating() && !youAreFlying() && !is_clinger(youmonst.data)
             && !context.takeoff.cancelled_don
             /* avoid recursive call to lava_effects() */
             && !iflags.in_lava_effects) {
@@ -776,7 +776,7 @@ Amulet_off()
                 before calling drown() */
             setworn((struct obj *) 0, W_AMUL);
             if (!breathless(youmonst.data) && !amphibious(youmonst.data)
-                && !Swimming) {
+                && !youCanSwim()) {
                 You("suddenly inhale an unhealthy amount of water!");
                 (void) drown();
             }
@@ -785,7 +785,7 @@ Amulet_off()
         break;
     case AMULET_OF_STRANGULATION:
         if (youAreBeingStrangled()) {
-            if (Breathless)
+            if (youNeedNotBreathe())
                 Your("%s is no longer constricted!", body_part(NECK));
             else
                 You("can breathe more easily!");
@@ -1020,7 +1020,7 @@ boolean gone;
     case RIN_LEVITATION:
         if (!youAreBlockedFrom(LEVITATION)) {
             (void) float_down(0L, 0L);
-            if (!Levitation)
+            if (!youAreLevitating())
                 learnring(obj, TRUE);
         } else {
             float_vs_flight(); /* maybe toggle (youAreBlockedFrom(FLYING) & I_SPECIAL) */

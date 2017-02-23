@@ -300,7 +300,7 @@ struct obj *pick;
 
         if (directionZ() < 0) {
             There("isn't any sort of lock up %s.",
-                  Levitation ? "here" : "there");
+                  youAreLevitating() ? "here" : "there");
             return PICKLOCK_LEARNED_SOMETHING;
         } else if (is_lava(currentX(), currentY())) {
             pline("Doing that would probably melt %s.", yname(pick));

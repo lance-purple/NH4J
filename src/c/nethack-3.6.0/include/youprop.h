@@ -19,38 +19,6 @@
  * intrinsic conferred by being polymorphed.]
  */
 
-/*** Transportation ***/
-#define Jumping (yourIntrinsic(JUMPING) || yourExtrinsic(JUMPING))
-
-#define Teleportation (yourIntrinsic(TELEPORT) || yourExtrinsic(TELEPORT))
-
-#define Teleport_control (yourIntrinsic(TELEPORT_CONTROL) || yourExtrinsic(TELEPORT_CONTROL))
-
-#define Levitation ((yourIntrinsic(LEVITATION) || yourExtrinsic(LEVITATION)) && !youAreBlockedFrom(LEVITATION))
-/* Can't touch surface, can't go under water; overrides all others */
-#define Lev_at_will                                                    \
-    (((yourIntrinsic(LEVITATION) & I_SPECIAL) != 0L || (yourExtrinsic(LEVITATION) & W_ARTI) != 0L) \
-     && (yourIntrinsic(LEVITATION) & ~(I_SPECIAL | TIMEOUT)) == 0L                   \
-     && (yourExtrinsic(LEVITATION) & ~W_ARTI) == 0L)
-
-#define Flying                                                      \
-    ((yourIntrinsic(FLYING) || yourExtrinsic(FLYING) || (u.usteed && is_flyer(u.usteed->data))) \
-     && !youAreBlockedFrom(FLYING))
-/* May touch surface; does not override any others */
-
-#define Swimming \
-    (yourIntrinsic(SWIMMING) || yourExtrinsic(SWIMMING) || (u.usteed && is_swimmer(u.usteed->data)))
-/* Get wet, don't go under water unless if amphibious */
-
-#define Amphibious \
-    (yourIntrinsic(MAGICAL_BREATHING) || yourExtrinsic(MAGICAL_BREATHING) || amphibious(youmonst.data))
-/* Get wet, may go under surface */
-
-#define Breathless \
-    (yourIntrinsic(MAGICAL_BREATHING) || yourExtrinsic(MAGICAL_BREATHING) || breathless(youmonst.data))
-
-#define Passes_walls (yourIntrinsic(PASSES_WALLS) || yourExtrinsic(PASSES_WALLS))
-
 /*** Physical attributes ***/
 #define Slow_digestion (yourIntrinsic(SLOW_DIGESTION) || yourExtrinsic(SLOW_DIGESTION)) /* KMH */
 

@@ -434,7 +434,7 @@ register struct monst *mtmp;
 
     /* Flying and levitation keeps our steed out of the liquid */
     /* (but not water-walking or swimming) */
-    if (mtmp == u.usteed && (Flying || Levitation))
+    if (mtmp == u.usteed && (youAreFlying() || youAreLevitating()))
         return 0;
 
     /* Gremlin multiplying won't go on forever since the hit points

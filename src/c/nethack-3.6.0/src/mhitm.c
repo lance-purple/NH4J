@@ -602,7 +602,7 @@ struct monst *magr, *mdef;
 
     /* (hypothetical) engulfers who can pass through walls aren't
      limited by rock|trees|bars */
-    if ((magr == &youmonst) ? Passes_walls : passes_walls(magr->data))
+    if ((magr == &youmonst) ? youCanPassThroughWalls() : passes_walls(magr->data))
         return TRUE;
 
     /* don't swallow something in a spot where attacker wouldn't

@@ -1589,4 +1589,52 @@ extern boolean youCauseConflict() {
  return (yourIntrinsic(CONFLICT) || yourExtrinsic(CONFLICT));
 }
 
+extern boolean youCanJump() {
+ return (yourIntrinsic(JUMPING) || yourExtrinsic(JUMPING));
+}
+
+extern boolean youCanTeleport() {
+ return (yourIntrinsic(TELEPORT) || yourExtrinsic(TELEPORT));
+}
+
+extern boolean youHaveTeleportControl() {
+ return (yourIntrinsic(TELEPORT_CONTROL) || yourExtrinsic(TELEPORT_CONTROL));
+}
+
+/* Can't touch surface, can't go under water; overrides all others */
+extern boolean youAreLevitating() {
+ return ((yourIntrinsic(LEVITATION) || yourExtrinsic(LEVITATION)) && !youAreBlockedFrom(LEVITATION));
+}
+
+extern boolean youCanLevitateAtWill() {
+  return ((yourIntrinsicHasMask(LEVITATION, I_SPECIAL) || yourExtrinsicHasMask(LEVITATION, W_ARTI))
+     && (0L == yourIntrinsic(LEVITATION) & ~(I_SPECIAL | TIMEOUT))
+     && (0L == yourExtrinsic(LEVITATION) & ~W_ARTI));
+}
+
+/* May touch surface; does not override any others */
+extern boolean youAreFlying() {
+  return ((yourIntrinsic(FLYING) || yourExtrinsic(FLYING) || (u.usteed && is_flyer(u.usteed->data)))
+     && !youAreBlockedFrom(FLYING));
+}
+
+/* Get wet, don't go under water unless if amphibious */
+extern boolean youCanSwim() {
+  return (yourIntrinsic(SWIMMING) || yourExtrinsic(SWIMMING) ||
+		   (u.usteed && is_swimmer(u.usteed->data)));
+}
+
+/* Get wet, may go under surface */
+extern boolean youAreAmphibious() {
+  return (yourIntrinsic(MAGICAL_BREATHING) || yourExtrinsic(MAGICAL_BREATHING) || amphibious(youmonst.data));
+}
+
+extern boolean youNeedNotBreathe() {
+  return (yourIntrinsic(MAGICAL_BREATHING) || yourExtrinsic(MAGICAL_BREATHING) || breathless(youmonst.data));
+}
+
+extern boolean youCanPassThroughWalls() {
+  return (yourIntrinsic(PASSES_WALLS) || yourExtrinsic(PASSES_WALLS));
+}
+
 /*attrib.c*/

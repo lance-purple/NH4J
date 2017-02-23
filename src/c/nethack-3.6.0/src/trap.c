@@ -459,7 +459,7 @@ boolean td; /* td == TRUE : trap door or hole */
 
     /* we'll fall even while levitating in Sokoban; otherwise, if we
        won't fall and won't be told that we aren't falling, give up now */
-    if (youCannotSee() && Levitation && !Sokoban)
+    if (youCannotSee() && youAreLevitating() && !Sokoban)
         return;
 
     bottom = levelsInCurrentDungeon();
@@ -492,8 +492,8 @@ boolean td; /* td == TRUE : trap door or hole */
 
     if (Sokoban && canYouFallThroughCurrentLevel())
         ; /* KMH -- You can't escape the Sokoban level traps */
-    else if (Levitation || u.ustuck
-             || (!canYouFallThroughCurrentLevel() && !levl[currentX()][currentY()].candig) || Flying
+    else if (youAreLevitating() || u.ustuck
+             || (!canYouFallThroughCurrentLevel() && !levl[currentX()][currentY()].candig) || youAreFlying()
              || is_clinger(youmonst.data)
              || (areYouInHell() && ! haveInvokedGateToSanctum() && newlevel == bottom)) {
         dont_fall = "don't fall in.";
@@ -832,10 +832,10 @@ unsigned trflags;
               defsyms[trap_to_defsym(ttype)].explanation);
         /* then proceed to normal trap effect */
     } else if (already_seen && !forcetrap) {
-        if ((Levitation || (Flying && !plunged))
+        if ((youAreLevitating() || (youAreFlying() && !plunged))
             && (ttype == PIT || ttype == SPIKED_PIT || ttype == HOLE
                 || ttype == BEAR_TRAP)) {
-            You("%s over %s %s.", Levitation ? "float" : "fly",
+            You("%s over %s %s.", youAreLevitating() ? "float" : "fly",
                 a_your[trap->madeby_u],
                 defsyms[trap_to_defsym(ttype)].explanation);
             return;
@@ -960,7 +960,7 @@ unsigned trflags;
         break;
 
     case SQKY_BOARD: /* stepped on a squeaky board */
-        if ((Levitation || Flying) && !forcetrap) {
+        if ((youAreLevitating() || youAreFlying()) && !forcetrap) {
             if (youCanSee()) {
                 seetrap(trap);
                 if (youAreHallucinating())
@@ -980,7 +980,7 @@ unsigned trflags;
     case BEAR_TRAP: {
         int dmg = d(2, 4);
 
-        if ((Levitation || Flying) && !forcetrap)
+        if ((youAreLevitating() || youAreFlying()) && !forcetrap)
             break;
         feeltrap(trap);
         if (amorphous(youmonst.data) || is_whirly(youmonst.data)
@@ -1089,7 +1089,7 @@ unsigned trflags;
     case PIT:
     case SPIKED_PIT:
         /* KMH -- You can't escape the Sokoban level traps */
-        if (!Sokoban && (Levitation || (Flying && !plunged)))
+        if (!Sokoban && (youAreLevitating() || (youAreFlying() && !plunged)))
             break;
         feeltrap(trap);
         if (!Sokoban && is_clinger(youmonst.data) && !plunged) {
@@ -1119,7 +1119,7 @@ unsigned trflags;
                 You("move into an adjacent pit.");
             } else {
                 Strcpy(verbbuf,
-                       !plunged ? "fall" : (Flying ? "dive" : "plunge"));
+                       !plunged ? "fall" : (youAreFlying() ? "dive" : "plunge"));
                 You("%s into %s pit!", verbbuf, a_your[trap->madeby_u]);
             }
         }
@@ -1163,7 +1163,7 @@ unsigned trflags;
             } else {
                 /* plunging flyers take spike damage but not pit damage */
                 if (!adj_pit
-                    && !(plunged && (Flying || is_clinger(youmonst.data))))
+                    && !(plunged && (youAreFlying() || is_clinger(youmonst.data))))
                     losehp(Maybe_Half_Phys(rnd(6)),
                            plunged ? "deliberately plunged into a pit"
                                    : "fell into a pit",
@@ -1239,7 +1239,7 @@ unsigned trflags;
                                  SUPPRESS_SADDLE, FALSE));
             } else {
                 Sprintf(verbbuf, "%s into",
-                        Levitation ? (const char *) "float"
+                        youAreLevitating() ? (const char *) "float"
                                    : locomotion(youmonst.data, "stumble"));
             }
             You("%s %s spider web!", verbbuf, a_your[trap->madeby_u]);
@@ -1354,7 +1354,7 @@ unsigned trflags;
                     break;
             if (otmp)
                 dmgval2 += rnd(4);
-            if (Passes_walls)
+            if (youCanPassThroughWalls())
                 dmgval2 = (dmgval2 + 3) / 4;
 
             You_feel((dmgval2 >= hp) ? "unbearably torpid!"
@@ -1374,7 +1374,7 @@ unsigned trflags;
                     x_monnam(u.usteed, steed_article, (char *) 0,
                              SUPPRESS_SADDLE, FALSE));
         else
-            Sprintf(verbbuf, "%s", Levitation
+            Sprintf(verbbuf, "%s", youAreLevitating()
                                        ? (const char *) "float"
                                        : locomotion(youmonst.data, "step"));
         You("%s onto a polymorph trap!", verbbuf);
@@ -1395,7 +1395,7 @@ unsigned trflags;
         unsigned steed_mid = 0;
         struct obj *saddle = 0;
 
-        if ((Levitation || Flying) && !forcetrap) {
+        if ((youAreLevitating() || youAreFlying()) && !forcetrap) {
             if (!already_seen && rn2(3))
                 break;
             feeltrap(trap);
@@ -2771,14 +2771,14 @@ float_up()
     }
     if (u.usteed && !is_floater(u.usteed->data)
         && !is_flyer(u.usteed->data)) {
-        if (Lev_at_will) {
+        if (youCanLevitateAtWill()) {
             pline("%s magically floats up!", Monnam(u.usteed));
         } else {
             You("cannot stay on %s.", mon_nam(u.usteed));
             dismount_steed(DISMOUNT_GENERIC);
         }
     }
-    if (Flying)
+    if (youAreFlying())
         You("are no longer able to control your flight.");
     setYourBlockerMask(FLYING, I_SPECIAL);
     return;
@@ -2809,7 +2809,7 @@ long hmask, emask; /* might cancel timeout */
 
     unsetYourIntrinsicMask(LEVITATION, hmask);
     unsetYourExtrinsicMask(LEVITATION, emask);
-    if (Levitation)
+    if (youAreLevitating())
         return 0; /* maybe another ring/potion/boots */
     if (youAreBlockedFrom(LEVITATION)) {
         /* Levitation is blocked, so hero is not actually floating
@@ -2821,7 +2821,7 @@ long hmask, emask; /* might cancel timeout */
     if (youAreBlockedFrom(FLYING)) {
         /* controlled flight no longer overridden by levitation */
         unsetYourBlockerMask(FLYING, I_SPECIAL);
-        if (Flying) {
+        if (youAreFlying()) {
             You("have stopped levitating and are now flying.");
             return 1;
         }
@@ -2846,7 +2846,7 @@ long hmask, emask; /* might cancel timeout */
         vision_full_recalc = 1; /* in case the hero moved. */
     }
     /* check for falling into pool - added by GAN 10/20/86 */
-    if (!Flying) {
+    if (!youAreFlying()) {
         if (!swallowed() && u.ustuck) {
             if (sticks(youmonst.data))
                 You("aren't able to maintain your hold on %s.",
@@ -2864,7 +2864,7 @@ long hmask, emask; /* might cancel timeout */
          * Use knowledge of the two routines as a hack -- this
          * should really be handled differently -dlc
          */
-        if (is_pool(currentX(), currentY()) && !canYouWalkOnWater() && !Swimming && !inWater())
+        if (is_pool(currentX(), currentY()) && !canYouWalkOnWater() && !youCanSwim() && !inWater())
             no_msg = drown();
 
         if (is_lava(currentX(), currentY())) {
@@ -2943,7 +2943,7 @@ climb_pit()
     if (!currentlyTrapped() || currentTrapType() != TT_PIT)
         return;
 
-    if (Passes_walls) {
+    if (youCanPassThroughWalls()) {
         /* marked as trapped so they can pick things up */
         You("ascend from the pit.");
         setCurrentTrapTimeout(0);
@@ -2954,16 +2954,16 @@ climb_pit()
         display_nhwindow(WIN_MESSAGE, FALSE);
         clear_nhwindow(WIN_MESSAGE);
         You("free your %s.", body_part(LEG));
-    } else if ((Flying || is_clinger(youmonst.data)) && !Sokoban) {
+    } else if ((youAreFlying() || is_clinger(youmonst.data)) && !Sokoban) {
         /* eg fell in pit, then poly'd to a flying monster;
            or used '>' to deliberately enter it */
-        You("%s from the pit.", Flying ? "fly" : "climb");
+        You("%s from the pit.", youAreFlying() ? "fly" : "climb");
         setCurrentTrapTimeout(0);
         fill_pit(currentX(), currentY());
         vision_full_recalc = 1; /* vision limits change */
     } else if (!(setCurrentTrapTimeout(currentTrapTimeout() - 1), currentlyTrapped())) {
         You("%s to the edge of the pit.",
-            (Sokoban && Levitation)
+            (Sokoban && youAreLevitating())
                 ? "struggle against the air currents and float"
                 : u.usteed ? "ride" : "crawl");
         fill_pit(currentX(), currentY());
@@ -3539,7 +3539,7 @@ drown()
 
     /* happily wading in the same contiguous pool */
     if (inWater() && is_pool(currentX() - directionX(), currentY() - directionY())
-        && (Swimming || Amphibious)) {
+        && (youCanSwim() || youAreAmphibious())) {
         /* water effects on objects every now and then */
         if (!rn2(5))
             inpool_ok = TRUE;
@@ -3549,8 +3549,8 @@ drown()
 
     if (!inWater()) {
         You("%s into the water%c", areYouOnWaterLevel() ? "plunge" : "fall",
-            Amphibious || Swimming ? '.' : '!');
-        if (!Swimming && !areYouOnWaterLevel())
+            youAreAmphibious() || youCanSwim() ? '.' : '!');
+        if (!youCanSwim() && !areYouOnWaterLevel())
             You("sink like %s.", youAreHallucinating() ? "the Titanic" : "a rock");
     }
 
@@ -3574,8 +3574,8 @@ drown()
         unleash_all();
     }
 
-    if (Amphibious || Swimming) {
-        if (Amphibious) {
+    if (youAreAmphibious() || youCanSwim()) {
+        if (youAreAmphibious()) {
             if (flags.verbose)
                 pline("But you aren't drowning.");
             if (!areYouOnWaterLevel()) {
@@ -3595,8 +3595,8 @@ drown()
         vision_full_recalc = 1;
         return FALSE;
     }
-    if ((Teleportation || can_teleport(youmonst.data)) && youAreAware()
-        && (Teleport_control || rn2(3) < currentLuckWithBonus() + 2)) {
+    if ((youCanTeleport() || can_teleport(youmonst.data)) && youAreAware()
+        && (youHaveTeleportControl() || rn2(3) < currentLuckWithBonus() + 2)) {
         You("attempt a teleport spell."); /* utcsri!carroll */
         if (!level.flags.noteleport) {
             (void) dotele();
@@ -3846,7 +3846,7 @@ boolean force_failure;
         return 0;
     }
     /* We might be forced to move onto the trap's location. */
-    if (sobj_at(BOULDER, ttmp->tx, ttmp->ty) && !Passes_walls && !under_u) {
+    if (sobj_at(BOULDER, ttmp->tx, ttmp->ty) && !youCanPassThroughWalls() && !under_u) {
         There("is a boulder in your way.");
         return 0;
     }

@@ -344,7 +344,7 @@ struct monst *mon;
         /* hero can't be mindless but poly'ing into mindless form can
            confer strangulation protection */
         nobrainer = mindless(youmonst.data);
-        nonbreathing = Breathless;
+        nonbreathing = youNeedNotBreathe();
     } else {
         nobrainer = mindless(mon->data);
         /* monsters don't wear amulets of magical breathing,

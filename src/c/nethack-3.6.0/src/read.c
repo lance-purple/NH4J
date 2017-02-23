@@ -1662,7 +1662,7 @@ boolean confused, helmet_protects, byu, skip_uswallow;
         return;
     otmp2->quan = confused ? rn1(5, 2) : 1;
     otmp2->owt = weight(otmp2);
-    if (!amorphous(youmonst.data) && !Passes_walls
+    if (!amorphous(youmonst.data) && !youCanPassThroughWalls()
         && !noncorporeal(youmonst.data) && !unsolid(youmonst.data)) {
         You("are hit by %s!", doname(otmp2));
         dmg = dmgval(otmp2, &youmonst) * otmp2->quan;

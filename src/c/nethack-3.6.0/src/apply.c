@@ -1498,11 +1498,11 @@ int magic; /* 0=Physical, otherwise skill level */
     coord cc;
 
     if (!magic && (nolimbs(youmonst.data) || slithy(youmonst.data))) {
-        /* normally (nolimbs || slithy) implies !Jumping,
+        /* normally (nolimbs || slithy) implies no jumping,
            but that isn't necessarily the case for knights */
         You_cant("jump; you have no legs!");
         return 0;
-    } else if (!magic && !Jumping) {
+    } else if (!magic && !youCanJump()) {
         You_cant("jump very far.");
         return 0;
     /* if steed is immobile, can't do physical jump but can do spell one */
@@ -1535,7 +1535,7 @@ int magic; /* 0=Physical, otherwise skill level */
         }
         You("cannot escape from %s!", mon_nam(u.ustuck));
         return 0;
-    } else if (Levitation || areYouOnAirLevel() || areYouOnWaterLevel()) {
+    } else if (youAreLevitating() || areYouOnAirLevel() || areYouOnWaterLevel()) {
         if (magic) {
             You("flail around a little.");
             return 1;
@@ -2316,7 +2316,7 @@ struct obj *otmp;
             is_animal(u.ustuck->data) ? "while swallowed" : "while engulfed";
     else if (underwater())
         what = "underwater";
-    else if (Levitation)
+    else if (youAreLevitating())
         what = "while levitating";
     else if (is_pool(currentX(), currentY()))
         what = "in water";
@@ -2506,7 +2506,7 @@ struct obj *obj;
             kick_steed();
             return 1;
         }
-        if (Levitation || u.usteed) {
+        if (youAreLevitating() || u.usteed) {
             /* Have a shot at snaring something on the floor */
             otmp = level.objects[currentX()][currentY()];
             if (otmp && otmp->otyp == CORPSE && otmp->corpsenm == PM_HORSE) {

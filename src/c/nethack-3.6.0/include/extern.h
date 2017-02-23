@@ -195,6 +195,16 @@ E boolean FDECL(youAppearDisplaced, ());
 E boolean FDECL(youAreStealthy, ());
 E boolean FDECL(youAggravateMonsters, ());
 E boolean FDECL(youCauseConflict, ());
+E boolean FDECL(youCanJump, ());
+E boolean FDECL(youCanTeleport, ());
+E boolean FDECL(youHaveTeleportControl, ());
+E boolean FDECL(youAreLevitating, ());
+E boolean FDECL(youCanLevitateAtWill, ());
+E boolean FDECL(youAreFlying, ());
+E boolean FDECL(youCanSwim, ());
+E boolean FDECL(youAreAmphibious, ());
+E boolean FDECL(youNeedNotBreathe, ());
+E boolean FDECL(youCanPassThroughWalls, ());
 
 /* ### ball.c ### */
 

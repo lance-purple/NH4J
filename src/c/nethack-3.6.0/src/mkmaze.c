@@ -1101,7 +1101,7 @@ water_friction()
     register int x, y, dx, dy;
     register boolean eff = FALSE;
 
-    if (Swimming && rn2(4))
+    if (youCanSwim() && rn2(4))
         return; /* natural swimmers have advantage */
 
     if (directionX() && !rn2(!directionY() ? 3 : 6)) { /* 1/3 chance or half that */

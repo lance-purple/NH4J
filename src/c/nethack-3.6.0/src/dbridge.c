@@ -410,18 +410,18 @@ int x, y;
     if (noncorporeal(etmp->edata))
         return TRUE;
     if (is_pool(x, y))
-        return (boolean) ((is_u(etmp) && (canYouWalkOnWater() || Amphibious || Swimming
-                                          || Flying || Levitation))
+        return (boolean) ((is_u(etmp) && (canYouWalkOnWater() || youAreAmphibious() || youCanSwim()
+                                          || youAreFlying() || youAreLevitating()))
                           || is_swimmer(etmp->edata)
                           || is_flyer(etmp->edata)
                           || is_floater(etmp->edata));
     /* must force call to lava_effects in e_died if is_u */
     if (is_lava(x, y))
-        return (boolean) ((is_u(etmp) && (Levitation || Flying))
+        return (boolean) ((is_u(etmp) && (youAreLevitating() || youAreFlying()))
                           || likes_lava(etmp->edata)
                           || is_flyer(etmp->edata));
     if (is_db_wall(x, y))
-        return (boolean) (is_u(etmp) ? Passes_walls
+        return (boolean) (is_u(etmp) ? youCanPassThroughWalls()
                           : passes_walls(etmp->edata));
     return TRUE;
 }
@@ -494,7 +494,7 @@ STATIC_OVL boolean
 automiss(etmp)
 struct entity *etmp;
 {
-    return (boolean) ((is_u(etmp) ? Passes_walls : passes_walls(etmp->edata))
+    return (boolean) ((is_u(etmp) ? youCanPassThroughWalls() : passes_walls(etmp->edata))
                       || noncorporeal(etmp->edata));
 }
 
@@ -521,7 +521,7 @@ boolean chunks;
         /* flying requires mobility */
         misses = 5; /* out of 8 */
     else if (is_floater(etmp->edata)
-             || (is_u(etmp) && Levitation)) /* doesn't require mobility */
+             || (is_u(etmp) && youAreLevitating())) /* doesn't require mobility */
         misses = 3;
     else if (chunks && is_pool(etmp->ex, etmp->ey))
         misses = 2; /* sitting ducks */

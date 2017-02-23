@@ -1291,7 +1291,7 @@ int final;
 STATIC_OVL boolean
 walking_on_water()
 {
-    if (inWater() || Levitation || Flying)
+    if (inWater() || youAreLevitating() || youAreFlying())
         return FALSE;
     return (boolean) (canYouWalkOnWater()
                       && (is_pool(currentX(), currentY()) || is_lava(currentX(), currentY())));
@@ -1645,18 +1645,18 @@ int final;
         Sprintf(eos(youtoo), "and %s ", steedname);
     }
     /* other movement situations that hero should always know */
-    if (Levitation) {
-        if (Lev_at_will && magic)
+    if (youAreLevitating()) {
+        if (youCanLevitateAtWill() && magic)
             you_are("levitating, at will", "");
         else
             enl_msg(youtoo, are, were, "levitating", from_what(LEVITATION));
-    } else if (Flying) { /* can only fly when not levitating */
+    } else if (youAreFlying()) { /* can only fly when not levitating */
         enl_msg(youtoo, are, were, "flying", from_what(FLYING));
     }
     if (underwater()) {
         you_are("underwater", "");
     } else if (inWater()) {
-        you_are(Swimming ? "swimming" : "in water", from_what(SWIMMING));
+        you_are(youCanSwim() ? "swimming" : "in water", from_what(SWIMMING));
     } else if (walking_on_water()) {
         /* show active canYouWalkOnWater() here, potential canYouWalkOnWater() elsewhere */
         Sprintf(buf, "walking on %s",
@@ -2060,18 +2060,18 @@ int final;
         enl_msg("You cause", "", "d", " conflict", from_what(CONFLICT));
 
     /*** Transportation ***/
-    if (Jumping)
+    if (youCanJump())
         you_can("jump", from_what(JUMPING));
-    if (Teleportation)
+    if (youCanTeleport())
         you_can("teleport", from_what(TELEPORT));
-    if (Teleport_control)
+    if (youHaveTeleportControl())
         you_have("teleport control", from_what(TELEPORT_CONTROL));
     /* actively levitating handled earlier as a status condition */
     if (youAreBlockedFrom(LEVITATION)) { /* levitation is blocked */
         long save_BLev = yourBlocker(LEVITATION);
 
         setYourBlocker(LEVITATION, 0L);
-        if (Levitation)
+        if (youAreLevitating())
             enl_msg(You_, "would levitate", "would have levitated",
                     if_surroundings_permitted, "");
         setYourBlocker(LEVITATION, save_BLev);
@@ -2081,9 +2081,9 @@ int final;
         long save_BFly = yourBlocker(FLYING);
 
         setYourBlocker(FLYING, 0L);
-        if (Flying)
+        if (youAreFlying())
             enl_msg(You_, "would fly", "would have flown",
-                    Levitation
+                    youAreLevitating()
                        ? "if you weren't levitating"
                        : (save_BFly == FROMOUTSIDE)
                           ? if_surroundings_permitted
@@ -2096,13 +2096,13 @@ int final;
     if (canYouWalkOnWater() && !walking_on_water())
         you_can("walk on water", from_what(WWALKING));
     /* actively swimming (in water but not under it) handled earlier */
-    if (Swimming && (underwater() || !inWater()))
+    if (youCanSwim() && (underwater() || !inWater()))
         you_can("swim", from_what(SWIMMING));
-    if (Breathless)
+    if (youNeedNotBreathe())
         you_can("survive without air", from_what(MAGICAL_BREATHING));
-    else if (Amphibious)
+    else if (youAreAmphibious())
         you_can("breathe water", from_what(MAGICAL_BREATHING));
-    if (Passes_walls)
+    if (youCanPassThroughWalls())
         you_can("walk through walls", from_what(PASSES_WALLS));
 
     /*** Physical attributes ***/
@@ -2467,7 +2467,7 @@ int msgflag;          /* for variant message phrasing */
 
             if (o)
                 Sprintf(bp, " underneath %s", ansimpleoname(o));
-        } else if (is_clinger(youmonst.data) || Flying) {
+        } else if (is_clinger(youmonst.data) || youAreFlying()) {
             /* Flying: 'lurker above' hides on ceiling but doesn't cling */
             Sprintf(bp, " on the %s", ceiling(currentX(), currentY()));
         } else {

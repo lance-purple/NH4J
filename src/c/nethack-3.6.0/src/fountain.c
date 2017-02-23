@@ -216,7 +216,7 @@ drinkfountain()
     register boolean mgkftn = (levl[currentX()][currentY()].blessedftn == 1);
     register int fate = rnd(30);
 
-    if (Levitation) {
+    if (youAreLevitating()) {
         floating_above("fountain");
         return;
     }
@@ -350,7 +350,7 @@ void
 dipfountain(obj)
 register struct obj *obj;
 {
-    if (Levitation) {
+    if (youAreLevitating()) {
         floating_above("fountain");
         return;
     }
@@ -508,7 +508,7 @@ drinksink()
     struct obj *otmp;
     struct monst *mtmp;
 
-    if (Levitation) {
+    if (youAreLevitating()) {
         floating_above("sink");
         return;
     }

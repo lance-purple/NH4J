@@ -549,7 +549,7 @@ int ttyp;
     boolean madeby_u = (madeby == BY_YOU);
     boolean madeby_obj = (madeby == BY_OBJECT);
     boolean at_u = (x == currentX()) && (y == currentY());
-    boolean wont_fall = Levitation || Flying;
+    boolean wont_fall = youAreLevitating() || youAreFlying();
 
     if (at_u && currentlyTrapped()) {
         if (currentTrapType() == TT_BURIEDBALL) {
@@ -739,7 +739,7 @@ const char *fillmsg;
 
     if (fillmsg)
         pline(fillmsg, typ == LAVAPOOL ? "lava" : "water");
-    if (u_spot && !(Levitation || Flying)) {
+    if (u_spot && !(youAreLevitating() || youAreFlying())) {
         if (typ == LAVAPOOL)
             (void) lava_effects();
         else if (!canYouWalkOnWater())
@@ -1026,7 +1026,7 @@ struct obj *obj;
     } else if (underwater()) {
         pline("Turbulence torpedoes your %s attempts.", verbing);
     } else if (directionZ() < 0) {
-        if (Levitation)
+        if (youAreLevitating())
             You("don't have enough leverage.");
         else
             You_cant("reach the %s.", ceiling(currentX(), currentY()));
@@ -2019,7 +2019,7 @@ void
 bury_you()
 {
     debugpline0("bury_you");
-    if (!Levitation && !Flying) {
+    if (!youAreLevitating() && !youAreFlying()) {
         if (swallowed())
             You_feel("a sensation like falling into a trap!");
         else
@@ -2027,7 +2027,7 @@ bury_you()
                       surface(currentX(), currentY(currentY()
 
         setBuried(TRUE);
-        if (!Strangled && !Breathless)
+        if (!Strangled && !youNeedNotBreathe())
             Strangled = 6;
         showHeroBeingBuried(1);
     }
@@ -2048,14 +2048,14 @@ void
 escape_tomb()
 {
     debugpline0("escape_tomb");
-    if ((Teleportation || can_teleport(youmonst.data))
-        && (Teleport_control || rn2(3) < Luck+2)) {
+    if ((youCanTeleport() || can_teleport(youmonst.data))
+        && (youHaveTeleportControl() || rn2(3) < Luck+2)) {
         You("attempt a teleport spell.");
         (void) dotele();        /* calls unearth_you() */
     } else if (buried()) { /* still buried after 'port attempt */
         boolean good;
 
-        if (amorphous(youmonst.data) || Passes_walls
+        if (amorphous(youmonst.data) || youCanPassThroughWalls()
             || noncorporeal(youmonst.data)
             || (unsolid(youmonst.data)
                 && youmonst.data != &mons[PM_WATER_ELEMENTAL])

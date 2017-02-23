@@ -3420,7 +3420,7 @@ boolean catchup; /* restoring a level */
     y = tmp_dam->place.y;
     if (!IS_ROOM(tmp_dam->typ)) {
         if (x == currentX() && y == currentY())
-            if (!Passes_walls)
+            if (!youCanPassThroughWalls())
                 return 0;
         if (x == shkp->mx && y == shkp->my)
             return 0;
@@ -3429,7 +3429,7 @@ boolean catchup; /* restoring a level */
     }
     if ((ttmp = t_at(x, y)) != 0) {
         if (x == currentX() && y == currentY())
-            if (!Passes_walls)
+            if (!youCanPassThroughWalls())
                 return 0;
         if (ttmp->ttyp == LANDMINE || ttmp->ttyp == BEAR_TRAP) {
             /* convert to an object */

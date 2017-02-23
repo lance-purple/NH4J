@@ -1658,7 +1658,7 @@ struct obj *obj;
 
     /* if we aren't levitating or this isn't an artifact which confers
        levitation via #invoke then freeinv() won't toggle levitation */
-    if (!Levitation || (oart = get_artifact(obj)) == 0
+    if (!youAreLevitating() || (oart = get_artifact(obj)) == 0
         || oart->inv_prop != LEVITATION || !(yourExtrinsicHasMask(LEVITATION, W_ARTI)))
         return FALSE;
 
@@ -1670,7 +1670,7 @@ struct obj *obj;
     save_Lev = u.uprops[LEVITATION];
     unsetYourIntrinsicMask(LEVITATION, (I_SPECIAL | TIMEOUT));
     unsetYourExtrinsicMask(LEVITATION, W_ARTI);
-    result = (boolean) !Levitation;
+    result = !youAreLevitating();
     u.uprops[LEVITATION] = save_Lev;
     return result;
 }
@@ -1925,7 +1925,7 @@ boolean loseit;    /* whether to drop it if hero can longer touch it */
 
     /* if we still have it and caller wants us to drop it, do so now */
     if (loseit && obj) {
-        if (Levitation) {
+        if (youAreLevitating()) {
             freeinv(obj);
             hitfloor(obj);
         } else {

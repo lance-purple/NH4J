@@ -213,7 +213,7 @@ const char *fmt, *arg;
     }
     check_strangling(TRUE);
 
-    if (!Levitation && !u.ustuck && is_pool_or_lava(currentX(), currentY()))
+    if (!youAreLevitating() && !u.ustuck && is_pool_or_lava(currentX(), currentY()))
         spoteffects(TRUE);
 
     see_monsters();
@@ -809,10 +809,10 @@ int mntmp;
         learn_egg_type(egg_type_from_parent(currentMonsterNumber(), TRUE));
     }
     find_ac();
-    if ((!Levitation && !u.ustuck && !Flying && is_pool_or_lava(currentX(), currentY()))
-        || (underwater() && !Swimming))
+    if ((!youAreLevitating() && !u.ustuck && !youAreFlying() && is_pool_or_lava(currentX(), currentY()))
+        || (underwater() && !youCanSwim()))
         spoteffects(TRUE);
-    if (Passes_walls && currentlyTrapped()
+    if (youCanPassThroughWalls() && currentlyTrapped()
         && (currentTrapType() == TT_INFLOOR || currentTrapType() == TT_BURIEDBALL)) {
         setCurrentTrapTimeout(0);
         if (currentTrapType() == TT_INFLOOR)
@@ -1141,7 +1141,7 @@ dospinweb()
 {
     register struct trap *ttmp = t_at(currentX(), currentY());
 
-    if (Levitation || areYouOnAirLevel() || underwater()
+    if (youAreLevitating() || areYouOnAirLevel() || underwater()
         || areYouOnWaterLevel()) {
         You("must be on the ground to spin a web.");
         return 0;
@@ -1411,7 +1411,7 @@ int
 dohide()
 {
     boolean ismimic = youmonst.data->mlet == S_MIMIC,
-            on_ceiling = is_clinger(youmonst.data) || Flying;
+            on_ceiling = is_clinger(youmonst.data) || youAreFlying();
 
     /* can't hide while being held (or holding) or while trapped
        (except for floor hiders [trapper or mimic] in pits) */
@@ -1451,7 +1451,7 @@ dohide()
         setLurking(FALSE);
         return 0;
     }
-    if ((is_hider(youmonst.data) && !Flying) /* floor hider */
+    if ((is_hider(youmonst.data) && !youAreFlying()) /* floor hider */
         && (areYouOnAirLevel() || areYouOnWaterLevel())) {
         There("is nowhere to hide beneath you.");
         setLurking(FALSE);

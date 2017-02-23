@@ -2518,7 +2518,7 @@ recalc_mapseen()
      */
     for (x = 1; x < COLNO; x++) {
         for (y = 0; y < ROWNO; y++) {
-            if (cansee(x, y) || (x == currentX() && y == currentY() && !Levitation)) {
+            if (cansee(x, y) || (x == currentX() && y == currentY() && !youAreLevitating())) {
                 ltyp = levl[x][y].typ;
                 if (ltyp == DRAWBRIDGE_UP)
                     ltyp = db_under_typ(levl[x][y].drawbridgemask);

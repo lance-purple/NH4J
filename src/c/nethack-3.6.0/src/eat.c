@@ -234,7 +234,7 @@ struct obj *food;
 
     exercise(A_CON, FALSE);
 
-    if (Breathless || (!youAreBeingStrangled() && !rn2(20))) {
+    if (youNeedNotBreathe() || (!youAreBeingStrangled() && !rn2(20))) {
         /* choking by eating AoS doesn't involve stuffing yourself */
         if (food && food->otyp == AMULET_OF_STRANGULATION) {
             You("choke, but recover your composure.");
@@ -1506,7 +1506,7 @@ struct obj *obj;
 
         if (youCanSee())
             what = "goes", where = "dark";
-        else if (Levitation || areYouOnAirLevel() || areYouOnWaterLevel())
+        else if (youAreLevitating() || areYouOnAirLevel() || areYouOnWaterLevel())
             what = "you lose control of", where = "yourself";
         else
             what = "you slap against the",
@@ -1888,7 +1888,7 @@ struct obj *otmp;
             case RIN_LEVITATION:
                 /* undo the `.intrinsic |= FROMOUTSIDE' done above */
                 u.uprops[LEVITATION].intrinsic = oldprop;
-                if (!Levitation) {
+                if (!youAreLevitating()) {
                     float_up();
                     incrementYourIntrinsicTimeout(LEVITATION, d(10, 20));
                     makeknown(typ);
@@ -2822,7 +2822,7 @@ boolean incr;
                 /* stop what you're doing, then faint */
                 stop_occupation();
                 You("faint from lack of food.");
-                if (!Levitation)
+                if (!youAreLevitating())
                     selftouch("Falling, you");
                 incrementYourIntrinsicTimeout(DEAF, duration);
                 nomul(-duration);
@@ -2916,7 +2916,7 @@ int corpsecheck; /* 0, no check, 1, corpses, 2, tinnable corpses */
     if (!can_reach_floor(TRUE) || (feeding && u.usteed)
         || (is_pool_or_lava(currentX(), currentY())
             && (canYouWalkOnWater() || is_clinger(youmonst.data)
-                || (Flying && !Breathless))))
+                || (youAreFlying() && !youNeedNotBreathe()))))
         goto skipfloor;
 
     if (feeding && metallivorous(youmonst.data)) {

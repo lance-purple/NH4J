@@ -3155,7 +3155,7 @@ wiztrap:
             lev->typ = LAVAPOOL;
             del_engr_at(x, y);
             pline("A pool of molten lava.");
-            if (!(Levitation || Flying))
+            if (!(youAreLevitating() || youAreFlying()))
                 (void) lava_effects();
             newsym(x, y);
             return &zeroobj;

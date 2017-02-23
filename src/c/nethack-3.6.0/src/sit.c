@@ -47,7 +47,7 @@ dosit()
     if (!can_reach_floor(FALSE)) {
         if (swallowed())
             There("are no seats in here!");
-        else if (Levitation)
+        else if (youAreLevitating())
             You("tumble in place.");
         else
             You("are sitting on air.");

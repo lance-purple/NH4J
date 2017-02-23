@@ -291,8 +291,8 @@ boolean force;      /* Quietly force this animal */
     }
 
     /* Is the player impaired? */
-    if (!force && !is_floater(ptr) && !is_flyer(ptr) && Levitation
-        && !Lev_at_will) {
+    if (!force && !is_floater(ptr) && !is_flyer(ptr) && youAreLevitating()
+        && !youCanLevitateAtWill()) {
         You("cannot reach %s.", mon_nam(mtmp));
         return (FALSE);
     }
@@ -304,7 +304,7 @@ boolean force;      /* Quietly force this animal */
     if (!force
         && (youAreConfused() || youKeepFumbling() || youHaveSlipperyFingers() || youHaveWoundedLegs() || otmp->cursed
             || (currentExperienceLevel() + mtmp->mtame < rnd(MAXULEV / 2 + 5)))) {
-        if (Levitation) {
+        if (youAreLevitating()) {
             pline("%s slips away from you.", Monnam(mtmp));
             return FALSE;
         }
@@ -323,7 +323,7 @@ boolean force;      /* Quietly force this animal */
     /* Success */
     maybewakesteed(mtmp);
     if (!force) {
-        if (Levitation && !is_floater(ptr) && !is_flyer(ptr))
+        if (youAreLevitating() && !is_floater(ptr) && !is_flyer(ptr))
             /* Must have Lev_at_will at this point */
             pline("%s magically floats up!", Monnam(mtmp));
         You("mount %s.", mon_nam(mtmp));

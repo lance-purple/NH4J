@@ -599,7 +599,7 @@ drag:
         || ((t = t_at(uchain->ox, uchain->oy))
             && (t->ttyp == PIT || t->ttyp == SPIKED_PIT || t->ttyp == HOLE
                 || t->ttyp == TRAPDOOR))) {
-        if (Levitation) {
+        if (youAreLevitating()) {
             You_feel("a tug from the iron ball.");
             if (t)
                 t->tseen = 1;
@@ -738,7 +738,7 @@ xchar x, y;
 
         setOriginalX(currentX());
         setOriginalY(currentY());
-        if (!Levitation && !MON_AT(x, y) && !currentlyTrapped()
+        if (!youAreLevitating() && !MON_AT(x, y) && !currentlyTrapped()
             && (is_pool(x, y)
                 || ((t = t_at(x, y))
                     && (t->ttyp == PIT || t->ttyp == SPIKED_PIT

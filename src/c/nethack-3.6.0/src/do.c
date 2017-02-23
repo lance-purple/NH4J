@@ -161,7 +161,7 @@ const char *verb;
                 }
                 mtmp->mtrapped = 0;
             } else {
-                if (!Passes_walls && !throws_rocks(youmonst.data)) {
+                if (!youCanPassThroughWalls() && !throws_rocks(youmonst.data)) {
                     losehp(Maybe_Half_Phys(rnd(15)),
                            "squished under a boulder", NO_KILLER_PREFIX);
                     return FALSE; /* player remains trapped */
@@ -194,12 +194,12 @@ const char *verb;
         /* Reasonably bulky objects (arbitrary) splash when dropped.
          * If you're floating above the water even small things make
          * noise.  Stuff dropped near fountains always misses */
-        if ((youCannotSee() || (Levitation || Flying)) && !youAreDeaf()
+        if ((youCannotSee() || (youAreLevitating() || youAreFlying())) && !youAreDeaf()
             && ((x == currentX()) && (y == currentY()))) {
             if (!underwater()) {
                 if (weight(obj) > 9) {
                     pline("Splash!");
-                } else if (Levitation || Flying) {
+                } else if (youAreLevitating() || youAreFlying()) {
                     pline("Plop!");
                 }
             }
@@ -673,7 +673,7 @@ boolean with_impact;
         else if (level.flags.has_shop)
             sellobj(obj, currentX(), currentY());
         stackobj(obj);
-        if (youCannotSee() && Levitation)
+        if (youCannotSee() && youAreLevitating())
             map_object(obj, 0);
         newsym(currentX(), currentY()); /* remap location under self */
     }
@@ -945,7 +945,7 @@ dodown()
     }
 
     if (trap)
-        You("%s %s.", Flying ? "fly" : locomotion(youmonst.data, "jump"),
+        You("%s %s.", youAreFlying() ? "fly" : locomotion(youmonst.data, "jump"),
             trap->ttyp == HOLE ? "down the hole" : "through the trap door");
 
     if (trap && areYouOnStrongholdLevel()) {
@@ -1303,9 +1303,9 @@ boolean at_stairs, falling, portal;
             /* you climb up the {stairs|ladder};
                fly up the stairs; fly up along the ladder */
             pline("%s %s up%s the %s.",
-                  (youAreBeingPunished() && !Levitation) ? "With great effort you" : "You",
-                  Flying ? "fly" : "climb",
-                  (Flying && at_ladder) ? " along" : "",
+                  (youAreBeingPunished() && !youAreLevitating()) ? "With great effort you" : "You",
+                  youAreFlying() ? "fly" : "climb",
+                  (youAreFlying() && at_ladder) ? " along" : "",
                   at_ladder ? "ladder" : "stairs");
         } else { /* down */
             if (at_ladder)
@@ -1316,7 +1316,7 @@ boolean at_stairs, falling, portal;
                 u_on_upstairs();
             if (!directionZ()) {
                 ; /* stayed on same level? (no transit effects) */
-            } else if (Flying) {
+            } else if (youAreFlying()) {
                 if (flags.verbose)
                     You("fly down %s.",
                         at_ladder ? "along the ladder" : "the stairs");

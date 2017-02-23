@@ -544,7 +544,7 @@ int x, y;
         return FALSE; /* previous step wants to stop now */
     }
 
-    if (!Passes_walls || !(may_pass = may_passwall(x, y))) {
+    if (!youCanPassThroughWalls() || !(may_pass = may_passwall(x, y))) {
         if (IS_ROCK(levl[x][y].typ) || closed_door(x, y)) {
             const char *s;
 
@@ -1056,7 +1056,7 @@ boolean
         return;
 
     } else if (obj->otyp == BOOMERANG && !underwater()) {
-        if (areYouOnAirLevel() || Levitation)
+        if (areYouOnAirLevel() || youAreLevitating())
             hurtle(-directionX(), -directionY(), 1, TRUE);
         mon = boomhit(obj, directionX(), directionY());
         if (mon == &youmonst) { /* the thing was caught */
@@ -1103,7 +1103,7 @@ boolean
                 range /= 2;
         }
 
-        if (areYouOnAirLevel() || Levitation) {
+        if (areYouOnAirLevel() || youAreLevitating()) {
             /* action, reaction... */
             urange -= range;
             if (urange < 1)
@@ -1129,7 +1129,7 @@ boolean
         thrownobj = obj; /* obj may be null now */
 
         /* have to do this after bhit() so currentX() & currentY() are correct */
-        if (areYouOnAirLevel() || Levitation)
+        if (areYouOnAirLevel() || youAreLevitating())
             hurtle(-directionX(), -directionY(), urange, TRUE);
 
         if (!obj)
@@ -1187,7 +1187,7 @@ boolean
                     pline(youCannotSee() ? "%s lands %s your %s."
                                 : "%s back to you, landing %s your %s.",
                           youCannotSee() ? Something : Tobjnam(obj, "return"),
-                          Levitation ? "beneath" : "at",
+                          youAreLevitating() ? "beneath" : "at",
                           makeplural(body_part(FOOT)));
                 } else {
                     dmg += rnd(3);

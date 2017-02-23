@@ -61,8 +61,8 @@ unsigned gpflags;
         mdat = mtmp->data;
         if (is_pool(x, y) && !ignorewater) {
             if (mtmp == &youmonst)
-                return (Levitation || Flying || canYouWalkOnWater() || Swimming
-                        || Amphibious);
+                return (youAreLevitating() || youAreFlying() || canYouWalkOnWater() || youCanSwim()
+                        || youAreAmphibious());
             else
                 return (is_floater(mdat) || is_flyer(mdat) || is_swimmer(mdat)
                         || is_clinger(mdat));
@@ -70,7 +70,7 @@ unsigned gpflags;
             return FALSE;
         } else if (is_lava(x, y)) {
             if (mtmp == &youmonst)
-                return (Levitation || Flying
+                return (youAreLevitating() || youAreFlying()
                         || (youResistFire() && canYouWalkOnWater() && uarmf
                             && uarmf->oerodeproof)
                         || (areYouPolymorphed() && likes_lava(youmonst.data)));
@@ -444,7 +444,7 @@ struct obj *scroll;
         if (!wizard || yn("Override?") != 'y')
             return FALSE;
     }
-    if ((Teleport_control && !youAreStunned()) || wizard) {
+    if ((youHaveTeleportControl() && !youAreStunned()) || wizard) {
         if (unconscious()) {
             pline("Being unconscious, you cannot control your teleport.");
         } else {
@@ -516,7 +516,7 @@ dotele()
         boolean castit = FALSE;
         register int sp_no = 0, energy = 0;
 
-        if (!Teleportation || (currentExperienceLevel() < (Role_if(PM_WIZARD) ? 8 : 12)
+        if (!youCanTeleport() || (currentExperienceLevel() < (Role_if(PM_WIZARD) ? 8 : 12)
                                && !can_teleport(youmonst.data))) {
             /* Try to use teleport away spell. */
             if (objects[SPE_TELEPORT_AWAY].oc_name_known && !youAreConfused())
@@ -527,7 +527,7 @@ dotele()
                     }
             if (!wizard) {
                 if (!castit) {
-                    if (!Teleportation)
+                    if (!youCanTeleport())
                         You("don't know that spell.");
                     else
                         You("are not able to teleport at will.");
@@ -600,7 +600,7 @@ level_tele()
         You_feel("very disoriented for a moment.");
         return;
     }
-    if ((Teleport_control && !youAreStunned()) || wizard) {
+    if ((youHaveTeleportControl() && !youAreStunned()) || wizard) {
         char qbuf[BUFSZ];
         int trycnt = 0;
 
@@ -748,9 +748,9 @@ level_tele()
 
         if (killer.name[0]) {
             ; /* arrival in heaven is pending */
-        } else if (Levitation) {
+        } else if (youAreLevitating()) {
             escape_by_flying = "float gently down to earth";
-        } else if (Flying) {
+        } else if (youAreFlying()) {
             escape_by_flying = "fly down to the ground";
         } else {
             pline("Unfortunately, you don't know how to fly.");
@@ -878,7 +878,7 @@ level_tele_trap(trap)
 struct trap *trap;
 {
     You("%s onto a level teleport trap!",
-        Levitation ? (const char *) "float"
+        youAreLevitating() ? (const char *) "float"
                    : locomotion(youmonst.data, "step"));
     if (youResistMagic()) {
         shieldeff(currentX(), currentY());

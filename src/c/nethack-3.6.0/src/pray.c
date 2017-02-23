@@ -193,7 +193,7 @@ in_trouble()
                 || (blocked_boulder(i, j) && !throws_rocks(youmonst.data)))
                 count++;
         }
-    if (count == 8 && !Passes_walls)
+    if (count == 8 && !youCanPassThroughWalls())
         return TROUBLE_STUCK_IN_WALL;
 
     if (Cursed_obj(uarmf, LEVITATION_BOOTS)
@@ -705,7 +705,7 @@ const char *str;
     } else {
         pline("%s %s %s your %s!", str,
               youCannotSee() ? "lands" : vtense(str, "appear"),
-              Levitation ? "beneath" : "at", makeplural(body_part(FOOT)));
+              youAreLevitating() ? "beneath" : "at", makeplural(body_part(FOOT)));
     }
 }
 

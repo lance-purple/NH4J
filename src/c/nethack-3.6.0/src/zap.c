@@ -2288,7 +2288,7 @@ boolean ordinary;
     case SPE_TELEPORT_AWAY:
         tele();
         /* same criteria as when mounted (zap_steed) */
-        if ((Teleport_control && !youAreStunned()) || !couldsee(originalX(), originalY())
+        if ((youHaveTeleportControl() && !youAreStunned()) || !couldsee(originalX(), originalY())
             || distanceSquaredToYou(originalX(), originalY()) >= 16)
             learn_it = TRUE;
         break;
@@ -2508,7 +2508,7 @@ struct obj *obj; /* wand or spell */
         /* you go together */
         tele();
         /* same criteria as when unmounted (zapyourself) */
-        if ((Teleport_control && !youAreStunned()) || !couldsee(originalX(), originalY())
+        if ((youHaveTeleportControl() && !youAreStunned()) || !couldsee(originalX(), originalY())
             || distanceSquaredToYou(originalX(), originalY()) >= 16)
             learnwand(obj);
         steedhit = TRUE;
@@ -2741,7 +2741,7 @@ struct obj *obj; /* wand or spell */
                 else
                     pline("Blood %ss %s your %s.",
                           is_lava(currentX(), currentY()) ? "boil" : "pool",
-                          Levitation ? "beneath" : "at",
+                          youAreLevitating() ? "beneath" : "at",
                           makeplural(body_part(FOOT)));
             }
         }
@@ -4248,7 +4248,7 @@ short exploding_wand_typ;
                         docrt();
                         vision_full_recalc = 1;
                     } else if (currentlyTrapped() && currentTrapType() == TT_LAVA) {
-                        if (Passes_walls) {
+                        if (youCanPassThroughWalls()) {
                             setCurrentTrapTimeout(0);
                             You("pass through the now-solid rock.");
                         } else {

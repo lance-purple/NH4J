@@ -139,7 +139,7 @@ choke_dialogue()
     register long i = yourIntrinsicTimeout(STRANGLED);
 
     if (i > 0 && i <= SIZE(choke_texts)) {
-        if (Breathless || !rn2(50))
+        if (youNeedNotBreathe() || !rn2(50))
             pline(choke_texts2[SIZE(choke_texts2) - i], body_part(NECK));
         else {
             const char *str = choke_texts[SIZE(choke_texts) - i];
@@ -408,7 +408,7 @@ nh_timeout()
             case FUMBLING:
                 /* call this only when a move took place.  */
                 /* otherwise handle fumbling msgs locally. */
-                if (youMoved() && !Levitation) {
+                if (youMoved() && !youAreLevitating()) {
                     slip_or_trip();
                     nomul(-2);
                     multi_reason = "fumbling";

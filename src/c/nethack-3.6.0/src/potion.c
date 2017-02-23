@@ -721,7 +721,7 @@ register struct obj *otmp;
         if (Free_action) {
             You("stiffen momentarily.");
         } else {
-            if (Levitation || areYouOnAirLevel() || areYouOnWaterLevel())
+            if (youAreLevitating() || areYouOnAirLevel() || areYouOnWaterLevel())
                 You("are motionlessly suspended.");
             else if (u.usteed)
                 You("are frozen in place!");
@@ -952,7 +952,7 @@ register struct obj *otmp;
     case SPE_LEVITATION:
         if (otmp->cursed)
             unsetYourIntrinsicMask(LEVITATION, I_SPECIAL);
-        if (!Levitation && !youAreBlockedFrom(LEVITATION)) {
+        if (!youAreLevitating() && !youAreBlockedFrom(LEVITATION)) {
             /* kludge to ensure proper operation of float_up() */
             setYourIntrinsicTimeout(LEVITATION, 1L);
             float_up();
@@ -981,7 +981,7 @@ register struct obj *otmp;
             setYourIntrinsicMask(LEVITATION, I_SPECIAL);
         } else
             incrementYourIntrinsicTimeout(LEVITATION, rn1(140, 10));
-        if (Levitation)
+        if (youAreLevitating())
             spoteffects(FALSE); /* for sinks */
         float_vs_flight();
         break;
@@ -1782,7 +1782,7 @@ dodip()
         /* "Dip <the object> into the {pool, moat, &c}?" */
         Sprintf(qtoo, "%s the %s?", qbuf, pooltype);
         if (yn(upstart(qtoo)) == 'y') {
-            if (Levitation) {
+            if (youAreLevitating()) {
                 floating_above(pooltype);
             } else if (u.usteed && !is_swimmer(u.usteed->data)
                        && P_SKILL(P_RIDING) < P_BASIC) {

@@ -111,7 +111,7 @@ moverock()
         rx = currentX() + 2 * directionX(); /* boulder destination position */
         ry = currentY() + 2 * directionY();
         nomul(0);
-        if (Levitation || areYouOnAirLevel()) {
+        if (youAreLevitating() || areYouOnAirLevel()) {
             if (youCannotSee())
                 feel_location(sx, sy);
             You("don't have enough leverage to push %s.", the(xname(otmp)));
@@ -678,7 +678,7 @@ int mode;
     if (IS_ROCK(tmpr->typ) || tmpr->typ == IRONBARS) {
         if (youCannotSee() && mode == DO_MOVE)
             feel_location(x, y);
-        if (Passes_walls && may_passwall(x, y)) {
+        if (youCanPassThroughWalls() && may_passwall(x, y)) {
             ; /* do nothing */
         } else if (tmpr->typ == IRONBARS) {
             if ((dmgtype(youmonst.data, AD_RUST)
@@ -686,7 +686,7 @@ int mode;
                 && still_chewing(x, y)) {
                 return FALSE;
             }
-            if (!(Passes_walls || passes_bars(youmonst.data))) {
+            if (!(youCanPassThroughWalls() || passes_bars(youmonst.data))) {
                 if (iflags.mention_walls)
                     You("cannot pass through the bars.");
                 return FALSE;
@@ -706,7 +706,7 @@ int mode;
                 if (areYouOnStrongholdLevel() && is_db_wall(x, y))
                     pline_The("drawbridge is up!");
                 /* sokoban restriction stays even after puzzle is solved */
-                else if (Passes_walls && !may_passwall(x, y)
+                else if (youCanPassThroughWalls() && !may_passwall(x, y)
                          && areYouOnASokobanLevel())
                     pline_The("Sokoban walls resist your ability.");
                 else if (iflags.mention_walls)
@@ -718,7 +718,7 @@ int mode;
         if (closed_door(x, y)) {
             if (youCannotSee() && mode == DO_MOVE)
                 feel_location(x, y);
-            if (Passes_walls)
+            if (youCanPassThroughWalls())
                 ; /* do nothing */
             else if (can_ooze(&youmonst)) {
                 if (mode == DO_MOVE)
@@ -755,7 +755,7 @@ int mode;
             }
         } else {
         testdiag:
-            if (dx && dy && !Passes_walls
+            if (dx && dy && !youCanPassThroughWalls()
                 && (!doorless_door(x, y) || block_door(x, y))) {
                 /* Diagonal moves into a door are not allowed. */
                 if (youCannotSee() && mode == DO_MOVE)
@@ -796,7 +796,7 @@ int mode;
         struct trap *t = t_at(x, y);
 
         if ((t && t->tseen)
-            || (!Levitation && !Flying && !is_clinger(youmonst.data)
+            || (!youAreLevitating() && !youAreFlying() && !is_clinger(youmonst.data)
                 && is_pool_or_lava(x, y) && levl[x][y].seenv))
             return FALSE;
     }
@@ -804,13 +804,13 @@ int mode;
     ust = &levl[ux][uy];
 
     /* Now see if other things block our way . . */
-    if (dx && dy && !Passes_walls && IS_DOOR(ust->typ)
+    if (dx && dy && !youCanPassThroughWalls() && IS_DOOR(ust->typ)
         && (!doorless_door(ux, uy) || block_entry(x, y))) {
         /* Can't move at a diagonal out of a doorway with door. */
         return FALSE;
     }
 
-    if (sobj_at(BOULDER, x, y) && (Sokoban || !Passes_walls)) {
+    if (sobj_at(BOULDER, x, y) && (Sokoban || !youCanPassThroughWalls())) {
         if (!(youCannotSee() || youAreHallucinating()) && (context.run >= 2)
             && mode != TEST_TRAV)
             return FALSE;
@@ -827,7 +827,7 @@ int mode;
 
             /* don't pick two boulders in a row, unless there's a way thru */
             if (sobj_at(BOULDER, ux, uy) && !Sokoban) {
-                if (!Passes_walls
+                if (!youCanPassThroughWalls()
                     && !(tunnels(youmonst.data) && !needspick(youmonst.data))
                     && !carrying(PICK_AXE) && !carrying(DWARVISH_MATTOCK)
                     && !((obj = carrying(WAN_DIGGING))
@@ -924,7 +924,7 @@ boolean guess;
 
                     if (!isok(nx, ny))
                         continue;
-                    if ((!Passes_walls && !can_ooze(&youmonst)
+                    if ((!youCanPassThroughWalls() && !can_ooze(&youmonst)
                          && closed_door(x, y)) || sobj_at(BOULDER, x, y)) {
                         /* closed doors and boulders usually
                          * cause a delay, so prefer another path */
@@ -1199,7 +1199,7 @@ u_rooted()
 {
     if (!youmonst.data->mmove) {
         You("are rooted %s.",
-            Levitation || areYouOnAirLevel() || areYouOnWaterLevel()
+            youAreLevitating() || areYouOnAirLevel() || areYouOnWaterLevel()
                 ? "in place"
                 : "to the ground");
         nomul(0);
@@ -1253,7 +1253,7 @@ domove()
         setCurrentY(y);
         mtmp = u.ustuck;
     } else {
-        if (areYouOnAirLevel() && rn2(4) && !Levitation && !Flying) {
+        if (areYouOnAirLevel() && rn2(4) && !youAreLevitating() && !youAreFlying()) {
             switch (rn2(3)) {
             case 0:
                 You("tumble in place.");
@@ -1271,13 +1271,13 @@ domove()
         }
 
         /* check slippery ice */
-        on_ice = !Levitation && is_ice(currentX(), currentY());
+        on_ice = !youAreLevitating() && is_ice(currentX(), currentY());
         if (on_ice) {
             static int skates = 0;
             if (!skates)
                 skates = find_skates();
             if ((uarmf && uarmf->otyp == skates) || resists_cold(&youmonst)
-                || Flying || is_floater(youmonst.data)
+                || youAreFlying() || is_floater(youmonst.data)
                 || is_clinger(youmonst.data) || is_whirly(youmonst.data))
                 on_ice = FALSE;
             else if (!rn2(youResistCold() ? 3 : 2)) {
@@ -1321,7 +1321,7 @@ domove()
             return;
         }
         if (((trap = t_at(x, y)) && trap->tseen)
-            || (youCannotSee() && !Levitation && !Flying && !is_clinger(youmonst.data)
+            || (youCannotSee() && !youAreLevitating() && !youAreFlying() && !is_clinger(youmonst.data)
                 && is_pool_or_lava(x, y) && levl[x][y].seenv)) {
             if (context.run >= 2) {
                 nomul(0);
@@ -1768,7 +1768,7 @@ invocation_message()
         nomul(0); /* stop running or travelling */
         if (u.usteed)
             Sprintf(buf, "beneath %s", y_monnam(u.usteed));
-        else if (Levitation || Flying)
+        else if (youAreLevitating() || youAreFlying())
             Strcpy(buf, "beneath you");
         else
             Sprintf(buf, "under your %s", makeplural(body_part(FOOT)));
@@ -1793,17 +1793,17 @@ switch_terrain()
 
     if (blocklev) {
         /* called from spoteffects(), skip float_down() */
-        if (Levitation)
+        if (youAreLevitating())
             You_cant("levitate in here.");
         setYourBlockerMask(LEVITATION, FROMOUTSIDE);
     } else if (youAreBlockedFrom(LEVITATION)) {
         unsetYourBlockerMask(LEVITATION, FROMOUTSIDE);
-        if (Levitation)
+        if (youAreLevitating())
             float_up();
     }
     /* the same terrain that blocks levitation also blocks flight */
     if (blocklev) {
-        if (Flying)
+        if (youAreFlying())
             You_cant("fly in here.");
         setYourBlockerMask(FLYING, FROMOUTSIDE);
     } else if (youAreBlockedFrom(FLYING)) {
@@ -1812,7 +1812,7 @@ switch_terrain()
         /* [minor bug: we don't know whether this is beginning flight or
            resuming it; that could be tracked so that this message could
            be adjusted to "resume flying", but isn't worth the effort...] */
-        if (Flying)
+        if (youAreFlying())
             You("start flying.");
     }
 }
@@ -1839,9 +1839,9 @@ boolean newspot;             /* true if called by spoteffects */
                     is_ice(currentX(), currentY()) ? "ice" : "land");
         } else if (areYouOnWaterLevel()) {
             still_inwater = TRUE;
-        } else if (Levitation) {
+        } else if (youAreLevitating()) {
             You("pop out of the water like a cork!");
-        } else if (Flying) {
+        } else if (youAreFlying()) {
             You("fly out of the water.");
         } else if (canYouWalkOnWater()) {
             You("slowly rise above the surface.");
@@ -1860,7 +1860,7 @@ boolean newspot;             /* true if called by spoteffects */
     }
 
     /* check for entering water or lava */
-    if (!u.ustuck && !Levitation && !Flying && is_pool_or_lava(currentX(), currentY())) {
+    if (!u.ustuck && !youAreLevitating() && !youAreFlying() && is_pool_or_lava(currentX(), currentY())) {
         if (u.usteed
             && (is_flyer(u.usteed->data) || is_floater(u.usteed->data)
                 || is_clinger(u.usteed->data))) {
@@ -1888,7 +1888,7 @@ boolean newspot;             /* true if called by spoteffects */
             if (lava_effects())
                 return TRUE;
         } else if (!canYouWalkOnWater()
-                   && (newspot || !inWater() || !(Swimming || Amphibious))) {
+                   && (newspot || !inWater() || !(youCanSwim() || youAreAmphibious()))) {
             if (drown())
                 return TRUE;
         }
@@ -1931,7 +1931,7 @@ boolean pick;
         goto spotdone;
 
     check_special_room(FALSE);
-    if (IS_SINK(levl[currentX()][currentY()].typ) && Levitation)
+    if (IS_SINK(levl[currentX()][currentY()].typ) && youAreLevitating())
         dosinkfall();
     if (!in_steed_dismounting) { /* if dismounting, we'll check again later */
         boolean pit;
@@ -2373,7 +2373,7 @@ dopickup()
     }
     if (is_pool(currentX(), currentY())) {
         if (canYouWalkOnWater() || is_floater(youmonst.data) || is_clinger(youmonst.data)
-            || (Flying && !Breathless)) {
+            || (youAreFlying() && !youNeedNotBreathe())) {
             You("cannot dive into the water to pick things up.");
             return 0;
         } else if (!underwater()) {
@@ -2383,7 +2383,7 @@ dopickup()
     }
     if (is_lava(currentX(), currentY())) {
         if (canYouWalkOnWater() || is_floater(youmonst.data) || is_clinger(youmonst.data)
-            || (Flying && !Breathless)) {
+            || (youAreFlying() && !youNeedNotBreathe())) {
             You_cant("reach the bottom to pick things up.");
             return 0;
         } else if (!likes_lava(youmonst.data)) {
@@ -2506,7 +2506,7 @@ lookaround()
                 /* water and lava only stop you if directly in front, and stop
                  * you even if you are running
                  */
-                if (!Levitation && !Flying && !is_clinger(youmonst.data)
+                if (!youAreLevitating() && !youAreFlying() && !is_clinger(youmonst.data)
                     && x == currentX() + directionX() && y == currentY() + directionY())
                     /* No canYouWalkOnWater() check; otherwise they'd be able
                      * to test boots by trying to SHIFT-direction
@@ -2594,7 +2594,7 @@ int x, y;
     /* diagonal movement has some restrictions */
     if (NODIAG(currentMonsterNumber()))
         return FALSE; /* poly'd into a grid bug... */
-    if (Passes_walls)
+    if (youCanPassThroughWalls())
         return TRUE; /* or a xorn... */
     /* pool could be next to a door, conceivably even inside a shop */
     if (IS_DOOR(levl[x][y].typ) && (!doorless_door(x, y) || block_door(x, y)))
@@ -2750,13 +2750,13 @@ weight_cap()
             carrcap = (carrcap * (long) youmonst.data->cwt / WT_HUMAN);
     }
 
-    if (Levitation || areYouOnAirLevel() /* pugh@cornell */
+    if (youAreLevitating() || areYouOnAirLevel() /* pugh@cornell */
         || (u.usteed && strongmonst(u.usteed->data)))
         carrcap = MAX_CARR_CAP;
     else {
         if (carrcap > MAX_CARR_CAP)
             carrcap = MAX_CARR_CAP;
-        if (!Flying) {
+        if (!youAreFlying()) {
             if (yourExtrinsic(WOUNDED_LEGS) & LEFT_SIDE)
                 carrcap -= 100;
             if (yourExtrinsic(WOUNDED_LEGS) & RIGHT_SIDE)
