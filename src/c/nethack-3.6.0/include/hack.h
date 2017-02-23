@@ -124,7 +124,10 @@
 #include "monsym.h"
 #include "mkroom.h"
 #include "objclass.h"
-#include "youprop.h"
+#include "prop.h"
+#include "permonst.h"
+#include "mondata.h"
+#include "pm.h"
 #include "wintype.h"
 #include "context.h"
 #include "decl.h"
@@ -225,7 +228,7 @@ NEARDATA extern coord bhitpos; /* place where throw or zap hits or stops */
  * Take care to ensure it doesn't get used more than once in other instances.
  */
 #define Maybe_Half_Phys(dmg) \
-    ((Half_physical_damage) ? (((dmg) + 1) / 2) : (dmg))
+    ((youTakeHalfDamageFromPhysicalAttacks()) ? (((dmg) + 1) / 2) : (dmg))
 
 /* flags for special ggetobj status returns */
 #define ALL_FINISHED 0x01 /* called routine already finished the job */

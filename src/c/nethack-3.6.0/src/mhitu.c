@@ -125,7 +125,7 @@ void
 u_slow_down()
 {
     setYourIntrinsicMask(FAST, 0L);
-    if (!Fast)
+    if (!youAreFast())
         You("slow down.");
     else /* speed boots */
         Your("quickness feels less natural.");
@@ -1071,7 +1071,7 @@ register struct attack *mattk;
                  helm_simple_name(uarmh));
             break;
         }
-        if (Half_physical_damage)
+        if (youTakeHalfDamageFromPhysicalAttacks())
             dmg = (dmg + 1) / 2;
         mdamageu(mtmp, dmg);
 
@@ -1092,7 +1092,7 @@ register struct attack *mattk;
     case AD_PLYS:
         hitmsg(mtmp, mattk);
         if (uncancelled && multi >= 0 && !rn2(3)) {
-            if (Free_action) {
+            if (youHaveFreeAction()) {
                 You("momentarily stiffen.");
             } else {
                 if (youCannotSee())
@@ -1225,7 +1225,7 @@ register struct attack *mattk;
     case AD_WERE:
         hitmsg(mtmp, mattk);
         if (uncancelled && !rn2(4) && lycanthropeType() == NON_PM
-            && !Protection_from_shape_changers && !defends(AD_WERE, uwep)) {
+            && !youHaveProtectionFromShapeChangers() && !defends(AD_WERE, uwep)) {
             You_feel("feverish.");
             exercise(A_CON, FALSE);
             setLycanthropeType(monsndx(mdat));
@@ -1522,7 +1522,7 @@ register struct attack *mattk;
         if (flaming(youmonst.data)) {
             pline_The("slime burns away!");
             dmg = 0;
-        } else if (Unchanging || noncorporeal(youmonst.data)
+        } else if (youAreUnchanging() || noncorporeal(youmonst.data)
                    || youmonst.data == &mons[PM_GREEN_SLIME]) {
             You("are unaffected.");
             dmg = 0;
@@ -1562,7 +1562,7 @@ register struct attack *mattk;
     }
 
     if (dmg) {
-        if (Half_physical_damage
+        if (youTakeHalfDamageFromPhysicalAttacks()
             /* Mitre of Holiness */
             || (Role_if(PM_PRIEST) && uarmh && is_quest_artifact(uarmh)
                 && (is_undead(mtmp->data) || is_demon(mtmp->data)
@@ -1743,14 +1743,14 @@ register struct attack *mattk;
     switch (mattk->adtyp) {
     case AD_DGST:
         physical_damage = TRUE;
-        if (Slow_digestion) {
+        if (youHaveSlowDigestion()) {
             /* Messages are handled below */
             setTimeSinceBeingSwallowed(0);
             tmp = 0;
         } else if (timeSinceBeingSwallowed() == 0) {
             pline("%s totally digests you!", Monnam(mtmp));
             tmp = currentHitPoints();
-            if (Half_physical_damage)
+            if (youTakeHalfDamageFromPhysicalAttacks())
                 tmp *= 2; /* sorry */
         } else {
             pline("%s%s digests you!", Monnam(mtmp),
@@ -1872,7 +1872,7 @@ register struct attack *mattk;
         You("get %s!", is_animal(mtmp->data) ? "regurgitated" : "expelled");
         if (flags.verbose
             && (is_animal(mtmp->data)
-                || (dmgtype(mtmp->data, AD_DGST) && Slow_digestion)))
+                || (dmgtype(mtmp->data, AD_DGST) && youHaveSlowDigestion())))
             pline("Obviously %s doesn't like your taste.", mon_nam(mtmp));
         expels(mtmp, mtmp->data, FALSE);
     }
@@ -2016,7 +2016,7 @@ register struct attack *mattk;
                       : "gazes ineffectually");
             break;
         }
-        if (Reflecting && couldsee(mtmp->mx, mtmp->my)
+        if (youCanReflectAttacks() && couldsee(mtmp->mx, mtmp->my)
             && mtmp->data == &mons[PM_MEDUSA]) {
             /* hero has line of sight to Medusa and she's not blind */
             boolean useeit = canseemon(mtmp);
@@ -2409,7 +2409,7 @@ register struct monst *mon;
         case 0:
             You_feel("drained of energy.");
             setCurrentMagicalEnergy(0);
-            decreaseMaximumMagicalEnergy(rnd(Half_physical_damage ? 5 : 10));
+            decreaseMaximumMagicalEnergy(rnd(youTakeHalfDamageFromPhysicalAttacks() ? 5 : 10));
             exercise(A_CON, FALSE);
             if (maximumMagicalEnergy() < 0)
                 setMaximumMagicalEnergy(0);

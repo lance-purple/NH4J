@@ -1383,7 +1383,7 @@ domove()
             if (context.run && ((youCanSee() && mon_visible(mtmp)
                                  && ((mtmp->m_ap_type != M_AP_FURNITURE
                                       && mtmp->m_ap_type != M_AP_OBJECT)
-                                     || Protection_from_shape_changers))
+                                     || youHaveProtectionFromShapeChangers()))
                                 || sensemon(mtmp))) {
                 nomul(0);
                 context.move = 0;
@@ -1418,7 +1418,7 @@ domove()
          */
         if (context.nopick
             && (canspotmon(mtmp) || glyph_is_invisible(levl[x][y].glyph))) {
-            if (mtmp->m_ap_type && !Protection_from_shape_changers
+            if (mtmp->m_ap_type && !youHaveProtectionFromShapeChangers()
                 && !sensemon(mtmp))
                 stumble_onto_mimic(mtmp);
             else if (mtmp->mpeaceful && !youAreHallucinating())
@@ -2013,7 +2013,7 @@ boolean pick;
                 You("are hit by %s!",
                     x_monnam(mtmp, ARTICLE_A, "falling", 0, TRUE));
                 dmg = d(4, 6);
-                if (Half_physical_damage)
+                if (youTakeHalfDamageFromPhysicalAttacks())
                     dmg = (dmg + 1) / 2;
                 mdamageu(mtmp, dmg);
             }
@@ -2712,7 +2712,7 @@ boolean k_format;
         context.botl = 1;
         if (currentHitPointsAsMonster() < 1)
             rehumanize();
-        else if (n > 0 && currentHitPointsAsMonster() * 10 < maximumHitPointsAsMonster() && Unchanging)
+        else if (n > 0 && currentHitPointsAsMonster() * 10 < maximumHitPointsAsMonster() && youAreUnchanging())
             maybe_wail();
         return;
     }

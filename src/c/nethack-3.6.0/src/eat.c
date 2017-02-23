@@ -541,7 +541,7 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
         if (yourCurrentAttr(A_INT) <= ATTRMIN(A_INT)) {
             static NEARDATA const char brainlessness[] = "brainlessness";
 
-            if (Lifesaved) {
+            if (yourLifeCanBeSaved()) {
                 Strcpy(killer.name, brainlessness);
                 killer.format = KILLED_BY;
                 done(DIED);
@@ -685,7 +685,7 @@ register int pm;
         return;
     }
     case PM_GREEN_SLIME:
-        if (!youAreTurningToSlime() && !Unchanging && !slimeproof(youmonst.data)) {
+        if (!youAreTurningToSlime() && !youAreUnchanging() && !slimeproof(youmonst.data)) {
             You("don't feel very well.");
             make_slimed(10L, (char *) 0);
             delayed_killer(SLIMED, KILLED_BY_AN, "");
@@ -978,7 +978,7 @@ register int pm;
         /*FALLTHRU*/
     case PM_SMALL_MIMIC:
         tmp += 20;
-        if (youmonst.data->mlet != S_MIMIC && !Unchanging) {
+        if (youmonst.data->mlet != S_MIMIC && !youAreUnchanging()) {
             char buf[BUFSZ];
 
             incrementPolyselfCount(1); /* you're changing form */
@@ -1025,7 +1025,7 @@ register int pm;
     case PM_CHAMELEON:
     case PM_DOPPELGANGER:
     case PM_SANDESTIN: /* moot--they don't leave corpses */
-        if (Unchanging) {
+        if (youAreUnchanging()) {
             You_feel("momentarily different."); /* same as poly trap */
         } else {
             You_feel("a change coming over you.");
@@ -1947,7 +1947,7 @@ struct obj *otmp;
             break;
         case AMULET_OF_UNCHANGING:
             /* un-change: it's a pun */
-            if (!Unchanging && areYouPolymorphed()) {
+            if (!youAreUnchanging() && areYouPolymorphed()) {
                 accessory_has_effect(otmp);
                 makeknown(typ);
                 rehumanize();
@@ -2204,7 +2204,7 @@ struct obj *otmp;
                         && !poly_when_stoned(youmonst.data));
 
         if (mnum == PM_GREEN_SLIME || otmp->otyp == GLOB_OF_GREEN_SLIME)
-            stoneorslime = (!Unchanging && !slimeproof(youmonst.data));
+            stoneorslime = (!youAreUnchanging() && !slimeproof(youmonst.data));
 
         if (cadaver && !nonrotting_corpse(mnum)) {
             long age = peek_at_iced_corpse_age(otmp);
@@ -2625,7 +2625,7 @@ gethungry()
 
     if ((!sleepingSinceMove() || !rn2(10)) /* slow metabolic rate while asleep */
         && (carnivorous(youmonst.data) || herbivorous(youmonst.data))
-        && !Slow_digestion) {
+        && !youHaveSlowDigestion()) {
         decreaseCurrentNutrition(1); /* ordinary food consumption */
     }
 

@@ -45,7 +45,7 @@ quest.h         rect.h          region.h        rm.h            skills.h
 sp_lev.h        spell.h         sys.h           system.h        tcap.h
 timeout.h       tosconf.h       tradstdc.h      trampoli.h      trap.h
 unixconf.h      vision.h        vmsconf.h       wceconf.h       winami.h
-winprocs.h      wintype.h       you.h           youprop.h
+winprocs.h      wintype.h       you.h
 (file for tty versions)
 wintty.h
 (files for X versions)

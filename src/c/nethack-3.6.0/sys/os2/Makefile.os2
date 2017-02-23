@@ -712,7 +712,7 @@ CONFIG_H   = $(INCL)\config.h $(INCL)\config1.h $(INCL)\tradstdc.h $(GLOBAL_H)
 TRAP_H	   = $(INCL)\trap.h
 PERMONST_H = $(INCL)\permonst.h $(INCL)\monattk.h $(INCL)\monflag.h
 YOU_H	   = $(INCL)\you.h $(INCL)\attrib.h $(PERMONST_H) $(INCL)\mondata.h \
-	     $(INCL)\monst.h $(INCL)\mextra.h $(INCL)\youprop.h \
+	     $(INCL)\monst.h $(INCL)\mextra.h
 	     $(INCL)\prop.h $(INCL)\pm.h
 DECL_H	   = $(INCL)\decl.h $(INCL)\spell.h $(INCL)\obj.h $(YOU_H) \
 	     $(INCL)\onames.h $(INCL)\color.h

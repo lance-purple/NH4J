@@ -89,7 +89,7 @@ dosit()
             } else if (currentTrapType() == TT_PIT) {
                 if (trap && trap->ttyp == SPIKED_PIT) {
                     You("sit down on a spike.  Ouch!");
-                    losehp(Half_physical_damage ? rn2(2) : 1,
+                    losehp(youTakeHalfDamageFromPhysicalAttacks() ? rn2(2) : 1,
                            "sitting on an iron spike", KILLED_BY);
                     exercise(A_STR, FALSE);
                 } else {
@@ -341,7 +341,7 @@ rndcurse()
         nobj++;
     }
     if (nobj) {
-        for (cnt = rnd(6 / ((!!youResistMagic()) + (!!Half_spell_damage) + 1));
+        for (cnt = rnd(6 / ((youResistMagic()?1:0) + (youTakeHalfDamageFromSpells() ? 1:0) + 1));
              cnt > 0; cnt--) {
             onum = rnd(nobj);
             for (otmp = invent; otmp; otmp = otmp->nobj) {

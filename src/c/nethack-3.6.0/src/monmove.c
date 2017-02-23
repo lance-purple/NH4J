@@ -479,7 +479,7 @@ register struct monst *mtmp;
                       m_sen ? "telepathy" : youHaveTelepathyWhenBlind() ? "latent telepathy"
                                                           : "mind");
                 dmg = rnd(15);
-                if (Half_spell_damage)
+                if (youTakeHalfDamageFromSpells())
                     dmg = (dmg + 1) / 2;
                 losehp(dmg, "psychic blast", KILLED_BY_AN);
             }
@@ -1580,7 +1580,7 @@ can_fog(mtmp)
 struct monst *mtmp;
 {
     if ((is_vampshifter(mtmp) || mtmp->data->mlet == S_VAMPIRE)
-        && !Protection_from_shape_changers && !stuff_prevents_passage(mtmp))
+        && !youHaveProtectionFromShapeChangers() && !stuff_prevents_passage(mtmp))
         return TRUE;
     return FALSE;
 }

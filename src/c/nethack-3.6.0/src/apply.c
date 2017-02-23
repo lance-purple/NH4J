@@ -798,7 +798,7 @@ struct obj *obj;
             You_cant("see your %s %s.", uvisage, body_part(FACE));
         } else {
             if (currentMonsterNumber() == PM_FLOATING_EYE) {
-                if (Free_action) {
+                if (youHaveFreeAction()) {
                     You("stiffen momentarily under your gaze.");
                 } else {
                     if (youAreHallucinating())
@@ -1814,7 +1814,7 @@ struct obj *obj;
         /* don't recover strength lost from hunger */
         if (idx == A_STR && currentHungerState() >= WEAK)
             val_limit--;
-        if (Fixed_abil) {
+        if (youHaveFixedAbilities()) {
             /* potion/spell of restore ability override sustain ability
                intrinsic but unicorn horn usage doesn't */
             unfixable_trbl += val_limit - yourCurrentAttr(idx);
@@ -2682,7 +2682,7 @@ struct obj *obj;
             }
             wakeup(mtmp);
         } else {
-            if (mtmp->m_ap_type && !Protection_from_shape_changers
+            if (mtmp->m_ap_type && !youHaveProtectionFromShapeChangers()
                 && !sensemon(mtmp))
                 stumble_onto_mimic(mtmp);
             else

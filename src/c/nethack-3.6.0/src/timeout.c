@@ -241,7 +241,7 @@ nh_timeout()
     if (timeRemainingAsMonster() > 0) {
         decreaseTimeRemainingAsMonster(1);
         if (0 == timeRemainingAsMonster()) {
-            if (Unchanging) {
+            if (youAreUnchanging()) {
                 setTimeRemainingAsMonster(rnd(100 * youmonst.data->mlevel + 1));
             } else {
                 rehumanize();
@@ -326,9 +326,9 @@ nh_timeout()
                 done(POISONING);
                 break;
             case FAST:
-                if (!Very_fast)
+                if (!youAreVeryFast())
                     You_feel("yourself slowing down%s.",
-                             Fast ? " a bit" : "");
+                             youAreFast() ? " a bit" : "");
                 break;
             case CONFUSION:
                 /* So make_confused works properly */

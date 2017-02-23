@@ -540,7 +540,7 @@ register struct obj *otmp;
             pline("Ulch!  This makes you feel mediocre!");
             break;
         } else {
-            /* unlike unicorn horn, overrides Fixed_abil */
+            /* unlike unicorn horn, overrides fixed abilities */
             pline("Wow!  This makes you feel %s!",
                   (otmp->blessed)
                       ? (unfixable_trouble_count(FALSE) ? "better" : "great")
@@ -718,7 +718,7 @@ register struct obj *otmp;
         break;
     }
     case POT_PARALYSIS:
-        if (Free_action) {
+        if (youHaveFreeAction()) {
             You("stiffen momentarily.");
         } else {
             if (youAreLevitating() || areYouOnAirLevel() || areYouOnWaterLevel())
@@ -735,7 +735,7 @@ register struct obj *otmp;
         }
         break;
     case POT_SLEEPING:
-        if (youResistSleep() || Free_action) {
+        if (youResistSleep() || youHaveFreeAction()) {
             You("yawn.");
         } else {
             You("suddenly fall asleep!");
@@ -803,7 +803,7 @@ register struct obj *otmp;
                         (youResistPoison()) ? "mildly " : "",
                         (otmp->fromsink) ? "contaminated tap water"
                                          : "contaminated potion");
-                if (!Fixed_abil) {
+                if (!youHaveFixedAbilities()) {
                     poisontell(typ, FALSE);
                     (void) adjattrib(typ, youResistPoison() ? -1 : -rn1(4, 3),
                                      1);
@@ -845,7 +845,7 @@ register struct obj *otmp;
         if (otmp->cursed) {
             pline("Ulch!  That potion tasted foul!");
             unkn++;
-        } else if (Fixed_abil) {
+        } else if (youHaveFixedAbilities()) {
             nothing++;
         } else {      /* If blessed, increase all; if not, try up to */
             int itmp; /* 6 times to find one which can be increased. */
@@ -870,8 +870,8 @@ register struct obj *otmp;
         }
         /* FALLTHRU */
     case SPE_HASTE_SELF:
-        if (!Very_fast) { /* wwf@doe.carleton.ca */
-            You("are suddenly moving %sfaster.", Fast ? "" : "much ");
+        if (!youAreVeryFast()) { /* wwf@doe.carleton.ca */
+            You("are suddenly moving %sfaster.", youAreFast() ? "" : "much ");
         } else {
             Your("%s get new energy.", makeplural(body_part(LEG)));
             unkn++;
@@ -1057,7 +1057,7 @@ register struct obj *otmp;
         break;
     case POT_POLYMORPH:
         You_feel("a little %s.", youAreHallucinating() ? "normal" : "strange");
-        if (!Unchanging)
+        if (!youAreUnchanging())
             polyself(0);
         break;
     default:
@@ -1269,7 +1269,7 @@ boolean your_fault;
             break;
         case POT_POLYMORPH:
             You_feel("a little %s.", youAreHallucinating() ? "normal" : "strange");
-            if (!Unchanging && !youResistMagic())
+            if (!youAreUnchanging() && !youResistMagic())
                 polyself(0);
             break;
         case POT_ACID:
@@ -1407,7 +1407,7 @@ boolean your_fault;
                     if (mon->mhp > mon->mhpmax)
                         mon->mhp = mon->mhpmax;
                     if (is_were(mon->data) && is_human(mon->data)
-                        && !Protection_from_shape_changers)
+                        && !youHaveProtectionFromShapeChangers())
                         new_were(mon); /* transform into beast */
                 }
             } else if (mon->data == &mons[PM_GREMLIN]) {
@@ -1580,7 +1580,7 @@ register struct obj *obj;
         break;
     case POT_PARALYSIS:
         kn++;
-        if (!Free_action) {
+        if (!youHaveFreeAction()) {
             pline("%s seems to be holding you.", Something);
             nomul(-rnd(5));
             multi_reason = "frozen by a potion";
@@ -1591,7 +1591,7 @@ register struct obj *obj;
         break;
     case POT_SLEEPING:
         kn++;
-        if (!Free_action && !youResistSleep()) {
+        if (!youHaveFreeAction() && !youResistSleep()) {
             You_feel("rather tired.");
             nomul(-rnd(5));
             multi_reason = "sleeping off a magical draught";
@@ -1601,7 +1601,7 @@ register struct obj *obj;
             You("yawn.");
         break;
     case POT_SPEED:
-        if (!Fast)
+        if (!youAreFast())
             Your("knees seem more flexible now.");
         incrementYourIntrinsicTimeout(FAST, rnd(5));
         exercise(A_DEX, TRUE);

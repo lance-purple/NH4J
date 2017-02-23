@@ -540,7 +540,7 @@ int x, y;
     struct monst *mtmp;
 
     if ((mtmp = m_at(x, y)) && is_door_mappear(mtmp)
-        && !Protection_from_shape_changers) {
+        && !youHaveProtectionFromShapeChangers()) {
         stumble_onto_mimic(mtmp);
         return TRUE;
     }

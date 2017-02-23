@@ -669,7 +669,7 @@ u_freshly_entered_shop()
             should_block = TRUE;
         } else {
             should_block =
-                (Fast && (sobj_at(PICK_AXE, currentX(), currentY())
+                (youAreFast() && (sobj_at(PICK_AXE, currentX(), currentY())
                           || sobj_at(DWARVISH_MATTOCK, currentX(), currentY())));
         }
         if (should_block)
@@ -3615,7 +3615,7 @@ register struct monst *shkp;
             if (uondoor) {
                 badinv =
                     (carrying(PICK_AXE) || carrying(DWARVISH_MATTOCK)
-                     || (Fast && (sobj_at(PICK_AXE, currentX(), currentY())
+                     || (youAreFast() && (sobj_at(PICK_AXE, currentX(), currentY())
                                   || sobj_at(DWARVISH_MATTOCK, currentX(), currentY()))));
                 if (satdoor && badinv)
                     return 0;

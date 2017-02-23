@@ -139,7 +139,7 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
         /* if it was an invisible mimic, treat it as if we stumbled
          * onto a visible mimic
          */
-        if (mtmp->m_ap_type && !Protection_from_shape_changers
+        if (mtmp->m_ap_type && !youHaveProtectionFromShapeChangers()
             /* applied pole-arm attack is too far to get stuck */
             && distanceSquaredToYou(mtmp->mx, mtmp->my) <= 2) {
             if (!u.ustuck && !mtmp->mflee && dmgtype(mtmp->data, AD_STCK))
@@ -149,7 +149,7 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
         return TRUE;
     }
 
-    if (mtmp->m_ap_type && !Protection_from_shape_changers && !sensemon(mtmp)
+    if (mtmp->m_ap_type && !youHaveProtectionFromShapeChangers() && !sensemon(mtmp)
         && !glyph_is_warning(glyph_at(bhitpos.x, bhitpos.y))) {
         /* If a hidden mimic was in a square where a player remembers
          * some (probably different) unseen monster, the player is in
@@ -1670,7 +1670,7 @@ register struct attack *mattk;
         if (notonhead || !has_head(pd)) {
             pline("%s doesn't seem harmed.", Monnam(mdef));
             tmp = 0;
-            if (!Unchanging && pd == &mons[PM_GREEN_SLIME]) {
+            if (!youAreUnchanging() && pd == &mons[PM_GREEN_SLIME]) {
                 if (!youAreTurningToSlime()) {
                     You("suck in some slime and don't feel very well.");
                     make_slimed(10L, (char *) 0);
@@ -1908,7 +1908,7 @@ register struct attack *mattk;
                          && (is_rider(pd) || (pd == &mons[PM_MEDUSA]
                                               && !youResistStoning())));
 
-        if ((mattk->adtyp == AD_DGST && !Slow_digestion) || fatal_gulp)
+        if ((mattk->adtyp == AD_DGST && !youHaveSlowDigestion()) || fatal_gulp)
             eating_conducts(pd);
 
         if (fatal_gulp && !is_rider(pd)) { /* petrification */
@@ -1935,7 +1935,7 @@ register struct attack *mattk;
                     return 0; /* lifesaved */
                 }
 
-                if (Slow_digestion) {
+                if (youHaveSlowDigestion()) {
                     dam = 0;
                     break;
                 }
@@ -1965,7 +1965,7 @@ register struct attack *mattk;
                          * if his youCanSeeInvisible() wears off
                          */
                         You("digest %s.", mon_nam(mdef));
-                        if (Slow_digestion)
+                        if (youHaveSlowDigestion())
                             tmp *= 2;
                         nomul(-tmp);
                         multi_reason = "digesting something";
@@ -1975,7 +1975,7 @@ register struct attack *mattk;
                     if (pd == &mons[PM_GREEN_SLIME]) {
                         Sprintf(msgbuf, "%s isn't sitting well with you.",
                                 The(pd->mname));
-                        if (!Unchanging) {
+                        if (!youAreUnchanging()) {
                             make_slimed(5L, (char *) 0);
                         }
                     } else
@@ -2061,7 +2061,7 @@ register struct attack *mattk;
             }
             You("%s %s!", is_animal(youmonst.data) ? "regurgitate" : "expel",
                 mon_nam(mdef));
-            if (Slow_digestion || is_animal(youmonst.data)) {
+            if (youHaveSlowDigestion() || is_animal(youmonst.data)) {
                 pline("Obviously, you didn't like %s taste.",
                       s_suffix(mon_nam(mdef)));
             }
@@ -2438,7 +2438,7 @@ boolean wep_was_destroyed;
                     if (ureflects("%s gaze is reflected by your %s.",
                                   s_suffix(Monnam(mon)))) {
                         ;
-                    } else if (Free_action) {
+                    } else if (youHaveFreeAction()) {
                         You("momentarily stiffen under %s gaze!",
                             s_suffix(mon_nam(mon)));
                     } else if (youAreHallucinating() && rn2(4)) {
@@ -2457,7 +2457,7 @@ boolean wep_was_destroyed;
                     if (!rn2(500))
                         change_luck(-1);
                 }
-            } else if (Free_action) {
+            } else if (youHaveFreeAction()) {
                 You("momentarily stiffen.");
             } else { /* gelatinous cube */
                 You("are frozen by %s!", mon_nam(mon));

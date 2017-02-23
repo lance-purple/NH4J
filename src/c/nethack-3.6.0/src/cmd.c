@@ -1524,7 +1524,7 @@ int mode, final, attrindx;
        to actually resort to doing that */
     if (areYouPolymorphed()) {
         hide_innate_value = TRUE;
-    } else if (Fixed_abil) {
+    } else if (youHaveFixedAbilities()) {
         if (stuck_ring(uleft, RIN_SUSTAIN_ABILITY)
             || stuck_ring(uright, RIN_SUSTAIN_ABILITY))
             hide_innate_value = TRUE;
@@ -2106,15 +2106,15 @@ int final;
         you_can("walk through walls", from_what(PASSES_WALLS));
 
     /*** Physical attributes ***/
-    if (Regeneration)
+    if (youRegenerate())
         enl_msg("You regenerate", "", "d", "", from_what(REGENERATION));
-    if (Slow_digestion)
+    if (youHaveSlowDigestion())
         you_have("slower digestion", from_what(SLOW_DIGESTION));
     if (toHitModifier())
         you_have(enlght_combatinc("to hit", toHitModifier(), final, buf), "");
     if (damageBonus())
         you_have(enlght_combatinc("damage", damageBonus(), final, buf), "");
-    if (armorBonusFromProtectionSpell() || Protection) {
+    if (armorBonusFromProtectionSpell() || youAreProtected()) {
         int prot = 0;
 
         if (uleft && uleft->otyp == RIN_PROTECTION)
@@ -2137,22 +2137,22 @@ int final;
             armpro = SIZE(mc_types) - 1;
         you_are(mc_types[armpro], "");
     }
-    if (Half_physical_damage)
+    if (youTakeHalfDamageFromPhysicalAttacks())
         enlght_halfdmg(HALF_PHDAM, final);
-    if (Half_spell_damage)
+    if (youTakeHalfDamageFromSpells())
         enlght_halfdmg(HALF_SPDAM, final);
     /* polymorph and other shape change */
-    if (Protection_from_shape_changers)
+    if (youHaveProtectionFromShapeChangers())
         you_are("protected from shape changers",
                 from_what(PROT_FROM_SHAPE_CHANGERS));
-    if (Unchanging) {
+    if (youAreUnchanging()) {
         const char *what = 0;
 
         if (!areYouPolymorphed()) /* areYouPolymorphed() handled below after current form */
             you_can("not change from your current form",
                     from_what(UNCHANGING));
         /* blocked shape changes */
-        if (Polymorph)
+        if (youPolymorph())
             what = !final ? "polymorph" : "have polymorphed";
         else if (lycanthropeType() >= LOW_PM)
             what = !final ? "change shape" : "have changed shape";
@@ -2162,10 +2162,10 @@ int final;
             enl_msg(You_, buf, buf, " if not locked into your current form",
                     "");
         }
-    } else if (Polymorph) {
+    } else if (youPolymorph()) {
         you_are("polymorphing periodically", from_what(POLYMORPH));
     }
-    if (Polymorph_control)
+    if (youHavePolymorphControl())
         you_have("polymorph control", from_what(POLYMORPH_CONTROL));
     if (areYouPolymorphed() && currentMonsterNumber() != lycanthropeType()) {
         /* foreign shape (except were-form which is handled below) */
@@ -2186,20 +2186,20 @@ int final;
         }
         you_are(buf, "");
     }
-    if (Unchanging && areYouPolymorphed()) /* !areYouPolymorphed() handled above */
+    if (youAreUnchanging() && areYouPolymorphed()) /* !areYouPolymorphed() handled above */
         you_can("not change from your current form", from_what(UNCHANGING));
     if (youHateSilver())
         you_are("harmed by silver", "");
     /* movement and non-armor-based protection */
-    if (Fast)
-        you_are(Very_fast ? "very fast" : "fast", from_what(FAST));
-    if (Reflecting)
+    if (youAreFast())
+        you_are(youAreVeryFast() ? "very fast" : "fast", from_what(FAST));
+    if (youCanReflectAttacks())
         you_have("reflection", from_what(REFLECTING));
-    if (Free_action)
+    if (youHaveFreeAction())
         you_have("free action", from_what(FREE_ACTION));
-    if (Fixed_abil)
+    if (youHaveFixedAbilities())
         you_have("fixed abilities", from_what(FIXED_ABIL));
-    if (Lifesaved)
+    if (yourLifeCanBeSaved())
         enl_msg("Your life ", "will be", "would have been", " saved", "");
 
     /*** Miscellany ***/

@@ -1066,7 +1066,7 @@ struct monst *mtmp;
     int idx = 0, trycnt = 5, spotted;
     char buf[BUFSZ];
 
-    if (Protection_from_shape_changers || !mtmp->meating)
+    if (youHaveProtectionFromShapeChangers() || !mtmp->meating)
         return;
 
     do {

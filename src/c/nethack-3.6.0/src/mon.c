@@ -2628,7 +2628,7 @@ struct monst *mon;
 {
     int mcham;
 
-    if (Protection_from_shape_changers) {
+    if (youHaveProtectionFromShapeChangers()) {
         mcham = (int) mon->cham;
         if (mcham >= LOW_PM) {
             mon->cham = NON_PM;

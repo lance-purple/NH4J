@@ -1340,7 +1340,7 @@ unsigned trflags;
 
             /* Half_XXX_damage has opposite its usual effect (approx)
                but isn't cumulative if hero has more than one */
-            if (Half_physical_damage || Half_spell_damage)
+            if (youTakeHalfDamageFromPhysicalAttacks() || youTakeHalfDamageFromSpells())
                 dmgval2 += rnd(4);
             /* give Magicbane wielder dose of own medicine */
             if (uwep && uwep->oartifact == ART_MAGICBANE)
@@ -1378,7 +1378,7 @@ unsigned trflags;
                                        ? (const char *) "float"
                                        : locomotion(youmonst.data, "step"));
         You("%s onto a polymorph trap!", verbbuf);
-        if (youResistMagic() || Unchanging) {
+        if (youResistMagic() || youAreUnchanging()) {
             shieldeff(currentX(), currentY());
             You_feel("momentarily different.");
             /* Trap did nothing; don't remove it --KAA */
@@ -4688,7 +4688,7 @@ boolean disarm;
         case 5:
         case 4:
         case 3:
-            if (!Free_action) {
+            if (!youHaveFreeAction()) {
                 pline("Suddenly you are frozen in place!");
                 nomul(-d(5, 6));
                 multi_reason = "frozen by a trap";
@@ -5030,7 +5030,7 @@ lava_effects()
         } else
             You("fall into the lava!");
 
-        usurvive = Lifesaved || discover;
+        usurvive = yourLifeCanBeSaved() || discover;
         if (wizard)
             usurvive = TRUE;
 

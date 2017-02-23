@@ -133,12 +133,12 @@ boolean resuming;
                     } else {
                         moveamt = youmonst.data->mmove;
 
-                        if (Very_fast) { /* speed boots or potion */
+                        if (youAreVeryFast()) { /* speed boots or potion */
                             /* average movement is 1.67 times normal */
                             moveamt += NORMAL_SPEED / 2;
                             if (rn2(3) == 0)
                                 moveamt += NORMAL_SPEED / 2;
-                        } else if (Fast) {
+                        } else if (youAreFast()) {
                             /* average movement is 1.33 times normal */
                             if (rn2(3) != 0)
                                 moveamt += NORMAL_SPEED / 2;
@@ -205,7 +205,7 @@ boolean resuming;
                            as hp gets lower, rate of further loss slows down
                            */
                         if (currentHitPointsAsMonster() > 1 && rn2(currentHitPointsAsMonster()) > rn2(8)
-                            && (!Half_physical_damage || !(moves % 2L))) {
+                            && (!youTakeHalfDamageFromPhysicalAttacks() || !(moves % 2L))) {
                             decreaseCurrentHitPointsAsMonster(1);
                             context.botl = 1;
                         } else if (currentHitPointsAsMonster() < 1)
@@ -213,14 +213,14 @@ boolean resuming;
                     } else if (areYouPolymorphed() && currentHitPointsAsMonster() < maximumHitPointsAsMonster()) {
                         if (currentHitPointsAsMonster() < 1)
                             rehumanize();
-                        else if (Regeneration
+                        else if (youRegenerate()
                                  || (wtcap < MOD_ENCUMBER && !(moves % 20))) {
                             context.botl = 1;
                             increaseCurrentHitPointsAsMonster(1);
                         }
                     } else if (currentHitPoints() < maximumHitPoints()
                                && (wtcap < MOD_ENCUMBER || (! youMoved())
-                                   || Regeneration)) {
+                                   || youRegenerate())) {
                         if (currentExperienceLevel() > 9 && !(moves % 3)) {
                             int heal, Con = (int) ACURR(A_CON);
 
@@ -235,7 +235,7 @@ boolean resuming;
                             increaseCurrentHitPoints(heal);
                             if (currentHitPoints() > maximumHitPoints())
                                 setCurrentHitPoints(maximumHitPoints());
-                        } else if (Regeneration
+                        } else if (youRegenerate()
                                    || (currentExperienceLevel() <= 9
                                        && !(moves
                                             % ((MAXULEV + 12) / (currentExperienceLevel() + 2)
@@ -265,7 +265,7 @@ boolean resuming;
                         && ((wtcap < MOD_ENCUMBER
                              && (!(moves % ((MAXULEV + 8 - currentExperienceLevel())
                                             * (Role_if(PM_WIZARD) ? 3 : 4)
-                                            / 6)))) || Energy_regeneration)) {
+                                            / 6)))) || yourEnergyRegenerates())) {
                         increaseCurrentMagicalEnergy(rn1(
                             (int) (ACURR(A_WIS) + ACURR(A_INT)) / 15 + 1, 1));
                         if (currentMagicalEnergy() > maximumMagicalEnergy())
@@ -288,15 +288,15 @@ boolean resuming;
                             }
                         }
                         /* delayed change may not be valid anymore */
-                        if ((change == 1 && !Polymorph)
+                        if ((change == 1 && !youPolymorph())
                             || (change == 2 && lycanthropeType() == NON_PM))
                             change = 0;
-                        if (Polymorph && !rn2(100))
+                        if (youPolymorph() && !rn2(100))
                             change = 1;
                         else if (lycanthropeType() >= LOW_PM && !areYouPolymorphed()
                                  && !rn2(80 - (20 * night())))
                             change = 2;
-                        if (change && !Unchanging) {
+                        if (change && !youAreUnchanging()) {
                             if (multi >= 0) {
                                 if (occupation)
                                     stop_occupation();

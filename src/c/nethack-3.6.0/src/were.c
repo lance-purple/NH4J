@@ -12,7 +12,7 @@ register struct monst *mon;
         return;
 
     if (is_human(mon->data)) {
-        if (!Protection_from_shape_changers
+        if (!youHaveProtectionFromShapeChangers()
             && !rn2(night() ? (flags.moonphase == FULL_MOON ? 3 : 30)
                             : (flags.moonphase == FULL_MOON ? 10 : 50))) {
             new_were(mon); /* change into animal form */
@@ -34,7 +34,7 @@ register struct monst *mon;
                     You_hear("a %s howling at the moon.", howler);
             }
         }
-    } else if (!rn2(30) || Protection_from_shape_changers) {
+    } else if (!rn2(30) || youHaveProtectionFromShapeChangers()) {
         new_were(mon); /* change back into human form */
     }
 }
@@ -130,7 +130,7 @@ char *genbuf;
     int total = 0;
 
     *visible = 0;
-    if (Protection_from_shape_changers && !yours)
+    if (youHaveProtectionFromShapeChangers() && !yours)
         return 0;
     for (i = rnd(5); i > 0; i--) {
         switch (pm) {
@@ -172,9 +172,9 @@ void
 you_were()
 {
     char qbuf[QBUFSZ];
-    boolean controllable_poly = Polymorph_control && !(youAreStunned() || youAreUnaware());
+    boolean controllable_poly = youHavePolymorphControl() && !(youAreStunned() || youAreUnaware());
 
-    if (Unchanging || (currentMonsterNumber() == lycanthropeType()))
+    if (youAreUnchanging() || (currentMonsterNumber() == lycanthropeType()))
         return;
     if (controllable_poly) {
         /* `+4' => skip "were" prefix to get name of beast */
@@ -190,13 +190,13 @@ void
 you_unwere(purify)
 boolean purify;
 {
-    boolean controllable_poly = Polymorph_control && !(youAreStunned() || youAreUnaware());
+    boolean controllable_poly = youHavePolymorphControl() && !(youAreStunned() || youAreUnaware());
 
     if (purify) {
         You_feel("purified.");
         setLycanthropeType(NON_PM); /* cure lycanthropy */
     }
-    if (!Unchanging && is_were(youmonst.data)
+    if (!youAreUnchanging() && is_were(youmonst.data)
         && (!controllable_poly || yn("Remain in beast form?") == 'n'))
         rehumanize();
 }

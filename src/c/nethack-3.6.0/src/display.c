@@ -364,7 +364,7 @@ int sightflags;             /* 1 if the monster is physically seen;
 xchar worm_tail;            /* mon is actually a worm tail */
 {
     boolean mon_mimic = (mon->m_ap_type != M_AP_NOTHING);
-    int sensed = (mon_mimic && (Protection_from_shape_changers
+    int sensed = (mon_mimic && (youHaveProtectionFromShapeChangers()
                                 || sensemon(mon)));
     /*
      * We must do the mimic check first.  If the mimic is mimicing something,

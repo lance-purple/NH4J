@@ -251,9 +251,7 @@ PERMONST_H = $(INCL)\monattk.h	$(INCL)\monflag.h   $(INCL)\align.h   \
 	    $(INCL)\permonst.h
 RM_H	   = $(INCL)\align.h	$(INCL)\rm.h
 SP_LEV_H   = $(INCL)\align.h	$(INCL)\sp_lev.h
-YOUPROP_H  = $(PERMONST_H)	$(MONDATA_H)	    $(INCL)\prop.h    \
-	    $(INCL)\pm.h       $(INCL)\youprop.h
-YOU_H	   = $(MONST_H)		$(YOUPROP_H)	    $(INCL)\align.h   \
+YOU_H	   = $(MONST_H)		$(INCL)\align.h   \
 	     $(INCL)\attrib.h	$(INCL)\you.h
 DISPLAY_H  = $(MONDATA_H)	$(INCL)\vision.h    $(INCL)\display.h
 PCCONF_H   = $(INCL)\micro.h	$(INCL)\system.h    $(INCL)\pcconf.h \

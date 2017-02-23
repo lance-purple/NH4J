@@ -588,7 +588,7 @@ coord *cc;
         replmon(mtmp, mtmp2);
         newsym(mtmp2->mx, mtmp2->my); /* Might now be invisible */
 
-        /* in case Protection_from_shape_changers is different
+        /* in case protection from shape changers is different
            now than it was when the traits were stored */
         restore_cham(mtmp2);
     }
@@ -2209,7 +2209,7 @@ boolean ordinary;
 
     case WAN_POLYMORPH:
     case SPE_POLYMORPH:
-        if (!Unchanging) {
+        if (!youAreUnchanging()) {
             learn_it = TRUE;
             polyself(0);
         }
@@ -2255,7 +2255,7 @@ boolean ordinary;
     case WAN_SPEED_MONSTER:
         if (!(yourIntrinsicHasMask(FAST, INTRINSIC))) {
             learn_it = TRUE;
-            if (!Fast)
+            if (!youAreFast())
                 You("speed up.");
             else
                 Your("quickness feels more natural.");
@@ -2581,7 +2581,7 @@ boolean youattack, allow_cancel_kill, self_cancel;
             if ((currentMonsterNumber() == PM_CLAY_GOLEM) && youCanSee())
                 pline(writing_vanishes, your);
 
-            if (Unchanging)
+            if (youAreUnchanging())
                 Your("amulet grows hot for a moment, then cools.");
             else
                 rehumanize();
@@ -3661,9 +3661,9 @@ xchar sx, sy;
         break;
     }
 
-    /* Half_spell_damage protection yields half-damage for wands & spells,
+    /* Half spell damage protection yields half-damage for wands & spells,
        including hero's own ricochets; breath attacks do full damage */
-    if (dam && Half_spell_damage && !(abstyp >= 20 && abstyp <= 29))
+    if (dam && youTakeHalfDamageFromSpells() && !(abstyp >= 20 && abstyp <= 29))
         dam = (dam + 1) / 2;
     losehp(dam, fltxt, KILLED_BY_AN);
     return;
@@ -3958,7 +3958,7 @@ register int dx, dy;
             } else if (zap_hit((int) armorClass(), 0)) {
                 range -= 2;
                 pline("%s hits you!", The(fltxt));
-                if (Reflecting) {
+                if (youCanReflectAttacks()) {
                     if (youCanSee()) {
                         (void) ureflects("But %s reflects from your %s!",
                                          "it");

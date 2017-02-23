@@ -103,7 +103,7 @@ int msgflg; /* positive => no message, zero => message, and */
     boolean abonflg;
     const char *attrstr;
 
-    if (Fixed_abil || !incr)
+    if (youHaveFixedAbilities() || !incr)
         return FALSE;
 
     if ((ndx == A_INT || ndx == A_WIS) && uarmh && uarmh->otyp == DUNCE_CAP) {
@@ -1039,7 +1039,7 @@ boolean
 extremeattr(attrindx) /* does attrindx's value match its max or min? */
 int attrindx;
 {
-    /* Fixed_abil and racial MINATTR/MAXATTR aren't relevant here */
+    /* Fixed abilities and racial MINATTR/MAXATTR aren't relevant here */
     int lolimit = 3, hilimit = 25, curval = ACURR(attrindx);
 
     /* upper limit for Str is 25 but its value is encoded differently */
@@ -1635,6 +1635,112 @@ extern boolean youNeedNotBreathe() {
 
 extern boolean youCanPassThroughWalls() {
   return (yourIntrinsic(PASSES_WALLS) || yourExtrinsic(PASSES_WALLS));
+}
+
+extern boolean youHaveSlowDigestion() {
+  return (yourIntrinsic(SLOW_DIGESTION) || yourExtrinsic(SLOW_DIGESTION));
+}
+
+extern boolean youTakeHalfDamageFromSpells() {
+  return (yourIntrinsic(HALF_SPDAM) || yourExtrinsic(HALF_SPDAM));
+}
+
+/*
+ * Physical damage
+ *
+ * Damage is NOT physical damage if (in order of priority):
+ * 1. it already qualifies for some other special category
+ *    for which a special resistance already exists in the game
+ *    including: cold, fire, shock, acid, and magic.
+ *    Note that fire is extended to include all non-acid forms of
+ *    burning, even boiling water since that is already dealt with
+ *    by fire resistance, and in most or all cases is caused by fire.
+ * 2. it doesn't leave a mark. Marks include destruction of, or
+ *    damage to, an internal organ (including the brain),
+ *    lacerations, bruises, crushed body parts, bleeding.
+ *
+ * The following were evaluated and determined _NOT_ to be
+ * susceptible to Half_physical_damage protection:
+ *   Being caught in a fireball                      [fire damage]
+ *   Sitting in lava                                 [lava damage]
+ *   Thrown potion (acid)                            [acid damage]
+ *   Splattered burning oil from thrown potion       [fire damage]
+ *   Mixing water and acid                           [acid damage]
+ *   Molten lava (entering or being splashed)        [lava damage]
+ *   boiling water from a sink                       [fire damage]
+ *   Fire traps                                      [fire damage]
+ *   Scrolls of fire (confused and otherwise)        [fire damage]
+ *   Alchemical explosion                            [not physical]
+ *   System shock                                    [shock damage]
+ *   Bag of holding explosion                        [magical]
+ *   Being undead-turned by your god                 [magical]
+ *   Level-drain                                     [magical]
+ *   Magical explosion of a magic trap               [magical]
+ *   Sitting on a throne with a bad effect           [magical]
+ *   Contaminated water from a sink                  [poison/sickness]
+ *   Contact-poisoned spellbooks                     [poison/sickness]
+ *   Eating acidic/poisonous/mildly-old corpses      [poison/sickness]
+ *   Eating a poisoned weapon while polyselfed       [poison/sickness]
+ *   Engulfing a zombie or mummy (AT_ENGL in hmonas) [poison/sickness]
+ *   Quaffed potions of sickness, lit oil, acid      [poison/sickness]
+ *   Pyrolisks' fiery gaze                           [fire damage]
+ *   Any passive attack                              [most don't qualify]
+ */
+
+extern boolean youTakeHalfDamageFromPhysicalAttacks() {
+  return (yourIntrinsic(HALF_PHDAM) || yourExtrinsic(HALF_PHDAM));
+}
+
+extern boolean youRegenerate() {
+  return (yourIntrinsic(REGENERATION) || yourExtrinsic(REGENERATION));
+}
+
+extern boolean yourEnergyRegenerates() {
+  return (yourIntrinsic(ENERGY_REGENERATION) || yourExtrinsic(ENERGY_REGENERATION));
+}
+
+extern boolean youAreProtected() {
+  return (yourIntrinsic(PROTECTION) || yourExtrinsic(PROTECTION));
+}
+
+extern boolean youHaveProtectionFromShapeChangers() {
+  return (yourIntrinsic(PROT_FROM_SHAPE_CHANGERS) || yourExtrinsic(PROT_FROM_SHAPE_CHANGERS));
+}
+
+extern boolean youPolymorph() {
+  return (yourIntrinsic(POLYMORPH) || yourExtrinsic(POLYMORPH));
+}
+
+extern boolean youHavePolymorphControl() {
+  return (yourIntrinsic(POLYMORPH_CONTROL) || yourExtrinsic(POLYMORPH_CONTROL));
+}
+
+extern boolean youAreUnchanging() {
+  return (yourIntrinsic(UNCHANGING) || yourExtrinsic(UNCHANGING));
+}
+
+extern boolean youAreFast() {
+  return (yourIntrinsic(FAST) || yourExtrinsic(FAST));
+}
+
+extern boolean youAreVeryFast() {
+  return ((yourIntrinsic(FAST) & ~INTRINSIC)) || yourExtrinsic(FAST);
+}
+
+extern boolean youCanReflectAttacks() {
+  return (yourIntrinsic(REFLECTING) || yourExtrinsic(REFLECTING));
+}
+
+extern boolean youHaveFreeAction() {
+  return yourExtrinsic(FREE_ACTION);
+}
+
+extern boolean youHaveFixedAbilities() {
+  return yourExtrinsic(FIXED_ABIL);
+}
+
+extern boolean yourLifeCanBeSaved() {
+  return yourExtrinsic(LIFESAVED);
 }
 
 /*attrib.c*/

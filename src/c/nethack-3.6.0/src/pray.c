@@ -207,7 +207,7 @@ in_trouble()
         if (welded(uwep))
             return TROUBLE_UNUSEABLE_HANDS;
         if (areYouPolymorphed() && nohands(youmonst.data)
-            && (!Unchanging || ((otmp = unchanger()) != 0 && otmp->cursed)))
+            && (!youAreUnchanging() || ((otmp = unchanger()) != 0 && otmp->cursed)))
             return TROUBLE_UNUSEABLE_HANDS;
     }
     if (youAreBlindfolded() && ublindf->cursed)
@@ -378,12 +378,12 @@ int trouble;
         context.botl = 1;
         break;
     case TROUBLE_COLLAPSING:
-        /* override Fixed_abil; uncurse that if feasible */
+        /* override fixed abilities; uncurse that if feasible */
         You_feel("%sstronger.",
                  (yourAttrMax(A_STR) - yourCurrentAttr(A_STR) > 6) ? "much " : "");
         setYourCurrentAttr(A_STR, yourAttrMax(A_STR));
         context.botl = 1;
-        if (Fixed_abil) {
+        if (youHaveFixedAbilities()) {
             if ((otmp = stuck_ring(uleft, RIN_SUSTAIN_ABILITY)) != 0) {
                 if (otmp == uleft)
                     what = leftglow;
@@ -418,7 +418,7 @@ int trouble;
             goto decurse;
         }
         if (areYouPolymorphed() && nohands(youmonst.data)) {
-            if (!Unchanging) {
+            if (!youAreUnchanging()) {
                 Your("shape becomes uncertain.");
                 rehumanize(); /* "You return to {normal} form." */
             } else if ((otmp = unchanger()) != 0 && otmp->cursed) {
@@ -474,7 +474,7 @@ int trouble;
         update_inventory();
         break;
     case TROUBLE_POISONED:
-        /* override Fixed_abil; ignore items which confer that */
+        /* override fixed abilities; ignore items which confer that */
         if (youAreHallucinating())
             pline("There's a tiger in your tank.");
         else
@@ -547,7 +547,7 @@ aligntyp resp_god;
             pline("%s seems unaffected.", Monnam(u.ustuck));
     } else {
         pline("Suddenly, a bolt of lightning strikes you!");
-        if (Reflecting) {
+        if (youCanReflectAttacks()) {
             shieldeff(currentX(), currentY());
             if (youCannotSee())
                 pline("For some reason you're unaffected.");

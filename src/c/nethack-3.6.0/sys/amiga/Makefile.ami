@@ -811,7 +811,7 @@ $(I)onames.h:  $(SBIN)makedefs
 
 $(I)pm.h:  $(SBIN)makedefs
 	$(SBIN)makedefs -p
-	$(EXECUTE) $(AMI)ifchange TOUCH $(I)t.pm.h $(I)pm.h $(I)decl.h $(I)youprop.h
+	$(EXECUTE) $(AMI)ifchange TOUCH $(I)t.pm.h $(I)pm.h $(I)decl.h
 	$(EXECUTE) $(AMI)ifchange MOVE $(I)t.pm.h $(I)pm.h
 	-wait 2
 
@@ -1617,15 +1617,11 @@ $(I)permonst.h:  $(I)monattk.h $(I)monflag.h $(I)align.h
 	-setdate $(I)permonst.h
 	-wait 2
 
-$(I)you.h:  $(I)align.h $(I)attrib.h $(I)monst.h $(I)mextra.h $(I)youprop.h $(I)skills.h
+$(I)you.h:  $(I)align.h $(I)attrib.h $(I)monst.h $(I)mextra.h $(I)skills.h
 	-setdate $(I)you.h
 	-wait 2
 
 # pm.h handled at target
-
-$(I)youprop.h:  $(I)prop.h $(I)permonst.h $(I)mondata.h
-	-setdate $(I)youprop.h
-	-wait 2
 
 $(I)display.h: $(I)vision.h $(I)mondata.h
 	-setdate $(I)display.h

@@ -2026,7 +2026,7 @@ do_class_genocide()
                     pline("Wiped out all %s.", nam);
                     if (areYouPolymorphed() && i == currentMonsterNumber()) {
                         decreaseCurrentHitPointsAsMonster(1);
-                        if (Unchanging) {
+                        if (youAreUnchanging()) {
                             if (!feel_dead++)
                                 You("die.");
                             /* finish genociding this class of
@@ -2165,7 +2165,7 @@ int how;
                 continue;
             }
             /* KMH -- Unchanging prevents rehumanization */
-            if (Unchanging && ptr == youmonst.data)
+            if (youAreUnchanging() && ptr == youmonst.data)
                 killplayer++;
             break;
         }

@@ -140,7 +140,7 @@ HACKINCL = align.h amiconf.h artifact.h artilist.h attrib.h beconf.h color.h \
 	   objclass.h os2conf.h patchlevel.h pcconf.h permonst.h prop.h rect.h \
 	   region.h rm.h sp_lev.h spell.h sys.h system.h tcap.h timeout.h \
 	   tosconf.h tradstdc.h trampoli.h trap.h unixconf.h vision.h \
-	   vmsconf.h wintty.h winX.h winprocs.h wintype.h you.h youprop.h
+	   vmsconf.h wintty.h winX.h winprocs.h wintype.h you.h
 
 #HSOURCES = $(HACKINCL) date.h onames.h pm.h vis_tab.h\
 #		lev_comp.h dgn_comp.h dgn_file.h
@@ -320,7 +320,7 @@ $(CONFIG_H) : $(INC)config.h $(INC)config1.h $(INC)tradstdc.h $(INC)global.h \
 # hack.h timestamp
 $(HACK_H) : $(INC)hack.h $(CONFIG_H) $(INC)align.h \
 		$(INC)dungeon.h $(INC)monsym.h $(INC)mkroom.h \
-		$(INC)objclass.h $(INC)youprop.h $(INC)prop.h \
+		$(INC)objclass.h $(INC)prop.h \
 		$(INC)permonst.h $(INC)monattk.h \
 		$(INC)monflag.h $(INC)mondata.h $(INC)pm.h \
 		$(INC)wintype.h $(INC)context.h $(INC)decl.h $(INC)quest.h \

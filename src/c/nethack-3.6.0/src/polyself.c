@@ -349,7 +349,7 @@ newman()
     if (youAreTurningToStone())
         make_stoned(0L, (char *) 0, 0, (char *) 0);
     if (currentHitPoints() <= 0) {
-        if (Polymorph_control) { /* even when stunned or unaware */
+        if (youHavePolymorphControl()) { /* even when stunned or unaware */
             if (currentHitPoints() <= 0)
                 setCurrentHitPoints(1);
         } else {
@@ -394,14 +394,14 @@ int psflags;
     boolean forcecontrol = (psflags == 1), monsterpoly = (psflags == 2),
             draconian = (uarm && Is_dragon_armor(uarm)),
             iswere = (lycanthropeType() >= LOW_PM), isvamp = is_vampire(youmonst.data),
-            controllable_poly = Polymorph_control && !(youAreStunned() || youAreUnaware());
+            controllable_poly = youHavePolymorphControl() && !(youAreStunned() || youAreUnaware());
 
-    if (Unchanging) {
+    if (youAreUnchanging()) {
         pline("You fail to transform!");
         return;
     }
     /* being stunned or unaware doesn't negate this aspect of Poly_control */
-    if (!Polymorph_control && !forcecontrol && !draconian && !iswere
+    if (!youHavePolymorphControl() && !forcecontrol && !draconian && !iswere
         && !isvamp) {
         if (rn2(20) > ACURR(A_CON)) {
             You1(shudder_for_moment);
@@ -1031,7 +1031,7 @@ void
 rehumanize()
 {
     /* You can't revert back while unchanging */
-    if (Unchanging && (currentHitPointsAsMonster() < 1)) {
+    if (youAreUnchanging() && (currentHitPointsAsMonster() < 1)) {
         killer.format = NO_KILLER_PREFIX;
         Strcpy(killer.name, "killed while stuck in creature form");
         done(DIED);
@@ -1371,7 +1371,7 @@ dogaze()
                     continue;
 
                 if (mtmp->data == &mons[PM_FLOATING_EYE] && !mtmp->mcan) {
-                    if (!Free_action) {
+                    if (!youHaveFreeAction()) {
                         You("are frozen by %s gaze!",
                             s_suffix(mon_nam(mtmp)));
                         nomul((currentExperienceLevel() > 6 || rn2(4))

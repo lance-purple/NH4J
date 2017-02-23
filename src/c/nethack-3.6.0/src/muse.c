@@ -1065,7 +1065,7 @@ find_offensive(mtmp)
 struct monst *mtmp;
 {
     register struct obj *obj;
-    boolean reflection_skip = (Reflecting && rn2(2));
+    boolean reflection_skip = (youCanReflectAttacks() && rn2(2));
     struct obj *helmet = which_armor(mtmp, W_ARMH);
 
     m.offensive = (struct obj *) 0;
@@ -1217,7 +1217,7 @@ register struct obj *otmp;
             } else if (rnd(20) < 10 + armorClass()) {
                 pline_The("wand hits you!");
                 tmp = d(2, 12);
-                if (Half_spell_damage)
+                if (youTakeHalfDamageFromSpells())
                     tmp = (tmp + 1) / 2;
                 losehp(tmp, "wand", KILLED_BY_AN);
             } else
@@ -1484,7 +1484,7 @@ struct monst *mtmp;
             if (Fire_resistance)
                 You("are not harmed.");
             burn_away_slime();
-            if (Half_spell_damage)
+            if (youTakeHalfDamageFromSpells())
                 num = (num + 1) / 2;
             else
                 losehp(num, "scroll of fire", KILLED_BY_AN);

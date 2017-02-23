@@ -213,9 +213,9 @@ Boots_off(VOID_ARGS)
     setworn((struct obj *) 0, W_ARMF);
     switch (otyp) {
     case SPEED_BOOTS:
-        if (!Very_fast && !context.takeoff.cancelled_don) {
+        if (!youAreVeryFast() && !context.takeoff.cancelled_don) {
             makeknown(otyp);
-            You_feel("yourself slow down%s.", Fast ? " a bit" : "");
+            You_feel("yourself slow down%s.", youAreFast() ? " a bit" : "");
         }
         break;
     case WATER_WALKING_BOOTS:
@@ -710,7 +710,7 @@ Amulet_on()
     case AMULET_OF_CHANGE: {
         int orig_sex = poly_gender();
 
-        if (Unchanging)
+        if (youAreUnchanging())
             break;
         change_sex();
         /* Don't use same message as polymorph */

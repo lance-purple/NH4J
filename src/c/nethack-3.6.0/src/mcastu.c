@@ -283,7 +283,7 @@ boolean foundyou;
         dmg = d((int) ((ml / 2) + mattk->damn), (int) mattk->damd);
     else
         dmg = d((int) ((ml / 2) + 1), 6);
-    if (Half_spell_damage)
+    if (youTakeHalfDamageFromSpells())
         dmg = (dmg + 1) / 2;
 
     ret = 1;
@@ -429,7 +429,7 @@ int spellnum;
         } else {
             You("suddenly feel weaker!");
             dmg = mtmp->m_lev - 6;
-            if (Half_spell_damage)
+            if (youTakeHalfDamageFromSpells())
                 dmg = (dmg + 1) / 2;
             losestr(rnd(dmg));
             if (currentHitPoints() < 1)
@@ -448,7 +448,7 @@ int spellnum;
             impossible("no reason for monster to cast disappear spell?");
         break;
     case MGC_STUN_YOU:
-        if (youResistMagic() || Free_action) {
+        if (youResistMagic() || youHaveFreeAction()) {
             shieldeff(currentX(), currentY());
             if (!youAreStunned())
                 You_feel("momentarily disoriented.");
@@ -456,7 +456,7 @@ int spellnum;
         } else {
             You(youAreStunned() ? "struggle to keep your balance." : "reel...");
             dmg = d(ACURR(A_DEX) < 12 ? 6 : 4, 4);
-            if (Half_spell_damage)
+            if (youTakeHalfDamageFromSpells())
                 dmg = (dmg + 1) / 2;
             make_stunned(yourIntrinsicTimeout(STUNNED) + (long) dmg, FALSE);
         }
@@ -521,7 +521,7 @@ int spellnum;
          */
         pline("A sudden geyser slams into you from nowhere!");
         dmg = d(8, 6);
-        if (Half_physical_damage)
+        if (youTakeHalfDamageFromPhysicalAttacks())
             dmg = (dmg + 1) / 2;
         break;
     case CLC_FIRE_PILLAR:
@@ -531,7 +531,7 @@ int spellnum;
             dmg = 0;
         } else
             dmg = d(8, 6);
-        if (Half_spell_damage)
+        if (youTakeHalfDamageFromSpells())
             dmg = (dmg + 1) / 2;
         burn_away_slime();
         (void) burnarmor(&youmonst);
@@ -552,7 +552,7 @@ int spellnum;
                 break;
         } else
             dmg = d(8, 6);
-        if (Half_spell_damage)
+        if (youTakeHalfDamageFromSpells())
             dmg = (dmg + 1) / 2;
         destroy_item(WAND_CLASS, AD_ELEC);
         destroy_item(RING_CLASS, AD_ELEC);
@@ -643,7 +643,7 @@ int spellnum;
             pline("Scales cover your %s!", (num_eyes == 1)
                                                ? body_part(EYE)
                                                : makeplural(body_part(EYE)));
-            make_blinded(Half_spell_damage ? 100L : 200L, FALSE);
+            make_blinded(youTakeHalfDamageFromSpells() ? 100L : 200L, FALSE);
             if (youCanSee())
                 Your1(vision_clears);
             dmg = 0;
@@ -651,7 +651,7 @@ int spellnum;
             impossible("no reason for monster to cast blindness spell?");
         break;
     case CLC_PARALYZE:
-        if (youResistMagic() || Free_action) {
+        if (youResistMagic() || youHaveFreeAction()) {
             shieldeff(currentX(), currentY());
             if (multi >= 0)
                 You("stiffen briefly.");
@@ -661,7 +661,7 @@ int spellnum;
             if (multi >= 0)
                 You("are frozen in place!");
             dmg = 4 + (int) mtmp->m_lev;
-            if (Half_spell_damage)
+            if (youTakeHalfDamageFromSpells())
                 dmg = (dmg + 1) / 2;
             nomul(-dmg);
             multi_reason = "paralyzed by a monster";
@@ -677,7 +677,7 @@ int spellnum;
             boolean oldprop = !!youAreConfused();
 
             dmg = (int) mtmp->m_lev;
-            if (Half_spell_damage)
+            if (youTakeHalfDamageFromSpells())
                 dmg = (dmg + 1) / 2;
             make_confused(yourIntrinsic(CONFUSION) + dmg, TRUE);
             if (youAreHallucinating())

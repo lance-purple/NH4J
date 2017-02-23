@@ -878,7 +878,7 @@ int how;
 
     if (how < PANICKED)
         increaseDeathCount(1);
-    if (Lifesaved && (how <= GENOCIDED)) {
+    if (yourLifeCanBeSaved() && (how <= GENOCIDED)) {
         pline("But wait...");
         makeknown(AMULET_OF_LIFE_SAVING);
         Your("medallion %s!", youCanSee() ? "begins to glow" : "feels warm");

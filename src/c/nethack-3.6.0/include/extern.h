@@ -205,6 +205,22 @@ E boolean FDECL(youCanSwim, ());
 E boolean FDECL(youAreAmphibious, ());
 E boolean FDECL(youNeedNotBreathe, ());
 E boolean FDECL(youCanPassThroughWalls, ());
+E boolean FDECL(youHaveSlowDigestion, ());
+E boolean FDECL(youTakeHalfDamageFromSpells, ());
+E boolean FDECL(youTakeHalfDamageFromPhysicalAttacks, ());
+E boolean FDECL(youRegenerate, ());
+E boolean FDECL(yourEnergyRegenerates, ());
+E boolean FDECL(youAreProtected, ());
+E boolean FDECL(youHaveProtectionFromShapeChangers, ());
+E boolean FDECL(youPolymorph, ());
+E boolean FDECL(youHavePolymorphControl, ());
+E boolean FDECL(youAreUnchanging, ());
+E boolean FDECL(youAreFast, ());
+E boolean FDECL(youAreVeryFast, ());
+E boolean FDECL(youCanReflectAttacks, ());
+E boolean FDECL(youHaveFreeAction, ());
+E boolean FDECL(youHaveFixedAbilities, ());
+E boolean FDECL(yourLifeCanBeSaved, ());
 
 /* ### ball.c ### */
 

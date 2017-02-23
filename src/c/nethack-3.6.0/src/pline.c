@@ -513,8 +513,8 @@ ustatusline()
         Sprintf(eos(info), ", slippery %s", makeplural(body_part(HAND)));
     if (currentlyTrapped())
         Strcat(info, ", trapped");
-    if (Fast)
-        Strcat(info, Very_fast ? ", very fast" : ", fast");
+    if (youAreFast())
+        Strcat(info, youAreVeryFast() ? ", very fast" : ", fast");
     if (lurking())
         Strcat(info, ", concealed");
     if (youAreInvisibleToOthers())

@@ -854,10 +854,7 @@ ALLOBJ= $(NVOBJ) $(VVOBJ) $(OVLINIT)
 EXTERN_H    =
 PCCONF_H    = $(INCL)\pcconf.h $(INCL)\micro.h $(INCL)\system.h
 PERMONST_H  = $(INCL)\monattk.h $(INCL)\monflag.h $(INCL)\align.h
-YOUPROP_H   = $(INCL)\prop.h $(PERMONST_H) $(INCL)\pm.h $(INCL)\youprop.h \
-	      $(INCL)\mondata.h
-YOU_H	    = $(INCL)\attrib.h $(INCL)\monst.h $(INCL)\mextra.h $(YOUPROP_H) \
-              $(INCL)\align.h
+YOU_H	    = $(INCL)\attrib.h $(INCL)\monst.h $(INCL)\mextra.h $(INCL)\align.h
 DECL_H      = $(INCL)\quest.h $(INCL)\spell.h $(INCL)\color.h \
 	      $(INCL)\obj.h $(YOU_H) $(INCL)\onames.h $(INCL)\pm.h
 
