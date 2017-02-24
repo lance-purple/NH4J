@@ -37,6 +37,14 @@ STATIC_VAR const char no_longer_petrify_resistant[] =
    change sex (ought to be an arg to polymon() and newman() instead) */
 STATIC_VAR int sex_change_ok = 0;
 
+static void PROPSET(int propertyIndex, boolean on) {
+  if (on)
+    setYourIntrinsicMask(propertyIndex, FROMFORM);
+  else
+    unsetYourIntrinsicMask(propertyIndex, FROMFORM);
+}
+
+
 /* update the youmonst.data structure pointer and intrinsics */
 void
 set_uasmon()
@@ -44,14 +52,6 @@ set_uasmon()
     struct permonst *mdat = &mons[currentMonsterNumber()];
 
     set_mon_data(&youmonst, mdat, 0);
-
-#define PROPSET(PropIndx, ON)                          \
-    do {                                               \
-        if (ON)                                        \
-            u.uprops[PropIndx].intrinsic |= FROMFORM;  \
-        else                                           \
-            u.uprops[PropIndx].intrinsic &= ~FROMFORM; \
-    } while (0)
 
     PROPSET(FIRE_RES, resists_fire(&youmonst));
     PROPSET(COLD_RES, resists_cold(&youmonst));
@@ -80,7 +80,7 @@ set_uasmon()
     PROPSET(HALLUC_RES, dmgtype(mdat, AD_HALU));
     PROPSET(SEE_INVIS, perceives(mdat));
     PROPSET(TELEPAT, telepathic(mdat));
-    PROPSET(INFRAVISION, infravision(mdat));
+    PROPSET(INFRAVISION, !!infravision(mdat));
     PROPSET(INVIS, pm_invisible(mdat));
     PROPSET(TELEPORT, can_teleport(mdat));
     PROPSET(TELEPORT_CONTROL, control_teleport(mdat));

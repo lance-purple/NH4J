@@ -2686,7 +2686,7 @@ maybe_wail()
             pline("%s is about to die.", who);
         } else {
             for (i = 0, powercnt = 0; i < SIZE(powers); ++i)
-                if (u.uprops[powers[i]].intrinsic & INTRINSIC)
+                if (yourIntrinsicHasMask(powers[i], INTRINSIC))
                     ++powercnt;
 
             pline(powercnt >= 4 ? "%s, all your powers will be lost..."

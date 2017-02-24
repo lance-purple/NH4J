@@ -70,10 +70,9 @@ long mask;
                         /* leave as "x = x <op> y", here and below, for broken
                          * compilers */
                         p = objects[oobj->otyp].oc_oprop;
-                        u.uprops[p].extrinsic =
-                            u.uprops[p].extrinsic & ~wp->w_mask;
+                        unsetYourExtrinsicMask(p, wp->w_mask);
                         if ((p = w_blocks(oobj, mask)) != 0)
-                            u.uprops[p].blocked &= ~wp->w_mask;
+                            unsetYourBlockerMask(p, wp->w_mask);
                         if (oobj->oartifact)
                             set_artifact_intrinsic(oobj, 0, mask);
                     }
@@ -90,10 +89,9 @@ long mask;
                         if (obj->oclass == WEAPON_CLASS || is_weptool(obj)
                             || mask != W_WEP) {
                             p = objects[obj->otyp].oc_oprop;
-                            u.uprops[p].extrinsic =
-                                u.uprops[p].extrinsic | wp->w_mask;
+                            setYourExtrinsicMask(p, wp->w_mask);
                             if ((p = w_blocks(obj, mask)) != 0)
-                                u.uprops[p].blocked |= wp->w_mask;
+                                setYourBlockerMask(p, wp->w_mask);
                         }
                         if (obj->oartifact)
                             set_artifact_intrinsic(obj, 1, mask);
@@ -121,12 +119,12 @@ register struct obj *obj;
         if (obj == *(wp->w_obj)) {
             *(wp->w_obj) = 0;
             p = objects[obj->otyp].oc_oprop;
-            u.uprops[p].extrinsic = u.uprops[p].extrinsic & ~wp->w_mask;
+            unsetYourExtrinsicMask(p, wp->w_mask);
             obj->owornmask &= ~wp->w_mask;
             if (obj->oartifact)
                 set_artifact_intrinsic(obj, 0, wp->w_mask);
             if ((p = w_blocks(obj, wp->w_mask)) != 0)
-                u.uprops[p].blocked &= ~wp->w_mask;
+                unsetYourBlockerMask(p, wp->w_mask);
         }
     update_inventory();
 }

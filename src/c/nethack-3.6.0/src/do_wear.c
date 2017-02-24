@@ -121,8 +121,8 @@ boolean on;
         return;
 
     if (!oldprop /* extrinsic displacement from something else */
-        && !(u.uprops[DISPLACED].intrinsic) /* (theoretical) */
-        && !(u.uprops[DISPLACED].blocked) /* (also theoretical) */
+        && !(yourIntrinsic(DISPLACED)) /* (theoretical) */
+        && !(yourBlocker(DISPLACED)) /* (also theoretical) */
         /* we don't use canseeself() here because it augments vision
            with touch, which isn't appropriate for deciding whether
            we'll notice that monsters have trouble spotting the hero */
@@ -153,7 +153,7 @@ int
 Boots_on(VOID_ARGS)
 {
     long oldprop =
-        u.uprops[objects[uarmf->otyp].oc_oprop].extrinsic & ~WORN_BOOTS;
+        yourExtrinsic(objects[uarmf->otyp].oc_oprop) & ~WORN_BOOTS;
 
     switch (uarmf->otyp) {
     case LOW_BOOTS:
@@ -204,7 +204,7 @@ Boots_off(VOID_ARGS)
 {
     struct obj *otmp = uarmf;
     int otyp = otmp->otyp;
-    long oldprop = u.uprops[objects[otyp].oc_oprop].extrinsic & ~WORN_BOOTS;
+    long oldprop = yourExtrinsic(objects[otyp].oc_oprop) & ~WORN_BOOTS;
 
     context.takeoff.mask &= ~W_ARMF;
     /* For levitation, float_down() returns if Levitation, so we
@@ -265,7 +265,7 @@ STATIC_PTR int
 Cloak_on(VOID_ARGS)
 {
     long oldprop =
-        u.uprops[objects[uarmc->otyp].oc_oprop].extrinsic & ~WORN_CLOAK;
+        yourExtrinsic(objects[uarmc->otyp].oc_oprop) & ~WORN_CLOAK;
 
     switch (uarmc->otyp) {
     case ORCISH_CLOAK:
@@ -319,7 +319,7 @@ Cloak_off(VOID_ARGS)
 {
     struct obj *otmp = uarmc;
     int otyp = otmp->otyp;
-    long oldprop = u.uprops[objects[otyp].oc_oprop].extrinsic & ~WORN_CLOAK;
+    long oldprop = yourExtrinsic(objects[otyp].oc_oprop) & ~WORN_CLOAK;
 
     context.takeoff.mask &= ~W_ARMC;
     /* For mummy wrapping, taking it off first resets `Invisible'. */
@@ -479,7 +479,7 @@ int
 Gloves_on(VOID_ARGS)
 {
     long oldprop =
-        u.uprops[objects[uarmg->otyp].oc_oprop].extrinsic & ~WORN_GLOVES;
+        yourExtrinsic(objects[uarmg->otyp].oc_oprop) & ~WORN_GLOVES;
 
     switch (uarmg->otyp) {
     case LEATHER_GLOVES:
@@ -529,7 +529,7 @@ int
 Gloves_off(VOID_ARGS)
 {
     long oldprop =
-        u.uprops[objects[uarmg->otyp].oc_oprop].extrinsic & ~WORN_GLOVES;
+        yourExtrinsic(objects[uarmg->otyp].oc_oprop) & ~WORN_GLOVES;
     boolean on_purpose = !context.mon_moving && !uarmg->in_use;
 
     context.takeoff.mask &= ~W_ARMG;
@@ -842,7 +842,7 @@ void
 Ring_on(obj)
 register struct obj *obj;
 {
-    long oldprop = u.uprops[objects[obj->otyp].oc_oprop].extrinsic;
+    long oldprop = yourExtrinsic(objects[obj->otyp].oc_oprop);
     int old_attrib, which;
     boolean observable;
 
@@ -964,7 +964,7 @@ boolean gone;
     boolean observable;
 
     context.takeoff.mask &= ~mask;
-    if (!(u.uprops[objects[obj->otyp].oc_oprop].extrinsic & mask))
+    if (!(yourExtrinsicHasMask(objects[obj->otyp].oc_oprop, mask)))
         impossible("Strange... I didn't know you had that ring.");
     if (gone)
         setnotworn(obj);

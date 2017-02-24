@@ -626,7 +626,7 @@ long wp_mask;
     if (wp_mask == W_ART && !on && oart->inv_prop) {
         /* might have to turn off invoked power too */
         if (oart->inv_prop <= LAST_PROP
-            && (u.uprops[oart->inv_prop].extrinsic & W_ARTI))
+            && yourExtrinsicHasMask(oart->inv_prop, W_ARTI))
             (void) arti_invoke(otmp);
     }
 }
@@ -1592,13 +1592,15 @@ struct obj *obj;
         }
         }
     } else {
-        long eprop = (u.uprops[oart->inv_prop].extrinsic ^= W_ARTI),
-             iprop = u.uprops[oart->inv_prop].intrinsic;
+        toggleYourExtrinsicMask(oart->inv_prop, W_ARTI);
+
+        long eprop = yourExtrinsic(oart->inv_prop);
+        long iprop = yourIntrinsic(oart->inv_prop);
         boolean on = (eprop & W_ARTI) != 0; /* true if prop just set */
 
         if (on && obj->age > monstermoves) {
             /* the artifact is tired :-) */
-            u.uprops[oart->inv_prop].extrinsic ^= W_ARTI;
+            toggleYourExtrinsicMask(oart->inv_prop, W_ARTI);
             You_feel("that %s %s ignoring you.", the(xname(obj)),
                      otense(obj, "are"));
             /* can't just keep repeatedly trying */
@@ -1653,7 +1655,11 @@ finesse_ahriman(obj)
 struct obj *obj;
 {
     const struct artifact *oart;
-    struct prop save_Lev;
+
+    long save_hLev;
+    long save_eLev;
+    long save_bLev;
+
     boolean result;
 
     /* if we aren't levitating or this isn't an artifact which confers
@@ -1667,11 +1673,19 @@ struct obj *obj;
        (this assumes that there aren't two simultaneously invoked artifacts
        both conferring levitation--safe, since if there were two of them,
        invoking the 2nd would negate the 1st rather than stack with it) */
-    save_Lev = u.uprops[LEVITATION];
+
+    save_hLev = yourIntrinsic(LEVITATION);
+    save_eLev = yourExtrinsic(LEVITATION);
+    save_bLev = yourBlocker(LEVITATION);
+
     unsetYourIntrinsicMask(LEVITATION, (I_SPECIAL | TIMEOUT));
     unsetYourExtrinsicMask(LEVITATION, W_ARTI);
     result = !youAreLevitating();
-    u.uprops[LEVITATION] = save_Lev;
+
+    setYourIntrinsic(LEVITATION, save_hLev);
+    setYourExtrinsic(LEVITATION, save_eLev);
+    setYourBlocker(LEVITATION, save_bLev);
+
     return result;
 }
 
@@ -1962,7 +1976,7 @@ boolean drop_untouchable;
     if ((art = get_artifact(obj)) != 0) {
         carryeffect = (art->cary.adtyp || art->cspfx);
         invoked = (art->inv_prop > 0 && art->inv_prop <= LAST_PROP
-                   && (u.uprops[art->inv_prop].extrinsic & W_ARTI) != 0L);
+                   && yourExtrinsicHasMask(art->inv_prop, W_ARTI));
     } else {
         carryeffect = invoked = FALSE;
     }

@@ -794,12 +794,12 @@ int propidx; /* special cases can have negative values */
                     Sprintf(buf, because_of, bare_artifactname(ublindf));
                 break;
             case INVIS:
-                if (u.uprops[INVIS].blocked & W_ARMC)
+                if (yourBlockerHasMask(INVIS, W_ARMC))
                     Sprintf(buf, because_of,
                             ysimple_name(uarmc)); /* mummy wrapping */
                 break;
             case CLAIRVOYANT:
-                if (wizard && (u.uprops[CLAIRVOYANT].blocked & W_ARMH))
+                if (wizard && (yourBlockerHasMask(CLAIRVOYANT, W_ARMH)))
                     Sprintf(buf, because_of,
                             ysimple_name(uarmh)); /* cornuthaum */
                 break;
@@ -1337,6 +1337,12 @@ extern void unsetYourExtrinsicMask(int index, long mask) {
   setYourExtrinsic(index, (curr & ~mask));
 }
 
+extern void toggleYourExtrinsicMask(int index, long mask) {
+  long curr = yourExtrinsic(index);
+  setYourExtrinsic(index, (curr ^ mask));
+}
+
+
 extern long yourIntrinsic(int index) {
   return u.uprops[index].intrinsic;
 }
@@ -1365,6 +1371,10 @@ extern long yourBlocker(int index) {
 
 extern void setYourBlocker(int index, long value) {
   u.uprops[index].blocked = value;
+}
+
+extern boolean yourBlockerHasMask(int index, long mask) {
+  return ((yourBlocker(index) & mask) != 0);
 }
 
 extern void setYourBlockerMask(int index, long mask) {

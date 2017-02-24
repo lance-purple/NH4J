@@ -548,8 +548,8 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
                 /* amulet of life saving has now been used up */
                 pline("Unfortunately your brain is still gone.");
                 /* sanity check against adding other forms of life-saving */
-                u.uprops[LIFESAVED].extrinsic =
-                    u.uprops[LIFESAVED].intrinsic = 0L;
+                setYourExtrinsic(LIFESAVED, 0L);
+                setYourIntrinsic(LIFESAVED, 0L);
             } else {
                 Your("last thought fades away.");
             }
@@ -1844,7 +1844,7 @@ struct obj *otmp;
 
     /* Note: rings are not so common that this is unbalancing. */
     /* (How often do you even _find_ 3 rings of polymorph in a game?) */
-    oldprop = u.uprops[objects[typ].oc_oprop].intrinsic;
+    oldprop = yourIntrinsic(objects[typ].oc_oprop);
     if (otmp == uleft || otmp == uright) {
         Ring_gone(otmp);
         if (currentHitPoints() <= 0)
@@ -1857,10 +1857,11 @@ struct obj *otmp;
             if (!objects[typ].oc_oprop)
                 break; /* should never happen */
 
-            if (!(u.uprops[objects[typ].oc_oprop].intrinsic & FROMOUTSIDE))
+            if (!(yourIntrinsicHasMask(objects[typ].oc_oprop, FROMOUTSIDE))) {
                 accessory_has_effect(otmp);
+	    }
 
-            u.uprops[objects[typ].oc_oprop].intrinsic |= FROMOUTSIDE;
+            setYourIntrinsicMask(objects[typ].oc_oprop, FROMOUTSIDE);
 
             switch (typ) {
             case RIN_SEE_INVISIBLE:
@@ -1887,7 +1888,7 @@ struct obj *otmp;
                 break;
             case RIN_LEVITATION:
                 /* undo the `.intrinsic |= FROMOUTSIDE' done above */
-                u.uprops[LEVITATION].intrinsic = oldprop;
+                setYourIntrinsic(LEVITATION, oldprop);
                 if (!youAreLevitating()) {
                     float_up();
                     incrementYourIntrinsicTimeout(LEVITATION, d(10, 20));

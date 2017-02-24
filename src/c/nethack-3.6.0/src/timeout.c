@@ -201,10 +201,19 @@ burn_away_slime()
     }
 }
 
+static boolean yourIntrinsicJustTimedOut(int i) {
+  long remaining = yourIntrinsicTimeout(i);
+  if (0L == remaining) {
+    return FALSE; /* already timed out */
+  }
+  remaining--;
+  setYourIntrinsicTimeout(i, remaining);
+  return (0L == remaining);
+}
+
 void
 nh_timeout()
 {
-    register struct prop *upp;
     struct kinfo *kptr;
     int sleeptime;
     int m_idx;
@@ -270,10 +279,10 @@ nh_timeout()
             pline("%s stops galloping.", Monnam(u.usteed));
     }
 
-    for (upp = u.uprops; upp < u.uprops + SIZE(u.uprops); upp++)
-        if ((upp->intrinsic & TIMEOUT) && !(--upp->intrinsic & TIMEOUT)) {
-            kptr = find_delayed_killer((int) (upp - u.uprops));
-            switch (upp - u.uprops) {
+    for (int i = 0; i <= LAST_PROP; i++) {
+        if (yourIntrinsicJustTimedOut(i)) {
+            kptr = find_delayed_killer(i);
+            switch (i) {
             case STONED:
                 if (kptr && kptr->name[0]) {
                     killer.format = kptr->format;
@@ -433,6 +442,7 @@ nh_timeout()
                 break;
             }
         }
+    }
 
     run_timers();
 }
@@ -2030,7 +2040,7 @@ boolean ghostly;
 long yourIntrinsicTimeout(index)
 int index;
 {
-    return u.uprops[index].intrinsic & TIMEOUT;
+    return yourIntrinsic(index) & TIMEOUT;
 }
 
 void setYourIntrinsicTimeout(index, value)
@@ -2042,8 +2052,8 @@ long value;
     } else if (value < 1) {
         value = 0;
     }
-    u.uprops[index].intrinsic &= ~TIMEOUT;
-    u.uprops[index].intrinsic |= value;
+    long otherBits = yourIntrinsic(index) & ~TIMEOUT;
+    setYourIntrinsic(index, otherBits | value);
 }	
 
 void incrementYourIntrinsicTimeout(index, incr)
