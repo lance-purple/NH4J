@@ -124,12 +124,14 @@ E int FDECL(is_innate, (int));
 E char *FDECL(from_what, (int));
 E void FDECL(uchangealign, (int, int));
 
+E boolean FDECL(youHaveIntrinsic, (int));
 E long FDECL(yourIntrinsic, (int));
 E void FDECL(setYourIntrinsic, (int, long));
 E boolean FDECL(yourIntrinsicHasMask, (int, long));
 E void FDECL(setYourIntrinsicMask, (int, long));
 E void FDECL(unsetYourIntrinsicMask, (int, long));
 
+E boolean FDECL(youHaveExtrinsic, (int));
 E long FDECL(yourExtrinsic, (int));
 E void FDECL(setYourExtrinsic, (int, long));
 E boolean FDECL(yourExtrinsicHasMask, (int, long));

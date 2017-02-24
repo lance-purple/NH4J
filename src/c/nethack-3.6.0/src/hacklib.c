@@ -66,6 +66,7 @@
 #endif
 
 #define PLAYER_CHARACTER_CLASS "rec/games/roguelike/nh4j/PlayerCharacter"
+#define QUALITIES_CLASS "rec/games/roguelike/nh4j/Qualities"
 
 jclass getJavaClass(const char* className) {
     jclass javaClass = (*jni_env)->FindClass(jni_env, className);
@@ -101,6 +102,12 @@ long javaGetLong(const char* classname, const char* methodname) {
     return (*jni_env)->CallStaticLongMethod(jni_env, you_class, method);
 }
 
+long javaGetLongFromInt(const char* classname, const char* methodname, int i) {
+    jclass you_class = getJavaClass(classname);
+    jmethodID method = getStaticMethod(you_class, methodname, "(I)J");
+    return (*jni_env)->CallStaticLongMethod(jni_env, you_class, method, i);
+}
+
 boolean javaGetBoolean(const char* classname, const char* methodname) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "()Z");
@@ -129,6 +136,12 @@ void javaSetLong(const char* classname, const char* methodname, long v) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "(J)V");
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, v);
+}
+
+void javaSetLongFromInt(const char* classname, const char* methodname, int i, long v) {
+    jclass you_class = getJavaClass(classname);
+    jmethodID method = getStaticMethod(you_class, methodname, "(IJ)V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, i, v);
 }
 
 void javaSetBoolean(const char* classname, const char* methodname, boolean v) {
@@ -2422,6 +2435,30 @@ char freshlyExitedShops(int i) {
 void setFreshlyEnteredShops(int i, char roomID) {
     int v = roomID;
     javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setFreshlyEnteredShops", i, v);
+}
+
+extern long yourExtrinsic(int i) {
+  return javaGetLongFromInt(QUALITIES_CLASS, "extrinsic", i);
+}
+
+extern void setYourExtrinsic(int i, long value) {
+  javaSetLongFromInt(QUALITIES_CLASS, "setExtrinsic", i, value);
+}
+
+extern long yourIntrinsic(int i) {
+  return javaGetLongFromInt(QUALITIES_CLASS, "intrinsic", i);
+}
+
+extern void setYourIntrinsic(int i, long value) {
+  javaSetLongFromInt(QUALITIES_CLASS, "setIntrinsic", i, value);
+}
+
+extern long yourBlocker(int i) {
+  return javaGetLongFromInt(QUALITIES_CLASS, "blocker", i);
+}
+
+extern void setYourBlocker(int i, long value) {
+  javaSetLongFromInt(QUALITIES_CLASS, "setBlocker", i, value);
 }
 
 /*hacklib.c*/

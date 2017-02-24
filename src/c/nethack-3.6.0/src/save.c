@@ -434,6 +434,12 @@ register int fd, mode;
     write_int(fd, protectionSpellPointDuration());
     write_int(fd, protectionSpellPointCountdown());
 
+    for (int i = 1; i <= LAST_PROP; i++) {
+        write_long(fd, yourIntrinsic(i));
+        write_long(fd, yourExtrinsic(i));
+        write_long(fd, yourBlocker(i));
+    }
+
     write_int(fd, abilityToConfuseMonsters());
 
     write_int(fd, creamed());

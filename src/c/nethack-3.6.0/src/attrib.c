@@ -448,7 +448,7 @@ exerper()
         debugpline0("exerper: Status checks");
         if (yourIntrinsicHasMask(CLAIRVOYANT, (INTRINSIC | TIMEOUT)) && !youAreBlockedFrom(CLAIRVOYANT))
             exercise(A_WIS, TRUE);
-        if (yourIntrinsic(REGENERATION))
+        if (youRegenerate())
             exercise(A_STR, TRUE);
 
         if (youAreSick() || youAreVomiting())
@@ -1315,12 +1315,8 @@ boolean youAreAware() {
    return !youAreUnaware();
 }
 
-extern long yourExtrinsic(int index) {
-  return u.uprops[index].extrinsic;
-}
-
-extern void setYourExtrinsic(int index, long value) {
-  u.uprops[index].extrinsic = value;
+extern boolean youHaveExtrinsic(int index) {
+  return (0L != yourExtrinsic(index));
 }
 
 extern boolean yourExtrinsicHasMask(int index, long mask) {
@@ -1342,13 +1338,8 @@ extern void toggleYourExtrinsicMask(int index, long mask) {
   setYourExtrinsic(index, (curr ^ mask));
 }
 
-
-extern long yourIntrinsic(int index) {
-  return u.uprops[index].intrinsic;
-}
-
-extern void setYourIntrinsic(int index, long value) {
-  u.uprops[index].intrinsic = value;
+extern boolean youHaveIntrinsic(int index) {
+  return (0L != yourIntrinsic(index));
 }
 
 extern boolean yourIntrinsicHasMask(int index, long mask) {
@@ -1365,24 +1356,18 @@ extern void unsetYourIntrinsicMask(int index, long mask) {
   setYourIntrinsic(index, (curr & ~mask));
 }
 
-extern long yourBlocker(int index) {
-  return u.uprops[index].blocked;
-}
-
-extern void setYourBlocker(int index, long value) {
-  u.uprops[index].blocked = value;
-}
-
 extern boolean yourBlockerHasMask(int index, long mask) {
   return ((yourBlocker(index) & mask) != 0);
 }
 
 extern void setYourBlockerMask(int index, long mask) {
-  u.uprops[index].blocked |= mask;
+  long curr = yourBlocker(index);
+  setYourBlocker(index, (curr | mask));
 }
 
 extern void unsetYourBlockerMask(int index, long mask) {
-  u.uprops[index].blocked &= ~mask;
+  long curr = yourBlocker(index);
+  setYourBlocker(index, (curr & ~mask));
 }
 
 extern boolean youAreBlockedFrom(int index) {
@@ -1391,55 +1376,55 @@ extern boolean youAreBlockedFrom(int index) {
 
 
 extern boolean youResistFire() {
- return (yourExtrinsic(FIRE_RES) || yourIntrinsic(FIRE_RES));
+ return (youHaveExtrinsic(FIRE_RES) || youHaveIntrinsic(FIRE_RES));
 }
 
 extern boolean youResistCold() {
- return (yourExtrinsic(COLD_RES) || yourIntrinsic(COLD_RES));
+ return (youHaveExtrinsic(COLD_RES) || youHaveIntrinsic(COLD_RES));
 }
 
 extern boolean youResistSleep() {
- return (yourExtrinsic(SLEEP_RES) || yourIntrinsic(SLEEP_RES));
+ return (youHaveExtrinsic(SLEEP_RES) || youHaveIntrinsic(SLEEP_RES));
 }
 
 extern boolean youResistDisintegration() {
- return (yourExtrinsic(DISINT_RES) || yourIntrinsic(DISINT_RES));
+ return (youHaveExtrinsic(DISINT_RES) || youHaveIntrinsic(DISINT_RES));
 }
 
 extern boolean youResistShock() {
- return (yourExtrinsic(SHOCK_RES) || yourIntrinsic(SHOCK_RES));
+ return (youHaveExtrinsic(SHOCK_RES) || youHaveIntrinsic(SHOCK_RES));
 }
 
 extern boolean youResistPoison() {
- return (yourExtrinsic(POISON_RES) || yourIntrinsic(POISON_RES));
+ return (youHaveExtrinsic(POISON_RES) || youHaveIntrinsic(POISON_RES));
 }
 
 extern boolean youResistDraining() {
- return (yourExtrinsic(DRAIN_RES) || yourIntrinsic(DRAIN_RES));
+ return (youHaveExtrinsic(DRAIN_RES) || youHaveIntrinsic(DRAIN_RES));
 }
 
 extern boolean youResistMagic() {
- return (yourExtrinsic(ANTIMAGIC) || yourIntrinsic(ANTIMAGIC));
+ return (youHaveExtrinsic(ANTIMAGIC) || youHaveIntrinsic(ANTIMAGIC));
 }
 
 extern boolean youResistAcid() {
- return (yourExtrinsic(ACID_RES) || yourIntrinsic(ACID_RES));
+ return (youHaveExtrinsic(ACID_RES) || youHaveIntrinsic(ACID_RES));
 }
 
 extern boolean youResistStoning() {
- return (yourExtrinsic(STONE_RES) || yourIntrinsic(STONE_RES));
+ return (youHaveExtrinsic(STONE_RES) || youHaveIntrinsic(STONE_RES));
 }
 
 extern boolean youResistSickness() {
- return (yourExtrinsic(SICK_RES) || yourIntrinsic(SICK_RES));
+ return (youHaveExtrinsic(SICK_RES) || youHaveIntrinsic(SICK_RES));
 }
 
 extern boolean youResistHallucination() {
- return (yourExtrinsic(HALLUC_RES) || yourIntrinsic(HALLUC_RES));
+ return (youHaveExtrinsic(HALLUC_RES) || youHaveIntrinsic(HALLUC_RES));
 }
 
 extern boolean youAreInvulnerable() {
- return (yourIntrinsic(INVULNERABLE));
+ return (youHaveIntrinsic(INVULNERABLE));
 }
 
 extern boolean youAreBeingPunished() {
@@ -1447,15 +1432,15 @@ extern boolean youAreBeingPunished() {
 }
 
 extern boolean youAreStunned() {
- return (yourIntrinsic(STUNNED));
+ return (youHaveIntrinsic(STUNNED));
 }
 
 extern boolean youAreConfused() {
- return (yourIntrinsic(CONFUSION));
+ return (youHaveIntrinsic(CONFUSION));
 }
 
 extern boolean youAreTemporarilyBlinded() {
- return (yourIntrinsic(BLINDED));
+ return (youHaveIntrinsic(BLINDED));
 }
 
 /* you are blind because of a cover */
@@ -1483,99 +1468,99 @@ extern boolean youCanSee() {
 }
 
 extern boolean youAreSick() {
- return (yourIntrinsic(SICK));
+ return (youHaveIntrinsic(SICK));
 }
 
 extern boolean youAreVomiting() {
- return (yourIntrinsic(VOMITING));
+ return (youHaveIntrinsic(VOMITING));
 }
 
 extern boolean youAreHallucinating() {
- return (yourIntrinsic(HALLUC) && !youResistHallucination());
+ return (youHaveIntrinsic(HALLUC) && !youResistHallucination());
 }
 
 extern boolean youHaveSlipperyFingers() {
- return (yourIntrinsic(SLIPPERY_FINGERS));
+ return (youHaveIntrinsic(SLIPPERY_FINGERS));
 }
 
 extern boolean youAreTurningToStone() {
- return (yourIntrinsic(STONED));
+ return (youHaveIntrinsic(STONED));
 }
 
 extern boolean youAreTurningToSlime() {
- return (yourIntrinsic(SLIMED));
+ return (youHaveIntrinsic(SLIMED));
 }
 
 extern boolean youAreBeingStrangled() {
- return (yourIntrinsic(STRANGLED));
+ return (youHaveIntrinsic(STRANGLED));
 }
 
 extern boolean youAreDeaf() {
- return (yourIntrinsic(DEAF) || yourExtrinsic(DEAF));
+ return (youHaveIntrinsic(DEAF) || youHaveExtrinsic(DEAF));
 }
 
 extern boolean youKeepFumbling() {
- return (yourIntrinsic(FUMBLING) || yourExtrinsic(FUMBLING));
+ return (youHaveIntrinsic(FUMBLING) || youHaveExtrinsic(FUMBLING));
 }
 
 extern boolean youHaveWoundedLegs() {
- return (yourIntrinsic(WOUNDED_LEGS) || yourExtrinsic(WOUNDED_LEGS));
+ return (youHaveIntrinsic(WOUNDED_LEGS) || youHaveExtrinsic(WOUNDED_LEGS));
 }
 
 extern boolean youAreSleepy() {
- return (yourIntrinsic(SLEEPY) || yourExtrinsic(SLEEPY));
+ return (youHaveIntrinsic(SLEEPY) || youHaveExtrinsic(SLEEPY));
 }
 
 extern boolean youHunger() {
- return (yourIntrinsic(HUNGER) || yourExtrinsic(HUNGER));
+ return (youHaveIntrinsic(HUNGER) || youHaveExtrinsic(HUNGER));
 }
 
 extern boolean youCanSeeInvisible() {
- return (yourIntrinsic(SEE_INVIS) || yourExtrinsic(SEE_INVIS));
+ return (youHaveIntrinsic(SEE_INVIS) || youHaveExtrinsic(SEE_INVIS));
 }
 
 extern boolean youHaveTelepathyWhenBlind() {
- return (yourIntrinsic(TELEPAT) || yourExtrinsic(TELEPAT));
+ return (youHaveIntrinsic(TELEPAT) || youHaveExtrinsic(TELEPAT));
 }
 
 extern boolean youHaveTelepathyWhenNotBlind() {
- return (yourExtrinsic(TELEPAT));
+ return (youHaveExtrinsic(TELEPAT));
 }
 
 extern boolean youSenseWarnings() {
- return (yourIntrinsic(WARNING) || yourExtrinsic(WARNING));
+ return (youHaveIntrinsic(WARNING) || youHaveExtrinsic(WARNING));
 }
 
 extern boolean youAreWarnedOfMonsters() {
- return (yourIntrinsic(WARN_OF_MON) || yourExtrinsic(WARN_OF_MON));
+ return (youHaveIntrinsic(WARN_OF_MON) || youHaveExtrinsic(WARN_OF_MON));
 }
 
 extern boolean youAreWarnedOfUndead() {
- return (yourIntrinsic(WARN_UNDEAD) || yourExtrinsic(WARN_UNDEAD));
+ return (youHaveIntrinsic(WARN_UNDEAD) || youHaveExtrinsic(WARN_UNDEAD));
 }
 
 extern boolean youHaveAutomaticSearching() {
- return (yourIntrinsic(SEARCHING) || yourExtrinsic(SEARCHING));
+ return (youHaveIntrinsic(SEARCHING) || youHaveExtrinsic(SEARCHING));
 }
 
 extern boolean youAreClairvoyant() {
-  return (yourIntrinsic(CLAIRVOYANT) || yourExtrinsic(CLAIRVOYANT)) && !youAreBlockedFrom(CLAIRVOYANT);
+  return (youHaveIntrinsic(CLAIRVOYANT) || youHaveExtrinsic(CLAIRVOYANT)) && !youAreBlockedFrom(CLAIRVOYANT);
 }
 
 extern boolean youHaveInfravision() {
- return (yourIntrinsic(INFRAVISION) || yourExtrinsic(INFRAVISION));
+ return (youHaveIntrinsic(INFRAVISION) || youHaveExtrinsic(INFRAVISION));
 }
 
 extern boolean youCanDetectMonsters() {
- return (yourIntrinsic(DETECT_MONSTERS) || yourExtrinsic(DETECT_MONSTERS));
+ return (youHaveIntrinsic(DETECT_MONSTERS) || youHaveExtrinsic(DETECT_MONSTERS));
 }
 
 extern boolean youAreAdorned() {
- return (yourExtrinsic(ADORNED));
+ return (youHaveExtrinsic(ADORNED));
 }
 
 extern boolean youAreInvisibleToOthers() {
- return ((yourIntrinsic(INVIS) || yourExtrinsic(INVIS)) && !youAreBlockedFrom(INVIS));
+ return ((youHaveIntrinsic(INVIS) || youHaveExtrinsic(INVIS)) && !youAreBlockedFrom(INVIS));
 }
 
 /* Note: invisibility also hides inventory and steed */
@@ -1584,36 +1569,36 @@ extern boolean youAreFullyInvisible() {
 }
 
 extern boolean youAppearDisplaced() {
- return (yourExtrinsic(DISPLACED));
+ return (youHaveExtrinsic(DISPLACED));
 }
 
 extern boolean youAreStealthy() {
- return ((yourIntrinsic(STEALTH) || yourExtrinsic(STEALTH)) && !youAreBlockedFrom(STEALTH));
+ return ((youHaveIntrinsic(STEALTH) || youHaveExtrinsic(STEALTH)) && !youAreBlockedFrom(STEALTH));
 }
 
 extern boolean youAggravateMonsters() {
- return (yourIntrinsic(AGGRAVATE_MONSTER) || yourExtrinsic(AGGRAVATE_MONSTER));
+ return (youHaveIntrinsic(AGGRAVATE_MONSTER) || youHaveExtrinsic(AGGRAVATE_MONSTER));
 }
 
 extern boolean youCauseConflict() {
- return (yourIntrinsic(CONFLICT) || yourExtrinsic(CONFLICT));
+ return (youHaveIntrinsic(CONFLICT) || youHaveExtrinsic(CONFLICT));
 }
 
 extern boolean youCanJump() {
- return (yourIntrinsic(JUMPING) || yourExtrinsic(JUMPING));
+ return (youHaveIntrinsic(JUMPING) || youHaveExtrinsic(JUMPING));
 }
 
 extern boolean youCanTeleport() {
- return (yourIntrinsic(TELEPORT) || yourExtrinsic(TELEPORT));
+ return (youHaveIntrinsic(TELEPORT) || youHaveExtrinsic(TELEPORT));
 }
 
 extern boolean youHaveTeleportControl() {
- return (yourIntrinsic(TELEPORT_CONTROL) || yourExtrinsic(TELEPORT_CONTROL));
+ return (youHaveIntrinsic(TELEPORT_CONTROL) || youHaveExtrinsic(TELEPORT_CONTROL));
 }
 
 /* Can't touch surface, can't go under water; overrides all others */
 extern boolean youAreLevitating() {
- return ((yourIntrinsic(LEVITATION) || yourExtrinsic(LEVITATION)) && !youAreBlockedFrom(LEVITATION));
+ return ((youHaveIntrinsic(LEVITATION) || youHaveExtrinsic(LEVITATION)) && !youAreBlockedFrom(LEVITATION));
 }
 
 extern boolean youCanLevitateAtWill() {
@@ -1624,35 +1609,35 @@ extern boolean youCanLevitateAtWill() {
 
 /* May touch surface; does not override any others */
 extern boolean youAreFlying() {
-  return ((yourIntrinsic(FLYING) || yourExtrinsic(FLYING) || (u.usteed && is_flyer(u.usteed->data)))
+  return ((youHaveIntrinsic(FLYING) || youHaveExtrinsic(FLYING) || (u.usteed && is_flyer(u.usteed->data)))
      && !youAreBlockedFrom(FLYING));
 }
 
 /* Get wet, don't go under water unless if amphibious */
 extern boolean youCanSwim() {
-  return (yourIntrinsic(SWIMMING) || yourExtrinsic(SWIMMING) ||
+  return (youHaveIntrinsic(SWIMMING) || youHaveExtrinsic(SWIMMING) ||
 		   (u.usteed && is_swimmer(u.usteed->data)));
 }
 
 /* Get wet, may go under surface */
 extern boolean youAreAmphibious() {
-  return (yourIntrinsic(MAGICAL_BREATHING) || yourExtrinsic(MAGICAL_BREATHING) || amphibious(youmonst.data));
+  return (youHaveIntrinsic(MAGICAL_BREATHING) || youHaveExtrinsic(MAGICAL_BREATHING) || amphibious(youmonst.data));
 }
 
 extern boolean youNeedNotBreathe() {
-  return (yourIntrinsic(MAGICAL_BREATHING) || yourExtrinsic(MAGICAL_BREATHING) || breathless(youmonst.data));
+  return (youHaveIntrinsic(MAGICAL_BREATHING) || youHaveExtrinsic(MAGICAL_BREATHING) || breathless(youmonst.data));
 }
 
 extern boolean youCanPassThroughWalls() {
-  return (yourIntrinsic(PASSES_WALLS) || yourExtrinsic(PASSES_WALLS));
+  return (youHaveIntrinsic(PASSES_WALLS) || youHaveExtrinsic(PASSES_WALLS));
 }
 
 extern boolean youHaveSlowDigestion() {
-  return (yourIntrinsic(SLOW_DIGESTION) || yourExtrinsic(SLOW_DIGESTION));
+  return (youHaveIntrinsic(SLOW_DIGESTION) || youHaveExtrinsic(SLOW_DIGESTION));
 }
 
 extern boolean youTakeHalfDamageFromSpells() {
-  return (yourIntrinsic(HALF_SPDAM) || yourExtrinsic(HALF_SPDAM));
+  return (youHaveIntrinsic(HALF_SPDAM) || youHaveExtrinsic(HALF_SPDAM));
 }
 
 /*
@@ -1698,59 +1683,59 @@ extern boolean youTakeHalfDamageFromSpells() {
  */
 
 extern boolean youTakeHalfDamageFromPhysicalAttacks() {
-  return (yourIntrinsic(HALF_PHDAM) || yourExtrinsic(HALF_PHDAM));
+  return (youHaveIntrinsic(HALF_PHDAM) || youHaveExtrinsic(HALF_PHDAM));
 }
 
 extern boolean youRegenerate() {
-  return (yourIntrinsic(REGENERATION) || yourExtrinsic(REGENERATION));
+  return (youHaveIntrinsic(REGENERATION) || youHaveExtrinsic(REGENERATION));
 }
 
 extern boolean yourEnergyRegenerates() {
-  return (yourIntrinsic(ENERGY_REGENERATION) || yourExtrinsic(ENERGY_REGENERATION));
+  return (youHaveIntrinsic(ENERGY_REGENERATION) || youHaveExtrinsic(ENERGY_REGENERATION));
 }
 
 extern boolean youAreProtected() {
-  return (yourIntrinsic(PROTECTION) || yourExtrinsic(PROTECTION));
+  return (youHaveIntrinsic(PROTECTION) || youHaveExtrinsic(PROTECTION));
 }
 
 extern boolean youHaveProtectionFromShapeChangers() {
-  return (yourIntrinsic(PROT_FROM_SHAPE_CHANGERS) || yourExtrinsic(PROT_FROM_SHAPE_CHANGERS));
+  return (youHaveIntrinsic(PROT_FROM_SHAPE_CHANGERS) || youHaveExtrinsic(PROT_FROM_SHAPE_CHANGERS));
 }
 
 extern boolean youPolymorph() {
-  return (yourIntrinsic(POLYMORPH) || yourExtrinsic(POLYMORPH));
+  return (youHaveIntrinsic(POLYMORPH) || youHaveExtrinsic(POLYMORPH));
 }
 
 extern boolean youHavePolymorphControl() {
-  return (yourIntrinsic(POLYMORPH_CONTROL) || yourExtrinsic(POLYMORPH_CONTROL));
+  return (youHaveIntrinsic(POLYMORPH_CONTROL) || youHaveExtrinsic(POLYMORPH_CONTROL));
 }
 
 extern boolean youAreUnchanging() {
-  return (yourIntrinsic(UNCHANGING) || yourExtrinsic(UNCHANGING));
+  return (youHaveIntrinsic(UNCHANGING) || youHaveExtrinsic(UNCHANGING));
 }
 
 extern boolean youAreFast() {
-  return (yourIntrinsic(FAST) || yourExtrinsic(FAST));
+  return (youHaveIntrinsic(FAST) || youHaveExtrinsic(FAST));
 }
 
 extern boolean youAreVeryFast() {
-  return ((yourIntrinsic(FAST) & ~INTRINSIC)) || yourExtrinsic(FAST);
+  return ((youHaveIntrinsic(FAST) & ~INTRINSIC)) || youHaveExtrinsic(FAST);
 }
 
 extern boolean youCanReflectAttacks() {
-  return (yourIntrinsic(REFLECTING) || yourExtrinsic(REFLECTING));
+  return (youHaveIntrinsic(REFLECTING) || youHaveExtrinsic(REFLECTING));
 }
 
 extern boolean youHaveFreeAction() {
-  return yourExtrinsic(FREE_ACTION);
+  return youHaveExtrinsic(FREE_ACTION);
 }
 
 extern boolean youHaveFixedAbilities() {
-  return yourExtrinsic(FIXED_ABIL);
+  return youHaveExtrinsic(FIXED_ABIL);
 }
 
 extern boolean yourLifeCanBeSaved() {
-  return yourExtrinsic(LIFESAVED);
+  return youHaveExtrinsic(LIFESAVED);
 }
 
 /*attrib.c*/

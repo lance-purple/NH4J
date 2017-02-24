@@ -210,8 +210,6 @@ extern const struct Align aligns[]; /* table of available alignments */
 
 /*** Information about the player ***/
 struct you {
-    struct prop uprops[LAST_PROP + 1];
-
     struct monst *ustuck;
     struct monst *usteed;
 

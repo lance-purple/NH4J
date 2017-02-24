@@ -700,6 +700,12 @@ unsigned int *stuckid, *steedid;
     setProtectionSpellPointDuration(read_int(fd));
     setProtectionSpellPointCountdown(read_int(fd));
 
+    for (int i = 1; i <= LAST_PROP; i++) {
+        setYourIntrinsic(i, read_long(fd));
+        setYourExtrinsic(i, read_long(fd));
+        setYourBlocker(i, read_long(fd));
+    }
+
     setAbilityToConfuseMonsters(read_int(fd));
 
     setCreamed(read_int(fd));
