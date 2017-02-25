@@ -2478,4 +2478,28 @@ extern void decreaseWeaponSkillSlots(int n) {
   javaSetInt(WEAPON_SKILL_CLASS, "decreaseSlots", n);
 }
 
+extern int weaponSkill(int type) {
+  return javaGetIntFromInt(WEAPON_SKILL_CLASS, "weaponSkill", type);
+}
+
+extern void setWeaponSkill(int type, int value) {
+  javaSetIntFromInt(WEAPON_SKILL_CLASS, "setWeaponSkill", type, value);
+}
+
+extern int maximumWeaponSkill(int type) {
+  return javaGetIntFromInt(WEAPON_SKILL_CLASS, "maximumWeaponSkill", type);
+}
+
+extern void setMaximumWeaponSkill(int type, int value) {
+  javaSetIntFromInt(WEAPON_SKILL_CLASS, "setMaximumWeaponSkill", type, value);
+}
+
+extern int weaponSkillAdvance(int type) {
+  return javaGetIntFromInt(WEAPON_SKILL_CLASS, "weaponSkillAdvance", type);
+}
+
+extern void setWeaponSkillAdvance(int type, int value) { 
+  javaSetIntFromInt(WEAPON_SKILL_CLASS, "setWeaponSkillAdvance", type, value);
+}
+
 /*hacklib.c*/

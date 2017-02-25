@@ -120,7 +120,7 @@ int shotlimit;
                          || youKeepFumbling() || ACURR(A_DEX) <= 6);
 
         /* Bonus if the player is proficient in this weapon... */
-        switch (P_SKILL(weapon_type(obj))) {
+        switch (weaponSkill(weapon_type(obj))) {
         case P_EXPERT:
             multishot++;
         /*FALLTHRU*/

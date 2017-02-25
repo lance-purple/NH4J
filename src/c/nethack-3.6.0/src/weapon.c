@@ -875,7 +875,7 @@ char *buf;
 {
     const char *ptr;
 
-    switch (P_SKILL(skill)) {
+    switch (weaponSkill(skill)) {
     case P_UNSKILLED:
         ptr = "Unskilled";
         break;
@@ -908,7 +908,7 @@ STATIC_OVL int
 slots_required(skill)
 int skill;
 {
-    int tmp = P_SKILL(skill);
+    int tmp = weaponSkill(skill);
 
     /* The more difficult the training, the more slots it takes.
      *  unskilled -> basic      1
@@ -935,16 +935,16 @@ can_advance(skill, speedy)
 int skill;
 boolean speedy;
 {
-    if (P_RESTRICTED(skill)
-        || P_SKILL(skill) >= P_MAX_SKILL(skill)
+    if (weaponSkillIsRestricted(skill)
+        || weaponSkill(skill) >= maximumWeaponSkill(skill)
         || u.skills_advanced >= P_SKILL_LIMIT)
         return FALSE;
 
     if (wizard && speedy)
         return TRUE;
 
-    return (boolean) ((int) P_ADVANCE(skill)
-                      >= practice_needed_to_advance(P_SKILL(skill))
+    return (boolean) (weaponSkillAdvance(skill)
+                      >= practice_needed_to_advance(weaponSkill(skill))
                       && weaponSkillSlots() >= slots_required(skill));
 }
 
@@ -953,13 +953,13 @@ STATIC_OVL boolean
 could_advance(skill)
 int skill;
 {
-    if (P_RESTRICTED(skill)
-        || P_SKILL(skill) >= P_MAX_SKILL(skill)
+    if (weaponSkillIsRestricted(skill)
+        || weaponSkill(skill) >= maximumWeaponSkill(skill)
         || u.skills_advanced >= P_SKILL_LIMIT)
         return FALSE;
 
-    return (boolean) ((int) P_ADVANCE(skill)
-                      >= practice_needed_to_advance(P_SKILL(skill)));
+    return (boolean) (weaponSkillAdvance(skill)
+                      >= practice_needed_to_advance(weaponSkill(skill)));
 }
 
 /* return true if this skill has reached its maximum and there's been enough
@@ -968,12 +968,12 @@ STATIC_OVL boolean
 peaked_skill(skill)
 int skill;
 {
-    if (P_RESTRICTED(skill))
+    if (weaponSkillIsRestricted(skill))
         return FALSE;
 
-    return (boolean) (P_SKILL(skill) >= P_MAX_SKILL(skill)
-                      && ((int) P_ADVANCE(skill)
-                          >= practice_needed_to_advance(P_SKILL(skill))));
+    return (boolean) (weaponSkill(skill) >= maximumWeaponSkill(skill)
+                      && (weaponSkillAdvance(skill)
+                          >= practice_needed_to_advance(weaponSkill(skill))));
 }
 
 STATIC_OVL void
@@ -981,11 +981,11 @@ skill_advance(skill)
 int skill;
 {
     decreaseWeaponSkillSlots(slots_required(skill));
-    P_SKILL(skill)++;
+    increaseWeaponSkill(skill, 1);
     u.skill_record[u.skills_advanced++] = skill;
     /* subtly change the advance message to indicate no more advancement */
     You("are now %s skilled in %s.",
-        P_SKILL(skill) >= P_MAX_SKILL(skill) ? "most" : "more",
+        weaponSkill(skill) >= maximumWeaponSkill(skill) ? "most" : "more",
         P_NAME(skill));
 }
 
@@ -1024,7 +1024,7 @@ enhance_weapon_skill()
         /* find longest available skill name, count those that can advance */
         to_advance = eventually_advance = maxxed_cnt = 0;
         for (longest = 0, i = 0; i < P_NUM_SKILLS; i++) {
-            if (P_RESTRICTED(i))
+            if (weaponSkillIsRestricted(i))
                 continue;
             if ((len = strlen(P_NAME(i))) > longest)
                 longest = len;
@@ -1076,7 +1076,7 @@ enhance_weapon_skill()
                     add_menu(win, NO_GLYPH, &any, 0, 0, iflags.menu_headings,
                              skill_ranges[pass].name, MENU_UNSELECTED);
 
-                if (P_RESTRICTED(i))
+                if (weaponSkillIsRestricted(i))
                     continue;
                 /*
                  * Sigh, this assumes a monospaced font unless
@@ -1100,12 +1100,12 @@ enhance_weapon_skill()
                 if (wizard) {
                     if (!iflags.menu_tab_sep)
                         Sprintf(buf, " %s%-*s %-12s %5d(%4d)", prefix,
-                                longest, P_NAME(i), sklnambuf, P_ADVANCE(i),
-                                practice_needed_to_advance(P_SKILL(i)));
+                                longest, P_NAME(i), sklnambuf, weaponSkillAdvance(i),
+                                practice_needed_to_advance(weaponSkill(i)));
                     else
                         Sprintf(buf, " %s%s\t%s\t%5d(%4d)", prefix, P_NAME(i),
-                                sklnambuf, P_ADVANCE(i),
-                                practice_needed_to_advance(P_SKILL(i)));
+                                sklnambuf, weaponSkillAdvance(i),
+                                practice_needed_to_advance(weaponSkill(i)));
                 } else {
                     if (!iflags.menu_tab_sep)
                         Sprintf(buf, " %s %-*s [%s]", prefix, longest,
@@ -1153,10 +1153,10 @@ void
 unrestrict_weapon_skill(skill)
 int skill;
 {
-    if (skill < P_NUM_SKILLS && P_RESTRICTED(skill)) {
-        P_SKILL(skill) = P_UNSKILLED;
-        P_MAX_SKILL(skill) = P_BASIC;
-        P_ADVANCE(skill) = 0;
+    if (skill < P_NUM_SKILLS && weaponSkillIsRestricted(skill)) {
+        setWeaponSkill(skill, P_UNSKILLED);
+        setMaximumWeaponSkill(skill, P_BASIC);
+        setWeaponSkillAdvance(skill, 0);
     }
 }
 
@@ -1167,9 +1167,9 @@ int degree;
 {
     boolean advance_before;
 
-    if (skill != P_NONE && !P_RESTRICTED(skill)) {
+    if (skill != P_NONE && !weaponSkillIsRestricted(skill)) {
         advance_before = can_advance(skill, FALSE);
-        P_ADVANCE(skill) += degree;
+        increaseWeaponSkill(skill, degree);
         if (!advance_before && can_advance(skill, FALSE))
             give_may_advance_msg(skill);
     }
@@ -1204,9 +1204,9 @@ int n; /* number of slots to lose; normally one */
             decreaseWeaponSkillSlots(1);
         } else if (u.skills_advanced) {
             skill = u.skill_record[--u.skills_advanced];
-            if (P_SKILL(skill) <= P_UNSKILLED)
+            if (weaponSkill(skill) <= P_UNSKILLED)
                 panic("lose_weapon_skill (%d)", skill);
-            P_SKILL(skill)--; /* drop skill one level */
+            decreaseWeaponSkill(skill, 1); /* drop skill one level */
             /* Lost skill might have taken more than one slot; refund rest. */
             setWeaponSkillSlots(slots_required(skill) - 1);
             /* It might now be possible to advance some other pending
@@ -1260,9 +1260,9 @@ struct obj *weapon;
     if (type == P_NONE) {
         bonus = 0;
     } else if (type <= P_LAST_WEAPON) {
-        switch (P_SKILL(type)) {
+        switch (weaponSkill(type)) {
         default:
-            impossible(bad_skill, P_SKILL(type)); /* fall through */
+            impossible(bad_skill, weaponSkill(type)); /* fall through */
         case P_ISRESTRICTED:
         case P_UNSKILLED:
             bonus = -4;
@@ -1278,9 +1278,9 @@ struct obj *weapon;
             break;
         }
     } else if (type == P_TWO_WEAPON_COMBAT) {
-        skill = P_SKILL(P_TWO_WEAPON_COMBAT);
-        if (P_SKILL(wep_type) < skill)
-            skill = P_SKILL(wep_type);
+        skill = weaponSkill(P_TWO_WEAPON_COMBAT);
+        if (weaponSkill(wep_type) < skill)
+            skill = weaponSkill(wep_type);
         switch (skill) {
         default:
             impossible(bad_skill, skill); /* fall through */
@@ -1308,14 +1308,14 @@ struct obj *weapon;
          * mastr:  +3   +6
          * grand:  +3   +7
          */
-        bonus = P_SKILL(type);
+        bonus = weaponSkill(type);
         bonus = max(bonus, P_UNSKILLED) - 1; /* unskilled => 0 */
         bonus = ((bonus + 2) * (martial_bonus() ? 2 : 1)) / 2;
     }
 
     /* KMH -- It's harder to hit while you are riding */
     if (u.usteed) {
-        switch (P_SKILL(P_RIDING)) {
+        switch (weaponSkill(P_RIDING)) {
         case P_ISRESTRICTED:
         case P_UNSKILLED:
             bonus -= 2;
@@ -1354,9 +1354,9 @@ struct obj *weapon;
     if (type == P_NONE) {
         bonus = 0;
     } else if (type <= P_LAST_WEAPON) {
-        switch (P_SKILL(type)) {
+        switch (weaponSkill(type)) {
         default:
-            impossible("weapon_dam_bonus: bad skill %d", P_SKILL(type));
+            impossible("weapon_dam_bonus: bad skill %d", weaponSkill(type));
         /* fall through */
         case P_ISRESTRICTED:
         case P_UNSKILLED:
@@ -1373,9 +1373,9 @@ struct obj *weapon;
             break;
         }
     } else if (type == P_TWO_WEAPON_COMBAT) {
-        skill = P_SKILL(P_TWO_WEAPON_COMBAT);
-        if (P_SKILL(wep_type) < skill)
-            skill = P_SKILL(wep_type);
+        skill = weaponSkill(P_TWO_WEAPON_COMBAT);
+        if (weaponSkill(wep_type) < skill)
+            skill = weaponSkill(wep_type);
         switch (skill) {
         default:
         case P_ISRESTRICTED:
@@ -1402,14 +1402,14 @@ struct obj *weapon;
          * mastr:  +2   +7
          * grand:  +3   +9
          */
-        bonus = P_SKILL(type);
+        bonus = weaponSkill(type);
         bonus = max(bonus, P_UNSKILLED) - 1; /* unskilled => 0 */
         bonus = ((bonus + 1) * (martial_bonus() ? 3 : 1)) / 2;
     }
 
     /* KMH -- Riding gives some thrusting damage */
     if (u.usteed && type != P_TWO_WEAPON_COMBAT) {
-        switch (P_SKILL(P_RIDING)) {
+        switch (weaponSkill(P_RIDING)) {
         case P_ISRESTRICTED:
         case P_UNSKILLED:
             break;
@@ -1442,9 +1442,9 @@ const struct def_skill *class_skill;
 
     /* initialize skill array; by default, everything is restricted */
     for (skill = 0; skill < P_NUM_SKILLS; skill++) {
-        P_SKILL(skill) = P_ISRESTRICTED;
-        P_MAX_SKILL(skill) = P_ISRESTRICTED;
-        P_ADVANCE(skill) = 0;
+        setWeaponSkill(skill, P_ISRESTRICTED);
+        setMaximumWeaponSkill(skill, P_ISRESTRICTED);
+        setWeaponSkillAdvance(skill, 0);
     }
 
     /* Set skill for all weapons in inventory to be basic */
@@ -1456,18 +1456,19 @@ const struct def_skill *class_skill;
             continue;
 
         skill = weapon_type(obj);
-        if (skill != P_NONE)
-            P_SKILL(skill) = P_BASIC;
+        if (skill != P_NONE) {
+            setWeaponSkill(skill, P_BASIC);
+	}
     }
 
     /* set skills for magic */
     if (Role_if(PM_HEALER) || Role_if(PM_MONK)) {
-        P_SKILL(P_HEALING_SPELL) = P_BASIC;
+        setWeaponSkill(P_HEALING_SPELL, P_BASIC);
     } else if (Role_if(PM_PRIEST)) {
-        P_SKILL(P_CLERIC_SPELL) = P_BASIC;
+        setWeaponSkill(P_CLERIC_SPELL, P_BASIC);
     } else if (Role_if(PM_WIZARD)) {
-        P_SKILL(P_ATTACK_SPELL) = P_BASIC;
-        P_SKILL(P_ENCHANTMENT_SPELL) = P_BASIC;
+        setWeaponSkill(P_ATTACK_SPELL, P_BASIC);
+        setWeaponSkill(P_ENCHANTMENT_SPELL, P_BASIC);
     }
 
     /* walk through array to set skill maximums */
@@ -1475,30 +1476,30 @@ const struct def_skill *class_skill;
         skmax = class_skill->skmax;
         skill = class_skill->skill;
 
-        P_MAX_SKILL(skill) = skmax;
-        if (P_SKILL(skill) == P_ISRESTRICTED) /* skill pre-set */
-            P_SKILL(skill) = P_UNSKILLED;
+        setMaximumWeaponSkill(skill, skmax);
+        if (weaponSkill(skill) == P_ISRESTRICTED) /* skill pre-set */
+            setWeaponSkill(skill, P_UNSKILLED);
     }
 
     /* High potential fighters already know how to use their hands. */
-    if (P_MAX_SKILL(P_BARE_HANDED_COMBAT) > P_EXPERT)
-        P_SKILL(P_BARE_HANDED_COMBAT) = P_BASIC;
+    if (maximumWeaponSkill(P_BARE_HANDED_COMBAT) > P_EXPERT)
+        setWeaponSkill(P_BARE_HANDED_COMBAT, P_BASIC);
 
     /* Roles that start with a horse know how to ride it */
     if (urole.petnum == PM_PONY)
-        P_SKILL(P_RIDING) = P_BASIC;
+        setWeaponSkill(P_RIDING, P_BASIC);
 
     /*
      * Make sure we haven't missed setting the max on a skill
      * & set advance
      */
     for (skill = 0; skill < P_NUM_SKILLS; skill++) {
-        if (!P_RESTRICTED(skill)) {
-            if (P_MAX_SKILL(skill) < P_SKILL(skill)) {
+        if (!weaponSkillIsRestricted(skill)) {
+            if (maximumWeaponSkill(skill) < weaponSkill(skill)) {
                 impossible("skill_init: curr > max: %s", P_NAME(skill));
-                P_MAX_SKILL(skill) = P_SKILL(skill);
+                setMaximumWeaponSkill(skill, weaponSkill(skill));
             }
-            P_ADVANCE(skill) = practice_needed_to_advance(P_SKILL(skill) - 1);
+            setWeaponSkillAdvance(skill, practice_needed_to_advance(weaponSkill(skill) - 1));
         }
     }
 }
@@ -1520,6 +1521,26 @@ register struct obj *obj;
     if (MON_WEP(mon) == obj)
         MON_NOWEP(mon);
     obj->owornmask &= ~W_WEP;
+}
+
+extern void increaseWeaponSkill(int type, int value) {
+  setWeaponSkill(type, weaponSkill(type) + value);
+}
+
+extern void decreaseWeaponSkill(int type, int value) {
+  setWeaponSkill(type, weaponSkill(type) - value);
+}
+
+extern void increaseWeaponSkillAdvance(int type, int value) { 
+  setWeaponSkillAdvance(type, weaponSkillAdvance(type) + value);
+}
+
+extern void decreaseWeaponSkillAdvance(int type, int value) { 
+  setWeaponSkillAdvance(type, weaponSkillAdvance(type) - value);
+}
+
+extern boolean weaponSkillIsRestricted(int type) {
+  return (weaponSkill(type) == P_ISRESTRICTED);
 }
 
 /*weapon.c*/

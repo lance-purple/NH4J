@@ -97,7 +97,7 @@ struct obj *otmp;
         chance -= 10 * mtmp->m_lev;
     if (Role_if(PM_KNIGHT))
         chance += 20;
-    switch (P_SKILL(P_RIDING)) {
+    switch (weaponSkill(P_RIDING)) {
     case P_ISRESTRICTED:
     case P_UNSKILLED:
     default:

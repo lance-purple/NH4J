@@ -149,7 +149,7 @@ boolean check_pit;
     if (swallowed())
         return FALSE;
     /* Restricted/unskilled riders can't reach the floor */
-    if (u.usteed && P_SKILL(P_RIDING) < P_BASIC)
+    if (u.usteed && weaponSkill(P_RIDING) < P_BASIC)
         return FALSE;
     if (check_pit && !youAreFlying()
         && (t = t_at(currentX(), currentY())) != 0 && uteetering_at_seen_pit(t))

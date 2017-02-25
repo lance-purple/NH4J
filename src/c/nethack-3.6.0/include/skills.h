@@ -91,22 +91,25 @@
 
 #define practice_needed_to_advance(level) ((level) * (level) *20)
 
-/* The hero's skill in various weapons. */
-struct skills {
-    xchar skill;
-    xchar max_skill;
-    unsigned short advance;
-};
-
 extern int weaponSkillSlots();
 extern void setWeaponSkillSlots(int s);
 extern void increaseWeaponSkillSlots(int n);
 extern void decreaseWeaponSkillSlots(int n);
 
-#define P_SKILL(type) (u.weapon_skills[type].skill)
-#define P_MAX_SKILL(type) (u.weapon_skills[type].max_skill)
-#define P_ADVANCE(type) (u.weapon_skills[type].advance)
-#define P_RESTRICTED(type) (u.weapon_skills[type].skill == P_ISRESTRICTED)
+extern int weaponSkill(int type);
+extern void setWeaponSkill(int type, int value);
+extern void increaseWeaponSkill(int type, int value);
+extern void decreaseWeaponSkill(int type, int value);
+
+extern int maximumWeaponSkill(int type);
+extern void setMaximumWeaponSkill(int type, int value);
+
+extern int weaponSkillAdvance(int type);
+extern void setWeaponSkillAdvance(int type, int value);
+extern void increaseWeaponSkillAdvance(int type, int value);
+extern void decreaseWeaponSkillAdvance(int type, int value);
+
+extern boolean weaponSkillIsRestricted(int type);
 
 #define P_SKILL_LIMIT 60 /* Max number of skill advancements */
 

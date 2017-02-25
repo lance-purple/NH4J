@@ -813,7 +813,7 @@ cast_protection()
             }
         }
         increaseArmorBonusFromProtectionSpell(gain);
-        setProtectionSpellPointDuration((P_SKILL(spell_skilltype(SPE_PROTECTION)) == P_EXPERT) ? 20 : 10);
+        setProtectionSpellPointDuration((weaponSkill(spell_skilltype(SPE_PROTECTION)) == P_EXPERT) ? 20 : 10);
         if (!protectionSpellPointCountdown())
             setProtectionSpellPointCountdown(protectionSpellPointDuration());
         find_ac();
@@ -997,7 +997,7 @@ boolean atme;
      * See spell_skilltype for categories.
      */
     skill = spell_skilltype(pseudo->otyp);
-    role_skill = P_SKILL(skill);
+    role_skill = weaponSkill(skill);
 
     switch (pseudo->otyp) {
     /*
@@ -1641,7 +1641,7 @@ int spell;
      * The difficulty is based on the hero's level and their skill level
      * in that spell type.
      */
-    skill = P_SKILL(spell_skilltype(spellid(spell)));
+    skill = weaponSkill(spell_skilltype(spellid(spell)));
     skill = max(skill, P_UNSKILLED) - 1; /* unskilled => 0 */
     difficulty =
         (spellev(spell) - 1) * 4 - ((skill * 6) + (currentExperienceLevel() / 3) + 1);
@@ -1706,7 +1706,7 @@ char *outbuf;
     long turnsleft, percent, accuracy;
     int skill;
 
-    skill = P_SKILL(spell_skilltype(spellid(idx)));
+    skill = weaponSkill(spell_skilltype(spellid(idx)));
     skill = max(skill, P_UNSKILLED); /* restricted same as unskilled */
     turnsleft = spellknow(idx);
     *outbuf = '\0'; /* lint suppression */

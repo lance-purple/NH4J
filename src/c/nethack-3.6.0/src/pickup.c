@@ -1540,7 +1540,7 @@ boolean looting; /* loot vs tip */
     const char *verb = looting ? "loot" : "tip";
 
     if (!can_reach_floor(TRUE)) {
-        if (u.usteed && P_SKILL(P_RIDING) < P_BASIC)
+        if (u.usteed && weaponSkill(P_RIDING) < P_BASIC)
             rider_cant_reach(); /* not skilled enough to reach */
         else
             cant_reach_floor(x, y, FALSE, TRUE);

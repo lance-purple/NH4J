@@ -1132,7 +1132,7 @@ aligntyp g_align;
                         if (spl_book[sp_no].sp_id == otmp->otyp)
                             break;
                     if (sp_no == MAXSPELL
-                        && !P_RESTRICTED(spell_skilltype(otmp->otyp)))
+                        && !weaponSkillIsRestricted(spell_skilltype(otmp->otyp)))
                         break; /* usable, but not yet known */
                 } else {
                     if (!objects[SPE_BLANK_PAPER].oc_name_known

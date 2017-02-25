@@ -2914,7 +2914,7 @@ int skill;
     int hit_bon = 0;
     int dex = ACURR(A_DEX);
 
-    switch (P_SKILL(spell_skilltype(skill))) {
+    switch (weaponSkill(spell_skilltype(skill))) {
     case P_ISRESTRICTED:
     case P_UNSKILLED:
         hit_bon = -4;

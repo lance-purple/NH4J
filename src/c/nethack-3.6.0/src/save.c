@@ -510,6 +510,11 @@ register int fd, mode;
     }
 
     write_int(fd, weaponSkillSlots());
+    for (type = 0; type < P_NUM_SKILLS; type++) {
+        write_int(fd, weaponSkill(type));
+        write_int(fd, maximumWeaponSkill(type));
+        write_int(fd, weaponSkillAdvance(type));
+    }
 
     bwrite(fd, yyyymmddhhmmss(ubirthday), 14);
     bwrite(fd, (genericptr_t) &urealtime.realtime,

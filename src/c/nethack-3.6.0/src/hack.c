@@ -310,7 +310,7 @@ moverock()
                 feel_location(sx, sy);
         cannot_push:
             if (throws_rocks(youmonst.data)) {
-                if (u.usteed && P_SKILL(P_RIDING) < P_BASIC) {
+                if (u.usteed && weaponSkill(P_RIDING) < P_BASIC) {
                     You("aren't skilled enough to %s %s from %s.",
                         (flags.pickup && !Sokoban) ? "pick up" : "push aside",
                         the(xname(otmp)), y_monnam(u.usteed));
@@ -2410,7 +2410,7 @@ dopickup()
     if (!can_reach_floor(TRUE)) {
         if (traphere && uteetering_at_seen_pit(traphere))
             You("cannot reach the bottom of the pit.");
-        else if (u.usteed && P_SKILL(P_RIDING) < P_BASIC)
+        else if (u.usteed && weaponSkill(P_RIDING) < P_BASIC)
             rider_cant_reach();
         else if (youCannotSee() && !can_reach_floor(TRUE))
             You("cannot reach anything here.");

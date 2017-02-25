@@ -1785,7 +1785,7 @@ dodip()
             if (youAreLevitating()) {
                 floating_above(pooltype);
             } else if (u.usteed && !is_swimmer(u.usteed->data)
-                       && P_SKILL(P_RIDING) < P_BASIC) {
+                       && weaponSkill(P_RIDING) < P_BASIC) {
                 rider_cant_reach(); /* not skilled enough to reach */
             } else {
                 if (obj->otyp == POT_ACID)

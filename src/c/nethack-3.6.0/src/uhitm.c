@@ -680,7 +680,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                                || (Role_if(PM_SAMURAI) && obj->otyp == KATANA
                                    && !uarms))
                            && ((wtype = uwep_skill_type()) != P_NONE
-                               && P_SKILL(wtype) >= P_SKILLED)
+                               && weaponSkill(wtype) >= P_SKILLED)
                            && ((monwep = MON_WEP(mon)) != 0
                                && !is_flimsy(monwep)
                                && !obj_resists(
@@ -1068,7 +1068,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
         hittxt = TRUE;
     } else if (unarmed && tmp > 1 && !thrown && !obj && !areYouPolymorphed()) {
         /* VERY small chance of stunning opponent if unarmed. */
-        if (rnd(100) < P_SKILL(P_BARE_HANDED_COMBAT) && !bigmonst(mdat)
+        if (rnd(100) < weaponSkill(P_BARE_HANDED_COMBAT) && !bigmonst(mdat)
             && !thick_skinned(mdat)) {
             if (canspotmon(mon))
                 pline("%s %s from your powerful strike!", Monnam(mon),
@@ -1268,9 +1268,9 @@ struct obj *obj;   /* weapon */
         return 0;
 
     /* if using two weapons, use worse of lance and two-weapon skills */
-    skill_rating = P_SKILL(weapon_type(obj)); /* lance skill */
-    if (usingTwoWeapons() && P_SKILL(P_TWO_WEAPON_COMBAT) < skill_rating)
-        skill_rating = P_SKILL(P_TWO_WEAPON_COMBAT);
+    skill_rating = weaponSkill(weapon_type(obj)); /* lance skill */
+    if (usingTwoWeapons() && weaponSkill(P_TWO_WEAPON_COMBAT) < skill_rating)
+        skill_rating = weaponSkill(P_TWO_WEAPON_COMBAT);
     if (skill_rating == P_ISRESTRICTED)
         skill_rating = P_UNSKILLED; /* 0=>1 */
 

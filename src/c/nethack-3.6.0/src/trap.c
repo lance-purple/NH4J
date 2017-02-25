@@ -3863,7 +3863,7 @@ boolean force_failure;
     }
     /* untrappable traps are located on the ground. */
     if (!can_reach_floor(TRUE)) {
-        if (u.usteed && P_SKILL(P_RIDING) < P_BASIC)
+        if (u.usteed && weaponSkill(P_RIDING) < P_BASIC)
             rider_cant_reach();
         else
             You("are unable to reach the %s!",
