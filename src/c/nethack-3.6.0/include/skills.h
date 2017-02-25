@@ -111,6 +111,10 @@ extern void decreaseWeaponSkillAdvance(int type, int value);
 
 extern boolean weaponSkillIsRestricted(int type);
 
+extern int weaponSkillAdvancesCount();
+extern void addWeaponSkillAdvance(int value);
+extern int removeWeaponSkillAdvance();
+
 #define P_SKILL_LIMIT 60 /* Max number of skill advancements */
 
 /* Initial skill matrix structure; used in u_init.c and weapon.c */

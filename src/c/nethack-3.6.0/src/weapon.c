@@ -937,7 +937,7 @@ boolean speedy;
 {
     if (weaponSkillIsRestricted(skill)
         || weaponSkill(skill) >= maximumWeaponSkill(skill)
-        || u.skills_advanced >= P_SKILL_LIMIT)
+        || weaponSkillAdvancesCount() >= P_SKILL_LIMIT)
         return FALSE;
 
     if (wizard && speedy)
@@ -955,7 +955,7 @@ int skill;
 {
     if (weaponSkillIsRestricted(skill)
         || weaponSkill(skill) >= maximumWeaponSkill(skill)
-        || u.skills_advanced >= P_SKILL_LIMIT)
+        || weaponSkillAdvancesCount() >= P_SKILL_LIMIT)
         return FALSE;
 
     return (boolean) (weaponSkillAdvance(skill)
@@ -982,7 +982,7 @@ int skill;
 {
     decreaseWeaponSkillSlots(slots_required(skill));
     increaseWeaponSkill(skill, 1);
-    u.skill_record[u.skills_advanced++] = skill;
+    addWeaponSkillAdvance(skill);
     /* subtly change the advance message to indicate no more advancement */
     You("are now %s skilled in %s.",
         weaponSkill(skill) >= maximumWeaponSkill(skill) ? "most" : "more",
@@ -1202,8 +1202,8 @@ int n; /* number of slots to lose; normally one */
         /* deduct first from unused slots then from last placed one, if any */
         if (weaponSkillSlots() > 0) {
             decreaseWeaponSkillSlots(1);
-        } else if (u.skills_advanced) {
-            skill = u.skill_record[--u.skills_advanced];
+        } else if (weaponSkillAdvancesCount() > 0) {
+            skill= removeWeaponSkillAdvance();
             if (weaponSkill(skill) <= P_UNSKILLED)
                 panic("lose_weapon_skill (%d)", skill);
             decreaseWeaponSkill(skill, 1); /* drop skill one level */

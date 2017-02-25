@@ -782,6 +782,11 @@ unsigned int *stuckid, *steedid;
         setWeaponSkillAdvance(type, read_int(fd));
     }
 
+    int count = read_int(fd);
+    for (int i = 0; i < count; i++) {
+        addWeaponSkillAdvance(read_int(fd));
+    }
+
 #define ReadTimebuf(foo)                   \
     mread(fd, (genericptr_t) timebuf, 14); \
     timebuf[14] = '\0';                    \

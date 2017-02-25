@@ -210,11 +210,9 @@ extern const struct Align aligns[]; /* table of available alignments */
 
 /*** Information about the player ***/
 struct you {
+
     struct monst *ustuck;
     struct monst *usteed;
-
-    int skills_advanced; /* # of advances made so far */
-    xchar skill_record[P_SKILL_LIMIT]; /* skill advancements */
 
 }; /* end of `struct you' */
 

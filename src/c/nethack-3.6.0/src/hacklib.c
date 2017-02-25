@@ -2502,4 +2502,16 @@ extern void setWeaponSkillAdvance(int type, int value) {
   javaSetIntFromInt(WEAPON_SKILL_CLASS, "setWeaponSkillAdvance", type, value);
 }
 
+extern int weaponSkillAdvancesCount() {
+  return javaGetInt(WEAPON_SKILL_CLASS, "advancesCount");
+}
+
+extern void addWeaponSkillAdvance(int value) {
+  javaSetInt(WEAPON_SKILL_CLASS, "addAdvance", value);
+}
+
+extern int removeWeaponSkillAdvance() {
+  return javaGetInt(WEAPON_SKILL_CLASS, "removeAdvance");
+}
+
 /*hacklib.c*/

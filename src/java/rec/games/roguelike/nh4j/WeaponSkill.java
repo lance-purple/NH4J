@@ -1,12 +1,15 @@
 package rec.games.roguelike.nh4j;
 
 import java.util.HashMap;
+import java.util.Stack;
 
 public class WeaponSkill {
 
 	private static HashMap<Integer,Integer> skillsByType = new HashMap<>();
 	private static HashMap<Integer,Integer> maximumSkillsByType = new HashMap<>();
 	private static HashMap<Integer,Integer> skillAdvancesByType = new HashMap<>();
+	
+	private static Stack<Integer> advances = new Stack<>();
 	
 	private static int slots = 0;
 	
@@ -63,6 +66,18 @@ public class WeaponSkill {
 		if ((value != 0) || skillAdvancesByType.containsKey(type)) {
 			skillAdvancesByType.put(type, value);
 		}
+	}
+	
+	public static int advancesCount() {
+		return advances.size();
+	}
+	
+	public static void addAdvance(int value) {
+		advances.push(value);
+	}
+
+	public static int removeAdvance() {
+		return advances.pop();
 	}
 
 }

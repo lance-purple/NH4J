@@ -516,6 +516,12 @@ register int fd, mode;
         write_int(fd, weaponSkillAdvance(type));
     }
 
+    int count = weaponSkillAdvancesCount();
+    write_int(fd, count);
+    for (int i = 0; i < count; i++) {
+        write_int(fd, removeWeaponSkillAdvance());
+    }
+
     bwrite(fd, yyyymmddhhmmss(ubirthday), 14);
     bwrite(fd, (genericptr_t) &urealtime.realtime,
            sizeof(urealtime.realtime));
