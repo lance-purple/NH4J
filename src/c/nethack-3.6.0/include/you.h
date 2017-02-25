@@ -213,7 +213,6 @@ struct you {
     struct monst *ustuck;
     struct monst *usteed;
 
-    int weapon_slots;    /* unused skill slots */
     struct skills weapon_skills[P_NUM_SKILLS];
 
     int skills_advanced; /* # of advances made so far */

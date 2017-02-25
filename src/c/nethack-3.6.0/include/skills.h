@@ -98,6 +98,11 @@ struct skills {
     unsigned short advance;
 };
 
+extern int weaponSkillSlots();
+extern void setWeaponSkillSlots(int s);
+extern void increaseWeaponSkillSlots(int n);
+extern void decreaseWeaponSkillSlots(int n);
+
 #define P_SKILL(type) (u.weapon_skills[type].skill)
 #define P_MAX_SKILL(type) (u.weapon_skills[type].max_skill)
 #define P_ADVANCE(type) (u.weapon_skills[type].advance)

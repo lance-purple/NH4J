@@ -509,6 +509,8 @@ register int fd, mode;
         write_int(fd, haveSpecialItem(type));
     }
 
+    write_int(fd, weaponSkillSlots());
+
     bwrite(fd, yyyymmddhhmmss(ubirthday), 14);
     bwrite(fd, (genericptr_t) &urealtime.realtime,
            sizeof(urealtime.realtime));

@@ -775,6 +775,7 @@ unsigned int *stuckid, *steedid;
         setHaveSpecialItem(type, read_int(fd));
     }
 
+    setWeaponSkillSlots(read_int(fd));
 
 #define ReadTimebuf(foo)                   \
     mread(fd, (genericptr_t) timebuf, 14); \

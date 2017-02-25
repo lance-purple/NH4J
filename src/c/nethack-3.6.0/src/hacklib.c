@@ -67,6 +67,7 @@
 
 #define PLAYER_CHARACTER_CLASS "rec/games/roguelike/nh4j/PlayerCharacter"
 #define QUALITIES_CLASS "rec/games/roguelike/nh4j/Qualities"
+#define WEAPON_SKILL_CLASS "rec/games/roguelike/nh4j/WeaponSkill"
 
 jclass getJavaClass(const char* className) {
     jclass javaClass = (*jni_env)->FindClass(jni_env, className);
@@ -2459,6 +2460,22 @@ extern long yourBlocker(int i) {
 
 extern void setYourBlocker(int i, long value) {
   javaSetLongFromInt(QUALITIES_CLASS, "setBlocker", i, value);
+}
+
+extern int weaponSkillSlots() {
+  return javaGetInt(WEAPON_SKILL_CLASS, "slots");
+}
+
+extern void setWeaponSkillSlots(int s) {
+  javaSetInt(WEAPON_SKILL_CLASS, "setSlots", s);
+}
+
+extern void increaseWeaponSkillSlots(int n) {
+  javaSetInt(WEAPON_SKILL_CLASS, "increaseSlots", n);
+}
+
+extern void decreaseWeaponSkillSlots(int n) {
+  javaSetInt(WEAPON_SKILL_CLASS, "decreaseSlots", n);
 }
 
 /*hacklib.c*/

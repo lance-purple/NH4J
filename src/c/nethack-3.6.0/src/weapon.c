@@ -945,7 +945,7 @@ boolean speedy;
 
     return (boolean) ((int) P_ADVANCE(skill)
                       >= practice_needed_to_advance(P_SKILL(skill))
-                      && u.weapon_slots >= slots_required(skill));
+                      && weaponSkillSlots() >= slots_required(skill));
 }
 
 /* return true if this skill could be advanced if more slots were available */
@@ -980,7 +980,7 @@ STATIC_OVL void
 skill_advance(skill)
 int skill;
 {
-    u.weapon_slots -= slots_required(skill);
+    decreaseWeaponSkillSlots(slots_required(skill));
     P_SKILL(skill)++;
     u.skill_record[u.skills_advanced++] = skill;
     /* subtly change the advance message to indicate no more advancement */
@@ -1122,8 +1122,8 @@ enhance_weapon_skill()
         Strcpy(buf, (to_advance > 0) ? "Pick a skill to advance:"
                                      : "Current skills:");
         if (wizard && !speedy)
-            Sprintf(eos(buf), "  (%d slot%s available)", u.weapon_slots,
-                    plur(u.weapon_slots));
+            Sprintf(eos(buf), "  (%d slot%s available)", weaponSkillSlots(),
+                    plur(weaponSkillSlots()));
         end_menu(win, buf);
         n = select_menu(win, to_advance ? PICK_ONE : PICK_NONE, &selected);
         destroy_nhwindow(win);
@@ -1184,7 +1184,7 @@ int n; /* number of slots to gain; normally one */
     for (i = 0, before = 0; i < P_NUM_SKILLS; i++)
         if (can_advance(i, FALSE))
             before++;
-    u.weapon_slots += n;
+    increaseWeaponSkillSlots(n);
     for (i = 0, after = 0; i < P_NUM_SKILLS; i++)
         if (can_advance(i, FALSE))
             after++;
@@ -1200,15 +1200,15 @@ int n; /* number of slots to lose; normally one */
 
     while (--n >= 0) {
         /* deduct first from unused slots then from last placed one, if any */
-        if (u.weapon_slots) {
-            u.weapon_slots--;
+        if (weaponSkillSlots() > 0) {
+            decreaseWeaponSkillSlots(1);
         } else if (u.skills_advanced) {
             skill = u.skill_record[--u.skills_advanced];
             if (P_SKILL(skill) <= P_UNSKILLED)
                 panic("lose_weapon_skill (%d)", skill);
             P_SKILL(skill)--; /* drop skill one level */
             /* Lost skill might have taken more than one slot; refund rest. */
-            u.weapon_slots = slots_required(skill) - 1;
+            setWeaponSkillSlots(slots_required(skill) - 1);
             /* It might now be possible to advance some other pending
                skill by using the refunded slots, but giving a message
                to that effect would seem pretty confusing.... */
