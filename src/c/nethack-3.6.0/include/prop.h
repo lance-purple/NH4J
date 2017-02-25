@@ -82,11 +82,8 @@
 #define LIFESAVED 67
 #define LAST_PROP (LIFESAVED)
 
-/*** Where the properties come from ***/
-/* Definitions were moved here from obj.h and you.h */
-struct prop {
-    /*** Properties conveyed by objects ***/
-    long extrinsic;
+/*** Properties conveyed by objects ***/
+
 /* Armor */
 #define W_ARM 0x00000001L  /* Body armor */
 #define W_ARMC 0x00000002L /* Cloak */
@@ -117,10 +114,10 @@ struct prop {
 #define W_CHAIN 0x00400000L  /* Punishment chain */
 
     /*** Property is blocked by an object ***/
-    long blocked; /* Same assignments as extrinsic */
+    /* Same assignments as extrinsic */
 
     /*** Timeouts, permanent properties, and other flags ***/
-    long intrinsic;
+    
 /* Timed properties */
 #define TIMEOUT 0x00ffffffL     /* Up to 16 million turns */
                                 /* Permanent properties */
@@ -131,7 +128,6 @@ struct prop {
 /* Control flags */
 #define FROMFORM 0x10000000L  /* Polyd; conferred by monster form */
 #define I_SPECIAL 0x20000000L /* Property is controllable */
-};
 
 /*** Definitions for backwards compatibility ***/
 #define LEFT_RING W_RINGL
