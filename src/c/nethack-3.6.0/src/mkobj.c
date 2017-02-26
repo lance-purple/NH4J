@@ -377,9 +377,7 @@ struct obj *obj2, *obj1;
         OMONST(obj2)->mextra = (struct mextra *) 0;
         OMONST(obj2)->nmon = (struct monst *) 0;
 #if 0
-        OMONST(obj2)->m_id = context.ident++;
-        if (OMONST(obj2)->m_id) /* ident overflowed */
-            OMONST(obj2)->m_id = context.ident++;
+        OMONST(obj2)->m_id = nextIdentifier();
 #endif
         if (OMONST(obj1)->mextra)
             copy_mextra(OMONST(obj2), OMONST(obj1));
@@ -419,9 +417,7 @@ long num;
     otmp = newobj();
     *otmp = *obj; /* copies whole structure */
     otmp->oextra = (struct oextra *) 0;
-    otmp->o_id = context.ident++;
-    if (!otmp->o_id)
-        otmp->o_id = context.ident++; /* ident overflowed */
+    otmp->o_id = nextIdentifier();
     otmp->timed = 0;                  /* not timed, yet */
     otmp->lamplit = 0;                /* ditto */
     otmp->owornmask = 0L;             /* new object isn't worn */
@@ -609,9 +605,7 @@ register struct obj *otmp;
     *dummy = *otmp;
     dummy->oextra = (struct oextra *) 0;
     dummy->where = OBJ_FREE;
-    dummy->o_id = context.ident++;
-    if (!dummy->o_id)
-        dummy->o_id = context.ident++; /* ident overflowed */
+    dummy->o_id = nextIdentifier();
     dummy->timed = 0;
     copy_oextra(dummy, otmp);
     if (has_omid(dummy))
@@ -727,9 +721,7 @@ boolean artif;
     otmp = newobj();
     *otmp = zeroobj;
     otmp->age = monstermoves;
-    otmp->o_id = context.ident++;
-    if (!otmp->o_id)
-        otmp->o_id = context.ident++; /* ident overflowed */
+    otmp->o_id = nextIdentifier();
     otmp->quan = 1L;
     otmp->oclass = let;
     otmp->otyp = otyp;

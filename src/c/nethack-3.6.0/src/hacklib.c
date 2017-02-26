@@ -65,6 +65,7 @@
 #define Static static
 #endif
 
+#define CONTEXT_CLASS "rec/games/roguelike/nh4j/Context"
 #define PLAYER_CHARACTER_CLASS "rec/games/roguelike/nh4j/PlayerCharacter"
 #define QUALITIES_CLASS "rec/games/roguelike/nh4j/Qualities"
 #define WEAPON_SKILL_CLASS "rec/games/roguelike/nh4j/WeaponSkill"
@@ -2512,6 +2513,18 @@ extern void addWeaponSkillAdvance(int value) {
 
 extern int removeWeaponSkillAdvance() {
   return javaGetInt(WEAPON_SKILL_CLASS, "removeAdvance");
+}
+
+extern void initIdentifier(int i) {
+  javaSetInt(CONTEXT_CLASS, "initIdentifier", i);
+}
+
+extern int currentIdentifier() {
+  javaGetInt(CONTEXT_CLASS, "currentIdentifier");
+}
+
+extern int nextIdentifier() {
+  javaGetInt(CONTEXT_CLASS, "nextIdentifier");
 }
 
 /*hacklib.c*/

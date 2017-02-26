@@ -545,7 +545,7 @@ newgame()
 #endif
 
     context.botlx = 1;
-    context.ident = 1;
+    initIdentifier(1);
     context.stethoscope_move = -1L;
     context.warnlevel = 1;
     context.next_attrib_check = 600L; /* arbitrary first setting */

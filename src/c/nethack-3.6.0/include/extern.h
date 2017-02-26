@@ -321,6 +321,12 @@ E void NDECL(sanity_check);
 E char FDECL(yn_function, (const char *, const char *, CHAR_P));
 E boolean FDECL(paranoid_query, (BOOLEAN_P, const char *));
 
+/* ### context ### */
+
+E void FDECL (initIdentifier, (int));
+E int FDECL (currentIdentifier, ());
+E int FDECL (nextIdentifier, ());
+
 /* ### dbridge.c ### */
 
 E boolean FDECL(is_pool, (int, int));

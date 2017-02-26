@@ -282,7 +282,7 @@ boolean ghostly, frozen;
             otmp2->nobj = otmp;
 
         if (ghostly) {
-            unsigned nid = context.ident++;
+            unsigned nid = nextIdentifier();
             add_id_mapping(otmp->o_id, nid);
             otmp->o_id = nid;
         }
@@ -404,7 +404,7 @@ boolean ghostly;
             mtmp2->nmon = mtmp;
 
         if (ghostly) {
-            unsigned nid = context.ident++;
+            unsigned nid = nextIdentifier();
             add_id_mapping(mtmp->m_id, nid);
             mtmp->m_id = nid;
         }
@@ -549,6 +549,9 @@ unsigned int *stuckid, *steedid;
     mread(fd, (genericptr_t) &context, sizeof(struct context_info));
     if (context.warntype.speciesidx)
         context.warntype.species = &mons[context.warntype.speciesidx];
+
+    /* read former 'context' fields that are now stored in Java */
+    initIdentifier(read_int(fd));
 
     /* we want to be able to revert to command line/environment/config
        file option values instead of keeping old save file option values

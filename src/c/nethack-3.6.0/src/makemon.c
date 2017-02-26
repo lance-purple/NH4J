@@ -757,9 +757,8 @@ xchar x, y; /* clone's preferred location or 0 (near mon) */
     m2->mextra = (struct mextra *) 0;
     m2->nmon = fmon;
     fmon = m2;
-    m2->m_id = context.ident++;
-    if (!m2->m_id)
-        m2->m_id = context.ident++; /* ident overflowed */
+    m2->m_id = nextIdentifier();
+
     m2->mx = mm.x;
     m2->my = mm.y;
 
@@ -1116,9 +1115,8 @@ int mmflags;
 
     mtmp->nmon = fmon;
     fmon = mtmp;
-    mtmp->m_id = context.ident++;
-    if (!mtmp->m_id)
-        mtmp->m_id = context.ident++; /* ident overflowed */
+    mtmp->m_id = nextIdentifier();
+
     set_mon_data(mtmp, ptr, 0);
     if (ptr->msound == MS_LEADER && quest_info(MS_LEADER) == mndx)
         quest_status.leader_m_id = mtmp->m_id;
