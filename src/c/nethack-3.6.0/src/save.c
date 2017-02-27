@@ -306,6 +306,7 @@ register int fd, mode;
 
     /* save former 'context' fields that are now stored in Java */
     write_int(fd, currentIdentifier());
+    write_int(fd, numberOfWizards());
 
     bwrite(fd, (genericptr_t) &flags, sizeof(struct flag));
 #ifdef SYSFLAGS

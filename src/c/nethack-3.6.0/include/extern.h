@@ -327,6 +327,11 @@ E void FDECL (initIdentifier, (int));
 E int FDECL (currentIdentifier, ());
 E int FDECL (nextIdentifier, ());
 
+E int FDECL (numberOfWizards, ());
+E void FDECL (setNumberOfWizards, (int));
+E void FDECL (increaseNumberOfWizards, (int));
+E void FDECL (decreaseNumberOfWizards, (int));
+
 /* ### dbridge.c ### */
 
 E boolean FDECL(is_pool, (int, int));

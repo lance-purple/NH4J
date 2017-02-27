@@ -373,7 +373,7 @@ int spellnum;
         dmg = 0;
         break;
     case MGC_CLONE_WIZ:
-        if (mtmp->iswiz && context.no_of_wizards == 1) {
+        if (mtmp->iswiz && (1 == numberOfWizards())) {
             pline("Double Trouble...");
             clonewiz();
             dmg = 0;
@@ -793,7 +793,7 @@ int spellnum;
         if (!mcouldseeu && (spellnum == MGC_SUMMON_MONS
                             || (!mtmp->iswiz && spellnum == MGC_CLONE_WIZ)))
             return TRUE;
-        if ((!mtmp->iswiz || context.no_of_wizards > 1)
+        if ((!mtmp->iswiz || numberOfWizards() > 1)
             && spellnum == MGC_CLONE_WIZ)
             return TRUE;
         /* aggravation (global wakeup) when everyone is already active */

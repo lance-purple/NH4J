@@ -68,7 +68,7 @@ amulet()
         }
     }
 
-    if (!context.no_of_wizards)
+    if (0 == numberOfWizards())
         return;
     /* find Wizard, and wake him if necessary */
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
@@ -512,7 +512,7 @@ resurrect()
     long elapsed;
     const char *verb;
 
-    if (!context.no_of_wizards) {
+    if (0 == numberOfWizards()) {
         /* make a new Wizard */
         verb = "kill";
         mtmp = makemon(&mons[PM_WIZARD_OF_YENDOR], currentX(), currentY(), MM_NOWAIT);
@@ -590,7 +590,7 @@ intervene()
 void
 wizdead()
 {
-    context.no_of_wizards--;
+    decreaseNumberOfWizards(1);
     if (! becameDemigod()) {
         setBecameDemigod(TRUE);
         setTimeSinceBecomingADemigod(rn1(250, 50));

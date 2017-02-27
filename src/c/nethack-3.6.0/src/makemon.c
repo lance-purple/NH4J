@@ -1217,8 +1217,8 @@ int mmflags;
         }
     } else if (mndx == PM_WIZARD_OF_YENDOR) {
         mtmp->iswiz = TRUE;
-        context.no_of_wizards++;
-        if (context.no_of_wizards == 1 && areYouOnEarthLevel())
+        increaseNumberOfWizards(1);
+        if ((1 == numberOfWizards()) && areYouOnEarthLevel())
             mitem = SPE_DIG;
     } else if (mndx == PM_GHOST && !(mmflags & MM_NONAME)) {
         mtmp = christen_monst(mtmp, rndghostname());

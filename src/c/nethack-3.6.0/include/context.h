@@ -97,7 +97,6 @@ struct novel_tracking { /* for choosing random passage when reading novel */
 };
 
 struct context_info {
-    unsigned no_of_wizards; /* 0, 1 or 2 (wizard and his shadow) */
     unsigned run;           /* 0: h (etc), 1: H (etc), 2: fh (etc) */
                             /* 3: FH, 4: ff+, 5: ff-, 6: FF+, 7: FF- */
                             /* 8: travel */

@@ -552,6 +552,7 @@ unsigned int *stuckid, *steedid;
 
     /* read former 'context' fields that are now stored in Java */
     initIdentifier(read_int(fd));
+    setNumberOfWizards(read_int(fd));
 
     /* we want to be able to revert to command line/environment/config
        file option values instead of keeping old save file option values

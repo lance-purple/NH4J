@@ -2527,4 +2527,20 @@ extern int nextIdentifier() {
   javaGetInt(CONTEXT_CLASS, "nextIdentifier");
 }
 
+extern int numberOfWizards() {
+  return javaGetInt(CONTEXT_CLASS, "numberOfWizards");
+}
+
+extern void setNumberOfWizards(int n) {
+  javaSetInt(CONTEXT_CLASS, "setNumberOfWizards", n);
+}
+
+extern void increaseNumberOfWizards(int n) {
+  javaSetInt(CONTEXT_CLASS, "increaseNumberOfWizards", n);
+}
+
+extern void decreaseNumberOfWizards(int n) {
+  javaSetInt(CONTEXT_CLASS, "decreaseNumberOfWizards", n);
+}
+
 /*hacklib.c*/
