@@ -1169,7 +1169,7 @@ int degree;
 
     if (skill != P_NONE && !weaponSkillIsRestricted(skill)) {
         advance_before = can_advance(skill, FALSE);
-        increaseWeaponSkill(skill, degree);
+        increaseWeaponSkillAdvance(skill, degree);
         if (!advance_before && can_advance(skill, FALSE))
             give_may_advance_msg(skill);
     }
