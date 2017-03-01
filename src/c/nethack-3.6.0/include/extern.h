@@ -332,6 +332,17 @@ E void FDECL (setNumberOfWizards, (int));
 E void FDECL (increaseNumberOfWizards, (int));
 E void FDECL (decreaseNumberOfWizards, (int));
 
+E boolean FDECL (running, ());
+E int FDECL (runningPace, ());
+E void FDECL (setRunningPace, (int));
+
+#define WALK_ONE_SQUARE 0
+#define WALK_TIL_DIVERTED 1
+#define RUN_TIL_DIVERTED 2
+#define RUN_TIL_DIVERTED_BY_NONBRANCH 3
+/* 4: ff+, 5: ff-, 6: FF+, 7: FF- */
+#define TRAVEL_TO_POINT 8
+
 /* ### dbridge.c ### */
 
 E boolean FDECL(is_pool, (int, int));

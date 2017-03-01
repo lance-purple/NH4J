@@ -695,7 +695,7 @@ int mode;
             /* Eat the rock. */
             if (mode == DO_MOVE && still_chewing(x, y))
                 return FALSE;
-        } else if (flags.autodig && !context.run && !context.nopick && uwep
+        } else if (flags.autodig && !running() && !context.nopick && uwep
                    && is_pick(uwep)) {
             /* MRKR: Automatic digging when wielding the appropriate tool */
             if (mode == DO_MOVE)
@@ -732,7 +732,7 @@ int mode;
                     if (amorphous(youmonst.data))
                         You(
    "try to ooze under the door, but can't squeeze your possessions through.");
-                    if (flags.autoopen && !context.run && !youAreConfused()
+                    if (flags.autoopen && !running() && !youAreConfused()
                         && !youAreStunned() && !youKeepFumbling()) {
                         context.door_opened = context.move =
                             doopen_indir(x, y);
@@ -792,7 +792,7 @@ int mode;
     /* Pick travel path that does not require crossing a trap.
      * Avoid water and lava using the usual running rules.
      * (but not currentX()/currentY() because findtravelpath walks toward currentX()/currentY()) */
-    if (context.run == 8 && mode != DO_MOVE && (x != currentX() || y != currentY())) {
+    if ((TRAVEL_TO_POINT == runningPace()) && mode != DO_MOVE && (x != currentX() || y != currentY())) {
         struct trap *t = t_at(x, y);
 
         if ((t && t->tseen)
@@ -811,7 +811,7 @@ int mode;
     }
 
     if (sobj_at(BOULDER, x, y) && (Sokoban || !youCanPassThroughWalls())) {
-        if (!(youCannotSee() || youAreHallucinating()) && (context.run >= 2)
+        if (!(youCannotSee() || youAreHallucinating()) && (runningPace() >= RUN_TIL_DIVERTED)
             && mode != TEST_TRAV)
             return FALSE;
         if (mode == DO_MOVE) {
@@ -866,7 +866,7 @@ boolean guess;
     /* if travel to adjacent, reachable location, use normal movement rules */
     if (!guess && context.travel1 && distmin(currentX(), currentY(), destinationX(), destinationY()) == 1
         && !(currentX() != destinationX() && currentY() != destinationY() && NODIAG(currentMonsterNumber()))) {
-        context.run = 0;
+        setRunningPace(WALK_ONE_SQUARE);
         if (test_move(currentX(), currentY(), destinationX() - currentX(), destinationY() - currentY(), TEST_MOVE)) {
             setDirectionX(destinationX() - currentX());
             setDirectionY(destinationY() - currentY());
@@ -874,7 +874,7 @@ boolean guess;
             iflags.travelcc.x = iflags.travelcc.y = -1;
             return TRUE;
         }
-        context.run = 8;
+        setRunningPace(TRAVEL_TO_POINT);
     }
     if (destinationX() != currentX() || destinationY() != currentY()) {
         xchar travel[COLNO][ROWNO];
@@ -946,7 +946,7 @@ boolean guess;
                                 if (x == destinationX() && y == destinationY()) {
                                     nomul(0);
                                     /* reset run so domove run checks work */
-                                    context.run = 8;
+				    setRunningPace(TRAVEL_TO_POINT);
                                     iflags.travelcc.x = iflags.travelcc.y =
                                         -1;
                                 }
@@ -1323,7 +1323,7 @@ domove()
         if (((trap = t_at(x, y)) && trap->tseen)
             || (youCannotSee() && !youAreLevitating() && !youAreFlying() && !is_clinger(youmonst.data)
                 && is_pool_or_lava(x, y) && levl[x][y].seenv)) {
-            if (context.run >= 2) {
+            if (runningPace() >= RUN_TIL_DIVERTED) {
                 nomul(0);
                 context.move = 0;
                 return;
@@ -1380,7 +1380,7 @@ domove()
         if (mtmp) {
             /* Don't attack if you're running, and can see it */
             /* We should never get here if forcefight */
-            if (context.run && ((youCanSee() && mon_visible(mtmp)
+            if (running() && ((youCanSee() && mon_visible(mtmp)
                                  && ((mtmp->m_ap_type != M_AP_FURNITURE
                                       && mtmp->m_ap_type != M_AP_OBJECT)
                                      || youHaveProtectionFromShapeChangers()))
@@ -1669,8 +1669,8 @@ domove()
     }
 
     reset_occupations();
-    if (context.run) {
-        if (context.run < 8)
+    if (running()) {
+        if (runningPace() < TRAVEL_TO_POINT)
             if (IS_DOOR(tmpr->typ) || IS_ROCK(tmpr->typ)
                 || IS_FURNITURE(tmpr->typ))
                 nomul(0);
@@ -1713,7 +1713,7 @@ domove()
         nomovemsg = "";
     }
 
-    if (context.run && flags.runmode != RUN_TPORT) {
+    if (running() && flags.runmode != RUN_TPORT) {
         /* display every step or every 7th step depending upon mode */
         if (flags.runmode != RUN_LEAP || !(moves % 7L)) {
             if (flags.time)
@@ -2440,7 +2440,7 @@ lookaround()
         return;
     }
 
-    if (youCannotSee() || context.run == 0)
+    if (youCannotSee() || !running())
         return;
     for (x = currentX() - 1; x <= currentX() + 1; x++)
         for (y = currentY() - 1; y <= currentY() + 1; y++) {
@@ -2456,7 +2456,7 @@ lookaround()
             if ((mtmp = m_at(x, y)) && mtmp->m_ap_type != M_AP_FURNITURE
                 && mtmp->m_ap_type != M_AP_OBJECT
                 && (!mtmp->minvis || youCanSeeInvisible()) && !mtmp->mundetected) {
-                if ((context.run != 1 && !mtmp->mtame)
+                if (((runningPace() != WALK_TIL_DIVERTED) && !mtmp->mtame)
                     || (x == currentX() + directionX() && y == currentY() + directionY()))
                     goto stop;
             }
@@ -2473,14 +2473,15 @@ lookaround()
                      || (mtmp && is_door_mappear(mtmp))) {
                 if (x != currentX() && y != currentY())
                     continue;
-                if (context.run != 1)
+                if (runningPace() != WALK_TIL_DIVERTED)
                     goto stop;
                 goto bcorr;
             } else if (levl[x][y].typ == CORR) {
             bcorr:
                 if (levl[currentX()][currentY()].typ != ROOM) {
-                    if (context.run == 1 || context.run == 3
-                        || context.run == 8) {
+                    if ((WALK_TIL_DIVERTED == runningPace())
+                        || (RUN_TIL_DIVERTED_BY_NONBRANCH == runningPace())
+                        || (TRAVEL_TO_POINT == runningPace())) {
                         i = dist2(x, y, currentX() + directionX(), currentY() + directionY());
                         if (i > 2)
                             continue;
@@ -2497,7 +2498,7 @@ lookaround()
                 }
                 continue;
             } else if ((trap = t_at(x, y)) && trap->tseen) {
-                if (context.run == 1)
+                if (WALK_TIL_DIVERTED == runningPace())
                     goto bcorr; /* if you must */
                 if (x == currentX() + directionX() && y == currentY() + directionY())
                     goto stop;
@@ -2515,9 +2516,9 @@ lookaround()
                     goto stop;
                 continue;
             } else { /* e.g. objects or trap or stairs */
-                if (context.run == 1)
+                if (WALK_TIL_DIVERTED == runningPace())
                     goto bcorr;
-                if (context.run == 8)
+                if (TRAVEL_TO_POINT == runningPace())
                     continue;
                 if (mtmp)
                     continue; /* d */
@@ -2530,9 +2531,9 @@ lookaround()
             return;
         } /* end for loops */
 
-    if (corrct > 1 && context.run == 2)
+    if (corrct > 1 && (RUN_TIL_DIVERTED == runningPace()))
         goto stop;
-    if ((context.run == 1 || context.run == 3 || context.run == 8) && !noturn
+    if (((WALK_TIL_DIVERTED == runningPace()) || (RUN_TIL_DIVERTED_BY_NONBRANCH == runningPace()) || (TRAVEL_TO_POINT == runningPace())) && !noturn
         && !m0 && i0 && (corrct == 1 || (corrct == 2 && i0 == 1))) {
         /* make sure that we do not turn too far */
         if (i0 == 2) {
@@ -2642,7 +2643,8 @@ register int nval;
     multi = nval;
     if (nval == 0)
         multi_reason = NULL;
-    context.travel = context.travel1 = context.mv = context.run = 0;
+    context.travel = context.travel1 = context.mv = 0;
+    setRunningPace(WALK_ONE_SQUARE);
 }
 
 /* called when a non-movement, multi-turn action has completed */

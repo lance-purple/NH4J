@@ -370,7 +370,7 @@ int x, y;
             } else
                 et = ep->engr_txt;
             You("%s: \"%s\".", (youCannotSee()) ? "feel the words" : "read", et);
-            if (context.run > 1)
+            if (runningPace() > WALK_TIL_DIVERTED)
                 nomul(0);
         }
     }

@@ -3266,7 +3266,7 @@ register char *cmd;
     switch (*cmd) {
     case 'g':
         if (movecmd(cmd[1])) {
-            context.run = 2;
+            setRunningPace(RUN_TIL_DIVERTED);
             do_rush = TRUE;
         } else
             prefix_seen = TRUE;
@@ -3276,7 +3276,7 @@ register char *cmd;
             break; /* else FALLTHRU */
     case 'G':
         if (movecmd(lowc(cmd[1]))) {
-            context.run = 3;
+            setRunningPace(RUN_TIL_DIVERTED_BY_NONBRANCH);
             do_rush = TRUE;
         } else
             prefix_seen = TRUE;
@@ -3298,7 +3298,7 @@ register char *cmd;
         break;
     case 'm':
         if (movecmd(cmd[1]) || directionZ()) {
-            context.run = 0;
+            setRunningPace(WALK_ONE_SQUARE);
             context.nopick = 1;
             if (!directionZ())
                 do_walk = TRUE;
@@ -3309,7 +3309,7 @@ register char *cmd;
         break;
     case 'M':
         if (movecmd(lowc(cmd[1]))) {
-            context.run = 1;
+            setRunningPace(WALK_TIL_DIVERTED);
             context.nopick = 1;
             do_rush = TRUE;
         } else
@@ -3332,7 +3332,7 @@ register char *cmd;
         if (flags.travelcmd) {
             context.travel = 1;
             context.travel1 = 1;
-            context.run = 8;
+            setRunningPace(TRAVEL_TO_POINT);
             context.nopick = 1;
             do_rush = TRUE;
             break;
@@ -3340,13 +3340,13 @@ register char *cmd;
         /*FALLTHRU*/
     default:
         if (movecmd(*cmd)) { /* ordinary movement */
-            context.run = 0; /* only matters here if it was 8 */
+            setRunningPace(WALK_ONE_SQUARE); /* only matters if it was TRAVEL_TO_POINT */
             do_walk = TRUE;
         } else if (movecmd(Cmd.num_pad ? unmeta(*cmd) : lowc(*cmd))) {
-            context.run = 1;
+            setRunningPace(WALK_TIL_DIVERTED);
             do_rush = TRUE;
         } else if (movecmd(unctrl(*cmd))) {
-            context.run = 3;
+            setRunningPace(RUN_TIL_DIVERTED_BY_NONBRANCH);
             do_rush = TRUE;
         }
         break;
@@ -3372,7 +3372,7 @@ register char *cmd;
            feedback and led to strangeness if the key pressed
            ('u' in particular) was overloaded for num_pad use */
         You_cant("get there from here...");
-        context.run = 0;
+        setRunningPace(WALK_ONE_SQUARE);
         context.nopick = context.forcefight = FALSE;
         context.move = context.mv = FALSE;
         multi = 0;

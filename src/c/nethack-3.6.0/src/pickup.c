@@ -296,7 +296,7 @@ boolean picked_some;
 
     /* If there are objects here, take a look. */
     if (ct) {
-        if (context.run)
+        if (running())
             nomul(0);
         flush_screen(1);
         (void) look_here(ct, picked_some);
@@ -489,16 +489,16 @@ int what; /* should be a long */
 
         /* no pickup if levitating & not on air or water level */
         if (!can_reach_floor(TRUE)) {
-            if ((multi && !context.run) || (autopickup && !flags.pickup)
+            if ((multi && !running()) || (autopickup && !flags.pickup)
                 || (ttmp && uteetering_at_seen_pit(ttmp)))
                 read_engr_at(currentX(), currentY());
             return 0;
         }
-        /* multi && !context.run means they are in the middle of some other
+        /* multi && !running() means they are in the middle of some other
          * action, or possibly paralyzed, sleeping, etc.... and they just
          * teleported onto the object.  They shouldn't pick it up.
          */
-        if ((multi && !context.run) || (autopickup && !flags.pickup)) {
+        if ((multi && !running()) || (autopickup && !flags.pickup)) {
             check_here(FALSE);
             return 0;
         }
@@ -511,7 +511,8 @@ int what; /* should be a long */
         }
 
         /* if there's anything here, stop running */
-        if (OBJ_AT(currentX(), currentY()) && context.run && context.run != 8
+        if (OBJ_AT(currentX(), currentY()) && running()
+            && (runningPace() != TRAVEL_TO_POINT)
             && !context.nopick)
             nomul(0);
     }

@@ -184,7 +184,7 @@ boolean resuming;
                     if (timeToNextBlessing()) {
                         decreaseTimeToNextBlessing(1);
                     }
-                    if (flags.time && !context.run)
+                    if (flags.time && !running())
                         context.botl = 1;
 
                     /* One possible result of prayer is healing.  Whether or
@@ -456,9 +456,10 @@ boolean resuming;
                 continue;
             }
             if (context.mv) {
-                if (multi < COLNO && !--multi)
-                    context.travel = context.travel1 = context.mv =
-                        context.run = 0;
+                if (multi < COLNO && !--multi) {
+                    context.travel = context.travel1 = context.mv = 0;
+                    setRunningPace(WALK_ONE_SQUARE);
+                }
                 domove();
             } else {
                 --multi;
@@ -480,9 +481,9 @@ boolean resuming;
         if (vision_full_recalc)
             vision_recalc(0); /* vision! */
         /* when running in non-tport mode, this gets done through domove() */
-        if ((!context.run || flags.runmode == RUN_TPORT)
+        if ((!running() || flags.runmode == RUN_TPORT)
             && (multi && (!context.travel ? !(multi % 7) : !(moves % 7L)))) {
-            if (flags.time && context.run)
+            if (flags.time && running())
                 context.botl = 1;
             display_nhwindow(WIN_MAP, FALSE);
         }

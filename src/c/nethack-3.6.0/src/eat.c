@@ -2863,7 +2863,8 @@ boolean incr;
             if (incr && occupation
                 && (occupation != eatfood && occupation != opentin))
                 stop_occupation();
-            context.travel = context.travel1 = context.mv = context.run = 0;
+            context.travel = context.travel1 = context.mv = 0;
+            setRunningPace(WALK_ONE_SQUARE);
             break;
         case WEAK:
             if (youAreHallucinating())
@@ -2883,7 +2884,8 @@ boolean incr;
             if (incr && occupation
                 && (occupation != eatfood && occupation != opentin))
                 stop_occupation();
-            context.travel = context.travel1 = context.mv = context.run = 0;
+            context.travel = context.travel1 = context.mv = 0;
+            setRunningPace(WALK_ONE_SQUARE);
             break;
         }
         setCurrentHungerState(newhs);

@@ -4,6 +4,7 @@ public class Context {
 
 	static int identifier = 1; /* unique serial for monsters etc. */
     static int numberOfWizards = 0; /* 0, 1, or 2 for Wizard of Yendor and his shadow */
+    static int runningPace = 0;
 	
 	static void initIdentifier(int i) {
 		identifier = i;
@@ -36,6 +37,14 @@ public class Context {
 
 	static void decreaseNumberOfWizards(int n) {
 		numberOfWizards -= n;
+	}
+
+	static int runningPace() {
+		return runningPace;
+	}
+	
+	static void setRunningPace(int p) {
+		runningPace = p;
 	}
 
 }

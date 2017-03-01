@@ -2543,4 +2543,16 @@ extern void decreaseNumberOfWizards(int n) {
   javaSetInt(CONTEXT_CLASS, "decreaseNumberOfWizards", n);
 }
 
+extern boolean running() {
+    return (WALK_ONE_SQUARE != runningPace());
+}
+
+extern int runningPace() {
+  return javaGetInt(CONTEXT_CLASS, "runningPace");
+}
+
+extern void setRunningPace(int p) {
+  javaSetInt(CONTEXT_CLASS, "setRunningPace", p);
+}
+
 /*hacklib.c*/
