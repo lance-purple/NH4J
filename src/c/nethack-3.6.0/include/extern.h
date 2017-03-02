@@ -327,6 +327,9 @@ E void FDECL (initIdentifier, (int));
 E int FDECL (currentIdentifier, ());
 E int FDECL (nextIdentifier, ());
 
+E int FDECL (startingPetID, ());
+E void FDECL (setStartingPetID, (int));
+
 E int FDECL (numberOfWizards, ());
 E void FDECL (setNumberOfWizards, (int));
 E void FDECL (increaseNumberOfWizards, (int));

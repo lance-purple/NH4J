@@ -184,7 +184,7 @@ makedog()
     if (!mtmp)
         return ((struct monst *) 0); /* pets were genocided */
 
-    context.startingpet_mid = mtmp->m_id;
+    setStartingPetID(mtmp->m_id);
     /* Horses already wear a saddle */
     if (pettype == PM_PONY && !!(otmp = mksobj(SADDLE, TRUE, FALSE))) {
         if (mpickobj(mtmp, otmp))

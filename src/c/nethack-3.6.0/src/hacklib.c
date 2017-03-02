@@ -2555,4 +2555,12 @@ extern void setRunningPace(int p) {
   javaSetInt(CONTEXT_CLASS, "setRunningPace", p);
 }
 
+extern int startingPetID() {
+  return javaGetInt(CONTEXT_CLASS, "startingPetID");
+}
+
+extern void setStartingPetID(int id) {
+  return javaSetInt(CONTEXT_CLASS, "setStartingPetID", id);
+}
+
 /*hacklib.c*/
