@@ -5256,7 +5256,7 @@ struct fruit *replace_fruit;
     }
     /* if adding another fruit would overflow spe, use a random
        fruit instead... we've got a lot to choose from.
-       current_fruit remains as is. */
+       current fruit remains as is. */
     if (highest_fruit_id >= 127)
         return rnd(127);
 
@@ -5269,7 +5269,7 @@ struct fruit *replace_fruit;
     ffruit = f;
 nonew:
     if (user_specified)
-        context.current_fruit = f->fid;
+        setCurrentFruit(f->fid);
     return f->fid;
 }
 

@@ -7,6 +7,8 @@ public class Context {
 	
     static int numberOfWizards = 0; /* 0, 1, or 2 for Wizard of Yendor and his shadow */
     static int runningPace = 0;
+    
+    static int currentFruit;
 	
 	static void initIdentifier(int i) {
 		identifier = i;
@@ -55,6 +57,15 @@ public class Context {
 	
 	static void setStartingPetID(int id) {
 		startingPetID = id;
+	}
+
+	
+	static int currentFruit() {
+		return currentFruit;
+	}
+	
+	static void setCurrentFruit(int id) {
+		currentFruit = id;
 	}
 
 }

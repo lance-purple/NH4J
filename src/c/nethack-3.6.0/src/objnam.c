@@ -2420,7 +2420,7 @@ struct obj *no_wish;
     int tmp, tinv, tvariety;
     int wetness;
     struct fruit *f;
-    int ftype = context.current_fruit;
+    int ftype = currentFruit();
     char fruitbuf[BUFSZ];
     /* Fruits may not mess up the ability to wish for real objects (since
      * you can leave a fruit in a bones file and it will be added to

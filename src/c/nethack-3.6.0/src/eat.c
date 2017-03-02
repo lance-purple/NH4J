@@ -1743,7 +1743,7 @@ struct obj *otmp;
         /* else FALLTHRU */
     default:
         if (otmp->otyp == SLIME_MOLD && !otmp->cursed
-            && otmp->spe == context.current_fruit) {
+            && otmp->spe == currentFruit()) {
             pline("My, that was a %s %s!",
                   youAreHallucinating() ? "primo" : "yummy",
                   singular(otmp, xname));

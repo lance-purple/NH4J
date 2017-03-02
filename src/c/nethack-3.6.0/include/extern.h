@@ -346,6 +346,9 @@ E void FDECL (setRunningPace, (int));
 /* 4: ff+, 5: ff-, 6: FF+, 7: FF- */
 #define TRAVEL_TO_POINT 8
 
+E int FDECL (currentFruit, ());
+E void FDECL (setCurrentFruit, (int));
+
 /* ### dbridge.c ### */
 
 E boolean FDECL(is_pool, (int, int));

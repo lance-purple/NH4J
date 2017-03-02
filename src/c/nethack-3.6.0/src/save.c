@@ -309,6 +309,7 @@ register int fd, mode;
     write_int(fd, startingPetID());
     write_int(fd, numberOfWizards());
     write_int(fd, runningPace());
+    write_int(fd, currentFruit());
 
     bwrite(fd, (genericptr_t) &flags, sizeof(struct flag));
 #ifdef SYSFLAGS

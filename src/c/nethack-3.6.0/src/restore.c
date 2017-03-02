@@ -555,6 +555,7 @@ unsigned int *stuckid, *steedid;
     setStartingPetID(read_int(fd));
     setNumberOfWizards(read_int(fd));
     setRunningPace(read_int(fd));
+    setCurrentFruit(read_int(fd));
 
     /* we want to be able to revert to command line/environment/config
        file option values instead of keeping old save file option values

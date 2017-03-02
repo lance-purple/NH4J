@@ -802,7 +802,7 @@ boolean artif;
                 blessorcurse(otmp, 10);
                 break;
             case SLIME_MOLD:
-                otmp->spe = context.current_fruit;
+                otmp->spe = currentFruit();
                 flags.made_fruit = TRUE;
                 break;
             case KELP_FROND:

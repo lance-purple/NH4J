@@ -2563,4 +2563,12 @@ extern void setStartingPetID(int id) {
   return javaSetInt(CONTEXT_CLASS, "setStartingPetID", id);
 }
 
+extern int currentFruit() {
+  return javaGetInt(CONTEXT_CLASS, "currentFruit");
+}
+
+extern void setCurrentFruit(int id) {
+  return javaSetInt(CONTEXT_CLASS, "setCurrentFruit", id);
+}
+
 /*hacklib.c*/

@@ -97,7 +97,6 @@ struct novel_tracking { /* for choosing random passage when reading novel */
 };
 
 struct context_info {
-    int current_fruit; /* fruit->fid corresponding to pl_fruit[] */
     int warnlevel;
     int rndencode;          /* randomized escape sequence introducer */
     long next_attrib_check; /* next attribute check */
