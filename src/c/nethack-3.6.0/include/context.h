@@ -97,7 +97,7 @@ struct novel_tracking { /* for choosing random passage when reading novel */
 };
 
 struct context_info {
-    int rndencode;          /* randomized escape sequence introducer */
+    /*int rndencode;*/          /* randomized escape sequence introducer */
     long next_attrib_check; /* next attribute check */
     long stethoscope_move;
     short stethoscope_movement;

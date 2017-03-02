@@ -235,7 +235,7 @@ int glyph;
 {
     static char encbuf[20];
 
-    Sprintf(encbuf, "\\G%04X%04X", context.rndencode, glyph);
+    Sprintf(encbuf, "\\G%04X%04X", randomEscapeSequencePrefix(), glyph);
     return encbuf;
 }
 
@@ -277,7 +277,7 @@ const char *str;
                         rndchk = (rndchk * 16) + ((int) (dp - hex) / 2);
                     else
                         break;
-                if (rndchk == context.rndencode) {
+                if (rndchk == randomEscapeSequencePrefix()) {
                     gv = dcount = 0;
                     for (; *cp && ++dcount <= 4; ++cp)
                         if ((dp = index(hex, *cp)) != 0)
@@ -302,7 +302,7 @@ const char *str;
                         rndchk = (rndchk * 16) + ((int) (dp - hex) / 2);
                     else
                         break;
-                if (rndchk == context.rndencode) {
+                if (rndchk == randomEscapeSequencePrefix()) {
                     dcount = 0;
                     for (; *cp && ++dcount <= 2; ++cp)
                         if ((dp = index(hex, *cp)) != 0)

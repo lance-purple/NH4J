@@ -57,7 +57,7 @@ boolean resuming;
     }
 
     if (!resuming) { /* new game */
-        context.rndencode = rnd(9000);
+        setRandomEscapeSequencePrefix(rnd(9000));
         set_wear((struct obj *) 0); /* for side-effects of starting gear */
         (void) pickup(1);      /* autopickup at initial location */
     } else {                   /* restore old game */

@@ -2579,4 +2579,12 @@ extern void setCurrentFruit(int id) {
   return javaSetInt(CONTEXT_CLASS, "setCurrentFruit", id);
 }
 
+extern int randomEscapeSequencePrefix() {
+  return javaGetInt(CONTEXT_CLASS, "randomEscapeSequencePrefix");
+}
+
+extern void setRandomEscapeSequencePrefix(int p) {
+  return javaSetInt(CONTEXT_CLASS, "setRandomEscapeSequencePrefix", p);
+}
+
 /*hacklib.c*/

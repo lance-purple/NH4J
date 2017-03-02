@@ -5,6 +5,8 @@ public class Context {
 	static int identifier = 1; /* unique serial for monsters etc. */
 	static int startingPetID = 0;
 	
+	static int randomEscapeSequencePrefix;
+	
     static int numberOfWizards = 0; /* 0, 1, or 2 for Wizard of Yendor and his shadow */
     static int runningPace = 0;
     
@@ -76,6 +78,14 @@ public class Context {
 	
 	static void setMonsterWarningLevel(int lev) {
 		monsterWarningLevel = lev;
+	}
+
+	static int randomEscapeSequencePrefix() {
+		return randomEscapeSequencePrefix;
+	}
+	
+	static void setRandomEscapeSequencePrefix(int p) {
+		randomEscapeSequencePrefix = p;
 	}
 
 }

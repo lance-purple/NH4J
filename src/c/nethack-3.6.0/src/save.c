@@ -311,6 +311,7 @@ register int fd, mode;
     write_int(fd, monsterWarningLevel());
     write_int(fd, runningPace());
     write_int(fd, currentFruit());
+    write_int(fd, randomEscapeSequencePrefix());
 
     bwrite(fd, (genericptr_t) &flags, sizeof(struct flag));
 #ifdef SYSFLAGS

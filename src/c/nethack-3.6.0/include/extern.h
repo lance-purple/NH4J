@@ -330,6 +330,9 @@ E int FDECL (nextIdentifier, ());
 E int FDECL (startingPetID, ());
 E void FDECL (setStartingPetID, (int));
 
+E int FDECL (randomEscapeSequencePrefix, ());
+E void FDECL (setRandomEscapeSequencePrefix, (int));
+
 E int FDECL (numberOfWizards, ());
 E void FDECL (setNumberOfWizards, (int));
 E void FDECL (increaseNumberOfWizards, (int));
