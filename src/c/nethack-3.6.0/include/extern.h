@@ -335,6 +335,9 @@ E void FDECL (setNumberOfWizards, (int));
 E void FDECL (increaseNumberOfWizards, (int));
 E void FDECL (decreaseNumberOfWizards, (int));
 
+E int FDECL (monsterWarningLevel, ());
+E void FDECL (setMonsterWarningLevel, (int));
+
 E boolean FDECL (running, ());
 E int FDECL (runningPace, ());
 E void FDECL (setRunningPace, (int));

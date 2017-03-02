@@ -308,6 +308,7 @@ register int fd, mode;
     write_int(fd, currentIdentifier());
     write_int(fd, startingPetID());
     write_int(fd, numberOfWizards());
+    write_int(fd, monsterWarningLevel());
     write_int(fd, runningPace());
     write_int(fd, currentFruit());
 

@@ -548,7 +548,7 @@ newgame()
     context.botlx = 1;
     initIdentifier(1);
     context.stethoscope_move = -1L;
-    context.warnlevel = 1;
+    setMonsterWarningLevel(1);
     context.next_attrib_check = 600L; /* arbitrary first setting */
     context.tribute.enabled = TRUE;   /* turn on 3.6 tributes    */
     context.tribute.tributesz = sizeof(struct tribute_info);

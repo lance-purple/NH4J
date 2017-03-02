@@ -8,6 +8,8 @@ public class Context {
     static int numberOfWizards = 0; /* 0, 1, or 2 for Wizard of Yendor and his shadow */
     static int runningPace = 0;
     
+    static int monsterWarningLevel;
+    
     static int currentFruit;
 	
 	static void initIdentifier(int i) {
@@ -66,6 +68,14 @@ public class Context {
 	
 	static void setCurrentFruit(int id) {
 		currentFruit = id;
+	}
+
+	static int monsterWarningLevel() {
+		return monsterWarningLevel;
+	}
+	
+	static void setMonsterWarningLevel(int lev) {
+		monsterWarningLevel = lev;
 	}
 
 }

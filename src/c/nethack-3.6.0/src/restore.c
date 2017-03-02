@@ -554,6 +554,7 @@ unsigned int *stuckid, *steedid;
     initIdentifier(read_int(fd));
     setStartingPetID(read_int(fd));
     setNumberOfWizards(read_int(fd));
+    setMonsterWarningLevel(read_int(fd));
     setRunningPace(read_int(fd));
     setCurrentFruit(read_int(fd));
 

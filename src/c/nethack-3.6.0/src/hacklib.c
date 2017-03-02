@@ -2543,6 +2543,14 @@ extern void decreaseNumberOfWizards(int n) {
   javaSetInt(CONTEXT_CLASS, "decreaseNumberOfWizards", n);
 }
 
+extern int monsterWarningLevel() {
+  return javaGetInt(CONTEXT_CLASS, "monsterWarningLevel");
+}
+
+extern void setMonsterWarningLevel(int id) {
+  return javaSetInt(CONTEXT_CLASS, "setMonsterWarningLevel", id);
+}
+
 extern boolean running() {
     return (WALK_ONE_SQUARE != runningPace());
 }

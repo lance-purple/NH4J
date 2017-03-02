@@ -48,7 +48,7 @@
 
 #define mon_warning(mon)                                                 \
     (youSenseWarnings() && !(mon)->mpeaceful && (distanceSquaredToYou((mon)->mx, (mon)->my) < 100) \
-     && (((int) ((mon)->m_lev / 4)) >= context.warnlevel))
+     && (((int) ((mon)->m_lev / 4)) >= monsterWarningLevel()))
 
 /*
  * mon_visible()
