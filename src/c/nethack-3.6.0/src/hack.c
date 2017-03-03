@@ -2156,8 +2156,6 @@ STATIC_OVL void
 move_update(newlev)
 register boolean newlev;
 {
-    char *ptr1, *ptr2, *ptr4;
-
     for (int i = 0; (i < maximumOccupiedRoomCount()) && (currentlyOccupiedRooms(i)); i++) {
         setPreviouslyOccupiedRooms(i, currentlyOccupiedRooms(i));
     }
@@ -2215,7 +2213,6 @@ register boolean newlev;
             setFreshlyExitedShops(i2, shopID); i2++;
 	}
     }
-    *ptr2 = '\0';
 }
 
 void
