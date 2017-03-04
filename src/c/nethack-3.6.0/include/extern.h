@@ -1429,6 +1429,8 @@ E int FDECL(knowledgeOfPasstune, ());
 E void FDECL(setKnowledgeOfPasstune, (int));
 E void FDECL(incrementKnowledgeOfPasstune, (int));
 
+E void FDECL(copy_rooms, (char*, const char*));
+E char* FDECL(room_index, (const char*, int));
 /*
 E boolean FDECL(currently_occupying_room, (char));
 E boolean FDECL(previously_occupying_room, (char));

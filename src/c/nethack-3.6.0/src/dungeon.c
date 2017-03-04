@@ -3083,6 +3083,14 @@ boolean printdun;
     }
 }
 
+void copy_rooms(char* dest, const char* src) {
+  strcpy(dest, src);
+}
+
+char* room_index(const char* s, int c) {
+  return strchr(s, c);
+}
+
 int darkRoomSym()
 {
     return (areYouOnRogueLevel() ? S_stone : S_darkroom);

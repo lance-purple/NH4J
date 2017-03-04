@@ -2158,26 +2158,26 @@ register boolean newlev;
 {
     char *ptr1, *ptr2, *ptr3, *ptr4;
 
-    Strcpy(u.urooms0, u.urooms);
-    Strcpy(u.ushops0, u.ushops);
+    copy_rooms(u.urooms0, u.urooms);
+    copy_rooms(u.ushops0, u.ushops);
     if (newlev) {
         u.urooms[0] = '\0';
         u.uentered[0] = '\0';
         u.ushops[0] = '\0';
         u.ushops_entered[0] = '\0';
-        Strcpy(u.ushops_left, u.ushops0);
+        copy_rooms(u.ushops_left, u.ushops0);
         return;
     }
-    Strcpy(u.urooms, in_rooms(currentX(), currentY(), 0));
+    copy_rooms(u.urooms, in_rooms(currentX(), currentY(), 0));
 
     for (ptr1 = &u.urooms[0], ptr2 = &u.uentered[0], ptr3 = &u.ushops[0],
         ptr4 = &u.ushops_entered[0];
          *ptr1; ptr1++) {
-        if (!index(u.urooms0, *ptr1))
+        if (!room_index(u.urooms0, *ptr1))
             *(ptr2++) = *ptr1;
         if (IS_SHOP(*ptr1 - ROOMOFFSET)) {
             *(ptr3++) = *ptr1;
-            if (!index(u.ushops0, *ptr1))
+            if (!room_index(u.ushops0, *ptr1))
                 *(ptr4++) = *ptr1;
         }
     }
@@ -2187,7 +2187,7 @@ register boolean newlev;
 
     /* filter u.ushops0 -> u.ushops_left */
     for (ptr1 = &u.ushops0[0], ptr2 = &u.ushops_left[0]; *ptr1; ptr1++)
-        if (!index(u.ushops, *ptr1))
+        if (!room_index(u.ushops, *ptr1))
             *(ptr2++) = *ptr1;
     *ptr2 = '\0';
 }

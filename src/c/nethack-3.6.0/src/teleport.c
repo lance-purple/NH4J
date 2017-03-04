@@ -1238,7 +1238,7 @@ register struct obj *obj;
             && (!costly_spot(tx, ty)
                 || !index(in_rooms(tx, ty, 0), roomID))) {
             if (costly_spot(currentX(), currentY())
-                && index(u.urooms, *in_rooms(otx, oty, 0)))
+                && room_index(u.urooms, *in_rooms(otx, oty, 0)))
                 addtobill(obj, FALSE, FALSE, FALSE);
             else
                 (void) stolen_value(obj, otx, oty, FALSE, FALSE);

@@ -205,7 +205,7 @@ struct monst *mtmp;
 
         /* Make sure bill is set only when the
            dead shk is the resident shk. */
-        if ((p = index(u.ushops, eshk->shoproom)) != 0) {
+        if ((p = room_index(u.ushops, eshk->shoproom)) != 0) {
             setpaid(mtmp);
             eshk->bill_p = (struct bill_x *) 0;
             /* remove eshk->shoproom from u.ushops */
@@ -531,7 +531,7 @@ char *enterstring;
             && in_rooms(currentX(), currentY(), SHOPBASE)
                    != in_rooms(originalX(), originalY(), SHOPBASE))
             deserted_shop(enterstring);
-        Strcpy(empty_shops, u.ushops);
+        copy_rooms(empty_shops, u.ushops);
         u.ushops[0] = '\0';
         return;
     }
@@ -543,7 +543,7 @@ char *enterstring;
         eshkp->bill_p = (struct bill_x *) -1000;
         if (!index(empty_shops, *enterstring))
             deserted_shop(enterstring);
-        Strcpy(empty_shops, u.ushops);
+        copy_rooms(empty_shops, u.ushops);
         u.ushops[0] = '\0';
         return;
     }
@@ -1625,7 +1625,7 @@ int croaked; /* -1: escaped dungeon; 0: quit; 1: died */
         mtmp2 = mtmp->nmon;
         eshkp = ESHK(mtmp);
         local = areYouOnLevel(&eshkp->shoplevel);
-        if (local && index(u.ushops, eshkp->shoproom)) {
+        if (local && room_index(u.ushops, eshkp->shoproom)) {
             /* inside this shk's shop [there might be more than one
                resident shk if hero is standing in a breech of a shared
                wall, so give priority to one who's also owed money] */
