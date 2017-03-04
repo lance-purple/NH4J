@@ -527,7 +527,7 @@ char *enterstring;
         return;
 
     if (!(shkp = shop_keeper(*enterstring))) {
-        if (!index(empty_shops, *enterstring)
+        if (!room_index(empty_shops, *enterstring)
             && in_rooms(currentX(), currentY(), SHOPBASE)
                    != in_rooms(originalX(), originalY(), SHOPBASE))
             deserted_shop(enterstring);
@@ -541,7 +541,7 @@ char *enterstring;
     if (!inhishop(shkp)) {
         /* dump core when referenced */
         eshkp->bill_p = (struct bill_x *) -1000;
-        if (!index(empty_shops, *enterstring))
+        if (!room_index(empty_shops, *enterstring))
             deserted_shop(enterstring);
         copy_rooms(empty_shops, u.ushops);
         u.ushops[0] = '\0';
