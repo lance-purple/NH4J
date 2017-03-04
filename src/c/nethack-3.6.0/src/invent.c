@@ -2439,7 +2439,7 @@ dotypeinv()
     char *extra_types, types[BUFSZ];
     int class_count, oclass, unpaid_count, itemcount;
     int bcnt, ccnt, ucnt, xcnt, ocnt;
-    boolean billx = currentlyOccupiedShops(0) && doinvbill(0);
+    boolean billx = *u.ushops && doinvbill(0);
     menu_item *pick_list;
     boolean traditional = TRUE;
     const char *prompt = "What type of object do you want an inventory of?";
@@ -3154,8 +3154,7 @@ long numused;
     else
         otmp = obj;
     if (costly_spot(otmp->ox, otmp->oy)) {
-        char roomID = *in_rooms(otmp->ox, otmp->oy, 0);
-        if (currently_occupying_room(roomID))
+        if (index(u.urooms, *in_rooms(otmp->ox, otmp->oy, 0)))
             addtobill(otmp, FALSE, FALSE, FALSE);
         else
             (void) stolen_value(otmp, otmp->ox, otmp->oy, FALSE, FALSE);

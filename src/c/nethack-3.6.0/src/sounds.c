@@ -98,10 +98,10 @@ dosounds()
 #if defined(AMIGA) && defined(AZTEC_C_WORKAROUND)
                 /* Bug in aztec assembler here. Workaround below */
                 xx = ROOM_INDEX(sroom) + ROOMOFFSET;
-                xx = (xx != vault_currently_occupied());
+                xx = (xx != vault_occupied(u.urooms));
                 if (xx)
 #else
-                if (vault_currently_occupied()
+                if (vault_occupied(u.urooms)
                     != (ROOM_INDEX(sroom) + ROOMOFFSET))
 #endif /* AZTEC_C_WORKAROUND */
                 {
@@ -216,7 +216,7 @@ dosounds()
             return;
         }
         if (tended_shop(sroom)
-            && !currently_occupying_shop((int) (ROOM_INDEX(sroom) + ROOMOFFSET))) {
+            && !index(u.ushops, (int) (ROOM_INDEX(sroom) + ROOMOFFSET))) {
             static const char *const shop_msg[3] = {
                 "someone cursing shoplifters.",
                 "the chime of a cash register.", "Neiman and Marcus arguing!",
@@ -234,7 +234,7 @@ dosounds()
                 /* priest must be active */
                 && mtmp->mcanmove && !mtmp->msleeping
                 /* hero must be outside this temple */
-                && temple_currently_occupied() != EPRI(mtmp)->shroom)
+                && temple_occupied(u.urooms) != EPRI(mtmp)->shroom)
                 break;
         }
         if (mtmp) {

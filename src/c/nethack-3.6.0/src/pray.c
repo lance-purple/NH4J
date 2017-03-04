@@ -1603,7 +1603,7 @@ dosacrifice()
                         && rnd(currentAlignmentRecord()) > (3 * ALIGNLIM) / 4)
                         summon_minion(altaralign, TRUE);
                     /* anger priest; test handles bones files */
-                    if ((pri = findpriest(temple_currently_occupied()))
+                    if ((pri = findpriest(temple_occupied(u.urooms)))
                         && !p_coaligned(pri))
                         angry_priest();
                 } else {

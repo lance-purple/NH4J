@@ -2156,63 +2156,40 @@ STATIC_OVL void
 move_update(newlev)
 register boolean newlev;
 {
-    for (int i = 0; (i < maximumOccupiedRoomCount()) && (currentlyOccupiedRooms(i)); i++) {
-        setPreviouslyOccupiedRooms(i, currentlyOccupiedRooms(i));
-    }
+    char *ptr1, *ptr2, *ptr3, *ptr4;
 
-    for (int i = 0; (i < maximumOccupiedRoomCount()) && (currentlyOccupiedShops(i)); i++) {
-        setPreviouslyOccupiedShops(i, currentlyOccupiedShops(i));
-    }
-
+    Strcpy(u.urooms0, u.urooms);
+    Strcpy(u.ushops0, u.ushops);
     if (newlev) {
-	setCurrentlyOccupiedRooms(0, '\0');
-	setFreshlyEnteredRooms(0, '\0');
-	setCurrentlyOccupiedShops(0, '\0');
-	setFreshlyEnteredShops(0, '\0');
-        for (int i = 0; (i < maximumOccupiedRoomCount()); i++) {
-            setFreshlyExitedShops(i, previouslyOccupiedShops(i));
-        }
+        u.urooms[0] = '\0';
+        u.uentered[0] = '\0';
+        u.ushops[0] = '\0';
+        u.ushops_entered[0] = '\0';
+        Strcpy(u.ushops_left, u.ushops0);
         return;
     }
+    Strcpy(u.urooms, in_rooms(currentX(), currentY(), 0));
 
-    char* inRooms = in_rooms(currentX(), currentY(), 0);
-    int i = 0;
-    while (inRooms[i] != '\0') {
-        setCurrentlyOccupiedRooms(i, inRooms[i]);
-	i++;
-    }
-    while (i < maximumOccupiedRoomCount()) {
-        setCurrentlyOccupiedRooms(i, '\0');
-	i++;
-    }
-
-
-    int i2 = 0;
-    int i3 = 0;
-    int i4 = 0;
-    for (int i1 = 0; (i1 < maximumOccupiedRoomCount()) && (currentlyOccupiedRooms(i1)); i1++) {
-	char roomID = currentlyOccupiedRooms(i1);
-        if (!previously_occupying_room(roomID)) {
-            setFreshlyEnteredRooms(i2, roomID); i2++;
-	}
-        if (IS_SHOP(roomID - ROOMOFFSET)) {
-            setCurrentlyOccupiedShops(i3, roomID); i3++;
-            if (!previously_occupying_shop(roomID)) {
-                setFreshlyEnteredShops(i4, roomID); i4++;
-	    }
+    for (ptr1 = &u.urooms[0], ptr2 = &u.uentered[0], ptr3 = &u.ushops[0],
+        ptr4 = &u.ushops_entered[0];
+         *ptr1; ptr1++) {
+        if (!index(u.urooms0, *ptr1))
+            *(ptr2++) = *ptr1;
+        if (IS_SHOP(*ptr1 - ROOMOFFSET)) {
+            *(ptr3++) = *ptr1;
+            if (!index(u.ushops0, *ptr1))
+                *(ptr4++) = *ptr1;
         }
     }
-    setFreshlyEnteredRooms(i2, '\0');
-    setFreshlyEnteredRooms(i3, '\0');
-    setFreshlyEnteredShops(i4, '\0');
+    *ptr2 = '\0';
+    *ptr3 = '\0';
+    *ptr4 = '\0';
 
     /* filter u.ushops0 -> u.ushops_left */
-    for (int i1 = 0, i2 = 0; previouslyOccupiedShops(i1); i1++) {
-	char shopID = previouslyOccupiedShops(i1);
-        if (!currently_occupying_shop(shopID)) {
-            setFreshlyExitedShops(i2, shopID); i2++;
-	}
-    }
+    for (ptr1 = &u.ushops0[0], ptr2 = &u.ushops_left[0]; *ptr1; ptr1++)
+        if (!index(u.ushops, *ptr1))
+            *(ptr2++) = *ptr1;
+    *ptr2 = '\0';
 }
 
 void
@@ -2220,22 +2197,22 @@ check_special_room(newlev)
 register boolean newlev;
 {
     register struct monst *mtmp;
+    char *ptr;
 
     move_update(newlev);
 
-    if (previouslyOccupiedShops(0))
-        u_freshly_left_shop(newlev);
+    if (*u.ushops0)
+        u_left_shop(u.ushops_left, newlev);
 
-    if (!(freshlyEnteredRooms(0)) && !freshlyEnteredShops(0)) /* implied by newlev */
+    if (!*u.uentered && !*u.ushops_entered) /* implied by newlev */
         return; /* no entrance messages necessary */
 
     /* Did we just enter a shop? */
-    if (freshlyEnteredShops(0))
-        u_freshly_entered_shop();
+    if (*u.ushops_entered)
+        u_entered_shop(u.ushops_entered);
 
-    for (int i = 0; (freshlyEnteredRooms(i)); i++) {
-        char roomID = freshlyEnteredRooms(i);
-        int roomno = (roomID - ROOMOFFSET), rt = rooms[roomno].rtype;
+    for (ptr = &u.uentered[0]; *ptr; ptr++) {
+        int roomno = *ptr - ROOMOFFSET, rt = rooms[roomno].rtype;
         boolean msg_given = TRUE;
 
         /* Did we just enter some other special room? */

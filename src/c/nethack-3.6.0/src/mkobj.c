@@ -599,7 +599,7 @@ register struct obj *otmp;
 
     if (otmp->unpaid) {
         cost = unpaid_cost(otmp, FALSE);
-        subfrombill(otmp, shop_keeper(currentlyOccupiedShops(0)));
+        subfrombill(otmp, shop_keeper(*u.ushops));
     }
     dummy = newobj();
     *dummy = *otmp;
@@ -693,7 +693,7 @@ int alter_type;
     case OBJ_FLOOR:
         if (set_bknown)
             obj->bknown = 1;
-        if (costly_spot(currentX(), currentY()) && objroom == currentlyOccupiedShops(0)) {
+        if (costly_spot(currentX(), currentY()) && objroom == *u.ushops) {
             verbalize("You %s %s, you pay for %s!",
                       alteration_verbs[alter_type], those, them);
             bill_dummy_object(obj);

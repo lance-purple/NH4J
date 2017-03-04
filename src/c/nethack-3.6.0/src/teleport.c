@@ -725,13 +725,12 @@ level_tele()
     killer.name[0] = 0; /* still alive, so far... */
 
     if (newlev < 0 && !force_dest) {
-        if (previouslyOccupiedShops(0)) {
+        if (*u.ushops0) {
             /* take unpaid inventory items off of shop bills */
             in_mklev = TRUE; /* suppress map update */
-            u_left_previously_occupied_shop(TRUE);
+            u_left_shop(u.ushops0, TRUE);
             /* you're now effectively out of the shop */
-            setPreviouslyOccupiedShops(0, '\0');
-            setCurrentlyOccupiedShops(0, '\0');
+            *u.ushops0 = *u.ushops = '\0';
             in_mklev = FALSE;
         }
         if (newlev <= -10) {
@@ -1239,7 +1238,7 @@ register struct obj *obj;
             && (!costly_spot(tx, ty)
                 || !index(in_rooms(tx, ty, 0), roomID))) {
             if (costly_spot(currentX(), currentY())
-                && currently_occupying_room(roomID))
+                && index(u.urooms, *in_rooms(otx, oty, 0)))
                 addtobill(obj, FALSE, FALSE, FALSE);
             else
                 (void) stolen_value(obj, otx, oty, FALSE, FALSE);

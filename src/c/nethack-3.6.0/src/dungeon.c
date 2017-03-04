@@ -2456,18 +2456,17 @@ recalc_mapseen()
                             && quest_status.got_quest);
 
     /* track rooms the hero is in */
-    for (i = 0; i < maximumOccupiedRoomCount(); ++i) {
-	char roomID = currentlyOccupiedRooms(i);
-        if (!roomID)
+    for (i = 0; i < SIZE(u.urooms); ++i) {
+        if (!u.urooms[i])
             continue;
 
-        ridx = roomID - ROOMOFFSET;
+        ridx = u.urooms[i] - ROOMOFFSET;
         mptr->msrooms[ridx].seen = 1;
         mptr->msrooms[ridx].untended =
             (rooms[ridx].rtype >= SHOPBASE)
-                ? (!(mtmp = shop_keeper(roomID)) || !inhishop(mtmp))
+                ? (!(mtmp = shop_keeper(u.urooms[i])) || !inhishop(mtmp))
                 : (rooms[ridx].rtype == TEMPLE)
-                      ? (!(mtmp = findpriest(roomID))
+                      ? (!(mtmp = findpriest(u.urooms[i]))
                          || !inhistemple(mtmp))
                       : 0;
     }

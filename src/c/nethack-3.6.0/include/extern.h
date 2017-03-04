@@ -1429,6 +1429,7 @@ E int FDECL(knowledgeOfPasstune, ());
 E void FDECL(setKnowledgeOfPasstune, (int));
 E void FDECL(incrementKnowledgeOfPasstune, (int));
 
+/*
 E boolean FDECL(currently_occupying_room, (char));
 E boolean FDECL(previously_occupying_room, (char));
 E boolean FDECL(currently_occupying_shop, (char));
@@ -1448,6 +1449,7 @@ E char FDECL(freshlyEnteredShops, (int));
 E void FDECL(setFreshlyEnteredShops, (int, char));
 E char FDECL(freshlyExitedShops, (int));
 E void FDECL(setFreshlyExitedShops, (int, char));
+*/
 
 
 /* ### invent.c ### */
@@ -2412,7 +2414,6 @@ E void FDECL(altar_wrath, (int, int));
 E int FDECL(move_special, (struct monst *, BOOLEAN_P, SCHAR_P, BOOLEAN_P,
                            BOOLEAN_P, XCHAR_P, XCHAR_P, XCHAR_P, XCHAR_P));
 E char FDECL(temple_occupied, (char *));
-E char FDECL(temple_currently_occupied, ());
 E boolean FDECL(inhistemple, (struct monst *));
 E int FDECL(pri_move, (struct monst *));
 E void FDECL(initPriestOnCurrentLevel, (struct mkroom *, int, int, BOOLEAN_P));
@@ -2637,10 +2638,9 @@ E void FDECL(set_residency, (struct monst *, BOOLEAN_P));
 E void FDECL(replshk, (struct monst *, struct monst *));
 E void FDECL(restshk, (struct monst *, BOOLEAN_P));
 E char FDECL(inside_shop, (XCHAR_P, XCHAR_P));
-E void FDECL(u_freshly_left_shop, (BOOLEAN_P));
-E void FDECL(u_left_previously_occupied_shop, (BOOLEAN_P));
+E void FDECL(u_left_shop, (char *, BOOLEAN_P));
 E void FDECL(remote_burglary, (XCHAR_P, XCHAR_P));
-E void FDECL(u_freshly_entered_shop, ());
+E void FDECL(u_entered_shop, (char *));
 E void FDECL(pick_pick, (struct obj *));
 E boolean FDECL(same_price, (struct obj *, struct obj *));
 E void NDECL(shopper_financial_report);

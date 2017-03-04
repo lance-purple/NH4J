@@ -614,6 +614,7 @@ unsigned int *stuckid, *steedid;
     setDestinationY(read_int(fd));
     setYouMoved(read_int(fd) ? TRUE : FALSE);
 
+    /*
     for (int i =  0; i < maximumOccupiedRoomCount(); i++) {
         setCurrentlyOccupiedRooms(i, (char) (0xff & read_int(fd)));
         setPreviouslyOccupiedRooms(i, (char) (0xff & read_int(fd)));
@@ -623,6 +624,7 @@ unsigned int *stuckid, *steedid;
         setFreshlyEnteredShops(i, (char) (0xff & read_int(fd)));
         setFreshlyExitedShops(i, (char) (0xff & read_int(fd)));
     }
+    */
 
     setCurrentTrapType(read_int(fd));
     setCurrentTrapTimeout(read_int(fd));

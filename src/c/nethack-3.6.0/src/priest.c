@@ -145,30 +145,6 @@ register char *array;
     return '\0';
 }
 
-char
-temple_currently_occupied()
-{
-    for (int i = 0; (i < maximumOccupiedRoomCount()) && (currentlyOccupiedRooms(i)); i++) {
-	char roomID = currentlyOccupiedRooms(i);
-        if (rooms[roomID - ROOMOFFSET].rtype == TEMPLE) {
-            return roomID;
-	}
-    }
-    return '\0';
-}
-
-char
-temple_previously_occupied()
-{
-    for (int i = 0; (i < maximumOccupiedRoomCount()) && (previouslyOccupiedRooms(i)); i++) {
-	char roomID = previouslyOccupiedRooms(i);
-        if (rooms[roomID - ROOMOFFSET].rtype == TEMPLE) {
-            return roomID;
-	}
-    }
-    return '\0';
-}
-
 STATIC_OVL boolean
 histemple_at(priest, x, y)
 register struct monst *priest;
@@ -225,7 +201,7 @@ register struct monst *priest;
                 Your("displaced image doesn't fool %s!", mon_nam(priest));
             (void) mattacku(priest);
             return 0;
-        } else if (currently_occupying_room(temple)) {
+        } else if (index(u.urooms, temple)) {
             /* chase player if inside temple & can see him */
             if (priest->mcansee && m_canseeu(priest)) {
                 gx = currentX();
@@ -414,7 +390,7 @@ int roomno;
     char buf[BUFSZ];
 
     /* don't do anything if hero is already in the room */
-    if (temple_previously_occupied())
+    if (temple_occupied(u.urooms0))
         return;
 
     if ((priest = findpriest((char) roomno)) != 0) {
@@ -728,7 +704,7 @@ xchar x, y;
     }
     if (currentAlignmentRecord() <= ALGN_SINNED) /* sinned or worse */
         return FALSE;
-    if ((roomno = temple_currently_occupied()) == 0
+    if ((roomno = temple_occupied(u.urooms)) == 0
         || roomno != *in_rooms(x, y, TEMPLE))
         return FALSE;
     if ((priest = findpriest(roomno)) == 0)
@@ -742,7 +718,7 @@ void
 ghod_hitsu(priest)
 struct monst *priest;
 {
-    int x, y, ax, ay, roomno = (int) temple_currently_occupied();
+    int x, y, ax, ay, roomno = (int) temple_occupied(u.urooms);
     struct mkroom *troom;
 
     if (!roomno || !has_shrine(priest))
@@ -817,7 +793,7 @@ angry_priest()
     register struct monst *priest;
     struct rm *lev;
 
-    if ((priest = findpriest(temple_currently_occupied())) != 0) {
+    if ((priest = findpriest(temple_occupied(u.urooms))) != 0) {
         struct epri *eprip = EPRI(priest);
 
         wakeup(priest);

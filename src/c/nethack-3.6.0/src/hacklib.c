@@ -2329,6 +2329,7 @@ midnight()
     return (getlt()->tm_hour == 0);
 }
 
+/* 
 boolean currently_occupying_room(char roomID) {
     for (int i = 0; (i < maximumOccupiedRoomCount()) && (currentlyOccupiedRooms(i)); i++) {
         if (roomID == currentlyOccupiedRooms(i)) {
@@ -2438,6 +2439,7 @@ void setFreshlyEnteredShops(int i, char roomID) {
     int v = roomID;
     javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setFreshlyEnteredShops", i, v);
 }
+*/
 
 extern long yourExtrinsic(int i) {
   return javaGetLongFromInt(QUALITIES_CLASS, "extrinsic", i);

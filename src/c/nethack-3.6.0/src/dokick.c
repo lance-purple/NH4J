@@ -410,8 +410,8 @@ xchar x, y; /* coordinates where object was before the impact, not after */
 
     costly = ((shkp = shop_keeper(*in_rooms(x, y, SHOPBASE)))
               && costly_spot(x, y));
-    insider = (currentlyOccupiedShops(0) && inside_shop(currentX(), currentY())
-               && *in_rooms(x, y, SHOPBASE) == currentlyOccupiedShops(0));
+    insider = (*u.ushops && inside_shop(currentX(), currentY())
+               && *in_rooms(x, y, SHOPBASE) == *u.ushops);
     /* if dropped or thrown, shop ownership flags are set on this obj */
     frominv = (obj != kickedobj);
 
@@ -577,9 +577,9 @@ xchar x, y;
                   otense(kickedobj, "come"));
         obj_extract_self(kickedobj);
         newsym(x, y);
-	char shopID = *in_rooms(x, y, SHOPBASE);
+
         if (costly && (!costly_spot(currentX(), currentY())
-                       || !currently_occupying_room(shopID)))
+                       || !index(u.urooms, *in_rooms(x, y, SHOPBASE))))
             addtobill(kickedobj, FALSE, FALSE, FALSE);
         if (!flooreffects(kickedobj, currentX(), currentY(), "fall")) {
             place_object(kickedobj, currentX(), currentY());
@@ -1404,10 +1404,9 @@ xchar dlev;          /* if !0 send to dlev near player */
         obj_extract_self(obj);
 
         if (costly) {
-            char shopID = *in_rooms(x, y, SHOPBASE);
             price += stolen_value(
                 obj, x, y, (costly_spot(currentX(), currentY())
-                            && currently_occupying_room(shopID)),
+                            && index(u.urooms, *in_rooms(x, y, SHOPBASE))),
                 TRUE);
             /* set obj->no_charge to 0 */
             if (Has_contents(obj))
@@ -1533,7 +1532,7 @@ boolean shop_floor_obj;
             (void) stolen_value(
                 otmp, ox, oy,
                 (costly_spot(currentX(), currentY())
-                 && currently_occupying_room(shopID)),
+                 && index(u.urooms, *in_rooms(ox, oy, SHOPBASE))),
                 FALSE);
         }
         /* set otmp->no_charge to 0 */
