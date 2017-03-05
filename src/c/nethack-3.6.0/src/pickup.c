@@ -1437,15 +1437,15 @@ struct obj *otmp;
         /* addtobill cares about your location rather than the object's;
            usually they'll be the same, but not when using telekinesis
            (if ever implemented) or a grappling hook */
-        copy_rooms(saveushops, u.ushops);
+        copyRoomIDs(saveushops, u.ushops);
         fakeshop[0] = *in_rooms(otmp->ox, otmp->oy, SHOPBASE);
         fakeshop[1] = '\0';
-        copy_rooms(u.ushops, fakeshop);
+        copyRoomIDs(u.ushops, fakeshop);
         /* sets obj->unpaid if necessary */
         addtobill(otmp, TRUE, FALSE, FALSE);
-        copy_rooms(u.ushops, saveushops);
+        copyRoomIDs(u.ushops, saveushops);
         /* if you're outside the shop, make shk notice */
-        if (!room_index(u.ushops, *fakeshop))
+        if (!oneOfRoomsHasID(u.ushops, *fakeshop))
             remote_burglary(otmp->ox, otmp->oy);
     }
     newsym(otmp->ox, otmp->oy);

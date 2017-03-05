@@ -205,13 +205,10 @@ struct monst *mtmp;
 
         /* Make sure bill is set only when the
            dead shk is the resident shk. */
-        if ((p = room_index(u.ushops, eshk->shoproom)) != 0) {
+        if (oneOfRoomsHasID(u.ushops, eshk->shoproom)) {
             setpaid(mtmp);
             eshk->bill_p = (struct bill_x *) 0;
-            /* remove eshk->shoproom from u.ushops */
-            do {
-                *p = *(p + 1);
-            } while (*++p);
+	    removeIDFromRooms(u.ushops, eshk->shoproom);
         }
     }
 }
@@ -527,11 +524,11 @@ char *enterstring;
         return;
 
     if (!(shkp = shop_keeper(*enterstring))) {
-        if (!room_index(empty_shops, *enterstring)
+        if (!oneOfRoomsHasID(empty_shops, *enterstring)
             && in_rooms(currentX(), currentY(), SHOPBASE)
                    != in_rooms(originalX(), originalY(), SHOPBASE))
             deserted_shop(enterstring);
-        copy_rooms(empty_shops, u.ushops);
+        copyRoomIDs(empty_shops, u.ushops);
         u.ushops[0] = '\0';
         return;
     }
@@ -541,9 +538,9 @@ char *enterstring;
     if (!inhishop(shkp)) {
         /* dump core when referenced */
         eshkp->bill_p = (struct bill_x *) -1000;
-        if (!room_index(empty_shops, *enterstring))
+        if (!oneOfRoomsHasID(empty_shops, *enterstring))
             deserted_shop(enterstring);
-        copy_rooms(empty_shops, u.ushops);
+        copyRoomIDs(empty_shops, u.ushops);
         u.ushops[0] = '\0';
         return;
     }
@@ -747,7 +744,7 @@ register struct monst *mtmp;
 {
     struct eshk *eshkp = ESHK(mtmp);
 
-    return (index(in_rooms(mtmp->mx, mtmp->my, SHOPBASE), eshkp->shoproom)
+    return (oneOfRoomsHasID(in_rooms(mtmp->mx, mtmp->my, SHOPBASE), eshkp->shoproom)
             && areYouOnLevel(&eshkp->shoplevel));
 }
 
@@ -1625,7 +1622,7 @@ int croaked; /* -1: escaped dungeon; 0: quit; 1: died */
         mtmp2 = mtmp->nmon;
         eshkp = ESHK(mtmp);
         local = areYouOnLevel(&eshkp->shoplevel);
-        if (local && room_index(u.ushops, eshkp->shoproom)) {
+        if (local && oneOfRoomsHasID(u.ushops, eshkp->shoproom)) {
             /* inside this shk's shop [there might be more than one
                resident shk if hero is standing in a breech of a shared
                wall, so give priority to one who's also owed money] */
@@ -3249,8 +3246,8 @@ boolean croaked;
         unsigned old_doormask = 0;
 
         disposition = 0;
-        Strcpy(shops, in_rooms(x, y, SHOPBASE));
-        if (index(shops, ESHK(shkp)->shoproom)) {
+        copyRoomIDs(shops, in_rooms(x, y, SHOPBASE));
+        if (oneOfRoomsHasID(shops, ESHK(shkp)->shoproom)) {
             if (IS_DOOR(levl[x][y].typ))
                 old_doormask = levl[x][y].doormask;
 
@@ -3763,7 +3760,7 @@ boolean cant_mollify;
         if (!tmp_dam->cost)
             continue;
         cost_of_damage += tmp_dam->cost;
-        Strcpy(shops_affected,
+        copyRoomIDs(shops_affected,
                in_rooms(tmp_dam->place.x, tmp_dam->place.y, SHOPBASE));
         for (shp = shops_affected; *shp; shp++) {
             struct monst *tmp_shk;

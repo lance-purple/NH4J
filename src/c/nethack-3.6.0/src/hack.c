@@ -2052,7 +2052,7 @@ int roomno;
         if (DEADMONSTER(mtmp))
             continue;
         if (mtmp->data == mdat
-            && index(in_rooms(mtmp->mx, mtmp->my, 0), roomno + ROOMOFFSET))
+            && oneOfRoomsHasID(in_rooms(mtmp->mx, mtmp->my, 0), roomno + ROOMOFFSET))
             return mtmp;
     }
     return (struct monst *) 0;
@@ -2106,19 +2106,19 @@ register int typewanted;
     for (x = min_x; x <= max_x; x += step) {
         lev = &levl[x][min_y];
         y = 0;
-        if (((rno = lev[y].roomno) >= ROOMOFFSET) && !index(ptr, rno)
+        if (((rno = lev[y].roomno) >= ROOMOFFSET) && !oneOfRoomsHasID(ptr, rno)
             && goodtype(rno))
             *(--ptr) = rno;
         y += step;
         if (y > max_y_offset)
             continue;
-        if (((rno = lev[y].roomno) >= ROOMOFFSET) && !index(ptr, rno)
+        if (((rno = lev[y].roomno) >= ROOMOFFSET) && !oneOfRoomsHasID(ptr, rno)
             && goodtype(rno))
             *(--ptr) = rno;
         y += step;
         if (y > max_y_offset)
             continue;
-        if (((rno = lev[y].roomno) >= ROOMOFFSET) && !index(ptr, rno)
+        if (((rno = lev[y].roomno) >= ROOMOFFSET) && !oneOfRoomsHasID(ptr, rno)
             && goodtype(rno))
             *(--ptr) = rno;
     }
@@ -2158,27 +2158,27 @@ register boolean newlev;
 {
     int i1, i2, i3, i4;
 
-    copy_rooms(u.urooms0, u.urooms);
-    copy_rooms(u.ushops0, u.ushops);
+    copyRoomIDs(u.urooms0, u.urooms);
+    copyRoomIDs(u.ushops0, u.ushops);
     if (newlev) {
         u.urooms[0] = '\0';
         u.uentered[0] = '\0';
         u.ushops[0] = '\0';
         u.ushops_entered[0] = '\0';
-        copy_rooms(u.ushops_left, u.ushops0);
+        copyRoomIDs(u.ushops_left, u.ushops0);
         return;
     }
-    copy_rooms(u.urooms, in_rooms(currentX(), currentY(), 0));
+    copyRoomIDs(u.urooms, in_rooms(currentX(), currentY(), 0));
 
-    for ((i1 = 0, i2 = 0, i3 = 0, i4 = 0); u.urooms[i1]; i1++) {
-        if (!room_index(u.urooms0, u.urooms[i1])) {
+    for ((i1 = 0, i2 = 0, i3 = 0, i4 = 0); (u.urooms[i1] != 0); i1++) {
+        if (!oneOfRoomsHasID(u.urooms0, u.urooms[i1])) {
             u.uentered[i2] = u.urooms[i1];
 	    i2++;
 	}
         if (IS_SHOP(u.urooms[i1] - ROOMOFFSET)) {
             u.ushops[i3] = u.urooms[i1];
 	    i3++;
-            if (!room_index(u.ushops0, u.urooms[i1])) {
+            if (!oneOfRoomsHasID(u.ushops0, u.urooms[i1])) {
                 u.ushops_entered[i4] = u.urooms[i1];
 		i4++;
 	    }
@@ -2190,7 +2190,7 @@ register boolean newlev;
 
     /* filter u.ushops0 -> u.ushops_left */
     for ((i1 = 0, i2 = 0); u.ushops0[i1]; i1++)
-        if (!room_index(u.ushops, u.ushops0[i1])) {
+        if (!oneOfRoomsHasID(u.ushops, u.ushops0[i1])) {
             u.ushops_left[i2] = u.ushops0[i1];
 	    i2++;
 	}

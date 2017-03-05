@@ -2457,7 +2457,7 @@ recalc_mapseen()
 
     /* track rooms the hero is in */
     for (i = 0; i < SIZE(u.urooms); ++i) {
-        if (!u.urooms[i])
+        if (0 == u.urooms[i])
             continue;
 
         ridx = u.urooms[i] - ROOMOFFSET;
@@ -3083,7 +3083,7 @@ boolean printdun;
     }
 }
 
-void copy_rooms(char* dest, const char* src) {
+void copyRoomIDs(char* dest, const char* src) {
   int i = 0;
   while (src[i] != '\0')
   {
@@ -3093,15 +3093,27 @@ void copy_rooms(char* dest, const char* src) {
   dest[i] = '\0';
 }
 
-const char* room_index(const char* s, char c) {
+boolean oneOfRoomsHasID(const char* roomIDs, char desiredRoomID) {
 
-  while (*s != '\0') {
-    if (c == *s) {
-      return s;
+  for (int i = 0; (roomIDs[i] != '\0'); i++) {
+    if (roomIDs[i] == desiredRoomID) {
+      return TRUE;
     }
-    s++;
   }
-  return '\0';
+  return FALSE;
+}
+
+void removeIDFromRooms(char* roomIDs, char deletedRoomID) {
+  char buf[5];
+  int j;
+
+  for (int i = 0; (roomIDs[i] != '\0'); i++) {
+    if (roomIDs[i] != deletedRoomID) {
+      buf[j++] = roomIDs[i];
+    }
+  }
+  buf[j] = '\0';
+  copyRoomIDs(roomIDs, buf);
 }
 
 int darkRoomSym()

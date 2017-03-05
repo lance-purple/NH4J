@@ -3154,7 +3154,7 @@ long numused;
     else
         otmp = obj;
     if (costly_spot(otmp->ox, otmp->oy)) {
-        if (room_index(u.urooms, *in_rooms(otmp->ox, otmp->oy, 0)))
+        if (oneOfRoomsHasID(u.urooms, *in_rooms(otmp->ox, otmp->oy, 0)))
             addtobill(otmp, FALSE, FALSE, FALSE);
         else
             (void) stolen_value(otmp, otmp->ox, otmp->oy, FALSE, FALSE);

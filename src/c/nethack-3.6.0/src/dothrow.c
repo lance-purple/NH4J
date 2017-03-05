@@ -1152,7 +1152,7 @@ boolean
         /* [perhaps this should be moved into thitmonst or hmon] */
         if (mon && mon->isshk
             && (!inside_shop(currentX(), currentY())
-                || !room_index(in_rooms(mon->mx, mon->my, SHOPBASE), *u.ushops)))
+                || !oneOfRoomsHasID(in_rooms(mon->mx, mon->my, SHOPBASE), *u.ushops)))
             hot_pursuit(mon);
 
         if (obj_gone)

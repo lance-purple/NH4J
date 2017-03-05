@@ -619,7 +619,7 @@ boolean verbosely;
         } else if (mon->mtame && (obj->owornmask & W_SADDLE) && !obj->unpaid
                    && costly_spot(omx, omy)
                    /* being at costly_spot guarantees lev->roomno is not 0 */
-                   && index(in_rooms(currentX(), currentY(), SHOPBASE),
+                   && oneOfRoomsHasID(in_rooms(currentX(), currentY(), SHOPBASE),
                             levl[omx][omy].roomno)) {
             obj->no_charge = 1;
         }
