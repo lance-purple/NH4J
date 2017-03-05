@@ -3084,11 +3084,24 @@ boolean printdun;
 }
 
 void copy_rooms(char* dest, const char* src) {
-  strcpy(dest, src);
+  int i = 0;
+  while (src[i] != '\0')
+  {
+    dest[i] = src[i];
+    i++;
+  }
+  dest[i] = '\0';
 }
 
-char* room_index(const char* s, int c) {
-  return strchr(s, c);
+const char* room_index(const char* s, char c) {
+
+  while (*s != '\0') {
+    if (c == *s) {
+      return s;
+    }
+    s++;
+  }
+  return '\0';
 }
 
 int darkRoomSym()
