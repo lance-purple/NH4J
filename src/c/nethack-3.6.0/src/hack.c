@@ -2156,7 +2156,7 @@ STATIC_OVL void
 move_update(newlev)
 register boolean newlev;
 {
-    char *ptr1, *ptr2, *ptr3, *ptr4;
+    int i1, i2, i3, i4;
 
     copy_rooms(u.urooms0, u.urooms);
     copy_rooms(u.ushops0, u.ushops);
@@ -2170,26 +2170,31 @@ register boolean newlev;
     }
     copy_rooms(u.urooms, in_rooms(currentX(), currentY(), 0));
 
-    for (ptr1 = &u.urooms[0], ptr2 = &u.uentered[0], ptr3 = &u.ushops[0],
-        ptr4 = &u.ushops_entered[0];
-         *ptr1; ptr1++) {
-        if (!room_index(u.urooms0, *ptr1))
-            *(ptr2++) = *ptr1;
-        if (IS_SHOP(*ptr1 - ROOMOFFSET)) {
-            *(ptr3++) = *ptr1;
-            if (!room_index(u.ushops0, *ptr1))
-                *(ptr4++) = *ptr1;
+    for ((i1 = 0, i2 = 0, i3 = 0, i4 = 0); u.urooms[i1]; i1++) {
+        if (!room_index(u.urooms0, u.urooms[i1])) {
+            u.uentered[i2] = u.urooms[i1];
+	    i2++;
+	}
+        if (IS_SHOP(u.urooms[i1] - ROOMOFFSET)) {
+            u.ushops[i3] = u.urooms[i1];
+	    i3++;
+            if (!room_index(u.ushops0, u.urooms[i1])) {
+                u.ushops_entered[i4] = u.urooms[i1];
+		i4++;
+	    }
         }
     }
-    *ptr2 = '\0';
-    *ptr3 = '\0';
-    *ptr4 = '\0';
+    u.uentered[i2] = '\0';
+    u.ushops[i3] = '\0';
+    u.ushops_entered[i4]= '\0';
 
     /* filter u.ushops0 -> u.ushops_left */
-    for (ptr1 = &u.ushops0[0], ptr2 = &u.ushops_left[0]; *ptr1; ptr1++)
-        if (!room_index(u.ushops, *ptr1))
-            *(ptr2++) = *ptr1;
-    *ptr2 = '\0';
+    for ((i1 = 0, i2 = 0); u.ushops0[i1]; i1++)
+        if (!room_index(u.ushops, u.ushops0[i1])) {
+            u.ushops_left[i2] = u.ushops0[i1];
+	    i2++;
+	}
+    u.ushops_left[i2] = '\0';
 }
 
 void
