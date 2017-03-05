@@ -2202,7 +2202,6 @@ check_special_room(newlev)
 register boolean newlev;
 {
     register struct monst *mtmp;
-    char *ptr;
 
     move_update(newlev);
 
@@ -2216,8 +2215,8 @@ register boolean newlev;
     if (*u.ushops_entered)
         u_entered_shop(u.ushops_entered);
 
-    for (ptr = &u.uentered[0]; *ptr; ptr++) {
-        int roomno = *ptr - ROOMOFFSET, rt = rooms[roomno].rtype;
+    for (int i = 0; u.uentered[i]; i++) {
+        int roomno = u.uentered[i] - ROOMOFFSET, rt = rooms[roomno].rtype;
         boolean msg_given = TRUE;
 
         /* Did we just enter some other special room? */
