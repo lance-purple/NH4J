@@ -361,7 +361,7 @@ dig(VOID_ARGS)
     if (context.digging.effort > 100) {
         register const char *digtxt, *dmgtxt = (const char *) 0;
         register struct obj *obj;
-        register boolean shopedge = *in_rooms(dpx, dpy, SHOPBASE);
+        register boolean shopedge = locationIsInAShop(dpx, dpy);
 
         if ((obj = sobj_at(STATUE, dpx, dpy)) != 0) {
             if (break_statue(obj))
@@ -472,7 +472,7 @@ dig(VOID_ARGS)
         int dig_target = dig_typ(uwep, dpx, dpy);
 
         if (IS_WALL(lev->typ) || dig_target == DIGTYP_DOOR) {
-            if (*in_rooms(dpx, dpy, SHOPBASE)) {
+            if (locationIsInAShop(dpx, dpy)) {
                 pline("This %s seems too hard to %s.",
                       IS_DOOR(lev->typ) ? "door" : "wall", verb);
                 return 0;
@@ -591,7 +591,7 @@ int ttyp;
         Strcpy(surface_type, "grave");
     else
         Strcpy(surface_type, surface(x, y));
-    shopdoor = IS_DOOR(lev->typ) && *in_rooms(x, y, SHOPBASE);
+    shopdoor = IS_DOOR(lev->typ) && locationIsInAShop(x, y);
     oldobjs = level.objects[x][y];
     ttmp = maketrap(x, y, ttyp);
     if (!ttmp)
@@ -1252,7 +1252,7 @@ register struct monst *mtmp;
 
     /* Eats away door if present & closed or locked */
     if (closed_door(mtmp->mx, mtmp->my)) {
-        if (*in_rooms(mtmp->mx, mtmp->my, SHOPBASE))
+        if (locationIsInAShop(mtmp->mx, mtmp->my))
             add_damage(mtmp->mx, mtmp->my, 0L);
         unblock_point(mtmp->mx, mtmp->my); /* vision */
         if (here->doormask & D_TRAPPED) {
@@ -1290,7 +1290,7 @@ register struct monst *mtmp;
         /* KMH -- Okay on arboreal levels (room walls are still stone) */
         if (flags.verbose && !rn2(5))
             You_hear("crashing rock.");
-        if (*in_rooms(mtmp->mx, mtmp->my, SHOPBASE))
+        if (locationIsInAShop(mtmp->mx, mtmp->my))
             add_damage(mtmp->mx, mtmp->my, 0L);
         if (level.flags.is_maze_lev) {
             here->typ = ROOM;
@@ -1487,7 +1487,7 @@ zap_dig()
                 break;
             }
         } else if (closed_door(zx, zy) || room->typ == SDOOR) {
-            if (*in_rooms(zx, zy, SHOPBASE)) {
+            if (locationIsInAShop(zx, zy)) {
                 add_damage(zx, zy, 400L);
                 shopdoor = TRUE;
             }
@@ -1504,7 +1504,7 @@ zap_dig()
         } else if (maze_dig) {
             if (IS_WALL(room->typ)) {
                 if (!(room->wall_info & W_NONDIGGABLE)) {
-                    if (*in_rooms(zx, zy, SHOPBASE)) {
+                    if (locationIsInAShop(zx, zy)) {
                         add_damage(zx, zy, 200L);
                         shopwall = TRUE;
                     }
@@ -1532,7 +1532,7 @@ zap_dig()
             if (!may_dig(zx, zy))
                 break;
             if (IS_WALL(room->typ) || room->typ == SDOOR) {
-                if (*in_rooms(zx, zy, SHOPBASE)) {
+                if (locationIsInAShop(zx, zy)) {
                     add_damage(zx, zy, 200L);
                     shopwall = TRUE;
                 }

@@ -415,7 +415,7 @@ boolean with_you;
     if (xlocale && wander) {
         /* monster moved a bit; pick a nearby location */
         /* mnearto() deals w/stone, et al */
-        char *r = in_rooms(xlocale, ylocale, 0);
+        char *r = allPlainRoomsLocatedAt(xlocale, ylocale);
         if (r && *r) {
             coord c;
             /* somexy() handles irregular rooms */

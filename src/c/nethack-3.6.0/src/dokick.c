@@ -408,10 +408,10 @@ xchar x, y; /* coordinates where object was before the impact, not after */
     if (!Is_container(obj) || !Has_contents(obj) || Is_mbag(obj))
         return;
 
-    costly = ((shkp = shop_keeper(*in_rooms(x, y, SHOPBASE)))
+    costly = ((shkp = shop_keeper(shopLocatedAt(x, y)))
               && costly_spot(x, y));
     insider = (*u.ushops && inside_shop(currentX(), currentY())
-               && *in_rooms(x, y, SHOPBASE) == *u.ushops);
+               && shopLocatedAt(x, y) == *u.ushops);
     /* if dropped or thrown, shop ownership flags are set on this obj */
     frominv = (obj != kickedobj);
 
@@ -555,7 +555,7 @@ xchar x, y;
         range = 1;
 
     costly = (!(kickedobj->no_charge && !Has_contents(kickedobj))
-              && (shkp = shop_keeper(*in_rooms(x, y, SHOPBASE))) != 0
+              && (shkp = shop_keeper(shopLocatedAt(x, y))) != 0
               && costly_spot(x, y));
     isgold = (kickedobj->oclass == COIN_CLASS);
 
@@ -579,7 +579,7 @@ xchar x, y;
         newsym(x, y);
 
         if (costly && (!costly_spot(currentX(), currentY())
-                       || !oneOfRoomsHasID(u.urooms, *in_rooms(x, y, SHOPBASE))))
+                       || !oneOfRoomsHasID(u.urooms, shopLocatedAt(x, y))))
             addtobill(kickedobj, FALSE, FALSE, FALSE);
         if (!flooreffects(kickedobj, currentX(), currentY(), "fall")) {
             place_object(kickedobj, currentX(), currentY());
@@ -686,9 +686,9 @@ xchar x, y;
     if (kickedobj->where == OBJ_MIGRATING)
         return 1;
 
-    bhitroom = *in_rooms(bhitpos.x, bhitpos.y, SHOPBASE);
+    bhitroom = shopLocatedAt(bhitpos.x, bhitpos.y);
     if (costly && (!costly_spot(bhitpos.x, bhitpos.y)
-                   || *in_rooms(x, y, SHOPBASE) != bhitroom)) {
+                   || shopLocatedAt(x, y) != bhitroom)) {
         if (isgold)
             costly_gold(x, y, kickedobj->quan);
         else
@@ -1246,7 +1246,7 @@ dokick()
     exercise(A_DEX, TRUE);
     /* door is known to be CLOSED or LOCKED */
     if (rnl(35) < avrg_attrib + (!martial() ? 0 : ACURR(A_DEX))) {
-        boolean shopdoor = *in_rooms(x, y, SHOPBASE) ? TRUE : FALSE;
+        boolean shopdoor = locationIsInAShop(x, y);
         /* break the door */
         if (maploc->doormask & D_TRAPPED) {
             if (flags.verbose)
@@ -1380,7 +1380,7 @@ xchar dlev;          /* if !0 send to dlev near player */
      * unsavory pline repetitions.
      */
     if (costly) {
-        if ((shkp = shop_keeper(*in_rooms(x, y, SHOPBASE))) != 0) {
+        if ((shkp = shop_keeper(shopLocatedAt(x, y))) != 0) {
             debit = ESHK(shkp)->debit;
             robbed = ESHK(shkp)->robbed;
             angry = !shkp->mpeaceful;
@@ -1406,7 +1406,7 @@ xchar dlev;          /* if !0 send to dlev near player */
         if (costly) {
             price += stolen_value(
                 obj, x, y, (costly_spot(currentX(), currentY())
-                            && oneOfRoomsHasID(u.urooms, *in_rooms(x, y, SHOPBASE))),
+                            && oneOfRoomsHasID(u.urooms, shopLocatedAt(x, y))),
                 TRUE);
             /* set obj->no_charge to 0 */
             if (Has_contents(obj))
@@ -1528,11 +1528,10 @@ boolean shop_floor_obj;
         } else {
             ox = otmp->ox;
             oy = otmp->oy;
-	    char shopID = *in_rooms(ox, oy, SHOPBASE);
             (void) stolen_value(
                 otmp, ox, oy,
                 (costly_spot(currentX(), currentY())
-                 && oneOfRoomsHasID(u.urooms, *in_rooms(ox, oy, SHOPBASE))),
+                 && oneOfRoomsHasID(u.urooms, shopLocatedAt(ox, oy))),
                 FALSE);
         }
         /* set otmp->no_charge to 0 */

@@ -793,7 +793,7 @@ boolean broken;
         return;
 
     if (broken || !costly_spot(x, y)
-        || *in_rooms(x, y, SHOPBASE) != *u.ushops) {
+        || shopLocatedAt(x, y) != *u.ushops) {
         /* thrown out of a shop or into a different shop */
         if (is_unpaid(obj))
             (void) stolen_value(obj, currentX(), currentY(), (boolean) shkp->mpeaceful,
@@ -1152,7 +1152,7 @@ boolean
         /* [perhaps this should be moved into thitmonst or hmon] */
         if (mon && mon->isshk
             && (!inside_shop(currentX(), currentY())
-                || !oneOfRoomsHasID(in_rooms(mon->mx, mon->my, SHOPBASE), *u.ushops)))
+                || !oneOfRoomsHasID(allShopsLocatedAt(mon->mx, mon->my), *u.ushops)))
             hot_pursuit(mon);
 
         if (obj_gone)
@@ -1834,10 +1834,10 @@ boolean from_invent;
                 check_shop_obj(obj, x, y, TRUE);
         } else if (!obj->no_charge && costly_spot(x, y)) {
             /* it is assumed that the obj is a floor-object */
-            char *o_shop = in_rooms(x, y, SHOPBASE);
-            struct monst *shkp = shop_keeper(*o_shop);
+            char o_shop = shopLocatedAt(x, y);
+            struct monst *shkp = shop_keeper(o_shop);
 
-            if (shkp) { /* (implies *o_shop != '\0') */
+            if (shkp) { /* (implies o_shop != '\0') */
                 static NEARDATA long lastmovetime = 0L;
                 static NEARDATA boolean peaceful_shk = FALSE;
                 /*  We want to base shk actions on her peacefulness
@@ -1847,7 +1847,7 @@ boolean from_invent;
                 if (moves != lastmovetime)
                     peaceful_shk = shkp->mpeaceful;
                 if (stolen_value(obj, x, y, peaceful_shk, FALSE) > 0L
-                    && (*o_shop != u.ushops[0] || !inside_shop(currentX(), currentY()))
+                    && (o_shop != u.ushops[0] || !inside_shop(currentX(), currentY()))
                     && moves != lastmovetime)
                     make_angry_shk(shkp, x, y);
                 lastmovetime = moves;

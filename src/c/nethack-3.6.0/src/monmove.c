@@ -911,7 +911,7 @@ not_special:
             minr = 1;
 
         if ((likegold || likegems || likeobjs || likemagic || likerock
-             || conceals) && (!*in_rooms(omx, omy, SHOPBASE)
+             || conceals) && (!locationIsInAShop(omx, omy)
                               || (!rn2(25) && !mtmp->isshk))) {
         look_for_obj:
             oomx = min(COLNO - 1, omx + minr);
@@ -1290,7 +1290,7 @@ postmov:
                         unblock_point(mtmp->mx, mtmp->my); /* vision */
                     }
                     /* if it's a shop door, schedule repair */
-                    if (*in_rooms(mtmp->mx, mtmp->my, SHOPBASE))
+                    if (locationIsInAShop(mtmp->mx, mtmp->my))
                         add_damage(mtmp->mx, mtmp->my, 0L);
                 }
             } else if (levl[mtmp->mx][mtmp->my].typ == IRONBARS) {
@@ -1355,7 +1355,7 @@ postmov:
                     return 2; /* it died */
             }
 
-            if (!*in_rooms(mtmp->mx, mtmp->my, SHOPBASE) || !rn2(25)) {
+            if (!locationIsInAShop(mtmp->mx, mtmp->my) || !rn2(25)) {
                 boolean picked = FALSE;
 
                 if (likeobjs)
@@ -1399,7 +1399,7 @@ void
 dissolve_bars(x, y)
 register int x, y;
 {
-    levl[x][y].typ = (areYouOnASpecialLevel() || *in_rooms(x, y, 0)) ? ROOM : CORR;
+    levl[x][y].typ = (areYouOnASpecialLevel() || locationIsInAPlainRoom(x, y)) ? ROOM : CORR;
     newsym(x, y);
 }
 

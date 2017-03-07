@@ -416,7 +416,7 @@ int force;
                         goto do_pit;
                     if (cansee(x, y))
                         pline_The("door collapses.");
-                    if (*in_rooms(x, y, SHOPBASE))
+                    if (locationIsInAShop(x, y))
                         add_damage(x, y, 0L);
                     levl[x][y].doormask = D_NODOOR;
                     unblock_point(x, y);

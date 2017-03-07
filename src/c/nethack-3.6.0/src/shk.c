@@ -434,7 +434,7 @@ xchar x, y;
     struct monst *shkp;
     struct eshk *eshkp;
 
-    shkp = shop_keeper(*in_rooms(x, y, SHOPBASE));
+    shkp = shop_keeper(shopLocatedAt(x, y));
     if (!shkp || !inhishop(shkp))
         return; /* shk died, teleported, changed levels... */
 
@@ -525,8 +525,8 @@ char *enterstring;
 
     if (!(shkp = shop_keeper(*enterstring))) {
         if (!oneOfRoomsHasID(empty_shops, *enterstring)
-            && in_rooms(currentX(), currentY(), SHOPBASE)
-                   != in_rooms(originalX(), originalY(), SHOPBASE))
+            && allShopsLocatedAt(currentX(), currentY())
+                   != allShopsLocatedAt(originalX(), originalY()))
             deserted_shop(enterstring);
         copyRoomIDs(empty_shops, u.ushops);
         u.ushops[0] = '\0';
@@ -744,7 +744,7 @@ register struct monst *mtmp;
 {
     struct eshk *eshkp = ESHK(mtmp);
 
-    return (oneOfRoomsHasID(in_rooms(mtmp->mx, mtmp->my, SHOPBASE), eshkp->shoproom)
+    return (oneOfRoomsHasID(allShopsLocatedAt(mtmp->mx, mtmp->my), eshkp->shoproom)
             && areYouOnLevel(&eshkp->shoplevel));
 }
 
@@ -1889,7 +1889,7 @@ register struct obj *obj;
         && (obj->unpaid
             || (obj->where == OBJ_FLOOR
                 && !obj->no_charge && costly_spot(x, y)))
-        && (shkp = shop_keeper(*in_rooms(x, y, SHOPBASE))) != 0
+        && (shkp = shop_keeper(shopLocatedAt(x, y))) != 0
         && inhishop(shkp)) {
         cost = obj->quan * get_cost(obj, shkp);
         if (Has_contents(obj))
@@ -2214,7 +2214,7 @@ boolean include_contents;
 
     if (!get_obj_location(unp_obj, &ox, &oy, BURIED_TOO | CONTAINED_TOO))
         ox = currentX(), oy = currentY(); /* (shouldn't happen) */
-    if ((shkp = shop_keeper(*in_rooms(ox, oy, SHOPBASE))) != 0) {
+    if ((shkp = shop_keeper(shopLocatedAt(ox, oy))) != 0) {
         bp = onbill(unp_obj, shkp, TRUE);
     } else {
         /* didn't find shk?  try searching bills */
@@ -2648,7 +2648,7 @@ xchar x, y;
 boolean peaceful, silent;
 {
     long value = 0L, gvalue = 0L, billamt = 0L;
-    char roomno = *in_rooms(x, y, SHOPBASE);
+    char roomno = shopLocatedAt(x, y);
     struct bill_x *bp;
     struct monst *shkp = 0;
 
@@ -2767,7 +2767,7 @@ xchar x, y;
     boolean isgold = (obj->oclass == COIN_CLASS);
     boolean only_partially_your_contents = FALSE;
 
-    if (!(shkp = shop_keeper(*in_rooms(x, y, SHOPBASE))) || !inhishop(shkp))
+    if (!(shkp = shop_keeper(shopLocatedAt(x, y))) || !inhishop(shkp))
         return;
     if (!costly_spot(x, y))
         return;
@@ -3192,7 +3192,7 @@ long cost;
         struct monst *mtmp;
 
         /* Don't schedule for repair unless it's a real shop entrance */
-        for (shops = in_rooms(x, y, SHOPBASE); *shops; shops++)
+        for (shops = allShopsLocatedAt(x, y); *shops; shops++)
             if ((mtmp = shop_keeper(*shops)) != 0 && x == ESHK(mtmp)->shd.x
                 && y == ESHK(mtmp)->shd.y)
                 break;
@@ -3246,7 +3246,7 @@ boolean croaked;
         unsigned old_doormask = 0;
 
         disposition = 0;
-        copyRoomIDs(shops, in_rooms(x, y, SHOPBASE));
+        copyRoomIDs(shops, allShopsLocatedAt(x, y));
         if (oneOfRoomsHasID(shops, ESHK(shkp)->shoproom)) {
             if (IS_DOOR(levl[x][y].typ))
                 old_doormask = levl[x][y].doormask;
@@ -3761,7 +3761,7 @@ boolean cant_mollify;
             continue;
         cost_of_damage += tmp_dam->cost;
         copyRoomIDs(shops_affected,
-               in_rooms(tmp_dam->place.x, tmp_dam->place.y, SHOPBASE));
+               allShopsLocatedAt(tmp_dam->place.x, tmp_dam->place.y));
         for (shp = shops_affected; *shp; shp++) {
             struct monst *tmp_shk;
             unsigned int shk_distance;
@@ -3813,7 +3813,7 @@ boolean cant_mollify;
     }
 
     /* if the shk is not in their shop.. */
-    if (!*in_rooms(shkp->mx, shkp->my, SHOPBASE)) {
+    if (!locationIsInAShop(shkp->mx, shkp->my)) {
         if (!cansee(shkp->mx, shkp->my))
             return;
         pursue = TRUE;
@@ -3906,7 +3906,7 @@ register xchar x, y;
 
     if (!level.flags.has_shop)
         return FALSE;
-    shkp = shop_keeper(*in_rooms(x, y, SHOPBASE));
+    shkp = shop_keeper(shopLocatedAt(x, y));
     if (!shkp || !inhishop(shkp))
         return FALSE;
     eshkp = ESHK(shkp);
@@ -3923,7 +3923,7 @@ register xchar x, y;
     register struct obj *otmp;
     register struct monst *shkp;
 
-    if (!(shkp = shop_keeper(*in_rooms(x, y, SHOPBASE))) || !inhishop(shkp))
+    if (!(shkp = shop_keeper(shopLocatedAt(x, y))) || !inhishop(shkp))
         return (struct obj *) 0;
 
     for (otmp = level.objects[x][y]; otmp; otmp = otmp->nexthere)
@@ -4246,7 +4246,7 @@ register long amount;
     if (!costly_spot(x, y))
         return;
     /* shkp now guaranteed to exist by costly_spot() */
-    shkp = shop_keeper(*in_rooms(x, y, SHOPBASE));
+    shkp = shop_keeper(shopLocatedAt(x, y));
 
     eshkp = ESHK(shkp);
     if (eshkp->credit >= amount) {
@@ -4275,7 +4275,7 @@ boolean
 block_door(x, y)
 register xchar x, y;
 {
-    register int roomno = *in_rooms(x, y, SHOPBASE);
+    register int roomno = shopLocatedAt(x, y);
     register struct monst *shkp;
 
     if (roomno < 0 || !IS_SHOP(roomno))
@@ -4318,7 +4318,7 @@ register xchar x, y;
           && levl[currentX()][currentY()].doormask == D_BROKEN))
         return FALSE;
 
-    roomno = *in_rooms(x, y, SHOPBASE);
+    roomno = shopLocatedAt(x, y);
     if (roomno < 0 || !IS_SHOP(roomno))
         return FALSE;
     if (!(shkp = shop_keeper((char) roomno)) || !inhishop(shkp))

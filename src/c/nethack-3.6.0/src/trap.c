@@ -409,7 +409,7 @@ register int x, y, typ;
     case HOLE:
     case TRAPDOOR:
         lev = &levl[x][y];
-        if (*in_rooms(x, y, SHOPBASE)
+        if (locationIsInAShop(x, y)
             && (typ == HOLE || typ == TRAPDOOR
                 || IS_DOOR(lev->typ) || IS_WALL(lev->typ)))
             add_damage(x, y, /* schedule repair */
@@ -659,7 +659,7 @@ int *fail_reason;
                                     : "comes to life";
     if ((x == currentX() && y == currentY()) || cause == ANIMATE_SPELL) {
         /* "the|your|Manlobbi's statue [of a wombat]" */
-        shkp = shop_keeper(*in_rooms(mon->mx, mon->my, SHOPBASE));
+        shkp = shop_keeper(shopLocatedAt(mon->mx, mon->my));
         Sprintf(statuename, "%s%s", shk_your(tmpbuf, statue),
                 (cause == ANIMATE_SPELL
                  /* avoid "of a shopkeeper" if it's Manlobbi himself
@@ -696,7 +696,7 @@ int *fail_reason;
            which refers to "it" so needs to follow a message describing
            the object ("the statue comes to life" one above) */
         if (cause != ANIMATE_NORMAL && costly_spot(x, y)
-            && (shkp = shop_keeper(*in_rooms(x, y, SHOPBASE))) != 0
+            && (shkp = shop_keeper(shopLocatedAt(x, y))) != 0
             /* avoid charging for Manlobbi's statue of Manlobbi
                if stone-to-flesh is used on petrified shopkeep */
             && mon != shkp)
@@ -4372,7 +4372,7 @@ boolean force;
                 unblock_point(x, y);
                 newsym(x, y);
                 /* (probably ought to charge for this damage...) */
-                if (*in_rooms(x, y, SHOPBASE))
+                if (locationIsInAShop(x, y))
                     add_damage(x, y, 0L);
             } else {
                 You("disarm it!");
@@ -4599,10 +4599,10 @@ boolean disarm;
 
             /* the obj location need not be that of player */
             costly = (costly_spot(ox, oy)
-                      && (shkp = shop_keeper(*in_rooms(ox, oy, SHOPBASE)))
+                      && (shkp = shop_keeper(shopLocatedAt(ox, oy)))
                              != (struct monst *) 0);
             insider = (*u.ushops && inside_shop(currentX(), currentY())
-                       && *in_rooms(ox, oy, SHOPBASE) == *u.ushops);
+                       && shopLocatedAt(ox, oy) == *u.ushops);
 
             pline("%s!", Tobjnam(obj, "explode"));
             Sprintf(buf, "exploding %s", xname(obj));

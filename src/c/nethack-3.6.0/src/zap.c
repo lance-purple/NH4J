@@ -756,7 +756,7 @@ boolean by_hero;
 
         x = corpse->ox, y = corpse->oy;
         if (costly_spot(x, y))
-            shkp = shop_keeper(*in_rooms(x, y, SHOPBASE));
+            shkp = shop_keeper(shopLocatedAt(x, y));
 
         if (cansee(x, y))
             pline(
@@ -1554,7 +1554,7 @@ int id;
         && get_obj_location(otmp, &ox, &oy, BURIED_TOO | CONTAINED_TOO)
         && costly_spot(ox, oy)) {
         register struct monst *shkp =
-            shop_keeper(*in_rooms(ox, oy, SHOPBASE));
+            shop_keeper(shopLocatedAt(ox, oy));
 
         if ((!obj->no_charge
              || (Has_contents(obj)
@@ -1562,8 +1562,8 @@ int id;
             && inhishop(shkp)) {
             if (shkp->mpeaceful) {
                 if (*u.ushops
-                    && *in_rooms(currentX(), currentY(), 0)
-                           == *in_rooms(shkp->mx, shkp->my, 0)
+                    && plainRoomLocatedAt(currentX(), currentY())
+                           == plainRoomLocatedAt(shkp->mx, shkp->my)
                     && !costly_spot(currentX(), currentY()))
                     make_angry_shk(shkp, ox, oy);
                 else {
@@ -3215,7 +3215,7 @@ struct obj **pobj; /* object tossed/used, set to NULL
                         || (obj->otyp == WAN_STRIKING && !youAreDeaf()))
                         learnwand(obj);
                     if (levl[bhitpos.x][bhitpos.y].doormask == D_BROKEN
-                        && *in_rooms(bhitpos.x, bhitpos.y, SHOPBASE)) {
+                        && locationIsInAShop(bhitpos.x, bhitpos.y)) {
                         shopdoor = TRUE;
                         add_damage(bhitpos.x, bhitpos.y, 400L);
                     }
@@ -4295,7 +4295,7 @@ short exploding_wand_typ;
                 rangemod -= 3;
                 if (see_it)
                     Norep("The %s melt.", defsyms[S_bars].explanation);
-                if (*in_rooms(x, y, SHOPBASE)) {
+                if (locationIsInAShop(x, y)) {
                     /* in case we ever have a shop bounded by bars */
                     lev->typ = ROOM;
                     if (see_it)
@@ -4396,7 +4396,7 @@ short exploding_wand_typ;
             break;
         }
         if (new_doormask >= 0) { /* door gets broken */
-            if (*in_rooms(x, y, SHOPBASE)) {
+            if (locationIsInAShop(x, y)) {
                 if (type >= 0) {
                     add_damage(x, y, 400L);
                     *shopdamage = TRUE;
@@ -4431,7 +4431,7 @@ short exploding_wand_typ;
             seemimic(mon);
         if (type >= 0) {
             setmangry(mon);
-            if (mon->ispriest && *in_rooms(mon->mx, mon->my, TEMPLE))
+            if (mon->ispriest && locationIsInATemple(mon->mx, mon->my))
                 ghod_hitsu(mon);
             if (mon->isshk && !*u.ushops)
                 hot_pursuit(mon);
@@ -4450,7 +4450,7 @@ register struct obj *obj; /* no texts here! */
 
     if (by_you && get_obj_location(obj, &x, &y, 0) && costly_spot(x, y)) {
         struct monst *shkp = 0;
-        char objroom = *in_rooms(x, y, SHOPBASE);
+        char objroom = shopLocatedAt(x, y);
 
         if (billable(&shkp, obj, objroom, FALSE)) {
             /* shop message says "you owe <shk> <$> for it!" so we need

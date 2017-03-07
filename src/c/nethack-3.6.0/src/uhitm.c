@@ -359,7 +359,7 @@ register struct monst *mtmp;
                     inshop = FALSE;
             char *p;
 
-            for (p = in_rooms(mtmp->mx, mtmp->my, SHOPBASE); *p; p++)
+            for (p = allShopsLocatedAt(mtmp->mx, mtmp->my); *p; p++)
                 if (tended_shop(&rooms[*p - ROOMOFFSET])) {
                     inshop = TRUE;
                     break;

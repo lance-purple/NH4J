@@ -215,11 +215,11 @@ register int x, y;
     /* other room types will no longer exist when we're interested --
      * see check_special_room()
      */
-    if (*in_rooms(x, y, VAULT))
+    if (locationIsInAVault(x, y))
         what = "vault's ceiling";
-    else if (*in_rooms(x, y, TEMPLE))
+    else if (locationIsInATemple(x, y))
         what = "temple's ceiling";
-    else if (*in_rooms(x, y, SHOPBASE))
+    else if (locationIsInAShop(x, y))
         what = "shop's ceiling";
     else if (areYouOnWaterLevel())
         /* water plane has no surface; its air bubbles aren't below sky */

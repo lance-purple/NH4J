@@ -969,7 +969,21 @@ E boolean NDECL(overexertion);
 E void NDECL(invocation_message);
 E boolean FDECL(pooleffects, (BOOLEAN_P));
 E void FDECL(spoteffects, (BOOLEAN_P));
-E char *FDECL(in_rooms, (XCHAR_P, XCHAR_P, int));
+
+E char* FDECL(allPlainRoomsLocatedAt, (XCHAR_P, XCHAR_P));
+E char FDECL(plainRoomLocatedAt, (XCHAR_P, XCHAR_P));
+E boolean FDECL(locationIsInAPlainRoom, (XCHAR_P, XCHAR_P));
+
+E char* FDECL(allShopsLocatedAt, (XCHAR_P, XCHAR_P));
+E char FDECL(shopLocatedAt, (XCHAR_P, XCHAR_P));
+E boolean FDECL(locationIsInAShop, (XCHAR_P, XCHAR_P));
+
+E char FDECL(templeLocatedAt, (XCHAR_P, XCHAR_P));
+E boolean FDECL(locationIsInATemple, (XCHAR_P, XCHAR_P));
+
+E char FDECL(vaultLocatedAt, (XCHAR_P, XCHAR_P));
+E boolean FDECL(locationIsInAVault, (XCHAR_P, XCHAR_P));
+
 E boolean FDECL(in_town, (int, int));
 E void FDECL(check_special_room, (BOOLEAN_P));
 E int NDECL(dopickup);

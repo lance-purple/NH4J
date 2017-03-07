@@ -436,7 +436,7 @@ xchar x, y;
         }
 
     } else if (IS_WALL(lev->typ)) {
-        if (*in_rooms(x, y, SHOPBASE)) {
+        if (locationIsInAShop(x, y)) {
             add_damage(x, y, 10L * ACURRSTR);
             dmgtxt = "damage";
         }
@@ -466,7 +466,7 @@ xchar x, y;
         lev->typ = DOOR;
 
     } else if (IS_DOOR(lev->typ)) {
-        if (*in_rooms(x, y, SHOPBASE)) {
+        if (locationIsInAShop(x, y)) {
             add_damage(x, y, 400L);
             dmgtxt = "break";
         }
@@ -2052,14 +2052,14 @@ int roomno;
         if (DEADMONSTER(mtmp))
             continue;
         if (mtmp->data == mdat
-            && oneOfRoomsHasID(in_rooms(mtmp->mx, mtmp->my, 0), roomno + ROOMOFFSET))
+            && oneOfRoomsHasID(allPlainRoomsLocatedAt(mtmp->mx, mtmp->my), roomno + ROOMOFFSET))
             return mtmp;
     }
     return (struct monst *) 0;
 }
 
-char *
-in_rooms(x, y, typewanted)
+static char *
+allRoomsAtLocationOfType(x, y, typewanted)
 register xchar x, y;
 register int typewanted;
 {
@@ -2125,6 +2125,66 @@ register int typewanted;
     return ptr;
 }
 
+char *allPlainRoomsLocatedAt(x, y)
+register xchar x, y;
+{
+    return allRoomsAtLocationOfType(x, y, 0);
+}
+
+char plainRoomLocatedAt(x, y)
+register xchar x, y;
+{
+    return (*allPlainRoomsLocatedAt(x, y));
+}
+
+boolean locationIsInAPlainRoom(x, y)
+register xchar x, y;
+{
+    return ('\0' != plainRoomLocatedAt(x, y));
+}
+
+char *allShopsLocatedAt(x, y)
+register xchar x, y;
+{
+    return allRoomsAtLocationOfType(x, y, SHOPBASE);
+}
+
+char shopLocatedAt(x, y)
+register xchar x, y;
+{
+    return (*allShopsLocatedAt(x, y));
+}
+
+boolean locationIsInAShop(x, y)
+register xchar x, y;
+{
+    return ('\0' != shopLocatedAt(x, y));
+}
+
+char templeLocatedAt(x, y)
+register xchar x, y;
+{
+    return (*allRoomsAtLocationOfType(x, y, TEMPLE));
+}
+
+boolean locationIsInATemple(x, y)
+register xchar x, y;
+{
+    return ('\0' != templeLocatedAt(x, y));
+}
+
+char vaultLocatedAt(x, y)
+register xchar x, y;
+{
+    return (*allRoomsAtLocationOfType(x, y, VAULT));
+}
+
+boolean locationIsInAVault(x, y)
+register xchar x, y;
+{
+    return ('\0' != vaultLocatedAt(x, y));
+}
+
 /* is (x,y) in a town? */
 boolean
 in_town(x, y)
@@ -2168,7 +2228,7 @@ register boolean newlev;
         copyRoomIDs(u.ushops_left, u.ushops0);
         return;
     }
-    copyRoomIDs(u.urooms, in_rooms(currentX(), currentY(), 0));
+    copyRoomIDs(u.urooms, allPlainRoomsLocatedAt(currentX(), currentY()));
 
     for ((i1 = 0, i2 = 0, i3 = 0, i4 = 0); (u.urooms[i1] != 0); i1++) {
         if (!oneOfRoomsHasID(u.urooms0, u.urooms[i1])) {

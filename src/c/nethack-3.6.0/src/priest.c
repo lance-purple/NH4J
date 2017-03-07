@@ -151,7 +151,7 @@ register struct monst *priest;
 register xchar x, y;
 {
     return (boolean) (priest && priest->ispriest
-                      && (EPRI(priest)->shroom == *in_rooms(x, y, TEMPLE))
+                      && (EPRI(priest)->shroom == templeLocatedAt(x, y))
                       && areYouOnLevel(&(EPRI(priest)->shrlevel)));
 }
 
@@ -561,7 +561,7 @@ register struct monst *priest;
     }
 
     /* you desecrated the temple and now you want to chat? */
-    if (priest->mpeaceful && *in_rooms(priest->mx, priest->my, TEMPLE)
+    if (priest->mpeaceful && locationIsInATemple(priest->mx, priest->my)
         && !has_shrine(priest)) {
         verbalize(
               "Begone!  Thou desecratest this holy place with thy presence.");
@@ -705,7 +705,7 @@ xchar x, y;
     if (currentAlignmentRecord() <= ALGN_SINNED) /* sinned or worse */
         return FALSE;
     if ((roomno = temple_occupied(u.urooms)) == 0
-        || roomno != *in_rooms(x, y, TEMPLE))
+        || roomno != templeLocatedAt(x, y))
         return FALSE;
     if ((priest = findpriest(roomno)) == 0)
         return FALSE;

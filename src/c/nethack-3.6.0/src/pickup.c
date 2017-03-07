@@ -1438,7 +1438,7 @@ struct obj *otmp;
            usually they'll be the same, but not when using telekinesis
            (if ever implemented) or a grappling hook */
         copyRoomIDs(saveushops, u.ushops);
-        fakeshop[0] = *in_rooms(otmp->ox, otmp->oy, SHOPBASE);
+        fakeshop[0] = shopLocatedAt(otmp->ox, otmp->oy);
         fakeshop[1] = '\0';
         copyRoomIDs(u.ushops, fakeshop);
         /* sets obj->unpaid if necessary */
@@ -2882,7 +2882,7 @@ struct obj *box; /* or bag */
             box->cknown = 1;
         }
         if (maybeshopgoods && !box->no_charge)
-            subfrombill(box, shop_keeper(*in_rooms(ox, oy, SHOPBASE)));
+            subfrombill(box, shop_keeper(shopLocatedAt(ox, oy)));
     } else if (SchroedingersBox(box)) {
         char yourbuf[BUFSZ];
 

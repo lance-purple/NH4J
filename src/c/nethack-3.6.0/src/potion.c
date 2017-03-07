@@ -1467,7 +1467,7 @@ boolean your_fault;
              && !objects[obj->otyp].oc_uname && cansee(mon->mx, mon->my))
         docall(obj);
     if (*u.ushops && obj->unpaid) {
-        struct monst *shkp = shop_keeper(*in_rooms(currentX(), currentY(), SHOPBASE));
+        struct monst *shkp = shop_keeper(shopLocatedAt(currentX(), currentY()));
 
         if (shkp)
             (void) stolen_value(obj, currentX(), currentY(), (boolean) shkp->mpeaceful,

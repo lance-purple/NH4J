@@ -109,10 +109,12 @@ picklock(VOID_ARGS)
         if (xlock.door->doormask & D_TRAPPED) {
             b_trapped("door", FINGER);
             xlock.door->doormask = D_NODOOR;
-            unblock_point(currentX() + directionX(), currentY() + directionY());
-            if (*in_rooms(currentX() + directionX(), currentY() + directionY(), SHOPBASE))
-                add_damage(currentX() + directionX(), currentY() + directionY(), 0L);
-            newsym(currentX() + directionX(), currentY() + directionY());
+	    int targetX = currentX() + directionX();
+	    int targetY = currentY() + directionY();
+            unblock_point(targetX, targetY);
+            if (locationIsInAShop(targetX, targetY))
+                add_damage(targetX, targetY, 0L);
+            newsym(targetX, targetY);
         } else if (xlock.door->doormask & D_LOCKED)
             xlock.door->doormask = D_CLOSED;
         else
@@ -646,7 +648,7 @@ int x, y;
         if (door->doormask & D_TRAPPED) {
             b_trapped("door", FINGER);
             door->doormask = D_NODOOR;
-            if (*in_rooms(cc.x, cc.y, SHOPBASE))
+            if (locationIsInAShop(cc.x, cc.y))
                 add_damage(cc.x, cc.y, 0L);
         } else
             door->doormask = D_ISOPEN;
@@ -980,7 +982,7 @@ int x, y;
     if (loudness > 0) {
         /* door was destroyed */
         wake_nearto(x, y, loudness);
-        if (*in_rooms(x, y, SHOPBASE))
+        if (locationIsInAShop(x, y))
             add_damage(x, y, 0L);
     }
 

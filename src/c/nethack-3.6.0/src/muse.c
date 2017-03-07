@@ -1246,7 +1246,7 @@ register struct obj *otmp;
             tele();
         } else {
             /* for consistency with zap.c, don't identify */
-            if (mtmp->ispriest && *in_rooms(mtmp->mx, mtmp->my, TEMPLE)) {
+            if (mtmp->ispriest && locationIsInATemple(mtmp->mx, mtmp->my)) {
                 if (cansee(mtmp->mx, mtmp->my))
                     pline("%s resists the magic!", Monnam(mtmp));
             } else if (!tele_restrict(mtmp))
@@ -1344,7 +1344,7 @@ struct obj *obj;                     /* 2nd arg to fhitm/fhito */
                     /* if a shop door gets broken, add it to
                        the shk's fix list (no cost to player) */
                     if (levl[bhitpos.x][bhitpos.y].doormask == D_BROKEN
-                        && *in_rooms(bhitpos.x, bhitpos.y, SHOPBASE))
+                        && locationIsInAShop(bhitpos.x, bhitpos.y))
                         add_damage(bhitpos.x, bhitpos.y, 0L);
                 }
                 break;

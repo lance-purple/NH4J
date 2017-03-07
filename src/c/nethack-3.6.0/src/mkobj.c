@@ -664,7 +664,7 @@ int alter_type;
             ox = currentX(), oy = currentY();
         if (!costly_spot(ox, oy))
             return;
-        objroom = *in_rooms(ox, oy, SHOPBASE);
+        objroom = shopLocatedAt(ox, oy);
         /* if no shop cares about it, we're done */
         if (!billable(&shkp, obj, objroom, FALSE))
             return;

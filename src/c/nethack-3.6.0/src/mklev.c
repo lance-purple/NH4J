@@ -384,7 +384,7 @@ register xchar x, y;
 struct mkroom *aroom;
 int type;
 {
-    boolean shdoor = *in_rooms(x, y, SHOPBASE) ? TRUE : FALSE;
+    boolean shdoor = locationIsInAShop(x, y);
 
     if (!IS_WALL(levl[x][y].typ)) /* avoid SDOORs on already made doors */
         type = DOOR;

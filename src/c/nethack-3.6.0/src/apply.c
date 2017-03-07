@@ -2418,7 +2418,7 @@ set_trap()
     if (ttmp) {
         ttmp->madeby_u = 1;
         feeltrap(ttmp);
-        if (*in_rooms(currentX(), currentY(), SHOPBASE)) {
+        if (locationIsInAShop(currentX(), currentY())) {
             add_damage(currentX(), currentY(), 0L); /* schedule removal */
         }
         if (!trapinfo.force_bungle)
@@ -3201,7 +3201,7 @@ struct obj *obj;
                     /* normally, pits and holes don't anger guards, but they
                      * do if it's a wall or door that's being dug */
                     watch_dig((struct monst *) 0, x, y, TRUE);
-                    if (*in_rooms(x, y, SHOPBASE))
+                    if (locationIsInAShop(x, y))
                         shop_damage = TRUE;
                 }
                 /*

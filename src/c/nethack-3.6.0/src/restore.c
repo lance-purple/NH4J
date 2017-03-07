@@ -181,7 +181,7 @@ boolean ghostly;
         if (ghostly)
             tmp_dam->when += (monstermoves - omoves);
         copyRoomIDs(damaged_shops,
-               in_rooms(tmp_dam->place.x, tmp_dam->place.y, SHOPBASE));
+               allShopsLocatedAt(tmp_dam->place.x, tmp_dam->place.y));
         if (currentDungeonLevel()) {
             /* when restoring, there are two passes over the current
              * level.  the first time, currentLevel isn't set, so neither is

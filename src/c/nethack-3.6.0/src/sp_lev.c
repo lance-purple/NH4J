@@ -1979,7 +1979,7 @@ struct mkroom *croom;
             croom_is_temple = FALSE;
     } else {
         get_location_coord(&x, &y, DRY, croom, a->coord);
-        if ((sproom = (schar) *in_rooms(x, y, TEMPLE)) != 0)
+        if ((sproom = (schar) templeLocatedAt(x, y)) != 0)
             croom = &rooms[sproom - ROOMOFFSET];
         else
             croom_is_temple = FALSE;

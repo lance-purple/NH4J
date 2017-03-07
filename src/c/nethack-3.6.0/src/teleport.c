@@ -1233,12 +1233,12 @@ register struct obj *obj;
     } else if (otx == 0 && oty == 0) {
         ; /* fell through a trap door; no update of old loc needed */
     } else {
-        char roomID = *in_rooms(otx, oty, 0);
+        char roomID = plainRoomLocatedAt(otx, oty);
         if (costly_spot(otx, oty)
             && (!costly_spot(tx, ty)
-                || !oneOfRoomsHasID(in_rooms(tx, ty, 0), roomID))) {
+                || !oneOfRoomsHasID(allPlainRoomsLocatedAt(tx, ty), roomID))) {
             if (costly_spot(currentX(), currentY())
-                && oneOfRoomsHasID(u.urooms, *in_rooms(otx, oty, 0)))
+                && oneOfRoomsHasID(u.urooms, plainRoomLocatedAt(otx, oty)))
                 addtobill(obj, FALSE, FALSE, FALSE);
             else
                 (void) stolen_value(obj, otx, oty, FALSE, FALSE);
@@ -1330,7 +1330,7 @@ boolean give_feedback;
 {
     coord cc;
 
-    if (mtmp->ispriest && *in_rooms(mtmp->mx, mtmp->my, TEMPLE)) {
+    if (mtmp->ispriest && locationIsInATemple(mtmp->mx, mtmp->my)) {
         if (give_feedback)
             pline("%s resists your magic!", Monnam(mtmp));
         return FALSE;

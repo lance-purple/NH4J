@@ -545,9 +545,9 @@ register struct monst *grd;
     struct fakecorridor *fcp;
     register struct egd *egrd = EGD(grd);
     struct rm *crm;
-    boolean goldincorridor = FALSE,
-            u_in_vault = vault_occupied(u.urooms) ? TRUE : FALSE,
-            grd_in_vault = *in_rooms(grd->mx, grd->my, VAULT) ? TRUE : FALSE;
+    boolean goldincorridor = FALSE;
+    boolean u_in_vault = vault_occupied(u.urooms) ? TRUE : FALSE;
+    boolean grd_in_vault = locationIsInAVault(grd->mx, grd->my);
     boolean disappear_msg_seen = FALSE, semi_dead = (grd->mhp <= 0);
     long umoney = money_cnt(invent);
     register boolean u_carry_gold = ((umoney + hidden_gold()) > 0L);
@@ -733,7 +733,7 @@ register struct monst *grd;
                     if (in_fcorridor(grd, nx, ny))
                         goto nextnxy;
 
-                    if (*in_rooms(nx, ny, VAULT))
+                    if (locationIsInAVault(nx, ny))
                         continue;
 
                     /* seems we found a good place to leave him alone */
