@@ -361,7 +361,7 @@ register int fd, mode;
         write_char(fd, previouslyOccupiedRoomIDs(i));
     //    write_int(fd, freshlyEnteredRooms(i));
     //    write_int(fd, currentlyOccupiedShops(i));
-    //    write_int(fd, previouslyOccupiedShops(i));
+        write_char(fd, previouslyOccupiedShopIDs(i));
     //    write_int(fd, freshlyEnteredShops(i));
     //    write_int(fd, freshlyExitedShops(i));
     }

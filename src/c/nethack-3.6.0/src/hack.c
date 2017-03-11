@@ -2219,13 +2219,14 @@ register boolean newlev;
     int i1, i2, i3, i4;
 
     copyCurrentlyOccupiedRoomIDsToPrevious();
-    copyRoomIDs(u.ushops0, u.ushops);
+    copyCurrentlyOccupiedShopIDsToPrevious();
+
     if (newlev) {
         u.urooms[0] = '\0';
         u.uentered[0] = '\0';
         u.ushops[0] = '\0';
         u.ushops_entered[0] = '\0';
-        copyRoomIDs(u.ushops_left, u.ushops0);
+        copyPreviouslyOccupiedShopIDsToExited();
         return;
     }
     copyRoomIDs(u.urooms, allPlainRoomsLocatedAt(currentX(), currentY()));
@@ -2238,7 +2239,7 @@ register boolean newlev;
         if (IS_SHOP(u.urooms[i1] - ROOMOFFSET)) {
             u.ushops[i3] = u.urooms[i1];
 	    i3++;
-            if (!oneOfRoomsHasID(u.ushops0, u.urooms[i1])) {
+            if (noneOfPreviouslyOccupiedShopsHasID(u.urooms[i1])) {
                 u.ushops_entered[i4] = u.urooms[i1];
 		i4++;
 	    }
@@ -2248,10 +2249,10 @@ register boolean newlev;
     u.ushops[i3] = '\0';
     u.ushops_entered[i4]= '\0';
 
-    /* filter u.ushops0 -> u.ushops_left */
-    for ((i1 = 0, i2 = 0); u.ushops0[i1]; i1++)
-        if (!oneOfRoomsHasID(u.ushops, u.ushops0[i1])) {
-            u.ushops_left[i2] = u.ushops0[i1];
+    /* filter previouslyOccupiedShops -> u.ushops_left */
+    for ((i1 = 0, i2 = 0); ('\0' != previouslyOccupiedShopIDs(i1)); i1++)
+        if (!oneOfRoomsHasID(u.ushops, previouslyOccupiedShopIDs(i1))) {
+            u.ushops_left[i2] = previouslyOccupiedShopIDs(i1);
 	    i2++;
 	}
     u.ushops_left[i2] = '\0';
@@ -2265,8 +2266,9 @@ register boolean newlev;
 
     move_update(newlev);
 
-    if (*u.ushops0)
+    if (youWerePreviouslyOccupyingAShop()) {
         u_left_shop(u.ushops_left, newlev);
+    }
 
     if (!*u.uentered && !*u.ushops_entered) /* implied by newlev */
         return; /* no entrance messages necessary */

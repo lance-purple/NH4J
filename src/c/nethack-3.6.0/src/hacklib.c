@@ -2334,7 +2334,6 @@ int maximumOccupiedRoomCount() {
     return javaGetInt(OCCUPIED_ROOMS_CLASS, "maximumCount");
 }
 
-
 char previouslyOccupiedRoomIDs(int i) {
     int roomID = javaGetIntFromInt(OCCUPIED_ROOMS_CLASS, "previouslyOccupiedRoomIDs", i);
     return (char) 0xff & roomID;
@@ -2343,6 +2342,16 @@ char previouslyOccupiedRoomIDs(int i) {
 void setPreviouslyOccupiedRoomIDs(int i, char roomID) {
     int v = roomID;
     javaSetIntFromInt(OCCUPIED_ROOMS_CLASS, "setPreviouslyOccupiedRoomIDs", i, v);
+}
+
+char previouslyOccupiedShopIDs(int i) {
+    int roomID = javaGetIntFromInt(OCCUPIED_ROOMS_CLASS, "previouslyOccupiedShopIDs", i);
+    return (char) 0xff & roomID;
+}
+
+void setPreviouslyOccupiedShopIDs(int i, char roomID) {
+    int v = roomID;
+    javaSetIntFromInt(OCCUPIED_ROOMS_CLASS, "setPreviouslyOccupiedShopIDs", i, v);
 }
 
 /* 

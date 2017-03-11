@@ -3137,6 +3137,47 @@ void removeIDFromRooms(char* roomIDs, char deletedRoomID) {
   copyRoomIDs(roomIDs, buf);
 }
 
+char mostRecentPreviouslyOccupiedShopID() {
+  return previouslyOccupiedShopIDs(0);
+}
+
+boolean youWerePreviouslyOccupyingAShop() {
+  return ('\0' != mostRecentPreviouslyOccupiedShopID());
+}
+
+void clearPreviouslyOccupiedShopIDs() {
+  setPreviouslyOccupiedShopIDs(0, '\0');
+}
+
+void copyCurrentlyOccupiedShopIDsToPrevious() {
+  int i = 0;
+  while (u.ushops[i] != '\0')
+  {
+    setPreviouslyOccupiedShopIDs(i, u.ushops[i]);
+    i++;
+  }
+  setPreviouslyOccupiedShopIDs(i, '\0');
+}
+
+void copyPreviouslyOccupiedShopIDsToExited() {
+  int i = 0;
+  while (previouslyOccupiedShopIDs(i) != '\0')
+  {
+    u.ushops_left[i] = previouslyOccupiedShopIDs(i);
+    i++;
+  }
+  u.ushops_left[i] = '\0';
+}
+
+boolean noneOfPreviouslyOccupiedShopsHasID(char roomID) {
+  for (int i = 0; (previouslyOccupiedShopIDs(i) != '\0'); i++) {
+    if (previouslyOccupiedShopIDs(i) == roomID) {
+      return FALSE;
+    }
+  }
+  return TRUE;
+}
+
 int darkRoomSym()
 {
     return (areYouOnRogueLevel() ? S_stone : S_darkroom);

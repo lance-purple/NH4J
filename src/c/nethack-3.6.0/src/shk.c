@@ -402,7 +402,7 @@ boolean newlev;
     if (!*leavestring && (!levl[currentX()][currentY()].edge || levl[originalX()][originalY()].edge))
         return;
 
-    shkp = shop_keeper(*u.ushops0);
+    shkp = shop_keeper(mostRecentPreviouslyOccupiedShopID());
     if (!shkp || !inhishop(shkp))
         return; /* shk died, teleported, changed levels... */
 
@@ -411,6 +411,46 @@ boolean newlev;
         return;
 
     if (!*leavestring && !muteshk(shkp)) {
+        /*
+         * Player just stepped onto shop-boundary (known from above logic).
+         * Try to intimidate him into paying his bill
+         */
+        verbalize(NOTANGRY(shkp) ? "%s!  Please pay before leaving."
+                                 : "%s!  Don't you leave without paying!",
+                  plname);
+        return;
+    }
+
+    if (rob_shop(shkp)) {
+        call_kops(shkp, (!newlev && levl[originalX()][originalY()].edge));
+    }
+}
+
+void leftPreviouslyOccupiedShop(boolean newlev)
+{
+    char shopID = mostRecentPreviouslyOccupiedShopID();
+    struct monst *shkp;
+    struct eshk *eshkp;
+
+    /*
+     * IF player
+     * ((didn't leave outright) AND
+     *  ((he is now strictly-inside the shop) OR
+     *   (he wasn't strictly-inside last turn anyway)))
+     * THEN (there's nothing to do, so just return)
+     */
+    if (!shopID && (!levl[currentX()][currentY()].edge || levl[originalX()][originalY()].edge))
+        return;
+
+    shkp = shop_keeper(shopID);
+    if (!shkp || !inhishop(shkp))
+        return; /* shk died, teleported, changed levels... */
+
+    eshkp = ESHK(shkp);
+    if (!eshkp->billct && !eshkp->debit) /* bill is settled */
+        return;
+
+    if (!shopID && !muteshk(shkp)) {
         /*
          * Player just stepped onto shop-boundary (known from above logic).
          * Try to intimidate him into paying his bill

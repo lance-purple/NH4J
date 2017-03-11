@@ -214,7 +214,6 @@ struct you {
     char urooms[5];         /* rooms (roomno + 3) occupied now */
     char uentered[5];       /* rooms (roomno + 3) entered this turn */
     char ushops[5];         /* shop rooms (roomno + 3) occupied now */
-    char ushops0[5];        /* ditto, for previous position */
     char ushops_entered[5]; /* ditto, shops entered this turn */
     char ushops_left[5];    /* ditto, shops exited this turn */
 

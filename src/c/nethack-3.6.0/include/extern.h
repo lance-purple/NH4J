@@ -1454,6 +1454,15 @@ E void FDECL(copyCurrentlyOccupiedRoomIDsToPrevious, ());
 E boolean FDECL(wasNotPreviouslyInRoom, (char));
 E boolean FDECL(wasPreviouslyOccupyingTemple, ());
 
+E char FDECL(previouslyOccupiedShopIDs, (int));
+E void FDECL(setPreviouslyOccupiedShopIDs, (int, char));
+E void FDECL(clearPreviouslyOccupiedShopIDs, ());
+E void FDECL(copyCurrentlyOccupiedShopIDsToPrevious, ());
+E void FDECL(copyPreviouslyOccupiedShopIDsToExited, ());
+E char FDECL(mostRecentPreviouslyOccupiedShopID, ());
+E boolean FDECL(youWerePreviouslyOccupyingAShop, ());
+E boolean FDECL(noneOfPreviouslyOccupiedShopsHasID, (char));
+E void FDECL(leftPreviouslyOccupiedShop, (boolean));
 /*
 E boolean FDECL(currently_occupying_room, (char));
 E boolean FDECL(previously_occupying_room, (char));
