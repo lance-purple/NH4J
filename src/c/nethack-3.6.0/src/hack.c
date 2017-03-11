@@ -2218,7 +2218,7 @@ register boolean newlev;
 {
     int i1, i2, i3, i4;
 
-    copyRoomIDs(u.urooms0, u.urooms);
+    copyCurrentlyOccupiedRoomIDsToPrevious();
     copyRoomIDs(u.ushops0, u.ushops);
     if (newlev) {
         u.urooms[0] = '\0';
@@ -2231,7 +2231,7 @@ register boolean newlev;
     copyRoomIDs(u.urooms, allPlainRoomsLocatedAt(currentX(), currentY()));
 
     for ((i1 = 0, i2 = 0, i3 = 0, i4 = 0); (u.urooms[i1] != 0); i1++) {
-        if (!oneOfRoomsHasID(u.urooms0, u.urooms[i1])) {
+        if (wasNotPreviouslyInRoom(u.urooms[i1])) {
             u.uentered[i2] = u.urooms[i1];
 	    i2++;
 	}

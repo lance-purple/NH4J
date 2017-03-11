@@ -278,6 +278,14 @@ dosave0()
     return 1;
 }
 
+static void write_char(fd, value)
+int fd;
+char value;
+{
+    bwrite(fd, (genericptr_t) &value, sizeof(char));
+}
+
+
 static void write_int(fd, value)
 int fd, value;
 {
@@ -348,16 +356,15 @@ register int fd, mode;
 
     write_int(fd, youMoved());
 
-    /*
     for (int i = 0; i < maximumOccupiedRoomCount(); i++) {
-        write_int(fd, currentlyOccupiedRooms(i));
-        write_int(fd, previouslyOccupiedRooms(i));
-        write_int(fd, freshlyEnteredRooms(i));
-        write_int(fd, currentlyOccupiedShops(i));
-        write_int(fd, previouslyOccupiedShops(i));
-        write_int(fd, freshlyEnteredShops(i));
-        write_int(fd, freshlyExitedShops(i));
-    }*/
+    //    write_int(fd, currentlyOccupiedRooms(i));
+        write_char(fd, previouslyOccupiedRoomIDs(i));
+    //    write_int(fd, freshlyEnteredRooms(i));
+    //    write_int(fd, currentlyOccupiedShops(i));
+    //    write_int(fd, previouslyOccupiedShops(i));
+    //    write_int(fd, freshlyEnteredShops(i));
+    //    write_int(fd, freshlyExitedShops(i));
+    }
 
     write_int(fd, currentTrapType());
     write_int(fd, currentTrapTimeout());

@@ -66,6 +66,7 @@
 #endif
 
 #define CONTEXT_CLASS "rec/games/roguelike/nh4j/Context"
+#define OCCUPIED_ROOMS_CLASS "rec/games/roguelike/nh4j/OccupiedRooms"
 #define PLAYER_CHARACTER_CLASS "rec/games/roguelike/nh4j/PlayerCharacter"
 #define QUALITIES_CLASS "rec/games/roguelike/nh4j/Qualities"
 #define WEAPON_SKILL_CLASS "rec/games/roguelike/nh4j/WeaponSkill"
@@ -2329,6 +2330,21 @@ midnight()
     return (getlt()->tm_hour == 0);
 }
 
+int maximumOccupiedRoomCount() {
+    return javaGetInt(OCCUPIED_ROOMS_CLASS, "maximumCount");
+}
+
+
+char previouslyOccupiedRoomIDs(int i) {
+    int roomID = javaGetIntFromInt(OCCUPIED_ROOMS_CLASS, "previouslyOccupiedRoomIDs", i);
+    return (char) 0xff & roomID;
+}
+
+void setPreviouslyOccupiedRoomIDs(int i, char roomID) {
+    int v = roomID;
+    javaSetIntFromInt(OCCUPIED_ROOMS_CLASS, "setPreviouslyOccupiedRoomIDs", i, v);
+}
+
 /* 
 boolean currently_occupying_room(char roomID) {
     for (int i = 0; (i < maximumOccupiedRoomCount()) && (currentlyOccupiedRooms(i)); i++) {
@@ -2348,10 +2364,6 @@ boolean previously_occupying_room(char roomID) {
     return FALSE;
 }
 
-int maximumOccupiedRoomCount() {
-    return javaGetInt(PLAYER_CHARACTER_CLASS, "maximumOccupiedRoomCount");
-}
-
 char currentlyOccupiedRooms(int i) {
     int roomID = javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "currentlyOccupiedRooms", i);
     return (char) 0xff & roomID;
@@ -2360,16 +2372,6 @@ char currentlyOccupiedRooms(int i) {
 void setCurrentlyOccupiedRooms(int i, char roomID) {
     int v = roomID;
     javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setCurrentlyOccupiedRooms", i, v);
-}
-
-char previouslyOccupiedRooms(int i) {
-    int roomID = javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "previouslyOccupiedRooms", i);
-    return (char) 0xff & roomID;
-}
-
-void setPreviouslyOccupiedRooms(int i, char roomID) {
-    int v = roomID;
-    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setPreviouslyOccupiedRooms", i, v);
 }
 
 char freshlyEnteredRooms(int i) {

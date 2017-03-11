@@ -1446,16 +1446,21 @@ E void FDECL(incrementKnowledgeOfPasstune, (int));
 E void FDECL(copyRoomIDs, (char*, const char*));
 E boolean FDECL(oneOfRoomsHasID, (const char*, char));
 E void FDECL(removeIDFromRooms, (char*, char));
+
+E int FDECL(maximumOccupiedRoomCount, ());
+E char FDECL(previouslyOccupiedRoomIDs, (int));
+E void FDECL(setPreviouslyOccupiedRoomIDs, (int, char));
+E void FDECL(copyCurrentlyOccupiedRoomIDsToPrevious, ());
+E boolean FDECL(wasNotPreviouslyInRoom, (char));
+E boolean FDECL(wasPreviouslyOccupyingTemple, ());
+
 /*
 E boolean FDECL(currently_occupying_room, (char));
 E boolean FDECL(previously_occupying_room, (char));
 E boolean FDECL(currently_occupying_shop, (char));
 E boolean FDECL(previously_occupying_shop, (char));
-E int FDECL(maximumOccupiedRoomCount, ());
 E char FDECL(currentlyOccupiedRooms, (int));
 E void FDECL(setCurrentlyOccupiedRooms, (int, char));
-E char FDECL(previouslyOccupiedRooms, (int));
-E void FDECL(setPreviouslyOccupiedRooms, (int, char));
 E char FDECL(freshlyEnteredRooms, (int));
 E void FDECL(setFreshlyEnteredRooms, (int, char));
 E char FDECL(currentlyOccupiedShops, (int));

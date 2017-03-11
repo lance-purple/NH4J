@@ -3093,8 +3093,29 @@ void copyRoomIDs(char* dest, const char* src) {
   dest[i] = '\0';
 }
 
-boolean oneOfRoomsHasID(const char* roomIDs, char desiredRoomID) {
 
+void copyCurrentlyOccupiedRoomIDsToPrevious() {
+  int i = 0;
+  while (u.urooms[i] != '\0')
+  {
+    setPreviouslyOccupiedRoomIDs(i, u.urooms[i]);
+    i++;
+  }
+  setPreviouslyOccupiedRoomIDs(i, '\0');
+}
+
+
+boolean wasNotPreviouslyInRoom(char roomID) {
+  for (int i = 0; (previouslyOccupiedRoomIDs(i) != '\0'); i++) {
+    if (previouslyOccupiedRoomIDs(i) == roomID) {
+      return FALSE;
+    }
+  }
+  return TRUE;
+}
+
+
+boolean oneOfRoomsHasID(const char* roomIDs, char desiredRoomID) {
   for (int i = 0; (roomIDs[i] != '\0'); i++) {
     if (roomIDs[i] == desiredRoomID) {
       return TRUE;

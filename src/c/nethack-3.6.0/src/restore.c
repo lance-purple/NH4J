@@ -507,6 +507,14 @@ register struct obj *otmp;
 #define SYSOPT_CHECK_SAVE_UID TRUE
 #endif
 
+static char read_char(fd)
+register int fd;
+{
+    int value;
+    mread(fd, (genericptr_t) &value, sizeof(char));
+    return value;
+}
+
 static int read_int(fd)
 register int fd;
 {
@@ -614,17 +622,15 @@ unsigned int *stuckid, *steedid;
     setDestinationY(read_int(fd));
     setYouMoved(read_int(fd) ? TRUE : FALSE);
 
-    /*
     for (int i =  0; i < maximumOccupiedRoomCount(); i++) {
-        setCurrentlyOccupiedRooms(i, (char) (0xff & read_int(fd)));
-        setPreviouslyOccupiedRooms(i, (char) (0xff & read_int(fd)));
-        setFreshlyEnteredRooms(i, (char) (0xff & read_int(fd)));
-        setCurrentlyOccupiedShops(i, (char) (0xff & read_int(fd)));
-        setPreviouslyOccupiedShops(i, (char) (0xff & read_int(fd)));
-        setFreshlyEnteredShops(i, (char) (0xff & read_int(fd)));
-        setFreshlyExitedShops(i, (char) (0xff & read_int(fd)));
+        //setCurrentlyOccupiedRooms(i, (char) (0xff & read_int(fd)));
+        setPreviouslyOccupiedRoomIDs(i, read_char(fd));
+        //setFreshlyEnteredRooms(i, (char) (0xff & read_int(fd)));
+        //setCurrentlyOccupiedShops(i, (char) (0xff & read_int(fd)));
+        //setPreviouslyOccupiedShops(i, (char) (0xff & read_int(fd)));
+        //setFreshlyEnteredShops(i, (char) (0xff & read_int(fd)));
+        //setFreshlyExitedShops(i, (char) (0xff & read_int(fd)));
     }
-    */
 
     setCurrentTrapType(read_int(fd));
     setCurrentTrapTimeout(read_int(fd));

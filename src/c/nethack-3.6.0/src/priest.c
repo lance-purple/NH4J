@@ -133,6 +133,20 @@ pick_move:
     return 0;
 }
 
+boolean wasPreviouslyOccupyingTemple()
+{
+    register char *ptr;
+
+    for (int i = 0; ('\0' != previouslyOccupiedRoomIDs(i)); i++) {
+        if (rooms[previouslyOccupiedRoomIDs(i) - ROOMOFFSET].rtype == TEMPLE)
+	{
+            return TRUE;
+	}
+    }
+    return FALSE;
+}
+
+
 char
 temple_occupied(array)
 register char *array;
@@ -390,8 +404,9 @@ int roomno;
     char buf[BUFSZ];
 
     /* don't do anything if hero is already in the room */
-    if (temple_occupied(u.urooms0))
+    if (wasPreviouslyOccupyingTemple()) {
         return;
+    }
 
     if ((priest = findpriest((char) roomno)) != 0) {
         /* tended */

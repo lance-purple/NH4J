@@ -31,16 +31,7 @@ public class PlayerCharacter {
 	private static int destinationY;
 
 	private static boolean youMoved;
-	
-	private static final int MAXIMUM_OCCUPIED_ROOM_COUNT = 5;
-	private static int currentlyOccupiedRooms[] = new int[MAXIMUM_OCCUPIED_ROOM_COUNT];
-	private static int previouslyOccupiedRooms[] = new int[MAXIMUM_OCCUPIED_ROOM_COUNT];
-    private static int freshlyEnteredRooms[] = new int[MAXIMUM_OCCUPIED_ROOM_COUNT];
-	private static int currentlyOccupiedShops[] = new int[MAXIMUM_OCCUPIED_ROOM_COUNT];
-	private static int previouslyOccupiedShops[] = new int[MAXIMUM_OCCUPIED_ROOM_COUNT];
-    private static int freshlyEnteredShops[] = new int[MAXIMUM_OCCUPIED_ROOM_COUNT];
-    private static int freshlyExitedShops[] = new int[MAXIMUM_OCCUPIED_ROOM_COUNT];
-    
+	    
 	private static int lastTurningDirection;
 	
 	private static TrapType currentTrapType;
@@ -1520,64 +1511,4 @@ public class PlayerCharacter {
 		haveAscended = h;
 	}
 	
-	public static int maximumOccupiedRoomCount() {
-		return MAXIMUM_OCCUPIED_ROOM_COUNT;
-	}
-
-	public static int currentlyOccupiedRooms(int index) {
-		return currentlyOccupiedRooms[index];
-	}
-	
-	public static void setCurrentlyOccupiedRooms(int index, int v) {
-		currentlyOccupiedRooms[index] = v;
-	}
-
-	public static int previouslyOccupiedRooms(int index) {
-		return previouslyOccupiedRooms[index];
-	}
-
-	public static void setPreviouslyOccupiedRooms(int index, int v) {
-		previouslyOccupiedRooms[index] = v;
-	}
-
-	public static int freshlyEnteredRooms(int index) {
-		return freshlyEnteredRooms[index];
-	}
-
-	public static void setFreshlyEnteredRooms(int index, int v) {
-		freshlyEnteredRooms[index] = v;
-	}
-
-	public static int currentlyOccupiedShops(int index) {
-		return currentlyOccupiedShops[index];
-	}
-	
-	public static void setCurrentlyOccupiedShops(int index, int v) {
-		currentlyOccupiedShops[index] = v;
-	}
-
-	public static int previouslyOccupiedShops(int index) {
-		return previouslyOccupiedShops[index];
-	}
-	
-	public static void setPreviouslyOccupiedShops(int index, int v) {
-		previouslyOccupiedShops[index] = v;
-	}
-
-	public static int freshlyEnteredShops(int index) {
-		return freshlyEnteredShops[index];
-	}
-
-	public static void setFreshlyEnteredShops(int index, int v) {
-		freshlyEnteredShops[index] = v;
-	}
-
-	public static int freshlyExitedShops(int index) {
-		return freshlyExitedShops[index];
-	}
-
-	public static void setFreshlyExitedShops(int index, int v) {
-		freshlyExitedShops[index] = v;
-	}
-
 }
