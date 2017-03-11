@@ -2252,10 +2252,10 @@ register boolean newlev;
     /* filter previouslyOccupiedShops -> u.ushops_left */
     for ((i1 = 0, i2 = 0); ('\0' != previouslyOccupiedShopIDs(i1)); i1++)
         if (!oneOfRoomsHasID(u.ushops, previouslyOccupiedShopIDs(i1))) {
-            u.ushops_left[i2] = previouslyOccupiedShopIDs(i1);
+            setFreshlyExitedShopIDs(i2, previouslyOccupiedShopIDs(i1));
 	    i2++;
 	}
-    u.ushops_left[i2] = '\0';
+    setFreshlyExitedShopIDs(i2, '\0');
 }
 
 void
@@ -2267,7 +2267,7 @@ register boolean newlev;
     move_update(newlev);
 
     if (youWerePreviouslyOccupyingAShop()) {
-        u_left_shop(u.ushops_left, newlev);
+        youLeftAShop(mostRecentFreshlyExitedShopID(), newlev);
     }
 
     if (!*u.uentered && !*u.ushops_entered) /* implied by newlev */

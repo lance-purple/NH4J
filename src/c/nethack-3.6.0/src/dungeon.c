@@ -3163,10 +3163,10 @@ void copyPreviouslyOccupiedShopIDsToExited() {
   int i = 0;
   while (previouslyOccupiedShopIDs(i) != '\0')
   {
-    u.ushops_left[i] = previouslyOccupiedShopIDs(i);
+    setFreshlyExitedShopIDs(i, previouslyOccupiedShopIDs(i));
     i++;
   }
-  u.ushops_left[i] = '\0';
+  setFreshlyExitedShopIDs(i, '\0');
 }
 
 boolean noneOfPreviouslyOccupiedShopsHasID(char roomID) {
@@ -3176,6 +3176,10 @@ boolean noneOfPreviouslyOccupiedShopsHasID(char roomID) {
     }
   }
   return TRUE;
+}
+
+char mostRecentFreshlyExitedShopID() {
+  return freshlyExitedShopIDs(0);
 }
 
 int darkRoomSym()

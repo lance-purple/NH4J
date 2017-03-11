@@ -2354,6 +2354,17 @@ void setPreviouslyOccupiedShopIDs(int i, char roomID) {
     javaSetIntFromInt(OCCUPIED_ROOMS_CLASS, "setPreviouslyOccupiedShopIDs", i, v);
 }
 
+char freshlyExitedShopIDs(int i) {
+    int roomID = javaGetIntFromInt(OCCUPIED_ROOMS_CLASS, "freshlyExitedShopIDs", i);
+    return (char) 0xff & roomID;
+}
+
+void setFreshlyExitedShopIDs(int i, char roomID) {
+    int v = roomID;
+    javaSetIntFromInt(OCCUPIED_ROOMS_CLASS, "setFreshlyExitedShopIDs", i, v);
+}
+
+
 /* 
 boolean currently_occupying_room(char roomID) {
     for (int i = 0; (i < maximumOccupiedRoomCount()) && (currentlyOccupiedRooms(i)); i++) {

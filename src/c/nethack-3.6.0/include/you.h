@@ -215,7 +215,6 @@ struct you {
     char uentered[5];       /* rooms (roomno + 3) entered this turn */
     char ushops[5];         /* shop rooms (roomno + 3) occupied now */
     char ushops_entered[5]; /* ditto, shops entered this turn */
-    char ushops_left[5];    /* ditto, shops exited this turn */
 
     struct monst *ustuck;
     struct monst *usteed;

@@ -728,7 +728,7 @@ level_tele()
         if (youWerePreviouslyOccupyingAShop()) {
             /* take unpaid inventory items off of shop bills */
             in_mklev = TRUE; /* suppress map update */
-            leftPreviouslyOccupiedShop(TRUE);
+            youLeftAShop(mostRecentPreviouslyOccupiedShopID(), TRUE);
             /* you're now effectively out of the shop */
             *u.ushops = '\0';
             clearPreviouslyOccupiedShopIDs();
