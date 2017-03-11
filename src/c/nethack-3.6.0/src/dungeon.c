@@ -3137,6 +3137,14 @@ void removeIDFromRooms(char* roomIDs, char deletedRoomID) {
   copyRoomIDs(roomIDs, buf);
 }
 
+void clearFreshlyEnteredRoomIDs() {
+  setFreshlyEnteredRoomIDs(0, '\0');
+}
+
+boolean youHaveNotFreshlyEnteredARoom() {
+  return ('\0' == freshlyEnteredRoomIDs(0));
+}
+
 char mostRecentPreviouslyOccupiedShopID() {
   return previouslyOccupiedShopIDs(0);
 }

@@ -2223,7 +2223,7 @@ register boolean newlev;
 
     if (newlev) {
         u.urooms[0] = '\0';
-        u.uentered[0] = '\0';
+        clearFreshlyEnteredRoomIDs();
         u.ushops[0] = '\0';
         u.ushops_entered[0] = '\0';
         copyPreviouslyOccupiedShopIDsToExited();
@@ -2233,7 +2233,7 @@ register boolean newlev;
 
     for ((i1 = 0, i2 = 0, i3 = 0, i4 = 0); (u.urooms[i1] != 0); i1++) {
         if (wasNotPreviouslyInRoom(u.urooms[i1])) {
-            u.uentered[i2] = u.urooms[i1];
+            setFreshlyEnteredRoomIDs(i2, u.urooms[i1]);
 	    i2++;
 	}
         if (IS_SHOP(u.urooms[i1] - ROOMOFFSET)) {
@@ -2245,7 +2245,7 @@ register boolean newlev;
 	    }
         }
     }
-    u.uentered[i2] = '\0';
+    setFreshlyEnteredRoomIDs(i2, '\0');
     u.ushops[i3] = '\0';
     u.ushops_entered[i4]= '\0';
 
@@ -2270,15 +2270,17 @@ register boolean newlev;
         youLeftAShop(mostRecentFreshlyExitedShopID(), newlev);
     }
 
-    if (!*u.uentered && !*u.ushops_entered) /* implied by newlev */
+    if (youHaveNotFreshlyEnteredARoom() && !*u.ushops_entered) /* implied by newlev */
         return; /* no entrance messages necessary */
 
     /* Did we just enter a shop? */
     if (*u.ushops_entered)
         u_entered_shop(u.ushops_entered);
 
-    for (int i = 0; u.uentered[i]; i++) {
-        int roomno = u.uentered[i] - ROOMOFFSET, rt = rooms[roomno].rtype;
+    for (int i = 0; ('\0' != freshlyEnteredRoomIDs(i)); i++) {
+	int freshRoomID = freshlyEnteredRoomIDs(i);
+        int roomno = freshRoomID - ROOMOFFSET;
+        int rt = rooms[roomno].rtype;
         boolean msg_given = TRUE;
 
         /* Did we just enter some other special room? */

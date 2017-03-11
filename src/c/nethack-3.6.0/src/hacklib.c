@@ -2344,6 +2344,16 @@ void setPreviouslyOccupiedRoomIDs(int i, char roomID) {
     javaSetIntFromInt(OCCUPIED_ROOMS_CLASS, "setPreviouslyOccupiedRoomIDs", i, v);
 }
 
+char freshlyEnteredRoomIDs(int i) {
+    int roomID = javaGetIntFromInt(OCCUPIED_ROOMS_CLASS, "freshlyEnteredRoomIDs", i);
+    return (char) 0xff & roomID;
+}
+
+void setFreshlyEnteredRoomIDs(int i, char roomID) {
+    int v = roomID;
+    javaSetIntFromInt(OCCUPIED_ROOMS_CLASS, "setFreshlyEnteredRoomIDs", i, v);
+}
+
 char previouslyOccupiedShopIDs(int i) {
     int roomID = javaGetIntFromInt(OCCUPIED_ROOMS_CLASS, "previouslyOccupiedShopIDs", i);
     return (char) 0xff & roomID;

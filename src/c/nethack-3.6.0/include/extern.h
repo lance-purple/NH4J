@@ -1454,6 +1454,11 @@ E void FDECL(copyCurrentlyOccupiedRoomIDsToPrevious, ());
 E boolean FDECL(wasNotPreviouslyInRoom, (char));
 E boolean FDECL(wasPreviouslyOccupyingTemple, ());
 
+E char FDECL(freshlyEnteredRoomIDs, (int));
+E void FDECL(setFreshlyEnteredRoomIDs, (int, char));
+E void FDECL(clearFreshlyEnteredRoomIDs, ());
+E boolean FDECL(youHaveNotFreshlyEnteredARoom, ());
+
 E char FDECL(previouslyOccupiedShopIDs, (int));
 E void FDECL(setPreviouslyOccupiedShopIDs, (int, char));
 E void FDECL(clearPreviouslyOccupiedShopIDs, ());
@@ -1466,25 +1471,6 @@ E boolean FDECL(noneOfPreviouslyOccupiedShopsHasID, (char));
 E char FDECL(freshlyExitedShopIDs, (int));
 E void FDECL(setFreshlyExitedShopIDs, (int, char));
 E char FDECL(mostRecentFreshlyExitedShopID, ());
-/*
-E boolean FDECL(currently_occupying_room, (char));
-E boolean FDECL(previously_occupying_room, (char));
-E boolean FDECL(currently_occupying_shop, (char));
-E boolean FDECL(previously_occupying_shop, (char));
-E char FDECL(currentlyOccupiedRooms, (int));
-E void FDECL(setCurrentlyOccupiedRooms, (int, char));
-E char FDECL(freshlyEnteredRooms, (int));
-E void FDECL(setFreshlyEnteredRooms, (int, char));
-E char FDECL(currentlyOccupiedShops, (int));
-E void FDECL(setCurrentlyOccupiedShops, (int, char));
-E char FDECL(previouslyOccupiedShops, (int));
-E void FDECL(setPreviouslyOccupiedShops, (int, char));
-E char FDECL(freshlyEnteredShops, (int));
-E void FDECL(setFreshlyEnteredShops, (int, char));
-E char FDECL(freshlyExitedShops, (int));
-E void FDECL(setFreshlyExitedShops, (int, char));
-*/
-
 
 /* ### invent.c ### */
 

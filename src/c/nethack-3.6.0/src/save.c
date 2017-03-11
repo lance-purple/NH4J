@@ -359,11 +359,11 @@ register int fd, mode;
     for (int i = 0; i < maximumOccupiedRoomCount(); i++) {
     //    write_int(fd, currentlyOccupiedRooms(i));
         write_char(fd, previouslyOccupiedRoomIDs(i));
-    //    write_int(fd, freshlyEnteredRooms(i));
-    //    write_int(fd, currentlyOccupiedShops(i));
+        write_char(fd, freshlyEnteredRoomIDs(i));
+    //    write_char(fd, currentlyOccupiedShops(i));
         write_char(fd, previouslyOccupiedShopIDs(i));
-    //    write_int(fd, freshlyEnteredShops(i));
-        write_int(fd, freshlyExitedShopIDs(i));
+    //    write_char(fd, freshlyEnteredShops(i));
+        write_char(fd, freshlyExitedShopIDs(i));
     }
 
     write_int(fd, currentTrapType());
