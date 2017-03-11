@@ -1468,6 +1468,13 @@ E char FDECL(mostRecentPreviouslyOccupiedShopID, ());
 E boolean FDECL(youWerePreviouslyOccupyingAShop, ());
 E boolean FDECL(noneOfPreviouslyOccupiedShopsHasID, (char));
 
+E char FDECL(freshlyEnteredShopIDs, (int));
+E void FDECL(setFreshlyEnteredShopIDs, (int, char));
+E void FDECL(clearFreshlyEnteredShopIDs, ());
+E char FDECL(mostRecentFreshlyEnteredShopID, ());
+E boolean FDECL(youHaveFreshlyEnteredAShop, ());
+E boolean FDECL(youHaveNotFreshlyEnteredAShop, ());
+
 E char FDECL(freshlyExitedShopIDs, (int));
 E void FDECL(setFreshlyExitedShopIDs, (int, char));
 E char FDECL(mostRecentFreshlyExitedShopID, ());

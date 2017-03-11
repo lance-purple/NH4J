@@ -480,12 +480,10 @@ struct monst *shkp;
 }
 
 /* give a message when entering an untended shop (caller has verified that) */
-STATIC_OVL void
-deserted_shop(enterstring)
-/*const*/ char *enterstring;
+STATIC_OVL void announceDesertedShop(char shopID)
 {
     struct monst *mtmp;
-    struct mkroom *r = &rooms[(int) *enterstring - ROOMOFFSET];
+    struct mkroom *r = &rooms[(int) shopID - ROOMOFFSET];
     int x, y, m = 0, n = 0;
 
     for (x = r->lx; x <= r->hx; ++x)
@@ -509,22 +507,21 @@ deserted_shop(enterstring)
 }
 
 void
-u_entered_shop(enterstring)
-char *enterstring;
+youEnteredAShop(char enteredShopID)
 {
     register int rt;
     register struct monst *shkp;
     register struct eshk *eshkp;
     static char empty_shops[5];
 
-    if (!*enterstring)
+    if (!enteredShopID)
         return;
 
-    if (!(shkp = shop_keeper(*enterstring))) {
-        if (!oneOfRoomsHasID(empty_shops, *enterstring)
+    if (!(shkp = shop_keeper(enteredShopID))) {
+        if (!oneOfRoomsHasID(empty_shops, enteredShopID)
             && allShopsLocatedAt(currentX(), currentY())
                    != allShopsLocatedAt(originalX(), originalY()))
-            deserted_shop(enterstring);
+            announceDesertedShop(enteredShopID);
         copyRoomIDs(empty_shops, u.ushops);
         u.ushops[0] = '\0';
         return;
@@ -535,8 +532,8 @@ char *enterstring;
     if (!inhishop(shkp)) {
         /* dump core when referenced */
         eshkp->bill_p = (struct bill_x *) -1000;
-        if (!oneOfRoomsHasID(empty_shops, *enterstring))
-            deserted_shop(enterstring);
+        if (!oneOfRoomsHasID(empty_shops, enteredShopID))
+            announceDesertedShop(enteredShopID);
         copyRoomIDs(empty_shops, u.ushops);
         u.ushops[0] = '\0';
         return;
@@ -562,7 +559,7 @@ char *enterstring;
         return;
     }
 
-    rt = rooms[*enterstring - ROOMOFFSET].rtype;
+    rt = rooms[enteredShopID - ROOMOFFSET].rtype;
 
     if (ANGRY(shkp)) {
         verbalize("So, %s, you dare return to %s %s?!", plname,

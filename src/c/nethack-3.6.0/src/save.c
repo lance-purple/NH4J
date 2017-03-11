@@ -362,7 +362,7 @@ register int fd, mode;
         write_char(fd, freshlyEnteredRoomIDs(i));
     //    write_char(fd, currentlyOccupiedShops(i));
         write_char(fd, previouslyOccupiedShopIDs(i));
-    //    write_char(fd, freshlyEnteredShops(i));
+        write_char(fd, freshlyEnteredShopIDs(i));
         write_char(fd, freshlyExitedShopIDs(i));
     }
 

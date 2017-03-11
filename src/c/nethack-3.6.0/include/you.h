@@ -213,7 +213,6 @@ struct you {
 
     char urooms[5];         /* rooms (roomno + 3) occupied now */
     char ushops[5];         /* shop rooms (roomno + 3) occupied now */
-    char ushops_entered[5]; /* ditto, shops entered this turn */
 
     struct monst *ustuck;
     struct monst *usteed;

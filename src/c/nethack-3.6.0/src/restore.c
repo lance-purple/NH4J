@@ -628,7 +628,7 @@ unsigned int *stuckid, *steedid;
         setFreshlyEnteredRoomIDs(i, read_char(fd));
         //setCurrentlyOccupiedShops(i, (char) (0xff & read_int(fd)));
         setPreviouslyOccupiedShopIDs(i, read_char(fd));
-        //setFreshlyEnteredShops(i, (char) (0xff & read_int(fd)));
+        setFreshlyEnteredShopIDs(i, read_char(fd));
         setFreshlyExitedShopIDs(i, read_char(fd));
     }
 

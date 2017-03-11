@@ -3186,6 +3186,22 @@ boolean noneOfPreviouslyOccupiedShopsHasID(char roomID) {
   return TRUE;
 }
 
+void clearFreshlyEnteredShopIDs() {
+  setFreshlyEnteredShopIDs(0, '\0');
+}
+
+boolean youHaveFreshlyEnteredAShop() {
+  return ('\0' != freshlyEnteredShopIDs(0));
+}
+
+boolean youHaveNotFreshlyEnteredAShop() {
+  return ('\0' == freshlyEnteredShopIDs(0));
+}
+
+char mostRecentFreshlyEnteredShopID() {
+  return freshlyEnteredShopIDs(0);
+}
+
 char mostRecentFreshlyExitedShopID() {
   return freshlyExitedShopIDs(0);
 }
