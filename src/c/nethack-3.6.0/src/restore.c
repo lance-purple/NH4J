@@ -626,10 +626,11 @@ unsigned int *stuckid, *steedid;
         //setCurrentlyOccupiedRooms(i, (char) (0xff & read_int(fd)));
         setPreviouslyOccupiedRoomIDs(i, read_char(fd));
         setFreshlyEnteredRoomIDs(i, read_char(fd));
-        //setCurrentlyOccupiedShops(i, (char) (0xff & read_int(fd)));
+        setCurrentlyOccupiedShopIDs(i, read_char(fd));
         setPreviouslyOccupiedShopIDs(i, read_char(fd));
         setFreshlyEnteredShopIDs(i, read_char(fd));
         setFreshlyExitedShopIDs(i, read_char(fd));
+        setEmptyShopIDs(i, read_char(fd));
     }
 
     setCurrentTrapType(read_int(fd));

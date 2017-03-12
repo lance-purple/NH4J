@@ -1432,21 +1432,30 @@ struct obj *otmp;
 {
     obj_extract_self(otmp);
     if (!swallowed() && otmp != uball && costly_spot(otmp->ox, otmp->oy)) {
-        char saveushops[5], fakeshop[2]; 
+        char fakeShopID;
+        char savedShopIDs[2];
 
         /* addtobill cares about your location rather than the object's;
            usually they'll be the same, but not when using telekinesis
            (if ever implemented) or a grappling hook */
-        copyRoomIDs(saveushops, u.ushops);
-        fakeshop[0] = shopLocatedAt(otmp->ox, otmp->oy);
-        fakeshop[1] = '\0';
-        copyRoomIDs(u.ushops, fakeshop);
+        savedShopIDs[0] = currentlyOccupiedShopIDs(0);
+        savedShopIDs[1] = currentlyOccupiedShopIDs(1);
+
+        fakeShopID = shopLocatedAt(otmp->ox, otmp->oy);
+
+        setCurrentlyOccupiedShopIDs(0, fakeShopID);
+        setCurrentlyOccupiedShopIDs(1, '\0');
+
         /* sets obj->unpaid if necessary */
         addtobill(otmp, TRUE, FALSE, FALSE);
-        copyRoomIDs(u.ushops, saveushops);
+
+        setCurrentlyOccupiedShopIDs(0, savedShopIDs[0]);
+        setCurrentlyOccupiedShopIDs(1, savedShopIDs[1]);
+
         /* if you're outside the shop, make shk notice */
-        if (!oneOfRoomsHasID(u.ushops, *fakeshop))
+        if (noneOfCurrentlyOccupiedShopsHasID(fakeShopID)) {
             remote_burglary(otmp->ox, otmp->oy);
+        }
     }
     newsym(otmp->ox, otmp->oy);
     return addinv(otmp); /* might merge it with other objects */
@@ -2148,7 +2157,7 @@ struct obj *item;
     else
         You("%s %s disappear!", youCannotSee() ? "notice" : "see", doname(item));
 
-    if (*u.ushops && (shkp = shop_keeper(*u.ushops)) != 0) {
+    if (youAreCurrentlyOccupyingAShop() && (shkp = shop_keeper(mostRecentCurrentlyOccupiedShopID())) != 0) {
         if (held ? (boolean) item->unpaid : costly_spot(currentX(), currentY()))
             loss = stolen_value(item, currentX(), currentY(), (boolean) shkp->mpeaceful,
                                 TRUE);

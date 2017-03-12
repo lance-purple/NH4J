@@ -3145,6 +3145,52 @@ boolean youHaveNotFreshlyEnteredARoom() {
   return ('\0' == freshlyEnteredRoomIDs(0));
 }
 
+char mostRecentCurrentlyOccupiedShopID() {
+  return currentlyOccupiedShopIDs(0);
+}
+
+boolean youAreCurrentlyOccupyingAShop() {
+  return ('\0' != mostRecentCurrentlyOccupiedShopID());
+}
+
+boolean youAreNotCurrentlyOccupyingAShop() {
+  return ('\0' == mostRecentCurrentlyOccupiedShopID());
+}
+
+void clearCurrentlyOccupiedShopIDs() {
+  setCurrentlyOccupiedShopIDs(0, '\0');
+}
+
+void removeIDFromCurrentlyOccupiedShops(char deletedRoomID) {
+  char buf[5];
+  int j = 0;
+
+  for (int i = 0; (currentlyOccupiedShopIDs(i) != '\0'); i++) {
+    if (currentlyOccupiedShopIDs(i) != deletedRoomID) {
+      buf[j++] = currentlyOccupiedShopIDs(i);
+    }
+  }
+  buf[j] = '\0';
+
+  for (j = 0; (buf[j] != '\0'); j++) {
+    setCurrentlyOccupiedShopIDs(j, buf[j]);
+  }
+  setCurrentlyOccupiedShopIDs(j, '\0');
+}
+
+boolean oneOfCurrentlyOccupiedShopsHasID(char roomID) {
+  for (int i = 0; (currentlyOccupiedShopIDs(i) != '\0'); i++) {
+    if (currentlyOccupiedShopIDs(i) == roomID) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+boolean noneOfCurrentlyOccupiedShopsHasID(char roomID) {
+  return !oneOfCurrentlyOccupiedShopsHasID(roomID);
+}
+
 char mostRecentPreviouslyOccupiedShopID() {
   return previouslyOccupiedShopIDs(0);
 }
@@ -3159,9 +3205,9 @@ void clearPreviouslyOccupiedShopIDs() {
 
 void copyCurrentlyOccupiedShopIDsToPrevious() {
   int i = 0;
-  while (u.ushops[i] != '\0')
+  while (currentlyOccupiedShopIDs(i) != '\0')
   {
-    setPreviouslyOccupiedShopIDs(i, u.ushops[i]);
+    setPreviouslyOccupiedShopIDs(i, currentlyOccupiedShopIDs(i));
     i++;
   }
   setPreviouslyOccupiedShopIDs(i, '\0');
@@ -3204,6 +3250,25 @@ char mostRecentFreshlyEnteredShopID() {
 
 char mostRecentFreshlyExitedShopID() {
   return freshlyExitedShopIDs(0);
+}
+
+boolean noneOfEmptyShopsHasID(char roomID) {
+  for (int i = 0; (emptyShopIDs(i) != '\0'); i++) {
+    if (emptyShopIDs(i) == roomID) {
+      return FALSE;
+    }
+  }
+  return TRUE;
+}
+
+void copyCurrentlyOccupiedShopIDsToEmpty() {
+  int i = 0;
+  while (currentlyOccupiedShopIDs(i) != '\0')
+  {
+    setEmptyShopIDs(i, currentlyOccupiedShopIDs(i));
+    i++;
+  }
+  setEmptyShopIDs(i, '\0');
 }
 
 int darkRoomSym()

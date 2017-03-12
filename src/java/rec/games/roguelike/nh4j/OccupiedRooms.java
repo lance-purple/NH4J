@@ -7,9 +7,12 @@ public class OccupiedRooms {
 	private static int previouslyOccupiedRoomIDs[] = new int[MAXIMUM_COUNT];
 	private static int freshlyEnteredRoomIDs[]     = new int[MAXIMUM_COUNT];
 	
+	private static int currentlyOccupiedShopIDs[]  = new int[MAXIMUM_COUNT];
 	private static int previouslyOccupiedShopIDs[] = new int[MAXIMUM_COUNT];
 	private static int freshlyEnteredShopIDs[]     = new int[MAXIMUM_COUNT];
 	private static int freshlyExitedShopIDs[]      = new int[MAXIMUM_COUNT];
+
+	private static int emptyShopIDs[] = new int[MAXIMUM_COUNT];
 
 	public static int maximumCount() {
 		return MAXIMUM_COUNT;
@@ -29,6 +32,14 @@ public class OccupiedRooms {
 
 	public static void setFreshlyEnteredRoomIDs(int index, int roomID) {
 		freshlyEnteredRoomIDs[index] = roomID;
+	}
+
+	public static int currentlyOccupiedShopIDs(int index) {
+		return currentlyOccupiedShopIDs[index];
+	}
+
+	public static void setCurrentlyOccupiedShopIDs(int index, int roomID) {
+		currentlyOccupiedShopIDs[index] = roomID;
 	}
 
 	public static int previouslyOccupiedShopIDs(int index) {
@@ -53,6 +64,14 @@ public class OccupiedRooms {
 
 	public static void setFreshlyExitedShopIDs(int index, int roomID) {
 		freshlyExitedShopIDs[index] = roomID;
+	}
+
+	public static int emptyShopIDs(int index) {
+		return emptyShopIDs[index];
+	}
+
+	public static void setEmptyShopIDs(int index, int roomID) {
+		emptyShopIDs[index] = roomID;
 	}
 
 }

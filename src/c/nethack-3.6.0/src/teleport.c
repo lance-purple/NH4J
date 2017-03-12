@@ -730,7 +730,7 @@ level_tele()
             in_mklev = TRUE; /* suppress map update */
             youLeftAShop(mostRecentPreviouslyOccupiedShopID(), TRUE);
             /* you're now effectively out of the shop */
-            *u.ushops = '\0';
+            clearCurrentlyOccupiedShopIDs();
             clearPreviouslyOccupiedShopIDs();
             in_mklev = FALSE;
         }

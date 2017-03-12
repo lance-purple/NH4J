@@ -398,7 +398,7 @@ struct obj *otmp;
         if (mtmp->mhp > 0) {
             wakeup(mtmp);
             m_respond(mtmp);
-            if (mtmp->isshk && !*u.ushops)
+            if (mtmp->isshk && youAreNotCurrentlyOccupyingAShop())
                 hot_pursuit(mtmp);
         } else if (mtmp->m_ap_type)
             seemimic(mtmp); /* might unblock if mimicing a boulder/door */
@@ -1144,7 +1144,7 @@ int mat, minwt;
             == (rn2(minwt + 1) != 0)) {
             /* appropriately add damage to bill */
             if (costly_spot(otmp->ox, otmp->oy)) {
-                if (*u.ushops)
+                if (youAreCurrentlyOccupyingAShop())
                     addtobill(otmp, FALSE, FALSE, FALSE);
                 else
                     (void) stolen_value(otmp, otmp->ox, otmp->oy, FALSE,
@@ -1287,7 +1287,7 @@ struct obj *obj;
 
     /* appropriately add damage to bill */
     if (costly_spot(obj->ox, obj->oy)) {
-        if (*u.ushops)
+        if (youAreCurrentlyOccupyingAShop())
             addtobill(obj, FALSE, FALSE, FALSE);
         else
             (void) stolen_value(obj, obj->ox, obj->oy, FALSE, FALSE);
@@ -1561,7 +1561,7 @@ int id;
                  && (contained_cost(obj, shkp, 0L, FALSE, FALSE) != 0L)))
             && inhishop(shkp)) {
             if (shkp->mpeaceful) {
-                if (*u.ushops
+                if (youAreCurrentlyOccupyingAShop()
                     && plainRoomLocatedAt(currentX(), currentY())
                            == plainRoomLocatedAt(shkp->mx, shkp->my)
                     && !costly_spot(currentX(), currentY()))
@@ -4433,7 +4433,7 @@ short exploding_wand_typ;
             setmangry(mon);
             if (mon->ispriest && locationIsInATemple(mon->mx, mon->my))
                 ghod_hitsu(mon);
-            if (mon->isshk && !*u.ushops)
+            if (mon->isshk && youAreNotCurrentlyOccupyingAShop())
                 hot_pursuit(mon);
         }
     }

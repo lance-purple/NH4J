@@ -493,7 +493,7 @@ dig(VOID_ARGS)
 int
 holetime()
 {
-    if (occupation != dig || !*u.ushops)
+    if (occupation != dig || youAreNotCurrentlyOccupyingAShop())
         return -1;
     return ((250 - context.digging.effort) / 20);
 }
@@ -666,7 +666,7 @@ int ttyp;
             } else {
                 d_level newlevel;
 
-                if (*u.ushops && madeby_u)
+                if (youAreCurrentlyOccupyingAShop() && madeby_u)
                     shopdig(1); /* shk might snatch pack */
                 /* handle earlier damage, eg breaking wand of digging */
                 else if (!madeby_u)
@@ -1177,8 +1177,9 @@ struct obj *obj;
             assignFromCurrentLevel(&context.digging.level);
             context.digging.effort = 0;
             You("start %s downward.", verbing);
-            if (*u.ushops)
+            if (youAreCurrentlyOccupyingAShop()) {
                 shopdig(0);
+            }
         } else
             You("continue %s downward.", verbing);
         did_dig_msg = FALSE;

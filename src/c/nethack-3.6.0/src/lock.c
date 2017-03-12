@@ -145,8 +145,8 @@ boolean destroyit;
         box->lknown = 1;
     } else { /* #force has destroyed this box (at <currentX(),currentY()>) */
         struct obj *otmp;
-        struct monst *shkp = (*u.ushops && costly_spot(currentX(), currentY()))
-                                 ? shop_keeper(*u.ushops)
+        struct monst *shkp = (youAreCurrentlyOccupyingAShop() && costly_spot(currentX(), currentY()))
+                                 ? shop_keeper(mostRecentCurrentlyOccupiedShopID())
                                  : 0;
         boolean costly = (boolean) (shkp != 0),
                 peaceful_shk = costly && (boolean) shkp->mpeaceful;

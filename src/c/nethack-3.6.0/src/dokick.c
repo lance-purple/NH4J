@@ -410,8 +410,8 @@ xchar x, y; /* coordinates where object was before the impact, not after */
 
     costly = ((shkp = shop_keeper(shopLocatedAt(x, y)))
               && costly_spot(x, y));
-    insider = (*u.ushops && inside_shop(currentX(), currentY())
-               && shopLocatedAt(x, y) == *u.ushops);
+    insider = (youAreCurrentlyOccupyingAShop() && inside_shop(currentX(), currentY())
+               && shopLocatedAt(x, y) == mostRecentCurrentlyOccupiedShopID());
     /* if dropped or thrown, shop ownership flags are set on this obj */
     frominv = (obj != kickedobj);
 

@@ -1466,7 +1466,7 @@ boolean your_fault;
     else if (obj->dknown && !objects[obj->otyp].oc_name_known
              && !objects[obj->otyp].oc_uname && cansee(mon->mx, mon->my))
         docall(obj);
-    if (*u.ushops && obj->unpaid) {
+    if (youAreCurrentlyOccupyingAShop() && obj->unpaid) {
         struct monst *shkp = shop_keeper(shopLocatedAt(currentX(), currentY()));
 
         if (shkp)

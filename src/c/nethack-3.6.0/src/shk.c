@@ -205,10 +205,10 @@ struct monst *mtmp;
 
         /* Make sure bill is set only when the
            dead shk is the resident shk. */
-        if (oneOfRoomsHasID(u.ushops, eshk->shoproom)) {
+        if (oneOfCurrentlyOccupiedShopsHasID(eshk->shoproom)) {
             setpaid(mtmp);
             eshk->bill_p = (struct bill_x *) 0;
-	    removeIDFromRooms(u.ushops, eshk->shoproom);
+	    removeIDFromCurrentlyOccupiedShops(eshk->shoproom);
         }
     }
 }
@@ -228,7 +228,7 @@ replshk(mtmp, mtmp2)
 register struct monst *mtmp, *mtmp2;
 {
     rooms[ESHK(mtmp2)->shoproom - ROOMOFFSET].resident = mtmp2;
-    if (inhishop(mtmp) && *u.ushops == ESHK(mtmp)->shoproom) {
+    if (inhishop(mtmp) && mostRecentCurrentlyOccupiedShopID() == ESHK(mtmp)->shoproom) {
         ESHK(mtmp2)->bill_p = &(ESHK(mtmp2)->bill[0]);
     }
 }
@@ -512,18 +512,18 @@ youEnteredAShop(char enteredShopID)
     register int rt;
     register struct monst *shkp;
     register struct eshk *eshkp;
-    static char empty_shops[5];
 
     if (!enteredShopID)
         return;
 
     if (!(shkp = shop_keeper(enteredShopID))) {
-        if (!oneOfRoomsHasID(empty_shops, enteredShopID)
+        if (noneOfEmptyShopsHasID(enteredShopID)
             && allShopsLocatedAt(currentX(), currentY())
-                   != allShopsLocatedAt(originalX(), originalY()))
+                   != allShopsLocatedAt(originalX(), originalY())) {
             announceDesertedShop(enteredShopID);
-        copyRoomIDs(empty_shops, u.ushops);
-        u.ushops[0] = '\0';
+	}
+        copyCurrentlyOccupiedShopIDsToEmpty();
+        clearCurrentlyOccupiedShopIDs();
         return;
     }
 
@@ -532,10 +532,11 @@ youEnteredAShop(char enteredShopID)
     if (!inhishop(shkp)) {
         /* dump core when referenced */
         eshkp->bill_p = (struct bill_x *) -1000;
-        if (!oneOfRoomsHasID(empty_shops, enteredShopID))
+        if (noneOfEmptyShopsHasID(enteredShopID)) {
             announceDesertedShop(enteredShopID);
-        copyRoomIDs(empty_shops, u.ushops);
-        u.ushops[0] = '\0';
+	}
+        copyCurrentlyOccupiedShopIDsToEmpty();
+        clearCurrentlyOccupiedShopIDs();
         return;
     }
 
@@ -629,7 +630,7 @@ struct obj *obj;
 
     if (obj->unpaid || !is_pick(obj))
         return;
-    shkp = shop_keeper(*u.ushops);
+    shkp = shop_keeper(mostRecentCurrentlyOccupiedShopID());
     if (shkp && inhishop(shkp) && !muteshk(shkp)) {
         static NEARDATA long pickmovetime = 0L;
 
@@ -846,9 +847,9 @@ register struct obj *obj, *merge;
     }
     /* sanity check, more or less */
     if (!shkp)
-        shkp = shop_keeper(*u.ushops);
+        shkp = shop_keeper(mostRecentCurrentlyOccupiedShopID());
     /*
-     * Note:  `shkp = shop_keeper(*u.ushops)' used to be
+     * Note:  `shkp = shop_keeper(mostRecentCurrentlyOccupiedShopID())' used to be
      *    unconditional.  But obfree() is used all over
      *    the place, so making its behavior be dependent
      *    upon player location doesn't make much sense.
@@ -1165,7 +1166,7 @@ dopay()
             nxtm = shkp;
         if (canspotmon(shkp))
             seensk++;
-        if (inhishop(shkp) && (*u.ushops == ESHK(shkp)->shoproom))
+        if (inhishop(shkp) && (mostRecentCurrentlyOccupiedShopID() == ESHK(shkp)->shoproom))
             resident = shkp;
     }
 
@@ -1616,7 +1617,7 @@ int croaked; /* -1: escaped dungeon; 0: quit; 1: died */
         mtmp2 = mtmp->nmon;
         eshkp = ESHK(mtmp);
         local = areYouOnLevel(&eshkp->shoplevel);
-        if (local && oneOfRoomsHasID(u.ushops, eshkp->shoproom)) {
+        if (local && oneOfCurrentlyOccupiedShopsHasID(eshkp->shoproom)) {
             /* inside this shk's shop [there might be more than one
                resident shk if hero is standing in a breech of a shared
                wall, so give priority to one who's also owed money] */
@@ -1675,7 +1676,7 @@ int croaked;
     struct eshk *eshkp = ESHK(shkp);
     boolean take = FALSE, taken = FALSE;
     unsigned save_minvis = shkp->minvis;
-    int roomno = *u.ushops;
+    int roomno = mostRecentCurrentlyOccupiedShopID();
     char takes[BUFSZ];
 
     shkp->minvis = 0;
@@ -1772,7 +1773,7 @@ struct monst *shkp;
 
     /* if you're not in this shk's shop room, or if you're in its doorway
         or entry spot, then your gear gets dumped all the way inside */
-    if (*u.ushops != eshkp->shoproom || IS_DOOR(levl[currentX()][currentY()].typ)
+    if (mostRecentCurrentlyOccupiedShopID() != eshkp->shoproom || IS_DOOR(levl[currentX()][currentY()].typ)
         || (currentX() == eshkp->shk.x && currentY() == eshkp->shk.y)) {
         /* shk.x,shk.y is the position immediately in
          * front of the door -- move in one more space
@@ -1876,7 +1877,7 @@ register struct obj *obj;
     xchar x, y;
     long cost = 0L;
 
-    if (*u.ushops
+    if (youAreCurrentlyOccupyingAShop()
         && obj->oclass != COIN_CLASS
         && obj != uball && obj != uchain
         && get_obj_location(obj, &x, &y, 0)
@@ -2240,7 +2241,7 @@ struct monst *shkp;
     struct bill_x *bp;
     int bct;
 
-    if (!billable(&shkp, obj, *u.ushops, TRUE))
+    if (!billable(&shkp, obj, mostRecentCurrentlyOccupiedShopID(), TRUE))
         return;
     eshkp = ESHK(shkp);
 
@@ -2383,7 +2384,7 @@ boolean ininv, dummy, silent;
     int contentscount;
     boolean container;
 
-    if (!billable(&shkp, obj, *u.ushops, TRUE))
+    if (!billable(&shkp, obj, mostRecentCurrentlyOccupiedShopID(), TRUE))
         return;
 
     if (obj->oclass == COIN_CLASS) {
@@ -2500,7 +2501,7 @@ register struct obj *obj, *otmp;
     /* otmp has been split off from obj */
     register struct bill_x *bp;
     register long tmp;
-    register struct monst *shkp = shop_keeper(*u.ushops);
+    register struct monst *shkp = shop_keeper(mostRecentCurrentlyOccupiedShopID());
 
     if (!shkp || !inhishop(shkp)) {
         impossible("splitbill: no resident shopkeeper??");
@@ -2765,7 +2766,7 @@ xchar x, y;
         return;
     if (!costly_spot(x, y))
         return;
-    if (!*u.ushops)
+    if (youAreNotCurrentlyOccupyingAShop())
         return;
 
     if (obj->unpaid && !container && !isgold) {
@@ -3031,7 +3032,7 @@ int mode; /* 0: deliver count 1: paged */
     char *buf_p;
     winid datawin;
 
-    shkp = shop_keeper(*u.ushops);
+    shkp = shop_keeper(mostRecentCurrentlyOccupiedShopID());
     if (!shkp || !inhishop(shkp)) {
         if (mode != 0)
             impossible("doinvbill: no shopkeeper?");
@@ -3152,7 +3153,7 @@ register xchar x, y;
         return 0;
 
     if (shkp->mcanmove && !shkp->msleeping
-        && (*u.ushops != ESHK(shkp)->shoproom || !inside_shop(currentX(), currentY()))
+        && (mostRecentCurrentlyOccupiedShopID() != ESHK(shkp)->shoproom || !inside_shop(currentX(), currentY()))
         && dist2(shkp->mx, shkp->my, x, y) < 3
         /* if it is the shk's pos, you hit and anger him */
         && (shkp->mx != x || shkp->my != y)) {
@@ -3563,7 +3564,7 @@ register struct monst *shkp;
                     return 0;
                 avoid = !badinv;
             } else {
-                avoid = (*u.ushops && distanceSquaredToYou(gx, gy) > 8);
+                avoid = (youAreCurrentlyOccupyingAShop() && distanceSquaredToYou(gx, gy) > 8);
                 badinv = FALSE;
             }
 
@@ -3612,7 +3613,7 @@ void
 shopdig(fall)
 register int fall;
 {
-    register struct monst *shkp = shop_keeper(*u.ushops);
+    register struct monst *shkp = shop_keeper(mostRecentCurrentlyOccupiedShopID());
     int lang;
     const char *grabs = "grabs";
 
@@ -3734,7 +3735,7 @@ boolean cant_mollify;
 {
     register struct monst *shkp = (struct monst *) 0;
     char shops_affected[5];
-    register boolean uinshp = (*u.ushops != '\0');
+    register boolean uinshp = youAreCurrentlyOccupyingAShop();
     char qbuf[80];
     register xchar x, y;
     boolean dugwall = (!strcmp(dmgstr, "dig into")    /* wand */
@@ -4182,10 +4183,10 @@ boolean altusage;
     char buf[BUFSZ];
     long tmp;
 
-    if (!otmp->unpaid || !*u.ushops
+    if (!otmp->unpaid || youAreNotCurrentlyOccupyingAShop()
         || (otmp->spe <= 0 && objects[otmp->otyp].oc_charged))
         return;
-    if (!(shkp = shop_keeper(*u.ushops)) || !inhishop(shkp))
+    if (!(shkp = shop_keeper(mostRecentCurrentlyOccupiedShopID())) || !inhishop(shkp))
         return;
     if ((tmp = cost_per_charge(shkp, otmp, altusage)) == 0L)
         return;
@@ -4276,7 +4277,7 @@ register xchar x, y;
         return FALSE;
     if (!IS_DOOR(levl[x][y].typ))
         return FALSE;
-    if (roomno != *u.ushops)
+    if (roomno != mostRecentCurrentlyOccupiedShopID())
         return FALSE;
 
     if (!(shkp = shop_keeper((char) roomno)) || !inhishop(shkp))

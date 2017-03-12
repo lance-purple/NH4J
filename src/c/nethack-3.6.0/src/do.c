@@ -29,10 +29,10 @@ dodrop()
 {
     int result, i = (invent) ? 0 : (SIZE(drop_types) - 1);
 
-    if (*u.ushops)
+    if (youAreCurrentlyOccupyingAShop())
         sellobj_state(SELL_DELIBERATE);
     result = drop(getobj(&drop_types[i], "drop"));
-    if (*u.ushops)
+    if (youAreCurrentlyOccupyingAShop())
         sellobj_state(SELL_NORMAL);
     reset_occupations();
 
@@ -719,12 +719,12 @@ doddrop()
     int result = 0;
 
     add_valid_menu_class(0); /* clear any classes already there */
-    if (*u.ushops)
+    if (youAreCurrentlyOccupyingAShop())
         sellobj_state(SELL_DELIBERATE);
     if (flags.menu_style != MENU_TRADITIONAL
         || (result = ggetobj("drop", drop, 0, FALSE, (unsigned *) 0)) < -1)
         result = menu_drop(result);
-    if (*u.ushops)
+    if (youAreCurrentlyOccupyingAShop())
         sellobj_state(SELL_NORMAL);
     reset_occupations();
 

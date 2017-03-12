@@ -2224,7 +2224,7 @@ register boolean newlev;
     if (newlev) {
         u.urooms[0] = '\0';
         clearFreshlyEnteredRoomIDs();
-        u.ushops[0] = '\0';
+        clearCurrentlyOccupiedShopIDs();
         clearFreshlyEnteredShopIDs();
         copyPreviouslyOccupiedShopIDsToExited();
         return;
@@ -2237,7 +2237,7 @@ register boolean newlev;
 	    i2++;
 	}
         if (IS_SHOP(u.urooms[i1] - ROOMOFFSET)) {
-            u.ushops[i3] = u.urooms[i1];
+            setCurrentlyOccupiedShopIDs(i3, u.urooms[i1]);
 	    i3++;
             if (noneOfPreviouslyOccupiedShopsHasID(u.urooms[i1])) {
                 setFreshlyEnteredShopIDs(i4, u.urooms[i1]);
@@ -2246,12 +2246,12 @@ register boolean newlev;
         }
     }
     setFreshlyEnteredRoomIDs(i2, '\0');
-    u.ushops[i3] = '\0';
+    setCurrentlyOccupiedShopIDs(i3, '\0');
     setFreshlyEnteredShopIDs(i4, '\0');
 
-    /* filter previouslyOccupiedShops -> u.ushops_left */
+    /* filter previouslyOccupiedShops -> currentlyOccupiedShops left */
     for ((i1 = 0, i2 = 0); ('\0' != previouslyOccupiedShopIDs(i1)); i1++)
-        if (!oneOfRoomsHasID(u.ushops, previouslyOccupiedShopIDs(i1))) {
+        if (noneOfCurrentlyOccupiedShopsHasID(previouslyOccupiedShopIDs(i1))) {
             setFreshlyExitedShopIDs(i2, previouslyOccupiedShopIDs(i1));
 	    i2++;
 	}
