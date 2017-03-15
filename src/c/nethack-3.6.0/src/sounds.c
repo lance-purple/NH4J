@@ -98,10 +98,10 @@ dosounds()
 #if defined(AMIGA) && defined(AZTEC_C_WORKAROUND)
                 /* Bug in aztec assembler here. Workaround below */
                 xx = ROOM_INDEX(sroom) + ROOMOFFSET;
-                xx = (xx != vault_occupied(u.urooms));
+                xx = (xx != mostRecentCurrentlyOccupiedVaultID());
                 if (xx)
 #else
-                if (vault_occupied(u.urooms)
+                if (mostRecentCurrentlyOccupiedVaultID()
                     != (ROOM_INDEX(sroom) + ROOMOFFSET))
 #endif /* AZTEC_C_WORKAROUND */
                 {
@@ -234,7 +234,7 @@ dosounds()
                 /* priest must be active */
                 && mtmp->mcanmove && !mtmp->msleeping
                 /* hero must be outside this temple */
-                && temple_occupied(u.urooms) != EPRI(mtmp)->shroom)
+                && mostRecentCurrentlyOccupiedTempleID() != EPRI(mtmp)->shroom)
                 break;
         }
         if (mtmp) {

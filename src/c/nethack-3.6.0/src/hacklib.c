@@ -2334,6 +2334,14 @@ int maximumOccupiedRoomCount() {
     return javaGetInt(OCCUPIED_ROOMS_CLASS, "maximumCount");
 }
 
+char currentlyOccupiedRoomIDs(int i) {
+    return u.xurooms[i];
+}
+
+void setCurrentlyOccupiedRoomIDs(int i, char roomID) {
+    u.xurooms[i] = roomID;
+}
+
 char previouslyOccupiedRoomIDs(int i) {
     int roomID = javaGetIntFromInt(OCCUPIED_ROOMS_CLASS, "previouslyOccupiedRoomIDs", i);
     return (char) 0xff & roomID;

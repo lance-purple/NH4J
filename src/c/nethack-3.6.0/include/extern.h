@@ -1448,6 +1448,14 @@ E boolean FDECL(oneOfRoomsHasID, (const char*, char));
 E void FDECL(removeIDFromRooms, (char*, char));
 
 E int FDECL(maximumOccupiedRoomCount, ());
+
+E char FDECL(currentlyOccupiedRoomIDs, (int));
+E void FDECL(setCurrentlyOccupiedRoomIDs, (int, char));
+E void FDECL(clearCurrentlyOccupiedRoomIDs, ());
+E void FDECL(copyRoomIDsToCurrentlyOccupied, (const char*));
+E boolean FDECL(oneOfCurrentlyOccupiedRoomsHasID, (char));
+E boolean FDECL(noneOfCurrentlyOccupiedRoomsHasID, (char));
+
 E char FDECL(previouslyOccupiedRoomIDs, (int));
 E void FDECL(setPreviouslyOccupiedRoomIDs, (int, char));
 E void FDECL(copyCurrentlyOccupiedRoomIDsToPrevious, ());
@@ -2455,7 +2463,7 @@ E void FDECL(altar_wrath, (int, int));
 
 E int FDECL(move_special, (struct monst *, BOOLEAN_P, SCHAR_P, BOOLEAN_P,
                            BOOLEAN_P, XCHAR_P, XCHAR_P, XCHAR_P, XCHAR_P));
-E char FDECL(temple_occupied, (char *));
+E char FDECL(mostRecentCurrentlyOccupiedTempleID, ());
 E boolean FDECL(inhistemple, (struct monst *));
 E int FDECL(pri_move, (struct monst *));
 E void FDECL(initPriestOnCurrentLevel, (struct mkroom *, int, int, BOOLEAN_P));
@@ -3046,7 +3054,7 @@ E int FDECL(hide_privileges, (BOOLEAN_P));
 E void FDECL(newegd, (struct monst *));
 E void FDECL(free_egd, (struct monst *));
 E boolean FDECL(grddead, (struct monst *));
-E char FDECL(vault_occupied, (char *));
+E char FDECL(mostRecentCurrentlyOccupiedVaultID, ());
 E char FDECL(vault_currently_occupied, ());
 E void NDECL(invault);
 E int FDECL(gd_move, (struct monst *));

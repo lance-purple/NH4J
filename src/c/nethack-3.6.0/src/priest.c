@@ -147,15 +147,16 @@ boolean wasPreviouslyOccupyingTemple()
 }
 
 
-char
-temple_occupied(array)
-register char *array;
+char mostRecentCurrentlyOccupiedTempleID()
 {
-    register char *ptr;
-
-    for (ptr = array; *ptr; ptr++)
-        if (rooms[*ptr - ROOMOFFSET].rtype == TEMPLE)
-            return *ptr;
+    for (int i = 0; ('\0' != currentlyOccupiedRoomIDs(i)); i++)
+    {
+        char roomID = currentlyOccupiedRoomIDs(i);
+        if (rooms[roomID - ROOMOFFSET].rtype == TEMPLE)
+	{
+            return roomID;
+	}
+    }
     return '\0';
 }
 
@@ -215,7 +216,7 @@ register struct monst *priest;
                 Your("displaced image doesn't fool %s!", mon_nam(priest));
             (void) mattacku(priest);
             return 0;
-        } else if (oneOfRoomsHasID(u.urooms, temple)) {
+        } else if (oneOfCurrentlyOccupiedRoomsHasID(temple)) {
             /* chase player if inside temple & can see him */
             if (priest->mcansee && m_canseeu(priest)) {
                 gx = currentX();
@@ -719,7 +720,7 @@ xchar x, y;
     }
     if (currentAlignmentRecord() <= ALGN_SINNED) /* sinned or worse */
         return FALSE;
-    if ((roomno = temple_occupied(u.urooms)) == 0
+    if ((roomno = mostRecentCurrentlyOccupiedTempleID()) == 0
         || roomno != templeLocatedAt(x, y))
         return FALSE;
     if ((priest = findpriest(roomno)) == 0)
@@ -733,7 +734,7 @@ void
 ghod_hitsu(priest)
 struct monst *priest;
 {
-    int x, y, ax, ay, roomno = (int) temple_occupied(u.urooms);
+    int x, y, ax, ay, roomno = (int) mostRecentCurrentlyOccupiedTempleID();
     struct mkroom *troom;
 
     if (!roomno || !has_shrine(priest))
@@ -808,7 +809,7 @@ angry_priest()
     register struct monst *priest;
     struct rm *lev;
 
-    if ((priest = findpriest(temple_occupied(u.urooms))) != 0) {
+    if ((priest = findpriest(mostRecentCurrentlyOccupiedTempleID())) != 0) {
         struct epri *eprip = EPRI(priest);
 
         wakeup(priest);

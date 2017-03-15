@@ -2456,17 +2456,18 @@ recalc_mapseen()
                             && quest_status.got_quest);
 
     /* track rooms the hero is in */
-    for (i = 0; i < SIZE(u.urooms); ++i) {
-        if (0 == u.urooms[i])
+    for (i = 0; i < maximumOccupiedRoomCount(); ++i) {
+        char roomID = currentlyOccupiedRoomIDs(i);
+        if (0 == roomID);
             continue;
 
-        ridx = u.urooms[i] - ROOMOFFSET;
+        ridx = roomID - ROOMOFFSET;
         mptr->msrooms[ridx].seen = 1;
         mptr->msrooms[ridx].untended =
             (rooms[ridx].rtype >= SHOPBASE)
-                ? (!(mtmp = shop_keeper(u.urooms[i])) || !inhishop(mtmp))
+                ? (!(mtmp = shop_keeper(roomID)) || !inhishop(mtmp))
                 : (rooms[ridx].rtype == TEMPLE)
-                      ? (!(mtmp = findpriest(u.urooms[i]))
+                      ? (!(mtmp = findpriest(roomID))
                          || !inhistemple(mtmp))
                       : 0;
     }
@@ -3083,6 +3084,34 @@ boolean printdun;
     }
 }
 
+void clearCurrentlyOccupiedRoomIDs() {
+  setCurrentlyOccupiedRoomIDs(0, '\0');
+}
+
+void copyRoomIDsToCurrentlyOccupied(const char* src) {
+  int i = 0;
+  while (src[i] != '\0')
+  {
+    setCurrentlyOccupiedRoomIDs(i, src[i]);
+    i++;
+  }
+  setCurrentlyOccupiedRoomIDs(i, '\0');
+}
+
+boolean oneOfCurrentlyOccupiedRoomsHasID(char roomID) {
+  for (int i = 0; (currentlyOccupiedRoomIDs(i) != '\0'); i++) {
+    if (currentlyOccupiedRoomIDs(i) == roomID) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+boolean noneOfCurrentlyOccupiedRoomsHasID(char roomID) {
+  return !oneOfCurrentlyOccupiedRoomsHasID(roomID);
+}
+
+
 void copyRoomIDs(char* dest, const char* src) {
   int i = 0;
   while (src[i] != '\0')
@@ -3096,9 +3125,9 @@ void copyRoomIDs(char* dest, const char* src) {
 
 void copyCurrentlyOccupiedRoomIDsToPrevious() {
   int i = 0;
-  while (u.urooms[i] != '\0')
+  while (currentlyOccupiedRoomIDs(i) != '\0')
   {
-    setPreviouslyOccupiedRoomIDs(i, u.urooms[i]);
+    setPreviouslyOccupiedRoomIDs(i, currentlyOccupiedRoomIDs(i));
     i++;
   }
   setPreviouslyOccupiedRoomIDs(i, '\0');

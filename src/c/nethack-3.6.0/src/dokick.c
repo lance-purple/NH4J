@@ -579,7 +579,7 @@ xchar x, y;
         newsym(x, y);
 
         if (costly && (!costly_spot(currentX(), currentY())
-                       || !oneOfRoomsHasID(u.urooms, shopLocatedAt(x, y))))
+                       || noneOfCurrentlyOccupiedRoomsHasID(shopLocatedAt(x, y))))
             addtobill(kickedobj, FALSE, FALSE, FALSE);
         if (!flooreffects(kickedobj, currentX(), currentY(), "fall")) {
             place_object(kickedobj, currentX(), currentY());
@@ -1406,7 +1406,7 @@ xchar dlev;          /* if !0 send to dlev near player */
         if (costly) {
             price += stolen_value(
                 obj, x, y, (costly_spot(currentX(), currentY())
-                            && oneOfRoomsHasID(u.urooms, shopLocatedAt(x, y))),
+                            && oneOfCurrentlyOccupiedRoomsHasID(shopLocatedAt(x, y))),
                 TRUE);
             /* set obj->no_charge to 0 */
             if (Has_contents(obj))
@@ -1531,7 +1531,7 @@ boolean shop_floor_obj;
             (void) stolen_value(
                 otmp, ox, oy,
                 (costly_spot(currentX(), currentY())
-                 && oneOfRoomsHasID(u.urooms, shopLocatedAt(ox, oy))),
+                 && oneOfCurrentlyOccupiedRoomsHasID(shopLocatedAt(ox, oy))),
                 FALSE);
         }
         /* set otmp->no_charge to 0 */

@@ -211,7 +211,7 @@ extern const struct Align aligns[]; /* table of available alignments */
 /*** Information about the player ***/
 struct you {
 
-    char urooms[5];         /* rooms (roomno + 3) occupied now */
+    char xurooms[5];         /* rooms (roomno + 3) occupied now */
 
     struct monst *ustuck;
     struct monst *usteed;

@@ -2222,25 +2222,26 @@ register boolean newlev;
     copyCurrentlyOccupiedShopIDsToPrevious();
 
     if (newlev) {
-        u.urooms[0] = '\0';
+        clearCurrentlyOccupiedRoomIDs();
         clearFreshlyEnteredRoomIDs();
         clearCurrentlyOccupiedShopIDs();
         clearFreshlyEnteredShopIDs();
         copyPreviouslyOccupiedShopIDsToExited();
         return;
     }
-    copyRoomIDs(u.urooms, allPlainRoomsLocatedAt(currentX(), currentY()));
+    copyRoomIDsToCurrentlyOccupied(allPlainRoomsLocatedAt(currentX(), currentY()));
 
-    for ((i1 = 0, i2 = 0, i3 = 0, i4 = 0); (u.urooms[i1] != 0); i1++) {
-        if (wasNotPreviouslyInRoom(u.urooms[i1])) {
-            setFreshlyEnteredRoomIDs(i2, u.urooms[i1]);
+    for ((i1 = 0, i2 = 0, i3 = 0, i4 = 0); (currentlyOccupiedRoomIDs(i1) != 0); i1++) {
+	char roomID = currentlyOccupiedRoomIDs(i1);
+        if (wasNotPreviouslyInRoom(roomID)) {
+            setFreshlyEnteredRoomIDs(i2, roomID);
 	    i2++;
 	}
-        if (IS_SHOP(u.urooms[i1] - ROOMOFFSET)) {
-            setCurrentlyOccupiedShopIDs(i3, u.urooms[i1]);
+        if (IS_SHOP(roomID - ROOMOFFSET)) {
+            setCurrentlyOccupiedShopIDs(i3, roomID);
 	    i3++;
-            if (noneOfPreviouslyOccupiedShopsHasID(u.urooms[i1])) {
-                setFreshlyEnteredShopIDs(i4, u.urooms[i1]);
+            if (noneOfPreviouslyOccupiedShopsHasID(roomID)) {
+                setFreshlyEnteredShopIDs(i4, roomID);
 		i4++;
 	    }
         }

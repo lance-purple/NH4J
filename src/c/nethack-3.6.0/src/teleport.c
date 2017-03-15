@@ -1239,7 +1239,7 @@ register struct obj *obj;
             && (!costly_spot(tx, ty)
                 || !oneOfRoomsHasID(allPlainRoomsLocatedAt(tx, ty), roomID))) {
             if (costly_spot(currentX(), currentY())
-                && oneOfRoomsHasID(u.urooms, plainRoomLocatedAt(otx, oty)))
+                && oneOfCurrentlyOccupiedRoomsHasID(plainRoomLocatedAt(otx, oty)))
                 addtobill(obj, FALSE, FALSE, FALSE);
             else
                 (void) stolen_value(obj, otx, oty, FALSE, FALSE);
