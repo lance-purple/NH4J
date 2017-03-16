@@ -357,7 +357,7 @@ register int fd, mode;
     write_int(fd, youMoved());
 
     for (int i = 0; i < maximumOccupiedRoomCount(); i++) {
-    //    write_int(fd, currentlyOccupiedRooms(i));
+        write_char(fd, currentlyOccupiedRoomIDs(i));
         write_char(fd, previouslyOccupiedRoomIDs(i));
         write_char(fd, freshlyEnteredRoomIDs(i));
         write_char(fd, currentlyOccupiedShopIDs(i));

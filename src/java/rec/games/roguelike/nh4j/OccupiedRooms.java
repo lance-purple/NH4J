@@ -3,7 +3,8 @@ package rec.games.roguelike.nh4j;
 public class OccupiedRooms {
 
 	private static final int MAXIMUM_COUNT = 5;
-	
+
+	private static int currentlyOccupiedRoomIDs[]  = new int[MAXIMUM_COUNT];
 	private static int previouslyOccupiedRoomIDs[] = new int[MAXIMUM_COUNT];
 	private static int freshlyEnteredRoomIDs[]     = new int[MAXIMUM_COUNT];
 	
@@ -17,7 +18,15 @@ public class OccupiedRooms {
 	public static int maximumCount() {
 		return MAXIMUM_COUNT;
 	}
-	
+
+	public static int currentlyOccupiedRoomIDs(int index) {
+		return currentlyOccupiedRoomIDs[index];
+	}
+
+	public static void setCurrentlyOccupiedRoomIDs(int index, int roomID) {
+		currentlyOccupiedRoomIDs[index] = roomID;
+	}
+
 	public static int previouslyOccupiedRoomIDs(int index) {
 		return previouslyOccupiedRoomIDs[index];
 	}

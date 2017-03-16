@@ -623,7 +623,7 @@ unsigned int *stuckid, *steedid;
     setYouMoved(read_int(fd) ? TRUE : FALSE);
 
     for (int i =  0; i < maximumOccupiedRoomCount(); i++) {
-        //setCurrentlyOccupiedRooms(i, (char) (0xff & read_int(fd)));
+        setCurrentlyOccupiedRoomIDs(i, read_char((fd)));
         setPreviouslyOccupiedRoomIDs(i, read_char(fd));
         setFreshlyEnteredRoomIDs(i, read_char(fd));
         setCurrentlyOccupiedShopIDs(i, read_char(fd));
