@@ -566,6 +566,14 @@ unsigned int *stuckid, *steedid;
     setRunningPace(read_int(fd));
     setCurrentFruit(read_int(fd));
     setRandomEscapeSequencePrefix(read_int(fd));
+    setCurrentNovelId(read_int(fd));
+    setCurrentNovelPassageCount(read_int(fd));
+    int maximumPassages = read_int(fd);
+    for (int i = 0; i < maximumPassages; i++)
+    {
+        setCurrentNovelPassage(i, read_int(fd));
+    }
+
 
     /* we want to be able to revert to command line/environment/config
        file option values instead of keeping old save file option values

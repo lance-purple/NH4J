@@ -320,6 +320,14 @@ register int fd, mode;
     write_int(fd, runningPace());
     write_int(fd, currentFruit());
     write_int(fd, randomEscapeSequencePrefix());
+    write_int(fd, currentNovelId());
+    write_int(fd, currentNovelPassageCount());
+    int maximumPassages = maximumNovelPassages();
+    write_int(fd, maximumPassages);
+    for (int i = 0; i < maximumPassages; i++)
+    {
+        write_int(fd, currentNovelPassage(i));
+    }
 
     bwrite(fd, (genericptr_t) &flags, sizeof(struct flag));
 #ifdef SYSFLAGS
