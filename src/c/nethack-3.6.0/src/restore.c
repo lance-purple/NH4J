@@ -578,6 +578,8 @@ unsigned int *stuckid, *steedid;
         setCurrentNovelPassage(i, read_int(fd));
     }
 
+    setParentObjectIDForSplitStack((unsigned) read_long(fd));
+    setChildObjectIDForSplitStack((unsigned) read_long(fd));
 
     /* we want to be able to revert to command line/environment/config
        file option values instead of keeping old save file option values

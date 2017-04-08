@@ -2205,6 +2205,11 @@ E void NDECL(rename_disco);
 
 E void NDECL(objects_init);
 
+E unsigned FDECL(parentObjectIDForSplitStack, ());
+E void FDECL(setParentObjectIDForSplitStack, (unsigned));
+E unsigned FDECL(childObjectIDForSplitStack, ());
+E void FDECL(setChildObjectIDForSplitStack, (unsigned));
+
 /* ### objnam.c ### */
 
 E char *FDECL(obj_typename, (int));

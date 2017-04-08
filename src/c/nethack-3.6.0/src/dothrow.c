@@ -51,8 +51,8 @@ int shotlimit;
          * been split from there (possibly triggering a panic in addinv),
          * and freeinv+addinv potentially has other side-effects.
          */
-        if (obj->o_id == context.objsplit.parent_oid
-            || obj->o_id == context.objsplit.child_oid)
+        if (obj->o_id == parentObjectIDForSplitStack()
+            || obj->o_id == childObjectIDForSplitStack())
             (void) unsplitobj(obj);
         return 0; /* no time passes */
     }

@@ -13,6 +13,9 @@ public class Context {
     static int monsterWarningLevel;
     
     static int currentFruit;
+    
+    static long parentObjectIdForSplitStack;
+    static long childObjectIdForSplitStack;
 	
 	static void initIdentifier(int i) {
 		identifier = i;
@@ -86,6 +89,26 @@ public class Context {
 	
 	static void setRandomEscapeSequencePrefix(int p) {
 		randomEscapeSequencePrefix = p;
+	}
+
+	static long parentObjectIdForSplitStack()
+	{
+		return parentObjectIdForSplitStack;
+	}
+
+	static void setParentObjectIdForSplitStack(long id)
+	{
+		parentObjectIdForSplitStack = id;
+	}
+	
+	static long childObjectIdForSplitStack()
+	{
+		return childObjectIdForSplitStack;
+	}
+
+	static void setChildObjectIdForSplitStack(long id)
+	{
+		childObjectIdForSplitStack = id;
 	}
 
 }

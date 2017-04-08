@@ -104,7 +104,6 @@ struct context_info {
     struct takeoff_info takeoff;
     struct warntype_info warntype;
     struct polearm_info polearm;
-    struct obj_split objsplit; /* track most recently split object stack */
 };
 
 extern NEARDATA struct context_info context;

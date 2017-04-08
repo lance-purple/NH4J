@@ -332,6 +332,8 @@ register int fd, mode;
     {
         write_int(fd, currentNovelPassage(i));
     }
+    write_long(fd, parentObjectIDForSplitStack());
+    write_long(fd,  childObjectIDForSplitStack());
 
     bwrite(fd, (genericptr_t) &flags, sizeof(struct flag));
 #ifdef SYSFLAGS

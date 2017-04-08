@@ -426,8 +426,9 @@ long num;
     otmp->quan = num;
     otmp->owt = weight(otmp); /* -= obj->owt ? */
 
-    context.objsplit.parent_oid = obj->o_id;
-    context.objsplit.child_oid = otmp->o_id;
+    setParentObjectIDForSplitStack(obj->o_id);
+    setChildObjectIDForSplitStack(otmp->o_id);
+
     obj->nobj = otmp;
     /* Only set nexthere when on the floor, nexthere is also used */
     /* as a back pointer to the container object when contained. */
@@ -482,17 +483,17 @@ struct obj *obj;
     }
 
     /* first try the expected case; obj is split from another stack */
-    if (obj->o_id == context.objsplit.child_oid) {
+    if (obj->o_id == childObjectIDForSplitStack()) {
         /* parent probably precedes child and will require list traversal */
         ochild = obj;
-        target_oid = context.objsplit.parent_oid;
+        target_oid = parentObjectIDForSplitStack();
         if (obj->nobj && obj->nobj->o_id == target_oid)
             oparent = obj->nobj;
-    } else if (obj->o_id == context.objsplit.parent_oid) {
+    } else if (obj->o_id == parentObjectIDForSplitStack()) {
         /* alternate scenario: another stack was split from obj;
            child probably follows parent and will be found here */
         oparent = obj;
-        target_oid = context.objsplit.child_oid;
+        target_oid = childObjectIDForSplitStack();
         if (obj->nobj && obj->nobj->o_id == target_oid)
             ochild = obj->nobj;
     }
@@ -521,7 +522,8 @@ struct obj *obj;
 void
 clear_splitobjs()
 {
-    context.objsplit.parent_oid = context.objsplit.child_oid = 0;
+    setParentObjectIDForSplitStack(0);
+    setChildObjectIDForSplitStack(0);
 }
 
 /*

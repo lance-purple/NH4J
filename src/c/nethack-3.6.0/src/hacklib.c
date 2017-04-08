@@ -2721,4 +2721,21 @@ extern void decreaseCurrentNovelPassageCount(int c) {
   return javaSetInt(NOVEL_CLASS, "decreaseCount", c);
 }
 
+extern unsigned parentObjectIDForSplitStack() {
+  return (unsigned) javaGetLong(CONTEXT_CLASS, "parentObjectIdForSplitStack");
+}
+
+extern void setParentObjectIDForSplitStack(unsigned id) {
+  javaSetLong(CONTEXT_CLASS, "setParentObjectIdForSplitStack", (long) id);
+}
+
+extern unsigned childObjectIDForSplitStack() {
+  return (unsigned) javaGetLong(CONTEXT_CLASS, "childObjectIdForSplitStack");
+}
+
+extern void setChildObjectIDForSplitStack(unsigned id) {
+  javaSetLong(CONTEXT_CLASS, "setChildObjectIdForSplitStack", (long) id);
+}
+
+
 /*hacklib.c*/
