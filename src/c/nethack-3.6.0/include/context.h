@@ -90,14 +90,7 @@ struct tribute_info {
     /* 30 free bits */
 };
 
-struct novel_tracking { /* for choosing random passage when reading novel */
-    unsigned id;        /* novel oid from previous passage selection */
-    int count;          /* number of passage indices available in pasg[] */
-    xchar pasg[30];     /* pasg[0..count] are passage indices */
-};
-
 struct context_info {
-    /*int rndencode;*/          /* randomized escape sequence introducer */
     long next_attrib_check; /* next attribute check */
     long stethoscope_move;
     short stethoscope_movement;
@@ -122,7 +115,6 @@ struct context_info {
     struct polearm_info polearm;
     struct obj_split objsplit; /* track most recently split object stack */
     struct tribute_info tribute;
-    struct novel_tracking novel;
 };
 
 extern NEARDATA struct context_info context;

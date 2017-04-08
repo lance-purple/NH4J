@@ -66,6 +66,7 @@
 #endif
 
 #define CONTEXT_CLASS "rec/games/roguelike/nh4j/Context"
+#define NOVEL_CLASS "rec/games/roguelike/nh4j/TributeNovel"
 #define OCCUPIED_ROOMS_CLASS "rec/games/roguelike/nh4j/OccupiedRooms"
 #define PLAYER_CHARACTER_CLASS "rec/games/roguelike/nh4j/PlayerCharacter"
 #define QUALITIES_CLASS "rec/games/roguelike/nh4j/Qualities"
@@ -2658,6 +2659,42 @@ extern int randomEscapeSequencePrefix() {
 
 extern void setRandomEscapeSequencePrefix(int p) {
   return javaSetInt(CONTEXT_CLASS, "setRandomEscapeSequencePrefix", p);
+}
+
+extern int maximumNovelPassages() {
+  return javaGetInt(NOVEL_CLASS, "maximumPassages");
+}
+
+extern int currentNovelId() {
+  return javaGetInt(NOVEL_CLASS, "id");
+}
+
+extern void setCurrentNovelId(int id) {
+  return javaSetInt(NOVEL_CLASS, "setId", id);
+}
+
+extern int currentNovelPassage(int index) {
+  return javaGetIntFromInt(NOVEL_CLASS, "passage", index);
+}
+
+extern void setCurrentNovelPassage(int index, int value) {
+  return javaSetIntFromInt(NOVEL_CLASS, "setPassage", index, value);
+}
+
+extern int currentNovelPassageCount() {
+  return javaGetInt(NOVEL_CLASS, "count");
+}
+
+extern void setCurrentNovelPassageCount(int c) {
+  return javaSetInt(NOVEL_CLASS, "setCount", c);
+}
+
+extern void increaseCurrentNovelPassageCount(int c) {
+  return javaSetInt(NOVEL_CLASS, "increaseCount", c);
+}
+
+extern void decreaseCurrentNovelPassageCount(int c) {
+  return javaSetInt(NOVEL_CLASS, "decreaseCount", c);
 }
 
 /*hacklib.c*/

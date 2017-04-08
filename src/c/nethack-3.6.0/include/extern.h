@@ -929,6 +929,17 @@ E void NDECL(really_close);
 #ifdef DEBUG
 E boolean FDECL(debugcore, (const char *, BOOLEAN_P));
 #endif
+E int FDECL(maximumNovelPassages, ());
+E int FDECL(currentNovelId, ());
+E void FDECL(setCurrentNovelId, (int));
+E int FDECL(currentNovelPassage, (int));
+E void FDECL(setCurrentNovelPassage, (int, int));
+
+E int FDECL(currentNovelPassageCount, ());
+E void FDECL(setCurrentNovelPassageCount, (int));
+E void FDECL(increaseCurrentNovelPassageCount, (int));
+E void FDECL(decreaseCurrentNovelPassageCount, (int));
+
 E boolean FDECL(read_tribute, (const char *, const char *, int,
                                char *, int, unsigned));
 E boolean FDECL(Death_quote, (char *, int));

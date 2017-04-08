@@ -3439,39 +3439,39 @@ boolean wildcards;
 #define TITLESCOPE 2
 #define PASSAGESCOPE 3
 
-#define MAXPASSAGES SIZE(context.novel.pasg) /* 30 */
-
 static int FDECL(choose_passage, (int, unsigned));
 
 /* choose a random passage that hasn't been chosen yet; once all have
    been chosen, reset the tracking to make all passages available again */
 static int
 choose_passage(passagecnt, oid)
-int passagecnt; /* total of available passages, 1..MAXPASSAGES */
+int passagecnt; /* total of available passages, 1..maximumNovelPassages() */
 unsigned oid; /* book.o_id, used to determine whether re-reading same book */
 {
     int idx, res;
+    int maximumPassages = maximumNovelPassages();
 
     if (passagecnt < 1)
         return 0;
-    if (passagecnt > MAXPASSAGES)
-        passagecnt = MAXPASSAGES;
+    if (passagecnt > maximumPassages)
+        passagecnt = maximumPassages;
 
     /* if a different book or we've used up all the passages already,
        reset in order to have all 'passagecnt' passages available */
-    if (oid != context.novel.id || context.novel.count == 0) {
-        context.novel.id = oid;
-        context.novel.count = passagecnt;
-        for (idx = 0; idx < MAXPASSAGES; idx++)
-            context.novel.pasg[idx] = (xchar) ((idx < passagecnt) ? idx + 1
-                                                                  : 0);
+    if (oid != currentNovelId() || currentNovelPassageCount() == 0) {
+        setCurrentNovelId(oid);
+        setCurrentNovelPassageCount(passagecnt);
+        for (idx = 0; idx < maximumPassages; idx++) {
+            setCurrentNovelPassage(idx, ((idx < passagecnt) ? idx + 1 : 0));
+	}
     }
 
-    idx = rn2(context.novel.count);
-    res = (int) context.novel.pasg[idx];
+    idx = rn2(currentNovelPassageCount());
+    res = currentNovelPassage(idx);
     /* move the last slot's passage index into the slot just used
        and reduce the number of passages available */
-    context.novel.pasg[idx] = context.novel.pasg[--context.novel.count];
+    decreaseCurrentNovelPassageCount(1);
+    setCurrentNovelPassage(idx, currentNovelPassage(currentNovelPassageCount()));
     return res;
 }
 
@@ -3494,6 +3494,7 @@ unsigned oid; /* book identifier */
     winid tribwin = WIN_ERR;
     boolean grasped = FALSE;
     boolean foundpassage = FALSE;
+    int maximumPassages = maximumNovelPassages();
 
     /* check for mandatories */
     if (!tribsection || !tribtitle) {
@@ -3557,8 +3558,8 @@ unsigned oid; /* book identifier */
                     if ((p2 = index(p1, ')')) != 0) {
                         *p2 = '\0';
                         passagecnt = atoi(p1);
-                        if (passagecnt > MAXPASSAGES)
-                            passagecnt = MAXPASSAGES;
+                        if (passagecnt > maximumPassages)
+                            passagecnt = maximumPassages;
                         scope = TITLESCOPE;
                         if (matchedsection && !strcmpi(st, tribtitle)) {
                             matchedtitle = TRUE;
