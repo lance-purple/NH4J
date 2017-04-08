@@ -81,15 +81,6 @@ struct obj_split {
              child_oid;  /* reset: clear_splitobjs() */
 };
 
-struct tribute_info {
-    size_t tributesz;       /* make it possible to skip this in future */
-    boolean enabled;        /* Do we have tributes turned on? */
-    Bitfield(bookstock, 1); /* Have we stocked the book? */
-    Bitfield(Deathnotice,1);    /* Did Death notice the book? */
-    /* Markers for other tributes can go here */
-    /* 30 free bits */
-};
-
 struct context_info {
     long next_attrib_check; /* next attribute check */
     long stethoscope_move;
@@ -114,7 +105,6 @@ struct context_info {
     struct warntype_info warntype;
     struct polearm_info polearm;
     struct obj_split objsplit; /* track most recently split object stack */
-    struct tribute_info tribute;
 };
 
 extern NEARDATA struct context_info context;

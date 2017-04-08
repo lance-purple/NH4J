@@ -459,8 +459,10 @@ boolean mkspecl;
                     || !strcmp(shp->name, "second-hand bookstore"))) {
         struct obj *novel = mksobj_at(SPE_NOVEL, sx, sy, FALSE, FALSE);
 
-        if (novel)
-            context.tribute.bookstock = TRUE;
+        if (novel) {
+            setTributeNovelStocked(TRUE);
+	}
+
         return;
     }
 
@@ -726,7 +728,7 @@ register struct mkroom *sroom;
         make_engr_at(m, n, buf, 0L, DUST);
     }
 
-    if (context.tribute.enabled && !context.tribute.bookstock) {
+    if (tributeNovelsEnabled() && !tributeNovelStocked()) {
         /*
          * Out of the number of spots where we're actually
          * going to put stuff, randomly single out one in particular.

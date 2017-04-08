@@ -910,7 +910,7 @@ register struct monst *mtmp;
     case MS_RIDER:
         /* 3.6.0 tribute */
         if (ptr == &mons[PM_DEATH]
-            && !context.tribute.Deathnotice && u_have_novel()) {
+            && !tributeNovelNoticedByDeath() && u_have_novel()) {
             struct obj *book = u_have_novel();
             const char *tribtitle = (char *)0;
 
@@ -926,7 +926,7 @@ register struct monst *mtmp;
                       || strcmpi(tribtitle, "The Wee Free Men") == 0))
                     Strcat(verbuf, " I may have been misquoted there.");
                 verbl_msg = verbuf;
-                context.tribute.Deathnotice = 1;
+                setTributeNovelNoticedByDeath(TRUE);
             }
         } else if (ptr == &mons[PM_DEATH]
                    && !rn2(2) && Death_quote(verbuf, BUFSZ)) {

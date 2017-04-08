@@ -566,6 +566,10 @@ unsigned int *stuckid, *steedid;
     setRunningPace(read_int(fd));
     setCurrentFruit(read_int(fd));
     setRandomEscapeSequencePrefix(read_int(fd));
+
+    setTributeNovelsEnabled(read_int(fd) ? TRUE : FALSE);
+    setTributeNovelStocked(read_int(fd) ? TRUE : FALSE);
+    setTributeNovelNoticedByDeath(read_int(fd) ? TRUE : FALSE);
     setCurrentNovelId(read_int(fd));
     setCurrentNovelPassageCount(read_int(fd));
     int maximumPassages = read_int(fd);

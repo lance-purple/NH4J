@@ -2661,8 +2661,32 @@ extern void setRandomEscapeSequencePrefix(int p) {
   return javaSetInt(CONTEXT_CLASS, "setRandomEscapeSequencePrefix", p);
 }
 
+extern boolean tributeNovelsEnabled() {
+  return javaGetBoolean(NOVEL_CLASS, "enabled");
+}
+
+extern void setTributeNovelsEnabled(boolean enabled) {
+  return javaSetBoolean(NOVEL_CLASS, "setEnabled", enabled);
+}
+
 extern int maximumNovelPassages() {
   return javaGetInt(NOVEL_CLASS, "maximumPassages");
+}
+
+extern boolean tributeNovelStocked() {
+  return javaGetBoolean(NOVEL_CLASS, "stocked");
+}
+
+extern void setTributeNovelStocked(boolean stocked) {
+  return javaSetBoolean(NOVEL_CLASS, "setStocked", stocked);
+}
+
+extern boolean tributeNovelNoticedByDeath() {
+  return javaGetBoolean(NOVEL_CLASS, "noticedByDeath");
+}
+
+extern void setTributeNovelNoticedByDeath(boolean noticed) {
+  return javaSetBoolean(NOVEL_CLASS, "setNoticedByDeath", noticed);
 }
 
 extern int currentNovelId() {

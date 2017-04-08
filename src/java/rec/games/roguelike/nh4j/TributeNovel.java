@@ -4,6 +4,10 @@ public class TributeNovel {
 
 	public static final int MAXIMUM_PASSAGES = 30;
 
+	public static boolean enabled;
+	public static boolean stocked;
+	public static boolean noticedByDeath;
+	
 	public static int id;
 	public static int passages[] = new int[MAXIMUM_PASSAGES];
     public static int count;
@@ -11,6 +15,36 @@ public class TributeNovel {
 	public static int maximumPassages()
 	{
 		return MAXIMUM_PASSAGES;
+	}
+
+	public static boolean enabled()
+	{
+		return enabled;
+	}
+
+	public static void setEnabled(boolean e)
+	{
+		enabled = e;
+	}
+
+	public static boolean stocked()
+	{
+		return stocked;
+	}
+
+	public static void setStocked(boolean s)
+	{
+		stocked = s;
+	}
+
+	public static boolean noticedByDeath()
+	{
+		return noticedByDeath;
+	}
+
+	public static void setNoticedByDeath(boolean n)
+	{
+		noticedByDeath = n;
 	}
 
 	public static int id()

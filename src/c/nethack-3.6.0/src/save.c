@@ -320,6 +320,10 @@ register int fd, mode;
     write_int(fd, runningPace());
     write_int(fd, currentFruit());
     write_int(fd, randomEscapeSequencePrefix());
+
+    write_int(fd, tributeNovelsEnabled());
+    write_int(fd, tributeNovelStocked());
+    write_int(fd, tributeNovelNoticedByDeath());
     write_int(fd, currentNovelId());
     write_int(fd, currentNovelPassageCount());
     int maximumPassages = maximumNovelPassages();

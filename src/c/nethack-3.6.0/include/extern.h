@@ -929,6 +929,13 @@ E void NDECL(really_close);
 #ifdef DEBUG
 E boolean FDECL(debugcore, (const char *, BOOLEAN_P));
 #endif
+E boolean FDECL(tributeNovelsEnabled, ());
+E void FDECL(setTributeNovelsEnabled, (boolean));
+E boolean FDECL(tributeNovelStocked, ());
+E void FDECL(setTributeNovelStocked, (boolean));
+E boolean FDECL(tributeNovelNoticedByDeath, ());
+E void FDECL(setTributeNovelNoticedByDeath, (boolean));
+
 E int FDECL(maximumNovelPassages, ());
 E int FDECL(currentNovelId, ());
 E void FDECL(setCurrentNovelId, (int));
