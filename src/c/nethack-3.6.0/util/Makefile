@@ -239,8 +239,6 @@ mdgreph: mdgrep.pl
 
 ../include/onames.h: makedefs
 	./makedefs -o
-../include/pm.h: makedefs
-	./makedefs -p
 ../src/monstr.c: makedefs
 	./makedefs -m
 ../include/vis_tab.h: makedefs

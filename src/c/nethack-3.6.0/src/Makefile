@@ -419,7 +419,7 @@ VERSOURCES = $(HACKCSRC) $(SYSSRC) $(WINSRC) $(CHAINSRC) $(GENCSRC)
 CSOURCES = $(HACKCSRC) $(SYSCSRC) $(WINCSRC) $(CHAINSRC) $(GENCSRC)
 
 
-# all .h files except date.h, onames.h, pm.h, and vis_tab.h which would
+# all .h files except date.h, onames.h, and vis_tab.h which would
 # cause dependency loops if run through "make depend"
 # and dgn_comp.h, dgn_file.h, lev_comp.h, special level & dungeon files.
 #
@@ -429,12 +429,12 @@ HACKINCL = align.h amiconf.h artifact.h artilist.h attrib.h beconf.h botl.h \
 	global.h hack.h lev.h lint.h macconf.h mextra.h mfndpos.h micro.h \
 	mkroom.h \
 	monattk.h mondata.h monflag.h monst.h monsym.h obj.h objclass.h \
-	os2conf.h patchlevel.h pcconf.h permonst.h prop.h rect.h region.h rm.h \
+	os2conf.h patchlevel.h pcconf.h permonst.h pm.h prop.h rect.h region.h rm.h \
 	sp_lev.h spell.h sys.h system.h tcap.h timeout.h tosconf.h tradstdc.h \
 	trampoli.h trap.h unixconf.h vision.h vmsconf.h wintty.h \
 	winX.h winprocs.h wintype.h you.h
 
-HSOURCES = $(HACKINCL) date.h onames.h pm.h vis_tab.h\
+HSOURCES = $(HACKINCL) date.h onames.h vis_tab.h\
 		lev_comp.h dgn_comp.h dgn_file.h
 
 # the following .o's _must_ be made before any others (for makedefs)
@@ -550,8 +550,6 @@ $(MAKEDEFS): ../util/makedefs.c  $(CONFIG_H) ../include/permonst.h \
 
 ../include/onames.h: $(MAKEDEFS)
 	@( cd ../util ; $(MAKE) ../include/onames.h )
-../include/pm.h: $(MAKEDEFS)
-	@( cd ../util ; $(MAKE) ../include/pm.h )
 monstr.c: $(MAKEDEFS)
 	@( cd ../util ; $(MAKE) ../src/monstr.c )
 ../include/vis_tab.h: $(MAKEDEFS)
@@ -596,7 +594,7 @@ clean:
 
 spotless: clean
 	-rm -f a.out core $(GAME) Sys*
-	-rm -f ../include/date.h ../include/onames.h ../include/pm.h
+	-rm -f ../include/date.h ../include/onames.h
 	-rm -f monstr.c ../include/vis_tab.h vis_tab.c tile.c *.moc
 	-rm -f ../win/gnome/gn_rip.h
 
