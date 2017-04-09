@@ -237,8 +237,6 @@ makedefs.o: makedefs.c $(CONFIG_H) ../include/permonst.h \
 mdgreph: mdgrep.pl
 	perl mdgrep.pl
 
-../src/monstr.c: makedefs
-	./makedefs -m
 ../include/vis_tab.h: makedefs
 	./makedefs -z
 # makedefs -z makes both vis_tab.h and vis_tab.c, but writes the .h first
