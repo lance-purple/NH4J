@@ -237,8 +237,6 @@ makedefs.o: makedefs.c $(CONFIG_H) ../include/permonst.h \
 mdgreph: mdgrep.pl
 	perl mdgrep.pl
 
-../include/onames.h: makedefs
-	./makedefs -o
 ../src/monstr.c: makedefs
 	./makedefs -m
 ../include/vis_tab.h: makedefs
