@@ -35,7 +35,11 @@ bot1()
         char mbot[BUFSZ];
         int k = 0;
 
-        Strcpy(mbot, mons[currentMonsterNumber()].mname);
+	int pmid = mons[currentMonsterNumber()].monsterTypeID;
+	javaString monsterName = monsterTypeName(pmid);
+        Strcpy(mbot, monsterName.c_str);
+	releaseJavaString(monsterName);
+
         while (mbot[k] != 0) {
             if ((k == 0 || (k > 0 && mbot[k - 1] == ' ')) && 'a' <= mbot[k]
                 && mbot[k] <= 'z')
@@ -410,7 +414,11 @@ bot()
         char mbot[BUFSZ];
         int k = 0;
 
-        Strcpy(mbot, mons[currentMonsterNumber()].mname);
+	int pmid = mons[currentMonsterNumber()].monsterTypeID;
+	javaString monsterName = monsterTypeName(pmid);
+        Strcpy(mbot, monsterName.c_str);
+	releaseJavaString(monsterName);
+
         while (mbot[k] != 0) {
             if ((k == 0 || (k > 0 && mbot[k - 1] == ' ')) && 'a' <= mbot[k]
                 && mbot[k] <= 'z')
