@@ -13,6 +13,16 @@
 E JNIEnv* jni_env;
 E JavaVM* java_vm;
 
+typedef struct {
+    jstring j_str;
+    const char* c_str;
+} javaString;
+
+#define NO_JAVA_STRING { NULL, NULL }
+
+E javaString FDECL(monsterTypeName, (int));
+E void FDECL(releaseJavaString, (javaString));
+
 /* ### alloc.c ### */
 
 #if 0

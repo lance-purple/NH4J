@@ -66,6 +66,7 @@
 #endif
 
 #define CONTEXT_CLASS "rec/games/roguelike/nh4j/Context"
+#define MONSTER_TYPE_CLASS "rec/games/roguelike/nh4j/MonsterType"
 #define NOVEL_CLASS "rec/games/roguelike/nh4j/TributeNovel"
 #define OCCUPIED_ROOMS_CLASS "rec/games/roguelike/nh4j/OccupiedRooms"
 #define PLAYER_CHARACTER_CLASS "rec/games/roguelike/nh4j/PlayerCharacter"
@@ -124,6 +125,12 @@ boolean javaGetBooleanFromInt(const char* classname, const char* methodname, int
     return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method, i);
 }
 
+jstring javaGetStringFromInt(const char* classname, const char* methodname, int i) {
+    jclass you_class = getJavaClass(classname);
+    jmethodID method = getStaticMethod(you_class, methodname, "(I)Ljava/lang/String;");
+    return (*jni_env)->CallStaticObjectMethod(jni_env, you_class, method, i);
+}
+
 void javaSetInt(const char* classname, const char* methodname, int v) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "(I)V");
@@ -159,6 +166,7 @@ void javaSetBooleanFromInt(const char* classname, const char* methodname, int i,
     jmethodID method = getStaticMethod(you_class, methodname, "(IZ)V");
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, i, v);
 }
+
 
 static boolean FDECL(pmatch_internal, (const char *, const char *,
                                        BOOLEAN_P, const char *));
@@ -2415,104 +2423,6 @@ void setEmptyShopIDs(int i, char roomID) {
     javaSetIntFromInt(OCCUPIED_ROOMS_CLASS, "setEmptyShopIDs", i, v);
 }
 
-/* 
-boolean currently_occupying_room(char roomID) {
-    for (int i = 0; (i < maximumOccupiedRoomCount()) && (currentlyOccupiedRooms(i)); i++) {
-        if (roomID == currentlyOccupiedRooms(i)) {
-	    return TRUE;
-	}
-    }
-    return FALSE;
-}
-
-boolean previously_occupying_room(char roomID) {
-    for (int i = 0; (i < maximumOccupiedRoomCount()) && (previouslyOccupiedRooms(i)); i++) {
-        if (roomID == previouslyOccupiedRooms(i)) {
-	    return TRUE;
-	}
-    }
-    return FALSE;
-}
-
-char currentlyOccupiedRooms(int i) {
-    int roomID = javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "currentlyOccupiedRooms", i);
-    return (char) 0xff & roomID;
-}
-
-void setCurrentlyOccupiedRooms(int i, char roomID) {
-    int v = roomID;
-    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setCurrentlyOccupiedRooms", i, v);
-}
-
-char freshlyEnteredRooms(int i) {
-    int roomID = javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "freshlyEnteredRooms", i);
-    return (char) 0xff & roomID;
-}
-
-void setFreshlyEnteredRooms(int i, char roomID) {
-    int v = roomID;
-    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setFreshlyEnteredRooms", i, v);
-}
-
-boolean currently_occupying_shop(char shopID) {
-    for (int i = 0; (i < maximumOccupiedRoomCount()) && (currentlyOccupiedShops(i)); i++) {
-        if (shopID == currentlyOccupiedShops(i)) {
-	    return TRUE;
-	}
-    }
-    return FALSE;
-}
-
-boolean previously_occupying_shop(char shopID) {
-    for (int i = 0; (i < maximumOccupiedRoomCount()) && (previouslyOccupiedShops(i)); i++) {
-        if (shopID == previouslyOccupiedShops(i)) {
-	    return TRUE;
-	}
-    }
-    return FALSE;
-}
-
-char currentlyOccupiedShops(int i) {
-    int shopID = javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "currentlyOccupiedShops", i);
-    return (char) 0xff & shopID;
-}
-
-void setCurrentlyOccupiedShops(int i, char shopID) {
-    int v = shopID;
-    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setCurrentlyOccupiedShops", i, v);
-}
-
-char previouslyOccupiedShops(int i) {
-    int shopID = javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "previouslyOccupiedShops", i);
-    return (char) 0xff & shopID;
-}
-
-void setPreviouslyOccupiedShops(int i, char shopID) {
-    int v = shopID;
-    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setPreviouslyOccupiedShops", i, v);
-}
-
-char freshlyEnteredShops(int i) {
-    int roomID = javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "freshlyEnteredShops", i);
-    return (char) 0xff & roomID;
-}
-
-void setFreshlyExitedShops(int i, char roomID) {
-    int v = roomID;
-    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setFreshlyExitedShops", i, v);
-}
-
-char freshlyExitedShops(int i) {
-    int roomID = javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "freshlyExitedShops", i);
-    return (char) 0xff & roomID;
-}
-
-void setFreshlyEnteredShops(int i, char roomID) {
-    int v = roomID;
-    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setFreshlyEnteredShops", i, v);
-}
-*/
-
 extern long yourExtrinsic(int i) {
   return javaGetLongFromInt(QUALITIES_CLASS, "extrinsic", i);
 }
@@ -2735,6 +2645,19 @@ extern unsigned childObjectIDForSplitStack() {
 
 extern void setChildObjectIDForSplitStack(unsigned id) {
   javaSetLong(CONTEXT_CLASS, "setChildObjectIdForSplitStack", (long) id);
+}
+
+extern javaString monsterTypeName(int id) {
+  jstring j_str = javaGetStringFromInt(MONSTER_TYPE_CLASS, "name", id);
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+   return result;
+}
+
+extern void releaseJavaString(javaString s) {
+  if (NULL != s.j_str) {
+    (*jni_env)->ReleaseStringUTFChars(jni_env, s.j_str, s.c_str);
+  }
 }
 
 

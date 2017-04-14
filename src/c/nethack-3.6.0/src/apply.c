@@ -256,6 +256,7 @@ int rx, ry, *resp;
 
     } else { /* statue */
         const char *what, *how;
+	javaString monsterName = NO_JAVA_STRING;
 
         mptr = &mons[statue->corpsenm];
         if (youCannotSee()) { /* ignore statue->dknown; it'll always be set */
@@ -264,7 +265,8 @@ int rx, ry, *resp;
                     humanoid(mptr) ? "person" : "creature");
             what = buf;
         } else {
-            what = mptr->mname;
+	    monsterName = monsterTypeName(mptr->monsterTypeID);
+	    what = monsterName.c_str;
             if (!type_is_pname(mptr))
                 what = The(what);
         }
@@ -279,6 +281,8 @@ int rx, ry, *resp;
         }
 
         pline("%s is in %s health for a statue.", what, how);
+	releaseJavaString(monsterName);
+
         return TRUE;
     }
     return FALSE; /* no corpse or statue */
@@ -371,13 +375,15 @@ register struct obj *obj;
             newsym(mtmp->mx, mtmp->my);
         } else if (mtmp->mappearance) {
             const char *what = "thing";
+	    javaString monsterName = NO_JAVA_STRING;
 
             switch (mtmp->m_ap_type) {
             case M_AP_OBJECT:
                 what = simple_typename(mtmp->mappearance);
                 break;
             case M_AP_MONSTER: /* ignore hallucination here */
-                what = mons[mtmp->mappearance].mname;
+	        monsterName = monsterTypeName(mons[mtmp->mappearance].monsterTypeID);
+                what = monsterName.c_str;
                 break;
             case M_AP_FURNITURE:
                 what = defsyms[mtmp->mappearance].explanation;
@@ -385,6 +391,7 @@ register struct obj *obj;
             }
             seemimic(mtmp);
             pline("That %s is really %s", what, mnm);
+	    releaseJavaString(monsterName);
         } else if (flags.verbose && !canspotmon(mtmp)) {
             There("is %s there.", mnm);
         }
@@ -1676,15 +1683,20 @@ struct obj *obj;
         && !uarmg) {
         char kbuf[BUFSZ];
 
-        if (poly_when_stoned(youmonst.data))
+	int monsterTypeID = mons[corpse->corpsenm].monsterTypeID;
+	javaString monsterName = monsterTypeName(monsterTypeID);
+        if (poly_when_stoned(youmonst.data)) {
             You("tin %s without wearing gloves.",
-                an(mons[corpse->corpsenm].mname));
+                an(monsterName.c_str));
+	}
         else {
             pline("Tinning %s without wearing gloves is a fatal mistake...",
-                  an(mons[corpse->corpsenm].mname));
+                  an(monsterName.c_str));
             Sprintf(kbuf, "trying to tin %s without gloves",
-                    an(mons[corpse->corpsenm].mname));
+                    an(monsterName.c_str));
         }
+	releaseJavaString(monsterName);
+
         instapetrify(kbuf);
     }
     if (is_rider(&mons[corpse->corpsenm])) {
@@ -2660,9 +2672,13 @@ struct obj *obj;
                              && polymon(PM_STONE_GOLEM))) {
                         char kbuf[BUFSZ];
 
+			int monsterTypeID = mons[otmp->corpsenm].monsterTypeID;
+	                javaString monsterName = monsterTypeName(monsterTypeID);
                         Sprintf(kbuf, "%s corpse",
-                                an(mons[otmp->corpsenm].mname));
+                                an(monsterName.c_str));
                         pline("Snatching %s is a fatal mistake.", kbuf);
+	                releaseJavaString(monsterName);
+
                         instapetrify(kbuf);
                     }
                     otmp = hold_another_object(
