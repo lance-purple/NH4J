@@ -17,6 +17,8 @@ public class MonsterType {
 	private static final int NOT_GENERATED_IN_HELL = 0x800;
 	private static final int ONLY_GENERATED_ONCE = 0x1000;
 
+	private static final MonsterType UNKNOWN_MONSTER_TYPE = new MonsterType(null, null, "UNKNOWN");
+
 	private PM pm;
 	private MC monsterClass;
 	private String name;
@@ -2828,7 +2830,7 @@ public class MonsterType {
 				.color(CLR.WHITE).add();
 	}
 
-	public static void initialize() {
+	private static void initialize() {
 
 		initializeAngel();
 		initializeAnts();
@@ -2893,5 +2895,19 @@ public class MonsterType {
 		initializeZombies();
 		initializeZruties();
 	}
+	
+	private static MonsterType getMonsterType(int pmid) {
+		if (monsterTypesByPMID.isEmpty()) {
+			initialize();
+		}
+		if (monsterTypesByPMID.containsKey(pmid))
+		{
+			return monsterTypesByPMID.get(pmid);
+		}
+		return UNKNOWN_MONSTER_TYPE;
+	}
 
+	public static String name(int pmid) {
+		return getMonsterType(pmid).name;
+	}
 }
