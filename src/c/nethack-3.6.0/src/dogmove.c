@@ -1094,6 +1094,11 @@ struct monst *mtmp;
            (on the other hand, perhaps you're sensing a brief glimpse
            of its mind as it changes form) */
         newsym(mtmp->mx, mtmp->my);
+	javaString monsterName = NO_JAVA_STRING;
+        if (mtmp->m_ap_type == M_AP_MONSTER) {
+	    monsterName = monsterTypeName(mons[mtmp->mappearance].monsterTypeID);
+	}
+
         You("%s %s appear where %s was!",
             cansee(mtmp->mx, mtmp->my) ? "see" : "sense",
             (mtmp->m_ap_type == M_AP_FURNITURE)
@@ -1105,9 +1110,10 @@ struct monst *mtmp;
                          && OBJ_NAME(objects[mtmp->mappearance]))
                             ? an(OBJ_NAME(objects[mtmp->mappearance]))
                             : (mtmp->m_ap_type == M_AP_MONSTER)
-                                  ? an(mons[mtmp->mappearance].mname)
+                                  ? an(monsterName.c_str)
                                   : something,
             buf);
+	releaseJavaString(monsterName);
         display_nhwindow(WIN_MAP, TRUE);
     }
 }

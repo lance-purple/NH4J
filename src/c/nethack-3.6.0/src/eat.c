@@ -480,8 +480,11 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
            inducing critter (most likely Medusa; attacking a cockatrice via
            tentacle-touch should have been caught before reaching this far) */
         if (magr == &youmonst) {
-            if (!youResistStoning() && !youAreTurningToStone())
-                make_stoned(5L, (char *) 0, KILLED_BY_AN, pd->mname);
+            if (!youResistStoning() && !youAreTurningToStone()) {
+		javaString monsterName = monsterTypeName(pd->monsterTypeID);
+                make_stoned(5L, (char *) 0, KILLED_BY_AN, monsterName.c_str);
+		releaseJavaString(monsterName);
+	    }
         } else {
             /* no need to check for poly_when_stoned or youResistStoning;
                mind flayers don't have those capabilities */
@@ -511,7 +514,9 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
             return MM_MISS;
         } else if (is_rider(pd)) {
             pline("Ingesting that is fatal.");
-            Sprintf(killer.name, "unwisely ate the brain of %s", pd->mname);
+	    javaString monsterName = monsterTypeName(pd->monsterTypeID);
+            Sprintf(killer.name, "unwisely ate the brain of %s", monsterName.c_str);
+	    releaseJavaString(monsterName);
             killer.format = NO_KILLER_PREFIX;
             done(DIED);
             /* life-saving needed to reach here */
@@ -639,7 +644,9 @@ register int pm;
         if (!youResistStoning()
             && !(poly_when_stoned(youmonst.data)
                  && polymon(PM_STONE_GOLEM))) {
-            Sprintf(killer.name, "tasting %s meat", mons[pm].mname);
+	    javaString monsterName = monsterTypeName(mons[pm].monsterTypeID);
+            Sprintf(killer.name, "tasting %s meat", monsterName.c_str);
+	    releaseJavaString(monsterName);
             killer.format = KILLED_BY;
             You("turn to stone.");
             done(STONING);
@@ -658,7 +665,9 @@ register int pm;
     case PM_LARGE_CAT:
         /* cannibals are allowed to eat domestic animals without penalty */
         if (!CANNIBAL_ALLOWED()) {
-            You_feel("that eating the %s was a bad idea.", mons[pm].mname);
+	    javaString monsterName = monsterTypeName(mons[pm].monsterTypeID);
+            You_feel("that eating the %s was a bad idea.", monsterName.c_str);
+	    releaseJavaString(monsterName);
             setYourIntrinsicMask(AGGRAVATE_MONSTER, FROMOUTSIDE);
         }
         break;
@@ -670,7 +679,9 @@ register int pm;
     case PM_PESTILENCE:
     case PM_FAMINE: {
         pline("Eating that is instantly fatal.");
-        Sprintf(killer.name, "unwisely ate the body of %s", mons[pm].mname);
+	javaString monsterName = monsterTypeName(mons[pm].monsterTypeID);
+        Sprintf(killer.name, "unwisely ate the body of %s", monsterName.c_str);
+	releaseJavaString(monsterName);
         killer.format = NO_KILLER_PREFIX;
         done(DIED);
         /* life-saving needed to reach here */
@@ -989,11 +1000,13 @@ register int pm;
                 dismount_steed(DISMOUNT_FELL);
             nomul(-tmp);
             multi_reason = "pretending to be a pile of gold";
+	    javaString youAsMonsterName = monsterTypeName(youmonst.data->monsterTypeID);
             Sprintf(buf,
                     youAreHallucinating()
                        ? "You suddenly dread being peeled and mimic %s again!"
                        : "You now prefer mimicking %s again.",
-                    an(areYouPolymorphed() ? youmonst.data->mname : urace.noun));
+                    an(areYouPolymorphed() ? youAsMonsterName.c_str : urace.noun));
+	    releaseJavaString(youAsMonsterName);
             eatmbuf = dupstr(buf);
             nomovemsg = eatmbuf;
             afternmv = eatmdone;
@@ -1186,10 +1199,12 @@ char *buf;
             } else {
                 Strcpy(eos(buf), " of ");
             }
+	    javaString monsterName = monsterTypeName(mons[mnum].monsterTypeID);
             if (vegetarian(&mons[mnum]))
-                Sprintf(eos(buf), "%s", mons[mnum].mname);
+                Sprintf(eos(buf), "%s", monsterName.c_str);
             else
-                Sprintf(eos(buf), "%s meat", mons[mnum].mname);
+                Sprintf(eos(buf), "%s meat", monsterName.c_str);
+	    releaseJavaString(monsterName);
         }
     }
 }
@@ -1253,7 +1268,7 @@ STATIC_OVL void
 consume_tin(mesg)
 const char *mesg;
 {
-    const char *what;
+    javaString what = NO_JAVA_STRING;
     int which, mnum, r;
     struct obj *tin = context.tin.tin;
 
@@ -1278,23 +1293,30 @@ const char *mesg;
         which = 0; /* 0=>plural, 1=>as-is, 2=>"the" prefix */
         if ((mnum == PM_COCKATRICE || mnum == PM_CHICKATRICE)
             && (youResistStoning() || youAreHallucinating())) {
-            what = "chicken";
+            what.c_str = "chicken";
             which = 1; /* suppress pluralization */
         } else if (youAreHallucinating()) {
-            what = rndmonnam(NULL);
+            what.c_str = rndmonnam(NULL);
         } else {
-            what = mons[mnum].mname;
+            what = monsterTypeName(mons[mnum].monsterTypeID);
             if (the_unique_pm(&mons[mnum]))
                 which = 2;
             else if (type_is_pname(&mons[mnum]))
                 which = 1;
         }
-        if (which == 0)
-            what = makeplural(what);
-        else if (which == 2)
-            what = the(what);
+        if (which == 0) {
+            pline("It smells like %s.", makeplural(what.c_str));
+	    releaseJavaString(what);
+	}
+        else if (which == 2) {
+            pline("It smells like %s.", the(what.c_str));
+	    releaseJavaString(what);
+	} else {
+            pline("It smells like %s.", what);
+	    releaseJavaString(what);
+	}
 
-        pline("It smells like %s.", what);
+
         if (yn("Eat it?") == 'n') {
             if (flags.verbose)
                 You("discard the open tin.");
@@ -1310,7 +1332,9 @@ const char *mesg;
         context.victual.fullwarn = context.victual.eating =
             context.victual.doreset = FALSE;
 
-        You("consume %s %s.", tintxts[r].txt, mons[mnum].mname);
+	javaString monsterName = monsterTypeName(mons[mnum].monsterTypeID);
+        You("consume %s %s.", tintxts[r].txt, monsterName.c_str);
+	releaseJavaString(monsterName);
 
         eating_conducts(&mons[mnum]);
 
@@ -2123,8 +2147,10 @@ struct obj *otmp;
                 && !(poly_when_stoned(youmonst.data)
                      && polymon(PM_STONE_GOLEM))) {
                 if (!youAreTurningToStone()) {
-                    Sprintf(killer.name, "%s egg",
-                            mons[otmp->corpsenm].mname);
+                    int corpseTypeID = mons[otmp->corpsenm].monsterTypeID;
+		    javaString corpseName = monsterTypeName(corpseTypeID);
+                    Sprintf(killer.name, "%s egg", corpseName.c_str);
+		    releaseJavaString(corpseName);
                     make_stoned(5L, (char *) 0, KILLED_BY_AN, killer.name);
                 }
             }
