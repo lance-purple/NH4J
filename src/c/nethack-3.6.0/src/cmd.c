@@ -2005,8 +2005,11 @@ int final;
         you_are(buf, "");
     }
     if (youAreWarnedOfMonsters() && context.warntype.speciesidx) {
-        Sprintf(buf, "aware of the presence of %s",
 	int warnedOfType = mons[context.warntype.speciesidx].monsterTypeID;
+	javaString warnedOfTypeName = monsterTypeName(warnedOfType);
+        Sprintf(buf, "aware of the presence of %s",
+                makeplural(warnedOfTypeName.c_str));
+	releaseJavaString(warnedOfTypeName);
         you_are(buf, from_what(WARN_OF_MON));
     }
     if (youAreWarnedOfUndead())
