@@ -859,7 +859,7 @@ boolean called;
 {
     char *buf = nextmbuf();
     struct permonst *mdat = mtmp->data;
-    const char *pm_name = mdat->mname;
+    javaString monsterName = NO_JAVA_STRING;
     boolean do_hallu, do_invis, do_it, do_saddle;
     boolean name_at_start, has_adjectives;
     char *bp;
@@ -901,14 +901,19 @@ boolean called;
         mtmp->minvis = save_invis;
         if (article == ARTICLE_NONE && !strncmp(name, "the ", 4))
             name += 4;
+
         return strcpy(buf, name);
     }
     /* an "aligned priest" not flagged as a priest or minion should be
        "priest" or "priestess" (normally handled by priestname()) */
-    if (mdat == &mons[PM_ALIGNED_PRIEST])
-        pm_name = mtmp->female ? "priestess" : "priest";
-    else if (mdat == &mons[PM_HIGH_PRIEST] && mtmp->female)
-        pm_name = "high priestess";
+    if (mdat == &mons[PM_ALIGNED_PRIEST]) {
+        monsterName.j_str = NULL;
+        monsterName.c_str = (mtmp->female ? "priestess" : "priest");
+    }
+    else if (mdat == &mons[PM_HIGH_PRIEST] && mtmp->female) {
+        monsterName.j_str = NULL;
+        monsterName.c_str = "high priestess";
+    }
 
     /* Shopkeepers: use shopkeeper name.  For normal shopkeepers, just
      * "Asidonhopo"; for unusual ones, "Asidonhopo the invisible
@@ -925,12 +930,18 @@ boolean called;
             return buf;
         }
         Strcat(buf, shkname(mtmp));
-        if (mdat == &mons[PM_SHOPKEEPER] && !do_invis)
+        if (mdat == &mons[PM_SHOPKEEPER] && !do_invis) {
             return buf;
+	}
         Strcat(buf, " the ");
         if (do_invis)
             Strcat(buf, "invisible ");
-        Strcat(buf, pm_name);
+
+	if (NULL == monsterName.c_str) {
+            monsterName = monsterTypeName(mdat->monsterTypeID);
+	}
+        Strcat(buf, monsterName.c_str);
+        releaseJavaString(monsterName);
         return buf;
     }
 
@@ -949,6 +960,10 @@ boolean called;
 
     /* Put the actual monster name or type into the buffer now */
     /* Be sure to remember whether the buffer starts with a name */
+    if (NULL == monsterName.c_str) {
+        monsterName = monsterTypeName(mdat->monsterTypeID);
+    }
+
     if (do_hallu) {
         char rnamecode;
         char *rname = rndmonnam(&rnamecode);
@@ -962,7 +977,7 @@ boolean called;
             Sprintf(eos(buf), "%s ghost", s_suffix(name));
             name_at_start = TRUE;
         } else if (called) {
-            Sprintf(eos(buf), "%s called %s", pm_name, name);
+            Sprintf(eos(buf), "%s called %s", monsterName.c_str, name);
             name_at_start = (boolean) type_is_pname(mdat);
         } else if (is_mplayer(mdat) && (bp = strstri(name, " the ")) != 0) {
             /* <name> the <adjective> <invisible> <saddled> <rank> */
@@ -988,7 +1003,7 @@ boolean called;
         Strcat(buf, lcase(pbuf));
         name_at_start = FALSE;
     } else {
-        Strcat(buf, pm_name);
+        Strcat(buf, monsterName.c_str);
         name_at_start = (boolean) type_is_pname(mdat);
     }
 
@@ -1000,6 +1015,8 @@ boolean called;
     } else if ((mdat->geno & G_UNIQ) && article == ARTICLE_A) {
         article = ARTICLE_THE;
     }
+
+    releaseJavaString(monsterName);
 
     {
         char buf2[BUFSZ];
@@ -1022,6 +1039,7 @@ boolean called;
             return buf;
         }
     }
+
 }
 
 char *
@@ -1191,7 +1209,9 @@ char *code;
     if (name >= SPECIAL_PM) {
         mname = bogusmon(buf, code);
     } else {
-        mname = strcpy(buf, mons[name].mname);
+	javaString monsterName = monsterTypeName(mons[name].monsterTypeID);
+        mname = strcpy(buf, monsterName.c_str);
+	releaseJavaString(monsterName);
     }
     return mname;
 #undef BOGUSMONSIZE
