@@ -1408,10 +1408,14 @@ int final;
 
         tmpbuf[0] = '\0';
         /* here we always use current gender, not saved role gender */
-        if (!is_male(uasmon) && !is_female(uasmon) && !is_neuter(uasmon))
+        if (!is_male(uasmon) && !is_female(uasmon) && !is_neuter(uasmon)) {
             Sprintf(tmpbuf, "%s ", genders[flags.female ? 1 : 0].adj);
+	}
+	
+	javaString youAsMonsterName = monsterTypeName(uasmon->monsterTypeID);
         Sprintf(buf, "%sin %s%s form", !final ? "currently " : "", tmpbuf,
-                uasmon->mname);
+                youAsMonsterName.c_str);
+	releaseJavaString(youAsMonsterName);
         you_are(buf, "");
     }
 
@@ -2002,7 +2006,7 @@ int final;
     }
     if (youAreWarnedOfMonsters() && context.warntype.speciesidx) {
         Sprintf(buf, "aware of the presence of %s",
-                makeplural(mons[context.warntype.speciesidx].mname));
+	int warnedOfType = mons[context.warntype.speciesidx].monsterTypeID;
         you_are(buf, from_what(WARN_OF_MON));
     }
     if (youAreWarnedOfUndead())
@@ -2169,7 +2173,9 @@ int final;
         you_have("polymorph control", from_what(POLYMORPH_CONTROL));
     if (areYouPolymorphed() && currentMonsterNumber() != lycanthropeType()) {
         /* foreign shape (except were-form which is handled below) */
-        Sprintf(buf, "polymorphed into %s", an(youmonst.data->mname));
+	javaString youAsMonsterName = monsterTypeName(youmonst.data->monsterTypeID);
+        Sprintf(buf, "polymorphed into %s", an(youAsMonsterName.c_str));
+	releaseJavaString(youAsMonsterName);
         if (wizard)
             Sprintf(eos(buf), " (%d)", timeRemainingAsMonster());
         you_are(buf, "");
@@ -2178,7 +2184,10 @@ int final;
         you_can("lay eggs", "");
     if (lycanthropeType() >= LOW_PM) {
         /* "you are a werecreature [in beast form]" */
-        Strcpy(buf, an(mons[lycanthropeType()].mname));
+	int lycanthropeTypeID = mons[lycanthropeType()].monsterTypeID;
+	javaString lycanthropeTypeName = monsterTypeName(lycanthropeTypeID);
+        Strcpy(buf, an(lycanthropeTypeName.c_str));
+	releaseJavaString(lycanthropeTypeName);
         if (currentMonsterNumber() == lycanthropeType()) {
             Strcat(buf, " in beast form");
             if (wizard)
