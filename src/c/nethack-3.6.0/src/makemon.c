@@ -1727,17 +1727,22 @@ struct monst *mtmp, *victim;
     if ((int) ++mtmp->m_lev >= mons[newtype].mlevel && newtype != oldtype) {
         ptr = &mons[newtype];
         if (mvitals[newtype].mvflags & G_GENOD) { /* allow G_EXTINCT */
-            if (canspotmon(mtmp))
+            if (canspotmon(mtmp)) {
+		javaString monsterName = monsterTypeName(ptr->monsterTypeID);
                 pline("As %s grows up into %s, %s %s!", mon_nam(mtmp),
-                      an(ptr->mname), mhe(mtmp),
+                      an(monsterName.c_str), mhe(mtmp),
                       nonliving(ptr) ? "expires" : "dies");
+		releaseJavaString(monsterName);
+	    }
             set_mon_data(mtmp, ptr, -1); /* keep mvitals[] accurate */
             mondied(mtmp);
             return (struct permonst *) 0;
         } else if (canspotmon(mtmp)) {
+	    javaString monsterName = monsterTypeName(ptr->monsterTypeID);
             pline("%s %s %s.", Monnam(mtmp),
                   humanoid(ptr) ? "becomes" : "grows up into",
-                  an(ptr->mname));
+                  an(monsterName.c_str));
+	    releaseJavaString(monsterName);
         }
         set_mon_data(mtmp, ptr, 1);    /* preserve intrinsics */
         newsym(mtmp->mx, mtmp->my);    /* color may change */
