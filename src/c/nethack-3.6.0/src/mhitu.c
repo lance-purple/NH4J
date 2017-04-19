@@ -425,23 +425,29 @@ register struct monst *mtmp;
 
                     if (obj) {
                         save_spe = obj->spe;
-                        if (obj->otyp == EGG)
+                        if (obj->otyp == EGG) {
                             obj->spe = 0;
+			}
                     }
+		    javaString youMonsterName = monsterTypeName(youmonst.data->monsterTypeID);
                     if (youmonst.data->mlet == S_EEL
-                        || currentMonsterNumber() == PM_TRAPPER)
+                        || currentMonsterNumber() == PM_TRAPPER) {
                         pline(
                              "Wait, %s!  There's a hidden %s named %s there!",
-                              m_monnam(mtmp), youmonst.data->mname, plname);
-                    else
+                              m_monnam(mtmp), youMonsterName.c_str, plname);
+		    } else {
                         pline(
                           "Wait, %s!  There's a %s named %s hiding under %s!",
-                              m_monnam(mtmp), youmonst.data->mname, plname,
+                              m_monnam(mtmp), youMonsterName.c_str, plname,
                               doname(level.objects[currentX()][currentY()]));
-                    if (obj)
+		    }
+		    releaseJavaString(youMonsterName);
+                    if (obj) {
                         obj->spe = save_spe;
-                } else
+		    }
+                } else {
                     impossible("hiding under nothing?");
+		}
             }
             newsym(currentX(), currentY());
         }
@@ -453,15 +459,20 @@ register struct monst *mtmp;
         && foundyou && !swallowed()) {
         boolean sticky = sticks(youmonst.data);
 
-        if (!canspotmon(mtmp))
+        if (!canspotmon(mtmp)) {
             map_invisible(mtmp->mx, mtmp->my);
-        if (sticky && !youseeit)
+        }
+	if (sticky && !youseeit) {
             pline("It gets stuck on you.");
-        else
+	} else {
+	    javaString youMonsterName = monsterTypeName(youmonst.data->monsterTypeID);
             pline("Wait, %s!  That's a %s named %s!", m_monnam(mtmp),
-                  youmonst.data->mname, plname);
-        if (sticky)
+                  youMonsterName.c_str, plname);
+	    releaseJavaString(youMonsterName);
+	}
+        if (sticky) {
             u.ustuck = mtmp;
+	}
         youmonst.m_ap_type = M_AP_NOTHING;
         youmonst.mappearance = 0;
         newsym(currentX(), currentY());
@@ -471,23 +482,30 @@ register struct monst *mtmp;
     /* non-mimic hero might be mimicking an object after eating m corpse */
     if (youmonst.m_ap_type == M_AP_OBJECT && !range2 && foundyou
         && !swallowed()) {
-        if (!canspotmon(mtmp))
+        if (!canspotmon(mtmp)) {
             map_invisible(mtmp->mx, mtmp->my);
-        if (!youseeit)
+	}
+        if (!youseeit) {
             pline("%s %s!", Something, (likes_gold(mtmp->data)
                                         && youmonst.mappearance == GOLD_PIECE)
                                            ? "tries to pick you up"
                                            : "disturbs you");
-        else
+	} else {
+            int monsterType = mons[currentMonsterNumber()].monsterTypeID;
+	    javaString monsterName = monsterTypeName(monsterType);
             pline("Wait, %s!  That %s is really %s named %s!", m_monnam(mtmp),
-                  mimic_obj_name(&youmonst), an(mons[currentMonsterNumber()].mname),
+                  mimic_obj_name(&youmonst), an(monsterName.c_str),
                   plname);
+	    releaseJavaString(monsterName);
+	}
         if (multi < 0) { /* this should always be the case */
             char buf[BUFSZ];
 
+	    javaString youMonsterName = monsterTypeName(youmonst.data->monsterTypeID);
             Sprintf(buf, "You appear to be %s again.",
-                    areYouPolymorphed() ? (const char *) an(youmonst.data->mname)
+                    areYouPolymorphed() ? (const char *) an(youMonsterName.c_str)
                            : (const char *) "yourself");
+	    releaseJavaString(youMonsterName);
             unmul(buf); /* immediately stop mimicking */
         }
         return 0;
@@ -745,8 +763,10 @@ struct permonst *mdat;
         You_feel("a slight illness.");
         return FALSE;
     } else {
+	javaString monsterName = monsterTypeName(mdat->monsterTypeID);
         make_sick(youAreSick() ? yourIntrinsic(SICK) / 3L + 1L : (long) rn1(ACURR(A_CON), 20),
-                  mdat->mname, TRUE, SICK_NONVOMITABLE);
+                  monsterName.c_str, TRUE, SICK_NONVOMITABLE);
+	releaseJavaString(monsterName);
         return TRUE;
     }
 }
@@ -916,8 +936,11 @@ register struct attack *mattk;
                 if (otmp->otyp == CORPSE
                     && touch_petrifies(&mons[otmp->corpsenm])) {
                     dmg = 1;
+		    javaString corpseName = monsterTypeName(
+                          mons[otmp->corpsenm].monsterTypeID);
                     pline("%s hits you with the %s corpse.", Monnam(mtmp),
-                          mons[otmp->corpsenm].mname);
+                          corpseName.c_str);
+		    releaseJavaString(corpseName);
                     if (!youAreTurningToStone())
                         goto do_stone;
                 }
@@ -1052,7 +1075,9 @@ register struct attack *mattk;
         if (uncancelled && !rn2(8)) {
             Sprintf(buf, "%s %s", s_suffix(Monnam(mtmp)),
                     mpoisons_subj(mtmp, mattk));
-            poisoned(buf, ptmp, mdat->mname, 30, FALSE);
+	    javaString monsterName = monsterTypeName(mdat->monsterTypeID);
+            poisoned(buf, ptmp, monsterName.c_str, 30, FALSE);
+	    releaseJavaString(monsterName);
         }
         break;
     case AD_DRIN:
@@ -1168,15 +1193,18 @@ register struct attack *mattk;
                     if (!youAreTurningToStone() && !youResistStoning()
                         && !(poly_when_stoned(youmonst.data)
                              && polymon(PM_STONE_GOLEM))) {
-                        int kformat = KILLED_BY_AN;
-                        const char *kname = mtmp->data->mname;
+                        javaString kname = monsterTypeName(mtmp->data->monsterTypeID);
 
                         if (mtmp->data->geno & G_UNIQ) {
-                            if (!type_is_pname(mtmp->data))
-                                kname = the(kname);
-                            kformat = KILLED_BY;
-                        }
-                        make_stoned(5L, (char *) 0, kformat, kname);
+                            if (!type_is_pname(mtmp->data)) {
+                                make_stoned(5L, (char *) 0, KILLED_BY, the(kname.c_str));
+			    } else {
+                                make_stoned(5L, (char *) 0, KILLED_BY, kname.c_str);
+			    }
+                        } else {
+                            make_stoned(5L, (char *) 0, KILLED_BY_AN, kname.c_str);
+			}
+			releaseJavaString(kname);
                         return 1;
                         /* done_in_by(mtmp, STONING); */
                     }
@@ -1207,9 +1235,11 @@ register struct attack *mattk;
 
                     pline("%s drowns you...", Monnam(mtmp));
                     killer.format = KILLED_BY_AN;
+		    javaString monsterName = monsterTypeName(mtmp->data->monsterTypeID);
                     Sprintf(killer.name, "%s by %s",
                             moat ? "moat" : "pool of water",
-                            an(mtmp->data->mname));
+                            an(monsterName.c_str));
+		    releaseJavaString(monsterName);
                     done(DROWNING);
                 } else if (mattk->aatyp == AT_HUGS)
                     You("are being crushed.");
@@ -1529,7 +1559,9 @@ register struct attack *mattk;
         } else if (!youAreTurningToSlime()) {
             You("don't feel very well.");
             make_slimed(10L, (char *) 0);
-            delayed_killer(SLIMED, KILLED_BY_AN, mtmp->data->mname);
+	    javaString monsterName = monsterTypeName(mtmp->data->monsterTypeID);
+            delayed_killer(SLIMED, KILLED_BY_AN, monsterName.c_str);
+	    releaseJavaString(monsterName);
         } else
             pline("Yuck!");
         break;
@@ -2052,7 +2084,9 @@ register struct attack *mattk;
                 break;
             You("turn to stone...");
             killer.format = KILLED_BY;
-            Strcpy(killer.name, mtmp->data->mname);
+	    javaString monsterName = monsterTypeName(mtmp->data->monsterTypeID);
+            Strcpy(killer.name, monsterName.c_str);
+	    releaseJavaString(monsterName);
             done(STONING);
         }
         break;
@@ -2652,10 +2686,12 @@ register struct attack *mattk;
                     tmp = 127;
                 if (mtmp->mcansee && haseyes(mtmp->data) && rn2(3)
                     && (perceives(mtmp->data) || !youAreInvisibleToOthers())) {
-                    if (youCannotSee())
+                    if (youCannotSee()) {
+			javaString youMonsterName = monsterTypeName(youmonst.data->monsterTypeID);
                         pline("As a blind %s, you cannot defend yourself.",
-                              youmonst.data->mname);
-                    else {
+                              youMonsterName.c_str);
+			releaseJavaString(youMonsterName);
+		    } else {
                         if (mon_reflects(mtmp,
                                          "Your gaze is reflected by %s %s."))
                             return 1;
