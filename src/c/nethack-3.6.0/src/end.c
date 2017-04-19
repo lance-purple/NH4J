@@ -426,35 +426,42 @@ int how;
 
     if (imitator) {
         char shape[BUFSZ];
-        const char *realnm = champtr->mname, *fakenm = mptr->mname;
+        javaString realName = monsterTypeName(champtr->monsterTypeID);
+        javaString fakeName = NO_JAVA_STRING;
+
         boolean alt = is_vampshifter(mtmp);
 
         if (mimicker) {
-            /* realnm is already correct because champtr==mptr;
+            /* realName is already correct because champtr==mptr;
                set up fake mptr for type_is_pname/the_unique_pm */
             mptr = &mons[mtmp->mappearance];
-            fakenm = mptr->mname;
-        } else if (alt && strstri(realnm, "vampire")
-                   && !strcmp(fakenm, "vampire bat")) {
+	    fakeName = monsterTypeName(mptr->monsterTypeID);
+        } else if (alt && strstri(realName.c_str, "vampire")
+                   && !strcmp(fakeName.c_str, "vampire bat")) {
             /* special case: use "vampire in bat form" in preference
                to redundant looking "vampire in vampire bat form" */
-            fakenm = "bat";
-        }
+            fakeName.c_str = "bat";
+        } else {
+	    fakeName = monsterTypeName(mptr->monsterTypeID);
+	}
+
         /* for the alternate format, always suppress any article;
            pname and the_unique should also have s_suffix() applied,
            but vampires don't take on any shapes which warrant that */
         if (alt || type_is_pname(mptr)) /* no article */
-            Strcpy(shape, fakenm);
+            Strcpy(shape, fakeName.c_str);
         else if (the_unique_pm(mptr)) /* "the"; don't use the() here */
-            Sprintf(shape, "the %s", fakenm);
+            Sprintf(shape, "the %s", fakeName.c_str);
         else /* "a"/"an" */
-            Strcpy(shape, an(fakenm));
+            Strcpy(shape, an(fakeName.c_str));
         /* omit "called" to avoid excessive verbosity */
         Sprintf(eos(buf),
                 alt ? "%s in %s form"
                     : mimicker ? "%s disguised as %s"
                                : "%s imitating %s",
-                realnm, shape);
+                realName.c_str, shape);
+	releaseJavaString(fakeName);
+	releaseJavaString(realName);
         mptr = mtmp->data; /* reset for mimicker case */
     } else if (mptr == &mons[PM_GHOST]) {
         Strcat(buf, "ghost");
@@ -472,7 +479,9 @@ int how;
            it overrides the effect of hallucination on priestname() */
         Strcat(buf, m_monnam(mtmp));
     } else {
-        Strcat(buf, mptr->mname);
+	javaString monsterName = monsterTypeName(mptr->monsterTypeID);
+        Strcat(buf, monsterName.c_str);
+	releaseJavaString(monsterName);
         if (has_mname(mtmp))
             Sprintf(eos(buf), " called %s", MNAME(mtmp));
     }
@@ -1072,8 +1081,11 @@ int how;
         /* give this feedback even if bones aren't going to be created,
            so that its presence or absence doesn't tip off the player to
            new bones or their lack; it might be a lie if makemon fails */
+        int graveMonsterType = mons[ariseFromGraveAsMonster()].monsterTypeID;
+	javaString graveMonster = monsterTypeName(graveMonsterType);
         Your("body rises from the dead as %s...",
-             an(mons[ariseFromGraveAsMonster()].mname));
+             an(graveMonster.c_str));
+	releaseJavaString(graveMonster);
         display_nhwindow(WIN_MESSAGE, FALSE);
     }
 
@@ -1446,14 +1458,15 @@ boolean ask;
             putstr(klwin, 0, "");
 
             /* countdown by monster "toughness" */
-            for (lev = max_lev; lev >= 0; lev--)
-                for (i = LOW_PM; i < NUMMONS; i++)
+            for (lev = max_lev; lev >= 0; lev--) {
+                for (i = LOW_PM; i < NUMMONS; i++) {
+		    javaString monsterName = monsterTypeName(mons[i].monsterTypeID);
                     if (mons[i].mlevel == lev
                         && (nkilled = mvitals[i].died) > 0) {
                         if ((mons[i].geno & G_UNIQ) && i != PM_HIGH_PRIEST) {
                             Sprintf(buf, "%s%s",
                                     !type_is_pname(&mons[i]) ? "The " : "",
-                                    mons[i].mname);
+                                    monsterName.c_str);
                             if (nkilled > 1) {
                                 switch (nkilled) {
                                 case 2:
@@ -1470,14 +1483,18 @@ boolean ask;
                         } else {
                             /* trolls or undead might have come back,
                                but we don't keep track of that */
-                            if (nkilled == 1)
-                                Strcpy(buf, an(mons[i].mname));
-                            else
+                            if (nkilled == 1) {
+                                Strcpy(buf, an(monsterName.c_str));
+			    } else {
                                 Sprintf(buf, "%d %s", nkilled,
-                                        makeplural(mons[i].mname));
+                                        makeplural(monsterName.c_str));
+			    }
                         }
                         putstr(klwin, 0, buf);
                     }
+		    releaseJavaString(monsterName);
+	        }
+	    }
             /*
              * if (youAreHallucinating())
              *     putstr(klwin, 0, "and a partridge in a pear tree");
@@ -1553,18 +1570,23 @@ boolean ask;
             putstr(klwin, 0, buf);
             putstr(klwin, 0, "");
 
-            for (i = LOW_PM; i < NUMMONS; i++)
+            for (i = LOW_PM; i < NUMMONS; i++) {
                 if (mvitals[i].mvflags & G_GONE && !(mons[i].geno & G_UNIQ)) {
-                    if ((mons[i].geno & G_UNIQ) && i != PM_HIGH_PRIEST)
+		    javaString monsterName = monsterTypeName(mons[i].monsterTypeID);
+                    if ((mons[i].geno & G_UNIQ) && i != PM_HIGH_PRIEST) {
                         Sprintf(buf, "%s%s",
                                 !type_is_pname(&mons[i]) ? "" : "the ",
-                                mons[i].mname);
-                    else
-                        Strcpy(buf, makeplural(mons[i].mname));
-                    if (!(mvitals[i].mvflags & G_GENOD))
+                                monsterName.c_str);
+		    } else {
+                        Strcpy(buf, makeplural(monsterName.c_str));
+		    }
+                    if (!(mvitals[i].mvflags & G_GENOD)) {
                         Strcat(buf, " (extinct)");
+		    }
                     putstr(klwin, 0, buf);
+		    releaseJavaString(monsterName);
                 }
+	    }
 
             putstr(klwin, 0, "");
             if (ngenocided > 0) {
