@@ -324,9 +324,11 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
         /* If we use an() here we'd have to remember never to use */
         /* it whenever calling doname() or xname(). */
         if (typ == FIGURINE && omndx != NON_PM) {
+	    javaString monsterName = monsterTypeName(mons[omndx].monsterTypeID);
             Sprintf(eos(buf), " of a%s %s",
-                    index(vowels, *mons[omndx].mname) ? "n" : "",
-                    mons[omndx].mname);
+                    index(vowels, monsterName.c_str[0]) ? "n" : "",
+                    monsterName.c_str);
+	    releaseJavaString(monsterName);
         } else if (is_wet_towel(obj)) {
             if (wizard)
                 Sprintf(eos(buf), " (%d)", obj->spe);
@@ -415,7 +417,8 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
         Strcpy(buf, actualn);
         break;
     case ROCK_CLASS:
-        if (typ == STATUE && omndx != NON_PM)
+        if (typ == STATUE && omndx != NON_PM) {
+	    javaString monsterName = monsterTypeName(mons[omndx].monsterTypeID);
             Sprintf(buf, "%s%s of %s%s",
                     (Role_if(PM_ARCHEOLOGIST) && (obj->spe & STATUE_HISTORIC))
                        ? "historic "
@@ -425,12 +428,15 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
                        ? ""
                        : the_unique_pm(&mons[omndx])
                           ? "the "
-                          : index(vowels, *mons[omndx].mname)
+                          : index(vowels, monsterName.c_str[0])
                              ? "an "
                              : "a ",
-                    mons[omndx].mname);
-        else
+                    monsterName.c_str);
+	    releaseJavaString(monsterName);
+	}
+        else {
             Strcpy(buf, actualn);
+	}
         break;
     case BALL_CLASS:
         Sprintf(buf, "%sheavy iron ball",
@@ -930,7 +936,9 @@ boolean with_price;
 #endif
             if (omndx >= LOW_PM
                 && (known || (mvitals[omndx].mvflags & MV_KNOWS_EGG))) {
-                Strcat(prefix, mons[omndx].mname);
+		javaString monsterName = monsterTypeName(mons[omndx].monsterTypeID);
+                Strcat(prefix, monsterName.c_str);
+		releaseJavaString(monsterName);
                 Strcat(prefix, " ");
                 if (obj->spe)
                     Strcat(bp, " (laid by you)");
@@ -1103,19 +1111,22 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
         any_prefix = (cxn_flags & CXN_ARTICLE) != 0,
             /* leave off suffix (do_name() appends "corpse" itself) */
         omit_corpse = (cxn_flags & CXN_NOCORPSE) != 0, possessive = FALSE;
-    const char *mname;
+
+    javaString mname = NO_JAVA_STRING;
 
     if (omndx == NON_PM) { /* paranoia */
-        mname = "thing";
+        mname.c_str = "thing";
         /* [Possible enhancement:  check whether corpse has monster traits
             attached in order to use priestname() for priests and minions.] */
     } else if (omndx == PM_ALIGNED_PRIEST) {
         /* avoid "aligned priest"; it just exposes internal details */
-        mname = "priest";
+        mname.c_str = "priest";
     } else {
-        mname = mons[omndx].mname;
+        mname = monsterTypeName(mons[omndx].monsterTypeID);
         if (the_unique_pm(&mons[omndx]) || type_is_pname(&mons[omndx])) {
-            mname = s_suffix(mname);
+	    const char* ss = s_suffix(mname.c_str);
+	    releaseJavaString(mname);
+            mname.c_str = ss;
             possessive = TRUE;
             /* don't precede personal name like "Medusa" with an article */
             if (type_is_pname(&mons[omndx]))
@@ -1141,13 +1152,13 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
 
     if (!adjective || !*adjective) {
         /* normal case:  newt corpse */
-        Strcat(nambuf, mname);
+        Strcat(nambuf, mname.c_str);
     } else {
         /* adjective positioning depends upon format of monster name */
         if (possessive) /* Medusa's cursed partly eaten corpse */
-            Sprintf(eos(nambuf), "%s %s", mname, adjective);
+            Sprintf(eos(nambuf), "%s %s", mname.c_str, adjective);
         else /* cursed partly eaten troll corpse */
-            Sprintf(eos(nambuf), "%s %s", adjective, mname);
+            Sprintf(eos(nambuf), "%s %s", adjective, mname.c_str);
         /* in case adjective has a trailing space, squeeze it out */
         mungspaces(nambuf);
         /* doname() might include a count in the adjective argument;
@@ -1155,6 +1166,8 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
         if (digit(*adjective))
             any_prefix = FALSE;
     }
+
+    releaseJavaString(mname);
 
     if (!omit_corpse) {
         Strcat(nambuf, " corpse");
@@ -2722,9 +2735,12 @@ struct obj *no_wish;
                                 mntmplen; /* double check for rank title */
                             char *obp = bp;
                             mntmptoo = title_to_mon(bp, (int *) 0, &mntmplen);
+			    javaString monsterName = monsterTypeName(mons[mntmp].monsterTypeID);
                             bp += mntmp != mntmptoo
-                                      ? (int) strlen(mons[mntmp].mname)
+                                      ? (int) strlen(monsterName.c_str)
                                       : mntmplen;
+			    releaseJavaString(monsterName);
+
                             if (*bp == ' ')
                                 bp++;
                             else if (!strncmpi(bp, "s ", 2))

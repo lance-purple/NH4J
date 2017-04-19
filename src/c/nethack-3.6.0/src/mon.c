@@ -1886,8 +1886,10 @@ boolean was_swallowed; /* digestion */
             if (was_swallowed && magr) {
                 if (magr == &youmonst) {
                     There("is an explosion in your %s!", body_part(STOMACH));
+		    javaString monsterName = monsterTypeName(mdat->monsterTypeID);
                     Sprintf(killer.name, "%s explosion",
-                            s_suffix(mdat->mname));
+                            s_suffix(monsterName.c_str));
+		    releaseJavaString(monsterName);
                     losehp(Maybe_Half_Phys(tmp), killer.name, KILLED_BY_AN);
                 } else {
                     You_hear("an explosion.");
@@ -1904,7 +1906,9 @@ boolean was_swallowed; /* digestion */
                 return FALSE;
             }
 
-            Sprintf(killer.name, "%s explosion", s_suffix(mdat->mname));
+	    javaString monsterName = monsterTypeName(mdat->monsterTypeID);
+            Sprintf(killer.name, "%s explosion", s_suffix(monsterName.c_str));
+	    releaseJavaString(monsterName);
             killer.format = KILLED_BY_AN;
             explode(mon->mx, mon->my, -1, tmp, MON_EXPLODE, EXPL_NOXIOUS);
             return FALSE;
@@ -2297,14 +2301,19 @@ struct monst *mtmp;
 {
     if (mtmp->data->mlet == S_GOLEM) {
         /* it's a golem, and not a stone golem */
-        if (canseemon(mtmp))
+        if (canseemon(mtmp)) {
             pline("%s solidifies...", Monnam(mtmp));
+	}
         if (newcham(mtmp, &mons[PM_STONE_GOLEM], FALSE, FALSE)) {
-            if (canseemon(mtmp))
-                pline("Now it's %s.", an(mtmp->data->mname));
+            if (canseemon(mtmp)) {
+		javaString monsterName = monsterTypeName(mtmp->data->monsterTypeID);
+                pline("Now it's %s.", an(monsterName.c_str));
+		releaseJavaString(monsterName);
+	    }
         } else {
-            if (canseemon(mtmp))
+            if (canseemon(mtmp)) {
                 pline("... and returns to normal.");
+	    }
         }
     } else
         impossible("Can't polystone %s!", a_monnam(mtmp));
@@ -2489,11 +2498,14 @@ struct monst *mtmp;
                     ++got_mad;
             }
         }
-        if (got_mad && !youAreHallucinating())
+        if (got_mad && !youAreHallucinating()) {
+	    javaString guardianName = monsterTypeName(q_guardian->monsterTypeID);
             pline_The("%s appear%s to be angry too...",
-                      got_mad == 1 ? q_guardian->mname
-                                   : makeplural(q_guardian->mname),
+                      got_mad == 1 ? guardianName.c_str
+                                   : makeplural(guardianName.c_str),
                       got_mad == 1 ? "s" : "");
+	    releaseJavaString(guardianName);
+	}
     }
 }
 

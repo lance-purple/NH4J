@@ -66,12 +66,17 @@ char *outbuf;
 
     /* include race with role unless polymorphed */
     race[0] = '\0';
-    if (!areYouPolymorphed())
+    if (!areYouPolymorphed()) {
         Sprintf(race, "%s ", urace.adj);
+    }
+
+    int currentMonsterType = mons[currentMonsterNumber()].monsterTypeID;
+    javaString currentMonsterName = monsterTypeName(currentMonsterType);
     Sprintf(outbuf, "%s%s%s called %s",
             /* being blinded may hide invisibility from self */
             (youAreInvisibleToOthers() && (senseself() || youCanSee())) ? "invisible " : "", race,
-            mons[currentMonsterNumber()].mname, plname);
+            currentMonsterName.c_str, plname);
+    releaseJavaString(currentMonsterName);
     if (u.usteed)
         Sprintf(eos(outbuf), ", mounted on %s", y_monnam(u.usteed));
     return outbuf;
@@ -231,14 +236,19 @@ int x, y;
                     Strcat(monbuf, ", ");
             }
             if (how_seen & MONSEEN_WARNMON) {
-                if (youAreHallucinating())
+                if (youAreHallucinating()) {
                     Strcat(monbuf, "paranoid delusion");
-                else
+		}
+                else {
+		    javaString monsterName = monsterTypeName(mtmp->data->monsterTypeID);
                     Sprintf(eos(monbuf), "warned of %s",
-                            makeplural(mtmp->data->mname));
+                            makeplural(monsterName.c_str));
+		    releaseJavaString(monsterName);
+		}
                 how_seen &= ~MONSEEN_WARNMON;
-                if (how_seen)
+                if (how_seen) {
                     Strcat(monbuf, ", ");
+		}
             }
             /* should have used up all the how_seen bits by now */
             if (how_seen) {
@@ -404,10 +414,13 @@ boolean user_typed_name, without_asking;
      * for Angel and angel, make the lookup string the same for both
      * user_typed_name and picked name.
      */
-    if (pm != (struct permonst *) 0 && !user_typed_name)
-        dbase_str = strcpy(newstr, pm->mname);
-    else
+    if (pm != (struct permonst *) 0 && !user_typed_name) {
+	javaString monsterName =  monsterTypeName(pm->monsterTypeID);
+        dbase_str = strcpy(newstr, monsterName.c_str);
+	releaseJavaString(monsterName);
+    } else {
         dbase_str = strcpy(newstr, inp);
+    }
     (void) lcase(dbase_str);
 
     if (!strncmp(dbase_str, "interior of ", 12))

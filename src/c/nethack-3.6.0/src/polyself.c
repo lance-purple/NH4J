@@ -459,7 +459,6 @@ int psflags;
                        && !(mntmp == PM_HUMAN || your_race(&mons[mntmp])
                             || mntmp == urole.malenum
                             || mntmp == urole.femalenum)) {
-                const char *pm_name;
 
                 /* mkclass_poly() can pick a !polyok()
                    candidate; if so, usually try again */
@@ -471,12 +470,17 @@ int psflags;
                        0 and trigger thats_enough_tries message */
                     ++tryct;
                 }
-                pm_name = mons[mntmp].mname;
-                if (the_unique_pm(&mons[mntmp]))
-                    pm_name = the(pm_name);
-                else if (!type_is_pname(&mons[mntmp]))
-                    pm_name = an(pm_name);
-                You_cant("polymorph into %s.", pm_name);
+                javaString pm_name = monsterTypeName(mons[mntmp].monsterTypeID);
+                if (the_unique_pm(&mons[mntmp])) {
+                    You_cant("polymorph into %s.", the(pm_name.c_str));
+		}
+                else if (!type_is_pname(&mons[mntmp])) {
+                    You_cant("polymorph into %s.", an(pm_name.c_str));
+		}
+		else {
+                    You_cant("polymorph into %s.", pm_name.c_str);
+		}
+		releaseJavaString(pm_name);
             } else
                 break;
         } while (--tryct > 0);
@@ -538,7 +542,9 @@ int psflags;
                             ? PM_WOLF
                             : !rn2(4) ? PM_FOG_CLOUD : PM_VAMPIRE_BAT;
             if (controllable_poly) {
-                Sprintf(buf, "Become %s?", an(mons[mntmp].mname));
+		javaString monsterName = monsterTypeName(mons[mntmp].monsterTypeID); 
+                Sprintf(buf, "Become %s?", an(monsterName.c_str));
+		releaseJavaString(monsterName);
                 if (yn(buf) != 'y')
                     return;
             }
@@ -599,7 +605,9 @@ int mntmp;
     int mlvl;
 
     if (mvitals[mntmp].mvflags & G_GENOD) { /* allow G_EXTINCT */
-        You_feel("rather %s-ish.", mons[mntmp].mname);
+	javaString monsterName = monsterTypeName(mons[mntmp].monsterTypeID);
+        You_feel("rather %s-ish.", monsterName.c_str);
+	releaseJavaString(monsterName);
         exercise(A_WIS, TRUE);
         return 0;
     }
@@ -651,6 +659,8 @@ int mntmp;
         if (sex_change_ok && !rn2(10))
             dochange = TRUE;
     }
+
+    javaString monsterName = monsterTypeName(mons[mntmp].monsterTypeID);
     if (dochange) {
         flags.female = !flags.female;
         You("%s %s%s!",
@@ -658,13 +668,15 @@ int mntmp;
             (is_male(&mons[mntmp]) || is_female(&mons[mntmp]))
                 ? ""
                 : flags.female ? "female " : "male ",
-            mons[mntmp].mname);
+            monsterName.c_str);
     } else {
         if (currentMonsterNumber() != mntmp)
-            You("turn into %s!", an(mons[mntmp].mname));
+            You("turn into %s!", an(monsterName.c_str));
         else
-            You_feel("like a new %s!", mons[mntmp].mname);
+            You_feel("like a new %s!", monsterName.c_str);
     }
+    releaseJavaString(monsterName);
+
     if (youAreTurningToStone() && poly_when_stoned(&mons[mntmp])) {
         /* poly_when_stoned already checked stone golem genocide */
         mntmp = PM_STONE_GOLEM;
@@ -762,7 +774,9 @@ int mntmp;
 
             pline("%s touch %s.", no_longer_petrify_resistant,
                   mon_nam(u.usteed));
-            Sprintf(buf, "riding %s", an(u.usteed->data->mname));
+	    javaString steedName = monsterTypeName(u.usteed->data->monsterTypeID);
+            Sprintf(buf, "riding %s", an(steedName.c_str));
+	    releaseJavaString(steedName);
             instapetrify(buf);
         }
         if (!can_ride(u.usteed))
@@ -1485,7 +1499,9 @@ dopoly()
     if (is_vampire(youmonst.data)) {
         polyself(2);
         if (savedat != youmonst.data) {
-            You("transform into %s.", an(youmonst.data->mname));
+            javaString youMonsterName = monsterTypeName(youmonst.data->monsterTypeID);
+            You("transform into %s.", an(youMonsterName.c_str));
+            releaseJavaString(youMonsterName);
             newsym(currentX(), currentY());
         }
     }

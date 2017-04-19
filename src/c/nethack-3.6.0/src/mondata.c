@@ -740,10 +740,12 @@ const char *in_str;
     }
 
     for (len = 0, i = LOW_PM; i < NUMMONS; i++) {
-        register int m_i_len = strlen(mons[i].mname);
+	javaString monsterName = monsterTypeName(mons[i].monsterTypeID);
+        register int m_i_len = strlen(monsterName.c_str);
 
-        if (m_i_len > len && !strncmpi(mons[i].mname, str, m_i_len)) {
+        if (m_i_len > len && !strncmpi(monsterName.c_str, str, m_i_len)) {
             if (m_i_len == slen) {
+		releaseJavaString(monsterName);
                 return i; /* exact match */
             } else if (slen > m_i_len
                        && (str[m_i_len] == ' '
@@ -759,9 +761,11 @@ const char *in_str;
                 len = m_i_len;
             }
         }
+	releaseJavaString(monsterName);
     }
-    if (mntmp == NON_PM)
+    if (mntmp == NON_PM) {
         mntmp = title_to_mon(str, (int *) 0, (int *) 0);
+    }
     return mntmp;
 }
 
@@ -845,13 +849,17 @@ int *mndx_p;
         /* check individual species names; not as thorough as mon_to_name()
            but our caller can call that directly if desired */
         for (i = LOW_PM; i < NUMMONS; i++) {
-            x = mons[i].mname;
-            if ((p = strstri(x, in_str)) != 0
-                && (p == x || *(p - 1) == ' ')) {
-                if (mndx_p)
+            javaString x = monsterTypeName(mons[i].monsterTypeID);
+            if ((p = strstri(x.c_str, in_str)) != 0
+                && (p == x.c_str || *(p - 1) == ' ')) {
+                if (mndx_p) {
                     *mndx_p = i;
+		}
+                releaseJavaString(x);
                 return mons[i].mlet;
-            }
+            } else {
+                releaseJavaString(x);
+	    }
         }
     }
     return 0;

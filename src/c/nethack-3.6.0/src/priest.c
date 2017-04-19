@@ -311,10 +311,19 @@ char *pname; /* caller-supplied output buffer */
             aligned_priest = mon->data == &mons[PM_ALIGNED_PRIEST],
             high_priest = mon->data == &mons[PM_HIGH_PRIEST];
     char whatcode = '\0';
-    const char *what = do_hallu ? rndmonnam(&whatcode) : mon->data->mname;
+    javaString what = NO_JAVA_STRING;
 
-    if (!mon->ispriest && !mon->isminion) /* should never happen...  */
-        return strcpy(pname, what);       /* caller must be confused */
+    if (do_hallu) {
+        what.c_str = rndmonnam(&whatcode);
+    } else {
+        what = monsterTypeName(mon->data->monsterTypeID);
+    }
+
+    if (!mon->ispriest && !mon->isminion) {       /* should never happen...  */
+        char* result = strcpy(pname, what.c_str); /* caller must be confused */
+	releaseJavaString(what);
+	return result;
+    }
 
     *pname = '\0';
     if (!do_hallu || !bogon_is_pname(whatcode))
@@ -330,19 +339,23 @@ char *pname; /* caller-supplied output buffer */
         } else {
             if (high_priest)
                 Strcat(pname, "high ");
+
+	    releaseJavaString(what);
             if (youAreHallucinating())
-                what = "poohbah";
+                what.c_str = "poohbah";
             else if (mon->female)
-                what = "priestess";
+                what.c_str = "priestess";
             else
-                what = "priest";
+                what.c_str = "priest";
         }
     } else {
-        if (mon->mtame && !strcmpi(what, "Angel"))
+        if (mon->mtame && !strcmpi(what.c_str, "Angel"))
             Strcat(pname, "guardian ");
     }
 
-    Strcat(pname, what);
+    Strcat(pname, what.c_str);
+    releaseJavaString(what);
+
     /* same as distant_monnam(), more or less... */
     if (do_hallu || !high_priest || !areYouOnAstralLevel()
         || distanceSquaredToYou(mon->mx, mon->my) <= 2 || program_state.gameover) {

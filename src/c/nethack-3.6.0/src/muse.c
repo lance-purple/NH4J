@@ -2440,8 +2440,15 @@ struct monst *mon;
         return (ptr->mcolor == CLR_GREEN || ptr->mcolor == CLR_BRIGHT_GREEN);
 #endif
     /* approximation */
-    if (strstri(ptr->mname, "green"))
+    javaString monsterName = monsterTypeName(ptr->monsterTypeID);
+    boolean isGreen = (NULL != strstri(monsterName.c_str, "green"));
+    releaseJavaString(monsterName);
+   
+    if (isGreen)
+    {
         return TRUE;
+    } 
+
     switch (monsndx(ptr)) {
     case PM_FOREST_CENTAUR:
     case PM_GARTER_SNAKE:

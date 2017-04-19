@@ -396,8 +396,13 @@ register struct monst *mtmp;
     /* pets eating mimic corpses mimic while eating, so this comes first */
     if (mtmp->meating)
         Strcat(info, ", eating");
+
     /* a stethoscope exposes mimic before getting here so this
        won't be relevant for it, but wand of probing doesn't */
+    javaString mimicMonster = NO_JAVA_STRING;
+    if (mtmp->m_ap_type == M_AP_MONSTER) {
+        mimicMonster = monsterTypeName(mons[mtmp->mappearance].monsterTypeID);
+    }
     if (mtmp->m_ap_type)
         Sprintf(eos(info), ", mimicking %s",
                 (mtmp->m_ap_type == M_AP_FURNITURE)
@@ -407,8 +412,10 @@ register struct monst *mtmp;
                                  ? "gold"
                                  : an(simple_typename(mtmp->mappearance)))
                           : (mtmp->m_ap_type == M_AP_MONSTER)
-                                ? an(mons[mtmp->mappearance].mname)
+                                ? an(mimicMonster.c_str)
                                 : something); /* impossible... */
+    releaseJavaString(mimicMonster);
+
     if (mtmp->mcan)
         Strcat(info, ", cancelled");
     if (mtmp->mconf)
