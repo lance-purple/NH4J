@@ -612,9 +612,12 @@ register struct monst *mtmp;
                     Sprintf(verbuf, vampmsg[vampindex], body_part(BLOOD));
                     verbl_msg = verbuf;
                 } else if (vampindex == 1) {
+		    int currentMonsterType = mons[currentMonsterNumber()].monsterTypeID;
+		    javaString currentMonsterName = monsterTypeName(currentMonsterType);
                     Sprintf(verbuf, vampmsg[vampindex],
-                            areYouPolymorphed() ? an(mons[currentMonsterNumber()].mname)
+                            areYouPolymorphed() ? an(currentMonsterName.c_str)
                                    : an(racenoun));
+		    releaseJavaString(currentMonsterName);
                     verbl_msg = verbuf;
                 } else
                     verbl_msg = vampmsg[vampindex];
@@ -976,7 +979,9 @@ dochat()
     struct obj *otmp;
 
     if (is_silent(youmonst.data)) {
-        pline("As %s, you cannot speak.", an(youmonst.data->mname));
+	javaString youMonsterName = monsterTypeName(youmonst.data->monsterTypeID);
+        pline("As %s, you cannot speak.", an(youMonsterName.c_str));
+	releaseJavaString(youMonsterName);
         return 0;
     }
     if (youAreBeingStrangled()) {

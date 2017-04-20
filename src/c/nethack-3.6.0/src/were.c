@@ -96,13 +96,18 @@ register struct monst *mon;
 
     pm = counter_were(monsndx(mon->data));
     if (pm < LOW_PM) {
-        impossible("unknown lycanthrope %s.", mon->data->mname);
+	javaString wereName = monsterTypeName(mon->data->monsterTypeID);
+        impossible("unknown lycanthrope %s.", wereName.c_str);
+	releaseJavaString(wereName);
         return;
     }
 
-    if (canseemon(mon) && !youAreHallucinating())
+    if (canseemon(mon) && !youAreHallucinating()) {
+	javaString monsterName = monsterTypeName(mons[pm].monsterTypeID);
         pline("%s changes into a %s.", Monnam(mon),
-              is_human(&mons[pm]) ? "human" : mons[pm].mname + 4);
+              is_human(&mons[pm]) ? "human" : monsterName.c_str + 4);
+	releaseJavaString(monsterName);
+    }
 
     set_mon_data(mon, &mons[pm], 0);
     if (mon->msleeping || !mon->mcanmove) {
@@ -178,8 +183,10 @@ you_were()
         return;
     if (controllable_poly) {
         /* `+4' => skip "were" prefix to get name of beast */
+	javaString wereName = monsterTypeName(mons[lycanthropeType()].monsterTypeID);
         Sprintf(qbuf, "Do you want to change into %s?",
-                an(mons[lycanthropeType()].mname + 4));
+                an(wereName.c_str + 4));
+	releaseJavaString(wereName);
         if (yn(qbuf) == 'n')
             return;
     }

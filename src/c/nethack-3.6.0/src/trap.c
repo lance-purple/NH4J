@@ -2693,8 +2693,10 @@ const char *arg;
 
     if (uwep && uwep->otyp == CORPSE && touch_petrifies(&mons[uwep->corpsenm])
         && !youResistStoning()) {
-        pline("%s touch the %s corpse.", arg, mons[uwep->corpsenm].mname);
-        Sprintf(kbuf, "%s corpse", an(mons[uwep->corpsenm].mname));
+	javaString corpseName = monsterTypeName(mons[uwep->corpsenm].monsterTypeID);
+        pline("%s touch the %s corpse.", arg, corpseName.c_str);
+        Sprintf(kbuf, "%s corpse", an(corpseName.c_str));
+	releaseJavaString(corpseName);
         instapetrify(kbuf);
         /* life-saved; unwield the corpse if we can't handle it */
         if (!uarmg && !youResistStoning())
@@ -2704,8 +2706,10 @@ const char *arg;
        allow two-weapon combat when either weapon is a corpse] */
     if (usingTwoWeapons() && uswapwep && uswapwep->otyp == CORPSE
         && touch_petrifies(&mons[uswapwep->corpsenm]) && !youResistStoning()) {
-        pline("%s touch the %s corpse.", arg, mons[uswapwep->corpsenm].mname);
-        Sprintf(kbuf, "%s corpse", an(mons[uswapwep->corpsenm].mname));
+	javaString corpseName = monsterTypeName(mons[uswapwep->corpsenm].monsterTypeID);
+        pline("%s touch the %s corpse.", arg, corpseName.c_str);
+        Sprintf(kbuf, "%s corpse", an(corpseName.c_str));
+	releaseJavaString(corpseName);
         instapetrify(kbuf);
         /* life-saved; unwield the corpse */
         if (!uarmg && !youResistStoning())
@@ -4097,16 +4101,20 @@ struct trap *ttmp;
 
     /* is it a cockatrice?... */
     if (touch_petrifies(mtmp->data) && !uarmg && !youResistStoning()) {
-        You("grab the trapped %s using your bare %s.", mtmp->data->mname,
+	javaString monsterName = monsterTypeName(mtmp->data->monsterTypeID);
+        You("grab the trapped %s using your bare %s.", monsterName.c_str,
             makeplural(body_part(HAND)));
+	releaseJavaString(monsterName);
 
         if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM)) {
             display_nhwindow(WIN_MESSAGE, FALSE);
         } else {
             char kbuf[BUFSZ];
 
+	    javaString monsterName = monsterTypeName(mtmp->data->monsterTypeID);
             Sprintf(kbuf, "trying to help %s out of a pit",
-                    an(mtmp->data->mname));
+                    an(monsterName.c_str));
+	    releaseJavaString(monsterName);
             instapetrify(kbuf);
             return 1;
         }

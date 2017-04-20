@@ -2009,7 +2009,10 @@ do_class_genocide()
             if (mons[i].mlet == class) {
                 char nam[BUFSZ];
 
-                Strcpy(nam, makeplural(mons[i].mname));
+		javaString monsterName = monsterTypeName(mons[i].monsterTypeID);
+                Strcpy(nam, makeplural(monsterName.c_str));
+		releaseJavaString(monsterName);
+
                 /* Although "genus" is Latin for race, the hero benefits
                  * from both race and role; thus genocide affects either.
                  */
@@ -2073,9 +2076,11 @@ do_class_genocide()
                         if (i == PM_HIGH_PRIEST)
                             uniq = FALSE;
 
+		        javaString monsterName = monsterTypeName(mons[i].monsterTypeID);
                         You("aren't permitted to genocide %s%s.",
                             (uniq && !named) ? "the " : "",
-                            (uniq || named) ? mons[i].mname : nam);
+                            (uniq || named) ? monsterName.c_str : nam);
+		        releaseJavaString(monsterName);
                     }
                 }
             }
@@ -2110,7 +2115,9 @@ int how;
     if (how & PLAYER) {
         mndx = originalMonsterNumber(); /* non-polymorphed mon num */
         ptr = &mons[mndx];
-        Strcpy(buf, ptr->mname);
+        javaString monsterName = monsterTypeName(mons[mndx].monsterTypeID);
+        Strcpy(buf, monsterName.c_str);
+	releaseJavaString(monsterName);
         killplayer++;
     } else {
         for (i = 0;; i++) {
@@ -2173,15 +2180,20 @@ int how;
 
     which = "all ";
     if (youAreHallucinating()) {
-        if (areYouPolymorphed())
-            Strcpy(buf, youmonst.data->mname);
-        else {
+        if (areYouPolymorphed()) {
+	    javaString youMonsterName = monsterTypeName(youmonst.data->monsterTypeID);
+            Strcpy(buf, youMonsterName.c_str);
+	    releaseJavaString(youMonsterName);
+	} else {
             Strcpy(buf, (flags.female && urole.name.f) ? urole.name.f
                                                        : urole.name.m);
             buf[0] = lowc(buf[0]);
         }
     } else {
-        Strcpy(buf, ptr->mname); /* make sure we have standard singular */
+	javaString monsterName = monsterTypeName(ptr->monsterTypeID);
+        Strcpy(buf, monsterName.c_str); /* make sure we have standard singular */
+	releaseJavaString(monsterName);
+
         if ((ptr->geno & G_UNIQ) && ptr != &mons[PM_HIGH_PRIEST])
             which = !type_is_pname(ptr) ? "the " : "";
     }
@@ -2409,10 +2421,13 @@ create_particular()
             firstchoice = which;
             if (cant_revive(&which, FALSE, (struct obj *) 0)) {
                 /* wizard mode can override handling of special monsters */
+		javaString whichMonsterName = monsterTypeName(mons[which].monsterTypeID);
+		javaString firstChoiceName  = monsterTypeName(mons[firstchoice].monsterTypeID);
                 Sprintf(buf, "Creating %s instead; force %s?",
-                        mons[which].mname, mons[firstchoice].mname);
-                if (yn(buf) == 'y')
+                        whichMonsterName.c_str, firstChoiceName.c_str);
+                if (yn(buf) == 'y') {
                     which = firstchoice;
+		}
             }
             whichpm = &mons[which];
         }

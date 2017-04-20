@@ -177,8 +177,10 @@ ldrname()
 {
     int i = urole.ldrnum;
 
+    javaString leaderName = monsterTypeName(mons[i].monsterTypeID);
     Sprintf(nambuf, "%s%s", type_is_pname(&mons[i]) ? "" : "the ",
-            mons[i].mname);
+            leaderName.c_str);
+    releaseJavaString(leaderName);
     return nambuf;
 }
 
@@ -202,8 +204,10 @@ neminame()
 {
     int i = urole.neminum;
 
+    javaString nemesisName = monsterTypeName(mons[i].monsterTypeID);
     Sprintf(nambuf, "%s%s", type_is_pname(&mons[i]) ? "" : "the ",
-            mons[i].mname);
+            nemesisName.c_str);
+    releaseJavaString(nemesisName);
     return nambuf;
 }
 
@@ -212,7 +216,10 @@ guardname() /* return your role leader's guard monster name */
 {
     int i = urole.guardnum;
 
-    return mons[i].mname;
+    javaString guardName = monsterTypeName(mons[i].monsterTypeID);
+    Sprintf(nambuf, "%s", guardName.c_str);
+    releaseJavaString(guardName);
+    return nambuf;
 }
 
 STATIC_OVL const char *

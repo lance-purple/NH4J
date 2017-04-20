@@ -71,7 +71,9 @@ struct obj *otmp;
 
         You("touch %s.", mon_nam(mtmp));
         if (!(poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))) {
-            Sprintf(kbuf, "attempting to saddle %s", an(mtmp->data->mname));
+            javaString monsterName = monsterTypeName(mtmp->data->monsterTypeID);
+            Sprintf(kbuf, "attempting to saddle %s", an(monsterName.c_str));
+            releaseJavaString(monsterName);
             instapetrify(kbuf);
         }
     }
@@ -257,7 +259,9 @@ boolean force;      /* Quietly force this animal */
         char kbuf[BUFSZ];
 
         You("touch %s.", mon_nam(mtmp));
-        Sprintf(kbuf, "attempting to ride %s", an(mtmp->data->mname));
+        javaString monsterName = monsterTypeName(mtmp->data->monsterTypeID);
+        Sprintf(kbuf, "attempting to ride %s", an(monsterName.c_str));
+        releaseJavaString(monsterName);
         instapetrify(kbuf);
     }
     if (!mtmp->mtame || mtmp->isminion) {
@@ -512,8 +516,10 @@ int reason; /* Player was thrown off etc. */
             return;
         }
         if (!has_mname(mtmp)) {
+            javaString monsterName = monsterTypeName(mtmp->data->monsterTypeID);
             pline("You've been through the dungeon on %s with no name.",
-                  an(mtmp->data->mname));
+                  an(monsterName.c_str));
+            releaseJavaString(monsterName);
             if (youAreHallucinating())
                 pline("It felt good to get out of the rain.");
         } else

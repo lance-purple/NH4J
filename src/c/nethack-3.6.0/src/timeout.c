@@ -740,8 +740,10 @@ slip_or_trip()
         }
         if (!uarmf && otmp->otyp == CORPSE
             && touch_petrifies(&mons[otmp->corpsenm]) && !youResistStoning()) {
+	    javaString corpseName = monsterTypeName(mons[otmp->corpsenm].monsterTypeID);
             Sprintf(killer.name, "tripping over %s corpse",
-                    an(mons[otmp->corpsenm].mname));
+                    an(corpseName.c_str));
+	    releaseJavaString(corpseName);
             instapetrify(killer.name);
         }
     } else if (rn2(3) && is_ice(currentX(), currentY())) {

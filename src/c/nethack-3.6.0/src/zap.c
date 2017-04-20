@@ -1892,10 +1892,12 @@ struct obj *obj, *otmp;
                         You_hear("the sound of a defibrillator.");
                         learn_it = TRUE;
                     } else if (youCanSee()) {
+			javaString corpseName = monsterTypeName(mons[corpsenm].monsterTypeID);
                         You("observe %s %s change dramatically.",
-                            s_suffix(an(mons[corpsenm].mname)),
+                            s_suffix(an(corpseName.c_str)),
                             nonliving(&mons[corpsenm]) ? "motility"
                                                        : "health");
+			releaseJavaString(corpseName);
                         learn_it = TRUE;
                     }
                     if (learn_it)

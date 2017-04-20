@@ -916,7 +916,9 @@ boolean polyspot;
             char buf[BUFSZ];
 
             You("touch %s.", mon_nam(u.usteed));
-            Sprintf(buf, "falling off %s", an(u.usteed->data->mname));
+	    javaString steedName = monsterTypeName(u.usteed->data->monsterTypeID);
+            Sprintf(buf, "falling off %s", an(steedName.c_str));
+	    releaseJavaString(steedName);
             instapetrify(buf);
         }
         dismount_steed(DISMOUNT_FELL);

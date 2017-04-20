@@ -336,9 +336,12 @@ invault()
 
         reset_faint(); /* if fainted - wake up */
         gsensed = !canspotmon(guard);
-        if (!gsensed)
+        if (!gsensed) {
+            javaString guardName = monsterTypeName(guard->data->monsterTypeID);
             pline("Suddenly one of the Vault's %s enters!",
-                  makeplural(guard->data->mname));
+                  makeplural(guardName.c_str));
+            releaseJavaString(guardName);
+	}
         else
             pline("Someone else has entered the Vault.");
         newsym(guard->mx, guard->my);
@@ -884,8 +887,10 @@ paygd()
         pline("%s remits your gold to the vault.", Monnam(grd));
         gx = rooms[EGD(grd)->vroom].lx + rn2(2);
         gy = rooms[EGD(grd)->vroom].ly + rn2(2);
+	javaString monsterName = monsterTypeName(mons[originalMonsterNumber()].monsterTypeID);
         Sprintf(buf, "To Croesus: here's the gold recovered from %s the %s.",
-                plname, mons[originalMonsterNumber()].mname);
+                plname, monsterName.c_str);
+	releaseJavaString(monsterName);
         make_grave(gx, gy, buf);
     }
     for (coins = invent; coins; coins = nextcoins) {

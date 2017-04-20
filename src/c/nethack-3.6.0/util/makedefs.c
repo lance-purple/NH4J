@@ -154,8 +154,10 @@ void NDECL(do_data);
 void NDECL(do_dungeon);
 void NDECL(do_date);
 void NDECL(do_options);
+#if 0
 void NDECL(do_monstr);
 void NDECL(do_permonst);
+#endif
 void NDECL(do_questtxt);
 void NDECL(do_rumors);
 void NDECL(do_oracles);
@@ -175,7 +177,9 @@ static void FDECL(do_rnd_access_file, (const char *));
 static boolean FDECL(d_filter, (char *));
 static boolean FDECL(h_filter, (char *));
 static boolean FDECL(ranged_attk, (struct permonst *));
+#if 0
 static int FDECL(mstrength, (struct permonst *));
+#endif
 static void NDECL(build_savebones_compat_string);
 static void FDECL(do_ext_makedefs, (int, char **));
 static void NDECL(windowing_sanity);
@@ -320,19 +324,23 @@ char *options;
         case 'E':
             do_dungeon();
             break;
+#if 0
         case 'm':
         case 'M':
             do_monstr();
             break;
+#endif
         case 'v':
         case 'V':
             do_date();
             do_options();
             break;
+#if 0
         case 'p':
         case 'P':
             do_permonst();
             break;
+#endif
         case 'q':
         case 'Q':
             do_questtxt();
@@ -1996,6 +2004,7 @@ register struct permonst *ptr;
  * an approximation of monster strength.  It uses a similar method of
  * determination as "experience()" to arrive at the strength.
  */
+#if 0
 static int
 mstrength(ptr)
 struct permonst *ptr;
@@ -2136,6 +2145,7 @@ do_permonst()
     Fclose(ofp);
     return;
 }
+#endif
 
 /*      Start of Quest text file processing. */
 #include "qtext.h"

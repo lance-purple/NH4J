@@ -835,12 +835,14 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
 
                     if (touch_petrifies(&mons[obj->corpsenm])) {
                         /*learn_egg_type(obj->corpsenm);*/
+			javaString corpseName = monsterTypeName(mons[obj->corpsenm].monsterTypeID);
                         pline("Splat! You hit %s with %s %s egg%s!",
                               mon_nam(mon),
                               obj->known ? "the" : cnt > 1L ? "some" : "a",
-                              obj->known ? mons[obj->corpsenm].mname
+                              obj->known ? corpseName.c_str
                                          : "petrifying",
                               plur(cnt));
+			releaseJavaString(corpseName);
                         obj->known = 1; /* (not much point...) */
                         useup_eggs(obj);
                         if (!munstone(mon, TRUE))
@@ -849,10 +851,12 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                             break;
                         return (boolean) (mon->mhp > 0);
                     } else { /* ordinary egg(s) */
+			javaString corpseName = monsterTypeName(mons[obj->corpsenm].monsterTypeID);
                         const char *eggp =
                             (obj->corpsenm != NON_PM && obj->known)
-                                ? the(mons[obj->corpsenm].mname)
+                                ? the(corpseName.c_str)
                                 : (cnt > 1L) ? "some" : "an";
+			releaseJavaString(corpseName);
                         You("hit %s with %s egg%s.", mon_nam(mon), eggp,
                             plur(cnt));
                         if (touch_petrifies(mdat) && !stale_egg(obj)) {
@@ -1913,12 +1917,15 @@ register struct attack *mattk;
 
         if (fatal_gulp && !is_rider(pd)) { /* petrification */
             char kbuf[BUFSZ];
-            const char *mname = pd->mname;
-
-            if (!type_is_pname(pd))
-                mname = an(mname);
             You("englut %s.", mon_nam(mdef));
-            Sprintf(kbuf, "swallowing %s whole", mname);
+
+            javaString monsterName = monsterTypeName(pd->monsterTypeID);
+            if (!type_is_pname(pd)) {
+                Sprintf(kbuf, "swallowing %s whole", an(monsterName.c_str));
+	    } else {
+                Sprintf(kbuf, "swallowing %s whole", monsterName.c_str);
+	    }
+	    releaseJavaString(monsterName);
             instapetrify(kbuf);
         } else {
             start_engulf(mdef);
@@ -1928,8 +1935,10 @@ register struct attack *mattk;
                 if (is_rider(pd)) {
                     pline("Unfortunately, digesting any of it is fatal.");
                     end_engulf();
+                    javaString monsterName = monsterTypeName(pd->monsterTypeID);
                     Sprintf(killer.name, "unwisely tried to eat %s",
-                            pd->mname);
+                            monsterName.c_str);
+	            releaseJavaString(monsterName);
                     killer.format = NO_KILLER_PREFIX;
                     done(DIED);
                     return 0; /* lifesaved */
@@ -1973,8 +1982,10 @@ register struct attack *mattk;
                     } else
                         pline1(msgbuf);
                     if (pd == &mons[PM_GREEN_SLIME]) {
+                        javaString monsterName = monsterTypeName(pd->monsterTypeID);
                         Sprintf(msgbuf, "%s isn't sitting well with you.",
-                                The(pd->mname));
+                                The(monsterName.c_str));
+			releaseJavaString(monsterName);
                         if (!youAreUnchanging()) {
                             make_slimed(5L, (char *) 0);
                         }
