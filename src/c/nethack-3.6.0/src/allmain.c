@@ -198,7 +198,7 @@ boolean resuming;
                     if (invulnerableWhilePraying()) {
                         /* for the moment at least, you're in tiptop shape */
                         wtcap = UNENCUMBERED;
-                    } else if (areYouPolymorphed() && youmonst.data->mlet == S_EEL
+                    } else if (areYouPolymorphed() && monsterClass(youmonst.data->monsterTypeID) == S_EEL
                                && !is_pool(currentX(), currentY())
                                && !areYouOnWaterLevel()) {
                         /* eel out of water loses hp, same as for monsters;

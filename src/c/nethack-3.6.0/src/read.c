@@ -1663,7 +1663,7 @@ boolean confused, helmet_protects, byu, skip_uswallow;
     otmp2->quan = confused ? rn1(5, 2) : 1;
     otmp2->owt = weight(otmp2);
     if (!amorphous(youmonst.data) && !youCanPassThroughWalls()
-        && !noncorporeal(youmonst.data) && !unsolid(youmonst.data)) {
+        && !isNoncorporeal(youmonst.data->monsterTypeID) && !unsolid(youmonst.data)) {
         You("are hit by %s!", doname(otmp2));
         dmg = dmgval(otmp2, &youmonst) * otmp2->quan;
         if (uarmh && helmet_protects) {
@@ -1705,7 +1705,7 @@ boolean confused, byu;
     /* Find the monster here (won't be player) */
     mtmp = m_at(x, y);
     if (mtmp && !amorphous(mtmp->data) && !passes_walls(mtmp->data)
-        && !noncorporeal(mtmp->data) && !unsolid(mtmp->data)) {
+        && !isNoncorporeal(mtmp->data->monsterTypeID) && !unsolid(mtmp->data)) {
         struct obj *helmet = which_armor(mtmp, W_ARMH);
         int mdmg;
 
@@ -1875,7 +1875,7 @@ struct obj *obj;
             else if (is_animal(u.ustuck->data))
                 pline("%s %s is lit.", s_suffix(Monnam(u.ustuck)),
                       mbodypart(u.ustuck, STOMACH));
-            else if (is_whirly(u.ustuck->data))
+            else if (isWhirly(u.ustuck->data->monsterTypeID))
                 pline("%s shines briefly.", Monnam(u.ustuck));
             else
                 pline("%s glistens.", Monnam(u.ustuck));
@@ -2279,7 +2279,7 @@ struct obj *sobj;
         uball->owt += 160 * (1 + sobj->cursed);
         return;
     }
-    if (amorphous(youmonst.data) || is_whirly(youmonst.data)
+    if (amorphous(youmonst.data) || isWhirly(youmonst.data->monsterTypeID)
         || unsolid(youmonst.data)) {
         if (!reuse_ball) {
             pline("A ball and chain appears, then falls away.");

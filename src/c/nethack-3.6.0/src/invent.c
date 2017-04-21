@@ -2927,7 +2927,7 @@ register struct obj *otmp, *obj;
     /* hatching eggs don't merge; ditto for revivable corpses */
     if ((obj->otyp == EGG && (obj->timed || otmp->timed))
         || (obj->otyp == CORPSE && otmp->corpsenm >= LOW_PM
-            && is_reviver(&mons[otmp->corpsenm])))
+            && isReviver(mons[otmp->corpsenm].monsterTypeID)))
         return FALSE;
 
     /* allow candle merging only if their ages are close */

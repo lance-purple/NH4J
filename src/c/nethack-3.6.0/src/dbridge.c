@@ -407,14 +407,14 @@ e_survives_at(etmp, x, y)
 struct entity *etmp;
 int x, y;
 {
-    if (noncorporeal(etmp->edata))
+    if (isNoncorporeal(etmp->edata->monsterTypeID))
         return TRUE;
     if (is_pool(x, y))
         return (boolean) ((is_u(etmp) && (canYouWalkOnWater() || youAreAmphibious() || youCanSwim()
                                           || youAreFlying() || youAreLevitating()))
                           || is_swimmer(etmp->edata)
                           || is_flyer(etmp->edata)
-                          || is_floater(etmp->edata));
+                          || isFloater(etmp->edata->monsterTypeID));
     /* must force call to lava_effects in e_died if is_u */
     if (is_lava(x, y))
         return (boolean) ((is_u(etmp) && (youAreLevitating() || youAreFlying()))
@@ -495,7 +495,7 @@ automiss(etmp)
 struct entity *etmp;
 {
     return (boolean) ((is_u(etmp) ? youCanPassThroughWalls() : passes_walls(etmp->edata))
-                      || noncorporeal(etmp->edata));
+                      || isNoncorporeal(etmp->edata->monsterTypeID));
 }
 
 /*
@@ -520,7 +520,7 @@ boolean chunks;
                        : (etmp->emon->mcanmove && !etmp->emon->msleeping)))
         /* flying requires mobility */
         misses = 5; /* out of 8 */
-    else if (is_floater(etmp->edata)
+    else if (isFloater(etmp->edata->monsterTypeID)
              || (is_u(etmp) && youAreLevitating())) /* doesn't require mobility */
         misses = 3;
     else if (chunks && is_pool(etmp->ex, etmp->ey))
@@ -732,7 +732,7 @@ struct entity *etmp;
                 You_hear("a splash.");
         if (e_survives_at(etmp, etmp->ex, etmp->ey)) {
             if (e_inview && !is_flyer(etmp->edata)
-                && !is_floater(etmp->edata))
+                && !isFloater(etmp->edata->monsterTypeID))
                 pline("%s from the bridge.", E_phrase(etmp, "fall"));
             return;
         }

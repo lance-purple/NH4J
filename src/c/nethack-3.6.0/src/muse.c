@@ -289,12 +289,12 @@ struct monst *mtmp;
      * silly trying to use the same cursed horn round after round
      */
     if (mtmp->mconf || mtmp->mstun || !mtmp->mcansee) {
-        if (!is_unicorn(mtmp->data) && !nohands(mtmp->data)) {
+        if (!isUnicorn(mtmp->data->monsterTypeID) && !nohands(mtmp->data)) {
             for (obj = mtmp->minvent; obj; obj = obj->nobj)
                 if (obj->otyp == UNICORN_HORN && !obj->cursed)
                     break;
         }
-        if (obj || is_unicorn(mtmp->data)) {
+        if (obj || isUnicorn(mtmp->data->monsterTypeID)) {
             m.defensive = obj;
             m.has_defense = MUSE_UNICORN_HORN;
             return TRUE;
@@ -379,24 +379,24 @@ struct monst *mtmp;
         ; /* fleeing by stairs or traps is not possible */
     } else if (levl[x][y].typ == STAIRS) {
         if (x == xdnstair && y == ydnstair) {
-            if (!is_floater(mtmp->data))
+            if (!isFloater(mtmp->data->monsterTypeID))
                 m.has_defense = MUSE_DOWNSTAIRS;
         } else if (x == xupstair && y == yupstair) {
             /* don't let monster leave the dungeon with the Amulet */
             if (currentLevelLedgerNum() != 1)
                 m.has_defense = MUSE_UPSTAIRS;
         } else if (sstairs.sx && x == sstairs.sx && y == sstairs.sy) {
-            if (sstairs.up || !is_floater(mtmp->data))
+            if (sstairs.up || !isFloater(mtmp->data->monsterTypeID))
                 m.has_defense = MUSE_SSTAIRS;
         }
     } else if (levl[x][y].typ == LADDER) {
         if (x == xupladder && y == yupladder) {
             m.has_defense = MUSE_UP_LADDER;
         } else if (x == xdnladder && y == ydnladder) {
-            if (!is_floater(mtmp->data))
+            if (!isFloater(mtmp->data->monsterTypeID))
                 m.has_defense = MUSE_DN_LADDER;
         } else if (sstairs.sx && x == sstairs.sx && y == sstairs.sy) {
-            if (sstairs.up || !is_floater(mtmp->data))
+            if (sstairs.up || !isFloater(mtmp->data->monsterTypeID))
                 m.has_defense = MUSE_SSTAIRS;
         }
     } else {
@@ -437,7 +437,7 @@ struct monst *mtmp;
                 continue;
             /* use trap if it's the correct type */
             if ((t->ttyp == TRAPDOOR || t->ttyp == HOLE)
-                && !is_floater(mtmp->data)
+                && !isFloater(mtmp->data->monsterTypeID)
                 && !mtmp->isshk && !mtmp->isgd && !mtmp->ispriest
                 && canYouFallThroughCurrentLevel()) {
                 trapx = xx;
@@ -503,7 +503,7 @@ struct monst *mtmp;
             break;
         if (obj->otyp == WAN_DIGGING && obj->spe > 0 && !stuck && !t
             && !mtmp->isshk && !mtmp->isgd && !mtmp->ispriest
-            && !is_floater(mtmp->data)
+            && !isFloater(mtmp->data->monsterTypeID)
             /* monsters digging in Sokoban can ruin things */
             && !Sokoban
             /* digging wouldn't be effective; assume they know that */
@@ -1030,7 +1030,7 @@ try_again:
         return (mtmp->data != &mons[PM_PESTILENCE]) ? POT_FULL_HEALING
                                                     : POT_SICKNESS;
     case 7:
-        if (is_floater(pm) || mtmp->isshk || mtmp->isgd || mtmp->ispriest)
+        if (isFloater(pm->monsterTypeID) || mtmp->isshk || mtmp->isgd || mtmp->ispriest)
             return 0;
         else
             return WAN_DIGGING;
@@ -1168,7 +1168,7 @@ struct monst *mtmp;
         if (obj->otyp == SCR_EARTH
             && ((helmet && is_metallic(helmet)) || mtmp->mconf
                 || amorphous(mtmp->data) || passes_walls(mtmp->data)
-                || noncorporeal(mtmp->data) || unsolid(mtmp->data)
+                || isNoncorporeal(mtmp->data->monsterTypeID) || unsolid(mtmp->data)
                 || !rn2(10))
             && dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) <= 2
             && mtmp->mcansee && haseyes(mtmp->data)
@@ -1551,7 +1551,7 @@ struct monst *mtmp;
         struct obj *helmet = which_armor(mtmp, W_ARMH);
 
         if ((helmet && is_metallic(helmet)) || amorphous(pm)
-            || passes_walls(pm) || noncorporeal(pm) || unsolid(pm))
+            || passes_walls(pm) || isNoncorporeal(pm->monsterTypeID) || unsolid(pm))
             return SCR_EARTH;
     } /* fall through */
     case 1:
@@ -1986,7 +1986,7 @@ struct monst *mtmp;
     if (difficulty < 6 && !rn2(30))
         return rn2(6) ? POT_POLYMORPH : WAN_POLYMORPH;
 
-    if (!rn2(40) && !nonliving(pm) && !is_vampshifter(mtmp))
+    if (!rn2(40) && !isNonliving(pm->monsterTypeID) && !is_vampshifter(mtmp))
         return AMULET_OF_LIFE_SAVING;
 
     switch (rn2(3)) {
@@ -2027,7 +2027,7 @@ struct obj *obj;
         if (obj->spe <= 0)
             return FALSE;
         if (typ == WAN_DIGGING)
-            return (boolean) !is_floater(mon->data);
+            return (boolean) !isFloater(mon->data->monsterTypeID);
         if (typ == WAN_POLYMORPH)
             return (boolean) (monstr[monsndx(mon->data)] < 6);
         if (objects[typ].oc_dir == RAY || typ == WAN_STRIKING
@@ -2050,7 +2050,7 @@ struct obj *obj;
         break;
     case AMULET_CLASS:
         if (typ == AMULET_OF_LIFE_SAVING)
-            return (boolean) !(nonliving(mon->data) || is_vampshifter(mon));
+            return (boolean) !(isNonliving(mon->data->monsterTypeID) || is_vampshifter(mon));
         if (typ == AMULET_OF_REFLECTION)
             return TRUE;
         break;
@@ -2058,7 +2058,7 @@ struct obj *obj;
         if (typ == PICK_AXE)
             return (boolean) needspick(mon->data);
         if (typ == UNICORN_HORN)
-            return (boolean) (!obj->cursed && !is_unicorn(mon->data));
+            return (boolean) (!obj->cursed && !isUnicorn(mon->data->monsterTypeID));
         if (typ == FROST_HORN || typ == FIRE_HORN)
             return (obj->spe > 0);
         break;
@@ -2273,7 +2273,7 @@ boolean tinok;
     return (boolean) (obj->corpsenm == PM_LIZARD
                       || (acidic(&mons[obj->corpsenm])
                           && (obj->corpsenm != PM_GREEN_SLIME
-                              || slimeproof(mon->data))));
+                              || isSlimeproof(mon->data->monsterTypeID))));
 }
 
 STATIC_OVL boolean
@@ -2321,7 +2321,7 @@ boolean by_you;
      * (via our caller) newcham()'s "mon turns into slime" feedback.
      */
 
-    if (slimeproof(mon->data))
+    if (isSlimeproof(mon->data->monsterTypeID))
         return FALSE;
     if (mon->meating || !mon->mcanmove || mon->msleeping)
         return FALSE;

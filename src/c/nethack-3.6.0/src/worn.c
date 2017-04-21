@@ -825,7 +825,7 @@ boolean polyspot;
         }
         if ((otmp = which_armor(mon, W_ARMC)) != 0) {
             if (vis) {
-                if (is_whirly(mon->data))
+                if (isWhirly(mon->data->monsterTypeID))
                     pline("%s %s falls, unsupported!", s_suffix(Monnam(mon)),
                           cloak_simple_name(otmp));
                 else
@@ -888,7 +888,7 @@ boolean polyspot;
     if (handless_or_tiny || slithy(mdat) || mdat->mlet == S_CENTAUR) {
         if ((otmp = which_armor(mon, W_ARMF)) != 0) {
             if (vis) {
-                if (is_whirly(mon->data))
+                if (isWhirly(mon->data->monsterTypeID))
                     pline("%s boots fall away!", s_suffix(Monnam(mon)));
                 else
                     pline("%s boots %s off %s feet!", s_suffix(Monnam(mon)),

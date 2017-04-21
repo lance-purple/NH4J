@@ -960,7 +960,7 @@ not_special:
                         && touch_artifact(otmp, mtmp)) {
                         if (can_carry(mtmp, otmp) > 0
                             && (throws_rocks(ptr) || !sobj_at(BOULDER, xx, yy))
-                            && (!is_unicorn(ptr)
+                            && (!isUnicorn(ptr->monsterTypeID)
                                 || objects[otmp->otyp].oc_material == GEMSTONE)
                             /* Don't get stuck circling an Elbereth */
                             && !onscary(xx, yy, mtmp)) {
@@ -1011,7 +1011,7 @@ not_special:
     if (is_minion(ptr) || is_rider(ptr))
         flag |= ALLOW_SANCT;
     /* unicorn may not be able to avoid hero on a noteleport level */
-    if (is_unicorn(ptr) && !level.flags.noteleport)
+    if (isUnicorn(ptr->monsterTypeID) && !level.flags.noteleport)
         flag |= NOTONL;
     if (passes_walls(ptr))
         flag |= (ALLOW_WALL | ALLOW_ROCK);
@@ -1049,7 +1049,7 @@ not_special:
         if (!mtmp->mpeaceful && level.flags.shortsighted
             && nidist > (couldsee(nix, niy) ? 144 : 36) && appr == 1)
             appr = 0;
-        if (is_unicorn(ptr) && level.flags.noteleport) {
+        if (isUnicorn(ptr->monsterTypeID) && level.flags.noteleport) {
             /* on noteleport levels, perhaps we cannot avoid hero */
             for (i = 0; i < cnt; i++)
                 if (!(info[i] & NOTONL))
@@ -1185,7 +1185,7 @@ not_special:
         if (mtmp->wormno)
             worm_move(mtmp);
     } else {
-        if (is_unicorn(ptr) && rn2(2) && !tele_restrict(mtmp)) {
+        if (isUnicorn(ptr->monsterTypeID) && rn2(2) && !tele_restrict(mtmp)) {
             (void) rloc(mtmp, TRUE);
             return 1;
         }

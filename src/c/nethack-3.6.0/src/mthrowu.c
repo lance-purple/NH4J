@@ -218,7 +218,7 @@ boolean verbose;    /* give message(s) even when you can't see what happened */
         if (mtmp->mhp < 1) {
             if (vis || verbose)
                 pline("%s is %s!", Monnam(mtmp),
-                      (nonliving(mtmp->data) || is_vampshifter(mtmp)
+                      (isNonliving(mtmp->data->monsterTypeID) || is_vampshifter(mtmp)
                        || !canspotmon(mtmp))
                           ? "destroyed"
                           : "killed");
@@ -341,7 +341,7 @@ struct obj *obj;         /* missile (or stack providing it) */
 
             if (singleobj->oclass == GEM_CLASS
                 && singleobj->otyp <= LAST_GEM + 9 /* 9 glass colors */
-                && is_unicorn(youmonst.data)) {
+                && isUnicorn(youmonst.data->monsterTypeID)) {
                 if (singleobj->otyp > LAST_GEM) {
                     You("catch the %s.", xname(singleobj));
                     You("are not interested in %s junk.",

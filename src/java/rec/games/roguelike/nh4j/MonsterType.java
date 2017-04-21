@@ -17,7 +17,7 @@ public class MonsterType {
 	private static final int NOT_GENERATED_IN_HELL = 0x800;
 	private static final int ONLY_GENERATED_ONCE = 0x1000;
 
-	private static final MonsterType UNKNOWN_MONSTER_TYPE = new MonsterType(null, null, "UNKNOWN");
+	private static final MonsterType UNKNOWN_MONSTER_TYPE = new MonsterType(MC.UNKNOWN, PM.UNKNOWN, "UNKNOWN");
 
 	private PM pm;
 	private MC monsterClass;
@@ -51,7 +51,11 @@ public class MonsterType {
 	public MonsterType(MC mc, PM pm, String name) {
 		this.pm = pm;
 		this.name = name;
-		this.monsterClass = monsterClass;
+		this.monsterClass = mc;
+	}
+	
+	public MC monsterClass() {
+		return monsterClass;
 	}
 
 	private static MonsterType of(MC mc, PM pm, String name) {
@@ -195,7 +199,13 @@ public class MonsterType {
 		}
 		return this;
 	}
+	
+	
+	public long flags2() {
+		return this.flags2;
+	}
 
+	
 	public MonsterType flags3(Long... flags) {
 		for (long flag : flags) {
 			this.flags3 |= flag;
@@ -2896,7 +2906,7 @@ public class MonsterType {
 		initializeZruties();
 	}
 	
-	private static MonsterType getMonsterType(int pmid) {
+	public static MonsterType getMonsterType(int pmid) {
 		if (monsterTypesByPMID.isEmpty()) {
 			initialize();
 		}
@@ -2910,4 +2920,9 @@ public class MonsterType {
 	public static String name(int pmid) {
 		return getMonsterType(pmid).name;
 	}
+
+	public static int monsterClass(int pmid) {
+		return getMonsterType(pmid).monsterClass.id();
+	}
+
 }

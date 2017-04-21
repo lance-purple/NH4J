@@ -1395,7 +1395,7 @@ dosacrifice()
         } else if (is_undead(ptr)) { /* Not demons--no demon corpses */
             if (currentAlignmentType() != A_CHAOTIC)
                 value += 1;
-        } else if (is_unicorn(ptr)) {
+        } else if (isUnicorn(ptr->monsterTypeID)) {
             int unicalign = sgn(ptr->maligntyp);
 
             if (unicalign == altaralign) {

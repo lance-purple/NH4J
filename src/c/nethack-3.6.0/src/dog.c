@@ -771,7 +771,7 @@ register struct obj *obj;
                         && fptr != &mons[PM_LIZARD]
                         && fptr != &mons[PM_LICHEN])
                            ? DOGFOOD
-                           : (starving && !vegan(fptr))
+                           : (starving && !isVeganOption(fptr->monsterTypeID))
                               ? ACCFOOD
                               : POISON;
             if (obj->otyp == EGG)
@@ -791,20 +791,22 @@ register struct obj *obj;
         case CORPSE:
             if ((peek_at_iced_corpse_age(obj) + 50L <= monstermoves
                  && obj->corpsenm != PM_LIZARD && obj->corpsenm != PM_LICHEN
-                 && mptr->mlet != S_FUNGUS)
+                 && monsterClass(mptr->monsterTypeID) != S_FUNGUS)
                 || (acidic(fptr) && !resists_acid(mon))
                 || (poisonous(fptr) && !resists_poison(mon)))
                 return POISON;
             /* turning into slime is preferable to starvation */
-            else if (fptr == &mons[PM_GREEN_SLIME] && !slimeproof(mon->data))
+            else if (fptr == &mons[PM_GREEN_SLIME] && !isSlimeproof(mon->data->monsterTypeID))
                 return starving ? ACCFOOD : POISON;
-            else if (vegan(fptr))
+            else if (isVeganOption(fptr->monsterTypeID))
                 return herbi ? CADAVER : MANFOOD;
             /* most humanoids will avoid cannibalism unless starving;
                arbitrary: elves won't eat other elves even then */
             else if (humanoid(mptr) && same_race(mptr, fptr)
-                     && (!is_undead(mptr) && fptr->mlet != S_KOBOLD
-                         && fptr->mlet != S_ORC && fptr->mlet != S_OGRE))
+                     && (!is_undead(mptr)
+			 && monsterClass(fptr->monsterTypeID) != S_KOBOLD
+                         && monsterClass(fptr->monsterTypeID) != S_ORC 
+			 && monsterClass(fptr->monsterTypeID) != S_OGRE))
                 return (starving && carni && !is_elf(mptr)) ? ACCFOOD : TABU;
             else
                 return carni ? CADAVER : MANFOOD;
@@ -820,7 +822,7 @@ register struct obj *obj;
         case CARROT:
             return herbi ? DOGFOOD : starving ? ACCFOOD : MANFOOD;
         case BANANA:
-            return (mptr->mlet == S_YETI)
+            return (monsterClass(mptr->monsterTypeID) == S_YETI)
                       ? DOGFOOD
                       : (herbi || starving)
                          ? ACCFOOD
@@ -874,7 +876,7 @@ register struct obj *obj;
     mtmp->mpeaceful = 1;
     set_malign(mtmp);
     if (flags.moonphase == FULL_MOON && night() && rn2(6) && obj
-        && mtmp->data->mlet == S_DOG)
+        && monsterClass(mtmp->data->monsterTypeID) == S_DOG)
         return FALSE;
 
     /* If we cannot tame it, at least it's no longer afraid. */

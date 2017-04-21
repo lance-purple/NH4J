@@ -156,7 +156,7 @@ int expltype;
                     break;
                 case AD_DISN:
                     explmask[i][j] = (olet == WAND_CLASS)
-                                         ? !!(nonliving(youmonst.data)
+                                         ? !!(isNonliving(youmonst.data->monsterTypeID)
                                               || is_demon(youmonst.data))
                                          : !!youResistDisintegration();
                     break;
@@ -197,7 +197,7 @@ int expltype;
                         break;
                     case AD_DISN:
                         explmask[i][j] |= (olet == WAND_CLASS)
-                                              ? (nonliving(mtmp->data)
+                                              ? (isNonliving(mtmp->data->monsterTypeID)
                                                  || is_demon(mtmp->data)
                                                  || is_vampshifter(mtmp))
                                               : resists_disint(mtmp);

@@ -301,7 +301,7 @@ register struct obj *obj;
     struct monst *mtmp;
     struct rm *lev;
     int rx, ry, res;
-    boolean interference = (swallowed() && is_whirly(u.ustuck->data)
+    boolean interference = (swallowed() && isWhirly(u.ustuck->data->monsterTypeID)
                             && !rn2(Role_if(PM_HEALER) ? 10 : 3));
 
     if (nohands(youmonst.data)) {
@@ -818,7 +818,7 @@ struct obj *obj;
                     }
                     nomovemsg = 0; /* default, "you can move again" */
                 }
-            } else if (youmonst.data->mlet == S_VAMPIRE)
+            } else if (monsterClass(youmonst.data->monsterTypeID) == S_VAMPIRE)
                 You("don't have a reflection.");
             else if (currentMonsterNumber() == PM_UMBER_HULK) {
                 pline("Huh?  That doesn't look like you!");
@@ -867,7 +867,7 @@ struct obj *obj;
     how_seen = vis ? howmonseen(mtmp) : 0;
     /* whether monster is able to use its vision-based capabilities */
     monable = !mtmp->mcan && (!mtmp->minvis || perceives(mtmp->data));
-    mlet = mtmp->data->mlet;
+    mlet = monsterClass(mtmp->data->monsterTypeID);
     if (mtmp->msleeping) {
         if (vis)
             pline("%s is too tired to look at your %s.", Monnam(mtmp),
@@ -922,7 +922,7 @@ struct obj *obj;
         (void) mpickobj(mtmp, obj);
         if (!tele_restrict(mtmp))
             (void) rloc(mtmp, TRUE);
-    } else if (!is_unicorn(mtmp->data) && !humanoid(mtmp->data)
+    } else if (!isUnicorn(mtmp->data->monsterTypeID) && !humanoid(mtmp->data)
                && (!mtmp->minvis || perceives(mtmp->data)) && rn2(5)) {
         if (vis)
             pline("%s is frightened by its reflection.", Monnam(mtmp));
@@ -1966,7 +1966,7 @@ long timeout;
 
         and_vanish[0] = '\0';
         if ((mtmp->minvis && !youCanSeeInvisible())
-            || (mtmp->data->mlet == S_MIMIC
+            || (monsterClass(mtmp->data->monsterTypeID) == S_MIMIC
                 && mtmp->m_ap_type != M_AP_NOTHING))
             suppress_see = TRUE;
 
@@ -1974,8 +1974,8 @@ long timeout;
             if (hides_under(mtmp->data) && mshelter) {
                 Sprintf(and_vanish, " and %s under %s",
                         locomotion(mtmp->data, "crawl"), doname(mshelter));
-            } else if (mtmp->data->mlet == S_MIMIC
-                       || mtmp->data->mlet == S_EEL) {
+            } else if (monsterClass(mtmp->data->monsterTypeID) == S_MIMIC
+                       || monsterClass(mtmp->data->monsterTypeID) == S_EEL) {
                 suppress_see = TRUE;
             } else
                 Strcpy(and_vanish, " and vanish");

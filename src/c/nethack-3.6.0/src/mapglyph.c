@@ -77,7 +77,7 @@ unsigned *ospecial;
      *            offsets.  The order is set in display.h.
      */
     if ((offset = (glyph - GLYPH_STATUE_OFF)) >= 0) { /* a statue */
-        idx = mons[offset].mlet + SYM_OFF_M;
+        idx = monsterClass(mons[offset].monsterTypeID) + SYM_OFF_M;
         if (has_rogue_color)
             color = CLR_RED;
         else
@@ -154,7 +154,7 @@ unsigned *ospecial;
             && level.objects[x][y]->nexthere)
             special |= MG_OBJPILE;
     } else if ((offset = (glyph - GLYPH_RIDDEN_OFF)) >= 0) { /* mon ridden */
-        idx = mons[offset].mlet + SYM_OFF_M;
+        idx = monsterClass(mons[offset].monsterTypeID) + SYM_OFF_M;
         if (has_rogue_color)
             /* This currently implies that the hero is here -- monsters */
             /* don't ride (yet...).  Should we set it to yellow like in */
@@ -173,7 +173,7 @@ unsigned *ospecial;
         if (level.objects[x][y] && level.objects[x][y]->nexthere)
             special |= MG_OBJPILE;
     } else if ((offset = (glyph - GLYPH_DETECT_OFF)) >= 0) { /* mon detect */
-        idx = mons[offset].mlet + SYM_OFF_M;
+        idx = monsterClass(mons[offset].monsterTypeID) + SYM_OFF_M;
         if (has_rogue_color)
             color = NO_COLOR; /* no need to check iflags.use_color */
         else
@@ -189,14 +189,14 @@ unsigned *ospecial;
             invis_color(offset);
         special |= MG_INVIS;
     } else if ((offset = (glyph - GLYPH_PET_OFF)) >= 0) { /* a pet */
-        idx = mons[offset].mlet + SYM_OFF_M;
+        idx = monsterClass(mons[offset].monsterTypeID) + SYM_OFF_M;
         if (has_rogue_color)
             color = NO_COLOR; /* no need to check iflags.use_color */
         else
             pet_color(offset);
         special |= MG_PET;
     } else { /* a monster */
-        idx = mons[glyph].mlet + SYM_OFF_M;
+        idx = monsterClass(mons[glyph].monsterTypeID) + SYM_OFF_M;
         if (has_rogue_color && iflags.use_color) {
             if (x == currentX() && y == currentY())
                 /* actually player should be yellow-on-gray if in corridor */

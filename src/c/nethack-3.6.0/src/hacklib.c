@@ -2660,5 +2660,9 @@ extern void releaseJavaString(javaString s) {
   }
 }
 
+extern int monsterClass(int id) {
+  return javaGetIntFromInt(MONSTER_TYPE_CLASS, "monsterClass", id);
+}
+
 
 /*hacklib.c*/

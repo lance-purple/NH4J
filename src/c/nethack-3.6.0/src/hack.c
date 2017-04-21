@@ -143,7 +143,7 @@ moverock()
             if (revive_nasty(rx, ry, "You sense movement on the other side."))
                 return -1;
 
-            if (mtmp && !noncorporeal(mtmp->data)
+            if (mtmp && !isNoncorporeal(mtmp->data->monsterTypeID)
                 && (!mtmp->mtrapped
                     || !(ttmp && ((ttmp->ttyp == PIT)
                                   || (ttmp->ttyp == SPIKED_PIT))))) {
@@ -632,7 +632,7 @@ struct monst *mon;
 
     /* too big? */
     if (bigmonst(ptr)
-        && !(amorphous(ptr) || is_whirly(ptr) || noncorporeal(ptr)
+        && !(amorphous(ptr) || isWhirly(ptr->monsterTypeID) || isNoncorporeal(ptr->monsterTypeID)
              || slithy(ptr) || can_fog(mon)))
         return 1;
 
@@ -1277,8 +1277,8 @@ domove()
             if (!skates)
                 skates = find_skates();
             if ((uarmf && uarmf->otyp == skates) || resists_cold(&youmonst)
-                || youAreFlying() || is_floater(youmonst.data)
-                || is_clinger(youmonst.data) || is_whirly(youmonst.data))
+                || youAreFlying() || isFloater(youmonst.data->monsterTypeID)
+                || is_clinger(youmonst.data) || isWhirly(youmonst.data->monsterTypeID))
                 on_ice = FALSE;
             else if (!rn2(youResistCold() ? 3 : 2)) {
                 setYourIntrinsicMask(FUMBLING, FROMOUTSIDE);
@@ -1428,7 +1428,7 @@ domove()
             return;
         }
         if (context.forcefight || !mtmp->mundetected || sensemon(mtmp)
-            || ((hides_under(mtmp->data) || mtmp->data->mlet == S_EEL)
+            || ((hides_under(mtmp->data) || monsterClass(mtmp->data->monsterTypeID) == S_EEL)
                 && !is_safepet(mtmp))) {
             /* try to attack; note that it might evade */
             /* also, we don't attack tame when _safepet_ */
@@ -1676,7 +1676,7 @@ domove()
                 nomul(0);
     }
 
-    if (hides_under(youmonst.data) || (youmonst.data->mlet == S_EEL) || directionX()
+    if (hides_under(youmonst.data) || (monsterClass(youmonst.data->monsterTypeID) == S_EEL) || directionX()
         || directionY())
         (void) hideunder(&youmonst);
 
@@ -1862,7 +1862,7 @@ boolean newspot;             /* true if called by spoteffects */
     /* check for entering water or lava */
     if (!u.ustuck && !youAreLevitating() && !youAreFlying() && is_pool_or_lava(currentX(), currentY())) {
         if (u.usteed
-            && (is_flyer(u.usteed->data) || is_floater(u.usteed->data)
+            && (is_flyer(u.usteed->data) || isFloater(u.usteed->data->monsterTypeID)
                 || is_clinger(u.usteed->data))) {
             /* floating or clinging steed keeps hero safe (is_flyer() test
                is redundant; it can't be true since Flying yielded false) */
@@ -1996,7 +1996,7 @@ boolean pick;
     }
     if ((mtmp = m_at(currentX(), currentY())) && !swallowed()) {
         mtmp->mundetected = mtmp->msleeping = 0;
-        switch (mtmp->data->mlet) {
+        switch (monsterClass(mtmp->data->monsterTypeID)) {
         case S_PIERCER:
             pline("%s suddenly drops from the %s!", Amonnam(mtmp),
                   ceiling(currentX(), currentY()));
@@ -2415,7 +2415,7 @@ dopickup()
         }
     }
     if (is_pool(currentX(), currentY())) {
-        if (canYouWalkOnWater() || is_floater(youmonst.data) || is_clinger(youmonst.data)
+        if (canYouWalkOnWater() || isFloater(youmonst.data->monsterTypeID) || is_clinger(youmonst.data)
             || (youAreFlying() && !youNeedNotBreathe())) {
             You("cannot dive into the water to pick things up.");
             return 0;
@@ -2425,7 +2425,7 @@ dopickup()
         }
     }
     if (is_lava(currentX(), currentY())) {
-        if (canYouWalkOnWater() || is_floater(youmonst.data) || is_clinger(youmonst.data)
+        if (canYouWalkOnWater() || isFloater(youmonst.data->monsterTypeID) || is_clinger(youmonst.data)
             || (youAreFlying() && !youNeedNotBreathe())) {
             You_cant("reach the bottom to pick things up.");
             return 0;
@@ -2785,7 +2785,7 @@ weight_cap()
     carrcap = 25 * (ACURRSTR + ACURR(A_CON)) + 50;
     if (areYouPolymorphed()) {
         /* consistent with can_carry() in mon.c */
-        if (youmonst.data->mlet == S_NYMPH)
+        if (monsterClass(youmonst.data->monsterTypeID) == S_NYMPH)
             carrcap = MAX_CARR_CAP;
         else if (!youmonst.data->cwt)
             carrcap = (carrcap * (long) youmonst.data->msize) / MZ_HUMAN;

@@ -1000,7 +1000,7 @@ int x;
 #endif
     } else if (x == A_CHA) {
         if (tmp < 18
-            && (youmonst.data->mlet == S_NYMPH || currentMonsterNumber() == PM_SUCCUBUS
+            && (monsterClass(youmonst.data->monsterTypeID) == S_NYMPH || currentMonsterNumber() == PM_SUCCUBUS
                 || currentMonsterNumber() == PM_INCUBUS))
             return (schar) 18;
     } else if (x == A_INT || x == A_WIS) {

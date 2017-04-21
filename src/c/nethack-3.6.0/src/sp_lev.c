@@ -1546,9 +1546,9 @@ struct mkroom *croom;
         int loc = DRY;
         if (pm->mlet == S_EEL || amphibious(pm) || is_swimmer(pm))
             loc = WET;
-        if (is_flyer(pm) || is_floater(pm))
+        if (is_flyer(pm) || isFloater(pm->monsterTypeID))
             loc |= (HOT | WET);
-        if (passes_walls(pm) || noncorporeal(pm))
+        if (passes_walls(pm) || isNoncorporeal(pm->monsterTypeID))
             loc |= SOLID;
         if (flaming(pm))
             loc |= HOT;
@@ -1655,14 +1655,14 @@ struct mkroom *croom;
 
                     mgender_from_permonst(mtmp, mdat);
                     set_mon_data(mtmp, mdat, 0);
-                    if (emits_light(olddata) != emits_light(mtmp->data)) {
+                    if (emitsLightWithRange(olddata->monsterTypeID) != emitsLightWithRange(mtmp->data->monsterTypeID)) {
                         /* used to give light, now doesn't, or vice versa,
                            or light's range has changed */
-                        if (emits_light(olddata))
+                        if (emitsLightWithRange(olddata->monsterTypeID))
                             del_light_source(LS_MONSTER, (genericptr_t) mtmp);
-                        if (emits_light(mtmp->data))
+                        if (emitsLightWithRange(mtmp->data->monsterTypeID))
                             new_light_source(mtmp->mx, mtmp->my,
-                                             emits_light(mtmp->data),
+                                             emitsLightWithRange(mtmp->data->monsterTypeID),
                                              LS_MONSTER, (genericptr_t) mtmp);
                     }
                     if (!mtmp->perminvis || pm_invisible(olddata))

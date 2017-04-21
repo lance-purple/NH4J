@@ -251,7 +251,7 @@ doit:
     You("kick %s.", mon_nam(mon));
     if (!rn2(clumsy ? 3 : 4) && (clumsy || !bigmonst(mon->data))
         && mon->mcansee && !mon->mtrapped && !thick_skinned(mon->data)
-        && mon->data->mlet != S_EEL && haseyes(mon->data) && mon->mcanmove
+        && monsterClass(mon->data->monsterTypeID) != S_EEL && haseyes(mon->data) && mon->mcanmove
         && !mon->mstun && !mon->mconf && !mon->msleeping
         && mon->data->mmove >= 12) {
         if (!nohands(mon->data) && !rn2(martial() ? 5 : 3)) {
@@ -269,7 +269,7 @@ doit:
                 pline("%s %s, %s evading your %skick.", Monnam(mon),
                       (!level.flags.noteleport && can_teleport(mon->data))
                           ? "teleports"
-                          : is_floater(mon->data)
+                          : isFloater(mon->data->monsterTypeID)
                                 ? "floats"
                                 : is_flyer(mon->data) ? "swoops"
                                                       : (nolimbs(mon->data)
@@ -786,7 +786,7 @@ dokick()
     } else if (near_capacity() > SLT_ENCUMBER) {
         Your("load is too heavy to balance yourself for a kick.");
         no_kick = TRUE;
-    } else if (youmonst.data->mlet == S_LIZARD) {
+    } else if (monsterClass(youmonst.data->monsterTypeID) == S_LIZARD) {
         Your("legs cannot kick effectively.");
         no_kick = TRUE;
     } else if (inWater() && !rn2(2)) {

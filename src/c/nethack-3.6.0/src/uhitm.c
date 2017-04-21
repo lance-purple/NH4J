@@ -1150,7 +1150,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
             fmt = "%s is seared!";
         }
         /* note: s_suffix returns a modifiable buffer */
-        if (!noncorporeal(mdat) && !amorphous(mdat))
+        if (!isNoncorporeal(mdat->monsterTypeID) && !amorphous(mdat))
             whom = strcat(s_suffix(whom), " flesh");
         pline(fmt, whom);
     }
@@ -1742,7 +1742,7 @@ register struct attack *mattk;
     case AD_SLIM:
         if (negated)
             break; /* physical damage only */
-        if (!rn2(4) && !slimeproof(pd)) {
+        if (!rn2(4) && !isSlimeproof(pd->monsterTypeID)) {
             if (!munslime(mdef, TRUE) && mdef->mhp > 0) {
                 /* this assumes newcham() won't fail; since hero has
                    a slime attack, green slimes haven't been geno'd */
@@ -1840,7 +1840,7 @@ register struct attack *mattk;
             }
         } else {
             shieldeff(mdef->mx, mdef->my);
-            if (is_golem(mdef->data))
+            if (isGolem(mdef->data->monsterTypeID))
                 golemeffects(mdef, (int) mattk->adtyp, tmp);
             else
                 pline_The("blast doesn't seem to affect %s.", mon_nam(mdef));

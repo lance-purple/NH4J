@@ -2,6 +2,7 @@ package rec.games.roguelike.nh4j;
 
 public enum MC {
 
+	UNKNOWN(0),
     ANT(1),
     BLOB(2),
     COCKATRICE(3),

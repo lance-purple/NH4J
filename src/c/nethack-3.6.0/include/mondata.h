@@ -22,7 +22,7 @@
 #define is_lminion(mon) \
     (is_minion((mon)->data) && mon_aligntyp(mon) == A_LAWFUL)
 #define is_flyer(ptr) (((ptr)->mflags1 & M1_FLY) != 0L)
-#define is_floater(ptr) ((ptr)->mlet == S_EYE || (ptr)->mlet == S_LIGHT)
+
 #define is_clinger(ptr) (((ptr)->mflags1 & M1_CLING) != 0L)
 #define is_swimmer(ptr) (((ptr)->mflags1 & M1_SWIM) != 0L)
 #define breathless(ptr) (((ptr)->mflags1 & M1_BREATHLESS) != 0L)
@@ -30,7 +30,7 @@
     (((ptr)->mflags1 & (M1_AMPHIBIOUS | M1_BREATHLESS)) != 0L)
 #define passes_walls(ptr) (((ptr)->mflags1 & M1_WALLWALK) != 0L)
 #define amorphous(ptr) (((ptr)->mflags1 & M1_AMORPHOUS) != 0L)
-#define noncorporeal(ptr) ((ptr)->mlet == S_GHOST)
+
 #define tunnels(ptr) (((ptr)->mflags1 & M1_TUNNEL) != 0L)
 #define needspick(ptr) (((ptr)->mflags1 & M1_NEEDPICK) != 0L)
 #define hides_under(ptr) (((ptr)->mflags1 & M1_CONCEAL) != 0L)
@@ -46,8 +46,7 @@
 #define notake(ptr) (((ptr)->mflags1 & M1_NOTAKE) != 0L)
 #define has_head(ptr) (((ptr)->mflags1 & M1_NOHEAD) == 0L)
 #define has_horns(ptr) (num_horns(ptr) > 0)
-#define is_whirly(ptr) \
-    ((ptr)->mlet == S_VORTEX || (ptr) == &mons[PM_AIR_ELEMENTAL])
+
 #define flaming(ptr)                                                     \
     ((ptr) == &mons[PM_FIRE_VORTEX] || (ptr) == &mons[PM_FLAMING_SPHERE] \
      || (ptr) == &mons[PM_FIRE_ELEMENTAL] || (ptr) == &mons[PM_SALAMANDER])
@@ -59,8 +58,7 @@
 #define slithy(ptr) (((ptr)->mflags1 & M1_SLITHY) != 0L)
 #define is_wooden(ptr) ((ptr) == &mons[PM_WOOD_GOLEM])
 #define thick_skinned(ptr) (((ptr)->mflags1 & M1_THICK_HIDE) != 0L)
-#define slimeproof(ptr) \
-    ((ptr) == &mons[PM_GREEN_SLIME] || flaming(ptr) || noncorporeal(ptr))
+
 #define lays_eggs(ptr) (((ptr)->mflags1 & M1_OVIPAROUS) != 0L)
 #define regenerates(ptr) (((ptr)->mflags1 & M1_REGEN) != 0L)
 #define perceives(ptr) (((ptr)->mflags1 & M1_SEE_INVIS) != 0L)
@@ -88,9 +86,9 @@
 #define is_bat(ptr)                                         \
     ((ptr) == &mons[PM_BAT] || (ptr) == &mons[PM_GIANT_BAT] \
      || (ptr) == &mons[PM_VAMPIRE_BAT])
-#define is_bird(ptr) ((ptr)->mlet == S_BAT && !is_bat(ptr))
+
 #define is_giant(ptr) (((ptr)->mflags2 & M2_GIANT) != 0L)
-#define is_golem(ptr) ((ptr)->mlet == S_GOLEM)
+
 #define is_domestic(ptr) (((ptr)->mflags2 & M2_DOMESTIC) != 0L)
 #define is_demon(ptr) (((ptr)->mflags2 & M2_DEMON) != 0L)
 #define is_mercenary(ptr) (((ptr)->mflags2 & M2_MERC) != 0L)
@@ -123,7 +121,7 @@
 #define likes_magic(ptr) (((ptr)->mflags2 & M2_MAGIC) != 0L)
 #define webmaker(ptr) \
     ((ptr) == &mons[PM_CAVE_SPIDER] || (ptr) == &mons[PM_GIANT_SPIDER])
-#define is_unicorn(ptr) ((ptr)->mlet == S_UNICORN && likes_gems(ptr))
+
 #define is_longworm(ptr)                                                   \
     (((ptr) == &mons[PM_BABY_LONG_WORM]) || ((ptr) == &mons[PM_LONG_WORM]) \
      || ((ptr) == &mons[PM_LONG_WORM_TAIL]))
@@ -141,22 +139,12 @@
 #define is_placeholder(ptr)                             \
     ((ptr) == &mons[PM_ORC] || (ptr) == &mons[PM_GIANT] \
      || (ptr) == &mons[PM_ELF] || (ptr) == &mons[PM_HUMAN])
-/* return TRUE if the monster tends to revive */
-#define is_reviver(ptr) (is_rider(ptr) || (ptr)->mlet == S_TROLL)
+
 /* monsters whose corpses and statues need special handling;
    note that high priests and the Wizard of Yendor are flagged
    as unique even though they really aren't; that's ok here */
 #define unique_corpstat(ptr) (((ptr)->geno & G_UNIQ) != 0)
 
-/* this returns the light's range, or 0 if none; if we add more light emitting
-   monsters, we'll likely have to add a new light range field to mons[] */
-#define emits_light(ptr)                                          \
-    (((ptr)->mlet == S_LIGHT || (ptr) == &mons[PM_FLAMING_SPHERE] \
-      || (ptr) == &mons[PM_SHOCKING_SPHERE]                       \
-      || (ptr) == &mons[PM_FIRE_VORTEX])                          \
-         ? 1                                                      \
-         : ((ptr) == &mons[PM_FIRE_ELEMENTAL]) ? 1 : 0)
-/*	[note: the light ranges above were reduced to 1 for performance...] */
 #define likes_lava(ptr) \
     (ptr == &mons[PM_FIRE_ELEMENTAL] || ptr == &mons[PM_SALAMANDER])
 #define pm_invisible(ptr) \
@@ -172,26 +160,6 @@
 
 #define is_mind_flayer(ptr) \
     ((ptr) == &mons[PM_MIND_FLAYER] || (ptr) == &mons[PM_MASTER_MIND_FLAYER])
-
-#define is_vampire(ptr) ((ptr)->mlet == S_VAMPIRE)
-
-#define nonliving(ptr)                                          \
-    (is_golem(ptr) || is_undead(ptr) || (ptr)->mlet == S_VORTEX \
-     || (ptr) == &mons[PM_MANES])
-
-/* Used for conduct with corpses, tins, and digestion attacks */
-/* G_NOCORPSE monsters might still be swallowed as a purple worm */
-/* Maybe someday this could be in mflags... */
-#define vegan(ptr)                                                 \
-    ((ptr)->mlet == S_BLOB || (ptr)->mlet == S_JELLY               \
-     || (ptr)->mlet == S_FUNGUS || (ptr)->mlet == S_VORTEX         \
-     || (ptr)->mlet == S_LIGHT                                     \
-     || ((ptr)->mlet == S_ELEMENTAL && (ptr) != &mons[PM_STALKER]) \
-     || ((ptr)->mlet == S_GOLEM && (ptr) != &mons[PM_FLESH_GOLEM]  \
-         && (ptr) != &mons[PM_LEATHER_GOLEM]) || noncorporeal(ptr))
-#define vegetarian(ptr) \
-    (vegan(ptr)         \
-     || ((ptr)->mlet == S_PUDDING && (ptr) != &mons[PM_BLACK_PUDDING]))
 
 #define befriend_with_obj(ptr, obj) \
     ((obj)->oclass == FOOD_CLASS && is_domestic(ptr))

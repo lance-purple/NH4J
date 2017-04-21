@@ -173,7 +173,7 @@ struct obj *otmp;
         if (!resist(mtmp, otmp->oclass, 0, NOTELL)) {
             mon_adjust_speed(mtmp, -1, otmp);
             m_dowear(mtmp, FALSE); /* might want speed boots */
-            if (swallowed() && (mtmp == u.ustuck) && is_whirly(mtmp->data)) {
+            if (swallowed() && (mtmp == u.ustuck) && isWhirly(mtmp->data->monsterTypeID)) {
                 You("disrupt %s!", mon_nam(mtmp));
                 pline("A huge hole opens up...");
                 expels(mtmp, mtmp->data, TRUE);
@@ -1607,9 +1607,9 @@ struct obj *obj;
             smell = TRUE;
         } else if (obj->otyp == STATUE || obj->otyp == FIGURINE) {
             ptr = &mons[obj->corpsenm];
-            if (is_golem(ptr)) {
+            if (isGolem(ptr->monsterTypeID)) {
                 golem_xform = (ptr != &mons[PM_FLESH_GOLEM]);
-            } else if (vegetarian(ptr)) {
+            } else if (isVegetarianOption(ptr->monsterTypeID)) {
                 /* Don't animate monsters that aren't flesh */
                 obj = poly_obj(obj, MEATBALL);
                 smell = TRUE;
@@ -1644,7 +1644,7 @@ struct obj *obj;
             if (mon) {
                 ptr = mon->data;
                 /* this golem handling is redundant... */
-                if (is_golem(ptr) && ptr != &mons[PM_FLESH_GOLEM])
+                if (isGolem(ptr->monsterTypeID) && ptr != &mons[PM_FLESH_GOLEM])
                     (void) newcham(mon, &mons[PM_FLESH_GOLEM], TRUE, FALSE);
             } else if ((ptr->geno & (G_NOCORPSE | G_UNIQ)) != 0) {
                 /* didn't revive but can't leave corpse either */
@@ -1895,7 +1895,7 @@ struct obj *obj, *otmp;
 			javaString corpseName = monsterTypeName(mons[corpsenm].monsterTypeID);
                         You("observe %s %s change dramatically.",
                             s_suffix(an(corpseName.c_str)),
-                            nonliving(&mons[corpsenm]) ? "motility"
+                            isNonliving(mons[corpsenm].monsterTypeID) ? "motility"
                                                        : "health");
 			releaseJavaString(corpseName);
                         learn_it = TRUE;
@@ -2297,7 +2297,7 @@ boolean ordinary;
 
     case WAN_DEATH:
     case SPE_FINGER_OF_DEATH:
-        if (nonliving(youmonst.data) || is_demon(youmonst.data)) {
+        if (isNonliving(youmonst.data->monsterTypeID) || is_demon(youmonst.data)) {
             pline((obj->otyp == WAN_DEATH)
                       ? "The wand shoots an apparently harmless beam at you."
                       : "You seem no deader than before.");
@@ -3442,7 +3442,7 @@ struct obj **ootmp; /* to return worn armor for caller to disintegrate */
                 tmp = 0;
                 break;
             }
-            if (nonliving(mon->data) || is_demon(mon->data)
+            if (isNonliving(mon->data->monsterTypeID) || is_demon(mon->data)
                 || is_vampshifter(mon) || resists_magm(mon)) {
                 /* similar to player */
                 sho_shieldeff = TRUE;
@@ -3612,7 +3612,7 @@ xchar sx, sy;
                 (void) destroy_arm(uarmc);
             if (uarmu)
                 (void) destroy_arm(uarmu);
-        } else if (nonliving(youmonst.data) || is_demon(youmonst.data)) {
+        } else if (isNonliving(youmonst.data->monsterTypeID) || is_demon(youmonst.data)) {
             shieldeff(sx, sy);
             You("seem unaffected.");
             break;

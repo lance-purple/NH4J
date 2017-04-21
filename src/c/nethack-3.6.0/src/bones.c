@@ -422,7 +422,7 @@ make_bones:
         }
         /* give mummy-from-hero a wrapping unless hero already
            carries one; don't bother forcing it to become worn */
-        if (mtmp->data->mlet == S_MUMMY && !carrying(MUMMY_WRAPPING))
+        if (monsterClass(mtmp->data->monsterTypeID) == S_MUMMY && !carrying(MUMMY_WRAPPING))
             (void) mongets(mtmp, MUMMY_WRAPPING);
         mtmp = christen_monst(mtmp, plname);
         newsym(currentX(), currentY());

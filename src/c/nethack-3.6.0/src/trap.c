@@ -382,7 +382,7 @@ register int x, y, typ;
 
         do { /* avoid ultimately hostile co-aligned unicorn */
             mptr = &mons[rndmonnum()];
-        } while (--trycount > 0 && is_unicorn(mptr)
+        } while (--trycount > 0 && isUnicorn(mptr->monsterTypeID)
                  && sgn(currentAlignmentType()) == sgn(mptr->maligntyp));
         statue = mkcorpstat(STATUE, (struct monst *) 0, mptr, x, y,
                             CORPSTAT_NONE);
@@ -585,7 +585,7 @@ int *fail_reason;
         if (mnum != PM_DOPPELGANGER)
             mptr = &mons[mnum];
         use_saved_traits = FALSE;
-    } else if (is_golem(mptr) && cause == ANIMATE_SPELL) {
+    } else if (isGolem(mptr->monsterTypeID) && cause == ANIMATE_SPELL) {
         /* statue of any golem hit by stone-to-flesh becomes flesh golem */
         golem_xform = (mptr != &mons[PM_FLESH_GOLEM]);
         mnum = PM_FLESH_GOLEM;
@@ -654,7 +654,7 @@ int *fail_reason;
                         ? "disappears"
                         : golem_xform
                               ? "turns into flesh"
-                              : (nonliving(mon->data) || is_vampshifter(mon))
+                              : (isNonliving(mon->data->monsterTypeID) || is_vampshifter(mon))
                                     ? "moves"
                                     : "comes to life";
     if ((x == currentX() && y == currentY()) || cause == ANIMATE_SPELL) {
@@ -983,7 +983,7 @@ unsigned trflags;
         if ((youAreLevitating() || youAreFlying()) && !forcetrap)
             break;
         feeltrap(trap);
-        if (amorphous(youmonst.data) || is_whirly(youmonst.data)
+        if (amorphous(youmonst.data) || isWhirly(youmonst.data->monsterTypeID)
             || unsolid(youmonst.data)) {
             pline("%s bear trap closes harmlessly through you.",
                   A_Your[trap->madeby_u]);
@@ -1205,7 +1205,7 @@ unsigned trflags;
 
     case WEB: /* Our luckless player has stumbled into a web. */
         feeltrap(trap);
-        if (amorphous(youmonst.data) || is_whirly(youmonst.data)
+        if (amorphous(youmonst.data) || isWhirly(youmonst.data->monsterTypeID)
             || unsolid(youmonst.data)) {
             if (acidic(youmonst.data) || currentMonsterNumber() == PM_GELATINOUS_CUBE
                 || currentMonsterNumber() == PM_FIRE_ELEMENTAL) {
@@ -2189,7 +2189,7 @@ register struct monst *mtmp;
             break;
         case BEAR_TRAP:
             if (mptr->msize > MZ_SMALL && !amorphous(mptr) && !is_flyer(mptr)
-                && !is_whirly(mptr) && !unsolid(mptr)) {
+                && !isWhirly(mptr->monsterTypeID) && !unsolid(mptr)) {
                 mtmp->mtrapped = 1;
                 if (in_sight) {
                     pline("%s is caught in %s bear trap!", Monnam(mtmp),
@@ -2345,7 +2345,7 @@ register struct monst *mtmp;
         case PIT:
         case SPIKED_PIT:
             fallverb = "falls";
-            if (is_flyer(mptr) || is_floater(mptr)
+            if (is_flyer(mptr) || isFloater(mptr->monsterTypeID)
                 || (mtmp->wormno && count_wsegs(mtmp) > 5)
                 || is_clinger(mptr)) {
                 if (force_mintrap && !Sokoban) {
@@ -2382,7 +2382,7 @@ register struct monst *mtmp;
                            defsyms[trap_to_defsym(tt)].explanation);
                 break; /* don't activate it after all */
             }
-            if (is_flyer(mptr) || is_floater(mptr) || mptr == &mons[PM_WUMPUS]
+            if (is_flyer(mptr) || isFloater(mptr->monsterTypeID) || mptr == &mons[PM_WUMPUS]
                 || (mtmp->wormno && count_wsegs(mtmp) > 5)
                 || mptr->msize >= MZ_HUGE) {
                 if (force_mintrap && !Sokoban) {
@@ -2426,7 +2426,7 @@ register struct monst *mtmp;
             /* Monster in a web. */
             if (webmaker(mptr))
                 break;
-            if (amorphous(mptr) || is_whirly(mptr) || unsolid(mptr)) {
+            if (amorphous(mptr) || isWhirly(mptr->monsterTypeID) || unsolid(mptr)) {
                 if (acidic(mptr) || mptr == &mons[PM_GELATINOUS_CUBE]
                     || mptr == &mons[PM_FIRE_ELEMENTAL]) {
                     if (in_sight)
@@ -2773,7 +2773,7 @@ float_up()
     } else {
         You("start to float in the air!");
     }
-    if (u.usteed && !is_floater(u.usteed->data)
+    if (u.usteed && !isFloater(u.usteed->data->monsterTypeID)
         && !is_flyer(u.usteed->data)) {
         if (youCanLevitateAtWill()) {
             pline("%s magically floats up!", Monnam(u.usteed));
@@ -2899,7 +2899,7 @@ long hmask, emask; /* might cancel timeout */
                     if (u.usteed)
                         dismount_steed(DISMOUNT_FELL);
                     selftouch("As you fall, you");
-                } else if (u.usteed && (is_floater(u.usteed->data)
+                } else if (u.usteed && (isFloater(u.usteed->data->monsterTypeID)
                                         || is_flyer(u.usteed->data))) {
                     You("settle more firmly in the saddle.");
                 } else if (youAreHallucinating()) {

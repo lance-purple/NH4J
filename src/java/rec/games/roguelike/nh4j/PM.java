@@ -2,6 +2,7 @@ package rec.games.roguelike.nh4j;
 
 public enum PM {
 
+	UNKNOWN(-1),
     GIANT_ANT(0),
     KILLER_BEE(1),
     SOLDIER_ANT(2),
@@ -394,6 +395,15 @@ public enum PM {
 	public int id()
 	{
 		return id;
+	}
+
+	public static boolean matchesOneOf(int pmid, PM ... possibilities) {
+		for (PM pm : possibilities) {
+			if (pm.id() == pmid) {
+				return true;
+			}
+		}
+		return false;
 	}
     
 }

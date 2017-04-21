@@ -73,7 +73,7 @@ poly_when_stoned(ptr)
 struct permonst *ptr;
 {
     /* non-stone golems turn into stone golems unless latter is genocided */
-    return (boolean) (is_golem(ptr) && ptr != &mons[PM_STONE_GOLEM]
+    return (boolean) (isGolem(ptr->monsterTypeID) && ptr != &mons[PM_STONE_GOLEM]
                       && !(mvitals[PM_STONE_GOLEM].mvflags & G_GENOD));
     /* allow G_EXTINCT */
 }
@@ -293,9 +293,10 @@ boolean
 hates_silver(ptr)
 register struct permonst *ptr;
 {
-    return (boolean) (is_were(ptr) || ptr->mlet == S_VAMPIRE || is_demon(ptr)
+    int mc = monsterClass(ptr->monsterTypeID);
+    return (boolean) (is_were(ptr) || mc == S_VAMPIRE || is_demon(ptr)
                       || ptr == &mons[PM_SHADE]
-                      || (ptr->mlet == S_IMP && ptr != &mons[PM_TENGU]));
+                      || (mc == S_IMP && ptr != &mons[PM_TENGU]));
 }
 
 /* True iff the type of monster pass through iron bars */
@@ -304,7 +305,7 @@ passes_bars(mptr)
 struct permonst *mptr;
 {
     return (boolean) (passes_walls(mptr) || amorphous(mptr) || unsolid(mptr)
-                      || is_whirly(mptr) || verysmall(mptr)
+                      || isWhirly(mptr->monsterTypeID) || verysmall(mptr)
                       || dmgtype(mptr, AD_CORR) || dmgtype(mptr, AD_RUST)
                       || (slithy(mptr) && !bigmonst(mptr)));
 }
@@ -314,9 +315,10 @@ boolean
 can_blow(mtmp)
 register struct monst *mtmp;
 {
+    int mc = monsterClass(mtmp->data->monsterTypeID);
     if ((is_silent(mtmp->data) || mtmp->data->msound == MS_BUZZ)
         && (breathless(mtmp->data) || verysmall(mtmp->data)
-            || !has_head(mtmp->data) || mtmp->data->mlet == S_EEL))
+            || !has_head(mtmp->data) || mc == S_EEL))
         return FALSE;
     if ((mtmp == &youmonst) && youAreBeingStrangled())
         return FALSE;
@@ -372,8 +374,8 @@ boolean
 sliparm(ptr)
 register struct permonst *ptr;
 {
-    return (boolean) (is_whirly(ptr) || ptr->msize <= MZ_SMALL
-                      || noncorporeal(ptr));
+    return (boolean) (isWhirly(ptr->monsterTypeID) || ptr->msize <= MZ_SMALL
+                      || isNoncorporeal(ptr->monsterTypeID));
 }
 
 /* creature will break out of armor */
@@ -407,7 +409,7 @@ struct permonst *ptr;
 {
     /* rats and mice are incapable of vomiting;
        which other creatures have the same limitation? */
-    if (ptr->mlet == S_RODENT && ptr != &mons[PM_ROCK_MOLE]
+    if (monsterClass(ptr->monsterTypeID) == S_RODENT && ptr != &mons[PM_ROCK_MOLE]
         && ptr != &mons[PM_WOODCHUCK])
         return TRUE;
     return FALSE;
@@ -513,7 +515,8 @@ boolean
 same_race(pm1, pm2)
 struct permonst *pm1, *pm2;
 {
-    char let1 = pm1->mlet, let2 = pm2->mlet;
+    int let1 = monsterClass(pm1->monsterTypeID);
+    int let2 = monsterClass(pm2->monsterTypeID);
 
     if (pm1 == pm2)
         return TRUE; /* exact match */
@@ -531,8 +534,8 @@ struct permonst *pm1, *pm2;
     /* other creatures are less precise */
     if (is_giant(pm1))
         return is_giant(pm2); /* open to quibbling here */
-    if (is_golem(pm1))
-        return is_golem(pm2); /* even moreso... */
+    if (isGolem(pm1->monsterTypeID))
+        return isGolem(pm2->monsterTypeID); /* even moreso... */
     if (is_mind_flayer(pm1))
         return is_mind_flayer(pm2);
     if (let1 == S_KOBOLD || pm1 == &mons[PM_KOBOLD_ZOMBIE]
@@ -545,8 +548,8 @@ struct permonst *pm1, *pm2;
         return (let2 == S_NYMPH);
     if (let1 == S_CENTAUR)
         return (let2 == S_CENTAUR);
-    if (is_unicorn(pm1))
-        return is_unicorn(pm2);
+    if (isUnicorn(pm1->monsterTypeID))
+        return isUnicorn(pm2->monsterTypeID);
     if (let1 == S_DRAGON)
         return (let2 == S_DRAGON);
     if (let1 == S_NAGA)
@@ -838,7 +841,7 @@ int *mndx_p;
                     return -i; /* class */
                 if (mndx_p)
                     *mndx_p = i; /* monster */
-                return mons[i].mlet;
+                return monsterClass(mons[i].monsterTypeID);
             }
         /* check monster class descriptions */
         for (i = 1; i < MAXMCLASSES; i++) {
@@ -856,7 +859,7 @@ int *mndx_p;
                     *mndx_p = i;
 		}
                 releaseJavaString(x);
-                return mons[i].mlet;
+                return monsterClass(mons[i].monsterTypeID);
             } else {
                 releaseJavaString(x);
 	    }
@@ -1038,7 +1041,7 @@ const char *def;
 {
     int capitalize = (*def == highc(*def));
 
-    return (is_floater(ptr) ? levitate[capitalize]
+    return (isFloater(ptr->monsterTypeID) ? levitate[capitalize]
             : (is_flyer(ptr) && ptr->msize <= MZ_SMALL) ? flys[capitalize]
               : (is_flyer(ptr) && ptr->msize > MZ_SMALL) ? flyl[capitalize]
                 : slithy(ptr) ? slither[capitalize]
@@ -1055,7 +1058,7 @@ const char *def;
 {
     int capitalize = 2 + (*def == highc(*def));
 
-    return (is_floater(ptr) ? levitate[capitalize]
+    return (isFloater(ptr->monsterTypeID) ? levitate[capitalize]
             : (is_flyer(ptr) && ptr->msize <= MZ_SMALL) ? flys[capitalize]
               : (is_flyer(ptr) && ptr->msize > MZ_SMALL) ? flyl[capitalize]
                 : slithy(ptr) ? slither[capitalize]
@@ -1118,15 +1121,58 @@ boolean
 olfaction(mdat)
 struct permonst *mdat;
 {
-    if (is_golem(mdat)
-        || mdat->mlet == S_EYE /* spheres  */
-        || mdat->mlet == S_JELLY || mdat->mlet == S_PUDDING
-        || mdat->mlet == S_BLOB || mdat->mlet == S_VORTEX
-        || mdat->mlet == S_ELEMENTAL
-        || mdat->mlet == S_FUNGUS /* mushrooms and fungi */
-        || mdat->mlet == S_LIGHT)
+    int mc = monsterClass(mdat->monsterTypeID);
+    if (isGolem(mdat->monsterTypeID)
+        || mc == S_EYE /* spheres  */
+        || mc == S_JELLY || mc == S_PUDDING
+        || mc == S_BLOB  || mc == S_VORTEX
+        || mc == S_ELEMENTAL
+        || mc == S_FUNGUS /* mushrooms and fungi */
+        || mc == S_LIGHT)
         return FALSE;
     return TRUE;
+}
+
+#define MONSTER_DATA_CLASS "rec/games/roguelike/nh4j/MonsterData"
+
+extern boolean javaGetBooleanFromInt(const char* classname, const char* methodname, int i);
+extern boolean javaGetIntFromInt(const char* classname, const char* methodname, int i);
+
+int emitsLightWithRange(int pmid) {
+    return javaGetIntFromInt(MONSTER_DATA_CLASS, "emitsLightWithRange", pmid);
+}
+boolean isFloater(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isFloater", pmid);
+}
+boolean isGolem(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isGolem", pmid);
+}
+boolean isNoncorporeal(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isNoncorporeal", pmid);
+}
+boolean isNonliving(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isNonliving", pmid);
+}
+boolean isReviver(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isReviver", pmid);
+}
+boolean isSlimeproof(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isSlimeproof", pmid);
+}
+boolean isUnicorn(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isUnicorn", pmid);
+}
+boolean isVampire(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isVampire", pmid);
+}
+boolean isVeganOption(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isVeganOption", pmid);
+}
+boolean isVegetarianOption(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isVegetarianOption", pmid);
+}
+boolean isWhirly(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isWhirly", pmid);
 }
 
 /*mondata.c*/

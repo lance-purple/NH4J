@@ -2484,7 +2484,7 @@ char *buf;
                                            "esteemed",
                                            "most renowned and sacred" };
     Strcat(buf, honored[rn2(SIZE(honored) - 1) + becameDemigod()]);
-    if (is_vampire(youmonst.data))
+    if (isVampire(youmonst.data->monsterTypeID))
         Strcat(buf, (flags.female) ? " dark lady" : " dark lord");
     else if (is_elf(youmonst.data))
         Strcat(buf, (flags.female) ? " hiril" : " hir");

@@ -487,11 +487,11 @@ int how;
     }
 
     Strcpy(killer.name, buf);
-    if (mptr->mlet == S_WRAITH)
+    if (monsterClass(mptr->monsterTypeID) == S_WRAITH)
         setAriseFromGraveAsMonster(PM_WRAITH);
-    else if (mptr->mlet == S_MUMMY && urace.mummynum != NON_PM)
+    else if (monsterClass(mptr->monsterTypeID) == S_MUMMY && urace.mummynum != NON_PM)
         setAriseFromGraveAsMonster(urace.mummynum);
-    else if (mptr->mlet == S_VAMPIRE && Race_if(PM_HUMAN))
+    else if (monsterClass(mptr->monsterTypeID) == S_VAMPIRE && Race_if(PM_HUMAN))
         setAriseFromGraveAsMonster(PM_VAMPIRE);
     else if (mptr == &mons[PM_GHOUL])
         setAriseFromGraveAsMonster(PM_GHOUL);

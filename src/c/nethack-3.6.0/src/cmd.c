@@ -491,7 +491,7 @@ domonability(VOID_ARGS)
         return dobreathe();
     else if (attacktype(youmonst.data, AT_SPIT))
         return dospit();
-    else if (youmonst.data->mlet == S_NYMPH)
+    else if (monsterClass(youmonst.data->monsterTypeID) == S_NYMPH)
         return doremove();
     else if (attacktype(youmonst.data, AT_GAZE))
         return dogaze();
@@ -509,7 +509,7 @@ domonability(VOID_ARGS)
                 dryup(currentX(), currentY(), TRUE);
         } else
             There("is no fountain here.");
-    } else if (is_unicorn(youmonst.data)) {
+    } else if (isUnicorn(youmonst.data->monsterTypeID)) {
         use_unicorn_horn((struct obj *) 0);
         return 1;
     } else if (youmonst.data->msound == MS_SHRIEK) {
@@ -518,7 +518,7 @@ domonability(VOID_ARGS)
             pline("Unfortunately sound does not carry well through rock.");
         else
             aggravate();
-    } else if (youmonst.data->mlet == S_VAMPIRE)
+    } else if (monsterClass(youmonst.data->monsterTypeID) == S_VAMPIRE)
         return dopoly();
     else if (areYouPolymorphed())
         pline("Any special ability you may have is purely reflexive.");
@@ -2471,7 +2471,7 @@ int msgflag;          /* for variant message phrasing */
         }
     } else if (lurking()) {
         bp = eos(buf); /* points past "hiding" */
-        if (youmonst.data->mlet == S_EEL) {
+        if (monsterClass(youmonst.data->monsterTypeID) == S_EEL) {
             if (is_pool(currentX(), currentY()))
                 Sprintf(bp, " in the %s", waterbody_name(currentX(), currentY()));
         } else if (hides_under(youmonst.data)) {

@@ -924,7 +924,7 @@ genericptr_t p2;
     reg = (NhRegion *) p1;
     dam = reg->arg.a_int;
     if (p2 == (genericptr_t) 0) { /* This means *YOU* Bozo! */
-        if (invulnerableWhilePraying() || nonliving(youmonst.data) || youNeedNotBreathe())
+        if (invulnerableWhilePraying() || isNonliving(youmonst.data->monsterTypeID) || youNeedNotBreathe())
             return FALSE;
         if (youCanSee()) {
             Your("%s sting.", makeplural(body_part(EYE)));
@@ -944,7 +944,7 @@ genericptr_t p2;
         mtmp = (struct monst *) p2;
 
         /* Non living and non breathing monsters are not concerned */
-        if (!(nonliving(mtmp->data) || is_vampshifter(mtmp))
+        if (!(isNonliving(mtmp->data->monsterTypeID) || is_vampshifter(mtmp))
             && !breathless(mtmp->data)) {
             if (cansee(mtmp->mx, mtmp->my))
                 pline("%s coughs!", Monnam(mtmp));
@@ -1021,7 +1021,7 @@ region_danger()
         /* the only type of region we understand is gas_cloud */
         if (f_indx == INSIDE_GAS_CLOUD) {
             /* completely harmless if you don't need to breathe */
-            if (nonliving(youmonst.data) || youNeedNotBreathe())
+            if (isNonliving(youmonst.data->monsterTypeID) || youNeedNotBreathe())
                 continue;
             /* minor inconvenience if you're poison resistant;
                not harmful enough to be a prayer-level trouble */

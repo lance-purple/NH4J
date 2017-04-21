@@ -84,7 +84,7 @@ set_uasmon()
     PROPSET(INVIS, pm_invisible(mdat));
     PROPSET(TELEPORT, can_teleport(mdat));
     PROPSET(TELEPORT_CONTROL, control_teleport(mdat));
-    PROPSET(LEVITATION, is_floater(mdat));
+    PROPSET(LEVITATION, isFloater(mdat->monsterTypeID));
     PROPSET(FLYING, is_flyer(mdat));
     PROPSET(SWIMMING, is_swimmer(mdat));
     /* [don't touch MAGICAL_BREATHING here; both Amphibious and Breathless
@@ -393,7 +393,7 @@ int psflags;
     int old_light, new_light, mntmp, class, tryct;
     boolean forcecontrol = (psflags == 1), monsterpoly = (psflags == 2),
             draconian = (uarm && Is_dragon_armor(uarm)),
-            iswere = (lycanthropeType() >= LOW_PM), isvamp = is_vampire(youmonst.data),
+            iswere = (lycanthropeType() >= LOW_PM), isvamp = isVampire(youmonst.data->monsterTypeID),
             controllable_poly = youHavePolymorphControl() && !(youAreStunned() || youAreUnaware());
 
     if (youAreUnchanging()) {
@@ -410,7 +410,7 @@ int psflags;
             return;
         }
     }
-    old_light = emits_light(youmonst.data);
+    old_light = emitsLightWithRange(youmonst.data->monsterTypeID);
     mntmp = NON_PM;
 
     if (monsterpoly && isvamp)
@@ -582,7 +582,7 @@ int psflags;
     sex_change_ok--; /* reset */
 
 made_change:
-    new_light = emits_light(youmonst.data);
+    new_light = emitsLightWithRange(youmonst.data->monsterTypeID);
     if (old_light != new_light) {
         if (old_light)
             del_light_source(LS_MONSTER, monst_to_any(&youmonst));
@@ -723,7 +723,7 @@ int mntmp;
     mlvl = (int) mons[mntmp].mlevel;
     if (youmonst.data->mlet == S_DRAGON && mntmp >= PM_GRAY_DRAGON) {
         setMaximumHitPointsAsMonster(areYouInEndgame() ? (8 * mlvl) : (4 * mlvl + d(mlvl, 4)));
-    } else if (is_golem(youmonst.data)) {
+    } else if (isGolem(youmonst.data->monsterTypeID)) {
         setMaximumHitPointsAsMonster(golemhp(mntmp));
     } else {
         if (!mlvl)
@@ -803,13 +803,13 @@ int mntmp;
             pline(use_thec, monsterc, "spin a web");
         if (currentMonsterNumber() == PM_GREMLIN)
             pline(use_thec, monsterc, "multiply in a fountain");
-        if (is_unicorn(youmonst.data))
+        if (isUnicorn(youmonst.data->monsterTypeID))
             pline(use_thec, monsterc, "use your horn");
         if (is_mind_flayer(youmonst.data))
             pline(use_thec, monsterc, "emit a mental blast");
         if (youmonst.data->msound == MS_SHRIEK) /* worthless, actually */
             pline(use_thec, monsterc, "shriek");
-        if (is_vampire(youmonst.data))
+        if (isVampire(youmonst.data->monsterTypeID))
             pline(use_thec, monsterc, "change shape");
 
         if (lays_eggs(youmonst.data) && flags.female)
@@ -840,7 +840,7 @@ int mntmp;
         setCurrentTrapTimeout(0);
         pline_The("lava now feels soothing.");
     }
-    if (amorphous(youmonst.data) || is_whirly(youmonst.data)
+    if (amorphous(youmonst.data) || isWhirly(youmonst.data->monsterTypeID)
         || unsolid(youmonst.data)) {
         if (youAreBeingPunished()) {
             You("slip out of the iron chain.");
@@ -851,7 +851,7 @@ int mntmp;
         }
     }
     if (currentlyTrapped() && (currentTrapType() == TT_WEB || currentTrapType() == TT_BEARTRAP)
-        && (amorphous(youmonst.data) || is_whirly(youmonst.data)
+        && (amorphous(youmonst.data) || isWhirly(youmonst.data->monsterTypeID)
             || unsolid(youmonst.data) || (youmonst.data->msize <= MZ_SMALL
                                           && currentTrapType() == TT_BEARTRAP))) {
         You("are no longer stuck in the %s.",
@@ -918,7 +918,7 @@ break_armor()
             dropx(otmp);
         }
         if ((otmp = uarmc) != 0) {
-            if (is_whirly(youmonst.data))
+            if (isWhirly(youmonst.data->monsterTypeID))
                 Your("%s falls, unsupported!", cloak_simple_name(otmp));
             else
                 You("shrink out of your %s!", cloak_simple_name(otmp));
@@ -926,7 +926,7 @@ break_armor()
             dropx(otmp);
         }
         if ((otmp = uarmu) != 0) {
-            if (is_whirly(youmonst.data))
+            if (isWhirly(youmonst.data->monsterTypeID))
                 You("seep right through your shirt!");
             else
                 You("become much too small for your shirt!");
@@ -982,7 +982,7 @@ break_armor()
         if ((otmp = uarmf) != 0) {
             if (donning(otmp))
                 cancel_don();
-            if (is_whirly(youmonst.data))
+            if (isWhirly(youmonst.data->monsterTypeID))
                 Your("boots fall away!");
             else
                 Your("boots %s off your feet!",
@@ -1051,7 +1051,7 @@ rehumanize()
         done(DIED);
     }
 
-    if (emits_light(youmonst.data))
+    if (emitsLightWithRange(youmonst.data->monsterTypeID))
         del_light_source(LS_MONSTER, monst_to_any(&youmonst));
     polyman("return to %s form!", urace.adj);
 
@@ -1166,7 +1166,7 @@ dospinweb()
             expels(u.ustuck, u.ustuck->data, TRUE);
             return 0;
         }
-        if (is_whirly(u.ustuck->data)) {
+        if (isWhirly(u.ustuck->data->monsterTypeID)) {
             int i;
 
             for (i = 0; i < NATTK; i++)
@@ -1496,7 +1496,7 @@ dopoly()
 {
     struct permonst *savedat = youmonst.data;
 
-    if (is_vampire(youmonst.data)) {
+    if (isVampire(youmonst.data->monsterTypeID)) {
         polyself(2);
         if (savedat != youmonst.data) {
             javaString youMonsterName = monsterTypeName(youmonst.data->monsterTypeID);

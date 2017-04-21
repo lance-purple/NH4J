@@ -1415,7 +1415,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
         tmp += 1000; /* Guaranteed hit */
     }
 
-    if (obj->oclass == GEM_CLASS && is_unicorn(mon->data)) {
+    if (obj->oclass == GEM_CLASS && isUnicorn(mon->data->monsterTypeID)) {
         if (mon->msleeping || !mon->mcanmove) {
             tmiss(obj, mon, FALSE);
             return 0;

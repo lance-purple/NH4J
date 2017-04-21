@@ -765,7 +765,7 @@ struct monst *mtmp;
     if (weap->spfx & SPFX_DMONS) {
         return (ptr == &mons[(int) weap->mtype]);
     } else if (weap->spfx & SPFX_DCLAS) {
-        return (weap->mtype == (unsigned long) ptr->mlet);
+        return (weap->mtype == (unsigned long) monsterClass(ptr->monsterTypeID));
     } else if (weap->spfx & SPFX_DFLAG1) {
         return ((ptr->mflags1 & weap->mtype) != 0L);
     } else if (weap->spfx & SPFX_DFLAG2) {
@@ -1299,7 +1299,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                     *dmgptr = 0;
                     return (boolean) (youattack || vis);
                 }
-                if (noncorporeal(mdef->data) || amorphous(mdef->data)) {
+                if (isNoncorporeal(mdef->data->monsterTypeID) || amorphous(mdef->data)) {
                     pline("%s slices through %s %s.", wepdesc,
                           s_suffix(mon_nam(mdef)), mbodypart(mdef, NECK));
                     return TRUE;
@@ -1318,7 +1318,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                     *dmgptr = 0;
                     return TRUE;
                 }
-                if (noncorporeal(youmonst.data) || amorphous(youmonst.data)) {
+                if (isNoncorporeal(youmonst.data->monsterTypeID) || amorphous(youmonst.data)) {
                     pline("%s slices through your %s.", wepdesc,
                           body_part(NECK));
                     return TRUE;
@@ -1334,7 +1334,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
     if (spec_ability(otmp, SPFX_DRLI)) {
         /* some non-living creatures (golems, vortices) are
            vulnerable to life drain effects */
-        const char *life = nonliving(mdef->data) ? "animating force" : "life";
+        const char *life = isNonliving(mdef->data->monsterTypeID) ? "animating force" : "life";
 
         if (!youdefend) {
             if (vis) {

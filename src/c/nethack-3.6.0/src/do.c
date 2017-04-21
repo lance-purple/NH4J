@@ -156,7 +156,7 @@ const char *verb;
                           (mtmp) ? "" : " with you");
             if (mtmp) {
                 if (!passes_walls(mtmp->data) && !throws_rocks(mtmp->data)) {
-                    if (hmon(mtmp, obj, TRUE) && !is_whirly(mtmp->data))
+                    if (hmon(mtmp, obj, TRUE) && !isWhirly(mtmp->data->monsterTypeID))
                         return FALSE; /* still alive */
                 }
                 mtmp->mtrapped = 0;

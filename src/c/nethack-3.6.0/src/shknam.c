@@ -392,7 +392,7 @@ int otyp; /* used iff obj is null */
             return (boolean) (obj->spe == 1); /* 0 = empty, 1 = spinach */
         if (otyp == TIN || otyp == CORPSE)
             return (boolean) (corpsenm >= LOW_PM
-                              && vegetarian(&mons[corpsenm]));
+                              && isVegetarianOption(mons[corpsenm].monsterTypeID));
     }
     return FALSE;
 }

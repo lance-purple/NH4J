@@ -11,9 +11,10 @@ STATIC_VAR NEARDATA struct monst zeromonst;
 /* this assumes that a human quest leader or nemesis is an archetype
    of the corresponding role; that isn't so for some roles (tourist
    for instance) but is for the priests and monks we use it for... */
-#define quest_mon_represents_role(mptr, role_pm) \
-    (mptr->mlet == S_HUMAN && Role_if(role_pm)   \
-     && (mptr->msound == MS_LEADER || mptr->msound == MS_NEMESIS))
+static boolean quest_mon_represents_role(struct permonst* mptr, int role_pm) {
+    return (monsterClass(mptr->monsterTypeID) == S_HUMAN && Role_if(role_pm)   
+     && (mptr->msound == MS_LEADER || mptr->msound == MS_NEMESIS));
+}
 
 STATIC_DCL boolean FDECL(uncommon, (int));
 STATIC_DCL int FDECL(align_shift, (struct permonst *));
@@ -36,7 +37,7 @@ boolean
 is_home_elemental(ptr)
 struct permonst *ptr;
 {
-    if (ptr->mlet == S_ELEMENTAL)
+    if (monsterClass(ptr->monsterTypeID) == S_ELEMENTAL)
         switch (monsndx(ptr)) {
         case PM_AIR_ELEMENTAL:
             return areYouOnAirLevel();
@@ -57,7 +58,7 @@ STATIC_OVL boolean
 wrong_elem_type(ptr)
 struct permonst *ptr;
 {
-    if (ptr->mlet == S_ELEMENTAL) {
+    if (monsterClass(ptr->monsterTypeID) == S_ELEMENTAL) {
         return (boolean) !is_home_elemental(ptr);
     } else if (areYouOnEarthLevel()) {
         /* no restrictions? */
@@ -69,8 +70,9 @@ struct permonst *ptr;
         if (!pm_resistance(ptr, MR_FIRE))
             return TRUE;
     } else if (areYouOnAirLevel()) {
-        if (!(is_flyer(ptr) && ptr->mlet != S_TRAPPER) && !is_floater(ptr)
-            && !amorphous(ptr) && !noncorporeal(ptr) && !is_whirly(ptr))
+	int pmid = ptr->monsterTypeID;
+        if (!(is_flyer(ptr) && monsterClass(pmid) != S_TRAPPER) && !isFloater(pmid)
+            && !amorphous(ptr) && !isNoncorporeal(pmid) && !isWhirly(pmid))
             return TRUE;
     }
     return FALSE;
@@ -181,7 +183,7 @@ register struct monst *mtmp;
      *          soldiers get all sorts of things
      *          kops get clubs & cream pies.
      */
-    switch (ptr->mlet) {
+    switch (monsterClass(ptr->monsterTypeID)) {
     case S_GIANT:
         if (rn2(2))
             (void) mongets(mtmp, (mm != PM_ETTIN) ? BOULDER : CLUB);
@@ -537,7 +539,7 @@ register struct monst *mtmp;
      *  Soldiers get armour & rations - armour approximates their ac.
      *  Nymphs may get mirror or potion of object detection.
      */
-    switch (ptr->mlet) {
+    switch (monsterClass(ptr->monsterTypeID)) {
     case S_HUMAN:
         if (is_mercenary(ptr)) {
             register int mac;
@@ -785,8 +787,8 @@ xchar x, y; /* clone's preferred location or 0 (near mon) */
     if (mon->ispriest)
         m2->ispriest = FALSE;
     place_monster(m2, m2->mx, m2->my);
-    if (emits_light(m2->data))
-        new_light_source(m2->mx, m2->my, emits_light(m2->data), LS_MONSTER,
+    if (emitsLightWithRange(m2->data->monsterTypeID))
+        new_light_source(m2->mx, m2->my, emitsLightWithRange(m2->data->monsterTypeID), LS_MONSTER,
                          monst_to_any(m2));
     if (has_mname(mon)) {
         m2 = christen_monst(m2, MNAME(mon));
@@ -875,13 +877,13 @@ struct monst *mon;
     int hp = rnd(8); /* default is d8 */
 
     /* like newmonhp, but home elementals are ignored, riders use normal d8 */
-    if (is_golem(ptr)) {
+    if (isGolem(ptr->monsterTypeID)) {
         /* draining usually won't be applicable for these critters */
         hp = golemhp(monsndx(ptr)) / (int) ptr->mlevel;
     } else if (ptr->mlevel > 49) {
         /* arbitrary; such monsters won't be involved in draining anyway */
         hp = 4 + rnd(4); /* 5..8 */
-    } else if (ptr->mlet == S_DRAGON && monsndx(ptr) >= PM_GRAY_DRAGON) {
+    } else if (monsterClass(ptr->monsterTypeID) == S_DRAGON && monsndx(ptr) >= PM_GRAY_DRAGON) {
         /* adult dragons; newmonhp() uses areYouInEndgame() ? 8 : 4 + rnd(4)
          */
         hp = 4 + rn2(5); /* 4..8 */
@@ -902,7 +904,7 @@ int mndx;
     struct permonst *ptr = &mons[mndx];
 
     mon->m_lev = adj_lev(ptr);
-    if (is_golem(ptr)) {
+    if (isGolem(ptr->monsterTypeID)) {
         mon->mhpmax = mon->mhp = golemhp(mndx);
     } else if (is_rider(ptr)) {
         /* we want low HP, but a high mlevel so they can attack well */
@@ -914,7 +916,7 @@ int mndx;
          * above the 1..49 that indicate "normal" monster levels */
         mon->mhpmax = mon->mhp = 2 * (ptr->mlevel - 6);
         mon->m_lev = mon->mhp / 4; /* approximation */
-    } else if (ptr->mlet == S_DRAGON && mndx >= PM_GRAY_DRAGON) {
+    } else if (monsterClass(ptr->monsterTypeID) == S_DRAGON && mndx >= PM_GRAY_DRAGON) {
         /* adult dragons */
         mon->mhpmax = mon->mhp =
             (int) (areYouInEndgame()
@@ -1149,7 +1151,7 @@ int mmflags;
     mtmp->mcansee = mtmp->mcanmove = TRUE;
     mtmp->mpeaceful = (mmflags & MM_ANGRY) ? FALSE : peace_minded(ptr);
 
-    switch (ptr->mlet) {
+    switch (monsterClass(ptr->monsterTypeID)) {
     case S_MIMIC:
         set_mimic_sym(mtmp);
         break;
@@ -1183,7 +1185,7 @@ int mmflags;
             mtmp->mpeaceful = FALSE;
         break;
     case S_UNICORN:
-        if (is_unicorn(ptr) && sgn(currentAlignmentType()) == sgn(ptr->maligntyp))
+        if (isUnicorn(ptr->monsterTypeID) && sgn(currentAlignmentType()) == sgn(ptr->maligntyp))
             mtmp->mpeaceful = TRUE;
         break;
     case S_BAT:
@@ -1191,7 +1193,7 @@ int mmflags;
             mon_adjust_speed(mtmp, 2, (struct obj *) 0);
         break;
     }
-    if ((ct = emits_light(mtmp->data)) > 0)
+    if ((ct = emitsLightWithRange(mtmp->data->monsterTypeID)) > 0)
         new_light_source(mtmp->mx, mtmp->my, ct, LS_MONSTER,
                          monst_to_any(mtmp));
     mitem = 0; /* extra inventory item for this monster */
@@ -1459,7 +1461,7 @@ rndmonst()
             rndmonst_state.mchoices[mndx] = 0;
             if (tooweak(mndx, minmlev) || toostrong(mndx, maxmlev))
                 continue;
-            if (upper && !isupper(def_monsyms[(int) (ptr->mlet)].sym))
+            if (upper && !isupper(def_monsyms[monsterClass(ptr->monsterTypeID)].sym))
                 continue;
             if (elemlevel && wrong_elem_type(ptr))
                 continue;
@@ -1558,12 +1560,12 @@ int spc;
      *                  mons[] array.
      */
     for (first = LOW_PM; first < SPECIAL_PM; first++)
-        if (mons[first].mlet == class)
+        if (monsterClass(mons[first].monsterTypeID) == class)
             break;
     if (first == SPECIAL_PM)
         return (struct permonst *) 0;
 
-    for (last = first; last < SPECIAL_PM && mons[last].mlet == class; last++)
+    for (last = first; last < SPECIAL_PM && monsterClass(mons[last].monsterTypeID) == class; last++)
         if (mk_gen_ok(last, G_GONE, mask)) {
             /* consider it */
             if (num && toostrong(last, maxmlev)
@@ -1603,12 +1605,12 @@ int class;
     register int first, last, num = 0;
 
     for (first = LOW_PM; first < SPECIAL_PM; first++)
-        if (mons[first].mlet == class)
+        if (monsterClass(mons[first].monsterTypeID) == class)
             break;
     if (first == SPECIAL_PM)
         return NON_PM;
 
-    for (last = first; last < SPECIAL_PM && mons[last].mlet == class; last++)
+    for (last = first; last < SPECIAL_PM && monsterClass(mons[last].monsterTypeID) == class; last++)
         if (mk_gen_ok(last, G_GENOD, (G_NOGEN | G_UNIQ)))
             num += mons[last].geno & G_FREQ;
     if (!num)
@@ -1689,7 +1691,7 @@ struct monst *mtmp, *victim;
         hp_threshold = mtmp->m_lev * 8; /* normal limit */
         if (!mtmp->m_lev)
             hp_threshold = 4;
-        else if (is_golem(ptr)) /* strange creatures */
+        else if (isGolem(ptr->monsterTypeID)) /* strange creatures */
             hp_threshold = ((mtmp->mhpmax / 10) + 1) * 10 - 1;
         else if (is_home_elemental(ptr))
             hp_threshold *= 3;
@@ -1731,7 +1733,7 @@ struct monst *mtmp, *victim;
 		javaString monsterName = monsterTypeName(ptr->monsterTypeID);
                 pline("As %s grows up into %s, %s %s!", mon_nam(mtmp),
                       an(monsterName.c_str), mhe(mtmp),
-                      nonliving(ptr) ? "expires" : "dies");
+                      isNonliving(ptr->monsterTypeID) ? "expires" : "dies");
 		releaseJavaString(monsterName);
 	    }
             set_mon_data(mtmp, ptr, -1); /* keep mvitals[] accurate */
@@ -1775,7 +1777,7 @@ int otyp;
         return 0;
     otmp = mksobj(otyp, TRUE, FALSE);
     if (otmp) {
-        if (mtmp->data->mlet == S_DEMON) {
+        if (monsterClass(mtmp->data->monsterTypeID) == S_DEMON) {
             /* demons never get blessed objects */
             if (otmp->blessed)
                 curse(otmp);

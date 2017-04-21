@@ -22,6 +22,7 @@ typedef struct {
 
 E javaString FDECL(monsterTypeName, (int));
 E void FDECL(releaseJavaString, (javaString));
+E int FDECL(monsterClass, (int));
 
 /* ### alloc.c ### */
 
@@ -2041,6 +2042,19 @@ E const char *FDECL(stagger, (const struct permonst *, const char *));
 E const char *FDECL(on_fire, (struct permonst *, struct attack *));
 E const struct permonst *FDECL(raceptr, (struct monst *));
 E boolean FDECL(olfaction, (struct permonst *));
+
+E int FDECL(emitsLightWithRange, (int));
+E boolean FDECL(isFloater, (int));
+E boolean FDECL(isGolem, (int));
+E boolean FDECL(isNonliving, (int));
+E boolean FDECL(isReviver, (int));
+E boolean FDECL(isUnicorn, (int));
+E boolean FDECL(isVampire, (int));
+E boolean FDECL(isNoncorporeal, (int));
+E boolean FDECL(isSlimeproof, (int));
+E boolean FDECL(isVeganOption, (int));
+E boolean FDECL(isVegetarianOption, (int));
+E boolean FDECL(isWhirly, (int));
 
 /* ### monmove.c ### */
 

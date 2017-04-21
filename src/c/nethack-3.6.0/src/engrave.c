@@ -490,7 +490,7 @@ doengrave()
     ebuf[0] = (char) 0;
     post_engr_text[0] = (char) 0;
     maxelen = BUFSZ - 1;
-    if (is_demon(youmonst.data) || youmonst.data->mlet == S_VAMPIRE)
+    if (is_demon(youmonst.data) || monsterClass(youmonst.data->monsterTypeID) == S_VAMPIRE)
         type = ENGR_BLOOD;
 
     /* Can the adventurer engrave at all? */
@@ -499,7 +499,7 @@ doengrave()
         if (is_animal(u.ustuck->data)) {
             pline("What would you write?  \"Jonah was here\"?");
             return 0;
-        } else if (is_whirly(u.ustuck->data)) {
+        } else if (isWhirly(u.ustuck->data->monsterTypeID)) {
             cant_reach_floor(currentX(), currentY(), FALSE, FALSE);
             return 0;
         } else

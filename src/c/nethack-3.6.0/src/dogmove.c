@@ -1073,7 +1073,7 @@ struct monst *mtmp;
         idx = rn2(SIZE(qm));
         if (qm[idx].mndx != 0 && monsndx(mtmp->data) == qm[idx].mndx)
             break;
-        if (qm[idx].mlet != 0 && mtmp->data->mlet == qm[idx].mlet)
+        if (qm[idx].mlet != 0 && monsterClass(mtmp->data->monsterTypeID) == qm[idx].mlet)
             break;
         if (qm[idx].mndx == 0 && qm[idx].mlet == 0)
             break;

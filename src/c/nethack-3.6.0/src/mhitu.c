@@ -230,7 +230,7 @@ boolean message;
             if (mdat->mattk[i].aatyp != AT_ENGL)
                 impossible("Swallower has no engulfing attack?");
             else {
-                if (is_whirly(mdat)) {
+                if (isWhirly(mdat->monsterTypeID)) {
                     switch (mdat->mattk[i].adtyp) {
                     case AD_ELEC:
                         Strcpy(blast, " in a shower of sparks");
@@ -359,7 +359,7 @@ register struct monst *mtmp;
             if (!enexto(&cc, currentX(), currentY(), youmonst.data)
                 /* a fish won't voluntarily swap positions
                    when it's in water and hero is over land */
-                || (mtmp->data->mlet == S_EEL
+                || (monsterClass(mtmp->data->monsterTypeID) == S_EEL
                     && is_pool(mtmp->mx, mtmp->my)
                     && !is_pool(currentX(), currentY()))) {
                 /* couldn't find any spot for hero; this used to
@@ -387,7 +387,7 @@ register struct monst *mtmp;
             set_apparxy(mtmp);
             newsym(currentX(), currentY());
 
-            if (youmonst.data->mlet != S_PIERCER)
+            if (monsterClass(youmonst.data->monsterTypeID) != S_PIERCER)
                 return 0; /* lurkers don't attack */
 
             obj = which_armor(mtmp, WORN_HELMET);
@@ -419,7 +419,7 @@ register struct monst *mtmp;
                 struct obj *obj = level.objects[currentX()][currentY()];
 
                 if (obj || currentMonsterNumber() == PM_TRAPPER
-                    || (youmonst.data->mlet == S_EEL
+                    || (monsterClass(youmonst.data->monsterTypeID) == S_EEL
                         && is_pool(currentX(), currentY()))) {
                     int save_spe = 0; /* suppress warning */
 
@@ -430,7 +430,7 @@ register struct monst *mtmp;
 			}
                     }
 		    javaString youMonsterName = monsterTypeName(youmonst.data->monsterTypeID);
-                    if (youmonst.data->mlet == S_EEL
+                    if (monsterClass(youmonst.data->monsterTypeID) == S_EEL
                         || currentMonsterNumber() == PM_TRAPPER) {
                         pline(
                              "Wait, %s!  There's a hidden %s named %s there!",
@@ -455,7 +455,7 @@ register struct monst *mtmp;
     }
 
     /* hero might be a mimic, concealed via #monster */
-    if (youmonst.data->mlet == S_MIMIC && youmonst.m_ap_type && !range2
+    if (monsterClass(youmonst.data->monsterTypeID) == S_MIMIC && youmonst.m_ap_type && !range2
         && foundyou && !swallowed()) {
         boolean sticky = sticks(youmonst.data);
 
@@ -524,7 +524,7 @@ register struct monst *mtmp;
         tmp = 1;
 
     /* make eels visible the moment they hit/miss us */
-    if (mdat->mlet == S_EEL && mtmp->minvis && cansee(mtmp->mx, mtmp->my)) {
+    if (monsterClass(mdat->monsterTypeID) == S_EEL && mtmp->minvis && cansee(mtmp->mx, mtmp->my)) {
         mtmp->minvis = 0;
         newsym(mtmp->mx, mtmp->my);
     }
@@ -674,7 +674,7 @@ register struct monst *mtmp;
                         pline("%s lunges forward and recoils!", Monnam(mtmp));
                     else
                         You_hear("a %s nearby.",
-                                 is_whirly(mtmp->data) ? "rushing noise"
+                                 isWhirly(mtmp->data->monsterTypeID) ? "rushing noise"
                                                        : "splat");
                 }
             }
@@ -879,7 +879,7 @@ register struct attack *mattk;
     /*  If the monster is undetected & hits you, you should know where
      *  the attack came from.
      */
-    if (mtmp->mundetected && (hides_under(mdat) || mdat->mlet == S_EEL)) {
+    if (mtmp->mundetected && (hides_under(mdat) || monsterClass(mdat->monsterTypeID) == S_EEL)) {
         mtmp->mundetected = 0;
         if (!(youCannotSee() ? youHaveTelepathyWhenBlind() : youHaveTelepathyWhenNotBlind())) {
             struct obj *obj;
@@ -1264,7 +1264,7 @@ register struct attack *mattk;
         break;
     case AD_SGLD:
         hitmsg(mtmp, mattk);
-        if (youmonst.data->mlet == mdat->mlet)
+        if (monsterClass(youmonst.data->monsterTypeID) == monsterClass(mdat->monsterTypeID))
             break;
         if (!mtmp->mcan)
             stealgold(mtmp);
@@ -1552,7 +1552,7 @@ register struct attack *mattk;
         if (flaming(youmonst.data)) {
             pline_The("slime burns away!");
             dmg = 0;
-        } else if (youAreUnchanging() || noncorporeal(youmonst.data)
+        } else if (youAreUnchanging() || isNoncorporeal(youmonst.data->monsterTypeID)
                    || youmonst.data == &mons[PM_GREEN_SLIME]) {
             You("are unaffected.");
             dmg = 0;
@@ -2276,7 +2276,7 @@ struct attack *mattk;
         && (!SYSOPT_SEDUCE || (mattk && mattk->adtyp != AD_SSEX)))
         return 0;
 
-    if (pagr->mlet != S_NYMPH
+    if (monsterClass(pagr->monsterTypeID) != S_NYMPH
         && ((pagr != &mons[PM_INCUBUS] && pagr != &mons[PM_SUCCUBUS])
             || (SYSOPT_SEDUCE && mattk && mattk->adtyp != AD_SSEX)))
         return 0;
@@ -2284,7 +2284,7 @@ struct attack *mattk;
     if (genagr == 1 - gendef)
         return 1;
     else
-        return (pagr->mlet == S_NYMPH) ? 2 : 0;
+        return (monsterClass(pagr->monsterTypeID) == S_NYMPH) ? 2 : 0;
 }
 
 /* Returns 1 if monster teleported */

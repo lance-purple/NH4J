@@ -614,7 +614,7 @@ struct monst *magr, *mdef;
     lev = &levl[dx][dy];
     if (IS_ROCK(lev->typ) || closed_door(dx, dy) || IS_TREE(lev->typ)
         /* not passes_bars(); engulfer isn't squeezing through */
-        || (lev->typ == IRONBARS && !is_whirly(magr->data)))
+        || (lev->typ == IRONBARS && !isWhirly(magr->data->monsterTypeID)))
         return FALSE;
 
     return TRUE;
@@ -1096,7 +1096,7 @@ register struct attack *mattk;
         if (!magr->mcan && !rn2(10)) {
             mdef->mcan = 1; /* cancelled regardless of lifesave */
             mdef->mstrategy &= ~STRAT_WAITFORU;
-            if (is_were(pd) && pd->mlet != S_HUMAN)
+            if (is_were(pd) && monsterClass(pd->monsterTypeID) != S_HUMAN)
                 were_change(mdef);
             if (pd == &mons[PM_CLAY_GOLEM]) {
                 if (vis) {
@@ -1202,7 +1202,7 @@ register struct attack *mattk;
             if (mdef->mhp <= 0)
                 return (MM_DEF_DIED
                         | (grow_up(magr, mdef) ? 0 : MM_AGR_DIED));
-            if (pa->mlet == S_NYMPH && !tele_restrict(magr)) {
+            if (monsterClass(pa->monsterTypeID) == S_NYMPH && !tele_restrict(magr)) {
                 (void) rloc(magr, TRUE);
                 if (vis && !canspotmon(magr))
                     pline("%s suddenly disappears!", buf);
@@ -1258,7 +1258,7 @@ register struct attack *mattk;
     case AD_SLIM:
         if (cancelled)
             break; /* physical damage only */
-        if (!rn2(4) && !slimeproof(pd)) {
+        if (!rn2(4) && !isSlimeproof(pd->monsterTypeID)) {
             if (!munslime(mdef, FALSE) && mdef->mhp > 0) {
                 if (newcham(mdef, &mons[PM_GREEN_SLIME], FALSE, vis))
                     pd = mdef->data;
@@ -1311,7 +1311,7 @@ register struct attack *mattk;
              * after monkilled() to provide better message ordering */
             if (mdef->cham >= LOW_PM) {
                 (void) newcham(magr, (struct permonst *) 0, FALSE, TRUE);
-            } else if (pd == &mons[PM_GREEN_SLIME] && !slimeproof(pa)) {
+            } else if (pd == &mons[PM_GREEN_SLIME] && !isSlimeproof(pa->monsterTypeID)) {
                 (void) newcham(magr, &mons[PM_GREEN_SLIME], FALSE, TRUE);
             } else if (pd == &mons[PM_WRAITH]) {
                 (void) grow_up(magr, (struct monst *) 0);

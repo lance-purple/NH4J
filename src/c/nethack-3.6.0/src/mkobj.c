@@ -1141,7 +1141,7 @@ struct obj *body;
             if (!rn2(3))
                 break;
 
-    } else if (mons[body->corpsenm].mlet == S_TROLL && !body->norevive) {
+    } else if (monsterClass(mons[body->corpsenm].monsterTypeID) == S_TROLL && !body->norevive) {
         long age;
         for (age = 2; age <= TAINT_AGE; age++)
             if (!rn2(TROLL_REVIVE_CHANCE)) { /* troll revives */
@@ -1409,9 +1409,10 @@ int x, y;
 }
 
 /* return TRUE if the corpse has special timing */
-#define special_corpse(num)                                                 \
-    (((num) == PM_LIZARD) || ((num) == PM_LICHEN) || (is_rider(&mons[num])) \
-     || (mons[num].mlet == S_TROLL))
+static boolean special_corpse(int num) {
+  return (((num) == PM_LIZARD) || ((num) == PM_LICHEN) || (is_rider(&mons[num]))
+     || (monsterClass(mons[num].monsterTypeID) == S_TROLL));
+}
 
 /*
  * OEXTRA note: Passing mtmp causes mtraits to be saved

@@ -1651,7 +1651,7 @@ boolean noisy;
             if (noisy)
                 You("have no feet..."); /* not body_part(FOOT) */
             err++;
-        } else if (areYouPolymorphed() && youmonst.data->mlet == S_CENTAUR) {
+        } else if (areYouPolymorphed() && monsterClass(youmonst.data->monsterTypeID) == S_CENTAUR) {
             /* break_armor() pushes boots off for centaurs,
                so don't let dowear() put them back on... */
             if (noisy)

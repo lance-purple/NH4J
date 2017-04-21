@@ -794,7 +794,7 @@ cast_protection()
                 atmosphere = swallowed()
                                 ? ((u.ustuck->data == &mons[PM_FOG_CLOUD])
                                    ? "mist"
-                                   : is_whirly(u.ustuck->data)
+                                   : isWhirly(u.ustuck->data->monsterTypeID)
                                       ? "maelstrom"
                                       : is_animal(u.ustuck->data)
                                          ? "maw"

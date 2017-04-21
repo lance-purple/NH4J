@@ -444,9 +444,9 @@ eating_conducts(pd)
 struct permonst *pd;
 {
     setFoodlessConduct(FALSE);
-    if (!vegan(pd))
+    if (!isVeganOption(pd->monsterTypeID))
         setVeganConduct(FALSE);
-    if (!vegetarian(pd))
+    if (!isVegetarianOption(pd->monsterTypeID))
         violated_vegetarian();
 }
 
@@ -461,7 +461,7 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
     boolean give_nutrit = FALSE;
     int result = MM_HIT, xtra_dmg = rnd(10);
 
-    if (noncorporeal(pd)) {
+    if (isNoncorporeal(pd->monsterTypeID)) {
         if (visflag)
             pline("%s brain is unharmed.",
                   (mdef == &youmonst) ? "Your" : s_suffix(Monnam(mdef)));
@@ -696,7 +696,7 @@ register int pm;
         return;
     }
     case PM_GREEN_SLIME:
-        if (!youAreTurningToSlime() && !youAreUnchanging() && !slimeproof(youmonst.data)) {
+        if (!youAreTurningToSlime() && !youAreUnchanging() && !isSlimeproof(youmonst.data->monsterTypeID)) {
             You("don't feel very well.");
             make_slimed(10L, (char *) 0);
             delayed_killer(SLIMED, KILLED_BY_AN, "");
@@ -989,7 +989,7 @@ register int pm;
         /*FALLTHRU*/
     case PM_SMALL_MIMIC:
         tmp += 20;
-        if (youmonst.data->mlet != S_MIMIC && !youAreUnchanging()) {
+        if (monsterClass(youmonst.data->monsterTypeID) != S_MIMIC && !youAreUnchanging()) {
             char buf[BUFSZ];
 
             incrementPolyselfCount(1); /* you're changing form */
@@ -1200,7 +1200,7 @@ char *buf;
                 Strcpy(eos(buf), " of ");
             }
 	    javaString monsterName = monsterTypeName(mons[mnum].monsterTypeID);
-            if (vegetarian(&mons[mnum]))
+            if (isVegetarianOption(mons[mnum].monsterTypeID))
                 Sprintf(eos(buf), "%s", monsterName.c_str);
             else
                 Sprintf(eos(buf), "%s meat", monsterName.c_str);
@@ -1219,7 +1219,7 @@ int forcetype;
     if (forcetype == SPINACH_TIN
         || (forcetype == HEALTHY_TIN
             && (obj->corpsenm == NON_PM /* empty or already spinach */
-                || !vegetarian(&mons[obj->corpsenm])))) { /* replace meat */
+                || !isVegetarianOption(mons[obj->corpsenm].monsterTypeID)))) { /* replace meat */
         obj->corpsenm = NON_PM; /* not based on any monster */
         obj->spe = 1;           /* spinach */
         return;
@@ -1558,9 +1558,9 @@ struct obj *otmp;
                          && !poly_when_stoned(youmonst.data));
 
     /* KMH, conduct */
-    if (!vegan(&mons[mnum]))
+    if (!isVeganOption(mons[mnum].monsterTypeID))
         setVeganConduct(FALSE);
-    if (!vegetarian(&mons[mnum]))
+    if (!isVegetarianOption(mons[mnum].monsterTypeID))
         violated_vegetarian();
 
     if (!nonrotting_corpse(mnum)) {
@@ -1577,9 +1577,9 @@ struct obj *otmp;
         boolean cannibal = maybe_cannibal(mnum, FALSE);
 
         pline("Ulch - that %s was tainted%s!",
-              mons[mnum].mlet == S_FUNGUS
+              monsterClass(mons[mnum].monsterTypeID) == S_FUNGUS
                   ? "fungoid vegetation"
-                  : !vegetarian(&mons[mnum]) ? "meat" : "protoplasm",
+                  : !isVegetarianOption(mons[mnum].monsterTypeID) ? "meat" : "protoplasm",
               cannibal ? ", you cannibal" : "");
         if (youResistSickness()) {
             pline("It doesn't seem at all sickening, though...");
@@ -1651,7 +1651,7 @@ struct obj *otmp;
         You("peck the eyeball with delight.");
     } else {
         /* [is this right?  omnivores end up always disliking the taste] */
-        boolean yummy = vegan(&mons[mnum])
+        boolean yummy = isVeganOption(mons[mnum].monsterTypeID)
                            ? (!carnivorous(youmonst.data)
                               && herbivorous(youmonst.data))
                            : (carnivorous(youmonst.data)
@@ -2231,7 +2231,7 @@ struct obj *otmp;
                         && !poly_when_stoned(youmonst.data));
 
         if (mnum == PM_GREEN_SLIME || otmp->otyp == GLOB_OF_GREEN_SLIME)
-            stoneorslime = (!youAreUnchanging() && !slimeproof(youmonst.data));
+            stoneorslime = (!youAreUnchanging() && !isSlimeproof(youmonst.data->monsterTypeID));
 
         if (cadaver && !nonrotting_corpse(mnum)) {
             long age = peek_at_iced_corpse_age(otmp);
@@ -2290,7 +2290,7 @@ struct obj *otmp;
                 it_or_they, eat_it_anyway);
         return (yn_function(buf, ynchars, 'n') == 'n') ? 1 : 2;
     }
-    if (cadaver && !vegetarian(&mons[mnum]) && vegetarianConduct()
+    if (cadaver && !isVegetarianOption(mons[mnum].monsterTypeID) && vegetarianConduct()
         && Role_if(PM_MONK)) {
         Sprintf(buf, "%s unhealthy. %s", foodsmell, eat_it_anyway);
         if (yn_function(buf, ynchars, 'n') == 'n')
@@ -2321,7 +2321,7 @@ struct obj *otmp;
     if (veganConduct()
         && ((material == LEATHER || material == BONE
              || material == DRAGON_HIDE || material == WAX)
-            || (cadaver && !vegan(&mons[mnum])))) {
+            || (cadaver && !isVeganOption(mons[mnum].monsterTypeID)))) {
         Sprintf(buf, "%s foul and unfamiliar to you. %s", foodsmell,
                 eat_it_anyway);
         if (yn_function(buf, ynchars, 'n') == 'n')
@@ -2332,7 +2332,7 @@ struct obj *otmp;
     if (vegetarianConduct()
         && ((material == LEATHER || material == BONE
              || material == DRAGON_HIDE)
-            || (cadaver && !vegetarian(&mons[mnum])))) {
+            || (cadaver && !isVegetarianOption(mons[mnum].monsterTypeID)))) {
         Sprintf(buf, "%s unfamiliar to you. %s", foodsmell, eat_it_anyway);
         if (yn_function(buf, ynchars, 'n') == 'n')
             return 1;
