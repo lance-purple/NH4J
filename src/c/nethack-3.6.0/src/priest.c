@@ -341,6 +341,7 @@ char *pname; /* caller-supplied output buffer */
                 Strcat(pname, "high ");
 
 	    releaseJavaString(what);
+            what.j_str = NULL;
             if (youAreHallucinating())
                 what.c_str = "poohbah";
             else if (mon->female)

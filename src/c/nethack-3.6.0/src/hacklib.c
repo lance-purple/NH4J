@@ -2688,4 +2688,7 @@ extern void setMonsterAlignment(int id, int value) {
   javaSetIntFromInt(MONSTER_TYPE_CLASS, "setMonsterAlignment", id, value);
 }
 
+extern int monsterGenerationMask(int id) {
+  return javaGetIntFromInt(MONSTER_TYPE_CLASS, "monsterGenerationMask", id);
+}
 /*hacklib.c*/

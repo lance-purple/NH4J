@@ -623,7 +623,7 @@ int *fail_reason;
 
     if (!mon) {
         if (fail_reason)
-            *fail_reason = unique_corpstat(&mons[statue->corpsenm])
+            *fail_reason = corpseOrStatueIsUnique(mons[statue->corpsenm].monsterTypeID)
                                ? AS_MON_IS_UNIQUE
                                : AS_NO_MON;
         return (struct monst *) 0;

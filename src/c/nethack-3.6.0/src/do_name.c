@@ -463,7 +463,7 @@ do_mname()
     /* unique monsters have their own specific names or titles;
        shopkeepers, temple priests and other minions use alternate
        name formatting routines which ignore any user-supplied name */
-    if (mtmp->data->geno & G_UNIQ)
+    if (monsterGenerationMask(mtmp->data->monsterTypeID) & G_UNIQ)
         pline("%s doesn't like being called names!", upstart(monnambuf));
     else if (mtmp->isshk
              && !(youAreDeaf() || mtmp->msleeping || !mtmp->mcanmove
@@ -1012,7 +1012,7 @@ boolean called;
             article = ARTICLE_THE;
         else
             article = ARTICLE_NONE;
-    } else if ((mdat->geno & G_UNIQ) && article == ARTICLE_A) {
+    } else if ((monsterGenerationMask(mdat->monsterTypeID) & G_UNIQ) && article == ARTICLE_A) {
         article = ARTICLE_THE;
     }
 
@@ -1204,7 +1204,7 @@ char *code;
     do {
         name = rn1(SPECIAL_PM + BOGUSMONSIZE - LOW_PM, LOW_PM);
     } while (name < SPECIAL_PM
-             && (type_is_pname(&mons[name]) || (mons[name].geno & G_NOGEN)));
+             && (type_is_pname(&mons[name]) || (monsterGenerationMask(mons[name].monsterTypeID) & G_NOGEN)));
 
     if (name >= SPECIAL_PM) {
         mname = bogusmon(buf, code);

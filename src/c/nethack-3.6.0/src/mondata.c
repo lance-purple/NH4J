@@ -886,7 +886,7 @@ register struct monst *mtmp;
 {
     if (is_neuter(mtmp->data) || !canspotmon(mtmp))
         return 2;
-    return (humanoid(mtmp->data) || (mtmp->data->geno & G_UNIQ)
+    return (humanoid(mtmp->data) || (monsterGenerationMask(mtmp->data->monsterTypeID) & G_UNIQ)
             || type_is_pname(mtmp->data)) ? (int) mtmp->female : 2;
 }
 
@@ -1173,6 +1173,9 @@ boolean isVegetarianOption(int pmid) {
 }
 boolean isWhirly(int pmid) {
     return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isWhirly", pmid);
+}
+boolean corpseOrStatueIsUnique(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "corpseOrStatueIsUnique", pmid);
 }
 
 /*mondata.c*/

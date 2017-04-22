@@ -29,6 +29,7 @@ E int FDECL(monsterBaseArmorClass, (int));
 E int FDECL(monsterBaseMagicResistance, (int));
 E int FDECL(monsterAlignment, (int));
 E void FDECL(setMonsterAlignment, (int, int));
+E int FDECL(monsterGenerationMask, (int));
 
 /* ### alloc.c ### */
 
@@ -2061,6 +2062,7 @@ E boolean FDECL(isSlimeproof, (int));
 E boolean FDECL(isVeganOption, (int));
 E boolean FDECL(isVegetarianOption, (int));
 E boolean FDECL(isWhirly, (int));
+E boolean FDECL(corpseOrStatueIsUnique, (int));
 
 /* ### monmove.c ### */
 

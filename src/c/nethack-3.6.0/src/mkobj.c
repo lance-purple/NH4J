@@ -353,7 +353,7 @@ rndmonnum()
     do {
         i = rn1(SPECIAL_PM - LOW_PM, LOW_PM);
         ptr = &mons[i];
-    } while ((ptr->geno & excludeflags) != 0);
+    } while ((monsterGenerationMask(ptr->monsterTypeID) & excludeflags) != 0);
 
     return i;
 }

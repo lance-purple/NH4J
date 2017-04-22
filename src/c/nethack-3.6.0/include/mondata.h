@@ -140,11 +140,6 @@
     ((ptr) == &mons[PM_ORC] || (ptr) == &mons[PM_GIANT] \
      || (ptr) == &mons[PM_ELF] || (ptr) == &mons[PM_HUMAN])
 
-/* monsters whose corpses and statues need special handling;
-   note that high priests and the Wizard of Yendor are flagged
-   as unique even though they really aren't; that's ok here */
-#define unique_corpstat(ptr) (((ptr)->geno & G_UNIQ) != 0)
-
 #define likes_lava(ptr) \
     (ptr == &mons[PM_FIRE_ELEMENTAL] || ptr == &mons[PM_SALAMANDER])
 #define pm_invisible(ptr) \

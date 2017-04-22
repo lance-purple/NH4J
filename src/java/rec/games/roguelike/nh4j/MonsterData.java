@@ -189,24 +189,28 @@ public class MonsterData {
     	return (isRider(pmid) || MC.TROLL.equals(mc));
     }
     
-    ///* monsters whose corpses and statues need special handling;
-    //   note that high priests and the Wizard of Yendor are flagged
-    //   as unique even though they really aren't; that's ok here */
-    //#define unique_corpstat(ptr) (((ptr)->geno & G_UNIQ) != 0)
+    /* monsters whose corpses and statues need special handling;
+       note that high priests and the Wizard of Yendor are flagged
+       as unique even though they really aren't; that's ok here */
+    public static boolean corpseOrStatueIsUnique(int pmid) {
+        int geno = MonsterType.getMonsterType(pmid).generationMask();
+	return ((geno & MonsterType.ONLY_GENERATED_ONCE) != 0);
+    }
+
     //
     
     
-	public static int emitsLightWithRange(int pmid) {
-		MC mc = MonsterType.getMonsterType(pmid).monsterClass();
-		if (MC.LIGHT.equals(mc)) {
-			return 1;
-		} else if (PM.matchesOneOf(pmid, PM.FLAMING_SPHERE, PM.SHOCKING_SPHERE,
-				PM.FIRE_VORTEX, PM.FIRE_ELEMENTAL)) {
-			return 1;
-		} else {
-			return 0;
-		}
-	}
+    public static int emitsLightWithRange(int pmid) {
+        MC mc = MonsterType.getMonsterType(pmid).monsterClass();
+        if (MC.LIGHT.equals(mc)) {
+            return 1;
+        } else if (PM.matchesOneOf(pmid, PM.FLAMING_SPHERE, PM.SHOCKING_SPHERE,
+	                           PM.FIRE_VORTEX, PM.FIRE_ELEMENTAL)) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
     
     //#define likes_lava(ptr) \
     //    (ptr == &mons[PM_FIRE_ELEMENTAL] || ptr == &mons[PM_SALAMANDER])

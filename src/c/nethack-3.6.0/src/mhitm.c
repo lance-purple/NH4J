@@ -325,7 +325,7 @@ register struct monst *magr, *mdef;
         newsym(mdef->mx, mdef->my);
         if (canseemon(mdef) && !sensemon(mdef)) {
             if (youAreUnaware())
-                You("dream of %s.", (mdef->data->geno & G_UNIQ)
+                You("dream of %s.", (monsterGenerationMask(mdef->data->monsterTypeID) & G_UNIQ)
                                         ? a_monnam(mdef)
                                         : makeplural(m_monnam(mdef)));
             else

@@ -1972,7 +1972,7 @@ do_class_genocide()
         immunecnt = gonecnt = goodcnt = 0;
         for (i = LOW_PM; i < NUMMONS; i++) {
             if (monsterClass(mons[i].monsterTypeID) == class) {
-                if (!(mons[i].geno & G_GENO))
+                if (!(monsterGenerationMask(mons[i].monsterTypeID) & G_GENO))
                     immunecnt++;
                 else if (mvitals[i].mvflags & G_GENOD)
                     gonecnt++;
@@ -2017,7 +2017,7 @@ do_class_genocide()
                  * from both race and role; thus genocide affects either.
                  */
                 if (Your_Own_Role(i) || Your_Own_Race(i)
-                    || ((mons[i].geno & G_GENO)
+                    || ((monsterGenerationMask(mons[i].monsterTypeID) & G_GENO)
                         && !(mvitals[i].mvflags & G_GENOD))) {
                     /* This check must be first since player monsters might
                      * have G_GENOD or !G_GENO.
@@ -2071,7 +2071,7 @@ do_class_genocide()
                         boolean named, uniq;
 
                         named = type_is_pname(&mons[i]) ? TRUE : FALSE;
-                        uniq = (mons[i].geno & G_UNIQ) ? TRUE : FALSE;
+                        uniq = (monsterGenerationMask(mons[i].monsterTypeID) & G_UNIQ) ? TRUE : FALSE;
                         /* one special case */
                         if (i == PM_HIGH_PRIEST)
                             uniq = FALSE;
@@ -2160,7 +2160,7 @@ int how;
             if (is_demon(ptr))
                 adjalign(sgn(currentAlignmentType()));
 
-            if (!(ptr->geno & G_GENO)) {
+            if (!(monsterGenerationMask(ptr->monsterTypeID) & G_GENO)) {
                 if (!youAreDeaf()) {
                     /* fixme: unconditional "caverns" will be silly in some
                      * circumstances */
@@ -2194,7 +2194,7 @@ int how;
         Strcpy(buf, monsterName.c_str); /* make sure we have standard singular */
 	releaseJavaString(monsterName);
 
-        if ((ptr->geno & G_UNIQ) && ptr != &mons[PM_HIGH_PRIEST])
+        if ((monsterGenerationMask(ptr->monsterTypeID) & G_UNIQ) && ptr != &mons[PM_HIGH_PRIEST])
             which = !type_is_pname(ptr) ? "the " : "";
     }
     if (how & REALLY) {
@@ -2244,7 +2244,7 @@ int how;
     } else {
         int cnt = 0, census = monster_census(FALSE);
 
-        if (!(mons[mndx].geno & G_UNIQ)
+        if (!(monsterGenerationMask(mons[mndx].monsterTypeID) & G_UNIQ)
             && !(mvitals[mndx].mvflags & (G_GENOD | G_EXTINCT)))
             for (i = rn1(3, 4); i > 0; i--) {
                 if (!makemon(ptr, currentX(), currentY(), NO_MINVENT))
@@ -2341,7 +2341,7 @@ struct obj *from_obj;
     } else if (*mtype == PM_LONG_WORM_TAIL) { /* for create_particular() */
         *mtype = PM_LONG_WORM;
         return TRUE;
-    } else if (unique_corpstat(&mons[*mtype])
+    } else if (corpseOrStatueIsUnique(mons[*mtype].monsterTypeID)
                && (!from_obj || !has_omonst(from_obj))) {
         /* unique corpses (from bones or wizard mode wish) or
            statues (bones or any wish) end up as shapechangers */

@@ -325,7 +325,7 @@ nh_timeout()
                 if ((m_idx = name_to_mon(killer.name)) >= LOW_PM) {
                     if (type_is_pname(&mons[m_idx])) {
                         killer.format = KILLED_BY;
-                    } else if (mons[m_idx].geno & G_UNIQ) {
+                    } else if (monsterGenerationMask(mons[m_idx].monsterTypeID) & G_UNIQ) {
                         Strcpy(killer.name, the(killer.name));
                         killer.format = KILLED_BY;
                     }
@@ -538,7 +538,7 @@ long timeout;
     if (get_obj_location(egg, &x, &y, 0)) {
         hatchcount = rnd((int) egg->quan);
         cansee_hatchspot = cansee(x, y) && !silent;
-        if (!(mons[mnum].geno & G_UNIQ)
+        if (!(monsterGenerationMask(mons[mnum].monsterTypeID) & G_UNIQ)
             && !(mvitals[mnum].mvflags & (G_GENOD | G_EXTINCT))) {
             for (i = hatchcount; i > 0; i--) {
                 if (!enexto(&cc, x, y, &mons[mnum])

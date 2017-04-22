@@ -107,7 +107,7 @@ struct monst *mon;
         return 0;
 
     /* sanity checks */
-    if (cnt > 1 && (mons[dtype].geno & G_UNIQ))
+    if (cnt > 1 && (monsterGenerationMask(mons[dtype].monsterTypeID) & G_UNIQ))
         cnt = 1;
     /*
      * If this daemon is unique and being re-summoned (the only way we

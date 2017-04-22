@@ -661,7 +661,7 @@ struct permonst *ptr;
     if (type_is_pname(ptr))
         return FALSE;
 
-    uniq = (ptr->geno & G_UNIQ) ? TRUE : FALSE;
+    uniq = (monsterGenerationMask(ptr->monsterTypeID) & G_UNIQ) ? TRUE : FALSE;
     /* high priest is unique if it includes "of <deity>", otherwise not
        (caller needs to handle the 1st possibility; we assume the 2nd);
        worm tail should be irrelevant but is included for completeness */
@@ -1126,6 +1126,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
         if (the_unique_pm(&mons[omndx]) || type_is_pname(&mons[omndx])) {
 	    const char* ss = s_suffix(mname.c_str);
 	    releaseJavaString(mname);
+            mname.j_str = NULL;
             mname.c_str = ss;
             possessive = TRUE;
             /* don't precede personal name like "Medusa" with an article */
@@ -3367,14 +3368,14 @@ typfnd:
             otmp->spe = 0; /* No spinach */
             if (dead_species(mntmp, FALSE)) {
                 otmp->corpsenm = NON_PM; /* it's empty */
-            } else if (!(mons[mntmp].geno & G_UNIQ)
+            } else if (!(monsterGenerationMask(mons[mntmp].monsterTypeID) & G_UNIQ)
                        && !(mvitals[mntmp].mvflags & G_NOCORPSE)
                        && mons[mntmp].cnutrit != 0) {
                 otmp->corpsenm = mntmp;
             }
             break;
         case CORPSE:
-            if (!(mons[mntmp].geno & G_UNIQ)
+            if (!(monsterGenerationMask(mons[mntmp].monsterTypeID) & G_UNIQ)
                 && !(mvitals[mntmp].mvflags & G_NOCORPSE)) {
                 if (mons[mntmp].msound == MS_GUARDIAN)
                     mntmp = genus(mntmp, 1);
@@ -3382,7 +3383,7 @@ typfnd:
             }
             break;
         case FIGURINE:
-            if (!(mons[mntmp].geno & G_UNIQ) && !is_human(&mons[mntmp])
+            if (!(monsterGenerationMask(mons[mntmp].monsterTypeID) & G_UNIQ) && !is_human(&mons[mntmp])
 #ifdef MAIL
                 && mntmp != PM_MAIL_DAEMON
 #endif

@@ -553,7 +553,7 @@ newgame()
     setTributeNovelsEnabled(TRUE);   /* turn on 3.6 tribute novels */
 
     for (i = 0; i < NUMMONS; i++)
-        mvitals[i].mvflags = mons[i].geno & G_NOCORPSE;
+        mvitals[i].mvflags = monsterGenerationMask(mons[i].monsterTypeID) & G_NOCORPSE;
 
     init_objects(); /* must be before u_init() */
 

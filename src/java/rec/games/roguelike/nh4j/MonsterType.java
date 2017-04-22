@@ -7,15 +7,15 @@ public class MonsterType {
 
 	private static HashMap<Integer, MonsterType> monsterTypesByPMID = new HashMap<>();;
 
-	private static final int FREQUENCY_MASK = 0x7;
-	private static final int LEAVES_NO_CORPSE = 0x10;
-	private static final int GENOCIDABLE = 0x20;
-	private static final int APPEARS_IN_LARGE_GROUPS = 0x40;
-	private static final int APPEARS_IN_SMALL_GROUPS = 0x80;
-	private static final int ONLY_GENERATED_SPECIALLY = 0x200;
-	private static final int ONLY_GENERATED_IN_HELL = 0x400;
-	private static final int NOT_GENERATED_IN_HELL = 0x800;
-	private static final int ONLY_GENERATED_ONCE = 0x1000;
+	static final int FREQUENCY_MASK = 0x7;
+	static final int LEAVES_NO_CORPSE = 0x10;
+	static final int GENOCIDABLE = 0x20;
+	static final int APPEARS_IN_LARGE_GROUPS = 0x40;
+	static final int APPEARS_IN_SMALL_GROUPS = 0x80;
+	static final int ONLY_GENERATED_SPECIALLY = 0x200;
+	static final int ONLY_GENERATED_IN_HELL = 0x400;
+    static final int NOT_GENERATED_IN_HELL = 0x800;
+	static final int ONLY_GENERATED_ONCE = 0x1000;
 
 	private static final MonsterType UNKNOWN_MONSTER_TYPE = new MonsterType(MC.UNKNOWN, PM.UNKNOWN, "UNKNOWN");
 
@@ -145,6 +145,10 @@ public class MonsterType {
 	public MonsterType freq(int frequency) {
 		this.generationMask |= (frequency & FREQUENCY_MASK);
 		return this;
+	}
+	
+	public int generationMask() {
+		return this.generationMask;
 	}
 
 	public MonsterType attack(AT type, AD damage, int numberOfDice, Dice dice) {
@@ -2947,6 +2951,10 @@ public class MonsterType {
 
 	public static void setMonsterAlignment(int pmid, int value) {
 		getMonsterType(pmid).alignment = value;
+	}
+	
+	public static int monsterGenerationMask(int pmid) {
+		return getMonsterType(pmid).generationMask;
 	}
 
 }

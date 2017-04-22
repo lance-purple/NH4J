@@ -213,7 +213,7 @@ int mndx;
 /* for deciding whether corpse will carry along full monster data */
 static boolean KEEPTRAITS(register struct monst* mon)                                                 
 {
-    return ((mon)->isshk || (mon)->mtame || unique_corpstat((mon)->data)
+    return ((mon)->isshk || (mon)->mtame || corpseOrStatueIsUnique((mon)->data->monsterTypeID)
      || isReviver((mon)->data->monsterTypeID)
         /* normally quest leader will be unique, */
         /* but he or she might have been polymorphed  */
@@ -1926,7 +1926,7 @@ boolean was_swallowed; /* digestion */
     if (((bigmonst(mdat) || mdat == &mons[PM_LIZARD]) && !mon->mcloned)
         || isGolem(mdat->monsterTypeID) || is_mplayer(mdat) || is_rider(mdat))
         return TRUE;
-    tmp = 2 + ((mdat->geno & G_FREQ) < 2) + verysmall(mdat);
+    tmp = 2 + ((monsterGenerationMask(mdat->monsterTypeID) & G_FREQ) < 2) + verysmall(mdat);
     return (boolean) !rn2(tmp);
 }
 
@@ -1986,7 +1986,7 @@ struct monst *mdef;
     mdef->mtrapped = 0; /* (see m_detach) */
 
     if ((int) mdef->data->msize > MZ_TINY
-        || !rn2(2 + ((int) (mdef->data->geno & G_FREQ) > 2))) {
+        || !rn2(2 + ((int) (monsterGenerationMask(mdef->data->monsterTypeID) & G_FREQ) > 2))) {
         oldminvent = 0;
         /* some objects may end up outside the statue */
         while ((obj = mdef->minvent) != 0) {
@@ -2025,8 +2025,9 @@ struct monst *mdef;
             (void) add_to_container(otmp, obj);
         }
         /* Archeologists should not break unique statues */
-        if (mdef->data->geno & G_UNIQ)
+        if (monsterGenerationMask(mdef->data->monsterTypeID) & G_UNIQ) {
             otmp->spe = 1;
+	}
         otmp->owt = weight(otmp);
     } else
         otmp = mksobj_at(ROCK, x, y, TRUE, FALSE);
@@ -2539,7 +2540,7 @@ wake_nearby()
             continue;
         if (distanceSquaredToYou(mtmp->mx, mtmp->my) < currentExperienceLevel() * 20) {
             mtmp->msleeping = 0;
-            if (!unique_corpstat(mtmp->data))
+            if (!corpseOrStatueIsUnique(mtmp->data->monsterTypeID))
                 mtmp->mstrategy &= ~STRAT_WAITMASK;
             if (mtmp->mtame && !mtmp->isminion)
                 EDOG(mtmp)->whistletime = moves;
@@ -2559,7 +2560,7 @@ register int x, y, distance;
             continue;
         if (distance == 0 || dist2(mtmp->mx, mtmp->my, x, y) < distance) {
             mtmp->msleeping = 0;
-            if (!unique_corpstat(mtmp->data))
+            if (!corpseOrStatueIsUnique(mtmp->data->monsterTypeID))
                 mtmp->mstrategy &= ~STRAT_WAITMASK;
         }
     }

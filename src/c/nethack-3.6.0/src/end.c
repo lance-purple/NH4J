@@ -408,7 +408,7 @@ int how;
     killer.format = KILLED_BY_AN;
     /* "killed by the high priest of Crom" is okay,
        "killed by the high priest" alone isn't */
-    if ((mptr->geno & G_UNIQ) != 0 && !(imitator && !mimicker)
+    if ((monsterGenerationMask(mptr->monsterTypeID) & G_UNIQ) != 0 && !(imitator && !mimicker)
         && !(mptr == &mons[PM_HIGH_PRIEST] && !mtmp->ispriest)) {
         if (!type_is_pname(mptr))
             Strcat(buf, "the ");
@@ -427,7 +427,7 @@ int how;
     if (imitator) {
         char shape[BUFSZ];
         javaString realName = monsterTypeName(champtr->monsterTypeID);
-        javaString fakeName = NO_JAVA_STRING;
+        javaString fakeName = monsterTypeName(mptr->monsterTypeID);
 
         boolean alt = is_vampshifter(mtmp);
 
@@ -435,15 +435,15 @@ int how;
             /* realName is already correct because champtr==mptr;
                set up fake mptr for type_is_pname/the_unique_pm */
             mptr = &mons[mtmp->mappearance];
+	    releaseJavaString(fakeName);
 	    fakeName = monsterTypeName(mptr->monsterTypeID);
         } else if (alt && strstri(realName.c_str, "vampire")
                    && !strcmp(fakeName.c_str, "vampire bat")) {
             /* special case: use "vampire in bat form" in preference
                to redundant looking "vampire in vampire bat form" */
-            fakeName.c_str = "bat";
-        } else {
-	    fakeName = monsterTypeName(mptr->monsterTypeID);
-	}
+	    releaseJavaString(fakeName);
+	    fakeName = monsterTypeName(PM_BAT);
+        }
 
         /* for the alternate format, always suppress any article;
            pname and the_unique should also have s_suffix() applied,
@@ -1463,7 +1463,7 @@ boolean ask;
 		    javaString monsterName = monsterTypeName(mons[i].monsterTypeID);
                     if (monsterLevel(mons[i].monsterTypeID) == lev
                         && (nkilled = mvitals[i].died) > 0) {
-                        if ((mons[i].geno & G_UNIQ) && i != PM_HIGH_PRIEST) {
+                        if ((monsterGenerationMask(mons[i].monsterTypeID) & G_UNIQ) && i != PM_HIGH_PRIEST) {
                             Sprintf(buf, "%s%s",
                                     !type_is_pname(&mons[i]) ? "The " : "",
                                     monsterName.c_str);
@@ -1533,7 +1533,7 @@ num_extinct()
 
     for (i = LOW_PM; i < NUMMONS; ++i)
         if (!(mvitals[i].mvflags & G_GENOD) && (mvitals[i].mvflags & G_GONE)
-            && !(mons[i].geno & G_UNIQ))
+            && !(monsterGenerationMask(mons[i].monsterTypeID) & G_UNIQ))
             ++n;
 
     return n;
@@ -1571,9 +1571,10 @@ boolean ask;
             putstr(klwin, 0, "");
 
             for (i = LOW_PM; i < NUMMONS; i++) {
-                if (mvitals[i].mvflags & G_GONE && !(mons[i].geno & G_UNIQ)) {
+                int geno = monsterGenerationMask(mons[i].monsterTypeID);
+                if (mvitals[i].mvflags & G_GONE && !(geno & G_UNIQ)) {
 		    javaString monsterName = monsterTypeName(mons[i].monsterTypeID);
-                    if ((mons[i].geno & G_UNIQ) && i != PM_HIGH_PRIEST) {
+                    if ((geno & G_UNIQ) && i != PM_HIGH_PRIEST) {
                         Sprintf(buf, "%s%s",
                                 !type_is_pname(&mons[i]) ? "" : "the ",
                                 monsterName.c_str);

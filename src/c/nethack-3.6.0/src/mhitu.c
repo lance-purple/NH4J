@@ -1195,7 +1195,7 @@ register struct attack *mattk;
                              && polymon(PM_STONE_GOLEM))) {
                         javaString kname = monsterTypeName(mtmp->data->monsterTypeID);
 
-                        if (mtmp->data->geno & G_UNIQ) {
+                        if (monsterGenerationMask(mtmp->data->monsterTypeID) & G_UNIQ) {
                             if (!type_is_pname(mtmp->data)) {
                                 make_stoned(5L, (char *) 0, KILLED_BY, the(kname.c_str));
 			    } else {

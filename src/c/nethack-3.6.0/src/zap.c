@@ -1647,7 +1647,7 @@ struct obj *obj;
                 /* this golem handling is redundant... */
                 if (isGolem(ptr->monsterTypeID) && ptr != &mons[PM_FLESH_GOLEM])
                     (void) newcham(mon, &mons[PM_FLESH_GOLEM], TRUE, FALSE);
-            } else if ((ptr->geno & (G_NOCORPSE | G_UNIQ)) != 0) {
+            } else if ((monsterGenerationMask(ptr->monsterTypeID) & (G_NOCORPSE | G_UNIQ)) != 0) {
                 /* didn't revive but can't leave corpse either */
                 res = 0;
             } else {

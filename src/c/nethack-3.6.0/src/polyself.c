@@ -537,7 +537,7 @@ int psflags;
                 mntmp = lycanthropeType();
         } else if (isvamp) {
         do_vampyr:
-            if (mntmp < LOW_PM || (mons[mntmp].geno & G_UNIQ))
+            if (mntmp < LOW_PM || (monsterGenerationMask(mons[mntmp].monsterTypeID) & G_UNIQ))
                 mntmp = (youmonst.data != &mons[PM_VAMPIRE] && !rn2(10))
                             ? PM_WOLF
                             : !rn2(4) ? PM_FOG_CLOUD : PM_VAMPIRE_BAT;

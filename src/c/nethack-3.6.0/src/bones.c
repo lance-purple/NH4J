@@ -128,8 +128,9 @@ boolean restore;
             else if (otmp->otyp == TIN) {
                 /* make tins of unique monster's meat be empty */
                 if (otmp->corpsenm >= LOW_PM
-                    && unique_corpstat(&mons[otmp->corpsenm]))
+                    && corpseOrStatueIsUnique(mons[otmp->corpsenm].monsterTypeID)) {
                     otmp->corpsenm = NON_PM;
+		}
             } else if (otmp->otyp == CORPSE || otmp->otyp == STATUE) {
                 int mnum = otmp->corpsenm;
 

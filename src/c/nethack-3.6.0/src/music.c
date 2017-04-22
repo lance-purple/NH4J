@@ -72,7 +72,7 @@ int distance;
             mtmp->mcanmove = 1;
             mtmp->mfrozen = 0;
             /* may scare some monsters -- waiting monsters excluded */
-            if (!unique_corpstat(mtmp->data)
+            if (!corpseOrStatueIsUnique(mtmp->data->monsterTypeID)
                 && (mtmp->mstrategy & STRAT_WAITMASK) != 0)
                 mtmp->mstrategy &= ~STRAT_WAITMASK;
             else if (distm < distance / 3
@@ -197,7 +197,7 @@ struct monst *bugler; /* monster that played instrument */
             mtmp->mcanmove = 1;
             mtmp->mfrozen = 0;
             /* may scare some monsters -- waiting monsters excluded */
-            if (!unique_corpstat(mtmp->data)
+            if (!corpseOrStatueIsUnique(mtmp->data->monsterTypeID)
                 && (mtmp->mstrategy & STRAT_WAITMASK) != 0)
                 mtmp->mstrategy &= ~STRAT_WAITMASK;
             else if (distm < distance / 3

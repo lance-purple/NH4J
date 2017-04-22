@@ -850,13 +850,14 @@ boolean ghostly;
     result = (((int) mvitals[mndx].born < lim) && !gone) ? TRUE : FALSE;
 
     /* if it's unique, don't ever make it again */
-    if (mons[mndx].geno & G_UNIQ)
+    int geno = monsterGenerationMask(mons[mndx].monsterTypeID);
+    if (geno & G_UNIQ)
         mvitals[mndx].mvflags |= G_EXTINCT;
 
     if (mvitals[mndx].born < 255 && tally
         && (!ghostly || (ghostly && result)))
         mvitals[mndx].born++;
-    if ((int) mvitals[mndx].born >= lim && !(mons[mndx].geno & G_NOGEN)
+    if ((int) mvitals[mndx].born >= lim && !(geno & G_NOGEN)
         && !(mvitals[mndx].mvflags & G_EXTINCT)) {
         if (wizard) {
             debugpline1("Automatically extinguished %s.",
@@ -1286,9 +1287,10 @@ int mmflags;
     }
     set_malign(mtmp); /* having finished peaceful changes */
     if (anymon) {
-        if ((ptr->geno & G_SGROUP) && rn2(2)) {
+	int geno = monsterGenerationMask(ptr->monsterTypeID);
+        if ((geno & G_SGROUP) && rn2(2)) {
             m_initsgrp(mtmp, mtmp->mx, mtmp->my);
-        } else if (ptr->geno & G_LGROUP) {
+        } else if (geno & G_LGROUP) {
             if (rn2(3))
                 m_initlgrp(mtmp, mtmp->mx, mtmp->my);
             else
@@ -1369,14 +1371,15 @@ STATIC_OVL boolean
 uncommon(mndx)
 int mndx;
 {
-    if (mons[mndx].geno & (G_NOGEN | G_UNIQ))
+    int geno = monsterGenerationMask(mons[mndx].monsterTypeID);
+    if (geno & (G_NOGEN | G_UNIQ))
         return TRUE;
     if (mvitals[mndx].mvflags & G_GONE)
         return TRUE;
     if (areYouInHell())
         return (boolean) (monsterAlignment(mons[mndx].monsterTypeID) > A_NEUTRAL);
     else
-        return (boolean) ((mons[mndx].geno & G_HELL) != 0);
+        return (boolean) ((geno & G_HELL) != 0);
 }
 
 /*
@@ -1461,6 +1464,7 @@ rndmonst()
         for ( ; mndx < SPECIAL_PM; mndx++) { /* (`mndx' initialized above) */
             ptr = &mons[mndx];
             rndmonst_state.mchoices[mndx] = 0;
+	    int geno = monsterGenerationMask(ptr->monsterTypeID);
             if (tooweak(mndx, minmlev) || toostrong(mndx, maxmlev))
                 continue;
             if (upper && !isupper(def_monsyms[monsterClass(ptr->monsterTypeID)].sym))
@@ -1469,9 +1473,9 @@ rndmonst()
                 continue;
             if (uncommon(mndx))
                 continue;
-            if (areYouInHell() && (ptr->geno & G_NOHELL))
+            if (areYouInHell() && (geno & G_NOHELL))
                 continue;
-            ct = (int) (ptr->geno & G_FREQ) + align_shift(ptr);
+            ct = (int) (geno & G_FREQ) + align_shift(ptr);
             if (ct < 0 || ct > 127)
                 panic("rndmonst: bad count [#%d: %d]", mndx, ct);
             rndmonst_state.choice_count += ct;
@@ -1528,7 +1532,7 @@ int mndx, mvflagsmask, genomask;
 
     if (mvitals[mndx].mvflags & mvflagsmask)
         return FALSE;
-    if (ptr->geno & genomask)
+    if (monsterGenerationMask(ptr->monsterTypeID) & genomask)
         return FALSE;
     if (is_placeholder(ptr))
         return FALSE;
@@ -1573,7 +1577,7 @@ int spc;
             if (num && toostrong(last, maxmlev)
                 && monstr[last] != monstr[last - 1] && rn2(2))
                 break;
-            num += mons[last].geno & G_FREQ;
+            num += monsterGenerationMask(mons[last].monsterTypeID) & G_FREQ;
         }
     if (!num)
         return (struct permonst *) 0;
@@ -1584,7 +1588,7 @@ int spc;
     for (num = rnd(num); num > 0; first++)
         if (mk_gen_ok(first, G_GONE, mask)) {
             /* skew towards lower value monsters at lower exp. levels */
-            num -= mons[first].geno & G_FREQ;
+            num -= monsterGenerationMask(mons[first].monsterTypeID) & G_FREQ;
             if (num && adj_lev(&mons[first]) > (currentExperienceLevel() * 2)) {
                 /* but not when multiple monsters are same level */
                 if (monsterLevel(mons[first].monsterTypeID) != monsterLevel(mons[first + 1].monsterTypeID))
@@ -1614,13 +1618,13 @@ int class;
 
     for (last = first; last < SPECIAL_PM && monsterClass(mons[last].monsterTypeID) == class; last++)
         if (mk_gen_ok(last, G_GENOD, (G_NOGEN | G_UNIQ)))
-            num += mons[last].geno & G_FREQ;
+            num += monsterGenerationMask(mons[last].monsterTypeID) & G_FREQ;
     if (!num)
         return NON_PM;
 
     for (num = rnd(num); num > 0; first++)
         if (mk_gen_ok(first, G_GENOD, (G_NOGEN | G_UNIQ)))
-            num -= mons[first].geno & G_FREQ;
+            num -= monsterGenerationMask(mons[first].monsterTypeID) & G_FREQ;
     first--; /* correct an off-by-one error */
 
     return first;

@@ -216,7 +216,7 @@ int rx, ry, *resp;
                 mptr = &mons[mtmp->mnum];
                 /* can't use mhe() here; it calls pronoun_gender() which
                    expects monster to be on the map (visibility check) */
-                if ((humanoid(mptr) || (mptr->geno & G_UNIQ)
+                if ((humanoid(mptr) || (monsterGenerationMask(mptr->monsterTypeID) & G_UNIQ)
                      || type_is_pname(mptr)) && !is_neuter(mptr))
                     gndr = (int) mtmp->female;
             } else {
