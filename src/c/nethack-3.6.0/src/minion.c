@@ -54,17 +54,18 @@ struct monst *mon;
     int dtype = NON_PM, cnt = 0, result = 0, census;
     aligntyp atyp;
     struct monst *mtmp;
+    int maligntype = monsterAlignment(ptr->monsterTypeID);
 
     if (mon) {
         ptr = mon->data;
         atyp = mon->ispriest ? EPRI(mon)->shralign
                              : mon->isminion ? EMIN(mon)->min_align
-                                             : (ptr->maligntyp == A_NONE)
+                                             : (maligntype == A_NONE)
                                                    ? A_NONE
-                                                   : sgn(ptr->maligntyp);
+                                                   : sgn(maligntype);
     } else {
         ptr = &mons[PM_WIZARD_OF_YENDOR];
-        atyp = (ptr->maligntyp == A_NONE) ? A_NONE : sgn(ptr->maligntyp);
+        atyp = (maligntype == A_NONE) ? A_NONE : sgn(maligntype);
     }
 
     if (is_dprince(ptr) || (ptr == &mons[PM_WIZARD_OF_YENDOR])) {
@@ -253,7 +254,7 @@ register struct monst *mtmp;
     cash = money_cnt(invent);
     demand =
         (cash * (rnd(80) + 20 * Athome))
-        / (100 * (1 + (sgn(currentAlignmentType()) == sgn(mtmp->data->maligntyp))));
+        / (100 * (1 + (sgn(currentAlignmentType()) == sgn(monsterAlignment(mtmp->data->monsterTypeID)))));
 
     if (!demand || multi < 0) { /* you have no gold or can't move */
         mtmp->mpeaceful = 0;
@@ -326,7 +327,7 @@ aligntyp atyp;
     for (tryct = !areYouInEndgame() ? 20 : 0; tryct > 0; --tryct) {
         pm = rn1(PM_DEMOGORGON + 1 - PM_ORCUS, PM_ORCUS);
         if (!(mvitals[pm].mvflags & G_GONE)
-            && (atyp == A_NONE || sgn(mons[pm].maligntyp) == sgn(atyp)))
+            && (atyp == A_NONE || sgn(monsterAlignment(mons[pm].monsterTypeID)) == sgn(atyp)))
             return (pm);
     }
     return (dlord(atyp)); /* approximate */
@@ -341,7 +342,7 @@ aligntyp atyp;
     for (tryct = !areYouInEndgame() ? 20 : 0; tryct > 0; --tryct) {
         pm = rn1(PM_YEENOGHU + 1 - PM_JUIBLEX, PM_JUIBLEX);
         if (!(mvitals[pm].mvflags & G_GONE)
-            && (atyp == A_NONE || sgn(mons[pm].maligntyp) == sgn(atyp)))
+            && (atyp == A_NONE || sgn(monsterAlignment(mons[pm].monsterTypeID)) == sgn(atyp)))
             return (pm);
     }
     return (ndemon(atyp)); /* approximate */
@@ -382,7 +383,7 @@ aligntyp atyp;
     for (tryct = 0; tryct < 20; tryct++) {
         ptr = mkclass(S_DEMON, 0);
         if (ptr && is_ndemon(ptr)
-            && (atyp == A_NONE || sgn(ptr->maligntyp) == sgn(atyp)))
+            && (atyp == A_NONE || sgn(monsterAlignment(ptr->monsterTypeID)) == sgn(atyp)))
             return (monsndx(ptr));
     }
 

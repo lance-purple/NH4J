@@ -2251,7 +2251,7 @@ cleanup:
     }
     if ((mtmp->mpeaceful && !rn2(2)) || mtmp->mtame)
         change_luck(-1);
-    if (isUnicorn(mdat->monsterTypeID) && sgn(currentAlignmentType()) == sgn(mdat->maligntyp)) {
+    if (isUnicorn(mdat->monsterTypeID) && sgn(currentAlignmentType()) == sgn(monsterAlignment(mdat->monsterTypeID))) {
         change_luck(-5);
         You_feel("guilty...");
     }
@@ -2279,7 +2279,7 @@ cleanup:
         /* cancel divine protection for killing your priest */
         if (p_coaligned(mtmp))
             setBlessings(0);
-        if (mdat->maligntyp == A_NONE)
+        if (monsterAlignment(mdat->monsterTypeID) == A_NONE)
             adjalign((int) (ALIGNLIM / 4)); /* BIG bonus */
     } else if (mtmp->mtame) {
         adjalign(-15); /* bad!! */

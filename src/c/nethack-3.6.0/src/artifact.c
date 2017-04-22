@@ -774,9 +774,10 @@ struct monst *mtmp;
                     && ((!areYouPolymorphed() && (urace.selfmask & weap->mtype))
                         || ((weap->mtype & M2_WERE) && lycanthropeType() >= LOW_PM))));
     } else if (weap->spfx & SPFX_DALIGN) {
+	int malign = monsterAlignment(ptr->monsterTypeID);
         return yours ? (currentAlignmentType() != weap->alignment)
-                     : (ptr->maligntyp == A_NONE
-                        || sgn(ptr->maligntyp) != weap->alignment);
+                     : (malign == A_NONE
+                        || sgn(malign) != weap->alignment);
     } else if (weap->spfx & SPFX_ATTK) {
         struct obj *defending_weapon = (yours ? uwep : MON_WEP(mtmp));
 

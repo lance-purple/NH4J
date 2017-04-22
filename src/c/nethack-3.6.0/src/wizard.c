@@ -451,7 +451,7 @@ struct monst *mcast;
 {
     register struct monst *mtmp;
     register int i, j, tmp;
-    int castalign = (mcast ? sgn(mcast->data->maligntyp) : -1);
+    int castalign = (mcast ? sgn(monsterAlignment(mcast->data->monsterTypeID)) : -1);
     coord bypos;
     int count, census;
 
@@ -493,8 +493,9 @@ struct monst *mcast;
                                    NO_MM_FLAGS);
                 if (mtmp) {
                     count++;
-                    if (mtmp->data->maligntyp == 0
-                        || sgn(mtmp->data->maligntyp) == castalign)
+		    int maligntyp = monsterAlignment(mtmp->data->monsterTypeID);
+                    if (maligntyp == 0
+                        || sgn(maligntyp) == castalign)
                         break;
                 }
             }

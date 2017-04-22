@@ -2940,5 +2940,13 @@ public class MonsterType {
 	public static int monsterBaseMagicResistance(int pmid) {
 		return getMonsterType(pmid).baseMagicResistance;
 	}
+	
+	public static int monsterAlignment(int pmid) {
+		return getMonsterType(pmid).alignment;
+	}
+
+	public static void setMonsterAlignment(int pmid, int value) {
+		getMonsterType(pmid).alignment = value;
+	}
 
 }

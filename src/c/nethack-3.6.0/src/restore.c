@@ -1340,7 +1340,7 @@ boolean ghostly;
             if (!mtmp->isshk)
                 mtmp->mpeaceful =
                     (isUnicorn(mtmp->data->monsterTypeID)
-                     && sgn(currentAlignmentType()) == sgn(mtmp->data->maligntyp))
+                     && sgn(currentAlignmentType()) == sgn(monsterAlignment(mtmp->data->monsterTypeID)))
                         ? TRUE
                         : peace_minded(mtmp->data);
             set_malign(mtmp);

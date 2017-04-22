@@ -1185,7 +1185,8 @@ int mmflags;
             mtmp->mpeaceful = FALSE;
         break;
     case S_UNICORN:
-        if (isUnicorn(ptr->monsterTypeID) && sgn(currentAlignmentType()) == sgn(ptr->maligntyp))
+        if (isUnicorn(ptr->monsterTypeID) &&
+            sgn(currentAlignmentType()) == sgn(monsterAlignment(ptr->monsterTypeID)))
             mtmp->mpeaceful = TRUE;
         break;
     case S_BAT:
@@ -1373,7 +1374,7 @@ int mndx;
     if (mvitals[mndx].mvflags & G_GONE)
         return TRUE;
     if (areYouInHell())
-        return (boolean) (mons[mndx].maligntyp > A_NEUTRAL);
+        return (boolean) (monsterAlignment(mons[mndx].monsterTypeID) > A_NEUTRAL);
     else
         return (boolean) ((mons[mndx].geno & G_HELL) != 0);
 }
@@ -1395,19 +1396,20 @@ register struct permonst *ptr;
         lev = areYouOnASpecialLevel();
         oldmoves = moves;
     }
+    int malign = monsterAlignment(ptr->monsterTypeID);
     switch ((lev) ? lev->flags.align : dungeons[currentDungeonNumber()].flags.align) {
     default: /* just in case */
     case AM_NONE:
         alshift = 0;
         break;
     case AM_LAWFUL:
-        alshift = (ptr->maligntyp + 20) / (2 * ALIGNWEIGHT);
+        alshift = (malign + 20) / (2 * ALIGNWEIGHT);
         break;
     case AM_NEUTRAL:
-        alshift = (20 - abs(ptr->maligntyp)) / ALIGNWEIGHT;
+        alshift = (20 - abs(malign)) / ALIGNWEIGHT;
         break;
     case AM_CHAOTIC:
-        alshift = (-(ptr->maligntyp - 20)) / (2 * ALIGNWEIGHT);
+        alshift = (-(malign - 20)) / (2 * ALIGNWEIGHT);
         break;
     }
     return alshift;
@@ -1860,7 +1862,8 @@ boolean
 peace_minded(ptr)
 register struct permonst *ptr;
 {
-    aligntyp mal = ptr->maligntyp, ual = currentAlignmentType();
+    aligntyp mal = monsterAlignment(ptr->monsterTypeID);
+    aligntyp ual = currentAlignmentType();
 
     if (always_peaceful(ptr))
         return TRUE;
@@ -1912,7 +1915,7 @@ void
 set_malign(mtmp)
 struct monst *mtmp;
 {
-    schar mal = mtmp->data->maligntyp;
+    schar mal = monsterAlignment(mtmp->data->monsterTypeID);
     boolean coaligned;
 
     if (mtmp->ispriest || mtmp->isminion) {

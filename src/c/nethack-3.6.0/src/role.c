@@ -2022,7 +2022,7 @@ role_init()
         pm->msound = MS_LEADER;
         pm->mflags2 |= (M2_PEACEFUL);
         pm->mflags3 |= M3_CLOSE;
-        pm->maligntyp = alignmnt * 3;
+        setMonsterAlignment(pm->monsterTypeID, (alignmnt * 3));
         /* if gender is random, we choose it now instead of waiting
            until the leader monster is created */
         quest_status.ldrgend =
@@ -2035,7 +2035,7 @@ role_init()
     if (urole.guardnum != NON_PM) {
         pm = &mons[urole.guardnum];
         pm->mflags2 |= (M2_PEACEFUL);
-        pm->maligntyp = alignmnt * 3;
+        setMonsterAlignment(pm->monsterTypeID, (alignmnt * 3));
     }
 
     /* Fix up the quest nemesis */

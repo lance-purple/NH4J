@@ -27,6 +27,8 @@ E int FDECL(monsterLevel, (int));
 E int FDECL(monsterMovementSpeed, (int));
 E int FDECL(monsterBaseArmorClass, (int));
 E int FDECL(monsterBaseMagicResistance, (int));
+E int FDECL(monsterAlignment, (int));
+E void FDECL(setMonsterAlignment, (int, int));
 
 /* ### alloc.c ### */
 

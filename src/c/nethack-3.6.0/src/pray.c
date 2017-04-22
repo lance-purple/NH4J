@@ -1359,7 +1359,7 @@ dosacrifice()
                     else
                         dmon->mstrategy &= ~STRAT_APPEARMSG;
                     You("have summoned %s!", dbuf);
-                    if (sgn(currentAlignmentType()) == sgn(dmon->data->maligntyp))
+                    if (sgn(currentAlignmentType()) == sgn(monsterAlignment(dmon->data->monsterTypeID)))
                         dmon->mpeaceful = TRUE;
                     You("are terrified, and unable to move.");
                     nomul(-3);
@@ -1396,7 +1396,7 @@ dosacrifice()
             if (currentAlignmentType() != A_CHAOTIC)
                 value += 1;
         } else if (isUnicorn(ptr->monsterTypeID)) {
-            int unicalign = sgn(ptr->maligntyp);
+            int unicalign = sgn(monsterAlignment(ptr->monsterTypeID));
 
             if (unicalign == altaralign) {
                 /* When same as altar, always a very bad action.

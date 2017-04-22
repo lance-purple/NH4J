@@ -383,7 +383,7 @@ register int x, y, typ;
         do { /* avoid ultimately hostile co-aligned unicorn */
             mptr = &mons[rndmonnum()];
         } while (--trycount > 0 && isUnicorn(mptr->monsterTypeID)
-                 && sgn(currentAlignmentType()) == sgn(mptr->maligntyp));
+                 && sgn(currentAlignmentType()) == sgn(monsterAlignment(mptr->monsterTypeID)));
         statue = mkcorpstat(STATUE, (struct monst *) 0, mptr, x, y,
                             CORPSTAT_NONE);
         mtmp = makemon(&mons[statue->corpsenm], 0, 0, MM_NOCOUNTBIRTH);
