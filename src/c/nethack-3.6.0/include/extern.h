@@ -23,6 +23,7 @@ typedef struct {
 E javaString FDECL(monsterTypeName, (int));
 E void FDECL(releaseJavaString, (javaString));
 E int FDECL(monsterClass, (int));
+E int FDECL(monsterLevel, (int));
 
 /* ### alloc.c ### */
 

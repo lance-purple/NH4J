@@ -265,7 +265,7 @@ int *attk_count, *role_roll_penalty;
     tmp = 1 + currentLuckWithBonus() + abon() + find_mac(mtmp) + toHitModifier();
 
     if (areYouPolymorphed()) {
-        tmp += youmonst.data->mlevel;
+        tmp += monsterLevel(youmonst.data->monsterTypeID);
     } else {
         tmp += currentExperienceLevel();
     }

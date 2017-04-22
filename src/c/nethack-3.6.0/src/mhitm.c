@@ -1435,7 +1435,7 @@ int mdead;
     if (mddat->mattk[i].damn)
         tmp = d((int) mddat->mattk[i].damn, (int) mddat->mattk[i].damd);
     else if (mddat->mattk[i].damd)
-        tmp = d((int) mddat->mlevel + 1, (int) mddat->mattk[i].damd);
+        tmp = d(monsterLevel(mddat->monsterTypeID) + 1, (int) mddat->mattk[i].damd);
     else
         tmp = 0;
 

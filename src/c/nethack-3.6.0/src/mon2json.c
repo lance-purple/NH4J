@@ -4206,7 +4206,7 @@ int main(int argc, char* argv[])
 	    PM_TYPES[mons[i].monsterTypeID],
 	    mons[i].mname);
 
-       fprintf(stdout, "\n        .level(%d)", mons[i].mlevel);
+       fprintf(stdout, "\n        .level(%d)", monsterLevel(mons[i].monsterTypeID));
        fprintf(stdout, ".move(%d)", mons[i].mmove);
        fprintf(stdout, ".ac(%d).mr(%d)", mons[i].ac, mons[i].mr);
 

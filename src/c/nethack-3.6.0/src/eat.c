@@ -827,7 +827,7 @@ register struct permonst *ptr;
         break;
     }
 
-    if (ptr->mlevel <= rn2(chance))
+    if (monsterLevel(ptr->monsterTypeID) <= rn2(chance))
         return; /* failed die roll */
 
     switch (type) {

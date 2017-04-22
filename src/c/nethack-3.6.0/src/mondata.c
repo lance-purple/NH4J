@@ -500,7 +500,7 @@ register struct monst *mdef, *magr;
                 || adtyp == AD_PHYS) {
                 dmg = mdef->data->mattk[i].damn;
                 if (!dmg)
-                    dmg = mdef->data->mlevel + 1;
+                    dmg = monsterLevel(mdef->data->monsterTypeID) + 1;
                 dmg *= mdef->data->mattk[i].damd;
             } else
                 dmg = 0;

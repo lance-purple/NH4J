@@ -333,7 +333,7 @@ boolean devour;
     }
 
     /* limit "instant" growth to prevent potential abuse */
-    if (grow && (int) mtmp->m_lev < (int) mtmp->data->mlevel + 15) {
+    if (grow && (int) mtmp->m_lev < (int) monsterLevel(mtmp->data->monsterTypeID) + 15) {
         if (!grow_up(mtmp, (struct monst *) 0))
             return 2;
     }

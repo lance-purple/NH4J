@@ -2925,4 +2925,8 @@ public class MonsterType {
 		return getMonsterType(pmid).monsterClass.id();
 	}
 
+	public static int monsterLevel(int pmid) {
+		return getMonsterType(pmid).monsterLevel;
+	}
+
 }

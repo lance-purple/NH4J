@@ -3028,7 +3028,7 @@ struct obj *box; /* null for floor trap */
         }
         if (alt > num)
             num = alt;
-        if (maximumHitPointsAsMonster() > mons[currentMonsterNumber()].mlevel) {
+        if (maximumHitPointsAsMonster() > monsterLevel(mons[currentMonsterNumber()].monsterTypeID)) {
             decreaseMaximumHitPointsAsMonster(rn2(min(maximumHitPointsAsMonster(), num + 1)));
             context.botl = 1;
         }

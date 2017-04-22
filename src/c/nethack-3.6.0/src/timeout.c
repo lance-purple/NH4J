@@ -251,7 +251,7 @@ nh_timeout()
         decreaseTimeRemainingAsMonster(1);
         if (0 == timeRemainingAsMonster()) {
             if (youAreUnchanging()) {
-                setTimeRemainingAsMonster(rnd(100 * youmonst.data->mlevel + 1));
+                setTimeRemainingAsMonster(rnd(100 * monsterLevel(youmonst.data->monsterTypeID) + 1));
             } else {
                 rehumanize();
             }

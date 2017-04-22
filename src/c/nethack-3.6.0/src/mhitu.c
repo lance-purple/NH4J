@@ -1622,7 +1622,7 @@ register struct attack *mattk;
 
             if (areYouPolymorphed()) {
                 /* [can't use youmonst.m_lev] */
-                lowerlimit = min((int) youmonst.data->mlevel, currentExperienceLevel());
+                lowerlimit = min(monsterLevel(youmonst.data->monsterTypeID), currentExperienceLevel());
                 if (maximumHitPointsAsMonster() - permdmg > lowerlimit) {
                     decreaseMaximumHitPointsAsMonster(permdmg);
                 } else if (maximumHitPointsAsMonster() > lowerlimit) {
@@ -2609,7 +2609,7 @@ register struct attack *mattk;
         tmp =
             d((int) olduasmon->mattk[i].damn, (int) olduasmon->mattk[i].damd);
     else if (olduasmon->mattk[i].damd)
-        tmp = d((int) olduasmon->mlevel + 1, (int) olduasmon->mattk[i].damd);
+        tmp = d(monsterLevel(olduasmon->monsterTypeID) + 1, (int) olduasmon->mattk[i].damd);
     else
         tmp = 0;
 
@@ -2719,7 +2719,7 @@ register struct attack *mattk;
             if (maximumHitPointsAsMonster() < currentHitPointsAsMonster()) {
                 setMaximumHitPointsAsMonster(currentHitPointsAsMonster());
             }
-            if (maximumHitPointsAsMonster() > ((youmonst.data->mlevel + 1) * 8))
+            if (maximumHitPointsAsMonster() > ((monsterLevel(youmonst.data->monsterTypeID) + 1) * 8))
                 (void) split_mon(&youmonst, mtmp);
             break;
         case AD_STUN: /* Yellow mold */
@@ -2784,7 +2784,7 @@ cloneu()
     mon->mcloned = 1;
     mon = christen_monst(mon, plname);
     initedog(mon);
-    mon->m_lev = youmonst.data->mlevel;
+    mon->m_lev = monsterLevel(youmonst.data->monsterTypeID);
     mon->mhpmax = maximumHitPointsAsMonster();
     mon->mhp = currentHitPointsAsMonster() / 2;
     decreaseCurrentHitPointsAsMonster(mon->mhp);

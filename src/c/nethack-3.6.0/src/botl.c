@@ -98,7 +98,7 @@ bot2()
             hpmax, currentMagicalEnergy(), maximumMagicalEnergy(), armorClass());
 
     if (areYouPolymorphed())
-        Sprintf(nb = eos(nb), " HD:%d", mons[currentMonsterNumber()].mlevel);
+        Sprintf(nb = eos(nb), " HD:%d", monsterLevel(mons[currentMonsterNumber()].monsterTypeID));
     else if (flags.showexp)
         Sprintf(nb = eos(nb), " Xp:%u/%-1ld", currentExperienceLevel(), currentXP());
     else
@@ -515,7 +515,7 @@ bot()
     /* Monster level (if areYouPolymorphed()) */
 
     if (areYouPolymorphed())
-        blstats[idx][BL_HD].a.a_int = mons[currentMonsterNumber()].mlevel;
+        blstats[idx][BL_HD].a.a_int = monsterLevel(mons[currentMonsterNumber()].monsterTypeID);
     else
         blstats[idx][BL_HD].a.a_int = 0;
 

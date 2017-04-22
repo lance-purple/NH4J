@@ -551,7 +551,7 @@ ustatusline()
                                                   ? "nominally "
                                                   : "insufficiently ",
           align_str(currentAlignmentType()),
-          areYouPolymorphed() ? mons[currentMonsterNumber()].mlevel : currentExperienceLevel(), areYouPolymorphed() ? currentHitPointsAsMonster() : currentHitPoints(),
+          areYouPolymorphed() ? monsterLevel(mons[currentMonsterNumber()].monsterTypeID) : currentExperienceLevel(), areYouPolymorphed() ? currentHitPointsAsMonster() : currentHitPoints(),
           areYouPolymorphed() ? maximumHitPointsAsMonster() : maximumHitPoints(), armorClass(), info);
 }
 

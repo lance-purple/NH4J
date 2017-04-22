@@ -1366,7 +1366,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
     tmp = -1 + currentLuckWithBonus() + find_mac(mon) + toHitModifier();
 
     if (areYouPolymorphed()) {
-        tmp += youmonst.data->mlevel;
+        tmp += monsterLevel(youmonst.data->monsterTypeID);
     } else {
         tmp += currentExperienceLevel();
     }

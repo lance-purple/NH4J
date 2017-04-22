@@ -1882,7 +1882,7 @@ boolean was_swallowed; /* digestion */
             if (mdat->mattk[i].damn)
                 tmp = d((int) mdat->mattk[i].damn, (int) mdat->mattk[i].damd);
             else if (mdat->mattk[i].damd)
-                tmp = d((int) mdat->mlevel + 1, (int) mdat->mattk[i].damd);
+                tmp = d(monsterLevel(mdat->monsterTypeID) + 1, (int) mdat->mattk[i].damd);
             else
                 tmp = 0;
             if (was_swallowed && magr) {

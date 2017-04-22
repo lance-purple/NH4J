@@ -1438,8 +1438,8 @@ boolean ask;
         if (mvitals[i].died)
             ntypes++;
         total_killed += (long) mvitals[i].died;
-        if (mons[i].mlevel > max_lev)
-            max_lev = mons[i].mlevel;
+        if (monsterLevel(mons[i].monsterTypeID) > max_lev)
+            max_lev = monsterLevel(mons[i].monsterTypeID);
     }
 
     /* vanquished creatures list;
@@ -1461,7 +1461,7 @@ boolean ask;
             for (lev = max_lev; lev >= 0; lev--) {
                 for (i = LOW_PM; i < NUMMONS; i++) {
 		    javaString monsterName = monsterTypeName(mons[i].monsterTypeID);
-                    if (mons[i].mlevel == lev
+                    if (monsterLevel(mons[i].monsterTypeID) == lev
                         && (nkilled = mvitals[i].died) > 0) {
                         if ((mons[i].geno & G_UNIQ) && i != PM_HIGH_PRIEST) {
                             Sprintf(buf, "%s%s",

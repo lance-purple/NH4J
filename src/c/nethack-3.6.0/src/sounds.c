@@ -367,7 +367,7 @@ register struct monst *mtmp;
         pline("%s %s!", Monnam(mtmp), vtense((char *) 0, growl_verb));
         if (running())
             nomul(0);
-        wake_nearto(mtmp->mx, mtmp->my, mtmp->data->mlevel * 18);
+        wake_nearto(mtmp->mx, mtmp->my, monsterLevel(mtmp->data->monsterTypeID) * 18);
     }
 }
 
@@ -410,7 +410,7 @@ register struct monst *mtmp;
         pline("%s %s!", Monnam(mtmp), vtense((char *) 0, yelp_verb));
         if (running())
             nomul(0);
-        wake_nearto(mtmp->mx, mtmp->my, mtmp->data->mlevel * 12);
+        wake_nearto(mtmp->mx, mtmp->my, monsterLevel(mtmp->data->monsterTypeID) * 12);
     }
 }
 
@@ -444,7 +444,7 @@ register struct monst *mtmp;
         pline("%s %s.", Monnam(mtmp), vtense((char *) 0, whimper_verb));
         if (running())
             nomul(0);
-        wake_nearto(mtmp->mx, mtmp->my, mtmp->data->mlevel * 6);
+        wake_nearto(mtmp->mx, mtmp->my, monsterLevel(mtmp->data->monsterTypeID) * 6);
     }
 }
 

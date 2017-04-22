@@ -720,7 +720,7 @@ int mntmp;
      * We can't do the above, since there's no such thing as an
      * "experience level of you as a monster" for a polymorphed character.
      */
-    mlvl = (int) mons[mntmp].mlevel;
+    mlvl = monsterLevel(mons[mntmp].monsterTypeID);
     if (monsterClass(youmonst.data->monsterTypeID) == S_DRAGON && mntmp >= PM_GRAY_DRAGON) {
         setMaximumHitPointsAsMonster(areYouInEndgame() ? (8 * mlvl) : (4 * mlvl + d(mlvl, 4)));
     } else if (isGolem(youmonst.data->monsterTypeID)) {
