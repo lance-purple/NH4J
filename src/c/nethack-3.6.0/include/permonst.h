@@ -43,8 +43,8 @@ struct permonst {
     const char *XXmname;        /* full name */
     char XXmlet;                /* symbol */
     schar XXmlevel;             /* base monster level */
-    schar XXmmove,              /* move speed */
-        ac,                     /* (base) armor class */
+    schar XXmmove;              /* move speed */
+    schar XXac,                 /* (base) armor class */
         mr;                     /* (base) magic resistance */
     aligntyp maligntyp;         /* basic monster alignment */
     unsigned short geno;        /* creation/geno mask value */

@@ -25,6 +25,7 @@ E void FDECL(releaseJavaString, (javaString));
 E int FDECL(monsterClass, (int));
 E int FDECL(monsterLevel, (int));
 E int FDECL(monsterMovementSpeed, (int));
+E int FDECL(monsterBaseArmorClass, (int));
 
 /* ### alloc.c ### */
 

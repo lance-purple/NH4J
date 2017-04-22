@@ -2933,4 +2933,8 @@ public class MonsterType {
 		return getMonsterType(pmid).movementSpeed;
 	}
 
+	public static int monsterBaseArmorClass(int pmid) {
+		return getMonsterType(pmid).baseArmorClass;
+	}
+
 }
