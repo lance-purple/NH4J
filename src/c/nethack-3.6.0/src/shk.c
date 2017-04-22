@@ -4103,7 +4103,7 @@ boolean silent;
 
     for (mtmp = fmon; mtmp; mtmp = mtmp2) {
         mtmp2 = mtmp->nmon;
-        if (mtmp->data->mlet == S_KOP) {
+        if (monsterClass(mtmp->data->monsterTypeID) == S_KOP) {
             if (canspotmon(mtmp))
                 cnt++;
             mongone(mtmp);

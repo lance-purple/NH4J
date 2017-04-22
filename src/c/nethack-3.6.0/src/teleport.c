@@ -66,7 +66,7 @@ unsigned gpflags;
             else
                 return (isFloater(mdat->monsterTypeID) || is_flyer(mdat) || is_swimmer(mdat)
                         || is_clinger(mdat));
-        } else if (mdat->mlet == S_EEL && rn2(13) && !ignorewater) {
+        } else if (monsterClass(mdat->monsterTypeID) == S_EEL && rn2(13) && !ignorewater) {
             return FALSE;
         } else if (is_lava(x, y)) {
             if (mtmp == &youmonst)
@@ -289,7 +289,7 @@ boolean allow_drag;
     setOriginalX(currentX());
     setOriginalY(currentY());
 
-    if (!hideunder(&youmonst) && youmonst.data->mlet == S_MIMIC) {
+    if (!hideunder(&youmonst) && monsterClass(youmonst.data->monsterTypeID) == S_MIMIC) {
         /* mimics stop being unnoticed */
         youmonst.m_ap_type = M_AP_NOTHING;
     }
@@ -1153,7 +1153,7 @@ int in_sight;
         } else if (tt == MAGIC_PORTAL) {
             if (areYouInEndgame()
                 && (mon_has_amulet(mtmp) || is_home_elemental(mptr))) {
-                if (in_sight && mptr->mlet != S_ELEMENTAL) {
+                if (in_sight && monsterClass(mptr->monsterTypeID) != S_ELEMENTAL) {
                     pline("%s seems to shimmer for a moment.", Monnam(mtmp));
                     seetrap(trap);
                 }

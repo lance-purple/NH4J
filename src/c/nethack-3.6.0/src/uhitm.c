@@ -165,7 +165,7 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
 
     if (mtmp->mundetected && !canseemon(mtmp)
         && !glyph_is_warning(glyph_at(bhitpos.x, bhitpos.y))
-        && (hides_under(mtmp->data) || mtmp->data->mlet == S_EEL)) {
+        && (hides_under(mtmp->data) || monsterClass(mtmp->data->monsterTypeID) == S_EEL)) {
         mtmp->mundetected = mtmp->msleeping = 0;
         newsym(mtmp->mx, mtmp->my);
         if (glyph_is_invisible(levl[mtmp->mx][mtmp->my].glyph)) {
@@ -426,7 +426,7 @@ register struct monst *mtmp;
     u_wipe_engr(3);
 
     /* Is the "it died" check actually correct? */
-    if (mdat->mlet == S_LEPRECHAUN && !mtmp->mfrozen && !mtmp->msleeping
+    if (monsterClass(mdat->monsterTypeID) == S_LEPRECHAUN && !mtmp->mfrozen && !mtmp->msleeping
         && !mtmp->mconf && mtmp->mcansee && !rn2(7)
         && (m_move(mtmp, 0) == 2 /* it died */
             || mtmp->mx != currentX() + directionX()
@@ -1368,7 +1368,7 @@ struct attack *mattk;
     }
 
     if (stealoid) { /* we will be taking everything */
-        if (gender(mdef) == (int) inherentlyFemale() && youmonst.data->mlet == S_NYMPH)
+        if (gender(mdef) == (int) inherentlyFemale() && monsterClass(youmonst.data->monsterTypeID) == S_NYMPH)
             You("charm %s.  She gladly hands over her possessions.",
                 mon_nam(mdef));
         else
@@ -2153,7 +2153,7 @@ register struct monst *mon;
                 goto use_weapon;
             /*FALLTHRU*/
         case AT_TUCH:
-            if (uwep && youmonst.data->mlet == S_LICH && !weapon_used)
+            if (uwep && monsterClass(youmonst.data->monsterTypeID) == S_LICH && !weapon_used)
                 goto use_weapon;
             /*FALLTHRU*/
         case AT_KICK:
@@ -2242,9 +2242,9 @@ register struct monst *mon;
                 if (mon->data == &mons[PM_SHADE])
                     Your("attempt to surround %s is harmless.", mon_nam(mon));
                 else {
+		    int mc = monsterClass(mon->data->monsterTypeID);
                     sum[i] = gulpum(mon, mattk);
-                    if (sum[i] == 2 && (mon->data->mlet == S_ZOMBIE
-                                        || mon->data->mlet == S_MUMMY)
+                    if (sum[i] == 2 && (mc == S_ZOMBIE || mc == S_MUMMY)
                         && rn2(5) && !youResistSickness()) {
                         You_feel("%ssick.", (youAreSick()) ? "very " : "");
                         mdamageu(mon, rnd(8));
@@ -2259,9 +2259,9 @@ register struct monst *mon;
             /* No check for uwep; if wielding nothing we want to
              * do the normal 1-2 points bare hand damage...
              */
-            if ((youmonst.data->mlet == S_KOBOLD
-                 || youmonst.data->mlet == S_ORC
-                 || youmonst.data->mlet == S_GNOME) && !weapon_used)
+            if ((monsterClass(youmonst.data->monsterTypeID) == S_KOBOLD ||
+                 monsterClass(youmonst.data->monsterTypeID) == S_ORC ||
+		 monsterClass(youmonst.data->monsterTypeID) == S_GNOME) && !weapon_used)
                 goto use_weapon;
 
         case AT_NONE:
@@ -2679,7 +2679,7 @@ struct obj *otmp; /* source of flash */
             pline_The("flash awakens %s.", mon_nam(mtmp));
             res = 1;
         }
-    } else if (mtmp->data->mlet != S_LIGHT) {
+    } else if (monsterClass(mtmp->data->monsterTypeID) != S_LIGHT) {
         if (!resists_blnd(mtmp)) {
             tmp = dist2(otmp->ox, otmp->oy, mtmp->mx, mtmp->my);
             if (useeit) {

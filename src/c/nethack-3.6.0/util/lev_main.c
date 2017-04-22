@@ -1161,12 +1161,12 @@ char c;
         return ERR;
 
     for (i = LOW_PM; i < NUMMONS; i++)
-        if (!class || class == mons[i].mlet)
+        if (!class || class == mons[i].XXmlet)
             if (!strcmp(s, mons[i].XXmname))
                 return i;
     /* didn't find it; lets try case insensitive search */
     for (i = LOW_PM; i < NUMMONS; i++)
-        if (!class || class == mons[i].mlet)
+        if (!class || class == mons[i].XXmlet)
             if (!case_insensitive_comp(s, mons[i].XXmname)) {
                 if (be_verbose)
                     lc_warning("Monster type \"%s\" matches \"%s\".", s,

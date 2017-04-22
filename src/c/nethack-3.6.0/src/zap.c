@@ -49,8 +49,9 @@ STATIC_DCL int FDECL(spell_hit_bonus, (int));
 
 #define is_hero_spell(type) ((type) >= 10 && (type) < 20)
 
-#define M_IN_WATER(ptr) \
-    ((ptr)->mlet == S_EEL || amphibious(ptr) || is_swimmer(ptr))
+static boolean M_IN_WATER(struct permonst* ptr) {
+    return (monsterClass(ptr->monsterTypeID) == S_EEL || amphibious(ptr) || is_swimmer(ptr));
+}
 
 STATIC_VAR const char are_blinded_by_the_flash[] =
     "are blinded by the flash!";
@@ -141,7 +142,7 @@ struct obj *otmp;
     const char *zap_type_text = "spell";
     struct obj *obj;
     boolean disguised_mimic =
-        (mtmp->data->mlet == S_MIMIC && mtmp->m_ap_type != M_AP_NOTHING);
+        (monsterClass(mtmp->data->monsterTypeID) == S_MIMIC && mtmp->m_ap_type != M_AP_NOTHING);
 
     if (swallowed() && mtmp == u.ustuck)
         reveal_invis = FALSE;
@@ -704,7 +705,7 @@ boolean by_hero;
             x = xy.x, y = xy.y;
     }
 
-    if (mons[montype].mlet == S_EEL && !IS_POOL(levl[x][y].typ)) {
+    if (monsterClass(mons[montype].monsterTypeID) == S_EEL && !IS_POOL(levl[x][y].typ)) {
         if (by_hero && cansee(x,y))
             pline("%s twitches feebly.",
                 upstart(corpse_xname(corpse, (const char *) 0, CXN_PFX_THE)));
@@ -724,7 +725,7 @@ boolean by_hero;
             if (mtmp->cham == PM_DOPPELGANGER) {
                 /* change shape to match the corpse */
                 (void) newcham(mtmp, mptr, FALSE, FALSE);
-            } else if (mtmp->data->mlet == S_ZOMBIE) {
+            } else if (monsterClass(mtmp->data->monsterTypeID) == S_ZOMBIE) {
                 mtmp->mhp = mtmp->mhpmax = 100;
                 mon_adjust_speed(mtmp, 2, (struct obj *) 0); /* MFAST */
             }
@@ -2591,7 +2592,7 @@ boolean youattack, allow_cancel_kill, self_cancel;
     } else {
         mdef->mcan = TRUE;
 
-        if (is_were(mdef->data) && mdef->data->mlet != S_HUMAN)
+        if (is_were(mdef->data) && monsterClass(mdef->data->monsterTypeID) != S_HUMAN)
             were_change(mdef);
 
         if (mdef->data == &mons[PM_CLAY_GOLEM]) {

@@ -1145,7 +1145,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
     } break;
     case SCR_CONFUSE_MONSTER:
     case SPE_CONFUSE_MONSTER:
-        if (youmonst.data->mlet != S_HUMAN || scursed) {
+        if (monsterClass(youmonst.data->monsterTypeID) != S_HUMAN || scursed) {
             if (!yourIntrinsic(CONFUSION))
                 You_feel("confused.");
             make_confused(yourIntrinsic(CONFUSION) + rnd(100), FALSE);
@@ -1968,10 +1968,10 @@ do_class_genocide()
 
         class = name_to_monclass(buf, (int *) 0);
         if (class == 0 && (i = name_to_mon(buf)) != NON_PM)
-            class = mons[i].mlet;
+            class = monsterClass(mons[i].monsterTypeID);
         immunecnt = gonecnt = goodcnt = 0;
         for (i = LOW_PM; i < NUMMONS; i++) {
-            if (mons[i].mlet == class) {
+            if (monsterClass(mons[i].monsterTypeID) == class) {
                 if (!(mons[i].geno & G_GENO))
                     immunecnt++;
                 else if (mvitals[i].mvflags & G_GENOD)
@@ -1980,8 +1980,8 @@ do_class_genocide()
                     goodcnt++;
             }
         }
-        if (!goodcnt && class != mons[urole.malenum].mlet
-            && class != mons[urace.malenum].mlet) {
+        if (!goodcnt && class != monsterClass(mons[urole.malenum].monsterTypeID)
+            && class != monsterClass(mons[urace.malenum].monsterTypeID)) {
             if (gonecnt)
                 pline("All such monsters are already nonexistent.");
             else if (immunecnt || class == S_invisible)
@@ -2006,7 +2006,7 @@ do_class_genocide()
         }
 
         for (i = LOW_PM; i < NUMMONS; i++) {
-            if (mons[i].mlet == class) {
+            if (monsterClass(mons[i].monsterTypeID) == class) {
                 char nam[BUFSZ];
 
 		javaString monsterName = monsterTypeName(mons[i].monsterTypeID);

@@ -459,7 +459,7 @@ boolean creation;
     /* give mummies a chance to wear their wrappings
      * and let skeletons wear their initial armor */
     if (mindless(mon->data)
-        && (!creation || (mon->data->mlet != S_MUMMY
+        && (!creation || (monsterClass(mon->data->monsterTypeID) != S_MUMMY
                           && mon->data != &mons[PM_SKELETON])))
         return;
 
@@ -475,7 +475,7 @@ boolean creation;
     if (!MON_WEP(mon) || !bimanual(MON_WEP(mon)))
         m_dowear_type(mon, W_ARMS, creation, FALSE);
     m_dowear_type(mon, W_ARMG, creation, FALSE);
-    if (!slithy(mon->data) && mon->data->mlet != S_CENTAUR)
+    if (!slithy(mon->data) && monsterClass(mon->data->monsterTypeID) != S_CENTAUR)
         m_dowear_type(mon, W_ARMF, creation, FALSE);
     if (!cantweararm(mon->data))
         m_dowear_type(mon, W_ARM, creation, FALSE);
@@ -885,7 +885,7 @@ boolean polyspot;
             m_lose_armor(mon, otmp);
         }
     }
-    if (handless_or_tiny || slithy(mdat) || mdat->mlet == S_CENTAUR) {
+    if (handless_or_tiny || slithy(mdat) || monsterClass(mdat->monsterTypeID) == S_CENTAUR) {
         if ((otmp = which_armor(mon, W_ARMF)) != 0) {
             if (vis) {
                 if (isWhirly(mon->data->monsterTypeID))

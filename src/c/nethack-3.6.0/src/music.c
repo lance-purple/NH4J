@@ -115,9 +115,10 @@ int distance;
     int could_see_mon, was_peaceful;
 
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
+	int mc = monsterClass(mtmp->data->monsterTypeID);
         if (DEADMONSTER(mtmp))
             continue;
-        if (mtmp->data->mlet == S_SNAKE && mtmp->mcanmove
+        if (mc == S_SNAKE && mtmp->mcanmove
             && distanceSquaredToYou(mtmp->mx, mtmp->my) < distance) {
             was_peaceful = mtmp->mpeaceful;
             mtmp->mpeaceful = 1;
@@ -149,9 +150,10 @@ int distance;
     register struct monst *mtmp;
 
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
+	int mc = monsterClass(mtmp->data->monsterTypeID);
         if (DEADMONSTER(mtmp))
             continue;
-        if (mtmp->data->mlet == S_NYMPH && mtmp->mcanmove
+        if (mc == S_NYMPH && mtmp->mcanmove
             && distanceSquaredToYou(mtmp->mx, mtmp->my) < distance) {
             mtmp->msleeping = 0;
             mtmp->mpeaceful = 1;

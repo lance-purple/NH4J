@@ -1544,7 +1544,7 @@ struct mkroom *croom;
 
     if (pm) {
         int loc = DRY;
-        if (pm->mlet == S_EEL || amphibious(pm) || is_swimmer(pm))
+        if (monsterClass(pm->monsterTypeID) == S_EEL || amphibious(pm) || is_swimmer(pm))
             loc = WET;
         if (is_flyer(pm) || isFloater(pm->monsterTypeID))
             loc |= (HOT | WET);
@@ -1585,7 +1585,7 @@ struct mkroom *croom;
          * eventually be expanded.
          */
         if (m->appear_as.str
-            && ((mtmp->data->mlet == S_MIMIC) || mtmp->cham)) {
+            && ((monsterClass(mtmp->data->monsterTypeID) == S_MIMIC) || mtmp->cham)) {
             int i;
 
             switch (m->appear) {

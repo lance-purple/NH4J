@@ -999,9 +999,10 @@ struct monst *mtmp;
     struct permonst *pm = mtmp->data;
     int difficulty = monstr[(monsndx(pm))];
     int trycnt = 0;
+    int mc = monsterClass(pm->monsterTypeID);
 
     if (is_animal(pm) || attacktype(pm, AT_EXPL) || mindless(mtmp->data)
-        || pm->mlet == S_GHOST || pm->mlet == S_KOP)
+        || mc == S_GHOST || mc == S_KOP)
         return 0;
 try_again:
     switch (rn2(8 + (difficulty > 3) + (difficulty > 6) + (difficulty > 8))) {
@@ -1540,9 +1541,10 @@ struct monst *mtmp;
 {
     struct permonst *pm = mtmp->data;
     int difficulty = monstr[(monsndx(pm))];
+    int mc = monsterClass(pm->monsterTypeID);
 
     if (is_animal(pm) || attacktype(pm, AT_EXPL) || mindless(mtmp->data)
-        || pm->mlet == S_GHOST || pm->mlet == S_KOP)
+        || mc == S_GHOST || mc == S_KOP)
         return 0;
     if (difficulty > 7 && !rn2(35))
         return WAN_DEATH;
@@ -1975,9 +1977,10 @@ struct monst *mtmp;
 {
     struct permonst *pm = mtmp->data;
     int difficulty = monstr[(monsndx(pm))];
+    int mc = monsterClass(pm->monsterTypeID);
 
     if (is_animal(pm) || attacktype(pm, AT_EXPL) || mindless(mtmp->data)
-        || pm->mlet == S_GHOST || pm->mlet == S_KOP)
+        || mc == S_GHOST || mc == S_KOP)
         return 0;
     /* Unlike other rnd_item functions, we only allow _weak_ monsters
      * to have this item; after all, the item will be used to strengthen

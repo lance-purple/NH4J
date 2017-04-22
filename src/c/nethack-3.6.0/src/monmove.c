@@ -122,6 +122,7 @@ int x, y;
 struct monst *mtmp;
 {
     boolean epresent = sengr_at("Elbereth", x, y, TRUE);
+    int mc = monsterClass(mtmp->data->monsterTypeID);
 
     /* creatures who are directly resistant to magical scaring:
      * Rodney, lawful minions, angels, the Riders */
@@ -131,7 +132,7 @@ struct monst *mtmp;
 
     /* should this still be true for defiled/molochian altars? */
     if (IS_ALTAR(levl[x][y].typ)
-        && (mtmp->data->mlet == S_VAMPIRE || is_vampshifter(mtmp)))
+        && (mc == S_VAMPIRE || is_vampshifter(mtmp)))
         return TRUE;
 
     /* the scare monster scroll doesn't have any of the below
@@ -152,7 +153,7 @@ struct monst *mtmp;
             && ((currentX() == x && currentY() == y)
                 || (youAppearDisplaced() && mtmp->mux == x && mtmp->muy == y))
             && !(mtmp->isshk || mtmp->isgd || !mtmp->mcansee
-                 || mtmp->mpeaceful || mtmp->data->mlet == S_HUMAN
+                 || mtmp->mpeaceful || mc == S_HUMAN
                  || mtmp->data == &mons[PM_MINOTAUR]
                  || areYouInHell() || areYouInEndgame()));
 }
@@ -197,16 +198,18 @@ register struct monst *mtmp;
      *  Aggravate or mon is (dog or human) or
      *      (1/7 and mon is not mimicing furniture or object)
      */
+    int mc = monsterClass(mtmp->data->monsterTypeID);
+
     if (couldsee(mtmp->mx, mtmp->my) && distanceSquaredToYou(mtmp->mx, mtmp->my) <= 100
         && (!youAreStealthy() || (mtmp->data == &mons[PM_ETTIN] && rn2(10)))
-        && (!(mtmp->data->mlet == S_NYMPH
+        && (!(mc == S_NYMPH
               || mtmp->data == &mons[PM_JABBERWOCK]
 #if 0 /* DEFERRED */
               || mtmp->data == &mons[PM_VORPAL_JABBERWOCK]
 #endif
-              || mtmp->data->mlet == S_LEPRECHAUN) || !rn2(50))
+              || mc == S_LEPRECHAUN) || !rn2(50))
         && (youAggravateMonsters()
-            || (mtmp->data->mlet == S_DOG || mtmp->data->mlet == S_HUMAN)
+            || (mc == S_DOG || mc == S_HUMAN)
             || (!rn2(7) && mtmp->m_ap_type != M_AP_FURNITURE
                 && mtmp->m_ap_type != M_AP_OBJECT))) {
         mtmp->msleeping = 0;
@@ -538,7 +541,7 @@ toofar:
 
     if (!nearby || mtmp->mflee || scared || mtmp->mconf || mtmp->mstun
         || (mtmp->minvis && !rn2(3))
-        || (mdat->mlet == S_LEPRECHAUN && !findgold(invent)
+        || (monsterClass(mdat->monsterTypeID) == S_LEPRECHAUN && !findgold(invent)
             && (findgold(mtmp->minvent) || rn2(2)))
         || (is_wanderer(mdat) && !rn2(4)) || (youCauseConflict() && !mtmp->iswiz)
         || (!mtmp->mcansee && !rn2(4)) || mtmp->mpeaceful) {
@@ -842,14 +845,15 @@ not_special:
         boolean should_see = (couldsee(omx, omy)
                               && (levl[gx][gy].lit || !levl[omx][omy].lit)
                               && (dist2(omx, omy, gx, gy) <= 36));
+	int mc = monsterClass(ptr->monsterTypeID);
 
         if (!mtmp->mcansee
             || (should_see && youAreInvisibleToOthers() && !perceives(ptr) && rn2(11))
             || is_obj_mappear(&youmonst,STRANGE_OBJECT) || lurking()
             || (is_obj_mappear(&youmonst,GOLD_PIECE) && !likes_gold(ptr))
             || (mtmp->mpeaceful && !mtmp->isshk) /* allow shks to follow */
-            || ((monsndx(ptr) == PM_STALKER || ptr->mlet == S_BAT
-                 || ptr->mlet == S_LIGHT) && !rn2(3)))
+            || ((monsndx(ptr) == PM_STALKER || mc == S_BAT
+                 || mc == S_LIGHT) && !rn2(3)))
             appr = 0;
 
         if (monsndx(ptr) == PM_LEPRECHAUN && (appr == 1)
@@ -945,7 +949,7 @@ not_special:
                     if (((likegold && otmp->oclass == COIN_CLASS)
                          || (likeobjs && index(practical, otmp->oclass)
                              && (otmp->otyp != CORPSE
-                                 || (ptr->mlet == S_NYMPH
+                                 || (monsterClass(ptr->monsterTypeID) == S_NYMPH
                                      && !is_rider(&mons[otmp->corpsenm]))))
                          || (likemagic && index(magical, otmp->oclass))
                          || (uses_items && searches_for_item(mtmp, otmp))
@@ -1021,7 +1025,7 @@ not_special:
         flag |= ALLOW_DIG;
     if (is_human(ptr) || ptr == &mons[PM_MINOTAUR])
         flag |= ALLOW_SSM;
-    if (is_undead(ptr) && ptr->mlet != S_GHOST)
+    if (is_undead(ptr) && monsterClass(ptr->monsterTypeID) != S_GHOST)
         flag |= NOGARLIC;
     if (is_vampshifter(mtmp))
         flag |= NOGARLIC;
@@ -1379,7 +1383,7 @@ postmov:
             }
         }
 
-        if (hides_under(ptr) || ptr->mlet == S_EEL) {
+        if (hides_under(ptr) || monsterClass(ptr->monsterTypeID) == S_EEL) {
             /* Always set--or reset--mundetected if it's already hidden
                (just in case the object it was hiding under went away);
                usually set mundetected unless monster can't move.  */
@@ -1579,7 +1583,7 @@ boolean
 can_fog(mtmp)
 struct monst *mtmp;
 {
-    if ((is_vampshifter(mtmp) || mtmp->data->mlet == S_VAMPIRE)
+    if ((is_vampshifter(mtmp) || monsterClass(mtmp->data->monsterTypeID) == S_VAMPIRE)
         && !youHaveProtectionFromShapeChangers() && !stuff_prevents_passage(mtmp))
         return TRUE;
     return FALSE;

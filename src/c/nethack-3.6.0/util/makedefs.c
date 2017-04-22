@@ -1141,7 +1141,7 @@ make_version()
     for (i = 1; objects[i].oc_class != ILLOBJ_CLASS; i++)
         continue;
     version.entity_count = (version.entity_count << 12) | (unsigned long) i;
-    for (i = 0; mons[i].mlet; i++)
+    for (i = 0; mons[i].XXmlet; i++)
         continue;
     version.entity_count = (version.entity_count << 12) | (unsigned long) i;
     /*

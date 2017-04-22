@@ -2207,7 +2207,7 @@ encodemonster	: STRING
                           lc_error("Unknown monster \"%s\"!", $1);
                           $$ = -1;
                       } else
-                          $$ = SP_MONST_PACK(m, def_monsyms[(int)mons[m].mlet].sym);
+                          $$ = SP_MONST_PACK(m, def_monsyms[(int)mons[m].XXmlet].sym);
                       Free($1);
                   }
                 | CHAR

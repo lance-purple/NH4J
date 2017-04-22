@@ -2457,9 +2457,9 @@ register struct monst *mtmp;
                 }
             /* fall though */
             default:
-                if (mptr->mlet == S_GIANT
+                if (monsterClass(mptr->monsterTypeID) == S_GIANT
                     /* exclude baby dragons and relatively short worms */
-                    || (mptr->mlet == S_DRAGON && extra_nasty(mptr))
+                    || (monsterClass(mptr->monsterTypeID) == S_DRAGON && extra_nasty(mptr))
                     || (mtmp->wormno && count_wsegs(mtmp) > 5)) {
                     tear_web = TRUE;
                 } else if (in_sight) {
@@ -3925,7 +3925,7 @@ struct monst *mtmp;
     if (!ttmp->madeby_u) {
         if (rnl(10) < 8 && !mtmp->mpeaceful && !mtmp->msleeping
             && !mtmp->mfrozen && !mindless(mtmp->data)
-            && mtmp->data->mlet != S_HUMAN) {
+            && monsterClass(mtmp->data->monsterTypeID) != S_HUMAN) {
             mtmp->mpeaceful = 1;
             set_malign(mtmp); /* reset alignment */
             pline("%s is grateful.", Monnam(mtmp));
@@ -4054,7 +4054,7 @@ boolean stuff;
         pline("%s is %s for you to lift.", Monnam(mtmp),
               stuff ? "carrying too much" : "too heavy");
         if (!ttmp->madeby_u && !mtmp->mpeaceful && mtmp->mcanmove
-            && !mindless(mtmp->data) && mtmp->data->mlet != S_HUMAN
+            && !mindless(mtmp->data) && monsterClass(mtmp->data->monsterTypeID) != S_HUMAN
             && rnl(10) < 3) {
             mtmp->mpeaceful = 1;
             set_malign(mtmp); /* reset alignment */

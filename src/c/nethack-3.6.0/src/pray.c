@@ -652,7 +652,7 @@ aligntyp resp_god;
               (ugod_is_angry() && resp_god == currentAlignmentType())
                   ? "hast strayed from the path"
                   : "art arrogant",
-              youmonst.data->mlet == S_HUMAN ? "mortal" : "creature");
+              monsterClass(youmonst.data->monsterTypeID) == S_HUMAN ? "mortal" : "creature");
         verbalize("Thou must relearn thy lessons!");
         (void) adjattrib(A_WIS, -1, FALSE);
         losexp((char *) 0);
@@ -678,7 +678,7 @@ aligntyp resp_god;
                       ? "scorn"
                       : "call upon");
         pline("\"Then die, %s!\"",
-              youmonst.data->mlet == S_HUMAN ? "mortal" : "creature");
+              monsterClass(youmonst.data->monsterTypeID) == S_HUMAN ? "mortal" : "creature");
         summon_minion(resp_god, FALSE);
         break;
 
@@ -1017,7 +1017,7 @@ aligntyp g_align;
             if (! haveOpenedDrawbridge() && ! enteredGehennomViaValley()) {
                 if (knowledgeOfPasstune() < 1) {
                     godvoice(g_align, (char *) 0);
-                    verbalize("Hark, %s!", youmonst.data->mlet == S_HUMAN
+                    verbalize("Hark, %s!", monsterClass(youmonst.data->monsterTypeID) == S_HUMAN
                                                ? "mortal"
                                                : "creature");
                     verbalize(
@@ -1940,7 +1940,7 @@ doturn()
                 mtmp->mcanmove = 1;
             } else if (!resist(mtmp, '\0', 0, TELL)) {
                 xlev = 6;
-                switch (mtmp->data->mlet) {
+                switch (monsterClass(mtmp->data->monsterTypeID)) {
                 /* this is intentional, lichs are tougher
                    than zombies. */
                 case S_LICH:

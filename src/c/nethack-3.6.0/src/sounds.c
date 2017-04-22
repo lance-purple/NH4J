@@ -128,7 +128,7 @@ dosounds()
         for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
             if (DEADMONSTER(mtmp))
                 continue;
-            if ((mtmp->data->mlet == S_ANT && is_flyer(mtmp->data))
+            if ((monsterClass(mtmp->data->monsterTypeID) == S_ANT && is_flyer(mtmp->data))
                 && mon_in_room(mtmp, BEEHIVE)) {
                 switch (rn2(2) + hallu) {
                 case 0:
@@ -803,7 +803,7 @@ register struct monst *mtmp;
             pline_msg = "talks about mining.";
         else if (likes_magic(ptr))
             pline_msg = "talks about spellcraft.";
-        else if (ptr->mlet == S_CENTAUR)
+        else if (monsterClass(ptr->monsterTypeID) == S_CENTAUR)
             pline_msg = "discusses hunting.";
         else
             switch (monsndx(ptr)) {
@@ -828,7 +828,7 @@ register struct monst *mtmp;
     case MS_SEDUCE: {
         int swval;
         if (SYSOPT_SEDUCE) {
-            if (ptr->mlet != S_NYMPH
+            if (monsterClass(ptr->monsterTypeID) != S_NYMPH
                 && could_seduce(mtmp, &youmonst, (struct attack *) 0) == 1) {
                 (void) doseduce(mtmp);
                 break;

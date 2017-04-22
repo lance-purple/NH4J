@@ -28,8 +28,8 @@ struct monst *mtmp;
 {
     struct permonst *ptr = mtmp->data;
 
-    return (index(steeds, ptr->mlet) && (ptr->msize >= MZ_MEDIUM)
-            && (!humanoid(ptr) || ptr->mlet == S_CENTAUR) && !amorphous(ptr)
+    return (index(steeds, monsterClass(ptr->monsterTypeID)) && (ptr->msize >= MZ_MEDIUM)
+            && (!humanoid(ptr) || monsterClass(ptr->monsterTypeID) == S_CENTAUR) && !amorphous(ptr)
             && !isNoncorporeal(ptr->monsterTypeID) && !isWhirly(ptr->monsterTypeID) && !unsolid(ptr));
 }
 
