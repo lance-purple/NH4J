@@ -2937,4 +2937,8 @@ public class MonsterType {
 		return getMonsterType(pmid).baseArmorClass;
 	}
 
+	public static int monsterBaseMagicResistance(int pmid) {
+		return getMonsterType(pmid).baseMagicResistance;
+	}
+
 }

@@ -2676,4 +2676,8 @@ extern int monsterBaseArmorClass(int id) {
   return javaGetIntFromInt(MONSTER_TYPE_CLASS, "monsterBaseArmorClass", id);
 }
 
+extern int monsterBaseMagicResistance(int id) {
+  return javaGetIntFromInt(MONSTER_TYPE_CLASS, "monsterBaseMagicResistance", id);
+}
+
 /*hacklib.c*/

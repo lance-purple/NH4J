@@ -4842,7 +4842,7 @@ int damage, tell;
     else if (dlev < 1)
         dlev = is_mplayer(mtmp->data) ? currentExperienceLevel() : 1;
 
-    resisted = rn2(100 + alev - dlev) < mtmp->data->mr;
+    resisted = rn2(100 + alev - dlev) < monsterBaseMagicResistance(mtmp->data->monsterTypeID);
     if (resisted) {
         if (tell) {
             shieldeff(mtmp->mx, mtmp->my);
