@@ -2668,5 +2668,8 @@ extern int monsterLevel(int id) {
   return javaGetIntFromInt(MONSTER_TYPE_CLASS, "monsterLevel", id);
 }
 
+extern int monsterMovementSpeed(int id) {
+  return javaGetIntFromInt(MONSTER_TYPE_CLASS, "monsterMovementSpeed", id);
+}
 
 /*hacklib.c*/

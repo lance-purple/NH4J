@@ -42,8 +42,8 @@ struct permonst {
     const int monsterTypeID;    /* type ID */
     const char *XXmname;        /* full name */
     char XXmlet;                /* symbol */
-    schar mlevel,               /* base monster level */
-        mmove,                  /* move speed */
+    schar XXmlevel;             /* base monster level */
+    schar XXmmove,              /* move speed */
         ac,                     /* (base) armor class */
         mr;                     /* (base) magic resistance */
     aligntyp maligntyp;         /* basic monster alignment */

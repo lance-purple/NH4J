@@ -85,8 +85,9 @@ register int nk;
         tmp += (7 - i) * ((i < 0) ? 2 : 1);
 
     /*  For very fast monsters, give extra experience */
-    if (ptr->mmove > NORMAL_SPEED)
-        tmp += (ptr->mmove > (3 * NORMAL_SPEED / 2)) ? 5 : 3;
+    int mmove = monsterMovementSpeed(ptr->monsterTypeID);
+    if (mmove > NORMAL_SPEED)
+        tmp += (mmove > (3 * NORMAL_SPEED / 2)) ? 5 : 3;
 
     /*  For each "special" attack type give extra experience */
     for (i = 0; i < NATTK; i++) {

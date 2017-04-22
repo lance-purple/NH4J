@@ -983,7 +983,7 @@ coord *cc;
                     if (goodpos(nx, ny, mon, gpflags))
                         goto gotgood;
                 }
-            if (bl == 0 && (!mon || mon->data->mmove)) {
+            if (bl == 0 && (!mon || monsterMovementSpeed(mon->data->monsterTypeID))) {
                 /* all map positions are visible (or not good),
                    try to pick something logical */
                 if (dnstair.sx && !rn2(2)) {

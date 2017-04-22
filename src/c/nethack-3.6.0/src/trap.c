@@ -3625,7 +3625,7 @@ drown()
     if (is_fainted())
         reset_faint();
     /* can't crawl if unable to move (crawl_ok flag stays false) */
-    if (multi < 0 || (areYouPolymorphed() && !youmonst.data->mmove))
+    if (multi < 0 || (areYouPolymorphed() && !monsterMovementSpeed(youmonst.data->monsterTypeID)))
         goto crawl;
     /* look around for a place to crawl to */
     for (i = 0; i < 100; i++) {
@@ -3719,7 +3719,7 @@ dountrap()
         return 0;
     }
     if ((nohands(youmonst.data) && !webmaker(youmonst.data))
-        || !youmonst.data->mmove) {
+        || !monsterMovementSpeed(youmonst.data->monsterTypeID)) {
         pline("And just how do you expect to do that?");
         return 0;
     } else if (u.ustuck && sticks(youmonst.data)) {

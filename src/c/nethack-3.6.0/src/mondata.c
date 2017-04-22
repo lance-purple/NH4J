@@ -1046,7 +1046,7 @@ const char *def;
               : (is_flyer(ptr) && ptr->msize > MZ_SMALL) ? flyl[capitalize]
                 : slithy(ptr) ? slither[capitalize]
                   : amorphous(ptr) ? ooze[capitalize]
-                    : !ptr->mmove ? immobile[capitalize]
+                    : !monsterMovementSpeed(ptr->monsterTypeID) ? immobile[capitalize]
                       : nolimbs(ptr) ? crawl[capitalize]
                         : def);
 }
@@ -1063,7 +1063,7 @@ const char *def;
               : (is_flyer(ptr) && ptr->msize > MZ_SMALL) ? flyl[capitalize]
                 : slithy(ptr) ? slither[capitalize]
                   : amorphous(ptr) ? ooze[capitalize]
-                    : !ptr->mmove ? immobile[capitalize]
+                    : !monsterMovementSpeed(ptr->monsterTypeID) ? immobile[capitalize]
                       : nolimbs(ptr) ? crawl[capitalize]
                         : def);
 }

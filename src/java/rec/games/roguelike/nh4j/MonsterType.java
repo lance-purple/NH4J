@@ -2928,5 +2928,9 @@ public class MonsterType {
 	public static int monsterLevel(int pmid) {
 		return getMonsterType(pmid).monsterLevel;
 	}
+	
+	public static int monsterMovementSpeed(int pmid) {
+		return getMonsterType(pmid).movementSpeed;
+	}
 
 }

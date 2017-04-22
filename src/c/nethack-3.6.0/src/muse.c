@@ -272,7 +272,7 @@ struct monst *mtmp;
     struct trap *t;
     int x = mtmp->mx, y = mtmp->my;
     boolean stuck = (mtmp == u.ustuck);
-    boolean immobile = (mtmp->data->mmove == 0);
+    boolean immobile = (monsterMovementSpeed(mtmp->data->monsterTypeID) == 0);
     int fraction;
 
     if (is_animal(mtmp->data) || mindless(mtmp->data))
@@ -1603,7 +1603,7 @@ struct monst *mtmp;
     int x = mtmp->mx, y = mtmp->my;
     struct trap *t;
     int xx, yy, pmidx = NON_PM;
-    boolean immobile = (mdat->mmove == 0);
+    boolean immobile = (monsterMovementSpeed(mdat->monsterTypeID) == 0);
     boolean stuck = (mtmp == u.ustuck);
 
     m.misc = (struct obj *) 0;

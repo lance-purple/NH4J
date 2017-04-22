@@ -536,7 +536,7 @@ int
 mcalcmove(mon)
 struct monst *mon;
 {
-    int mmove = mon->data->mmove;
+    int mmove = monsterMovementSpeed(mon->data->monsterTypeID);
 
     /* Note: MSLOW's `+ 1' prevents slowed speed 1 getting reduced to 0;
      *       MFAST's `+ 2' prevents hasted speed 1 from becoming a no-op;
@@ -579,7 +579,7 @@ mcalcdistress()
 
         /* must check non-moving monsters once/turn in case
          * they managed to end up in liquid */
-        if (mtmp->data->mmove == 0) {
+        if (monsterMovementSpeed(mtmp->data->monsterTypeID) == 0) {
             if (vision_full_recalc)
                 vision_recalc(0);
             if (minliquid(mtmp))

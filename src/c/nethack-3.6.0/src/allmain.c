@@ -131,7 +131,7 @@ boolean resuming;
                         /* your speed doesn't augment steed's speed */
                         moveamt = mcalcmove(u.usteed);
                     } else {
-                        moveamt = youmonst.data->mmove;
+                        moveamt = monsterMovementSpeed(youmonst.data->monsterTypeID);
 
                         if (youAreVeryFast()) { /* speed boots or potion */
                             /* average movement is 1.67 times normal */

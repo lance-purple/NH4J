@@ -548,7 +548,7 @@ struct entity *etmp;
 
     if (is_u(etmp) ? (youAreUnaware() || youKeepFumbling())
                    : (!etmp->emon->mcanmove || etmp->emon->msleeping
-                      || !etmp->edata->mmove || etmp->emon->wormno))
+                      || !monsterMovementSpeed(etmp->edata->monsterTypeID) || etmp->emon->wormno))
         return FALSE;
 
     if (is_u(etmp) ? youAreConfused() : etmp->emon->mconf)

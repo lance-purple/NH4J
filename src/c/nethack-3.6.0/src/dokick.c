@@ -253,7 +253,7 @@ doit:
         && mon->mcansee && !mon->mtrapped && !thick_skinned(mon->data)
         && monsterClass(mon->data->monsterTypeID) != S_EEL && haseyes(mon->data) && mon->mcanmove
         && !mon->mstun && !mon->mconf && !mon->msleeping
-        && mon->data->mmove >= 12) {
+        && monsterMovementSpeed(mon->data->monsterTypeID) >= 12) {
         if (!nohands(mon->data) && !rn2(martial() ? 5 : 3)) {
             pline("%s blocks your %skick.", Monnam(mon),
                   clumsy ? "clumsy " : "");

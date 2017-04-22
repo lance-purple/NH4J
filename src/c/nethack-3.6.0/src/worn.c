@@ -271,7 +271,7 @@ struct obj *obj; /* item to make known if effect can be seen */
         mon->mspeed = mon->permspeed;
 
     /* no message if monster is immobile (temp or perm) or unseen */
-    if (give_msg && (mon->mspeed != oldspeed || petrify) && mon->data->mmove
+    if (give_msg && (mon->mspeed != oldspeed || petrify) && monsterMovementSpeed(mon->data->monsterTypeID)
         && !(mon->mfrozen || mon->msleeping) && canseemon(mon)) {
         /* fast to slow (skipping intermediate state) or vice versa */
         const char *howmuch =

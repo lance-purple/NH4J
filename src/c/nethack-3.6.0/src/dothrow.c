@@ -1281,9 +1281,10 @@ boolean mon_notices;
             mon->msleeping = 0;
     }
     /* ditto for immobilized target */
-    if (!mon->mcanmove || !mon->data->mmove) {
+    int mmove = monsterMovementSpeed(mon->data->monsterTypeID);
+    if (!mon->mcanmove || !mmove) {
         tmp += 4;
-        if (mon_notices && mon->data->mmove && !rn2(10)) {
+        if (mon_notices && mmove && !rn2(10)) {
             mon->mcanmove = 1;
             mon->mfrozen = 0;
         }

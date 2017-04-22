@@ -1197,7 +1197,7 @@ struct trap *desttrap; /* nonnull if another trap at <x,y> */
 boolean
 u_rooted()
 {
-    if (!youmonst.data->mmove) {
+    if (!monsterMovementSpeed(youmonst.data->monsterTypeID)) {
         You("are rooted %s.",
             youAreLevitating() || areYouOnAirLevel() || areYouOnWaterLevel()
                 ? "in place"

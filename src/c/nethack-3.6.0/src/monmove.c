@@ -267,7 +267,7 @@ boolean fleemsg;
             /* unfortunately we can't distinguish between temporary
                sleep and temporary paralysis, so both conditions
                receive the same alternate message */
-            if (!mtmp->mcanmove || !mtmp->data->mmove)
+            if (!mtmp->mcanmove || !monsterMovementSpeed(mtmp->data->monsterTypeID))
                 pline("%s seems to flinch.", Adjmonnam(mtmp, "immobile"));
             else
                 pline("%s turns to flee.", Monnam(mtmp));
@@ -943,7 +943,7 @@ not_special:
                     if ((mtoo = m_at(xx, yy)) != 0
                         && (mtoo->msleeping || mtoo->mundetected
                             || (mtoo->mappearance && !mtoo->iswiz)
-                            || !mtoo->data->mmove))
+                            || !monsterMovementSpeed(mtoo->data->monsterTypeID)))
                         continue;
 
                     if (((likegold && otmp->oclass == COIN_CLASS)
