@@ -607,7 +607,7 @@ int *fail_reason;
            mptr reflects the original form for use by newcham()) */
         if ((mnum == PM_DOPPELGANGER && mptr != &mons[PM_DOPPELGANGER])
             /* block quest guards from other roles */
-            || (mptr->msound == MS_GUARDIAN
+            || (monsterSound(mptr->monsterTypeID) == MS_GUARDIAN
                 && quest_info(MS_GUARDIAN) != mnum)) {
             mon = makemon(&mons[PM_DOPPELGANGER], x, y,
                           NO_MINVENT | MM_NOCOUNTBIRTH | MM_ADJACENTOK);

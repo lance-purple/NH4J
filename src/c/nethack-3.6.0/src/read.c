@@ -346,7 +346,7 @@ doread()
             pline(nodisappear
                       ? "You %s the formula on the scroll."
                       : "As you %s the formula on it, the scroll disappears.",
-                  is_silent(youmonst.data) ? "cogitate" : "pronounce");
+                  isSilent(youmonst.data->monsterTypeID) ? "cogitate" : "pronounce");
         else
             pline(nodisappear ? "You read the scroll."
                               : "As you read the scroll, it disappears.");
@@ -355,7 +355,7 @@ doread()
                 pline("Being so trippy, you screw up...");
             else
                 pline("Being confused, you %s the magic words...",
-                      is_silent(youmonst.data) ? "misunderstand"
+                      isSilent(youmonst.data->monsterTypeID) ? "misunderstand"
                                                : "mispronounce");
         }
     }
@@ -2058,11 +2058,12 @@ do_class_genocide()
                 } else if (!gameover) {
                     /* suppress feedback about quest beings except
                        for those applicable to our own role */
-                    if ((mons[i].msound != MS_LEADER
+		    int msound = monsterSound(mons[i].monsterTypeID);
+                    if ((msound != MS_LEADER
                          || quest_info(MS_LEADER) == i)
-                        && (mons[i].msound != MS_NEMESIS
+                        && (msound != MS_NEMESIS
                             || quest_info(MS_NEMESIS) == i)
-                        && (mons[i].msound != MS_GUARDIAN
+                        && (msound != MS_GUARDIAN
                             || quest_info(MS_GUARDIAN) == i)
                         /* non-leader/nemesis/guardian role-specific monster
                            */

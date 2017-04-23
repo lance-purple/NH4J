@@ -315,10 +315,10 @@ boolean
 can_blow(mtmp)
 register struct monst *mtmp;
 {
-    int mc = monsterClass(mtmp->data->monsterTypeID);
-    if ((is_silent(mtmp->data) || mtmp->data->msound == MS_BUZZ)
+    int pmid = mtmp->data->monsterTypeID;
+    if ((isSilent(mtmp->data->monsterTypeID) || monsterSound(pmid) == MS_BUZZ)
         && (breathless(mtmp->data) || verysmall(mtmp->data)
-            || !has_head(mtmp->data) || mc == S_EEL))
+            || !has_head(mtmp->data) || monsterClass(pmid) == S_EEL))
         return FALSE;
     if ((mtmp == &youmonst) && youAreBeingStrangled())
         return FALSE;
@@ -1176,6 +1176,9 @@ boolean isWhirly(int pmid) {
 }
 boolean corpseOrStatueIsUnique(int pmid) {
     return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "corpseOrStatueIsUnique", pmid);
+}
+boolean isSilent(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isSilent", pmid);
 }
 
 /*mondata.c*/

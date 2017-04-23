@@ -2,6 +2,8 @@ package rec.games.roguelike.nh4j;
     
 public enum MS {
 
+	UNKNOWN(-1),
+	
     SILENT(0),    /* makes no sound */
     BARK(1),      /* if full moon, may howl */
     MEW(2),       /* mews or hisses */
@@ -54,6 +56,15 @@ public enum MS {
 	public int id()
 	{
 		return id;
+	}
+
+	public static MS of(int sound) {
+		for (MS ms : values()) {
+			if (sound == ms.id) {
+				return ms;
+			}
+		}
+		return UNKNOWN;
 	}
 
 }

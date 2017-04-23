@@ -512,7 +512,7 @@ domonability(VOID_ARGS)
     } else if (isUnicorn(youmonst.data->monsterTypeID)) {
         use_unicorn_horn((struct obj *) 0);
         return 1;
-    } else if (youmonst.data->msound == MS_SHRIEK) {
+    } else if (monsterSound(youmonst.data->monsterTypeID) == MS_SHRIEK) {
         You("shriek.");
         if (buried())
             pline("Unfortunately sound does not carry well through rock.");

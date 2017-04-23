@@ -254,7 +254,7 @@ dosounds()
             const char *msg;
             int trycount = 0, ax = EPRI(mtmp)->shrpos.x,
                 ay = EPRI(mtmp)->shrpos.y;
-            boolean speechless = (mtmp->data->msound <= MS_ANIMAL),
+            boolean speechless = (monsterSound(mtmp->data->monsterTypeID) <= MS_ANIMAL),
                     in_sight = canseemon(mtmp) || cansee(ax, ay);
 
             do {
@@ -312,7 +312,7 @@ register struct monst *mtmp;
 {
     const char *ret;
 
-    switch (mtmp->data->msound) {
+    switch (monsterSound(mtmp->data->monsterTypeID)) {
     case MS_MEW:
     case MS_HISS:
         ret = "hiss";
@@ -355,7 +355,7 @@ register struct monst *mtmp;
 {
     register const char *growl_verb = 0;
 
-    if (mtmp->msleeping || !mtmp->mcanmove || !mtmp->data->msound)
+    if (mtmp->msleeping || !mtmp->mcanmove || !monsterSound(mtmp->data->monsterTypeID))
         return;
 
     /* presumably nearness and soundok checks have already been made */
@@ -378,14 +378,16 @@ register struct monst *mtmp;
 {
     register const char *yelp_verb = 0;
 
-    if (mtmp->msleeping || !mtmp->mcanmove || !mtmp->data->msound)
+    int msound = monsterSound(mtmp->data->monsterTypeID);
+
+    if (mtmp->msleeping || !mtmp->mcanmove || !msound)
         return;
 
     /* presumably nearness and soundok checks have already been made */
     if (youAreHallucinating())
         yelp_verb = h_sounds[rn2(SIZE(h_sounds))];
     else
-        switch (mtmp->data->msound) {
+        switch (msound) {
         case MS_MEW:
             yelp_verb = "yowl";
             break;
@@ -421,14 +423,16 @@ register struct monst *mtmp;
 {
     register const char *whimper_verb = 0;
 
-    if (mtmp->msleeping || !mtmp->mcanmove || !mtmp->data->msound)
+    int msound = monsterSound(mtmp->data->monsterTypeID);
+
+    if (mtmp->msleeping || !mtmp->mcanmove || !msound)
         return;
 
     /* presumably nearness and soundok checks have already been made */
     if (youAreHallucinating())
         whimper_verb = h_sounds[rn2(SIZE(h_sounds))];
     else
-        switch (mtmp->data->msound) {
+        switch (msound) {
         case MS_MEW:
         case MS_GROWL:
             whimper_verb = "whimper";
@@ -458,9 +462,11 @@ register struct monst *mtmp;
         return;
 
     /* presumably nearness and soundok checks have already been made */
-    if (!is_silent(mtmp->data) && mtmp->data->msound <= MS_ANIMAL)
+    int msound = monsterSound(mtmp->data->monsterTypeID);
+
+    if (!isSilent(mtmp->data->monsterTypeID) && msound <= MS_ANIMAL)
         (void) domonnoise(mtmp);
-    else if (mtmp->data->msound >= MS_HUMANOID) {
+    else if (msound >= MS_HUMANOID) {
         if (!canspotmon(mtmp))
             map_invisible(mtmp->mx, mtmp->my);
         verbalize("I'm hungry.");
@@ -496,12 +502,12 @@ register struct monst *mtmp;
         *verbl_msg = 0,                 /* verbalize() */
             *verbl_msg_mcan = 0;        /* verbalize() if cancelled */
     struct permonst *ptr = mtmp->data;
-    int msound = ptr->msound;
+    int msound = monsterSound(ptr->monsterTypeID);
 
     /* presumably nearness and sleep checks have already been made */
     if (youAreDeaf())
         return 0;
-    if (is_silent(ptr))
+    if (isSilent(ptr->monsterTypeID))
         return 0;
 
     /* leader might be poly'd; if he can still speak, give leader speech */
@@ -509,7 +515,7 @@ register struct monst *mtmp;
         msound = MS_LEADER;
     /* make sure it's your role's quest guardian; adjust if not */
     else if (msound == MS_GUARDIAN && ptr != &mons[urole.guardnum])
-        msound = mons[genus(monsndx(ptr), 1)].msound;
+        msound = monsterSound(mons[genus(monsndx(ptr), 1)].monsterTypeID);
     /* some normally non-speaking types can/will speak if hero is similar */
     else if (msound == MS_ORC         /* note: MS_ORC is same as MS_GRUNT */
              && (same_race(ptr, youmonst.data)           /* current form, */
@@ -978,7 +984,7 @@ dochat()
     int tx, ty;
     struct obj *otmp;
 
-    if (is_silent(youmonst.data)) {
+    if (isSilent(youmonst.data->monsterTypeID)) {
 	javaString youMonsterName = monsterTypeName(youmonst.data->monsterTypeID);
         pline("As %s, you cannot speak.", an(youMonsterName.c_str));
 	releaseJavaString(youMonsterName);

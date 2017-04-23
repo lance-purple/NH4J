@@ -18,9 +18,10 @@ STATIC_DCL void FDECL(kops_gone, (BOOLEAN_P));
 #define ANGRY(mon) (!NOTANGRY(mon))
 #define IS_SHOP(x) (rooms[x].rtype >= SHOPBASE)
 
-#define muteshk(shkp)                       \
-    ((shkp)->msleeping || !(shkp)->mcanmove \
-     || (shkp)->data->msound <= MS_ANIMAL)
+static boolean muteshk(struct monst *shkp) {
+    return (shkp->msleeping || !shkp->mcanmove
+     || monsterSound(shkp->data->monsterTypeID) <= MS_ANIMAL);
+}
 
 extern const struct shclass shtypes[]; /* defined in shknam.c */
 
@@ -3622,11 +3623,13 @@ register int fall;
 
     /* 0 == can't speak, 1 == makes animal noises, 2 == speaks */
     lang = 0;
-    if (shkp->msleeping || !shkp->mcanmove || is_silent(shkp->data))
+    int msound = monsterSound(shkp->data->monsterTypeID);
+
+    if (shkp->msleeping || !shkp->mcanmove || isSilent(shkp->data->monsterTypeID))
         ; /* lang stays 0 */
-    else if (shkp->data->msound <= MS_ANIMAL)
+    else if (msound <= MS_ANIMAL)
         lang = 1;
-    else if (shkp->data->msound >= MS_HUMANOID)
+    else if (msound >= MS_HUMANOID)
         lang = 2;
 
     if (!inhishop(shkp)) {
@@ -3793,7 +3796,7 @@ boolean cant_mollify;
     if (!cost_of_damage || !shkp)
         return;
 
-    animal = (shkp->data->msound <= MS_ANIMAL);
+    animal = (monsterSound(shkp->data->monsterTypeID) <= MS_ANIMAL);
     pursue = FALSE;
     x = appear_here->place.x;
     y = appear_here->place.y;

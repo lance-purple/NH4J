@@ -32,6 +32,8 @@ E void FDECL(setMonsterAlignment, (int, int));
 E int FDECL(monsterGenerationMask, (int));
 E int FDECL(monsterCorpseWeight, (int));
 E int FDECL(monsterCorpseNutrition, (int));
+E int FDECL(monsterSound, (int));
+E void FDECL(setMonsterSound, (int, int));
 
 /* ### alloc.c ### */
 
@@ -2065,6 +2067,7 @@ E boolean FDECL(isVeganOption, (int));
 E boolean FDECL(isVegetarianOption, (int));
 E boolean FDECL(isWhirly, (int));
 E boolean FDECL(corpseOrStatueIsUnique, (int));
+E boolean FDECL(isSilent, (int));
 
 /* ### monmove.c ### */
 

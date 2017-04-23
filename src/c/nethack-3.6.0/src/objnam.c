@@ -3377,7 +3377,7 @@ typfnd:
         case CORPSE:
             if (!(monsterGenerationMask(mons[mntmp].monsterTypeID) & G_UNIQ)
                 && !(mvitals[mntmp].mvflags & G_NOCORPSE)) {
-                if (mons[mntmp].msound == MS_GUARDIAN)
+                if (monsterSound(mons[mntmp].monsterTypeID) == MS_GUARDIAN)
                     mntmp = genus(mntmp, 1);
                 set_corpsenm(otmp, mntmp);
             }

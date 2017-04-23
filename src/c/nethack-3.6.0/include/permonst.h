@@ -41,6 +41,7 @@ struct attack {
 #include "monflag.h"
 
 struct permonst {
+	/* can't eliminate these until mon[] gone, so rename to XX */
     const int monsterTypeID;    /* type ID */
     const char *XXmname;        /* full name */
     char XXmlet;                /* symbol */
@@ -53,7 +54,7 @@ struct permonst {
     struct attack mattk[NATTK]; /* attacks matrix */
     unsigned short XXcwt;       /* weight of corpse */
     unsigned short XXcnutrit;   /* its nutritional value */
-    uchar msound;               /* noise it makes (6 bits) */
+    uchar XXmsound;             /* noise it makes (6 bits) */
     uchar msize;                /* physical size (3 bits) */
     uchar mresists;             /* resistances */
     uchar mconveys;             /* conveyed by eating */

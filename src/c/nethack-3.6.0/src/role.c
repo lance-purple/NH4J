@@ -2019,7 +2019,7 @@ role_init()
     /* Fix up the quest leader */
     if (urole.ldrnum != NON_PM) {
         pm = &mons[urole.ldrnum];
-        pm->msound = MS_LEADER;
+        setMonsterSound(pm->monsterTypeID, MS_LEADER);
         pm->mflags2 |= (M2_PEACEFUL);
         pm->mflags3 |= M3_CLOSE;
         setMonsterAlignment(pm->monsterTypeID, (alignmnt * 3));
@@ -2041,7 +2041,7 @@ role_init()
     /* Fix up the quest nemesis */
     if (urole.neminum != NON_PM) {
         pm = &mons[urole.neminum];
-        pm->msound = MS_NEMESIS;
+        setMonsterSound(pm->monsterTypeID, MS_NEMESIS);
         pm->mflags2 &= ~(M2_PEACEFUL);
         pm->mflags2 |= (M2_NASTY | M2_STALK | M2_HOSTILE);
         pm->mflags3 &= ~(M3_CLOSE);

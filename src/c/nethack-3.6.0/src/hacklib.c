@@ -2700,4 +2700,12 @@ extern int monsterCorpseNutrition(int id) {
   return javaGetIntFromInt(MONSTER_TYPE_CLASS, "monsterCorpseNutrition", id);
 }
 
+extern int monsterSound(int id) {
+  return javaGetIntFromInt(MONSTER_TYPE_CLASS, "monsterSound", id);
+}
+
+extern void setMonsterSound(int id, int sound) {
+  return javaSetIntFromInt(MONSTER_TYPE_CLASS, "setMonsterSound", id, sound);
+}
+
 /*hacklib.c*/

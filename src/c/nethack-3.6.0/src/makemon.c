@@ -12,8 +12,9 @@ STATIC_VAR NEARDATA struct monst zeromonst;
    of the corresponding role; that isn't so for some roles (tourist
    for instance) but is for the priests and monks we use it for... */
 static boolean quest_mon_represents_role(struct permonst* mptr, int role_pm) {
+    int msound = monsterSound(mptr->monsterTypeID);
     return (monsterClass(mptr->monsterTypeID) == S_HUMAN && Role_if(role_pm)   
-     && (mptr->msound == MS_LEADER || mptr->msound == MS_NEMESIS));
+     && (msound == MS_LEADER || msound == MS_NEMESIS));
 }
 
 STATIC_DCL boolean FDECL(uncommon, (int));
@@ -260,7 +261,7 @@ register struct monst *mtmp;
                 if (!rn2(50))
                     (void) mongets(mtmp, CRYSTAL_BALL);
             }
-        } else if (ptr->msound == MS_PRIEST
+        } else if (monsterSound(ptr->monsterTypeID) == MS_PRIEST
                    || quest_mon_represents_role(ptr, PM_PRIEST)) {
             otmp = mksobj(MACE, FALSE, FALSE);
             if (otmp) {
@@ -624,7 +625,7 @@ register struct monst *mtmp;
             case 3:
                 (void) mongets(mtmp, WAN_STRIKING);
             }
-        } else if (ptr->msound == MS_PRIEST
+        } else if (monsterSound(ptr->monsterTypeID) == MS_PRIEST
                    || quest_mon_represents_role(ptr, PM_PRIEST)) {
             (void) mongets(mtmp, rn2(7) ? ROBE
                                         : rn2(3) ? CLOAK_OF_PROTECTION
@@ -1120,8 +1121,10 @@ int mmflags;
     fmon = mtmp;
     mtmp->m_id = nextIdentifier();
 
+    int msound = monsterSound(ptr->monsterTypeID);
+
     set_mon_data(mtmp, ptr, 0);
-    if (ptr->msound == MS_LEADER && quest_info(MS_LEADER) == mndx)
+    if (msound == MS_LEADER && quest_info(MS_LEADER) == mndx)
         quest_status.leader_m_id = mtmp->m_id;
     mtmp->mnum = mndx;
 
@@ -1135,9 +1138,9 @@ int mmflags;
     /* leader and nemesis gender is usually hardcoded in mons[],
        but for ones which can be random, it has already been chosen
        (in role_init(), for possible use by the quest pager code) */
-    else if (ptr->msound == MS_LEADER && quest_info(MS_LEADER) == mndx)
+    else if (msound == MS_LEADER && quest_info(MS_LEADER) == mndx)
         mtmp->female = quest_status.ldrgend;
-    else if (ptr->msound == MS_NEMESIS && quest_info(MS_NEMESIS) == mndx)
+    else if (msound == MS_NEMESIS && quest_info(MS_NEMESIS) == mndx)
         mtmp->female = quest_status.nemgend;
     else
         mtmp->female = rn2(2); /* ignored for neuters */
@@ -1145,7 +1148,7 @@ int mmflags;
     if (areYouOnASokobanLevel() && !mindless(ptr)) /* know about traps here */
         mtmp->mtrapseen = (1L << (PIT - 1)) | (1L << (HOLE - 1));
     /* quest leader and nemesis both know about all trap types */
-    if (ptr->msound == MS_LEADER || ptr->msound == MS_NEMESIS)
+    if (msound == MS_LEADER || msound == MS_NEMESIS)
         mtmp->mtrapseen = ~0;
 
     place_monster(mtmp, x, y);
@@ -1228,7 +1231,7 @@ int mmflags;
         mtmp = christen_monst(mtmp, rndghostname());
     } else if (mndx == PM_CROESUS) {
         mitem = TWO_HANDED_SWORD;
-    } else if (ptr->msound == MS_NEMESIS) {
+    } else if (monsterSound(ptr->monsterTypeID) == MS_NEMESIS) {
         mitem = BELL_OF_OPENING;
     } else if (mndx == PM_PESTILENCE) {
         mitem = POT_SICKNESS;
@@ -1247,7 +1250,7 @@ int mmflags;
             set_apparxy(mtmp);
         }
     }
-    if (is_dprince(ptr) && ptr->msound == MS_BRIBE) {
+    if (is_dprince(ptr) && monsterSound(ptr->monsterTypeID) == MS_BRIBE) {
         mtmp->mpeaceful = mtmp->minvis = mtmp->perminvis = 1;
         mtmp->mavenge = 0;
         if (uwep && uwep->oartifact == ART_EXCALIBUR)
@@ -1868,14 +1871,15 @@ register struct permonst *ptr;
 {
     aligntyp mal = monsterAlignment(ptr->monsterTypeID);
     aligntyp ual = currentAlignmentType();
+    int msound = monsterSound(ptr->monsterTypeID);
 
     if (always_peaceful(ptr))
         return TRUE;
     if (always_hostile(ptr))
         return FALSE;
-    if (ptr->msound == MS_LEADER || ptr->msound == MS_GUARDIAN)
+    if (msound == MS_LEADER || msound == MS_GUARDIAN)
         return TRUE;
-    if (ptr->msound == MS_NEMESIS)
+    if (msound == MS_NEMESIS)
         return FALSE;
 
     if (race_peaceful(ptr))
@@ -1935,7 +1939,7 @@ struct monst *mtmp;
     }
 
     coaligned = (sgn(mal) == sgn(currentAlignmentType()));
-    if (mtmp->data->msound == MS_LEADER) {
+    if (monsterSound(mtmp->data->monsterTypeID) == MS_LEADER) {
         mtmp->malign = -20;
     } else if (mal == A_NONE) {
         if (mtmp->mpeaceful)

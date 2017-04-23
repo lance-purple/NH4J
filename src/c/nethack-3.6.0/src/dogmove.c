@@ -755,6 +755,7 @@ register int after; /* this is extra fast monster movement */
         if ((info[i] & ALLOW_M) && MON_AT(nx, ny)) {
             int mstatus;
             register struct monst *mtmp2 = m_at(nx, ny);
+	    int m2sound = monsterSound(mtmp2->data->monsterTypeID);
 
             if ((int) mtmp2->m_lev >= (int) mtmp->m_lev + 2
                 || (mtmp2->data == &mons[PM_FLOATING_EYE] && rn2(10)
@@ -763,8 +764,8 @@ register int after; /* this is extra fast monster movement */
                 || (mtmp2->data == &mons[PM_GELATINOUS_CUBE] && rn2(10))
                 || (max_passive_dmg(mtmp2, mtmp) >= mtmp->mhp)
                 || ((mtmp->mhp * 4 < mtmp->mhpmax
-                     || mtmp2->data->msound == MS_GUARDIAN
-                     || mtmp2->data->msound == MS_LEADER) && mtmp2->mpeaceful
+                     || m2sound == MS_GUARDIAN
+                     || m2sound == MS_LEADER) && mtmp2->mpeaceful
                     && !youCauseConflict())
                 || (touch_petrifies(mtmp2->data) && !resists_ston(mtmp)))
                 continue;

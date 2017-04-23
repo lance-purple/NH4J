@@ -63,7 +63,10 @@ public class MonsterData {
     	return PM.matchesOneOf(pmid, PM.FIRE_VORTEX, PM.FLAMING_SPHERE, PM.FIRE_ELEMENTAL, PM.SALAMANDER);
     }
     
-    //#define is_silent(ptr) ((ptr)->msound == MS_SILENT)
+    public static boolean isSilent(int pmid) {
+    	return (MS.SILENT.id() == MonsterType.monsterSound(pmid));
+    }
+
     //#define unsolid(ptr) (((ptr)->mflags1 & M1_UNSOLID) != 0L)
     //#define mindless(ptr) (((ptr)->mflags1 & M1_MINDLESS) != 0L)
     //#define humanoid(ptr) (((ptr)->mflags1 & M1_HUMANOID) != 0L)

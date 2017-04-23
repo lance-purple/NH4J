@@ -747,7 +747,7 @@ register xchar x, y;
                     m_unleash(mtmp, FALSE);
                 } else {
                     You("pull on the leash.");
-                    if (mtmp->data->msound != MS_SILENT)
+                    if (monsterSound(mtmp->data->monsterTypeID) != MS_SILENT)
                         switch (rn2(3)) {
                         case 0:
                             growl(mtmp);

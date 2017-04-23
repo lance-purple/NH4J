@@ -1852,7 +1852,7 @@ register struct monst *mtmp;
     }
     if (mtmp->iswiz)
         wizdead();
-    if (mtmp->data->msound == MS_NEMESIS)
+    if (monsterSound(mtmp->data->monsterTypeID) == MS_NEMESIS)
         nemdead();
     if (mtmp->data == &mons[PM_MEDUSA])
         setAchieved(ACHIEVEMENT_KILLED_MEDUSA, TRUE);
@@ -2263,14 +2263,16 @@ cleanup:
     more_experienced(tmp, 0);
     newexplevel(); /* will decide if you go up */
 
+    int msound = monsterSound(mdat->monsterTypeID);
+
     /* adjust alignment points */
     if (mtmp->m_id == quest_status.leader_m_id) { /* REAL BAD! */
         adjalign(-(currentAlignmentRecord() + (int) ALIGNLIM / 2));
         pline("That was %sa bad idea...",
               completedQuest() ? "probably " : "");
-    } else if (mdat->msound == MS_NEMESIS) { /* Real good! */
+    } else if (msound == MS_NEMESIS) { /* Real good! */
         adjalign((int) (ALIGNLIM / 4));
-    } else if (mdat->msound == MS_GUARDIAN) { /* Bad */
+    } else if (msound == MS_GUARDIAN) { /* Bad */
         adjalign(-(int) (ALIGNLIM / 8));
         if (!youAreHallucinating())
             pline("That was probably a bad idea...");
@@ -2437,7 +2439,7 @@ void
 m_respond(mtmp)
 struct monst *mtmp;
 {
-    if (mtmp->data->msound == MS_SHRIEK) {
+    if (monsterSound(mtmp->data->monsterTypeID) == MS_SHRIEK) {
         if (!youAreDeaf()) {
             pline("%s shrieks.", Monnam(mtmp));
             stop_occupation();

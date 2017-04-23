@@ -366,8 +366,9 @@ make_bones:
         if (DEADMONSTER(mtmp))
             continue;
         mptr = mtmp->data;
+	int msound = monsterSound(mptr->monsterTypeID);
         if (mtmp->iswiz || mptr == &mons[PM_MEDUSA]
-            || mptr->msound == MS_NEMESIS || mptr->msound == MS_LEADER
+            || msound == MS_NEMESIS || msound == MS_LEADER
             || mptr == &mons[PM_VLAD_THE_IMPALER]
             || (mptr == &mons[PM_ORACLE] && !fixuporacle(mtmp)))
             mongone(mtmp);

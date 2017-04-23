@@ -467,7 +467,7 @@ do_mname()
         pline("%s doesn't like being called names!", upstart(monnambuf));
     else if (mtmp->isshk
              && !(youAreDeaf() || mtmp->msleeping || !mtmp->mcanmove
-                  || mtmp->data->msound <= MS_ANIMAL))
+                  || monsterSound(mtmp->data->monsterTypeID) <= MS_ANIMAL))
         verbalize("I'm %s, not %s.", shkname(mtmp), buf);
     else if (mtmp->ispriest || mtmp->isminion || mtmp->isshk)
         pline("%s will not accept the name %s.", upstart(monnambuf), buf);

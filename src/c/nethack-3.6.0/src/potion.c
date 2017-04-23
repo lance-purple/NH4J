@@ -1393,8 +1393,8 @@ boolean your_fault;
                 || is_were(mon->data) || is_vampshifter(mon)) {
                 if (obj->blessed) {
                     pline("%s %s in pain!", Monnam(mon),
-                          is_silent(mon->data) ? "writhes" : "shrieks");
-                    if (!is_silent(mon->data))
+                          isSilent(mon->data->monsterTypeID) ? "writhes" : "shrieks");
+                    if (!isSilent(mon->data->monsterTypeID))
                         wake_nearto(mon->mx, mon->my, monsterLevel(mon->data->monsterTypeID) * 10);
                     mon->mhp -= d(2, 6);
                     /* should only be by you */
@@ -1432,8 +1432,8 @@ boolean your_fault;
         case POT_ACID:
             if (!resists_acid(mon) && !resist(mon, POTION_CLASS, 0, NOTELL)) {
                 pline("%s %s in pain!", Monnam(mon),
-                      is_silent(mon->data) ? "writhes" : "shrieks");
-                if (!is_silent(mon->data))
+                      isSilent(mon->data->monsterTypeID) ? "writhes" : "shrieks");
+                if (!isSilent(mon->data->monsterTypeID))
                     wake_nearto(mon->mx, mon->my, monsterLevel(mon->data->monsterTypeID) * 10);
                 mon->mhp -= d(obj->cursed ? 2 : 1, obj->blessed ? 4 : 8);
                 if (mon->mhp < 1) {

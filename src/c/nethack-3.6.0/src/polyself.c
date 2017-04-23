@@ -807,7 +807,7 @@ int mntmp;
             pline(use_thec, monsterc, "use your horn");
         if (is_mind_flayer(youmonst.data))
             pline(use_thec, monsterc, "emit a mental blast");
-        if (youmonst.data->msound == MS_SHRIEK) /* worthless, actually */
+        if (monsterSound(youmonst.data->monsterTypeID) == MS_SHRIEK) /* worthless, actually */
             pline(use_thec, monsterc, "shriek");
         if (isVampire(youmonst.data->monsterTypeID))
             pline(use_thec, monsterc, "change shape");

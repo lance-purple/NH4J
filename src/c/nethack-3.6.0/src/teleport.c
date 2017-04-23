@@ -661,7 +661,7 @@ level_tele()
             if (ynq("Go to Nowhere.  Are you sure?") != 'y')
                 return;
             You("%s in agony as your body begins to warp...",
-                is_silent(youmonst.data) ? "writhe" : "scream");
+                isSilent(youmonst.data->monsterTypeID) ? "writhe" : "scream");
             display_nhwindow(WIN_MESSAGE, FALSE);
             You("cease to exist.");
             if (invent)

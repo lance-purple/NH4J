@@ -393,7 +393,7 @@ register struct monst *mtmp;
         (void) rloc(mtmp, TRUE);
         return 0;
     }
-    if (mdat->msound == MS_SHRIEK && !um_dist(mtmp->mx, mtmp->my, 1))
+    if (monsterSound(mdat->monsterTypeID) == MS_SHRIEK && !um_dist(mtmp->mx, mtmp->my, 1))
         m_respond(mtmp);
     if (mdat == &mons[PM_MEDUSA] && couldsee(mtmp->mx, mtmp->my))
         m_respond(mtmp);
@@ -434,7 +434,7 @@ register struct monst *mtmp;
     }
 
     /* Demonic Blackmail! */
-    if (nearby && mdat->msound == MS_BRIBE && mtmp->mpeaceful && !mtmp->mtame
+    if (nearby && monsterSound(mdat->monsterTypeID) == MS_BRIBE && mtmp->mpeaceful && !mtmp->mtame
         && !swallowed()) {
         if (mtmp->mux != currentX() || mtmp->muy != currentY()) {
             pline("%s whispers at thin air.",
@@ -622,7 +622,7 @@ toofar:
     if (!mtmp->msleeping && mtmp->mcanmove && nearby)
         quest_talk(mtmp);
     /* extra emotional attack for vile monsters */
-    if (inrange && mtmp->data->msound == MS_CUSS && !mtmp->mpeaceful
+    if (inrange && monsterSound(mtmp->data->monsterTypeID) == MS_CUSS && !mtmp->mpeaceful
         && couldsee(mtmp->mx, mtmp->my) && !mtmp->minvis && !rn2(5))
         cuss(mtmp);
 
