@@ -2965,4 +2965,12 @@ public class MonsterType {
 		return getMonsterType(pmid).corpseNutritionalValue;
 	}
 
+	public static int monsterSound(int pmid) {
+		return getMonsterType(pmid).makesSound.id();
+	}
+
+	public static void setMonsterSound(int pmid, int sound) {
+		getMonsterType(pmid).makesSound = MS.of(sound);
+	}
+
 }
