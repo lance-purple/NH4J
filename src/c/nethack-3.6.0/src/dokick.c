@@ -927,10 +927,10 @@ dokick()
             int range;
 
             range =
-                ((int) youmonst.data->cwt + (weight_cap() + inv_weight()));
+                (monsterCorpseWeight(youmonst.data->monsterTypeID) + (weight_cap() + inv_weight()));
             if (range < 1)
                 range = 1; /* divide by zero avoidance */
-            range = (3 * (int) mdat->cwt) / range;
+            range = (3 * monsterCorpseWeight(mdat->monsterTypeID)) / range;
 
             if (range < 1)
                 range = 1;

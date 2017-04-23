@@ -1053,11 +1053,12 @@ struct monst *mtmp;
      * and human weights.  Corpseless monsters are given a capacity
      * proportional to their size instead of weight.
      */
-    if (!mtmp->data->cwt)
+    int mcwt = monsterCorpseWeight(mtmp->data->monsterTypeID);
+    if (!mcwt)
         maxload = (MAX_CARR_CAP * (long) mtmp->data->msize) / MZ_HUMAN;
     else if (!strongmonst(mtmp->data)
-             || (strongmonst(mtmp->data) && (mtmp->data->cwt > WT_HUMAN)))
-        maxload = (MAX_CARR_CAP * (long) mtmp->data->cwt) / WT_HUMAN;
+             || (strongmonst(mtmp->data) && (mcwt > WT_HUMAN)))
+        maxload = (MAX_CARR_CAP * (long) mcwt) / WT_HUMAN;
     else
         maxload = MAX_CARR_CAP; /*strong monsters w/cwt <= WT_HUMAN*/
 

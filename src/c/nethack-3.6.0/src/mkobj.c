@@ -1333,13 +1333,13 @@ register struct obj *obj;
     int wt = objects[obj->otyp].oc_weight;
 
     if (SchroedingersBox(obj))
-        wt += mons[PM_HOUSECAT].cwt;
+        wt += monsterCorpseWeight(PM_HOUSECAT);
     if (Is_container(obj) || obj->otyp == STATUE) {
         struct obj *contents;
         register int cwt = 0;
 
         if (obj->otyp == STATUE && obj->corpsenm >= LOW_PM)
-            wt = (int) obj->quan * ((int) mons[obj->corpsenm].cwt * 3 / 2);
+            wt = (int) obj->quan * (monsterCorpseWeight(mons[obj->corpsenm].monsterTypeID) * 3 / 2);
 
         for (contents = obj->cobj; contents; contents = contents->nobj)
             cwt += weight(contents);
@@ -1364,7 +1364,7 @@ register struct obj *obj;
         return wt + cwt;
     }
     if (obj->otyp == CORPSE && obj->corpsenm >= LOW_PM) {
-        long long_wt = obj->quan * (long) mons[obj->corpsenm].cwt;
+        long long_wt = obj->quan * (long) monsterCorpseWeight(mons[obj->corpsenm].monsterTypeID);
 
         wt = (long_wt > LARGEST_INT) ? LARGEST_INT : (int) long_wt;
         if (obj->oeaten)

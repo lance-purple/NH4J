@@ -1248,7 +1248,7 @@ int okind;
         mdat = &mons[pm_index];
 
     mtmp = makemon(mdat, obj->ox, obj->oy, NO_MM_FLAGS);
-    polyuse(obj, okind, (int) mons[pm_index].cwt);
+    polyuse(obj, okind, monsterCorpseWeight(mons[pm_index].monsterTypeID));
 
     if (mtmp && cansee(mtmp->mx, mtmp->my)) {
         pline("Some %sobjects meld, and %s arises from the pile!", material,

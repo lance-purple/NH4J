@@ -2957,4 +2957,8 @@ public class MonsterType {
 		return getMonsterType(pmid).generationMask;
 	}
 
+	public static int monsterCorpseWeight(int pmid) {
+		return getMonsterType(pmid).corpseWeight;
+	}
+
 }

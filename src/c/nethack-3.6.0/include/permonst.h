@@ -51,8 +51,8 @@ struct permonst {
     aligntyp XXmaligntyp;       /* basic monster alignment */
     unsigned short XXgeno;      /* creation/geno mask value */
     struct attack mattk[NATTK]; /* attacks matrix */
-    unsigned short cwt,         /* weight of corpse */
-        cnutrit;                /* its nutritional value */
+    unsigned short XXcwt;       /* weight of corpse */
+    unsigned short cnutrit;     /* its nutritional value */
     uchar msound;               /* noise it makes (6 bits) */
     uchar msize;                /* physical size (3 bits) */
     uchar mresists;             /* resistances */

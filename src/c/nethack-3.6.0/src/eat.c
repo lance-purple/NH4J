@@ -1622,7 +1622,7 @@ struct obj *otmp;
     }
 
     /* delay is weight dependent */
-    context.victual.reqtime = 3 + (mons[mnum].cwt >> 6);
+    context.victual.reqtime = 3 + (monsterCorpseWeight(mons[mnum].monsterTypeID) >> 6);
 
     if (!tp && !nonrotting_corpse(mnum) && (otmp->orotten || !rn2(7))) {
         if (rottenfood(otmp)) {

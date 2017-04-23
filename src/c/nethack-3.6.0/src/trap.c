@@ -4143,7 +4143,7 @@ struct trap *ttmp;
     }
 
     /* is the monster too heavy? */
-    wt = inv_weight() + mtmp->data->cwt;
+    wt = inv_weight() + monsterCorpseWeight(mtmp->data->monsterTypeID);
     if (!try_lift(mtmp, ttmp, wt, FALSE))
         return 1;
 

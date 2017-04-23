@@ -2785,14 +2785,15 @@ weight_cap()
     carrcap = 25 * (ACURRSTR + ACURR(A_CON)) + 50;
     if (areYouPolymorphed()) {
         /* consistent with can_carry() in mon.c */
+	int yourCorpseWeight = monsterCorpseWeight(youmonst.data->monsterTypeID);
         if (monsterClass(youmonst.data->monsterTypeID) == S_NYMPH)
             carrcap = MAX_CARR_CAP;
-        else if (!youmonst.data->cwt)
+        else if (!yourCorpseWeight)
             carrcap = (carrcap * (long) youmonst.data->msize) / MZ_HUMAN;
         else if (!strongmonst(youmonst.data)
                  || (strongmonst(youmonst.data)
-                     && (youmonst.data->cwt > WT_HUMAN)))
-            carrcap = (carrcap * (long) youmonst.data->cwt / WT_HUMAN);
+                     && (yourCorpseWeight > WT_HUMAN)))
+            carrcap = (carrcap * (long) yourCorpseWeight / WT_HUMAN);
     }
 
     if (youAreLevitating() || areYouOnAirLevel() /* pugh@cornell */
