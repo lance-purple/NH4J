@@ -91,7 +91,7 @@ register int nk;
 
     /*  For each "special" attack type give extra experience */
     for (i = 0; i < NATTK; i++) {
-        tmp2 = ptr->mattk[i].aatyp;
+        tmp2 = ptr->mattk[i].type;
         if (tmp2 > AT_BUTT) {
             if (tmp2 == AT_WEAP)
                 tmp += 5;
@@ -104,7 +104,7 @@ register int nk;
 
     /*  For each "special" damage type give extra experience */
     for (i = 0; i < NATTK; i++) {
-        tmp2 = ptr->mattk[i].adtyp;
+        tmp2 = ptr->mattk[i].damageType;
         if (tmp2 > AD_PHYS && tmp2 < AD_BLND)
             tmp += 2 * mtmp->m_lev;
         else if ((tmp2 == AD_DRLI) || (tmp2 == AD_STON) || (tmp2 == AD_SLIM))
@@ -112,7 +112,7 @@ register int nk;
         else if (tmp2 != AD_PHYS)
             tmp += mtmp->m_lev;
         /* extra heavy damage bonus */
-        if ((int) (ptr->mattk[i].damd * ptr->mattk[i].damn) > 23)
+        if ((int) (ptr->mattk[i].diceSides * ptr->mattk[i].dice) > 23)
             tmp += mtmp->m_lev;
         if (tmp2 == AD_WRAP && monsterClass(ptr->monsterTypeID) == S_EEL && !youAreAmphibious())
             tmp += 1000;

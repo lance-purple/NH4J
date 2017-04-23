@@ -1099,7 +1099,7 @@ dobreathe()
     else if (!directionX() && !directionY() && !directionZ())
         ubreatheu(mattk);
     else
-        buzz((int) (20 + mattk->adtyp - 1), (int) mattk->damn, currentX(), currentY(),
+        buzz((int) (20 + mattk->damageType - 1), (int) mattk->dice, currentX(), currentY(),
              directionX(), directionY());
     return 1;
 }
@@ -1116,7 +1116,7 @@ dospit()
     if (!mattk) {
         impossible("bad spit attack?");
     } else {
-        switch (mattk->adtyp) {
+        switch (mattk->damageType) {
         case AD_BLND:
         case AD_DRST:
             otmp = mksobj(BLINDING_VENOM, TRUE, FALSE);
@@ -1170,7 +1170,7 @@ dospinweb()
             int i;
 
             for (i = 0; i < NATTK; i++)
-                if (u.ustuck->data->mattk[i].aatyp == AT_ENGL)
+                if (u.ustuck->data->mattk[i].type == AT_ENGL)
                     break;
             if (i == NATTK)
                 impossible("Swallower has no engulfing attack?");
@@ -1178,7 +1178,7 @@ dospinweb()
                 char sweep[30];
 
                 sweep[0] = '\0';
-                switch (u.ustuck->data->mattk[i].adtyp) {
+                switch (u.ustuck->data->mattk[i].damageType) {
                 case AD_FIRE:
                     Strcpy(sweep, "ignites and ");
                     break;
@@ -1293,16 +1293,16 @@ dogaze()
     int looked = 0;
     char qbuf[QBUFSZ];
     int i;
-    uchar adtyp = 0;
+    uchar damageType = 0;
 
     for (i = 0; i < NATTK; i++) {
-        if (youmonst.data->mattk[i].aatyp == AT_GAZE) {
-            adtyp = youmonst.data->mattk[i].adtyp;
+        if (youmonst.data->mattk[i].type == AT_GAZE) {
+            damageType = youmonst.data->mattk[i].damageType;
             break;
         }
     }
-    if (adtyp != AD_CONF && adtyp != AD_FIRE) {
-        impossible("gaze attack %d?", adtyp);
+    if (damageType != AD_CONF && damageType != AD_FIRE) {
+        impossible("gaze attack %d?", damageType);
         return 0;
     }
 
@@ -1338,7 +1338,7 @@ dogaze()
             } else {
                 if (flags.confirm && mtmp->mpeaceful && !youAreConfused()) {
                     Sprintf(qbuf, "Really %s %s?",
-                            (adtyp == AD_CONF) ? "confuse" : "attack",
+                            (damageType == AD_CONF) ? "confuse" : "attack",
                             mon_nam(mtmp));
                     if (yn(qbuf) != 'y')
                         continue;
@@ -1352,14 +1352,14 @@ dogaze()
                 /* No reflection check for consistency with when a monster
                  * gazes at *you*--only medusa gaze gets reflected then.
                  */
-                if (adtyp == AD_CONF) {
+                if (damageType == AD_CONF) {
                     if (!mtmp->mconf)
                         Your("gaze confuses %s!", mon_nam(mtmp));
                     else
                         pline("%s is getting more and more confused.",
                               Monnam(mtmp));
                     mtmp->mconf = 1;
-                } else if (adtyp == AD_FIRE) {
+                } else if (damageType == AD_FIRE) {
                     int dmg = d(2, 6), lev = (int) currentExperienceLevel();
 
                     You("attack %s with a fiery gaze!", mon_nam(mtmp));
@@ -1390,7 +1390,7 @@ dogaze()
                             s_suffix(mon_nam(mtmp)));
                         nomul((currentExperienceLevel() > 6 || rn2(4))
                                   ? -d((int) mtmp->m_lev + 1,
-                                       (int) mtmp->data->mattk[0].damd)
+                                       (int) mtmp->data->mattk[0].diceSides)
                                   : -200);
                         multi_reason = "frozen by a monster's gaze";
                         nomovemsg = 0;

@@ -73,7 +73,7 @@ register struct attack *mattk;
         far_noise = farq;
         noisetime = moves;
         You_hear("%s%s.",
-                 (mattk->aatyp == AT_EXPL) ? "an explosion" : "some noises",
+                 (mattk->type == AT_EXPL) ? "an explosion" : "some noises",
                  farq ? " in the distance" : "");
     }
 }
@@ -354,7 +354,7 @@ register struct monst *magr, *mdef;
         mattk = getmattk(pa, i, res, &alt_attk);
         otmp = (struct obj *) 0;
         attk = 1;
-        switch (mattk->aatyp) {
+        switch (mattk->type) {
         case AT_WEAP: /* "hand to hand" attacks */
             if (magr->weapon_check == NEED_WEAPON || !MON_WEP(magr)) {
                 magr->weapon_check = NEED_HTH_WEAPON;
@@ -384,7 +384,7 @@ register struct monst *magr, *mdef;
              * have a weapon instead.  This instinct doesn't work for
              * players, or under conflict or confusion.
              */
-            if (!magr->mconf && !youCauseConflict() && otmp && mattk->aatyp != AT_WEAP
+            if (!magr->mconf && !youCauseConflict() && otmp && mattk->type != AT_WEAP
                 && touch_petrifies(mdef->data)) {
                 strike = 0;
                 break;
@@ -505,7 +505,7 @@ struct attack *mattk;
             char magr_name[BUFSZ];
 
             Strcpy(magr_name, Monnam(magr));
-            switch (mattk->aatyp) {
+            switch (mattk->type) {
             case AT_BITE:
                 Sprintf(buf, "%s bites", magr_name);
                 break;
@@ -732,14 +732,14 @@ register struct attack *mattk;
     struct obj *obj;
     char buf[BUFSZ];
     struct permonst *pa = magr->data, *pd = mdef->data;
-    int armpro, num, tmp = d((int) mattk->damn, (int) mattk->damd),
+    int armpro, num, tmp = d((int) mattk->dice, (int) mattk->diceSides),
                      res = MM_MISS;
     boolean cancelled;
 
     if ((touch_petrifies(pd) /* or flesh_petrifies() */
-         || (mattk->adtyp == AD_DGST && pd == &mons[PM_MEDUSA]))
+         || (mattk->damageType == AD_DGST && pd == &mons[PM_MEDUSA]))
         && !resists_ston(magr)) {
-        long protector = attk_protection((int) mattk->aatyp),
+        long protector = attk_protection((int) mattk->type),
              wornitems = magr->misc_worn_check;
 
         /* wielded weapon gives same protection as gloves here */
@@ -767,7 +767,7 @@ register struct attack *mattk;
     armpro = magic_negation(mdef);
     cancelled = magr->mcan || !(rn2(10) >= 3 * armpro);
 
-    switch (mattk->adtyp) {
+    switch (mattk->damageType) {
     case AD_DGST:
         /* eating a Rider or its corpse is fatal */
         if (is_rider(pd)) {
@@ -836,9 +836,9 @@ register struct attack *mattk;
     case AD_HEAL:
     case AD_PHYS:
     physical:
-        if (mattk->aatyp == AT_KICK && thick_skinned(pd)) {
+        if (mattk->type == AT_KICK && thick_skinned(pd)) {
             tmp = 0;
-        } else if (mattk->aatyp == AT_WEAP) {
+        } else if (mattk->type == AT_WEAP) {
             if (otmp) {
                 if (otmp->otyp == CORPSE
                     && touch_petrifies(&mons[otmp->corpsenm]))
@@ -1008,7 +1008,7 @@ register struct attack *mattk;
                 You(brief_feeling, "peculiarly sad");
             return (MM_DEF_DIED | (grow_up(magr, mdef) ? 0 : MM_AGR_DIED));
         }
-        tmp = (mattk->adtyp == AD_STON ? 0 : 1);
+        tmp = (mattk->damageType == AD_STON ? 0 : 1);
         break;
     case AD_TLPT:
         if (!cancelled && tmp < mdef->mhp && !tele_restrict(mdef)) {
@@ -1066,12 +1066,12 @@ register struct attack *mattk;
         }
         break;
     case AD_BLND:
-        if (can_blnd(magr, mdef, mattk->aatyp, (struct obj *) 0)) {
+        if (can_blnd(magr, mdef, mattk->type, (struct obj *) 0)) {
             register unsigned rnd_tmp;
 
             if (vis && mdef->mcansee)
                 pline("%s is blinded.", Monnam(mdef));
-            rnd_tmp = d((int) mattk->damn, (int) mattk->damd);
+            rnd_tmp = d((int) mattk->dice, (int) mattk->diceSides);
             if ((rnd_tmp += mdef->mblinded) > 127)
                 rnd_tmp = 127;
             mdef->mblinded = rnd_tmp;
@@ -1212,7 +1212,7 @@ register struct attack *mattk;
         break;
     case AD_DREN:
         if (!cancelled && !rn2(4))
-            xdrainenergym(mdef, vis && mattk->aatyp != AT_ENGL);
+            xdrainenergym(mdef, vis && mattk->type != AT_ENGL);
         tmp = 0;
         break;
     case AD_DRST:
@@ -1300,13 +1300,13 @@ register struct attack *mattk;
             place_monster(mdef, mdef->mx, mdef->my);
             mdef->mhp = 0;
         }
-        monkilled(mdef, "", (int) mattk->adtyp);
+        monkilled(mdef, "", (int) mattk->damageType);
         if (mdef->mhp > 0)
             return res; /* mdef lifesaved */
         else if (res == MM_AGR_DIED)
             return (MM_DEF_DIED | MM_AGR_DIED);
 
-        if (mattk->adtyp == AD_DGST) {
+        if (mattk->damageType == AD_DGST) {
             /* various checks similar to dog_eat and meatobj.
              * after monkilled() to provide better message ordering */
             if (mdef->cham >= LOW_PM) {
@@ -1429,18 +1429,18 @@ int mdead;
     for (i = 0;; i++) {
         if (i >= NATTK)
             return (mdead | mhit); /* no passive attacks */
-        if (mddat->mattk[i].aatyp == AT_NONE)
+        if (mddat->mattk[i].type == AT_NONE)
             break;
     }
-    if (mddat->mattk[i].damn)
-        tmp = d((int) mddat->mattk[i].damn, (int) mddat->mattk[i].damd);
-    else if (mddat->mattk[i].damd)
-        tmp = d(monsterLevel(mddat->monsterTypeID) + 1, (int) mddat->mattk[i].damd);
+    if (mddat->mattk[i].dice)
+        tmp = d((int) mddat->mattk[i].dice, (int) mddat->mattk[i].diceSides);
+    else if (mddat->mattk[i].diceSides)
+        tmp = d(monsterLevel(mddat->monsterTypeID) + 1, (int) mddat->mattk[i].diceSides);
     else
         tmp = 0;
 
     /* These affect the enemy even if defender killed */
-    switch (mddat->mattk[i].adtyp) {
+    switch (mddat->mattk[i].damageType) {
     case AD_ACID:
         if (mhit && !rn2(2)) {
             Strcpy(buf, Monnam(magr));
@@ -1473,7 +1473,7 @@ int mdead;
 
     /* These affect the enemy only if defender is still alive */
     if (rn2(3))
-        switch (mddat->mattk[i].adtyp) {
+        switch (mddat->mattk[i].damageType) {
         case AD_PLYS: /* Floating eye */
             if (tmp > 127)
                 tmp = 127;
@@ -1561,7 +1561,7 @@ int mdead;
 
 assess_dmg:
     if ((magr->mhp -= tmp) <= 0) {
-        monkilled(magr, "", (int) mddat->mattk[i].adtyp);
+        monkilled(magr, "", (int) mddat->mattk[i].damageType);
         return (mdead | mhit | MM_AGR_DIED);
     }
     return (mdead | mhit);
@@ -1585,12 +1585,12 @@ boolean givemsg;
 /* "aggressive defense"; what type of armor prevents specified attack
    from touching its target? */
 long
-attk_protection(aatyp)
-int aatyp;
+attk_protection(type)
+int type;
 {
     long w_mask = 0L;
 
-    switch (aatyp) {
+    switch (type) {
     case AT_NONE:
     case AT_SPIT:
     case AT_EXPL:

@@ -26,7 +26,7 @@ STATIC_DCL boolean
 FDECL(Mb_hit, (struct monst * magr, struct monst *mdef, struct obj *, int *,
                int, BOOLEAN_P, char *));
 STATIC_DCL unsigned long FDECL(extrinsic_to_spfx, (int));
-STATIC_DCL uchar FDECL(extrinsic_to_adtyp, (int));
+STATIC_DCL uchar FDECL(extrinsic_to_damageType, (int));
 STATIC_DCL boolean FDECL(untouchable, (struct obj *, BOOLEAN_P));
 
 /* The amount added to the victim's total hit points to insure that the
@@ -403,39 +403,39 @@ const char *name;
 }
 
 STATIC_OVL boolean
-attacks(adtyp, otmp)
-int adtyp;
+attacks(damageType, otmp)
+int damageType;
 struct obj *otmp;
 {
     register const struct artifact *weap;
 
     if ((weap = get_artifact(otmp)) != 0)
-        return (boolean) (weap->attk.adtyp == adtyp);
+        return (boolean) (weap->attk.damageType == damageType);
     return FALSE;
 }
 
 boolean
-defends(adtyp, otmp)
-int adtyp;
+defends(damageType, otmp)
+int damageType;
 struct obj *otmp;
 {
     register const struct artifact *weap;
 
     if ((weap = get_artifact(otmp)) != 0)
-        return (boolean) (weap->defn.adtyp == adtyp);
+        return (boolean) (weap->defn.damageType == damageType);
     return FALSE;
 }
 
 /* used for monsters */
 boolean
-defends_when_carried(adtyp, otmp)
-int adtyp;
+defends_when_carried(damageType, otmp)
+int damageType;
 struct obj *otmp;
 {
     register const struct artifact *weap;
 
     if ((weap = get_artifact(otmp)) != 0)
-        return (boolean) (weap->cary.adtyp == adtyp);
+        return (boolean) (weap->cary.damageType == damageType);
     return FALSE;
 }
 
@@ -475,7 +475,7 @@ long wp_mask;
         return;
 
     /* effects from the defn field */
-    dtyp = (wp_mask != W_ART) ? oart->defn.adtyp : oart->cary.adtyp;
+    dtyp = (wp_mask != W_ART) ? oart->defn.damageType : oart->cary.damageType;
 
     if (dtyp == AD_FIRE)
         extrinsic = FIRE_RES;
@@ -497,7 +497,7 @@ long wp_mask;
         for (obj = invent; obj; obj = obj->nobj)
             if (obj != otmp && obj->oartifact) {
                 register const struct artifact *art = get_artifact(obj);
-                if (art->cary.adtyp == dtyp) {
+                if (art->cary.damageType == dtyp) {
                     extrinsic = 0;
                     break;
                 }
@@ -726,9 +726,9 @@ int dtyp;
         return FALSE;
     if (dtyp == AD_PHYS)
         return FALSE; /* nothing is immune to phys dmg */
-    return (boolean) (weap->attk.adtyp == dtyp
-                      || weap->defn.adtyp == dtyp
-                      || weap->cary.adtyp == dtyp);
+    return (boolean) (weap->attk.damageType == dtyp
+                      || weap->defn.damageType == dtyp
+                      || weap->cary.damageType == dtyp);
 }
 
 STATIC_OVL boolean
@@ -757,7 +757,7 @@ struct monst *mtmp;
     boolean yours;
 
     if (!(weap->spfx & (SPFX_DBONUS | SPFX_ATTK)))
-        return (weap->attk.adtyp == AD_PHYS);
+        return (weap->attk.damageType == AD_PHYS);
 
     yours = (mtmp == &youmonst);
     ptr = mtmp->data;
@@ -782,9 +782,9 @@ struct monst *mtmp;
         struct obj *defending_weapon = (yours ? uwep : MON_WEP(mtmp));
 
         if (defending_weapon && defending_weapon->oartifact
-            && defends((int) weap->attk.adtyp, defending_weapon))
+            && defends((int) weap->attk.damageType, defending_weapon))
             return FALSE;
-        switch (weap->attk.adtyp) {
+        switch (weap->attk.damageType) {
         case AD_FIRE:
             return !(yours ? youResistFire() : resists_fire(mtmp));
         case AD_COLD:
@@ -831,8 +831,8 @@ struct monst *mon;
     /* no need for an extra check for `NO_ATTK' because this will
        always return 0 for any artifact which has that attribute */
 
-    if (weap && weap->attk.damn && spec_applies(weap, mon))
-        return rnd((int) weap->attk.damn);
+    if (weap && weap->attk.dice && spec_applies(weap, mon))
+        return rnd((int) weap->attk.dice);
     return 0;
 }
 
@@ -845,8 +845,8 @@ int tmp;
 {
     register const struct artifact *weap = get_artifact(otmp);
 
-    if (!weap || (weap->attk.adtyp == AD_PHYS /* check for `NO_ATTK' */
-                  && weap->attk.damn == 0 && weap->attk.damd == 0))
+    if (!weap || (weap->attk.damageType == AD_PHYS /* check for `NO_ATTK' */
+                  && weap->attk.dice == 0 && weap->attk.diceSides == 0))
         spec_dbon_applies = FALSE;
     else if (otmp->oartifact == ART_GRIMTOOTH)
         /* Grimtooth has SPFX settings to warn against elves but we want its
@@ -856,7 +856,7 @@ int tmp;
         spec_dbon_applies = spec_applies(weap, mon);
 
     if (spec_dbon_applies)
-        return weap->attk.damd ? rnd((int) weap->attk.damd) : max(tmp, 1);
+        return weap->attk.diceSides ? rnd((int) weap->attk.diceSides) : max(tmp, 1);
     return 0;
 }
 
@@ -1743,13 +1743,13 @@ struct obj *otmp;
 }
 
 STATIC_OVL uchar
-extrinsic_to_adtyp(extrinsic)
+extrinsic_to_damageType(extrinsic)
 int extrinsic;
 {
-    struct abil2adtyp_tag {
+    struct abil2damageType {
         int extrinsic;
-        uchar adtyp;
-    } abil2adtyp[] = {
+        uchar damageType;
+    } abil2damageType[] = {
         { FIRE_RES, AD_FIRE },
         { COLD_RES, AD_COLD },
         { SHOCK_RES, AD_ELEC },
@@ -1759,9 +1759,9 @@ int extrinsic;
     };
     int k;
 
-    for (k = 0; k < SIZE(abil2adtyp); k++) {
-        if (abil2adtyp[k].extrinsic == extrinsic)
-            return abil2adtyp[k].adtyp;
+    for (k = 0; k < SIZE(abil2damageType); k++) {
+        if (abil2damageType[k].extrinsic == extrinsic)
+            return abil2damageType[k].damageType;
     }
     return 0;
 }
@@ -1815,7 +1815,7 @@ int extrinsic;
 
     if (usingTwoWeapons())
         wornmask |= W_SWAPWEP;
-    dtyp = extrinsic_to_adtyp(extrinsic);
+    dtyp = extrinsic_to_damageType(extrinsic);
     spfx = extrinsic_to_spfx(extrinsic);
     wornbits = (wornmask & yourExtrinsic(extrinsic));
 
@@ -1826,7 +1826,7 @@ int extrinsic;
 
             if (art) {
                 if (dtyp) {
-                    if (art->cary.adtyp == dtyp || art->defn.adtyp == dtyp)
+                    if (art->cary.damageType == dtyp || art->defn.damageType == dtyp)
                         return obj;
                 }
                 if (spfx) {
@@ -1975,7 +1975,7 @@ boolean drop_untouchable;
                          || (Is_container(obj) && Has_contents(obj)))));
 
     if ((art = get_artifact(obj)) != 0) {
-        carryeffect = (art->cary.adtyp || art->cspfx);
+        carryeffect = (art->cary.damageType || art->cspfx);
         invoked = (art->inv_prop > 0 && art->inv_prop <= LAST_PROP
                    && yourExtrinsicHasMask(art->inv_prop, W_ARTI));
     } else {

@@ -33,7 +33,7 @@ int atyp, dtyp;
     struct attack *a;
 
     for (a = &ptr->mattk[0]; a < &ptr->mattk[NATTK]; a++)
-        if (a->aatyp == atyp && (dtyp == AD_ANY || a->adtyp == dtyp))
+        if (a->type == atyp && (dtyp == AD_ANY || a->damageType == dtyp))
             return a;
     return (struct attack *) 0;
 }
@@ -58,10 +58,10 @@ struct permonst *ptr;
     for (i = 0; i < NATTK; i++) {
         /* AT_BOOM "passive attack" (gas spore's explosion upon death)
            isn't an attack as far as our callers are concerned */
-        if (mattk[i].aatyp == AT_BOOM)
+        if (mattk[i].type == AT_BOOM)
             continue;
 
-        if (mattk[i].aatyp)
+        if (mattk[i].type)
             return FALSE;
     }
     return TRUE;
@@ -170,11 +170,11 @@ struct monst *mon;
 /* True iff monster can be blinded by the given attack;
    note: may return True when mdef is blind (e.g. new cream-pie attack) */
 boolean
-can_blnd(magr, mdef, aatyp, obj)
+can_blnd(magr, mdef, type, obj)
 struct monst *magr; /* NULL == no specific aggressor */
 struct monst *mdef;
-uchar aatyp;
-struct obj *obj; /* aatyp == AT_WEAP, AT_SPIT */
+uchar type;
+struct obj *obj; /* type == AT_WEAP, AT_SPIT */
 {
     boolean is_you = (mdef == &youmonst);
     boolean check_visor = FALSE;
@@ -185,7 +185,7 @@ struct obj *obj; /* aatyp == AT_WEAP, AT_SPIT */
     if (!haseyes(mdef->data))
         return FALSE;
 
-    switch (aatyp) {
+    switch (type) {
     case AT_EXPL:
     case AT_BOOM:
     case AT_GAZE:
@@ -270,7 +270,7 @@ struct permonst *ptr;
      * but that's too slow -dlc
      */
     for (i = 0; i < NATTK; i++) {
-        atyp = ptr->mattk[i].aatyp;
+        atyp = ptr->mattk[i].type;
         if (atyp >= AT_WEAP)
             return TRUE;
         /* assert(atyp < 32); */
@@ -447,7 +447,7 @@ int dtyp, atyp;
     struct attack *a;
 
     for (a = &ptr->mattk[0]; a < &ptr->mattk[NATTK]; a++)
-        if (a->adtyp == dtyp && (atyp == AT_ANY || a->aatyp == atyp))
+        if (a->damageType == dtyp && (atyp == AT_ANY || a->type == atyp))
             return a;
     return (struct attack *) 0;
 }
@@ -468,11 +468,11 @@ max_passive_dmg(mdef, magr)
 register struct monst *mdef, *magr;
 {
     int i, dmg = 0, multi2 = 0;
-    uchar adtyp;
+    uchar damageType;
 
     /* each attack by magr can result in passive damage */
     for (i = 0; i < NATTK; i++)
-        switch (magr->data->mattk[i].aatyp) {
+        switch (magr->data->mattk[i].type) {
         case AT_CLAW:
         case AT_BITE:
         case AT_KICK:
@@ -490,18 +490,18 @@ register struct monst *mdef, *magr;
         }
 
     for (i = 0; i < NATTK; i++)
-        if (mdef->data->mattk[i].aatyp == AT_NONE
-            || mdef->data->mattk[i].aatyp == AT_BOOM) {
-            adtyp = mdef->data->mattk[i].adtyp;
-            if ((adtyp == AD_ACID && !resists_acid(magr))
-                || (adtyp == AD_COLD && !resists_cold(magr))
-                || (adtyp == AD_FIRE && !resists_fire(magr))
-                || (adtyp == AD_ELEC && !resists_elec(magr))
-                || adtyp == AD_PHYS) {
-                dmg = mdef->data->mattk[i].damn;
+        if (mdef->data->mattk[i].type == AT_NONE
+            || mdef->data->mattk[i].type == AT_BOOM) {
+            damageType = mdef->data->mattk[i].damageType;
+            if ((damageType == AD_ACID && !resists_acid(magr))
+                || (damageType == AD_COLD && !resists_cold(magr))
+                || (damageType == AD_FIRE && !resists_fire(magr))
+                || (damageType == AD_ELEC && !resists_elec(magr))
+                || damageType == AD_PHYS) {
+                dmg = mdef->data->mattk[i].dice;
                 if (!dmg)
                     dmg = monsterLevel(mdef->data->monsterTypeID) + 1;
-                dmg *= mdef->data->mattk[i].damd;
+                dmg *= mdef->data->mattk[i].diceSides;
             } else
                 dmg = 0;
 
@@ -1102,7 +1102,7 @@ struct attack *mattk;
         what = "heating up";
         break;
     default:
-        what = (mattk->aatyp == AT_HUGS) ? "being roasted" : "on fire";
+        what = (mattk->type == AT_HUGS) ? "being roasted" : "on fire";
         break;
     }
     return what;

@@ -4248,11 +4248,11 @@ int main(int argc, char* argv[])
 
        int aa;
        for (aa = 0; aa < NATTK; aa++) {
-           if (mons[i].mattk[aa].aatyp != 0) {
+           if (mons[i].mattk[aa].type != 0) {
                fprintf(stdout, "\n        .attack(%s, %s, %d, Dice.D%d)",
-                   AT_NAME(mons[i].mattk[aa].aatyp),
-                   AD_NAME(mons[i].mattk[aa].adtyp),
-                   mons[i].mattk[aa].damn, mons[i].mattk[aa].damd);
+                   AT_NAME(mons[i].mattk[aa].type),
+                   AD_NAME(mons[i].mattk[aa].damageType),
+                   mons[i].mattk[aa].dice, mons[i].mattk[aa].diceSides);
 	   }
        }
 

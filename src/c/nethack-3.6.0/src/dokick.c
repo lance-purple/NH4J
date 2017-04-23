@@ -202,7 +202,7 @@ xchar x, y;
 
             uattk = &youmonst.data->mattk[i];
             /* we only care about kicking attacks here */
-            if (uattk->aatyp != AT_KICK)
+            if (uattk->type != AT_KICK)
                 continue;
 
             if (mon->data == &mons[PM_SHADE] && (!uarmf || !uarmf->blessed)) {

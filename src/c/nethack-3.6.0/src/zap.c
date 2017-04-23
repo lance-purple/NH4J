@@ -2430,10 +2430,10 @@ void
 ubreatheu(mattk)
 struct attack *mattk;
 {
-    int dtyp = 20 + mattk->adtyp - 1;      /* breath by hero */
+    int dtyp = 20 + mattk->damageType - 1;      /* breath by hero */
     const char *fltxt = flash_types[dtyp]; /* blast of <something> */
 
-    zhitu(dtyp, mattk->damn, fltxt, currentX(), currentY());
+    zhitu(dtyp, mattk->dice, fltxt, currentX(), currentY());
 }
 
 /* light damages hero in gremlin form */

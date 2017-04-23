@@ -41,7 +41,7 @@ register struct attack *mattk;
         pline("%s %s you %s.", Monnam(mtmp), youCannotSee() ? "talks to" : "smiles at",
               compat == 2 ? "engagingly" : "seductively");
     } else
-        switch (mattk->aatyp) {
+        switch (mattk->type) {
         case AT_BITE:
             pline("%s bites!", Monnam(mtmp));
             break;
@@ -108,15 +108,15 @@ mpoisons_subj(mtmp, mattk)
 struct monst *mtmp;
 struct attack *mattk;
 {
-    if (mattk->aatyp == AT_WEAP) {
+    if (mattk->type == AT_WEAP) {
         struct obj *mwep = (mtmp == &youmonst) ? uwep : MON_WEP(mtmp);
         /* "Foo's attack was poisoned." is pretty lame, but at least
            it's better than "sting" when not a stinging attack... */
         return (!mwep || !mwep->opoisoned) ? "attack" : "weapon";
     } else {
-        return (mattk->aatyp == AT_TUCH) ? "contact"
-                  : (mattk->aatyp == AT_GAZE) ? "gaze"
-                       : (mattk->aatyp == AT_BITE) ? "bite" : "sting";
+        return (mattk->type == AT_TUCH) ? "contact"
+                  : (mattk->type == AT_GAZE) ? "gaze"
+                       : (mattk->type == AT_BITE) ? "bite" : "sting";
     }
 }
 
@@ -148,16 +148,16 @@ register struct attack *mattk;
         return;
     /* maybe it's attacking an image around the corner? */
 
-    compat = ((mattk->adtyp == AD_SEDU || mattk->adtyp == AD_SSEX)
+    compat = ((mattk->damageType == AD_SEDU || mattk->damageType == AD_SSEX)
               && could_seduce(mtmp, &youmonst, (struct attack *) 0));
 
     if (!mtmp->mcansee || (youAreInvisibleToOthers() && !perceives(mtmp->data))) {
         const char *swings =
-            mattk->aatyp == AT_BITE
+            mattk->type == AT_BITE
                 ? "snaps"
-                : mattk->aatyp == AT_KICK
+                : mattk->type == AT_KICK
                       ? "kicks"
-                      : (mattk->aatyp == AT_STNG || mattk->aatyp == AT_BUTT
+                      : (mattk->type == AT_STNG || mattk->type == AT_BUTT
                          || nolimbs(mtmp->data))
                             ? "lunges"
                             : "swings";
@@ -225,13 +225,13 @@ boolean message;
 
             blast[0] = '\0';
             for (i = 0; i < NATTK; i++)
-                if (mdat->mattk[i].aatyp == AT_ENGL)
+                if (mdat->mattk[i].type == AT_ENGL)
                     break;
-            if (mdat->mattk[i].aatyp != AT_ENGL)
+            if (mdat->mattk[i].type != AT_ENGL)
                 impossible("Swallower has no engulfing attack?");
             else {
                 if (isWhirly(mdat->monsterTypeID)) {
-                    switch (mdat->mattk[i].adtyp) {
+                    switch (mdat->mattk[i].damageType) {
                     case AD_ELEC:
                         Strcpy(blast, " in a shower of sparks");
                         break;
@@ -267,12 +267,12 @@ struct attack *alt_attk_buf;
        from hitting with both of them on the same turn; if the first has
        already hit, switch to a stun attack for the second */
     if (indx > 0 && prev_result[indx - 1] > 0
-        && (attk->adtyp == AD_DISE || attk->adtyp == AD_PEST
-            || attk->adtyp == AD_FAMN)
-        && attk->adtyp == mptr->mattk[indx - 1].adtyp) {
+        && (attk->damageType == AD_DISE || attk->damageType == AD_PEST
+            || attk->damageType == AD_FAMN)
+        && attk->damageType == mptr->mattk[indx - 1].damageType) {
         *alt_attk_buf = *attk;
         attk = alt_attk_buf;
-        attk->adtyp = AD_STUN;
+        attk->damageType = AD_STUN;
     }
     return attk;
 }
@@ -607,11 +607,11 @@ register struct monst *mtmp;
     for (i = 0; i < NATTK; i++) {
         sum[i] = 0;
         mattk = getmattk(mdat, i, sum, &alt_attk);
-        if ((swallowed() && mattk->aatyp != AT_ENGL)
-            || (skipnonmagc && mattk->aatyp != AT_MAGC))
+        if ((swallowed() && mattk->type != AT_ENGL)
+            || (skipnonmagc && mattk->type != AT_MAGC))
             continue;
 
-        switch (mattk->aatyp) {
+        switch (mattk->type) {
         case AT_CLAW: /* "hand to hand" attacks */
         case AT_KICK:
         case AT_BITE:
@@ -623,7 +623,7 @@ register struct monst *mtmp;
                             || !touch_petrifies(youmonst.data))) {
                 if (foundyou) {
                     if (tmp > (j = rnd(20 + i))) {
-                        if (mattk->aatyp != AT_KICK
+                        if (mattk->type != AT_KICK
                             || !thick_skinned(youmonst.data))
                             sum[i] = hitmu(mtmp, mattk);
                     } else
@@ -781,7 +781,7 @@ struct attack *mattk;
 
     if (!obj)
         obj = uarmu;
-    if (mattk->adtyp == AD_DRIN)
+    if (mattk->damageType == AD_DRIN)
         obj = uarmh;
 
     /* if your cloak/armor is greased, monster slips off; this
@@ -789,7 +789,7 @@ struct attack *mattk;
     if (obj && (obj->greased || obj->otyp == OILSKIN_CLOAK)
         && (!obj->cursed || rn2(3))) {
         pline("%s %s your %s %s!", Monnam(mtmp),
-              (mattk->adtyp == AD_WRAP) ? "slips off of"
+              (mattk->damageType == AD_WRAP) ? "slips off of"
                                         : "grabs you, but cannot hold onto",
               obj->greased ? "greased" : "slippery",
               /* avoid "slippery slippery cloak"
@@ -900,9 +900,9 @@ register struct attack *mattk;
     }
 
     /*  First determine the base damage done */
-    dmg = d((int) mattk->damn, (int) mattk->damd);
+    dmg = d((int) mattk->dice, (int) mattk->diceSides);
     if ((is_undead(mdat) || is_vampshifter(mtmp)) && midnight())
-        dmg += d((int) mattk->damn, (int) mattk->damd); /* extra damage */
+        dmg += d((int) mattk->dice, (int) mattk->diceSides); /* extra damage */
 
     /*  Next a cancellation factor.
      *  Use uncancelled when cancellation factor takes into account certain
@@ -913,9 +913,9 @@ register struct attack *mattk;
 
     permdmg = 0;
     /*  Now, adjust damages via resistances or specific attacks */
-    switch (mattk->adtyp) {
+    switch (mattk->damageType) {
     case AD_PHYS:
-        if (mattk->aatyp == AT_HUGS && !sticks(youmonst.data)) {
+        if (mattk->type == AT_HUGS && !sticks(youmonst.data)) {
             if (!u.ustuck && rn2(2)) {
                 if (u_slip_free(mtmp, mattk)) {
                     dmg = 0;
@@ -930,7 +930,7 @@ register struct attack *mattk;
                                          : "crushed");
             }
         } else { /* hand to hand weapon */
-            if (mattk->aatyp == AT_WEAP && otmp) {
+            if (mattk->type == AT_WEAP && otmp) {
                 int tmp;
 
                 if (otmp->otyp == CORPSE
@@ -978,7 +978,7 @@ register struct attack *mattk;
                         You("divide as %s hits you!", mon_nam(mtmp));
                 }
                 rustm(&youmonst, otmp);
-            } else if (mattk->aatyp != AT_TUCH || dmg != 0
+            } else if (mattk->type != AT_TUCH || dmg != 0
                        || mtmp != u.ustuck)
                 hitmsg(mtmp, mattk);
         }
@@ -1053,7 +1053,7 @@ register struct attack *mattk;
         }
         break;
     case AD_BLND:
-        if (can_blnd(mtmp, &youmonst, mattk->aatyp, (struct obj *) 0)) {
+        if (can_blnd(mtmp, &youmonst, mattk->type, (struct obj *) 0)) {
             if (youCanSee())
                 pline("%s blinds you!", Monnam(mtmp));
             make_blinded(yourIntrinsic(BLINDED) + (long) dmg, FALSE);
@@ -1241,7 +1241,7 @@ register struct attack *mattk;
                             an(monsterName.c_str));
 		    releaseJavaString(monsterName);
                     done(DROWNING);
-                } else if (mattk->aatyp == AT_HUGS)
+                } else if (mattk->type == AT_HUGS)
                     You("are being crushed.");
             } else {
                 dmg = 0;
@@ -1661,7 +1661,7 @@ gulp_blnd_check()
 
     if (!youAreTemporarilyBlinded() && swallowed()
         && (mattk = attacktype_fordmg(u.ustuck->data, AT_ENGL, AD_BLND))
-        && can_blnd(u.ustuck, &youmonst, mattk->aatyp, (struct obj *) 0)) {
+        && can_blnd(u.ustuck, &youmonst, mattk->type, (struct obj *) 0)) {
         increaseTimeSinceBeingSwallowed(1); /* compensate for gulpmu change */
         (void) gulpmu(u.ustuck, mattk);
         return TRUE;
@@ -1676,7 +1676,7 @@ register struct monst *mtmp;
 register struct attack *mattk;
 {
     struct trap *t = t_at(currentX(), currentY());
-    int tmp = d((int) mattk->damn, (int) mattk->damd);
+    int tmp = d((int) mattk->dice, (int) mattk->diceSides);
     int tim_tmp;
     register struct obj *otmp2;
     int i;
@@ -1746,7 +1746,7 @@ register struct attack *mattk;
         /* for digestion, shorter time is more dangerous;
            for other swallowings, longer time means more
            chances for the swallower to attack */
-        if (mattk->adtyp == AD_DGST) {
+        if (mattk->damageType == AD_DGST) {
             tim_tmp = 25 - (int) mtmp->m_lev;
             if (tim_tmp > 0)
                 tim_tmp = rnd(tim_tmp) / 2;
@@ -1772,7 +1772,7 @@ register struct attack *mattk;
     if (timeSinceBeingSwallowed() > 0)
         decreaseTimeSinceBeingSwallowed(1);
 
-    switch (mattk->adtyp) {
+    switch (mattk->damageType) {
     case AD_DGST:
         physical_damage = TRUE;
         if (youHaveSlowDigestion()) {
@@ -1822,7 +1822,7 @@ register struct attack *mattk;
         }
         break;
     case AD_BLND:
-        if (can_blnd(mtmp, &youmonst, mattk->aatyp, (struct obj *) 0)) {
+        if (can_blnd(mtmp, &youmonst, mattk->type, (struct obj *) 0)) {
             if (youCanSee()) {
                 long was_blinded = yourIntrinsic(BLINDED);
                 if (!was_blinded)
@@ -1929,12 +1929,12 @@ boolean ufound;
               levl[mtmp->mux][mtmp->muy].typ == WATER ? "empty water"
                                                       : "thin air");
     else {
-        register int tmp = d((int) mattk->damn, (int) mattk->damd);
-        register boolean not_affected = defends((int) mattk->adtyp, uwep);
+        register int tmp = d((int) mattk->dice, (int) mattk->diceSides);
+        register boolean not_affected = defends((int) mattk->damageType, uwep);
 
         hitmsg(mtmp, mattk);
 
-        switch (mattk->adtyp) {
+        switch (mattk->damageType) {
         case AD_COLD:
             physical_damage = FALSE;
             not_affected |= youResistCold();
@@ -1956,7 +1956,7 @@ boolean ufound;
                     if (flags.verbose)
                         You("get blasted!");
                 }
-                if (mattk->adtyp == AD_FIRE)
+                if (mattk->damageType == AD_FIRE)
                     burn_away_slime();
                 if (physical_damage)
                     tmp = Maybe_Half_Phys(tmp);
@@ -2000,7 +2000,7 @@ boolean ufound;
         }
         if (not_affected) {
             You("seem unaffected by it.");
-            ugolemeffects((int) mattk->adtyp, tmp);
+            ugolemeffects((int) mattk->damageType, tmp);
         }
     }
     if (kill_agr)
@@ -2037,7 +2037,7 @@ register struct attack *mattk;
     if (youAreHallucinating() && rn2(4))
         cancelled = TRUE;
 
-    switch (mattk->adtyp) {
+    switch (mattk->damageType) {
     case AD_STON:
         if (cancelled || !mtmp->mcansee) {
             if (!canseemon(mtmp))
@@ -2136,7 +2136,7 @@ register struct attack *mattk;
                 if (mtmp->mcan && mtmp->data == &mons[PM_ARCHON] && rn2(5))
                     react = -1;
             } else {
-                int blnd = d((int) mattk->damn, (int) mattk->damd);
+                int blnd = d((int) mattk->dice, (int) mattk->diceSides);
 
                 You("are blinded by %s radiance!", s_suffix(mon_nam(mtmp)));
                 make_blinded((long) blnd, FALSE);
@@ -2206,7 +2206,7 @@ register struct attack *mattk;
         break;
 #endif /* BEHOLDER */
     default:
-        impossible("Gaze attack %d?", mattk->adtyp);
+        impossible("Gaze attack %d?", mattk->damageType);
         break;
     }
     if (react >= 0) {
@@ -2273,12 +2273,12 @@ struct attack *mattk;
     }
 
     if (agrinvis && !defperc
-        && (!SYSOPT_SEDUCE || (mattk && mattk->adtyp != AD_SSEX)))
+        && (!SYSOPT_SEDUCE || (mattk && mattk->damageType != AD_SSEX)))
         return 0;
 
     if (monsterClass(pagr->monsterTypeID) != S_NYMPH
         && ((pagr != &mons[PM_INCUBUS] && pagr != &mons[PM_SUCCUBUS])
-            || (SYSOPT_SEDUCE && mattk && mattk->adtyp != AD_SSEX)))
+            || (SYSOPT_SEDUCE && mattk && mattk->damageType != AD_SSEX)))
         return 0;
 
     if (genagr == 1 - gendef)
@@ -2601,20 +2601,20 @@ register struct attack *mattk;
     for (i = 0;; i++) {
         if (i >= NATTK)
             return 1;
-        if (olduasmon->mattk[i].aatyp == AT_NONE
-            || olduasmon->mattk[i].aatyp == AT_BOOM)
+        if (olduasmon->mattk[i].type == AT_NONE
+            || olduasmon->mattk[i].type == AT_BOOM)
             break;
     }
-    if (olduasmon->mattk[i].damn)
+    if (olduasmon->mattk[i].dice)
         tmp =
-            d((int) olduasmon->mattk[i].damn, (int) olduasmon->mattk[i].damd);
-    else if (olduasmon->mattk[i].damd)
-        tmp = d(monsterLevel(olduasmon->monsterTypeID) + 1, (int) olduasmon->mattk[i].damd);
+            d((int) olduasmon->mattk[i].dice, (int) olduasmon->mattk[i].diceSides);
+    else if (olduasmon->mattk[i].diceSides)
+        tmp = d(monsterLevel(olduasmon->monsterTypeID) + 1, (int) olduasmon->mattk[i].diceSides);
     else
         tmp = 0;
 
     /* These affect the enemy even if you were "killed" (rehumanized) */
-    switch (olduasmon->mattk[i].adtyp) {
+    switch (olduasmon->mattk[i].damageType) {
     case AD_ACID:
         if (!rn2(2)) {
             pline("%s is splashed by your acid!", Monnam(mtmp));
@@ -2631,7 +2631,7 @@ register struct attack *mattk;
         goto assess_dmg;
     case AD_STON: /* cockatrice */
     {
-        long protector = attk_protection((int) mattk->aatyp),
+        long protector = attk_protection((int) mattk->type),
              wornitems = mtmp->misc_worn_check;
 
         /* wielded weapon gives same protection as gloves here */
@@ -2669,9 +2669,9 @@ register struct attack *mattk;
 
     /* These affect the enemy only if you are still a monster */
     if (rn2(3))
-        switch (youmonst.data->mattk[i].adtyp) {
+        switch (youmonst.data->mattk[i].damageType) {
         case AD_PHYS:
-            if (youmonst.data->mattk[i].aatyp == AT_BOOM) {
+            if (youmonst.data->mattk[i].type == AT_BOOM) {
                 You("explode!");
                 /* KMH, balance patch -- this is okay with unchanging */
                 rehumanize();

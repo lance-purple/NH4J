@@ -18,8 +18,10 @@
  */
 
 struct attack {
-    uchar aatyp;
-    uchar adtyp, damn, damd;
+    int type;
+    int damageType;
+    int dice;
+    int diceSides;
 };
 
 /*	Max # of attacks for any given monster.

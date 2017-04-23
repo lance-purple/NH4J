@@ -10,8 +10,8 @@ static int explosion[3][3] = { { S_explode1, S_explode4, S_explode7 },
                                { S_explode3, S_explode6, S_explode9 } };
 
 /* Note: I had to choose one of three possible kinds of "type" when writing
- * this function: a wand type (like in zap.c), an adtyp, or an object type.
- * Wand types get complex because they must be converted to adtyps for
+ * this function: a wand type (like in zap.c), a damageType, or an object type.
+ * Wand types get complex because they must be converted to damageType for
  * determining such things as fire resistance.  Adtyps get complex in that
  * they don't supply enough information--was it a player or a monster that
  * did it, and with a wand, spell, or breath weapon?  Object types share both
@@ -39,7 +39,7 @@ int expltype;
     const char *str = (const char *) 0;
     int idamres, idamnonres;
     struct monst *mtmp, *mdef = 0;
-    uchar adtyp;
+    uchar damageType;
     int explmask[3][3];
     /* 0=normal explosion, 1=do shieldeff, 2=do nothing */
     boolean shopdamage = FALSE, generic = FALSE, physical_dmg = FALSE,
@@ -92,39 +92,39 @@ int expltype;
     if (olet == MON_EXPLODE) {
         str = killer.name;
         do_hallu = youAreHallucinating() && strstri(str, "'s explosion");
-        adtyp = AD_PHYS;
+        damageType = AD_PHYS;
     } else
         switch (abs(type) % 10) {
         case 0:
             str = "magical blast";
-            adtyp = AD_MAGM;
+            damageType = AD_MAGM;
             break;
         case 1:
             str = (olet == BURNING_OIL) ? "burning oil"
                      : (olet == SCROLL_CLASS) ? "tower of flame" : "fireball";
             /* fire damage, not physical damage */
-            adtyp = AD_FIRE;
+            damageType = AD_FIRE;
             break;
         case 2:
             str = "ball of cold";
-            adtyp = AD_COLD;
+            damageType = AD_COLD;
             break;
         case 4:
             str = (olet == WAND_CLASS) ? "death field"
                                        : "disintegration field";
-            adtyp = AD_DISN;
+            damageType = AD_DISN;
             break;
         case 5:
             str = "ball of lightning";
-            adtyp = AD_ELEC;
+            damageType = AD_ELEC;
             break;
         case 6:
             str = "poison gas cloud";
-            adtyp = AD_DRST;
+            damageType = AD_DRST;
             break;
         case 7:
             str = "splash of acid";
-            adtyp = AD_ACID;
+            damageType = AD_ACID;
             break;
         default:
             impossible("explosion base type %d?", type);
@@ -141,7 +141,7 @@ int expltype;
                 explmask[i][j] = 0;
 
             if (i + x - 1 == currentX() && j + y - 1 == currentY()) {
-                switch (adtyp) {
+                switch (damageType) {
                 case AD_PHYS:
                     explmask[i][j] = 0;
                     break;
@@ -171,7 +171,7 @@ int expltype;
                     physical_dmg = TRUE;
                     break;
                 default:
-                    impossible("explosion type %d?", adtyp);
+                    impossible("explosion type %d?", damageType);
                     break;
                 }
             }
@@ -183,7 +183,7 @@ int expltype;
                 if (mtmp->mhp < 1)
                     explmask[i][j] = 2;
                 else
-                    switch (adtyp) {
+                    switch (damageType) {
                     case AD_PHYS:
                         break;
                     case AD_MAGM:
@@ -212,7 +212,7 @@ int expltype;
                         explmask[i][j] |= resists_acid(mtmp);
                         break;
                     default:
-                        impossible("explosion type %d?", adtyp);
+                        impossible("explosion type %d?", damageType);
                         break;
                     }
             }
@@ -318,7 +318,7 @@ int expltype;
                 if (swallowed() && mtmp == u.ustuck) {
                     const char *adj = NULL;
                     if (is_animal(u.ustuck->data)) {
-                        switch (adtyp) {
+                        switch (damageType) {
                         case AD_FIRE:
                             adj = "heartburn";
                             break;
@@ -346,7 +346,7 @@ int expltype;
                         }
                         pline("%s gets %s!", Monnam(u.ustuck), adj);
                     } else {
-                        switch (adtyp) {
+                        switch (damageType) {
                         case AD_FIRE:
                             adj = "toasted";
                             break;
@@ -380,14 +380,14 @@ int expltype;
                     pline("%s is caught in the %s!", Monnam(mtmp), str);
                 }
 
-                idamres += destroy_mitem(mtmp, SCROLL_CLASS, (int) adtyp);
-                idamres += destroy_mitem(mtmp, SPBOOK_CLASS, (int) adtyp);
-                idamnonres += destroy_mitem(mtmp, POTION_CLASS, (int) adtyp);
-                idamnonres += destroy_mitem(mtmp, WAND_CLASS, (int) adtyp);
-                idamnonres += destroy_mitem(mtmp, RING_CLASS, (int) adtyp);
+                idamres += destroy_mitem(mtmp, SCROLL_CLASS, (int) damageType);
+                idamres += destroy_mitem(mtmp, SPBOOK_CLASS, (int) damageType);
+                idamnonres += destroy_mitem(mtmp, POTION_CLASS, (int) damageType);
+                idamnonres += destroy_mitem(mtmp, WAND_CLASS, (int) damageType);
+                idamnonres += destroy_mitem(mtmp, RING_CLASS, (int) damageType);
 
                 if (explmask[i][j] == 1) {
-                    golemeffects(mtmp, (int) adtyp, dam + idamres);
+                    golemeffects(mtmp, (int) damageType, dam + idamres);
                     mtmp->mhp -= idamnonres;
                 } else {
                     /* call resist with 0 and do damage manually so 1) we can
@@ -405,9 +405,9 @@ int expltype;
                     }
                     if (mtmp == u.ustuck)
                         mdam *= 2;
-                    if (resists_cold(mtmp) && adtyp == AD_FIRE)
+                    if (resists_cold(mtmp) && damageType == AD_FIRE)
                         mdam *= 2;
-                    else if (resists_fire(mtmp) && adtyp == AD_COLD)
+                    else if (resists_fire(mtmp) && damageType == AD_COLD)
                         mdam *= 2;
                     mtmp->mhp -= mdam;
                     mtmp->mhp -= (idamres + idamnonres);
@@ -416,7 +416,7 @@ int expltype;
                     if (mdef ? (mtmp == mdef) : !context.mon_moving)
                         killed(mtmp);
                     else
-                        monkilled(mtmp, "", (int) adtyp);
+                        monkilled(mtmp, "", (int) damageType);
                 } else if (!context.mon_moving) {
                     /* all affected monsters, even if mdef is set */
                     setmangry(mtmp);
@@ -439,22 +439,22 @@ int expltype;
             iflags.last_msg = PLNMSG_CAUGHT_IN_EXPLOSION;
         }
         /* do property damage first, in case we end up leaving bones */
-        if (adtyp == AD_FIRE)
+        if (damageType == AD_FIRE)
             burn_away_slime();
         if (youAreInvulnerable()) {
             damu = 0;
             You("are unharmed!");
-        } else if (adtyp == AD_PHYS || physical_dmg)
+        } else if (damageType == AD_PHYS || physical_dmg)
             damu = Maybe_Half_Phys(damu);
-        if (adtyp == AD_FIRE)
+        if (damageType == AD_FIRE)
             (void) burnarmor(&youmonst);
-        destroy_item(SCROLL_CLASS, (int) adtyp);
-        destroy_item(SPBOOK_CLASS, (int) adtyp);
-        destroy_item(POTION_CLASS, (int) adtyp);
-        destroy_item(RING_CLASS, (int) adtyp);
-        destroy_item(WAND_CLASS, (int) adtyp);
+        destroy_item(SCROLL_CLASS, (int) damageType);
+        destroy_item(SPBOOK_CLASS, (int) damageType);
+        destroy_item(POTION_CLASS, (int) damageType);
+        destroy_item(RING_CLASS, (int) damageType);
+        destroy_item(WAND_CLASS, (int) damageType);
 
-        ugolemeffects((int) adtyp, damu);
+        ugolemeffects((int) damageType, damu);
         if (uhurt == 2) {
             if (areYouPolymorphed())
                 decreaseCurrentHitPointsAsMonster(damu);
@@ -493,18 +493,18 @@ int expltype;
                     pline_The("%s is fatal.", str);
                 /* Known BUG: BURNING suppresses corpse in bones data,
                    but done does not handle killer reason correctly */
-                done((adtyp == AD_FIRE) ? BURNING : DIED);
+                done((damageType == AD_FIRE) ? BURNING : DIED);
             }
         }
         exercise(A_STR, FALSE);
     }
 
     if (shopdamage) {
-        pay_for_damage(adtyp == AD_FIRE
+        pay_for_damage(damageType == AD_FIRE
                            ? "burn away"
-                           : adtyp == AD_COLD
+                           : damageType == AD_COLD
                                  ? "shatter"
-                                 : adtyp == AD_DISN ? "disintegrate"
+                                 : damageType == AD_DISN ? "disintegrate"
                                                     : "destroy",
                        FALSE);
     }

@@ -1993,7 +1993,7 @@ register struct permonst *ptr;
     register int atk_mask = (1 << AT_BREA) | (1 << AT_SPIT) | (1 << AT_GAZE);
 
     for (i = 0; i < NATTK; i++) {
-        if ((j = ptr->mattk[i].aatyp) >= AT_WEAP || (atk_mask & (1 << j)))
+        if ((j = ptr->mattk[i].type) >= AT_WEAP || (atk_mask & (1 << j)))
             return TRUE;
     }
 

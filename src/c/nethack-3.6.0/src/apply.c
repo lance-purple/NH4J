@@ -895,7 +895,7 @@ struct obj *obj;
         stoned = TRUE;
         killed(mtmp);
     } else if (monable && mtmp->data == &mons[PM_FLOATING_EYE]) {
-        int tmp = d((int) mtmp->m_lev, (int) mtmp->data->mattk[0].damd);
+        int tmp = d((int) mtmp->m_lev, (int) mtmp->data->mattk[0].diceSides);
         if (!rn2(4))
             tmp = 120;
         if (vis)
