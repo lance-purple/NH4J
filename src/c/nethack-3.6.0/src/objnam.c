@@ -3370,7 +3370,7 @@ typfnd:
                 otmp->corpsenm = NON_PM; /* it's empty */
             } else if (!(monsterGenerationMask(mons[mntmp].monsterTypeID) & G_UNIQ)
                        && !(mvitals[mntmp].mvflags & G_NOCORPSE)
-                       && mons[mntmp].cnutrit != 0) {
+                       && monsterCorpseNutrition(mons[mntmp].monsterTypeID) != 0) {
                 otmp->corpsenm = mntmp;
             }
             break;
@@ -3506,7 +3506,7 @@ typfnd:
 
     if (halfeaten && otmp->oclass == FOOD_CLASS) {
         if (otmp->otyp == CORPSE)
-            otmp->oeaten = mons[otmp->corpsenm].cnutrit;
+            otmp->oeaten = monsterCorpseNutrition(mons[otmp->corpsenm].monsterTypeID);
         else
             otmp->oeaten = objects[otmp->otyp].oc_nutrition;
         /* (do this adjustment before setting up object's weight) */

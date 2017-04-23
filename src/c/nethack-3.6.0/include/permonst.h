@@ -52,13 +52,13 @@ struct permonst {
     unsigned short XXgeno;      /* creation/geno mask value */
     struct attack mattk[NATTK]; /* attacks matrix */
     unsigned short XXcwt;       /* weight of corpse */
-    unsigned short cnutrit;     /* its nutritional value */
+    unsigned short XXcnutrit;   /* its nutritional value */
     uchar msound;               /* noise it makes (6 bits) */
     uchar msize;                /* physical size (3 bits) */
     uchar mresists;             /* resistances */
     uchar mconveys;             /* conveyed by eating */
-    unsigned long mflags1,      /* boolean bitflags */
-        mflags2;                /* more boolean bitflags */
+    unsigned long mflags1;      /* boolean bitflags */
+    unsigned long mflags2;      /* more boolean bitflags */
     unsigned short mflags3;     /* yet more boolean bitflags */
 #ifdef TEXTCOLOR
     uchar mcolor; /* color to use */

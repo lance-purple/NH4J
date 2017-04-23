@@ -2961,4 +2961,8 @@ public class MonsterType {
 		return getMonsterType(pmid).corpseWeight;
 	}
 
+	public static int monsterCorpseNutrition(int pmid) {
+		return getMonsterType(pmid).corpseNutritionalValue;
+	}
+
 }

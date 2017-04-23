@@ -147,7 +147,7 @@ struct obj *obj;
     if (obj->oclass == FOOD_CLASS) {
         if (obj->otyp == CORPSE) {
             mtmp->meating = 3 + (monsterCorpseWeight(mons[obj->corpsenm].monsterTypeID) >> 6);
-            nutrit = mons[obj->corpsenm].cnutrit;
+            nutrit = monsterCorpseNutrition(mons[obj->corpsenm].monsterTypeID);
         } else {
             mtmp->meating = objects[obj->otyp].oc_delay;
             nutrit = objects[obj->otyp].oc_nutrition;

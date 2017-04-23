@@ -1655,7 +1655,7 @@ struct obj *corpse;
 {
     if (corpse->oeaten)
         return 0;
-    if (!mons[corpse->corpsenm].cnutrit)
+    if (!monsterCorpseNutrition(mons[corpse->corpsenm].monsterTypeID))
         return 0;
     return 1;
 }
@@ -1706,7 +1706,7 @@ struct obj *obj;
             pline_The("corpse evades your grasp.");
         return;
     }
-    if (mons[corpse->corpsenm].cnutrit == 0) {
+    if (monsterCorpseNutrition(mons[corpse->corpsenm].monsterTypeID) == 0) {
         pline("That's too insubstantial to tin.");
         return;
     }

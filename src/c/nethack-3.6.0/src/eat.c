@@ -311,7 +311,7 @@ struct obj *otmp;
     if (!otmp->oeaten) {
         costly_alteration(otmp, COST_BITE);
         otmp->oeaten =
-            (otmp->otyp == CORPSE ? mons[otmp->corpsenm].cnutrit
+            (otmp->otyp == CORPSE ? monsterCorpseNutrition(mons[otmp->corpsenm].monsterTypeID)
                                   : objects[otmp->otyp].oc_nutrition);
     }
 
@@ -1631,7 +1631,7 @@ struct obj *otmp;
             retcode = 1;
         }
 
-        if (!mons[otmp->corpsenm].cnutrit) {
+        if (!monsterCorpseNutrition(mons[otmp->corpsenm].monsterTypeID)) {
             /* no nutrition: rots away, no message if you passed out */
             if (!retcode)
                 pline_The("corpse rots away completely.");
@@ -2579,7 +2579,7 @@ doeat()
 
     /* re-calc the nutrition */
     if (otmp->otyp == CORPSE)
-        basenutrit = mons[otmp->corpsenm].cnutrit;
+        basenutrit = monsterCorpseNutrition(mons[otmp->corpsenm].monsterTypeID);
     else
         basenutrit = objects[otmp->otyp].oc_nutrition;
 
@@ -3046,7 +3046,7 @@ struct obj *obj;
 
     uneaten_amt = (long) obj->oeaten;
     full_amount = (obj->otyp == CORPSE)
-                      ? (long) mons[obj->corpsenm].cnutrit
+                      ? (long) monsterCorpseNutrition(mons[obj->corpsenm].monsterTypeID)
                       : (long) objects[obj->otyp].oc_nutrition;
     if (uneaten_amt > full_amount) {
         impossible(

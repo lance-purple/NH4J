@@ -31,6 +31,7 @@ E int FDECL(monsterAlignment, (int));
 E void FDECL(setMonsterAlignment, (int, int));
 E int FDECL(monsterGenerationMask, (int));
 E int FDECL(monsterCorpseWeight, (int));
+E int FDECL(monsterCorpseNutrition, (int));
 
 /* ### alloc.c ### */
 

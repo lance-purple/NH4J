@@ -2696,4 +2696,8 @@ extern int monsterCorpseWeight(int id) {
   return javaGetIntFromInt(MONSTER_TYPE_CLASS, "monsterCorpseWeight", id);
 }
 
+extern int monsterCorpseNutrition(int id) {
+  return javaGetIntFromInt(MONSTER_TYPE_CLASS, "monsterCorpseNutrition", id);
+}
+
 /*hacklib.c*/

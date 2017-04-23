@@ -794,7 +794,7 @@ boolean artif;
                 else
                     for (tryct = 200; tryct > 0; --tryct) {
                         mndx = undead_to_corpse(rndmonnum());
-                        if (mons[mndx].cnutrit
+                        if (monsterCorpseNutrition(mons[mndx].monsterTypeID)
                             && !(mvitals[mndx].mvflags & G_NOCORPSE)) {
                             otmp->corpsenm = mndx;
                             set_tin_variety(otmp, RANDOM_TIN);
