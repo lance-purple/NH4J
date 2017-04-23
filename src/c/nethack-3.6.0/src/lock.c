@@ -637,7 +637,7 @@ int x, y;
         return res;
     }
 
-    if (verysmall(youmonst.data)) {
+    if (isVerySmallMonster(youmonst.data->monsterTypeID)) {
         pline("You're too small to pull the door open.");
         return res;
     }
@@ -774,7 +774,7 @@ doclose()
     }
 
     if (door->doormask == D_ISOPEN) {
-        if (verysmall(youmonst.data) && !u.usteed) {
+        if (isVerySmallMonster(youmonst.data->monsterTypeID) && !u.usteed) {
             pline("You're too small to push the door closed.");
             return res;
         }

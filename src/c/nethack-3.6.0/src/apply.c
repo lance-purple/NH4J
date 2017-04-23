@@ -186,7 +186,7 @@ int rx, ry, *resp;
         corpse = 0;               /* can't reach corpse on floor */
         /* you can't reach tiny statues (even though you can fight
            tiny monsters while levitating--consistency, what's that?) */
-        while (statue && mons[statue->corpsenm].msize == MZ_TINY)
+        while (statue && monsterSize(mons[statue->corpsenm].monsterTypeID) == MZ_TINY)
             statue = nxtobj(statue, STATUE, TRUE);
     }
     /* when both corpse and statue are present, pick the uppermost one */
@@ -2566,7 +2566,7 @@ struct obj *obj;
         const char *wrapped_what = (char *) 0;
 
         if (mtmp) {
-            if (bigmonst(mtmp->data)) {
+            if (isBigMonster(mtmp->data->monsterTypeID)) {
                 wrapped_what = strcpy(buf, mon_nam(mtmp));
             } else if (proficient) {
                 if (attack(mtmp))
@@ -3044,7 +3044,7 @@ struct obj *obj;
             break;
         notonhead = (bhitpos.x != mtmp->mx || bhitpos.y != mtmp->my);
         save_confirm = flags.confirm;
-        if (verysmall(mtmp->data) && !rn2(4)
+        if (isVerySmallMonster(mtmp->data->monsterTypeID) && !rn2(4)
             && enexto(&cc, currentX(), currentY(), (struct permonst *) 0)) {
             flags.confirm = FALSE;
             (void) attack_checks(mtmp, uwep);
@@ -3054,7 +3054,7 @@ struct obj *obj;
             mtmp->mundetected = 0;
             rloc_to(mtmp, cc.x, cc.y);
             return 1;
-        } else if ((!bigmonst(mtmp->data) && !strongmonst(mtmp->data))
+        } else if ((!isBigMonster(mtmp->data->monsterTypeID) && !strongmonst(mtmp->data))
                    || rn2(4)) {
             flags.confirm = FALSE;
             (void) attack_checks(mtmp, uwep);

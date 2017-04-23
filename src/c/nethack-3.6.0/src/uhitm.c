@@ -414,7 +414,7 @@ register struct monst *mtmp;
             if (uwep)
                 You("begin bashing monsters with %s.",
                     yobjnam(uwep, (char *) 0));
-            else if (!cantwield(youmonst.data))
+            else if (!cannotWieldThings(youmonst.data->monsterTypeID))
                 You("begin %sing monsters with your %s %s.",
                     Role_if(PM_MONK) ? "strik" : "bash",
                     uarmg ? "gloved" : "bare", /* Del Lamb */
@@ -804,7 +804,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                         ; /* maybe turn the corpse into a statue? */
 #endif
                     }
-                    tmp = (obj->corpsenm >= LOW_PM ? mons[obj->corpsenm].msize
+                    tmp = (obj->corpsenm >= LOW_PM ? monsterSize(mons[obj->corpsenm].monsterTypeID)
                                                    : 0) + 1;
                     break;
 
@@ -1072,7 +1072,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
         hittxt = TRUE;
     } else if (unarmed && tmp > 1 && !thrown && !obj && !areYouPolymorphed()) {
         /* VERY small chance of stunning opponent if unarmed. */
-        if (rnd(100) < weaponSkill(P_BARE_HANDED_COMBAT) && !bigmonst(mdat)
+        if (rnd(100) < weaponSkill(P_BARE_HANDED_COMBAT) && !isBigMonster(mdat->monsterTypeID)
             && !thick_skinned(mdat)) {
             if (canspotmon(mon))
                 pline("%s %s from your powerful strike!", Monnam(mon),
@@ -2149,7 +2149,7 @@ register struct monst *mon;
                 sum[i] = damageum(mon, mattk);
             break;
         case AT_CLAW:
-            if (uwep && !cantwield(youmonst.data) && !weapon_used)
+            if (uwep && !cannotWieldThings(youmonst.data->monsterTypeID) && !weapon_used)
                 goto use_weapon;
             /*FALLTHRU*/
         case AT_TUCH:

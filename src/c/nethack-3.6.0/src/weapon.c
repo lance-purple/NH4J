@@ -221,7 +221,7 @@ struct monst *mon;
     if (otyp == CREAM_PIE)
         return 0;
 
-    if (bigmonst(ptr)) {
+    if (isBigMonster(ptr->monsterTypeID)) {
         if (objects[otyp].oc_wldam)
             tmp = rnd(objects[otyp].oc_wldam);
         switch (otyp) {

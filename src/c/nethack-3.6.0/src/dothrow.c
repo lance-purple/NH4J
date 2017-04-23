@@ -589,7 +589,7 @@ int x, y;
             boolean too_much =
                 (invent && (inv_weight() + weight_cap() > 600));
             /* Move at a diagonal. */
-            if (bigmonst(youmonst.data) || too_much) {
+            if (isBigMonster(youmonst.data->monsterTypeID) || too_much) {
                 You("%sget forcefully wedged into a crevice.",
                     too_much ? "and all your belongings " : "");
                 dmg = rnd(2 + *range);
@@ -760,7 +760,7 @@ int dx, dy, range;
     /* Is the monster stuck or too heavy to push?
      * (very large monsters have too much inertia, even floaters and flyers)
      */
-    if (mon->data->msize >= MZ_HUGE || mon == u.ustuck || mon->mtrapped)
+    if (monsterSize(mon->data->monsterTypeID) >= MZ_HUGE || mon == u.ustuck || mon->mtrapped)
         return;
 
     /* Make sure dx and dy are [-1,0,1] */
@@ -1273,7 +1273,7 @@ boolean mon_notices;
     int tmp = 0;
 
     /* size of target affects the chance of hitting */
-    tmp += (mon->data->msize - MZ_MEDIUM); /* -2..+5 */
+    tmp += (monsterSize(mon->data->monsterTypeID) - MZ_MEDIUM); /* -2..+5 */
     /* sleeping target is more likely to be hit */
     if (mon->msleeping) {
         tmp += 2;

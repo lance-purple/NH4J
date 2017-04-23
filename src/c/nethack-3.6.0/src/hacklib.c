@@ -2708,4 +2708,8 @@ extern void setMonsterSound(int id, int sound) {
   return javaSetIntFromInt(MONSTER_TYPE_CLASS, "setMonsterSound", id, sound);
 }
 
+extern int monsterSize(int id) {
+  return javaGetIntFromInt(MONSTER_TYPE_CLASS, "monsterSize", id);
+}
+
 /*hacklib.c*/

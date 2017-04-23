@@ -3397,7 +3397,7 @@ typfnd:
             break;
         case STATUE:
             otmp->corpsenm = mntmp;
-            if (Has_contents(otmp) && verysmall(&mons[mntmp]))
+            if (Has_contents(otmp) && isVerySmallMonster(mons[mntmp].monsterTypeID))
                 delete_contents(otmp); /* no spellbook */
             otmp->spe = ishistoric ? STATUE_HISTORIC : 0;
             break;

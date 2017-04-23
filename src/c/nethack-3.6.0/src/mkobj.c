@@ -1000,7 +1000,7 @@ boolean artif;
             case STATUE:
                 /* possibly overridden by mkcorpstat() */
                 otmp->corpsenm = rndmonnum();
-                if (!verysmall(&mons[otmp->corpsenm])
+                if (!isVerySmallMonster(mons[otmp->corpsenm].monsterTypeID)
                     && rn2(level_difficulty() / 2 + 10) > 10)
                     (void) add_to_container(otmp, mkobj(SPBOOK_CLASS, FALSE));
             }

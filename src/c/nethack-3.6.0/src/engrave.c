@@ -519,7 +519,7 @@ doengrave()
         You_cant("write here.");
         return 0;
     }
-    if (cantwield(youmonst.data)) {
+    if (cannotWieldThings(youmonst.data->monsterTypeID)) {
         You_cant("even hold anything!");
         return 0;
     }

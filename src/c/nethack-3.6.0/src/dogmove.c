@@ -37,7 +37,7 @@ struct monst *mon;
         if (!tunnels(mon->data) || !needspick(mon->data))
             pickaxe = &dummy;
         /* don't hang on to key if can't open doors */
-        if (nohands(mon->data) || verysmall(mon->data))
+        if (nohands(mon->data) || isVerySmallMonster(mon->data->monsterTypeID))
             key = &dummy;
     }
     if (wep) {
@@ -152,7 +152,7 @@ struct obj *obj;
             mtmp->meating = objects[obj->otyp].oc_delay;
             nutrit = objects[obj->otyp].oc_nutrition;
         }
-        switch (mtmp->data->msize) {
+        switch (monsterSize(mtmp->data->monsterTypeID)) {
         case MZ_TINY:
             nutrit *= 8;
             break;
@@ -704,7 +704,7 @@ register int after; /* this is extra fast monster movement */
         You("get released!");
     }
 #endif
-    if (!nohands(mtmp->data) && !verysmall(mtmp->data)) {
+    if (!nohands(mtmp->data) && !isVerySmallMonster(mtmp->data->monsterTypeID)) {
         allowflags |= OPENDOOR;
         if (monhaskey(mtmp, TRUE))
             allowflags |= UNLOCKDOOR;

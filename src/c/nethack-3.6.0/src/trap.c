@@ -497,7 +497,7 @@ boolean td; /* td == TRUE : trap door or hole */
              || is_clinger(youmonst.data)
              || (areYouInHell() && ! haveInvokedGateToSanctum() && newlevel == bottom)) {
         dont_fall = "don't fall in.";
-    } else if (youmonst.data->msize >= MZ_HUGE) {
+    } else if (monsterSize(youmonst.data->monsterTypeID) >= MZ_HUGE) {
         dont_fall = "don't fit through.";
     } else if (!next_to_u()) {
         dont_fall = "are jerked back by your pet!";
@@ -989,7 +989,7 @@ unsigned trflags;
                   A_Your[trap->madeby_u]);
             break;
         }
-        if (!u.usteed && youmonst.data->msize <= MZ_SMALL) {
+        if (!u.usteed && monsterSize(youmonst.data->monsterTypeID) <= MZ_SMALL) {
             pline("%s bear trap closes harmlessly over you.",
                   A_Your[trap->madeby_u]);
             break;
@@ -2188,7 +2188,7 @@ register struct monst *mtmp;
             wake_nearto(mtmp->mx, mtmp->my, 40);
             break;
         case BEAR_TRAP:
-            if (mptr->msize > MZ_SMALL && !amorphous(mptr) && !is_flyer(mptr)
+            if (monsterSize(mptr->monsterTypeID) > MZ_SMALL && !amorphous(mptr) && !is_flyer(mptr)
                 && !isWhirly(mptr->monsterTypeID) && !unsolid(mptr)) {
                 mtmp->mtrapped = 1;
                 if (in_sight) {
@@ -2384,7 +2384,7 @@ register struct monst *mtmp;
             }
             if (is_flyer(mptr) || isFloater(mptr->monsterTypeID) || mptr == &mons[PM_WUMPUS]
                 || (mtmp->wormno && count_wsegs(mtmp) > 5)
-                || mptr->msize >= MZ_HUGE) {
+                || monsterSize(mptr->monsterTypeID) >= MZ_HUGE) {
                 if (force_mintrap && !Sokoban) {
                     /* openfallingtrap; not inescapable here */
                     if (in_sight) {
@@ -3858,7 +3858,7 @@ boolean force_failure;
     if (directionX() && directionY() && bad_rock(youmonst.data, currentX(), ttmp->ty)
         && bad_rock(youmonst.data, ttmp->tx, currentY())) {
         if ((invent && (inv_weight() + weight_cap() > 600))
-            || bigmonst(youmonst.data)) {
+            || isBigMonster(youmonst.data->monsterTypeID)) {
             /* don't allow untrap if they can't get thru to it */
             You("are unable to reach the %s!",
                 defsyms[trap_to_defsym(ttype)].explanation);

@@ -97,7 +97,7 @@ register boolean clumsy;
     dmg += damageBonus(); /* add ring(s) of increase damage */
     if (dmg > 0)
         mon->mhp -= dmg;
-    if (mon->mhp > 0 && martial() && !bigmonst(mon->data) && !rn2(3)
+    if (mon->mhp > 0 && martial() && !isBigMonster(mon->data->monsterTypeID) && !rn2(3)
         && mon->mcanmove && mon != u.ustuck && !mon->mtrapped) {
         /* see if the monster has a place to move into */
         mdx = mon->mx + directionX();
@@ -158,7 +158,7 @@ xchar x, y;
     /* anger target even if wild miss will occur */
     setmangry(mon);
 
-    if (youAreLevitating() && !rn2(3) && verysmall(mon->data)
+    if (youAreLevitating() && !rn2(3) && isVerySmallMonster(mon->data->monsterTypeID)
         && !is_flyer(mon->data)) {
         pline("Floating in the air, you miss wildly!");
         exercise(A_DEX, FALSE);
@@ -249,7 +249,7 @@ xchar x, y;
         clumsy = TRUE;
 doit:
     You("kick %s.", mon_nam(mon));
-    if (!rn2(clumsy ? 3 : 4) && (clumsy || !bigmonst(mon->data))
+    if (!rn2(clumsy ? 3 : 4) && (clumsy || !isBigMonster(mon->data->monsterTypeID))
         && mon->mcansee && !mon->mtrapped && !thick_skinned(mon->data)
         && monsterClass(mon->data->monsterTypeID) != S_EEL && haseyes(mon->data) && mon->mcanmove
         && !mon->mstun && !mon->mconf && !mon->msleeping
@@ -761,7 +761,7 @@ dokick()
     if (nolimbs(youmonst.data) || slithy(youmonst.data)) {
         You("have no legs to kick with.");
         no_kick = TRUE;
-    } else if (verysmall(youmonst.data)) {
+    } else if (isVerySmallMonster(youmonst.data->monsterTypeID)) {
         You("are too small to do any kicking.");
         no_kick = TRUE;
     } else if (u.usteed) {

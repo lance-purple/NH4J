@@ -454,7 +454,7 @@ boolean creation;
      * except for the additional restriction on intelligence.  (Players
      * are always intelligent, even if polymorphed).
      */
-    if (verysmall(mon->data) || nohands(mon->data) || is_animal(mon->data))
+    if (isVerySmallMonster(mon->data->monsterTypeID) || nohands(mon->data) || is_animal(mon->data))
         return;
     /* give mummies a chance to wear their wrappings
      * and let skeletons wear their initial armor */
@@ -469,7 +469,7 @@ boolean creation;
         m_dowear_type(mon, W_ARMU, creation, FALSE);
     /* treating small as a special case allows
        hobbits, gnomes, and kobolds to wear cloaks */
-    if (!cantweararm(mon->data) || mon->data->msize == MZ_SMALL)
+    if (!cantweararm(mon->data) || monsterSize(mon->data->monsterTypeID) == MZ_SMALL)
         m_dowear_type(mon, W_ARMC, creation, FALSE);
     m_dowear_type(mon, W_ARMH, creation, FALSE);
     if (!MON_WEP(mon) || !bimanual(MON_WEP(mon)))
@@ -772,7 +772,7 @@ boolean polyspot;
     register struct obj *otmp;
     struct permonst *mdat = mon->data;
     boolean vis = cansee(mon->mx, mon->my);
-    boolean handless_or_tiny = (nohands(mdat) || verysmall(mdat));
+    boolean handless_or_tiny = (nohands(mdat) || isVerySmallMonster(mdat->monsterTypeID));
     const char *pronoun = mhim(mon), *ppronoun = mhis(mon);
 
     if (breakarm(mdat)) {
@@ -892,7 +892,7 @@ boolean polyspot;
                     pline("%s boots fall away!", s_suffix(Monnam(mon)));
                 else
                     pline("%s boots %s off %s feet!", s_suffix(Monnam(mon)),
-                          verysmall(mdat) ? "slide" : "are pushed", ppronoun);
+                          isVerySmallMonster(mdat->monsterTypeID) ? "slide" : "are pushed", ppronoun);
             }
             if (polyspot)
                 bypass_obj(otmp);

@@ -1592,7 +1592,7 @@ boolean noisy;
                         : 0;
     if (which && cantweararm(youmonst.data)
         /* same exception for cloaks as used in m_dowear() */
-        && (which != c_cloak || youmonst.data->msize != MZ_SMALL)
+        && (which != c_cloak || monsterSize(youmonst.data->monsterTypeID) != MZ_SMALL)
         && (racial_exception(&youmonst, otmp) < 1)) {
         if (noisy)
             pline_The("%s will not fit on your body.", which);
@@ -1930,7 +1930,7 @@ dowear()
 
     /* cantweararm() checks for suits of armor, not what we want here;
        verysmall() or nohands() checks for shields, gloves, etc... */
-    if ((verysmall(youmonst.data) || nohands(youmonst.data))) {
+    if ((isVerySmallMonster(youmonst.data->monsterTypeID) || nohands(youmonst.data))) {
         pline("Don't even bother.");
         return 0;
     }

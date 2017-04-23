@@ -5,9 +5,6 @@
 #ifndef MONDATA_H
 #define MONDATA_H
 
-#define verysmall(ptr) ((ptr)->msize < MZ_SMALL)
-#define bigmonst(ptr) ((ptr)->msize >= MZ_LARGE)
-
 #define pm_resistance(ptr, typ) (((ptr)->mresists & (typ)) != 0)
 
 #define resists_fire(mon) (((mon)->mintrinsics & MR_FIRE) != 0)
@@ -103,7 +100,7 @@
 #define extra_nasty(ptr) (((ptr)->mflags2 & M2_NASTY) != 0L)
 #define strongmonst(ptr) (((ptr)->mflags2 & M2_STRONG) != 0L)
 #define can_breathe(ptr) attacktype(ptr, AT_BREA)
-#define cantwield(ptr) (nohands(ptr) || verysmall(ptr))
+
 #define could_twoweap(ptr) ((ptr)->mattk[1].type == AT_WEAP)
 #define cantweararm(ptr) (breakarm(ptr) || sliparm(ptr))
 #define throws_rocks(ptr) (((ptr)->mflags2 & M2_ROCKTHROW) != 0L)

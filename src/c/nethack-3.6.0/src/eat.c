@@ -1431,7 +1431,7 @@ struct obj *otmp;
     if (metallivorous(youmonst.data)) {
         mesg = "You bite right into the metal tin...";
         tmp = 0;
-    } else if (cantwield(youmonst.data)) { /* nohands || verysmall */
+    } else if (cannotWieldThings(youmonst.data->monsterTypeID)) { /* nohands || isVerySmallMonster */
         You("cannot handle the tin properly to open it.");
         return;
     } else if (otmp->blessed) {

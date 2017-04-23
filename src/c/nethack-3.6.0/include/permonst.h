@@ -55,7 +55,7 @@ struct permonst {
     unsigned short XXcwt;       /* weight of corpse */
     unsigned short XXcnutrit;   /* its nutritional value */
     uchar XXmsound;             /* noise it makes (6 bits) */
-    uchar msize;                /* physical size (3 bits) */
+    uchar XXmsize;              /* physical size (3 bits) */
     uchar mresists;             /* resistances */
     uchar mconveys;             /* conveyed by eating */
     unsigned long mflags1;      /* boolean bitflags */

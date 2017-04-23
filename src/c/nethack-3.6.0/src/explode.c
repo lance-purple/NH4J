@@ -659,7 +659,7 @@ struct obj *obj; /* only scatter this obj        */
                         if (multi)
                             nomul(0);
                         hitvalu = 8 + stmp->obj->spe;
-                        if (bigmonst(youmonst.data))
+                        if (isBigMonster(youmonst.data->monsterTypeID))
                             hitvalu++;
                         hitu = thitu(hitvalu, dmgval(stmp->obj, &youmonst),
                                      stmp->obj, (char *) 0);

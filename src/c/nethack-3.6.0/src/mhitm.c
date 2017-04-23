@@ -597,7 +597,7 @@ struct monst *magr, *mdef;
     int dx, dy;
 
     /* can't swallow something that's too big */
-    if (mdef->data->msize >= MZ_HUGE)
+    if (monsterSize(mdef->data->monsterTypeID) >= MZ_HUGE)
         return FALSE;
 
     /* (hypothetical) engulfers who can pass through walls aren't

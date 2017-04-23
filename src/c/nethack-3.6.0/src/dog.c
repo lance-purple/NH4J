@@ -903,7 +903,7 @@ register struct obj *obj;
             if (canseemon(mtmp)) {
                 boolean big_corpse =
                     (obj->otyp == CORPSE && obj->corpsenm >= LOW_PM
-                     && mons[obj->corpsenm].msize > mtmp->data->msize);
+                     && monsterSize(mons[obj->corpsenm].monsterTypeID) > monsterSize(mtmp->data->monsterTypeID));
                 pline("%s catches %s%s", Monnam(mtmp), the(xname(obj)),
                       !big_corpse ? "." : ", or vice versa!");
             } else if (cansee(mtmp->mx, mtmp->my))

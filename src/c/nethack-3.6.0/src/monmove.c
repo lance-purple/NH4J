@@ -749,7 +749,7 @@ register int after;
      */
     if (!areYouOnRogueLevel())
         can_tunnel = tunnels(ptr);
-    can_open = !(nohands(ptr) || verysmall(ptr));
+    can_open = !(cannotWieldThings(ptr->monsterTypeID));
     can_unlock =
         ((can_open && monhaskey(mtmp, TRUE)) || mtmp->iswiz || is_rider(ptr));
     doorbuster = is_giant(ptr);
@@ -1551,7 +1551,7 @@ struct monst *mtmp;
             && !(typ >= DAGGER && typ <= CRYSKNIFE) && typ != SLING
             && !is_cloak(obj) && typ != FEDORA && !is_gloves(obj)
             && typ != LEATHER_JACKET && typ != CREDIT_CARD && !is_shirt(obj)
-            && !(typ == CORPSE && verysmall(&mons[obj->corpsenm]))
+            && !(typ == CORPSE && isVerySmallMonster(mons[obj->corpsenm].monsterTypeID))
             && typ != FORTUNE_COOKIE && typ != CANDY_BAR && typ != PANCAKE
             && typ != LEMBAS_WAFER && typ != LUMP_OF_ROYAL_JELLY
             && obj->oclass != AMULET_CLASS && obj->oclass != RING_CLASS

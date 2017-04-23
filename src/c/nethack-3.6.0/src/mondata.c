@@ -305,9 +305,9 @@ passes_bars(mptr)
 struct permonst *mptr;
 {
     return (boolean) (passes_walls(mptr) || amorphous(mptr) || unsolid(mptr)
-                      || isWhirly(mptr->monsterTypeID) || verysmall(mptr)
+                      || isWhirly(mptr->monsterTypeID) || isVerySmallMonster(mptr->monsterTypeID)
                       || dmgtype(mptr, AD_CORR) || dmgtype(mptr, AD_RUST)
-                      || (slithy(mptr) && !bigmonst(mptr)));
+                      || (slithy(mptr) && !isBigMonster(mptr->monsterTypeID)));
 }
 
 /* returns True if monster can blow (whistle, etc) */
@@ -317,7 +317,7 @@ register struct monst *mtmp;
 {
     int pmid = mtmp->data->monsterTypeID;
     if ((isSilent(mtmp->data->monsterTypeID) || monsterSound(pmid) == MS_BUZZ)
-        && (breathless(mtmp->data) || verysmall(mtmp->data)
+        && (breathless(mtmp->data) || isVerySmallMonster(mtmp->data->monsterTypeID)
             || !has_head(mtmp->data) || monsterClass(pmid) == S_EEL))
         return FALSE;
     if ((mtmp == &youmonst) && youAreBeingStrangled())
@@ -374,7 +374,7 @@ boolean
 sliparm(ptr)
 register struct permonst *ptr;
 {
-    return (boolean) (isWhirly(ptr->monsterTypeID) || ptr->msize <= MZ_SMALL
+    return (boolean) (isWhirly(ptr->monsterTypeID) || monsterSize(ptr->monsterTypeID) <= MZ_SMALL
                       || isNoncorporeal(ptr->monsterTypeID));
 }
 
@@ -386,8 +386,8 @@ register struct permonst *ptr;
     if (sliparm(ptr))
         return FALSE;
 
-    return (boolean) (bigmonst(ptr)
-                      || (ptr->msize > MZ_SMALL && !humanoid(ptr))
+    return (boolean) (isBigMonster(ptr->monsterTypeID)
+                      || (monsterSize(ptr->monsterTypeID) > MZ_SMALL && !humanoid(ptr))
                       /* special cases of humanoids that cannot wear suits */
                       || ptr == &mons[PM_MARILITH]
                       || ptr == &mons[PM_WINGED_GARGOYLE]);
@@ -1041,9 +1041,11 @@ const char *def;
 {
     int capitalize = (*def == highc(*def));
 
+    int msize = monsterSize(ptr->monsterTypeID);
+
     return (isFloater(ptr->monsterTypeID) ? levitate[capitalize]
-            : (is_flyer(ptr) && ptr->msize <= MZ_SMALL) ? flys[capitalize]
-              : (is_flyer(ptr) && ptr->msize > MZ_SMALL) ? flyl[capitalize]
+            : (is_flyer(ptr) && msize <= MZ_SMALL) ? flys[capitalize]
+              : (is_flyer(ptr) && msize > MZ_SMALL) ? flyl[capitalize]
                 : slithy(ptr) ? slither[capitalize]
                   : amorphous(ptr) ? ooze[capitalize]
                     : !monsterMovementSpeed(ptr->monsterTypeID) ? immobile[capitalize]
@@ -1058,9 +1060,11 @@ const char *def;
 {
     int capitalize = 2 + (*def == highc(*def));
 
+    int msize = monsterSize(ptr->monsterTypeID);
+
     return (isFloater(ptr->monsterTypeID) ? levitate[capitalize]
-            : (is_flyer(ptr) && ptr->msize <= MZ_SMALL) ? flys[capitalize]
-              : (is_flyer(ptr) && ptr->msize > MZ_SMALL) ? flyl[capitalize]
+            : (is_flyer(ptr) && msize <= MZ_SMALL) ? flys[capitalize]
+              : (is_flyer(ptr) && msize > MZ_SMALL) ? flyl[capitalize]
                 : slithy(ptr) ? slither[capitalize]
                   : amorphous(ptr) ? ooze[capitalize]
                     : !monsterMovementSpeed(ptr->monsterTypeID) ? immobile[capitalize]
@@ -1177,8 +1181,18 @@ boolean isWhirly(int pmid) {
 boolean corpseOrStatueIsUnique(int pmid) {
     return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "corpseOrStatueIsUnique", pmid);
 }
+
 boolean isSilent(int pmid) {
     return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isSilent", pmid);
+}
+boolean isVerySmallMonster(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isVerySmallMonster", pmid);
+}
+boolean isBigMonster(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isBigMonster", pmid);
+}
+boolean cannotWieldThings(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "cannotWieldThings", pmid);
 }
 
 /*mondata.c*/

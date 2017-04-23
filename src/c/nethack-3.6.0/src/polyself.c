@@ -852,7 +852,7 @@ int mntmp;
     }
     if (currentlyTrapped() && (currentTrapType() == TT_WEB || currentTrapType() == TT_BEARTRAP)
         && (amorphous(youmonst.data) || isWhirly(youmonst.data->monsterTypeID)
-            || unsolid(youmonst.data) || (youmonst.data->msize <= MZ_SMALL
+            || unsolid(youmonst.data) || (monsterSize(youmonst.data->monsterTypeID) <= MZ_SMALL
                                           && currentTrapType() == TT_BEARTRAP))) {
         You("are no longer stuck in the %s.",
             currentTrapType() == TT_WEB ? "web" : "bear trap");
@@ -953,7 +953,7 @@ break_armor()
             }
         }
     }
-    if (nohands(youmonst.data) || verysmall(youmonst.data)) {
+    if (cannotWieldThings(youmonst.data->monsterTypeID)) {
         if ((otmp = uarmg) != 0) {
             if (donning(otmp))
                 cancel_don();
@@ -977,7 +977,7 @@ break_armor()
             dropx(otmp);
         }
     }
-    if (nohands(youmonst.data) || verysmall(youmonst.data)
+    if (cannotWieldThings(youmonst.data->monsterTypeID)
         || slithy(youmonst.data) || monsterClass(youmonst.data->monsterTypeID) == S_CENTAUR) {
         if ((otmp = uarmf) != 0) {
             if (donning(otmp))
@@ -986,7 +986,7 @@ break_armor()
                 Your("boots fall away!");
             else
                 Your("boots %s off your feet!",
-                     verysmall(youmonst.data) ? "slide" : "are pushed");
+                     isVerySmallMonster(youmonst.data->monsterTypeID) ? "slide" : "are pushed");
             (void) Boots_off();
             dropx(otmp);
         }
@@ -1006,7 +1006,7 @@ int alone;
          * future it might not be so if there are monsters which cannot
          * wear gloves but can wield weapons
          */
-        if (!alone || cantwield(youmonst.data)) {
+        if (!alone || cannotWieldThings(youmonst.data->monsterTypeID)) {
             candropwep = canletgo(uwep, "");
             candropswapwep = !usingTwoWeapons() || canletgo(uswapwep, "");
             if (alone) {

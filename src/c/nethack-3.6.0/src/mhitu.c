@@ -1900,7 +1900,7 @@ register struct attack *mattk;
         pline("%s very hurriedly %s you!", Monnam(mtmp),
               is_animal(mtmp->data) ? "regurgitates" : "expels");
         expels(mtmp, mtmp->data, FALSE);
-    } else if (!timeSinceBeingSwallowed() || youmonst.data->msize >= MZ_HUGE) {
+    } else if (!timeSinceBeingSwallowed() || monsterSize(youmonst.data->monsterTypeID) >= MZ_HUGE) {
         You("get %s!", is_animal(mtmp->data) ? "regurgitated" : "expelled");
         if (flags.verbose
             && (is_animal(mtmp->data)

@@ -247,7 +247,7 @@ dowield()
 
     /* May we attempt this? */
     multi = 0;
-    if (cantwield(youmonst.data)) {
+    if (cannotWieldThings(youmonst.data->monsterTypeID)) {
         pline("Don't be ridiculous!");
         return 0;
     }
@@ -298,7 +298,7 @@ doswapweapon()
 
     /* May we attempt this? */
     multi = 0;
-    if (cantwield(youmonst.data)) {
+    if (cannotWieldThings(youmonst.data->monsterTypeID)) {
         pline("Don't be ridiculous!");
         return 0;
     }
@@ -343,7 +343,7 @@ dowieldquiver()
             ? bullets
             : ready_objs;
 
-    /* Since the quiver isn't in your hands, don't check cantwield(), */
+    /* Since the quiver isn't in your hands, don't check cannotWieldThings(), */
     /* will_weld(), touch_petrifies(), etc. */
     multi = 0;
 
@@ -435,7 +435,7 @@ const char *verb; /* "rub",&c */
         }
         return FALSE;
     }
-    if (cantwield(youmonst.data)) {
+    if (cannotWieldThings(youmonst.data->monsterTypeID)) {
         You_cant("hold %s strongly enough.", more_than_1 ? "them" : "it");
         return FALSE;
     }

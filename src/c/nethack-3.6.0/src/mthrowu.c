@@ -392,7 +392,7 @@ struct obj *obj;         /* missile (or stack providing it) */
                     if (singleobj->otyp == ELVEN_ARROW)
                         dam++;
                 }
-                if (bigmonst(youmonst.data))
+                if (isBigMonster(youmonst.data->monsterTypeID))
                     hitv++;
                 hitv += 8 + singleobj->spe;
                 if (dam < 1)
@@ -550,7 +550,7 @@ struct monst *mtmp;
         hitv = 3 - distmin(currentX(), currentY(), mtmp->mx, mtmp->my);
         if (hitv < -4)
             hitv = -4;
-        if (bigmonst(youmonst.data))
+        if (isBigMonster(youmonst.data->monsterTypeID))
             hitv++;
         hitv += 8 + otmp->spe;
         if (dam < 1)
@@ -864,11 +864,11 @@ int whodidit;   /* 1==hero, 0=other, -1==just check whether it'll pass thru */
                     && obj_type != TIN_WHISTLE && obj_type != MAGIC_WHISTLE);
             break;
         case ROCK_CLASS: /* includes boulder */
-            if (obj_type != STATUE || mons[otmp->corpsenm].msize > MZ_TINY)
+            if (obj_type != STATUE || monsterSize(mons[otmp->corpsenm].monsterTypeID) > MZ_TINY)
                 hits = TRUE;
             break;
         case FOOD_CLASS:
-            if (obj_type == CORPSE && mons[otmp->corpsenm].msize > MZ_TINY)
+            if (obj_type == CORPSE && monsterSize(mons[otmp->corpsenm].monsterTypeID) > MZ_TINY)
                 hits = TRUE;
             else
                 hits = (obj_type == MEAT_STICK

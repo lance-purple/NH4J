@@ -28,7 +28,7 @@ struct monst *mtmp;
 {
     struct permonst *ptr = mtmp->data;
 
-    return (index(steeds, monsterClass(ptr->monsterTypeID)) && (ptr->msize >= MZ_MEDIUM)
+    return (index(steeds, monsterClass(ptr->monsterTypeID)) && (monsterSize(ptr->monsterTypeID) >= MZ_MEDIUM)
             && (!humanoid(ptr) || monsterClass(ptr->monsterTypeID) == S_CENTAUR) && !amorphous(ptr)
             && !isNoncorporeal(ptr->monsterTypeID) && !isWhirly(ptr->monsterTypeID) && !unsolid(ptr));
 }
@@ -155,8 +155,9 @@ boolean
 can_ride(mtmp)
 struct monst *mtmp;
 {
+    int upmid = youmonst.data->monsterTypeID;
     return (mtmp->mtame && humanoid(youmonst.data)
-            && !verysmall(youmonst.data) && !bigmonst(youmonst.data)
+            && !isVerySmallMonster(upmid) && !isBigMonster(upmid)
             && (!underwater() || is_swimmer(mtmp->data)));
 }
 
@@ -221,8 +222,10 @@ boolean force;      /* Quietly force this animal */
             return (FALSE);
     }
 
-    if (areYouPolymorphed() && (!humanoid(youmonst.data) || verysmall(youmonst.data)
-                   || bigmonst(youmonst.data) || slithy(youmonst.data))) {
+    int upmid = youmonst.data->monsterTypeID;
+
+    if (areYouPolymorphed() && (!humanoid(youmonst.data) || isVerySmallMonster(upmid)
+                   || isBigMonster(upmid) || slithy(youmonst.data))) {
         You("won't fit on a saddle.");
         return (FALSE);
     }

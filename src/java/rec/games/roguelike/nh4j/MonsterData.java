@@ -2,9 +2,14 @@ package rec.games.roguelike.nh4j;
 
 public class MonsterData {
 
-    //#define verysmall(ptr) ((ptr)->msize < MZ_SMALL)
-    //#define bigmonst(ptr) ((ptr)->msize >= MZ_LARGE)
-    //
+	public static boolean isVerySmallMonster(int pmid) {
+		return MonsterType.monsterSize(pmid) < MZ.SMALL.id();
+	}
+
+	public static boolean isBigMonster(int pmid) {
+		return MonsterType.monsterSize(pmid) >= MZ.LARGE.id();
+	}
+
     //#define pm_resistance(ptr, typ) (((ptr)->mresists & (typ)) != 0)
     //
     //#define resists_fire(mon) (((mon)->mintrinsics & MR_FIRE) != 0)
@@ -48,7 +53,12 @@ public class MonsterData {
     //                          || (ptr) == &mons[PM_FLOATING_EYE]) \
     //                             ? 1                              \
     //                             : 2)
+    
+    public static boolean hasNoHands(int pmid) {
+    	return (MonsterType.getMonsterType(pmid).hasFlag1(M1.NOHANDS));
+    }
     //#define nohands(ptr) (((ptr)->mflags1 & M1_NOHANDS) != 0L)
+    
     //#define nolimbs(ptr) (((ptr)->mflags1 & M1_NOLIMBS) == M1_NOLIMBS)
     //#define notake(ptr) (((ptr)->mflags1 & M1_NOTAKE) != 0L)
     //#define has_head(ptr) (((ptr)->mflags1 & M1_NOHEAD) == 0L)
@@ -97,8 +107,7 @@ public class MonsterData {
     //#define is_shapeshifter(ptr) (((ptr)->mflags2 & M2_SHAPESHIFTER) != 0L)
     
     public static boolean isUndead(int pmid) {
-    	long flags2 = MonsterType.getMonsterType(pmid).flags2();
-    	return ((M2.UNDEAD & flags2) != 0L);
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.UNDEAD);
     }
     
     //#define is_were(ptr) (((ptr)->mflags2 & M2_WERE) != 0L)
@@ -137,7 +146,11 @@ public class MonsterData {
     //#define extra_nasty(ptr) (((ptr)->mflags2 & M2_NASTY) != 0L)
     //#define strongmonst(ptr) (((ptr)->mflags2 & M2_STRONG) != 0L)
     //#define can_breathe(ptr) attacktype(ptr, AT_BREA)
-    //#define cantwield(ptr) (nohands(ptr) || verysmall(ptr))
+    
+    public static boolean cannotWieldThings(int pmid) {
+    	return hasNoHands(pmid) || isVerySmallMonster(pmid);
+    }
+    
     //#define could_twoweap(ptr) ((ptr)->mattk[1].aatyp == AT_WEAP)
     //#define cantweararm(ptr) (breakarm(ptr) || sliparm(ptr))
     //#define throws_rocks(ptr) (((ptr)->mflags2 & M2_ROCKTHROW) != 0L)
@@ -152,8 +165,7 @@ public class MonsterData {
     //#define likes_gold(ptr) (((ptr)->mflags2 & M2_GREEDY) != 0L)
     
     public static boolean likesGems(int pmid) {
-    	long flags2 = MonsterType.getMonsterType(pmid).flags2();
-    	return ((M2.JEWELS & flags2) != 0L);
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.JEWELS);
     }
     //#define likes_gems(ptr) (((ptr)->mflags2 & M2_JEWELS) != 0L)
     //#define likes_objs(ptr) (((ptr)->mflags2 & M2_COLLECT) != 0L || is_armed(ptr))

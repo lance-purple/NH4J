@@ -692,7 +692,7 @@ int ttyp;
                 if (is_flyer(mtmp->data) || isFloater(mtmp->data->monsterTypeID)
                     || mtmp->data == &mons[PM_WUMPUS]
                     || (mtmp->wormno && count_wsegs(mtmp) > 5)
-                    || mtmp->data->msize >= MZ_HUGE)
+                    || monsterSize(mtmp->data->monsterTypeID) >= MZ_HUGE)
                     return;
                 if (mtmp == u.ustuck) /* probably a vortex */
                     return;           /* temporary? kludge */

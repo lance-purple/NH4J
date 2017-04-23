@@ -1055,7 +1055,7 @@ struct monst *mtmp;
      */
     int mcwt = monsterCorpseWeight(mtmp->data->monsterTypeID);
     if (!mcwt)
-        maxload = (MAX_CARR_CAP * (long) mtmp->data->msize) / MZ_HUMAN;
+        maxload = (MAX_CARR_CAP * (long) monsterSize(mtmp->data->monsterTypeID)) / MZ_HUMAN;
     else if (!strongmonst(mtmp->data)
              || (strongmonst(mtmp->data) && (mcwt > WT_HUMAN)))
         maxload = (MAX_CARR_CAP * (long) mcwt) / WT_HUMAN;
@@ -1354,7 +1354,7 @@ nexttry: /* eels prefer the water, but if there is no water nearby,
                                 && !is_clinger(mdat)) || Sokoban)
                         && (ttmp->ttyp != SLP_GAS_TRAP || !resists_sleep(mon))
                         && (ttmp->ttyp != BEAR_TRAP
-                            || (mdat->msize > MZ_SMALL && !amorphous(mdat)
+                            || (monsterSize(mdat->monsterTypeID) > MZ_SMALL && !amorphous(mdat)
                                 && !is_flyer(mdat) && !isFloater(mdat->monsterTypeID)
                                 && !isWhirly(mdat->monsterTypeID) && !unsolid(mdat)))
                         && (ttmp->ttyp != FIRE_TRAP || !resists_fire(mon))
@@ -1421,7 +1421,7 @@ struct monst *magr, /* monster that is currently deciding where to move */
         /* no displacing trapped monsters or multi-location longworms */
         && !mdef->mtrapped && (!mdef->wormno || !count_wsegs(mdef))
         /* riders can move anything; others, same size or smaller only */
-        && (is_rider(pa) || pa->msize >= pd->msize))
+        && (is_rider(pa) || monsterSize(pa->monsterTypeID) >= monsterSize(pd->monsterTypeID)))
         return ALLOW_MDISP;
     return 0L;
 }
@@ -1924,10 +1924,10 @@ boolean was_swallowed; /* digestion */
     if (LEVEL_SPECIFIC_NOCORPSE(mdat))
         return FALSE;
 
-    if (((bigmonst(mdat) || mdat == &mons[PM_LIZARD]) && !mon->mcloned)
+    if (((isBigMonster(mdat->monsterTypeID) || mdat == &mons[PM_LIZARD]) && !mon->mcloned)
         || isGolem(mdat->monsterTypeID) || is_mplayer(mdat) || is_rider(mdat))
         return TRUE;
-    tmp = 2 + ((monsterGenerationMask(mdat->monsterTypeID) & G_FREQ) < 2) + verysmall(mdat);
+    tmp = 2 + ((monsterGenerationMask(mdat->monsterTypeID) & G_FREQ) < 2) + isVerySmallMonster(mdat->monsterTypeID);
     return (boolean) !rn2(tmp);
 }
 
@@ -1986,7 +1986,7 @@ struct monst *mdef;
 
     mdef->mtrapped = 0; /* (see m_detach) */
 
-    if ((int) mdef->data->msize > MZ_TINY
+    if ((int) monsterSize(mdef->data->monsterTypeID) > MZ_TINY
         || !rn2(2 + ((int) (monsterGenerationMask(mdef->data->monsterTypeID) & G_FREQ) > 2))) {
         oldminvent = 0;
         /* some objects may end up outside the statue */
@@ -2001,7 +2001,7 @@ struct monst *mdef;
             if (obj->otyp == BOULDER
 #if 0 /* monsters don't carry statues */
                 ||  (obj->otyp == STATUE
-                     && mons[obj->corpsenm].msize >= mdef->data->msize)
+                     && monsterSize(mons[obj->corpsenm].monsterTypeID) >= monsterSize(mdef->data->monsterTypeID))
 #endif
                 /* invocation tools resist even with 0% resistance */
                 || obj_resists(obj, 0, 0)) {
@@ -2216,7 +2216,7 @@ int dest; /* dest==1, normal; dest==0, don't print message; dest==2, don't
             otmp = mkobj(RANDOM_CLASS, TRUE);
             /* don't create large objects from small monsters */
             otyp = otmp->otyp;
-            if (mdat->msize < MZ_HUMAN && otyp != FIGURINE
+            if (monsterSize(mdat->monsterTypeID) < MZ_HUMAN && otyp != FIGURINE
                 /* oc_big is also oc_bimanual and oc_bulky */
                 && (otmp->owt > 30 || objects[otyp].oc_big)) {
                 delobj(otmp);

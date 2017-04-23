@@ -196,6 +196,11 @@ public class MonsterType {
 		}
 		return this;
 	}
+	
+	public boolean hasFlag1(long value) {
+		return ((flags1 & value) != 0L);
+	}
+
 
 	public MonsterType flags2(Long... flags) {
 		for (long flag : flags) {
@@ -204,9 +209,9 @@ public class MonsterType {
 		return this;
 	}
 	
-	
-	public long flags2() {
-		return this.flags2;
+
+	public boolean hasFlag2(long value) {
+		return ((flags2 & value) != 0L);
 	}
 
 	
@@ -217,6 +222,11 @@ public class MonsterType {
 		return this;
 	}
 
+	public boolean hasFlag3(long value) {
+		return ((flags3 & value) != 0L);
+	}
+
+	
 	public MonsterType color(CLR color) {
 		this.color = color;
 		return this;
@@ -2971,6 +2981,10 @@ public class MonsterType {
 
 	public static void setMonsterSound(int pmid, int sound) {
 		getMonsterType(pmid).makesSound = MS.of(sound);
+	}
+
+	public static int monsterSize(int pmid) {
+		return getMonsterType(pmid).size.id();
 	}
 
 }

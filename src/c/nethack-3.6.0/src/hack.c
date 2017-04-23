@@ -118,7 +118,7 @@ moverock()
             /* Give them a chance to climb over it? */
             return -1;
         }
-        if (verysmall(youmonst.data) && !u.usteed) {
+        if (isVerySmallMonster(youmonst.data->monsterTypeID) && !u.usteed) {
             if (youCannotSee())
                 feel_location(sx, sy);
             pline("You're too small to push that %s.", xname(otmp));
@@ -328,7 +328,7 @@ moverock()
                 && (((!invent || inv_weight() <= -850)
                      && (!directionX() || !directionY() || (IS_ROCK(levl[currentX()][sy].typ)
                                             && IS_ROCK(levl[sx][currentY()].typ))))
-                    || verysmall(youmonst.data))) {
+                    || isVerySmallMonster(youmonst.data->monsterTypeID))) {
                 pline(
                    "However, you can squeeze yourself into a small opening.");
                 sokoban_guilt();
@@ -631,7 +631,7 @@ struct monst *mon;
     struct permonst *ptr = mon->data;
 
     /* too big? */
-    if (bigmonst(ptr)
+    if (isBigMonster(ptr->monsterTypeID)
         && !(amorphous(ptr) || isWhirly(ptr->monsterTypeID) || isNoncorporeal(ptr->monsterTypeID)
              || slithy(ptr) || can_fog(mon)))
         return 1;
@@ -1603,7 +1603,7 @@ domove()
             You("stop.  %s can't move diagonally.", upstart(y_monnam(mtmp)));
         } else if ((originalX() != x) && (originalY() != y) && bad_rock(mtmp->data, x, originalY())
                    && bad_rock(mtmp->data, originalX(), y)
-                   && (bigmonst(mtmp->data) || (curr_mon_load(mtmp) > 600))) {
+                   && (isBigMonster(mtmp->data->monsterTypeID) || (curr_mon_load(mtmp) > 600))) {
             /* can't swap places when pet won't fit thru the opening */
             setCurrentX(originalX());
             setCurrentY(originalY()); /* didn't move after all */
@@ -2789,7 +2789,7 @@ weight_cap()
         if (monsterClass(youmonst.data->monsterTypeID) == S_NYMPH)
             carrcap = MAX_CARR_CAP;
         else if (!yourCorpseWeight)
-            carrcap = (carrcap * (long) youmonst.data->msize) / MZ_HUMAN;
+            carrcap = (carrcap * (long) monsterSize(youmonst.data->monsterTypeID)) / MZ_HUMAN;
         else if (!strongmonst(youmonst.data)
                  || (strongmonst(youmonst.data)
                      && (yourCorpseWeight > WT_HUMAN)))

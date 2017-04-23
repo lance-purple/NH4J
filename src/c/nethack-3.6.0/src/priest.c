@@ -74,7 +74,7 @@ register xchar omx, omy, gx, gy;
         allowflags |= ALLOW_ROCK;
     if (tunnels(mtmp->data))
         allowflags |= ALLOW_DIG;
-    if (!nohands(mtmp->data) && !verysmall(mtmp->data)) {
+    if (!nohands(mtmp->data) && !isVerySmallMonster(mtmp->data->monsterTypeID)) {
         allowflags |= OPENDOOR;
         if (monhaskey(mtmp, TRUE))
             allowflags |= UNLOCKDOOR;

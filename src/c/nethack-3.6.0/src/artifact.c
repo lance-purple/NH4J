@@ -1252,7 +1252,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                 if (notonhead)
                     return FALSE;
 
-                if (bigmonst(mdef->data)) {
+                if (isBigMonster(mdef->data->monsterTypeID)) {
                     if (youattack)
                         You("slice deeply into %s!", mon_nam(mdef));
                     else if (vis)
@@ -1266,7 +1266,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                 otmp->dknown = TRUE;
                 return TRUE;
             } else {
-                if (bigmonst(youmonst.data)) {
+                if (isBigMonster(youmonst.data->monsterTypeID)) {
                     pline("%s cuts deeply into you!",
                           magr ? Monnam(magr) : wepdesc);
                     *dmgptr *= 2;
