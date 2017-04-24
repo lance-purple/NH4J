@@ -748,29 +748,30 @@ register struct permonst *ptr;
 #else
 #define ifdebugresist(Msg) /*empty*/
 #endif
+    int mconveys = monsterConveysResistances(ptr->monsterTypeID);
     switch (type) {
     case FIRE_RES:
-        res = (ptr->mconveys & MR_FIRE) != 0;
+        res = (mconveys & MR_FIRE) != 0;
         ifdebugresist("can get fire resistance");
         break;
     case SLEEP_RES:
-        res = (ptr->mconveys & MR_SLEEP) != 0;
+        res = (mconveys & MR_SLEEP) != 0;
         ifdebugresist("can get sleep resistance");
         break;
     case COLD_RES:
-        res = (ptr->mconveys & MR_COLD) != 0;
+        res = (mconveys & MR_COLD) != 0;
         ifdebugresist("can get cold resistance");
         break;
     case DISINT_RES:
-        res = (ptr->mconveys & MR_DISINT) != 0;
+        res = (mconveys & MR_DISINT) != 0;
         ifdebugresist("can get disintegration resistance");
         break;
     case SHOCK_RES: /* shock (electricity) resistance */
-        res = (ptr->mconveys & MR_ELEC) != 0;
+        res = (mconveys & MR_ELEC) != 0;
         ifdebugresist("can get shock resistance");
         break;
     case POISON_RES:
-        res = (ptr->mconveys & MR_POISON) != 0;
+        res = (mconveys & MR_POISON) != 0;
         ifdebugresist("can get poison resistance");
         break;
     case TELEPORT:

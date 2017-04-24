@@ -38,6 +38,7 @@ E int FDECL(monsterSize, (int));
 E long FDECL(monsterResistances, (int));
 E boolean FDECL(monsterTypeResistsFire, (int));
 E boolean FDECL(monsterTypeResistsStoning, (int));
+E long FDECL(monsterConveysResistances, (int));
 
 /* ### alloc.c ### */
 

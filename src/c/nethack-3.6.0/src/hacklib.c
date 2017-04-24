@@ -2713,7 +2713,11 @@ extern int monsterSize(int id) {
 }
 
 extern long monsterResistances(int id) {
-  return javaGetLongFromInt(MONSTER_TYPE_CLASS, "monsterResistances", id);
+  return javaGetLongFromInt(MONSTER_TYPE_CLASS, "monsterHasResistances", id);
+}
+
+extern long monsterConveysResistances(int id) {
+  return javaGetLongFromInt(MONSTER_TYPE_CLASS, "monsterConveysResistances", id);
 }
 
 /*hacklib.c*/
