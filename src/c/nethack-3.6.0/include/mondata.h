@@ -5,8 +5,6 @@
 #ifndef MONDATA_H
 #define MONDATA_H
 
-#define pm_resistance(ptr, typ) (((ptr)->mresists & (typ)) != 0)
-
 #define resists_fire(mon) (((mon)->mintrinsics & MR_FIRE) != 0)
 #define resists_cold(mon) (((mon)->mintrinsics & MR_COLD) != 0)
 #define resists_sleep(mon) (((mon)->mintrinsics & MR_SLEEP) != 0)

@@ -56,7 +56,7 @@ struct permonst {
     unsigned short XXcnutrit;   /* its nutritional value */
     uchar XXmsound;             /* noise it makes (6 bits) */
     uchar XXmsize;              /* physical size (3 bits) */
-    uchar mresists;             /* resistances */
+    uchar XXmresists;           /* resistances */
     uchar mconveys;             /* conveyed by eating */
     unsigned long mflags1;      /* boolean bitflags */
     unsigned long mflags2;      /* more boolean bitflags */

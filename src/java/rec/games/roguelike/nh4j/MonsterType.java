@@ -182,6 +182,10 @@ public class MonsterType {
 		}
 		return this;
 	}
+	
+	public boolean hasResistance(int type) {
+		return ((this.hasResistances & type) != 0L);
+	}
 
 	public MonsterType conveys(Integer... conveyances) {
 		for (int resist : conveyances) {
@@ -2985,6 +2989,10 @@ public class MonsterType {
 
 	public static int monsterSize(int pmid) {
 		return getMonsterType(pmid).size.id();
+	}
+
+	public static long monsterResistances(int pmid) {
+		return getMonsterType(pmid).hasResistances;
 	}
 
 }

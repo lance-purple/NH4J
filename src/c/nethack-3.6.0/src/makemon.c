@@ -68,7 +68,7 @@ struct permonst *ptr;
         if (!is_swimmer(ptr))
             return TRUE;
     } else if (areYouOnFireLevel()) {
-        if (!pm_resistance(ptr, MR_FIRE))
+        if (!monsterTypeResistsFire(ptr->monsterTypeID))
             return TRUE;
     } else if (areYouOnAirLevel()) {
 	int pmid = ptr->monsterTypeID;

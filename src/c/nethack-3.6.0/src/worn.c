@@ -375,7 +375,7 @@ boolean on, silently;
                check whether any other worn item confers it.  Note that
                we don't currently check for anything conferred via simply
                carrying an object. */
-            if (!(mon->data->mresists & mask)) {
+            if (!(monsterResistances(mon->data->monsterTypeID) & mask)) {
                 for (otmp = mon->minvent; otmp; otmp = otmp->nobj)
                     if (otmp->owornmask
                         && (int) objects[otmp->otyp].oc_oprop == which)

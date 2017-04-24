@@ -35,6 +35,9 @@ E int FDECL(monsterCorpseNutrition, (int));
 E int FDECL(monsterSound, (int));
 E void FDECL(setMonsterSound, (int, int));
 E int FDECL(monsterSize, (int));
+E long FDECL(monsterResistances, (int));
+E boolean FDECL(monsterTypeResistsFire, (int));
+E boolean FDECL(monsterTypeResistsStoning, (int));
 
 /* ### alloc.c ### */
 

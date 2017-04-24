@@ -10,7 +10,13 @@ public class MonsterData {
 		return MonsterType.monsterSize(pmid) >= MZ.LARGE.id();
 	}
 
-    //#define pm_resistance(ptr, typ) (((ptr)->mresists & (typ)) != 0)
+	public static boolean monsterTypeResistsFire(int pmid) {
+		return MonsterType.getMonsterType(pmid).hasResistance(MR.FIRE);
+	}
+	public static boolean monsterTypeResistsStoning(int pmid) {
+		return MonsterType.getMonsterType(pmid).hasResistance(MR.STONE);
+	}
+
     //
     //#define resists_fire(mon) (((mon)->mintrinsics & MR_FIRE) != 0)
     //#define resists_cold(mon) (((mon)->mintrinsics & MR_COLD) != 0)

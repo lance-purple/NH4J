@@ -18,9 +18,9 @@ int flag;
         return; /* "don't care" */
 
     if (flag == 1)
-        mon->mintrinsics |= (ptr->mresists & 0x00FF);
+        mon->mintrinsics |= (monsterResistances(ptr->monsterTypeID) & 0x00FF);
     else
-        mon->mintrinsics = (ptr->mresists & 0x00FF);
+        mon->mintrinsics = (monsterResistances(ptr->monsterTypeID) & 0x00FF);
     return;
 }
 
@@ -1193,6 +1193,13 @@ boolean isBigMonster(int pmid) {
 }
 boolean cannotWieldThings(int pmid) {
     return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "cannotWieldThings", pmid);
+}
+
+boolean monsterTypeResistsFire(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "monsterTypeResistsFire", pmid);
+}
+boolean monsterTypeResistsStoning(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "monsterTypeResistsStoning", pmid);
 }
 
 /*mondata.c*/
