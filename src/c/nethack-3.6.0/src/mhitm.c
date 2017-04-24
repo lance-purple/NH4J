@@ -1427,7 +1427,7 @@ int mdead;
     int i, tmp;
 
     for (i = 0;; i++) {
-        if (i >= NATTK)
+        if (i >= monsterAttacks(mddat->monsterTypeID))
             return (mdead | mhit); /* no passive attacks */
         if (mddat->mattk[i].type == AT_NONE)
             break;

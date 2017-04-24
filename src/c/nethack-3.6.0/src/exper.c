@@ -89,8 +89,10 @@ register int nk;
     if (mmove > NORMAL_SPEED)
         tmp += (mmove > (3 * NORMAL_SPEED / 2)) ? 5 : 3;
 
+    int nAttacks = monsterAttacks(ptr->monsterTypeID);
+
     /*  For each "special" attack type give extra experience */
-    for (i = 0; i < NATTK; i++) {
+    for (i = 0; i < nAttacks; i++) {
         tmp2 = ptr->mattk[i].type;
         if (tmp2 > AT_BUTT) {
             if (tmp2 == AT_WEAP)
@@ -103,7 +105,7 @@ register int nk;
     }
 
     /*  For each "special" damage type give extra experience */
-    for (i = 0; i < NATTK; i++) {
+    for (i = 0; i < nAttacks; i++) {
         tmp2 = ptr->mattk[i].damageType;
         if (tmp2 > AD_PHYS && tmp2 < AD_BLND)
             tmp += 2 * mtmp->m_lev;

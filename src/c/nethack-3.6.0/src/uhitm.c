@@ -2310,8 +2310,9 @@ boolean wep_was_destroyed;
     register struct permonst *ptr = mon->data;
     register int i, tmp;
 
+    int nAttacks = monsterAttacks(ptr->monsterTypeID);
     for (i = 0;; i++) {
-        if (i >= NATTK)
+        if (i >= nAttacks)
             return (malive | mhit); /* no passive attacks */
         if (ptr->mattk[i].type == AT_NONE)
             break; /* try this one */
@@ -2554,11 +2555,14 @@ struct attack *mattk;     /* null means we find one internally */
 
     /* if caller hasn't specified an attack, find one */
     if (!mattk) {
+	int nAttacks = monsterAttacks(ptr->monsterTypeID);
         for (i = 0;; i++) {
-            if (i >= NATTK)
+            if (i >= nAttacks) {
                 return; /* no passive attacks */
-            if (ptr->mattk[i].type == AT_NONE)
+	    }
+            if (ptr->mattk[i].type == AT_NONE) {
                 break; /* try this one */
+	    }
         }
         mattk = &(ptr->mattk[i]);
     }

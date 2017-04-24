@@ -2991,6 +2991,10 @@ public class MonsterType {
 		return getMonsterType(pmid).size.id();
 	}
 
+	public static int monsterAttacks(int pmid) {
+		return getMonsterType(pmid).attacks.size();
+	}
+
 	public static long monsterHasResistances(int pmid) {
 		return getMonsterType(pmid).hasResistances;
 	}

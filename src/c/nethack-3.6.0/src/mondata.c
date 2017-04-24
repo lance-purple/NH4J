@@ -54,8 +54,9 @@ struct permonst *ptr;
 {
     int i;
     struct attack *mattk = ptr->mattk;
+    int nAttacks = monsterAttacks(ptr->monsterTypeID);
 
-    for (i = 0; i < NATTK; i++) {
+    for (i = 0; i < nAttacks; i++) {
         /* AT_BOOM "passive attack" (gas spore's explosion upon death)
            isn't an attack as far as our callers are concerned */
         if (mattk[i].type == AT_BOOM)
@@ -269,7 +270,8 @@ struct permonst *ptr;
      *       || attacktype(ptr, AT_MAGC));
      * but that's too slow -dlc
      */
-    for (i = 0; i < NATTK; i++) {
+    int nAttacks = monsterAttacks(ptr->monsterTypeID);
+    for (i = 0; i < nAttacks; i++) {
         atyp = ptr->mattk[i].type;
         if (atyp >= AT_WEAP)
             return TRUE;
@@ -471,7 +473,8 @@ register struct monst *mdef, *magr;
     uchar damageType;
 
     /* each attack by magr can result in passive damage */
-    for (i = 0; i < NATTK; i++)
+    int nAgressorAttacks = monsterAttacks(magr->data->monsterTypeID);
+    for (i = 0; i < nAgressorAttacks; i++)
         switch (magr->data->mattk[i].type) {
         case AT_CLAW:
         case AT_BITE:
@@ -489,7 +492,8 @@ register struct monst *mdef, *magr;
             break;
         }
 
-    for (i = 0; i < NATTK; i++)
+    int nDefenderAttacks = monsterAttacks(magr->data->monsterTypeID);
+    for (i = 0; i < nDefenderAttacks; i++)
         if (mdef->data->mattk[i].type == AT_NONE
             || mdef->data->mattk[i].type == AT_BOOM) {
             damageType = mdef->data->mattk[i].damageType;

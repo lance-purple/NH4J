@@ -224,7 +224,7 @@ boolean message;
             register int i;
 
             blast[0] = '\0';
-            for (i = 0; i < NATTK; i++)
+            for (i = 0; i < monsterAttacks(mdat->monsterTypeID); i++)
                 if (mdat->mattk[i].type == AT_ENGL)
                     break;
             if (mdat->mattk[i].type != AT_ENGL)
@@ -2599,7 +2599,7 @@ register struct attack *mattk;
     int i, tmp;
 
     for (i = 0;; i++) {
-        if (i >= NATTK)
+        if (i >= monsterAttacks(olduasmon->monsterTypeID))
             return 1;
         if (olduasmon->mattk[i].type == AT_NONE
             || olduasmon->mattk[i].type == AT_BOOM)

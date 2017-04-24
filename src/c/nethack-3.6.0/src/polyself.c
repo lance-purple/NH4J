@@ -1168,13 +1168,15 @@ dospinweb()
         }
         if (isWhirly(u.ustuck->data->monsterTypeID)) {
             int i;
+	    int nAttacks = monsterAttacks(u.ustuck->data->monsterTypeID);
 
-            for (i = 0; i < NATTK; i++)
+            for (i = 0; i < nAttacks; i++) {
                 if (u.ustuck->data->mattk[i].type == AT_ENGL)
                     break;
-            if (i == NATTK)
+	    }
+            if (i == nAttacks) {
                 impossible("Swallower has no engulfing attack?");
-            else {
+	    } else {
                 char sweep[30];
 
                 sweep[0] = '\0';
@@ -1295,7 +1297,9 @@ dogaze()
     int i;
     uchar damageType = 0;
 
-    for (i = 0; i < NATTK; i++) {
+    int nAttacks = monsterAttacks(youmonst.data->monsterTypeID);
+
+    for (i = 0; i < nAttacks; i++) {
         if (youmonst.data->mattk[i].type == AT_GAZE) {
             damageType = youmonst.data->mattk[i].damageType;
             break;

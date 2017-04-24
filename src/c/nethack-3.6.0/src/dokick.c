@@ -194,7 +194,7 @@ xchar x, y;
             tmp = find_roll_to_hit(mon, AT_KICK, (struct obj *) 0, &attknum,
                                    &armorpenalty);
 
-        for (i = 0; i < NATTK; i++) {
+        for (i = 0; i < monsterAttacks(youmonst.data->monsterTypeID); i++) {
             /* first of two kicks might have provoked counterattack
                that has incapacitated the hero (ie, floating eye) */
             if (multi < 0)

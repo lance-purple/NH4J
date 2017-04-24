@@ -1123,12 +1123,15 @@ struct obj *otmp;
             && (otmp->oclass == COIN_CLASS
                 || otmp->oclass == GEM_CLASS))
             glomper = TRUE;
-        else
-            for (nattk = 0; nattk < NATTK; nattk++)
+        else {
+	    int nAttacks = monsterAttacks(mtmp->data->monsterTypeID);
+            for (nattk = 0; nattk < nAttacks; nattk++) {
                 if (mtmp->data->mattk[nattk].type == AT_ENGL) {
                     glomper = TRUE;
                     break;
                 }
+	    }
+	}
         if ((mtmp->data->mflags1 & M1_NOHANDS) && !glomper)
             return 1;
     }
@@ -1878,7 +1881,7 @@ boolean was_swallowed; /* digestion */
     }
 
     /* Gas spores always explode upon death */
-    for (i = 0; i < NATTK; i++) {
+    for (i = 0; i < monsterAttacks(mdat->monsterTypeID); i++) {
         if (mdat->mattk[i].type == AT_BOOM) {
             if (mdat->mattk[i].dice)
                 tmp = d((int) mdat->mattk[i].dice, (int) mdat->mattk[i].diceSides);
@@ -2455,7 +2458,7 @@ struct monst *mtmp;
     if (mtmp->data == &mons[PM_MEDUSA]) {
         register int i;
 
-        for (i = 0; i < NATTK; i++)
+        for (i = 0; i < monsterAttacks(mtmp->data->monsterTypeID); i++)
             if (mtmp->data->mattk[i].type == AT_GAZE) {
                 (void) gazemu(mtmp, &mtmp->data->mattk[i]);
                 break;

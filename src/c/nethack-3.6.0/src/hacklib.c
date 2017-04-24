@@ -2712,6 +2712,10 @@ extern int monsterSize(int id) {
   return javaGetIntFromInt(MONSTER_TYPE_CLASS, "monsterSize", id);
 }
 
+extern int monsterAttacks(int id) {
+  return javaGetIntFromInt(MONSTER_TYPE_CLASS, "monsterAttacks", id);
+}
+
 extern long monsterResistances(int id) {
   return javaGetLongFromInt(MONSTER_TYPE_CLASS, "monsterHasResistances", id);
 }
