@@ -24,6 +24,16 @@ struct attack {
     int diceSides;
 };
 
+struct Attack {
+    int type;
+    int damageType;
+    int dice;
+    int diceSides;
+};
+
+#define NO_ATTACK {0, 0, 0, 0}
+
+
 /*	Max # of attacks for any given monster.
  */
 

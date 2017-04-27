@@ -14,4 +14,23 @@ public class Attack {
 		this.dice = dice;
 	}
 
+	public AT type()
+	{
+		return type;
+	}
+
+	public AD damageType()
+	{
+		return damage;
+	}
+	
+	public int numberOfDice()
+	{
+		return numberOfDice;
+	}
+	
+	public Dice dice()
+	{
+		return dice();
+	}
 }

@@ -2995,6 +2995,42 @@ public class MonsterType {
 		return getMonsterType(pmid).attacks.size();
 	}
 
+	public static int monsterAttackType(int pmid, int index) {
+		ArrayList<Attack> attacks = getMonsterType(pmid).attacks;
+		if (index >= attacks.size()) {
+			return AT.ANY.id();
+		} else {
+			return attacks.get(index).type().id();
+		}
+	}
+
+	public static int monsterAttackDamageType(int pmid, int index) {
+		ArrayList<Attack> attacks = getMonsterType(pmid).attacks;
+		if (index >= attacks.size()) {
+			return AD.PHYS.id();
+		} else {
+			return attacks.get(index).damageType().id();
+		}
+	}
+
+	public static int monsterAttackDice(int pmid, int index) {
+		ArrayList<Attack> attacks = getMonsterType(pmid).attacks;
+		if (index >= attacks.size()) {
+			return 0;
+		} else {
+			return attacks.get(index).numberOfDice();
+		}
+	}
+
+	public static int monsterAttackDiceSides(int pmid, int index) {
+		ArrayList<Attack> attacks = getMonsterType(pmid).attacks;
+		if (index >= attacks.size()) {
+			return Dice.D0.sides();
+		} else {
+			return attacks.get(index).dice().sides();
+		}
+	}
+
 	public static long monsterHasResistances(int pmid) {
 		return getMonsterType(pmid).hasResistances;
 	}

@@ -101,6 +101,12 @@ int javaGetIntFromInt(const char* classname, const char* methodname, int i) {
     return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method, i);
 }
 
+int javaGetIntFromIntAndInt(const char* classname, const char* methodname, int i, int j) {
+    jclass you_class = getJavaClass(classname);
+    jmethodID method = getStaticMethod(you_class, methodname, "(II)I");
+    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method, i, j);
+}
+
 long javaGetLong(const char* classname, const char* methodname) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "()J");
@@ -2714,6 +2720,16 @@ extern int monsterSize(int id) {
 
 extern int monsterAttacks(int id) {
   return javaGetIntFromInt(MONSTER_TYPE_CLASS, "monsterAttacks", id);
+}
+
+extern struct Attack monsterAttack(int id, int index) {
+   struct Attack mattk;
+   mattk.type = javaGetIntFromIntAndInt(MONSTER_TYPE_CLASS, "monsterAttackType", id, index);
+   mattk.damageType = javaGetIntFromIntAndInt(MONSTER_TYPE_CLASS, "monsterAttackDamageType", id, index);
+   mattk.dice = javaGetIntFromIntAndInt(MONSTER_TYPE_CLASS, "monsterAttackDice", id, index);
+   mattk.diceSides = javaGetIntFromIntAndInt(MONSTER_TYPE_CLASS, "monsterAttackDiceSides", id, index);
+
+   return mattk;
 }
 
 extern long monsterResistances(int id) {
