@@ -2078,6 +2078,7 @@ E boolean FDECL(isSilent, (int));
 E boolean FDECL(isBigMonster, (int));
 E boolean FDECL(isVerySmallMonster, (int));
 E boolean FDECL(cannotWieldThings, (int));
+E boolean FDECL(cannotUseTwoWeapons, (struct permonst *));
 
 /* ### monmove.c ### */
 

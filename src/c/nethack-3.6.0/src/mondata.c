@@ -1206,4 +1206,8 @@ boolean monsterTypeResistsStoning(int pmid) {
     return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "monsterTypeResistsStoning", pmid);
 }
 
+boolean cannotUseTwoWeapons(struct permonst* ptr) {
+    return ((ptr)->mattk[1].type != AT_WEAP);
+}
+
 /*mondata.c*/
