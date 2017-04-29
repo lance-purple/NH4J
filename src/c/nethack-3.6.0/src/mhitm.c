@@ -297,7 +297,7 @@ register struct monst *magr, *mdef;
         attk,       /* attack attempted this time */
         struck = 0, /* hit at least once */
         res[NATTK]; /* results of all attacks */
-    struct attack mattk;
+    struct Attack mattk;
     struct permonst *pa, *pd;
 
     if (!magr || !mdef)
@@ -352,6 +352,13 @@ register struct monst *magr, *mdef;
     for (i = 0; i < NATTK; i++) {
         res[i] = MM_MISS;
         mattk = getMonsterAttack(pa, i, res);
+
+	struct attack deprecated_mattk;
+	deprecated_mattk.type = mattk.type;
+	deprecated_mattk.damageType = mattk.damageType;
+	deprecated_mattk.dice = mattk.dice;
+	deprecated_mattk.diceSides = mattk.diceSides;
+
         otmp = (struct obj *) 0;
         attk = 1;
         switch (mattk.type) {
@@ -395,7 +402,7 @@ register struct monst *magr, *mdef;
             if (otmp)
                 tmp -= hitval(otmp, mdef);
             if (strike) {
-                res[i] = hitmm(magr, mdef, &mattk);
+                res[i] = hitmm(magr, mdef, &deprecated_mattk);
                 if ((mdef->data == &mons[PM_BLACK_PUDDING]
                      || mdef->data == &mons[PM_BROWN_PUDDING]) && otmp
                     && objects[otmp->otyp].oc_material == IRON
@@ -412,23 +419,23 @@ register struct monst *magr, *mdef;
                     }
                 }
             } else
-                missmm(magr, mdef, &mattk);
+                missmm(magr, mdef, &deprecated_mattk);
             break;
 
         case AT_HUGS: /* automatic if prev two attacks succeed */
             strike = (i >= 2 && res[i - 1] == MM_HIT && res[i - 2] == MM_HIT);
             if (strike)
-                res[i] = hitmm(magr, mdef, &mattk);
+                res[i] = hitmm(magr, mdef, &deprecated_mattk);
 
             break;
 
         case AT_GAZE:
             strike = 0;
-            res[i] = gazemm(magr, mdef, &mattk);
+            res[i] = gazemm(magr, mdef, &deprecated_mattk);
             break;
 
         case AT_EXPL:
-            res[i] = explmm(magr, mdef, &mattk);
+            res[i] = explmm(magr, mdef, &deprecated_mattk);
             if (res[i] == MM_MISS) { /* cancelled--no attack */
                 strike = 0;
                 attk = 0;
@@ -448,9 +455,9 @@ register struct monst *magr, *mdef;
                 strike = 0;
             else {
                 if ((strike = (tmp > rnd(20 + i))))
-                    res[i] = gulpmm(magr, mdef, &mattk);
+                    res[i] = gulpmm(magr, mdef, &deprecated_mattk);
                 else
-                    missmm(magr, mdef, &mattk);
+                    missmm(magr, mdef, &deprecated_mattk);
             }
             break;
 

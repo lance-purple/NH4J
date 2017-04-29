@@ -2105,7 +2105,7 @@ STATIC_OVL boolean
 hmonas(mon)
 register struct monst *mon;
 {
-    struct attack mattk;
+    struct Attack mattk;
     struct obj *weapon;
     boolean altwep = FALSE, weapon_used = FALSE;
     int i, tmp, armorpenalty, sum[NATTK], nsum = 0, dhit = 0, attknum = 0;
@@ -2113,6 +2113,13 @@ register struct monst *mon;
     for (i = 0; i < NATTK; i++) {
         sum[i] = 0;
         mattk = getMonsterAttack(youmonst.data, i, sum);
+
+	struct attack deprecated_mattk;
+	deprecated_mattk.type = mattk.type;
+	deprecated_mattk.damageType = mattk.damageType;
+	deprecated_mattk.dice = mattk.dice;
+	deprecated_mattk.diceSides = mattk.diceSides;
+	
         switch (mattk.type) {
         case AT_WEAP:
         use_weapon:
@@ -2134,7 +2141,7 @@ register struct monst *mon;
                                    &armorpenalty);
             dhit = (tmp > (dieroll = rnd(20)) || swallowed());
             /* Enemy dead, before any special abilities used */
-            if (!known_hitum(mon, weapon, &dhit, tmp, armorpenalty, &mattk)) {
+            if (!known_hitum(mon, weapon, &dhit, tmp, armorpenalty, &deprecated_mattk)) {
                 sum[i] = 2;
                 break;
             } else
@@ -2146,7 +2153,7 @@ register struct monst *mon;
              * already did it.
              */
             if (dhit && mattk.damageType != AD_SPEL && mattk.damageType != AD_PHYS)
-                sum[i] = damageum(mon, &mattk);
+                sum[i] = damageum(mon, &deprecated_mattk);
             break;
         case AT_CLAW:
             if (uwep && !cannotWieldThings(youmonst.data->monsterTypeID) && !weapon_used)
@@ -2168,14 +2175,14 @@ register struct monst *mon;
                 int compat;
 
                 if (!swallowed()
-                    && (compat = could_seduce(&youmonst, mon, &mattk))) {
+                    && (compat = could_seduce(&youmonst, mon, &deprecated_mattk))) {
                     You("%s %s %s.",
                         mon->mcansee && haseyes(mon->data) ? "smile at"
                                                            : "talk to",
                         mon_nam(mon),
                         compat == 2 ? "engagingly" : "seductively");
                     /* doesn't anger it; no wakeup() */
-                    sum[i] = damageum(mon, &mattk);
+                    sum[i] = damageum(mon, &deprecated_mattk);
                     break;
                 }
                 wakeup(mon);
@@ -2201,9 +2208,9 @@ register struct monst *mon;
                     Your("tentacles suck %s.", mon_nam(mon));
                 else
                     You("hit %s.", mon_nam(mon));
-                sum[i] = damageum(mon, &mattk);
+                sum[i] = damageum(mon, &deprecated_mattk);
             } else {
-                missum(mon, &mattk, (tmp + armorpenalty > dieroll));
+                missum(mon, &deprecated_mattk, (tmp + armorpenalty > dieroll));
             }
             break;
 
@@ -2219,11 +2226,11 @@ register struct monst *mon;
                 if (mon == u.ustuck) {
                     pline("%s is being %s.", Monnam(mon),
                           currentMonsterNumber() == PM_ROPE_GOLEM ? "choked" : "crushed");
-                    sum[i] = damageum(mon, &mattk);
+                    sum[i] = damageum(mon, &deprecated_mattk);
                 } else if (i >= 2 && sum[i - 1] && sum[i - 2]) {
                     You("grab %s!", mon_nam(mon));
                     u.ustuck = mon;
-                    sum[i] = damageum(mon, &mattk);
+                    sum[i] = damageum(mon, &deprecated_mattk);
                 }
             }
             break;
@@ -2231,7 +2238,7 @@ register struct monst *mon;
         case AT_EXPL: /* automatic hit if next to */
             dhit = -1;
             wakeup(mon);
-            sum[i] = explum(mon, &mattk);
+            sum[i] = explum(mon, &deprecated_mattk);
             break;
 
         case AT_ENGL:
@@ -2243,7 +2250,7 @@ register struct monst *mon;
                     Your("attempt to surround %s is harmless.", mon_nam(mon));
                 else {
 		    int mc = monsterClass(mon->data->monsterTypeID);
-                    sum[i] = gulpum(mon, &mattk);
+                    sum[i] = gulpum(mon, &deprecated_mattk);
                     if (sum[i] == 2 && (mc == S_ZOMBIE || mc == S_MUMMY)
                         && rn2(5) && !youResistSickness()) {
                         You_feel("%ssick.", (youAreSick()) ? "very " : "");
@@ -2251,7 +2258,7 @@ register struct monst *mon;
                     }
                 }
             } else {
-                missum(mon, &mattk, FALSE);
+                missum(mon, &deprecated_mattk, FALSE);
             }
             break;
 
