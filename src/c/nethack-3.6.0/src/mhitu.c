@@ -255,24 +255,27 @@ boolean message;
 }
 
 /* select a monster's next attack, possibly substituting for its usual one */
-struct attack *
-getmattk(mptr, indx, prev_result, alt_attk_buf)
+struct attack 
+getMonsterAttack(mptr, indx, prev_result)
 struct permonst *mptr;
 int indx, prev_result[];
-struct attack *alt_attk_buf;
 {
-    struct attack *attk = &mptr->mattk[indx];
+    struct Attack jattk = monsterAttack(mptr->monsterTypeID, indx);
+    struct attack attk;
+
+    attk.type = jattk.type;
+    attk.damageType = jattk.damageType;
+    attk.dice = jattk.dice;
+    attk.diceSides = jattk.diceSides;
 
     /* prevent a monster with two consecutive disease or hunger attacks
        from hitting with both of them on the same turn; if the first has
        already hit, switch to a stun attack for the second */
     if (indx > 0 && prev_result[indx - 1] > 0
-        && (attk->damageType == AD_DISE || attk->damageType == AD_PEST
-            || attk->damageType == AD_FAMN)
-        && attk->damageType == mptr->mattk[indx - 1].damageType) {
-        *alt_attk_buf = *attk;
-        attk = alt_attk_buf;
-        attk->damageType = AD_STUN;
+        && (attk.damageType == AD_DISE || attk.damageType == AD_PEST
+            || attk.damageType == AD_FAMN)
+        && attk.damageType == mptr->mattk[indx - 1].damageType) {
+        attk.damageType = AD_STUN;
     }
     return attk;
 }
@@ -290,7 +293,7 @@ int
 mattacku(mtmp)
 register struct monst *mtmp;
 {
-    struct attack *mattk, alt_attk;
+    struct attack mattk;
     int i, j, tmp, sum[NATTK];
     struct permonst *mdat = mtmp->data;
     boolean ranged = (distanceSquaredToYou(mtmp->mx, mtmp->my) > 3);
@@ -606,12 +609,12 @@ register struct monst *mtmp;
 
     for (i = 0; i < NATTK; i++) {
         sum[i] = 0;
-        mattk = getmattk(mdat, i, sum, &alt_attk);
-        if ((swallowed() && mattk->type != AT_ENGL)
-            || (skipnonmagc && mattk->type != AT_MAGC))
+        mattk = getMonsterAttack(mdat, i, sum);
+        if ((swallowed() && mattk.type != AT_ENGL)
+            || (skipnonmagc && mattk.type != AT_MAGC))
             continue;
 
-        switch (mattk->type) {
+        switch (mattk.type) {
         case AT_CLAW: /* "hand to hand" attacks */
         case AT_KICK:
         case AT_BITE:
@@ -623,13 +626,13 @@ register struct monst *mtmp;
                             || !touch_petrifies(youmonst.data))) {
                 if (foundyou) {
                     if (tmp > (j = rnd(20 + i))) {
-                        if (mattk->type != AT_KICK
+                        if (mattk.type != AT_KICK
                             || !thick_skinned(youmonst.data))
-                            sum[i] = hitmu(mtmp, mattk);
+                            sum[i] = hitmu(mtmp, &mattk);
                     } else
-                        missmu(mtmp, (tmp == j), mattk);
+                        missmu(mtmp, (tmp == j), &mattk);
                 } else {
-                    wildmiss(mtmp, mattk);
+                    wildmiss(mtmp, &mattk);
                     /* skip any remaining non-spell attacks */
                     skipnonmagc = TRUE;
                 }
@@ -640,19 +643,19 @@ register struct monst *mtmp;
             /* Note: if displaced, prev attacks never succeeded */
             if ((!range2 && i >= 2 && sum[i - 1] && sum[i - 2])
                 || mtmp == u.ustuck)
-                sum[i] = hitmu(mtmp, mattk);
+                sum[i] = hitmu(mtmp, &mattk);
             break;
 
         case AT_GAZE: /* can affect you either ranged or not */
             /* Medusa gaze already operated through m_respond in
                dochug(); don't gaze more than once per round. */
             if (mdat != &mons[PM_MEDUSA])
-                sum[i] = gazemu(mtmp, mattk);
+                sum[i] = gazemu(mtmp, &mattk);
             break;
 
         case AT_EXPL: /* automatic hit if next to, and aimed at you */
             if (!range2)
-                sum[i] = explmu(mtmp, mattk, foundyou);
+                sum[i] = explmu(mtmp, &mattk, foundyou);
             break;
 
         case AT_ENGL:
@@ -663,9 +666,9 @@ register struct monst *mtmp;
                          * displayed even when player is
                          * moving away */
                         flush_screen(1);
-                        sum[i] = gulpmu(mtmp, mattk);
+                        sum[i] = gulpmu(mtmp, &mattk);
                     } else {
-                        missmu(mtmp, (tmp == j), mattk);
+                        missmu(mtmp, (tmp == j), &mattk);
                     }
                 } else if (is_animal(mtmp->data)) {
                     pline("%s gulps some air!", Monnam(mtmp));
@@ -681,12 +684,12 @@ register struct monst *mtmp;
             break;
         case AT_BREA:
             if (range2)
-                sum[i] = breamu(mtmp, mattk);
+                sum[i] = breamu(mtmp, &mattk);
             /* Note: breamu takes care of displacement */
             break;
         case AT_SPIT:
             if (range2)
-                sum[i] = spitmu(mtmp, mattk);
+                sum[i] = spitmu(mtmp, &mattk);
             /* Note: spitmu takes care of displacement */
             break;
         case AT_WEAP:
@@ -714,14 +717,14 @@ register struct monst *mtmp;
                         mswings(mtmp, otmp);
                     }
                     if (tmp > (j = dieroll = rnd(20 + i)))
-                        sum[i] = hitmu(mtmp, mattk);
+                        sum[i] = hitmu(mtmp, &mattk);
                     else
-                        missmu(mtmp, (tmp == j), mattk);
+                        missmu(mtmp, (tmp == j), &mattk);
                     /* KMH -- Don't accumulate to-hit bonuses */
                     if (otmp)
                         tmp -= hittmp;
                 } else {
-                    wildmiss(mtmp, mattk);
+                    wildmiss(mtmp, &mattk);
                     /* skip any remaining non-spell attacks */
                     skipnonmagc = TRUE;
                 }
@@ -729,9 +732,9 @@ register struct monst *mtmp;
             break;
         case AT_MAGC:
             if (range2)
-                sum[i] = buzzmu(mtmp, mattk);
+                sum[i] = buzzmu(mtmp, &mattk);
             else
-                sum[i] = castmu(mtmp, mattk, TRUE, foundyou);
+                sum[i] = castmu(mtmp, &mattk, TRUE, foundyou);
             break;
 
         default: /* no attack */

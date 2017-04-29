@@ -2105,15 +2105,15 @@ STATIC_OVL boolean
 hmonas(mon)
 register struct monst *mon;
 {
-    struct attack *mattk, alt_attk;
+    struct attack mattk;
     struct obj *weapon;
     boolean altwep = FALSE, weapon_used = FALSE;
     int i, tmp, armorpenalty, sum[NATTK], nsum = 0, dhit = 0, attknum = 0;
 
     for (i = 0; i < NATTK; i++) {
         sum[i] = 0;
-        mattk = getmattk(youmonst.data, i, sum, &alt_attk);
-        switch (mattk->type) {
+        mattk = getMonsterAttack(youmonst.data, i, sum);
+        switch (mattk.type) {
         case AT_WEAP:
         use_weapon:
             /* Certain monsters don't use weapons when encountered as enemies,
@@ -2134,7 +2134,7 @@ register struct monst *mon;
                                    &armorpenalty);
             dhit = (tmp > (dieroll = rnd(20)) || swallowed());
             /* Enemy dead, before any special abilities used */
-            if (!known_hitum(mon, weapon, &dhit, tmp, armorpenalty, mattk)) {
+            if (!known_hitum(mon, weapon, &dhit, tmp, armorpenalty, &mattk)) {
                 sum[i] = 2;
                 break;
             } else
@@ -2145,8 +2145,8 @@ register struct monst *mon;
             /* Do not print "You hit" message, since known_hitum
              * already did it.
              */
-            if (dhit && mattk->damageType != AD_SPEL && mattk->damageType != AD_PHYS)
-                sum[i] = damageum(mon, mattk);
+            if (dhit && mattk.damageType != AD_SPEL && mattk.damageType != AD_PHYS)
+                sum[i] = damageum(mon, &mattk);
             break;
         case AT_CLAW:
             if (uwep && !cannotWieldThings(youmonst.data->monsterTypeID) && !weapon_used)
@@ -2161,49 +2161,49 @@ register struct monst *mon;
         case AT_STNG:
         case AT_BUTT:
         case AT_TENT:
-            tmp = find_roll_to_hit(mon, mattk->type, (struct obj *) 0,
+            tmp = find_roll_to_hit(mon, mattk.type, (struct obj *) 0,
                                    &attknum, &armorpenalty);
             dhit = (tmp > (dieroll = rnd(20)) || swallowed());
             if (dhit) {
                 int compat;
 
                 if (!swallowed()
-                    && (compat = could_seduce(&youmonst, mon, mattk))) {
+                    && (compat = could_seduce(&youmonst, mon, &mattk))) {
                     You("%s %s %s.",
                         mon->mcansee && haseyes(mon->data) ? "smile at"
                                                            : "talk to",
                         mon_nam(mon),
                         compat == 2 ? "engagingly" : "seductively");
                     /* doesn't anger it; no wakeup() */
-                    sum[i] = damageum(mon, mattk);
+                    sum[i] = damageum(mon, &mattk);
                     break;
                 }
                 wakeup(mon);
                 /* maybe this check should be in damageum()? */
                 if (mon->data == &mons[PM_SHADE]
-                    && !(mattk->type == AT_KICK && uarmf
+                    && !(mattk.type == AT_KICK && uarmf
                          && uarmf->blessed)) {
                     Your("attack passes harmlessly through %s.",
                          mon_nam(mon));
                     break;
                 }
-                if (mattk->type == AT_KICK)
+                if (mattk.type == AT_KICK)
                     You("kick %s.", mon_nam(mon));
-                else if (mattk->type == AT_BITE)
+                else if (mattk.type == AT_BITE)
                     You("bite %s.", mon_nam(mon));
-                else if (mattk->type == AT_STNG)
+                else if (mattk.type == AT_STNG)
                     You("sting %s.", mon_nam(mon));
-                else if (mattk->type == AT_BUTT)
+                else if (mattk.type == AT_BUTT)
                     You("butt %s.", mon_nam(mon));
-                else if (mattk->type == AT_TUCH)
+                else if (mattk.type == AT_TUCH)
                     You("touch %s.", mon_nam(mon));
-                else if (mattk->type == AT_TENT)
+                else if (mattk.type == AT_TENT)
                     Your("tentacles suck %s.", mon_nam(mon));
                 else
                     You("hit %s.", mon_nam(mon));
-                sum[i] = damageum(mon, mattk);
+                sum[i] = damageum(mon, &mattk);
             } else {
-                missum(mon, mattk, (tmp + armorpenalty > dieroll));
+                missum(mon, &mattk, (tmp + armorpenalty > dieroll));
             }
             break;
 
@@ -2219,11 +2219,11 @@ register struct monst *mon;
                 if (mon == u.ustuck) {
                     pline("%s is being %s.", Monnam(mon),
                           currentMonsterNumber() == PM_ROPE_GOLEM ? "choked" : "crushed");
-                    sum[i] = damageum(mon, mattk);
+                    sum[i] = damageum(mon, &mattk);
                 } else if (i >= 2 && sum[i - 1] && sum[i - 2]) {
                     You("grab %s!", mon_nam(mon));
                     u.ustuck = mon;
-                    sum[i] = damageum(mon, mattk);
+                    sum[i] = damageum(mon, &mattk);
                 }
             }
             break;
@@ -2231,11 +2231,11 @@ register struct monst *mon;
         case AT_EXPL: /* automatic hit if next to */
             dhit = -1;
             wakeup(mon);
-            sum[i] = explum(mon, mattk);
+            sum[i] = explum(mon, &mattk);
             break;
 
         case AT_ENGL:
-            tmp = find_roll_to_hit(mon, mattk->type, (struct obj *) 0,
+            tmp = find_roll_to_hit(mon, mattk.type, (struct obj *) 0,
                                    &attknum, &armorpenalty);
             if ((dhit = (tmp > rnd(20 + i)))) {
                 wakeup(mon);
@@ -2243,7 +2243,7 @@ register struct monst *mon;
                     Your("attempt to surround %s is harmless.", mon_nam(mon));
                 else {
 		    int mc = monsterClass(mon->data->monsterTypeID);
-                    sum[i] = gulpum(mon, mattk);
+                    sum[i] = gulpum(mon, &mattk);
                     if (sum[i] == 2 && (mc == S_ZOMBIE || mc == S_MUMMY)
                         && rn2(5) && !youResistSickness()) {
                         You_feel("%ssick.", (youAreSick()) ? "very " : "");
@@ -2251,7 +2251,7 @@ register struct monst *mon;
                     }
                 }
             } else {
-                missum(mon, mattk, FALSE);
+                missum(mon, &mattk, FALSE);
             }
             break;
 
@@ -2276,17 +2276,17 @@ register struct monst *mon;
             break;
 
         default: /* Strange... */
-            impossible("strange attack of yours (%d)", mattk->type);
+            impossible("strange attack of yours (%d)", mattk.type);
         }
         if (dhit == -1) {
             decreaseCurrentHitPointsAsMonster(1); /* dead in the current form */
             rehumanize();
         }
         if (sum[i] == 2)
-            return (boolean) passive(mon, 1, 0, mattk->type, FALSE);
+            return (boolean) passive(mon, 1, 0, mattk.type, FALSE);
         /* defender dead */
         else {
-            (void) passive(mon, sum[i], 1, mattk->type, FALSE);
+            (void) passive(mon, sum[i], 1, mattk.type, FALSE);
             nsum |= sum[i];
         }
         if (!areYouPolymorphed())

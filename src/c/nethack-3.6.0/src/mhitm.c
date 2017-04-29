@@ -297,7 +297,7 @@ register struct monst *magr, *mdef;
         attk,       /* attack attempted this time */
         struck = 0, /* hit at least once */
         res[NATTK]; /* results of all attacks */
-    struct attack *mattk, alt_attk;
+    struct attack mattk;
     struct permonst *pa, *pd;
 
     if (!magr || !mdef)
@@ -351,10 +351,10 @@ register struct monst *magr, *mdef;
     /* Now perform all attacks for the monster. */
     for (i = 0; i < NATTK; i++) {
         res[i] = MM_MISS;
-        mattk = getmattk(pa, i, res, &alt_attk);
+        mattk = getMonsterAttack(pa, i, res);
         otmp = (struct obj *) 0;
         attk = 1;
-        switch (mattk->type) {
+        switch (mattk.type) {
         case AT_WEAP: /* "hand to hand" attacks */
             if (magr->weapon_check == NEED_WEAPON || !MON_WEP(magr)) {
                 magr->weapon_check = NEED_HTH_WEAPON;
@@ -384,7 +384,7 @@ register struct monst *magr, *mdef;
              * have a weapon instead.  This instinct doesn't work for
              * players, or under conflict or confusion.
              */
-            if (!magr->mconf && !youCauseConflict() && otmp && mattk->type != AT_WEAP
+            if (!magr->mconf && !youCauseConflict() && otmp && mattk.type != AT_WEAP
                 && touch_petrifies(mdef->data)) {
                 strike = 0;
                 break;
@@ -395,7 +395,7 @@ register struct monst *magr, *mdef;
             if (otmp)
                 tmp -= hitval(otmp, mdef);
             if (strike) {
-                res[i] = hitmm(magr, mdef, mattk);
+                res[i] = hitmm(magr, mdef, &mattk);
                 if ((mdef->data == &mons[PM_BLACK_PUDDING]
                      || mdef->data == &mons[PM_BROWN_PUDDING]) && otmp
                     && objects[otmp->otyp].oc_material == IRON
@@ -412,23 +412,23 @@ register struct monst *magr, *mdef;
                     }
                 }
             } else
-                missmm(magr, mdef, mattk);
+                missmm(magr, mdef, &mattk);
             break;
 
         case AT_HUGS: /* automatic if prev two attacks succeed */
             strike = (i >= 2 && res[i - 1] == MM_HIT && res[i - 2] == MM_HIT);
             if (strike)
-                res[i] = hitmm(magr, mdef, mattk);
+                res[i] = hitmm(magr, mdef, &mattk);
 
             break;
 
         case AT_GAZE:
             strike = 0;
-            res[i] = gazemm(magr, mdef, mattk);
+            res[i] = gazemm(magr, mdef, &mattk);
             break;
 
         case AT_EXPL:
-            res[i] = explmm(magr, mdef, mattk);
+            res[i] = explmm(magr, mdef, &mattk);
             if (res[i] == MM_MISS) { /* cancelled--no attack */
                 strike = 0;
                 attk = 0;
@@ -448,9 +448,9 @@ register struct monst *magr, *mdef;
                 strike = 0;
             else {
                 if ((strike = (tmp > rnd(20 + i))))
-                    res[i] = gulpmm(magr, mdef, mattk);
+                    res[i] = gulpmm(magr, mdef, &mattk);
                 else
-                    missmm(magr, mdef, mattk);
+                    missmm(magr, mdef, &mattk);
             }
             break;
 
