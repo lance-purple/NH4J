@@ -558,7 +558,13 @@ toofar:
             for (a = &mdat->mattk[0]; a < &mdat->mattk[NATTK]; a++) {
                 if (a->type == AT_MAGC
                     && (a->damageType == AD_SPEL || a->damageType == AD_CLRC)) {
-                    if (castmu(mtmp, a, FALSE, FALSE)) {
+		    struct Attack new_a;
+		    new_a.type = a->type;
+		    new_a.damageType = a->damageType;
+		    new_a.dice = a->dice;
+		    new_a.diceSides = a->diceSides;
+
+                    if (castmu(mtmp, new_a, FALSE, FALSE)) {
                         tmp = 3;
                         break;
                     }

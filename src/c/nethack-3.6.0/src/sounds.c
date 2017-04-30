@@ -835,7 +835,7 @@ register struct monst *mtmp;
         int swval;
         if (SYSOPT_SEDUCE) {
             if (monsterClass(ptr->monsterTypeID) != S_NYMPH
-                && could_seduce(mtmp, &youmonst, (struct attack *) 0) == 1) {
+                && could_seduce(mtmp, &youmonst, NO_ATTACK) == 1) {
                 (void) doseduce(mtmp);
                 break;
             }

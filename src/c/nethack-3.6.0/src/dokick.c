@@ -188,7 +188,7 @@ xchar x, y;
      * If you have >1 kick attack, you get all of them.
      */
     if (areYouPolymorphed() && attacktype(youmonst.data, AT_KICK)) {
-        struct attack *uattk;
+        struct Attack uattk;
         int sum, kickdieroll, armorpenalty,
             attknum = 0,
             tmp = find_roll_to_hit(mon, AT_KICK, (struct obj *) 0, &attknum,
@@ -200,9 +200,13 @@ xchar x, y;
             if (multi < 0)
                 break;
 
-            uattk = &youmonst.data->mattk[i];
+            uattk.type = youmonst.data->mattk[i].type;
+            uattk.damageType = youmonst.data->mattk[i].damageType;
+            uattk.dice = youmonst.data->mattk[i].dice;
+            uattk.diceSides = youmonst.data->mattk[i].diceSides;
+
             /* we only care about kicking attacks here */
-            if (uattk->type != AT_KICK)
+            if (uattk.type != AT_KICK)
                 continue;
 
             if (mon->data == &mons[PM_SHADE] && (!uarmf || !uarmf->blessed)) {

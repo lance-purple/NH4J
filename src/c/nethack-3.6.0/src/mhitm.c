@@ -15,21 +15,15 @@ static const char brief_feeling[] =
     "have a %s feeling for a moment, then it passes.";
 
 STATIC_DCL char *FDECL(mon_nam_too, (char *, struct monst *, struct monst *));
-STATIC_DCL int FDECL(hitmm, (struct monst *, struct monst *,
-                             struct attack *));
-STATIC_DCL int FDECL(gazemm, (struct monst *, struct monst *,
-                              struct attack *));
-STATIC_DCL int FDECL(gulpmm, (struct monst *, struct monst *,
-                              struct attack *));
-STATIC_DCL int FDECL(explmm, (struct monst *, struct monst *,
-                              struct attack *));
-STATIC_DCL int FDECL(mdamagem, (struct monst *, struct monst *,
-                                struct attack *));
+STATIC_DCL int FDECL(hitmm, (struct monst *, struct monst *, const struct Attack));
+STATIC_DCL int FDECL(gazemm, (struct monst *, struct monst *, const struct Attack));
+STATIC_DCL int FDECL(gulpmm, (struct monst *, struct monst *, const struct Attack));
+STATIC_DCL int FDECL(explmm, (struct monst *, struct monst *, const struct Attack));
+STATIC_DCL int FDECL(mdamagem, (struct monst *, struct monst *, const struct Attack));
 STATIC_DCL void FDECL(mswingsm, (struct monst *, struct monst *,
                                  struct obj *));
-STATIC_DCL void FDECL(noises, (struct monst *, struct attack *));
-STATIC_DCL void FDECL(missmm, (struct monst *, struct monst *,
-                               struct attack *));
+STATIC_DCL void FDECL(noises, (struct monst *, const struct Attack));
+STATIC_DCL void FDECL(missmm, (struct monst *, struct monst *, const struct Attack));
 STATIC_DCL int FDECL(passivemm, (struct monst *, struct monst *,
                                  BOOLEAN_P, int));
 
@@ -65,7 +59,7 @@ struct monst *mon, *other_mon;
 STATIC_OVL void
 noises(magr, mattk)
 register struct monst *magr;
-register struct attack *mattk;
+register const struct Attack mattk;
 {
     boolean farq = (distanceSquaredToYou(magr->mx, magr->my) > 15);
 
@@ -73,7 +67,7 @@ register struct attack *mattk;
         far_noise = farq;
         noisetime = moves;
         You_hear("%s%s.",
-                 (mattk->type == AT_EXPL) ? "an explosion" : "some noises",
+                 (mattk.type == AT_EXPL) ? "an explosion" : "some noises",
                  farq ? " in the distance" : "");
     }
 }
@@ -82,7 +76,7 @@ STATIC_OVL
 void
 missmm(magr, mdef, mattk)
 register struct monst *magr, *mdef;
-struct attack *mattk;
+const struct Attack mattk;
 {
     const char *fmt;
     char buf[BUFSZ], mdef_name[BUFSZ];
@@ -101,8 +95,9 @@ struct attack *mattk;
                   : "%s misses";
         Sprintf(buf, fmt, Monnam(magr));
         pline("%s %s.", buf, mon_nam_too(mdef_name, mdef, magr));
-    } else
+    } else {
         noises(magr, mattk);
+    }
 }
 
 /*
@@ -353,12 +348,6 @@ register struct monst *magr, *mdef;
         res[i] = MM_MISS;
         mattk = getMonsterAttack(pa, i, res);
 
-	struct attack deprecated_mattk;
-	deprecated_mattk.type = mattk.type;
-	deprecated_mattk.damageType = mattk.damageType;
-	deprecated_mattk.dice = mattk.dice;
-	deprecated_mattk.diceSides = mattk.diceSides;
-
         otmp = (struct obj *) 0;
         attk = 1;
         switch (mattk.type) {
@@ -402,7 +391,7 @@ register struct monst *magr, *mdef;
             if (otmp)
                 tmp -= hitval(otmp, mdef);
             if (strike) {
-                res[i] = hitmm(magr, mdef, &deprecated_mattk);
+                res[i] = hitmm(magr, mdef, mattk);
                 if ((mdef->data == &mons[PM_BLACK_PUDDING]
                      || mdef->data == &mons[PM_BROWN_PUDDING]) && otmp
                     && objects[otmp->otyp].oc_material == IRON
@@ -418,24 +407,25 @@ register struct monst *magr, *mdef;
                         }
                     }
                 }
-            } else
-                missmm(magr, mdef, &deprecated_mattk);
+            } else {
+                missmm(magr, mdef, mattk);
+	    }
             break;
 
         case AT_HUGS: /* automatic if prev two attacks succeed */
             strike = (i >= 2 && res[i - 1] == MM_HIT && res[i - 2] == MM_HIT);
             if (strike)
-                res[i] = hitmm(magr, mdef, &deprecated_mattk);
+                res[i] = hitmm(magr, mdef, mattk);
 
             break;
 
         case AT_GAZE:
             strike = 0;
-            res[i] = gazemm(magr, mdef, &deprecated_mattk);
+            res[i] = gazemm(magr, mdef, mattk);
             break;
 
         case AT_EXPL:
-            res[i] = explmm(magr, mdef, &deprecated_mattk);
+            res[i] = explmm(magr, mdef, mattk);
             if (res[i] == MM_MISS) { /* cancelled--no attack */
                 strike = 0;
                 attk = 0;
@@ -454,10 +444,11 @@ register struct monst *magr, *mdef;
             if (swallowed() && magr == u.ustuck)
                 strike = 0;
             else {
-                if ((strike = (tmp > rnd(20 + i))))
-                    res[i] = gulpmm(magr, mdef, &deprecated_mattk);
-                else
-                    missmm(magr, mdef, &deprecated_mattk);
+                if ((strike = (tmp > rnd(20 + i)))) {
+                    res[i] = gulpmm(magr, mdef, mattk);
+		} else {
+                    missmm(magr, mdef, mattk);
+		}
             }
             break;
 
@@ -489,7 +480,7 @@ register struct monst *magr, *mdef;
 STATIC_OVL int
 hitmm(magr, mdef, mattk)
 register struct monst *magr, *mdef;
-struct attack *mattk;
+const struct Attack mattk;
 {
     if (vis) {
         int compat;
@@ -512,7 +503,7 @@ struct attack *mattk;
             char magr_name[BUFSZ];
 
             Strcpy(magr_name, Monnam(magr));
-            switch (mattk->type) {
+            switch (mattk.type) {
             case AT_BITE:
                 Sprintf(buf, "%s bites", magr_name);
                 break;
@@ -538,8 +529,9 @@ struct attack *mattk;
             }
             pline("%s %s.", buf, mon_nam_too(mdef_name, mdef, magr));
         }
-    } else
+    } else {
         noises(magr, mattk);
+    }
 
     return mdamagem(magr, mdef, mattk);
 }
@@ -548,7 +540,7 @@ struct attack *mattk;
 STATIC_OVL int
 gazemm(magr, mdef, mattk)
 register struct monst *magr, *mdef;
-struct attack *mattk;
+const struct Attack mattk;
 {
     char buf[BUFSZ];
 
@@ -631,7 +623,7 @@ struct monst *magr, *mdef;
 STATIC_OVL int
 gulpmm(magr, mdef, mattk)
 register struct monst *magr, *mdef;
-register struct attack *mattk;
+register const struct Attack mattk;
 {
     xchar ax, ay, dx, dy;
     int status;
@@ -701,29 +693,32 @@ register struct attack *mattk;
 STATIC_OVL int
 explmm(magr, mdef, mattk)
 struct monst *magr, *mdef;
-struct attack *mattk;
+const struct Attack mattk;
 {
     int result;
 
     if (magr->mcan)
         return MM_MISS;
 
-    if (cansee(magr->mx, magr->my))
+    if (cansee(magr->mx, magr->my)) {
         pline("%s explodes!", Monnam(magr));
-    else
+    } else {
         noises(magr, mattk);
+    }
 
     result = mdamagem(magr, mdef, mattk);
 
     /* Kill off aggressor if it didn't die. */
     if (!(result & MM_AGR_DIED)) {
         mondead(magr);
-        if (magr->mhp > 0)
+        if (magr->mhp > 0) {
             return result; /* life saved */
+	}
         result |= MM_AGR_DIED;
     }
-    if (magr->mtame) /* give this one even if it was visible */
+    if (magr->mtame) { /* give this one even if it was visible */
         You(brief_feeling, "melancholy");
+    }
 
     return result;
 }
@@ -734,19 +729,19 @@ struct attack *mattk;
 STATIC_OVL int
 mdamagem(magr, mdef, mattk)
 register struct monst *magr, *mdef;
-register struct attack *mattk;
+register const struct Attack mattk;
 {
     struct obj *obj;
     char buf[BUFSZ];
     struct permonst *pa = magr->data, *pd = mdef->data;
-    int armpro, num, tmp = d((int) mattk->dice, (int) mattk->diceSides),
+    int armpro, num, tmp = d(mattk.dice, mattk.diceSides),
                      res = MM_MISS;
     boolean cancelled;
 
     if ((touch_petrifies(pd) /* or flesh_petrifies() */
-         || (mattk->damageType == AD_DGST && pd == &mons[PM_MEDUSA]))
+         || (mattk.damageType == AD_DGST && pd == &mons[PM_MEDUSA]))
         && !resists_ston(magr)) {
-        long protector = attk_protection((int) mattk->type),
+        long protector = attk_protection((int) mattk.type),
              wornitems = magr->misc_worn_check;
 
         /* wielded weapon gives same protection as gloves here */
@@ -774,7 +769,7 @@ register struct attack *mattk;
     armpro = magic_negation(mdef);
     cancelled = magr->mcan || !(rn2(10) >= 3 * armpro);
 
-    switch (mattk->damageType) {
+    switch (mattk.damageType) {
     case AD_DGST:
         /* eating a Rider or its corpse is fatal */
         if (is_rider(pd)) {
@@ -843,9 +838,9 @@ register struct attack *mattk;
     case AD_HEAL:
     case AD_PHYS:
     physical:
-        if (mattk->type == AT_KICK && thick_skinned(pd)) {
+        if (mattk.type == AT_KICK && thick_skinned(pd)) {
             tmp = 0;
-        } else if (mattk->type == AT_WEAP) {
+        } else if (mattk.type == AT_WEAP) {
             if (otmp) {
                 if (otmp->otyp == CORPSE
                     && touch_petrifies(&mons[otmp->corpsenm]))
@@ -874,8 +869,9 @@ register struct attack *mattk;
             tmp = 0;
             break;
         }
-        if (vis)
+        if (vis) {
             pline("%s is %s!", Monnam(mdef), on_fire(pd, mattk));
+	}
         if (pd == &mons[PM_STRAW_GOLEM] || pd == &mons[PM_PAPER_GOLEM]) {
             if (vis)
                 pline("%s burns completely!", Monnam(mdef));
@@ -1015,7 +1011,7 @@ register struct attack *mattk;
                 You(brief_feeling, "peculiarly sad");
             return (MM_DEF_DIED | (grow_up(magr, mdef) ? 0 : MM_AGR_DIED));
         }
-        tmp = (mattk->damageType == AD_STON ? 0 : 1);
+        tmp = (mattk.damageType == AD_STON ? 0 : 1);
         break;
     case AD_TLPT:
         if (!cancelled && tmp < mdef->mhp && !tele_restrict(mdef)) {
@@ -1073,12 +1069,12 @@ register struct attack *mattk;
         }
         break;
     case AD_BLND:
-        if (can_blnd(magr, mdef, mattk->type, (struct obj *) 0)) {
+        if (can_blnd(magr, mdef, mattk.type, (struct obj *) 0)) {
             register unsigned rnd_tmp;
 
             if (vis && mdef->mcansee)
                 pline("%s is blinded.", Monnam(mdef));
-            rnd_tmp = d((int) mattk->dice, (int) mattk->diceSides);
+            rnd_tmp = d(mattk.dice, mattk.diceSides);
             if ((rnd_tmp += mdef->mblinded) > 127)
                 rnd_tmp = 127;
             mdef->mblinded = rnd_tmp;
@@ -1219,16 +1215,17 @@ register struct attack *mattk;
         break;
     case AD_DREN:
         if (!cancelled && !rn2(4))
-            xdrainenergym(mdef, vis && mattk->type != AT_ENGL);
+            xdrainenergym(mdef, vis && mattk.type != AT_ENGL);
         tmp = 0;
         break;
     case AD_DRST:
     case AD_DRDX:
     case AD_DRCO:
         if (!cancelled && !rn2(8)) {
-            if (vis)
+            if (vis) {
                 pline("%s %s was poisoned!", s_suffix(Monnam(magr)),
                       mpoisons_subj(magr, mattk));
+	    }
             if (resists_poison(mdef)) {
                 if (vis)
                     pline_The("poison doesn't seem to affect %s.",
@@ -1307,13 +1304,13 @@ register struct attack *mattk;
             place_monster(mdef, mdef->mx, mdef->my);
             mdef->mhp = 0;
         }
-        monkilled(mdef, "", (int) mattk->damageType);
+        monkilled(mdef, "", (int) mattk.damageType);
         if (mdef->mhp > 0)
             return res; /* mdef lifesaved */
         else if (res == MM_AGR_DIED)
             return (MM_DEF_DIED | MM_AGR_DIED);
 
-        if (mattk->damageType == AD_DGST) {
+        if (mattk.damageType == AD_DGST) {
             /* various checks similar to dog_eat and meatobj.
              * after monkilled() to provide better message ordering */
             if (mdef->cham >= LOW_PM) {

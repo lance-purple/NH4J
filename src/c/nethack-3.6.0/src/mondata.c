@@ -4,6 +4,8 @@
 
 #include "hack.h"
 
+struct Attack NO_ATTACK = { 0, 0, 0, 0 };
+
 /*      These routines provide basic data for any type of monster. */
 
 /* set up an individual monster's base type (initial creation, shapechange) */
@@ -1080,7 +1082,7 @@ const char *def;
 const char *
 on_fire(mptr, mattk)
 struct permonst *mptr;
-struct attack *mattk;
+const struct Attack mattk;
 {
     const char *what;
 
@@ -1110,7 +1112,7 @@ struct attack *mattk;
         what = "heating up";
         break;
     default:
-        what = (mattk->type == AT_HUGS) ? "being roasted" : "on fire";
+        what = (mattk.type == AT_HUGS) ? "being roasted" : "on fire";
         break;
     }
     return what;

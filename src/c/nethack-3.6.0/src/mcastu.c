@@ -177,7 +177,7 @@ int spellnum;
 int
 castmu(mtmp, mattk, thinks_it_foundyou, foundyou)
 register struct monst *mtmp;
-register struct attack *mattk;
+register const struct Attack mattk;
 boolean thinks_it_foundyou;
 boolean foundyou;
 {
@@ -197,19 +197,19 @@ boolean foundyou;
      * attacking casts spells only a small portion of the time that an
      * attacking monster does.
      */
-    if ((mattk->damageType == AD_SPEL || mattk->damageType == AD_CLRC) && ml) {
+    if ((mattk.damageType == AD_SPEL || mattk.damageType == AD_CLRC) && ml) {
         int cnt = 40;
 
         do {
             spellnum = rn2(ml);
-            if (mattk->damageType == AD_SPEL)
+            if (mattk.damageType == AD_SPEL)
                 spellnum = choose_magic_spell(spellnum);
             else
                 spellnum = choose_clerical_spell(spellnum);
             /* not trying to attack?  don't allow directed spells */
             if (!thinks_it_foundyou) {
-                if (!is_undirected_spell(mattk->damageType, spellnum)
-                    || spell_would_be_useless(mtmp, mattk->damageType, spellnum)) {
+                if (!is_undirected_spell(mattk.damageType, spellnum)
+                    || spell_would_be_useless(mtmp, mattk.damageType, spellnum)) {
                     if (foundyou)
                         impossible(
                        "spellcasting monster found you and doesn't know it?");
@@ -218,18 +218,18 @@ boolean foundyou;
                 break;
             }
         } while (--cnt > 0
-                 && spell_would_be_useless(mtmp, mattk->damageType, spellnum));
+                 && spell_would_be_useless(mtmp, mattk.damageType, spellnum));
         if (cnt == 0)
             return 0;
     }
 
     /* monster unable to cast spells? */
     if (mtmp->mcan || mtmp->mspec_used || !ml) {
-        cursetxt(mtmp, is_undirected_spell(mattk->damageType, spellnum));
+        cursetxt(mtmp, is_undirected_spell(mattk.damageType, spellnum));
         return (0);
     }
 
-    if (mattk->damageType == AD_SPEL || mattk->damageType == AD_CLRC) {
+    if (mattk.damageType == AD_SPEL || mattk.damageType == AD_CLRC) {
         mtmp->mspec_used = 10 - mtmp->m_lev;
         if (mtmp->mspec_used < 2)
             mtmp->mspec_used = 2;
@@ -239,7 +239,7 @@ boolean foundyou;
        wrong place?  If so, give a message, and return.  Do this *after*
        penalizing mspec_used. */
     if (!foundyou && thinks_it_foundyou
-        && !is_undirected_spell(mattk->damageType, spellnum)) {
+        && !is_undirected_spell(mattk.damageType, spellnum)) {
         pline("%s casts a spell at %s!",
               canseemon(mtmp) ? Monnam(mtmp) : "Something",
               levl[mtmp->mux][mtmp->muy].typ == WATER ? "empty water"
@@ -253,10 +253,10 @@ boolean foundyou;
             pline_The("air crackles around %s.", mon_nam(mtmp));
         return (0);
     }
-    if (canspotmon(mtmp) || !is_undirected_spell(mattk->damageType, spellnum)) {
+    if (canspotmon(mtmp) || !is_undirected_spell(mattk.damageType, spellnum)) {
         pline("%s casts a spell%s!",
               canspotmon(mtmp) ? Monnam(mtmp) : "Something",
-              is_undirected_spell(mattk->damageType, spellnum)
+              is_undirected_spell(mattk.damageType, spellnum)
                   ? ""
                   : (youAreFullyInvisible() && !perceives(mtmp->data)
                      && (mtmp->mux != currentX() || mtmp->muy != currentY()))
@@ -273,14 +273,14 @@ boolean foundyou;
      */
     if (!foundyou) {
         dmg = 0;
-        if (mattk->damageType != AD_SPEL && mattk->damageType != AD_CLRC) {
+        if (mattk.damageType != AD_SPEL && mattk.damageType != AD_CLRC) {
             impossible(
               "%s casting non-hand-to-hand version of hand-to-hand spell %d?",
-                       Monnam(mtmp), mattk->damageType);
+                       Monnam(mtmp), mattk.damageType);
             return (0);
         }
-    } else if (mattk->diceSides)
-        dmg = d((int) ((ml / 2) + mattk->dice), (int) mattk->diceSides);
+    } else if (mattk.diceSides)
+        dmg = d((int) ((ml / 2) + mattk.dice), mattk.diceSides);
     else
         dmg = d((int) ((ml / 2) + 1), 6);
     if (youTakeHalfDamageFromSpells())
@@ -288,7 +288,7 @@ boolean foundyou;
 
     ret = 1;
 
-    switch (mattk->damageType) {
+    switch (mattk.damageType) {
     case AD_FIRE:
         pline("You're enveloped in flames.");
         if (youResistFire()) {
@@ -318,7 +318,7 @@ boolean foundyou;
     case AD_SPEL: /* wizard spell */
     case AD_CLRC: /* clerical spell */
     {
-        if (mattk->damageType == AD_SPEL)
+        if (mattk.damageType == AD_SPEL)
             cast_wizard_spell(mtmp, dmg, spellnum);
         else
             cast_cleric_spell(mtmp, dmg, spellnum);
@@ -839,11 +839,11 @@ int spellnum;
 int
 buzzmu(mtmp, mattk)
 register struct monst *mtmp;
-register struct attack *mattk;
+register const struct Attack mattk;
 {
     /* don't print constant stream of curse messages for 'normal'
        spellcasting monsters at range */
-    if (mattk->damageType > AD_SPC2)
+    if (mattk.damageType > AD_SPC2)
         return (0);
 
     if (mtmp->mcan) {
@@ -852,14 +852,14 @@ register struct attack *mattk;
     }
     if (lined_up(mtmp) && rn2(3)) {
         nomul(0);
-        if (mattk->damageType && (mattk->damageType < 11)) { /* no cf unsigned >0 */
+        if (mattk.damageType && (mattk.damageType < 11)) { /* no cf unsigned >0 */
             if (canseemon(mtmp))
                 pline("%s zaps you with a %s!", Monnam(mtmp),
-                      flash_types[ad_to_typ(mattk->damageType)]);
-            buzz(-ad_to_typ(mattk->damageType), (int) mattk->dice, mtmp->mx,
+                      flash_types[ad_to_typ(mattk.damageType)]);
+            buzz(-ad_to_typ(mattk.damageType), mattk.dice, mtmp->mx,
                  mtmp->my, sgn(tbx), sgn(tby));
         } else
-            impossible("Monster spell %d cast", mattk->damageType - 1);
+            impossible("Monster spell %d cast", mattk.damageType - 1);
     }
     return (1);
 }

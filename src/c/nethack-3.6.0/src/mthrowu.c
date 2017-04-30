@@ -676,7 +676,7 @@ struct monst *mtmp;
 int
 spitmu(mtmp, mattk)
 struct monst *mtmp;
-struct attack *mattk;
+const struct Attack mattk;
 {
     struct obj *otmp;
 
@@ -687,7 +687,7 @@ struct attack *mattk;
         return 0;
     }
     if (lined_up(mtmp)) {
-        switch (mattk->damageType) {
+        switch (mattk.damageType) {
         case AD_BLND:
         case AD_DRST:
             otmp = mksobj(BLINDING_VENOM, TRUE, FALSE);
@@ -719,10 +719,10 @@ struct attack *mattk;
 int
 breamu(mtmp, mattk)
 struct monst *mtmp;
-struct attack *mattk;
+const struct Attack mattk;
 {
     /* if new breath types are added, change AD_ACID to max type */
-    int typ = (mattk->damageType == AD_RBRE) ? rnd(AD_ACID) : mattk->damageType;
+    int typ = (mattk.damageType == AD_RBRE) ? rnd(AD_ACID) : mattk.damageType;
 
     if (lined_up(mtmp)) {
         if (mtmp->mcan) {
@@ -739,7 +739,7 @@ struct attack *mattk;
                 if (canseemon(mtmp))
                     pline("%s breathes %s!", Monnam(mtmp),
                           breathwep[typ - 1]);
-                buzz((int) (-20 - (typ - 1)), (int) mattk->dice, mtmp->mx,
+                buzz((int) (-20 - (typ - 1)), mattk.dice, mtmp->mx,
                      mtmp->my, sgn(tbx), sgn(tby));
                 nomul(0);
                 /* breath runs out sometimes. Also, give monster some

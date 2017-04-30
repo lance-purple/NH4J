@@ -2460,7 +2460,12 @@ struct monst *mtmp;
 
         for (i = 0; i < monsterAttacks(mtmp->data->monsterTypeID); i++)
             if (mtmp->data->mattk[i].type == AT_GAZE) {
-                (void) gazemu(mtmp, &mtmp->data->mattk[i]);
+		struct Attack new_mattk;
+		new_mattk.type = mtmp->data->mattk[i].type;
+		new_mattk.damageType = mtmp->data->mattk[i].damageType;
+		new_mattk.dice = mtmp->data->mattk[i].dice;
+		new_mattk.diceSides = mtmp->data->mattk[i].diceSides;
+                (void) gazemu(mtmp, new_mattk);
                 break;
             }
     }

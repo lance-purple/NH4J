@@ -2722,7 +2722,7 @@ extern int monsterAttacks(int id) {
   return javaGetIntFromInt(MONSTER_TYPE_CLASS, "monsterAttacks", id);
 }
 
-extern struct Attack monsterAttack(int id, int index) {
+extern const struct Attack monsterAttack(int id, int index) {
    struct Attack mattk;
    mattk.type = javaGetIntFromIntAndInt(MONSTER_TYPE_CLASS, "monsterAttackType", id, index);
    mattk.damageType = javaGetIntFromIntAndInt(MONSTER_TYPE_CLASS, "monsterAttackDamageType", id, index);

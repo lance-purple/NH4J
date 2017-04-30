@@ -7,21 +7,20 @@
 
 STATIC_VAR NEARDATA struct obj *otmp;
 
-STATIC_DCL boolean FDECL(u_slip_free, (struct monst *, struct attack *));
-STATIC_DCL int FDECL(passiveum,
-                     (struct permonst *, struct monst *, struct attack *));
+STATIC_DCL boolean FDECL(u_slip_free, (struct monst *, const struct Attack));
+STATIC_DCL int FDECL(passiveum, (struct permonst *, struct monst *, const struct Attack));
 
 STATIC_DCL void FDECL(mayberem, (struct obj *, const char *));
 
 STATIC_DCL boolean FDECL(diseasemu, (struct permonst *));
-STATIC_DCL int FDECL(hitmu, (struct monst *, struct attack *));
-STATIC_DCL int FDECL(gulpmu, (struct monst *, struct attack *));
-STATIC_DCL int FDECL(explmu, (struct monst *, struct attack *, BOOLEAN_P));
-STATIC_DCL void FDECL(missmu, (struct monst *, BOOLEAN_P, struct attack *));
+STATIC_DCL int FDECL(hitmu, (struct monst *, const struct Attack));
+STATIC_DCL int FDECL(gulpmu, (struct monst *, const struct Attack));
+STATIC_DCL int FDECL(explmu, (struct monst *, const struct Attack, BOOLEAN_P));
+STATIC_DCL void FDECL(missmu, (struct monst *, BOOLEAN_P, const struct Attack));
 STATIC_DCL void FDECL(mswings, (struct monst *, struct obj *));
-STATIC_DCL void FDECL(wildmiss, (struct monst *, struct attack *));
+STATIC_DCL void FDECL(wildmiss, (struct monst *, const struct Attack));
 
-STATIC_DCL void FDECL(hitmsg, (struct monst *, struct attack *));
+STATIC_DCL void FDECL(hitmsg, (struct monst *, const struct Attack));
 
 /* See comment in mhitm.c.  If we use this a lot it probably should be */
 /* changed to a parameter to mhitu. */
@@ -30,7 +29,7 @@ static int dieroll;
 STATIC_OVL void
 hitmsg(mtmp, mattk)
 register struct monst *mtmp;
-register struct attack *mattk;
+register const struct Attack mattk;
 {
     int compat;
 
@@ -41,7 +40,7 @@ register struct attack *mattk;
         pline("%s %s you %s.", Monnam(mtmp), youCannotSee() ? "talks to" : "smiles at",
               compat == 2 ? "engagingly" : "seductively");
     } else
-        switch (mattk->type) {
+        switch (mattk.type) {
         case AT_BITE:
             pline("%s bites!", Monnam(mtmp));
             break;
@@ -75,16 +74,18 @@ STATIC_OVL void
 missmu(mtmp, nearmiss, mattk)
 struct monst *mtmp;
 boolean nearmiss;
-struct attack *mattk;
+const struct Attack mattk;
 {
-    if (!canspotmon(mtmp))
+    if (!canspotmon(mtmp)) {
         map_invisible(mtmp->mx, mtmp->my);
+    }
 
-    if (could_seduce(mtmp, &youmonst, mattk) && !mtmp->mcan)
+    if (could_seduce(mtmp, &youmonst, mattk) && !mtmp->mcan) {
         pline("%s pretends to be friendly.", Monnam(mtmp));
-    else
+    } else {
         pline("%s %smisses!", Monnam(mtmp),
               (nearmiss && flags.verbose) ? "just " : "");
+    }
 
     stop_occupation();
 }
@@ -106,17 +107,17 @@ struct obj *otemp;
 const char *
 mpoisons_subj(mtmp, mattk)
 struct monst *mtmp;
-struct attack *mattk;
+const struct Attack mattk;
 {
-    if (mattk->type == AT_WEAP) {
+    if (mattk.type == AT_WEAP) {
         struct obj *mwep = (mtmp == &youmonst) ? uwep : MON_WEP(mtmp);
         /* "Foo's attack was poisoned." is pretty lame, but at least
            it's better than "sting" when not a stinging attack... */
         return (!mwep || !mwep->opoisoned) ? "attack" : "weapon";
     } else {
-        return (mattk->type == AT_TUCH) ? "contact"
-                  : (mattk->type == AT_GAZE) ? "gaze"
-                       : (mattk->type == AT_BITE) ? "bite" : "sting";
+        return (mattk.type == AT_TUCH) ? "contact"
+                  : (mattk.type == AT_GAZE) ? "gaze"
+                       : (mattk.type == AT_BITE) ? "bite" : "sting";
     }
 }
 
@@ -136,7 +137,7 @@ u_slow_down()
 STATIC_OVL void
 wildmiss(mtmp, mattk)
 register struct monst *mtmp;
-register struct attack *mattk;
+register const struct Attack mattk;
 {
     int compat;
 
@@ -148,16 +149,16 @@ register struct attack *mattk;
         return;
     /* maybe it's attacking an image around the corner? */
 
-    compat = ((mattk->damageType == AD_SEDU || mattk->damageType == AD_SSEX)
-              && could_seduce(mtmp, &youmonst, (struct attack *) 0));
+    compat = ((mattk.damageType == AD_SEDU || mattk.damageType == AD_SSEX)
+              && could_seduce(mtmp, &youmonst, NO_ATTACK));
 
     if (!mtmp->mcansee || (youAreInvisibleToOthers() && !perceives(mtmp->data))) {
         const char *swings =
-            mattk->type == AT_BITE
+            mattk.type == AT_BITE
                 ? "snaps"
-                : mattk->type == AT_KICK
+                : mattk.type == AT_KICK
                       ? "kicks"
-                      : (mattk->type == AT_STNG || mattk->type == AT_BUTT
+                      : (mattk.type == AT_STNG || mattk.type == AT_BUTT
                          || nolimbs(mtmp->data))
                             ? "lunges"
                             : "swings";
@@ -255,7 +256,7 @@ boolean message;
 }
 
 /* select a monster's next attack, possibly substituting for its usual one */
-struct Attack 
+const struct Attack 
 getMonsterAttack(mptr, indx, prev_result)
 struct permonst *mptr;
 int indx, prev_result[];
@@ -608,12 +609,6 @@ register struct monst *mtmp;
             || (skipnonmagc && mattk.type != AT_MAGC))
             continue;
 
-	struct attack deprecated_mattk;
-	deprecated_mattk.type = mattk.type;
-	deprecated_mattk.damageType = mattk.damageType;
-	deprecated_mattk.dice = mattk.dice;
-	deprecated_mattk.diceSides = mattk.diceSides;
-
         switch (mattk.type) {
         case AT_CLAW: /* "hand to hand" attacks */
         case AT_KICK:
@@ -628,11 +623,11 @@ register struct monst *mtmp;
                     if (tmp > (j = rnd(20 + i))) {
                         if (mattk.type != AT_KICK
                             || !thick_skinned(youmonst.data))
-                            sum[i] = hitmu(mtmp, &deprecated_mattk);
+                            sum[i] = hitmu(mtmp, mattk);
                     } else
-                        missmu(mtmp, (tmp == j), &deprecated_mattk);
+                        missmu(mtmp, (tmp == j), mattk);
                 } else {
-                    wildmiss(mtmp, &deprecated_mattk);
+                    wildmiss(mtmp, mattk);
                     /* skip any remaining non-spell attacks */
                     skipnonmagc = TRUE;
                 }
@@ -643,19 +638,19 @@ register struct monst *mtmp;
             /* Note: if displaced, prev attacks never succeeded */
             if ((!range2 && i >= 2 && sum[i - 1] && sum[i - 2])
                 || mtmp == u.ustuck)
-                sum[i] = hitmu(mtmp, &deprecated_mattk);
+                sum[i] = hitmu(mtmp, mattk);
             break;
 
         case AT_GAZE: /* can affect you either ranged or not */
             /* Medusa gaze already operated through m_respond in
                dochug(); don't gaze more than once per round. */
             if (mdat != &mons[PM_MEDUSA])
-                sum[i] = gazemu(mtmp, &deprecated_mattk);
+                sum[i] = gazemu(mtmp, mattk);
             break;
 
         case AT_EXPL: /* automatic hit if next to, and aimed at you */
             if (!range2)
-                sum[i] = explmu(mtmp, &deprecated_mattk, foundyou);
+                sum[i] = explmu(mtmp, mattk, foundyou);
             break;
 
         case AT_ENGL:
@@ -666,9 +661,9 @@ register struct monst *mtmp;
                          * displayed even when player is
                          * moving away */
                         flush_screen(1);
-                        sum[i] = gulpmu(mtmp, &deprecated_mattk);
+                        sum[i] = gulpmu(mtmp, mattk);
                     } else {
-                        missmu(mtmp, (tmp == j), &deprecated_mattk);
+                        missmu(mtmp, (tmp == j), mattk);
                     }
                 } else if (is_animal(mtmp->data)) {
                     pline("%s gulps some air!", Monnam(mtmp));
@@ -684,12 +679,12 @@ register struct monst *mtmp;
             break;
         case AT_BREA:
             if (range2)
-                sum[i] = breamu(mtmp, &deprecated_mattk);
+                sum[i] = breamu(mtmp, mattk);
             /* Note: breamu takes care of displacement */
             break;
         case AT_SPIT:
             if (range2)
-                sum[i] = spitmu(mtmp, &deprecated_mattk);
+                sum[i] = spitmu(mtmp, mattk);
             /* Note: spitmu takes care of displacement */
             break;
         case AT_WEAP:
@@ -717,14 +712,14 @@ register struct monst *mtmp;
                         mswings(mtmp, otmp);
                     }
                     if (tmp > (j = dieroll = rnd(20 + i)))
-                        sum[i] = hitmu(mtmp, &deprecated_mattk);
+                        sum[i] = hitmu(mtmp, mattk);
                     else
-                        missmu(mtmp, (tmp == j), &deprecated_mattk);
+                        missmu(mtmp, (tmp == j), mattk);
                     /* KMH -- Don't accumulate to-hit bonuses */
                     if (otmp)
                         tmp -= hittmp;
                 } else {
-                    wildmiss(mtmp, &deprecated_mattk);
+                    wildmiss(mtmp, mattk);
                     /* skip any remaining non-spell attacks */
                     skipnonmagc = TRUE;
                 }
@@ -732,9 +727,9 @@ register struct monst *mtmp;
             break;
         case AT_MAGC:
             if (range2)
-                sum[i] = buzzmu(mtmp, &deprecated_mattk);
+                sum[i] = buzzmu(mtmp, mattk);
             else
-                sum[i] = castmu(mtmp, &deprecated_mattk, TRUE, foundyou);
+                sum[i] = castmu(mtmp, mattk, TRUE, foundyou);
             break;
 
         default: /* no attack */
@@ -778,13 +773,13 @@ struct permonst *mdat;
 STATIC_OVL boolean
 u_slip_free(mtmp, mattk)
 struct monst *mtmp;
-struct attack *mattk;
+const struct Attack mattk;
 {
     struct obj *obj = (uarmc ? uarmc : uarm);
 
     if (!obj)
         obj = uarmu;
-    if (mattk->damageType == AD_DRIN)
+    if (mattk.damageType == AD_DRIN)
         obj = uarmh;
 
     /* if your cloak/armor is greased, monster slips off; this
@@ -792,7 +787,7 @@ struct attack *mattk;
     if (obj && (obj->greased || obj->otyp == OILSKIN_CLOAK)
         && (!obj->cursed || rn2(3))) {
         pline("%s %s your %s %s!", Monnam(mtmp),
-              (mattk->damageType == AD_WRAP) ? "slips off of"
+              (mattk.damageType == AD_WRAP) ? "slips off of"
                                         : "grabs you, but cannot hold onto",
               obj->greased ? "greased" : "slippery",
               /* avoid "slippery slippery cloak"
@@ -867,7 +862,7 @@ struct monst *mon;
 STATIC_OVL int
 hitmu(mtmp, mattk)
 register struct monst *mtmp;
-register struct attack *mattk;
+register const struct Attack mattk;
 {
     register struct permonst *mdat = mtmp->data;
     register int uncancelled, ptmp;
@@ -903,9 +898,9 @@ register struct attack *mattk;
     }
 
     /*  First determine the base damage done */
-    dmg = d((int) mattk->dice, (int) mattk->diceSides);
+    dmg = d(mattk.dice, mattk.diceSides);
     if ((is_undead(mdat) || is_vampshifter(mtmp)) && midnight())
-        dmg += d((int) mattk->dice, (int) mattk->diceSides); /* extra damage */
+        dmg += d(mattk.dice, mattk.diceSides); /* extra damage */
 
     /*  Next a cancellation factor.
      *  Use uncancelled when cancellation factor takes into account certain
@@ -916,9 +911,9 @@ register struct attack *mattk;
 
     permdmg = 0;
     /*  Now, adjust damages via resistances or specific attacks */
-    switch (mattk->damageType) {
+    switch (mattk.damageType) {
     case AD_PHYS:
-        if (mattk->type == AT_HUGS && !sticks(youmonst.data)) {
+        if (mattk.type == AT_HUGS && !sticks(youmonst.data)) {
             if (!u.ustuck && rn2(2)) {
                 if (u_slip_free(mtmp, mattk)) {
                     dmg = 0;
@@ -933,7 +928,7 @@ register struct attack *mattk;
                                          : "crushed");
             }
         } else { /* hand to hand weapon */
-            if (mattk->type == AT_WEAP && otmp) {
+            if (mattk.type == AT_WEAP && otmp) {
                 int tmp;
 
                 if (otmp->otyp == CORPSE
@@ -981,7 +976,7 @@ register struct attack *mattk;
                         You("divide as %s hits you!", mon_nam(mtmp));
                 }
                 rustm(&youmonst, otmp);
-            } else if (mattk->type != AT_TUCH || dmg != 0
+            } else if (mattk.type != AT_TUCH || dmg != 0
                        || mtmp != u.ustuck)
                 hitmsg(mtmp, mattk);
         }
@@ -1056,7 +1051,7 @@ register struct attack *mattk;
         }
         break;
     case AD_BLND:
-        if (can_blnd(mtmp, &youmonst, mattk->type, (struct obj *) 0)) {
+        if (can_blnd(mtmp, &youmonst, mattk.type, (struct obj *) 0)) {
             if (youCanSee())
                 pline("%s blinds you!", Monnam(mtmp));
             make_blinded(yourIntrinsic(BLINDED) + (long) dmg, FALSE);
@@ -1244,7 +1239,7 @@ register struct attack *mattk;
                             an(monsterName.c_str));
 		    releaseJavaString(monsterName);
                     done(DROWNING);
-                } else if (mattk->type == AT_HUGS)
+                } else if (mattk.type == AT_HUGS)
                     You("are being crushed.");
             } else {
                 dmg = 0;
@@ -1666,7 +1661,14 @@ gulp_blnd_check()
         && (mattk = attacktype_fordmg(u.ustuck->data, AT_ENGL, AD_BLND))
         && can_blnd(u.ustuck, &youmonst, mattk->type, (struct obj *) 0)) {
         increaseTimeSinceBeingSwallowed(1); /* compensate for gulpmu change */
-        (void) gulpmu(u.ustuck, mattk);
+
+        struct Attack new_mattk;
+        new_mattk.type = mattk->type;
+        new_mattk.damageType = mattk->damageType;
+        new_mattk.dice = mattk->dice;
+        new_mattk.diceSides = mattk->diceSides;
+
+        (void) gulpmu(u.ustuck, new_mattk);
         return TRUE;
     }
     return FALSE;
@@ -1676,10 +1678,10 @@ gulp_blnd_check()
 STATIC_OVL int
 gulpmu(mtmp, mattk)
 register struct monst *mtmp;
-register struct attack *mattk;
+register const struct Attack mattk;
 {
     struct trap *t = t_at(currentX(), currentY());
-    int tmp = d((int) mattk->dice, (int) mattk->diceSides);
+    int tmp = d(mattk.dice, mattk.diceSides);
     int tim_tmp;
     register struct obj *otmp2;
     int i;
@@ -1749,7 +1751,7 @@ register struct attack *mattk;
         /* for digestion, shorter time is more dangerous;
            for other swallowings, longer time means more
            chances for the swallower to attack */
-        if (mattk->damageType == AD_DGST) {
+        if (mattk.damageType == AD_DGST) {
             tim_tmp = 25 - (int) mtmp->m_lev;
             if (tim_tmp > 0)
                 tim_tmp = rnd(tim_tmp) / 2;
@@ -1775,7 +1777,7 @@ register struct attack *mattk;
     if (timeSinceBeingSwallowed() > 0)
         decreaseTimeSinceBeingSwallowed(1);
 
-    switch (mattk->damageType) {
+    switch (mattk.damageType) {
     case AD_DGST:
         physical_damage = TRUE;
         if (youHaveSlowDigestion()) {
@@ -1825,7 +1827,7 @@ register struct attack *mattk;
         }
         break;
     case AD_BLND:
-        if (can_blnd(mtmp, &youmonst, mattk->type, (struct obj *) 0)) {
+        if (can_blnd(mtmp, &youmonst, mattk.type, (struct obj *) 0)) {
             if (youCanSee()) {
                 long was_blinded = yourIntrinsic(BLINDED);
                 if (!was_blinded)
@@ -1918,7 +1920,7 @@ register struct attack *mattk;
 STATIC_OVL int
 explmu(mtmp, mattk, ufound)
 register struct monst *mtmp;
-register struct attack *mattk;
+register const struct Attack mattk;
 boolean ufound;
 {
     boolean physical_damage = TRUE, kill_agr = TRUE;
@@ -1932,12 +1934,12 @@ boolean ufound;
               levl[mtmp->mux][mtmp->muy].typ == WATER ? "empty water"
                                                       : "thin air");
     else {
-        register int tmp = d((int) mattk->dice, (int) mattk->diceSides);
-        register boolean not_affected = defends((int) mattk->damageType, uwep);
+        register int tmp = d(mattk.dice, mattk.diceSides);
+        register boolean not_affected = defends(mattk.damageType, uwep);
 
         hitmsg(mtmp, mattk);
 
-        switch (mattk->damageType) {
+        switch (mattk.damageType) {
         case AD_COLD:
             physical_damage = FALSE;
             not_affected |= youResistCold();
@@ -1959,7 +1961,7 @@ boolean ufound;
                     if (flags.verbose)
                         You("get blasted!");
                 }
-                if (mattk->damageType == AD_FIRE)
+                if (mattk.damageType == AD_FIRE)
                     burn_away_slime();
                 if (physical_damage)
                     tmp = Maybe_Half_Phys(tmp);
@@ -2003,7 +2005,7 @@ boolean ufound;
         }
         if (not_affected) {
             You("seem unaffected by it.");
-            ugolemeffects((int) mattk->damageType, tmp);
+            ugolemeffects((int) mattk.damageType, tmp);
         }
     }
     if (kill_agr)
@@ -2016,7 +2018,7 @@ boolean ufound;
 int
 gazemu(mtmp, mattk)
 register struct monst *mtmp;
-register struct attack *mattk;
+register const struct Attack mattk;
 {
     static const char *const reactions[] = {
         "confused",              /* [0] */
@@ -2040,7 +2042,7 @@ register struct attack *mattk;
     if (youAreHallucinating() && rn2(4))
         cancelled = TRUE;
 
-    switch (mattk->damageType) {
+    switch (mattk.damageType) {
     case AD_STON:
         if (cancelled || !mtmp->mcansee) {
             if (!canseemon(mtmp))
@@ -2139,7 +2141,7 @@ register struct attack *mattk;
                 if (mtmp->mcan && mtmp->data == &mons[PM_ARCHON] && rn2(5))
                     react = -1;
             } else {
-                int blnd = d((int) mattk->dice, (int) mattk->diceSides);
+                int blnd = d(mattk.dice, mattk.diceSides);
 
                 You("are blinded by %s radiance!", s_suffix(mon_nam(mtmp)));
                 make_blinded((long) blnd, FALSE);
@@ -2209,7 +2211,7 @@ register struct attack *mattk;
         break;
 #endif /* BEHOLDER */
     default:
-        impossible("Gaze attack %d?", mattk->damageType);
+        impossible("Gaze attack %d?", mattk.damageType);
         break;
     }
     if (react >= 0) {
@@ -2250,7 +2252,7 @@ register int n;
 int
 could_seduce(magr, mdef, mattk)
 struct monst *magr, *mdef;
-struct attack *mattk;
+const struct Attack mattk;
 {
     register struct permonst *pagr;
     boolean agrinvis, defperc;
@@ -2276,12 +2278,12 @@ struct attack *mattk;
     }
 
     if (agrinvis && !defperc
-        && (!SYSOPT_SEDUCE || (mattk && mattk->damageType != AD_SSEX)))
+        && (!SYSOPT_SEDUCE || (mattk.damageType != AD_SSEX)))
         return 0;
 
     if (monsterClass(pagr->monsterTypeID) != S_NYMPH
         && ((pagr != &mons[PM_INCUBUS] && pagr != &mons[PM_SUCCUBUS])
-            || (SYSOPT_SEDUCE && mattk && mattk->damageType != AD_SSEX)))
+            || (SYSOPT_SEDUCE && mattk.damageType != AD_SSEX)))
         return 0;
 
     if (genagr == 1 - gendef)
@@ -2597,7 +2599,7 @@ STATIC_OVL int
 passiveum(olduasmon, mtmp, mattk)
 struct permonst *olduasmon;
 register struct monst *mtmp;
-register struct attack *mattk;
+register const struct Attack mattk;
 {
     int i, tmp;
 
@@ -2634,7 +2636,7 @@ register struct attack *mattk;
         goto assess_dmg;
     case AD_STON: /* cockatrice */
     {
-        long protector = attk_protection((int) mattk->type),
+        long protector = attk_protection(mattk.type),
              wornitems = mtmp->misc_worn_check;
 
         /* wielded weapon gives same protection as gloves here */

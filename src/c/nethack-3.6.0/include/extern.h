@@ -36,7 +36,7 @@ E int FDECL(monsterSound, (int));
 E void FDECL(setMonsterSound, (int, int));
 E int FDECL(monsterSize, (int));
 E int FDECL(monsterAttacks, (int));
-E struct Attack FDECL(monsterAttack, (int, int));
+E const struct Attack FDECL(monsterAttack, (int, int));
 E long FDECL(monsterResistances, (int));
 E boolean FDECL(monsterTypeResistsFire, (int));
 E boolean FDECL(monsterTypeResistsStoning, (int));
@@ -1772,8 +1772,8 @@ E void FDECL(genl_putmixed, (winid, int, const char *));
 
 /* ### mcastu.c ### */
 
-E int FDECL(castmu, (struct monst *, struct attack *, BOOLEAN_P, BOOLEAN_P));
-E int FDECL(buzzmu, (struct monst *, struct attack *));
+E int FDECL(castmu, (struct monst *, const struct Attack, BOOLEAN_P, BOOLEAN_P));
+E int FDECL(buzzmu, (struct monst *, const struct Attack));
 
 /* ### mhitm.c ### */
 
@@ -1790,17 +1790,17 @@ E void FDECL(rustm, (struct monst *, struct obj *));
 
 /* ### mhitu.c ### */
 
-E const char *FDECL(mpoisons_subj, (struct monst *, struct attack *));
+E const char *FDECL(mpoisons_subj, (struct monst *, const struct Attack));
 E void NDECL(u_slow_down);
 E struct monst *NDECL(cloneu);
 E void FDECL(expels, (struct monst *, struct permonst *, BOOLEAN_P));
-E struct Attack FDECL(getMonsterAttack, (struct permonst *, int, int *));
+E const struct Attack FDECL(getMonsterAttack, (struct permonst *, int, int *));
 E int FDECL(mattacku, (struct monst *));
 E int FDECL(magic_negation, (struct monst *));
 E boolean NDECL(gulp_blnd_check);
-E int FDECL(gazemu, (struct monst *, struct attack *));
+E int FDECL(gazemu, (struct monst *, const struct Attack));
 E void FDECL(mdamageu, (struct monst *, int));
-E int FDECL(could_seduce, (struct monst *, struct monst *, struct attack *));
+E int FDECL(could_seduce, (struct monst *, struct monst *, const struct Attack));
 E int FDECL(doseduce, (struct monst *));
 
 /* ### minion.c ### */
@@ -2056,7 +2056,7 @@ E int FDECL(little_to_big, (int));
 E int FDECL(big_to_little, (int));
 E const char *FDECL(locomotion, (const struct permonst *, const char *));
 E const char *FDECL(stagger, (const struct permonst *, const char *));
-E const char *FDECL(on_fire, (struct permonst *, struct attack *));
+E const char *FDECL(on_fire, (struct permonst *, const struct Attack));
 E const struct permonst *FDECL(raceptr, (struct monst *));
 E boolean FDECL(olfaction, (struct permonst *));
 
@@ -2172,8 +2172,8 @@ E void FDECL(Delay, (int));
 E int FDECL(thitu, (int, int, struct obj *, const char *));
 E int FDECL(ohitmon, (struct monst *, struct obj *, int, BOOLEAN_P));
 E void FDECL(thrwmu, (struct monst *));
-E int FDECL(spitmu, (struct monst *, struct attack *));
-E int FDECL(breamu, (struct monst *, struct attack *));
+E int FDECL(spitmu, (struct monst *, const struct Attack));
+E int FDECL(breamu, (struct monst *, const struct Attack));
 E boolean FDECL(linedup, (XCHAR_P, XCHAR_P, XCHAR_P, XCHAR_P, int));
 E boolean FDECL(lined_up, (struct monst *));
 E struct obj *FDECL(m_carrying, (struct monst *, int));
@@ -3062,8 +3062,8 @@ E int FDECL(find_roll_to_hit,
             (struct monst *, UCHAR_P, struct obj *, int *, int *));
 E boolean FDECL(attack, (struct monst *));
 E boolean FDECL(hmon, (struct monst *, struct obj *, int));
-E int FDECL(damageum, (struct monst *, struct attack *));
-E void FDECL(missum, (struct monst *, struct attack *, BOOLEAN_P));
+E int FDECL(damageum, (struct monst *, const struct Attack));
+E void FDECL(missum, (struct monst *, const struct Attack, BOOLEAN_P));
 E int FDECL(passive, (struct monst *, BOOLEAN_P, int, UCHAR_P, BOOLEAN_P));
 E void FDECL(passive_obj, (struct monst *, struct obj *, struct attack *));
 E void FDECL(stumble_onto_mimic, (struct monst *));

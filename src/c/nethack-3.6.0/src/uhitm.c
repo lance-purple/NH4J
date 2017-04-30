@@ -4,20 +4,18 @@
 
 #include "hack.h"
 
-STATIC_DCL boolean FDECL(known_hitum, (struct monst *, struct obj *, int *,
-                                       int, int, struct attack *));
+STATIC_DCL boolean FDECL(known_hitum, (struct monst *, struct obj *, int *, int, int, const struct Attack));
 STATIC_DCL boolean FDECL(theft_petrifies, (struct obj *));
-STATIC_DCL void FDECL(steal_it, (struct monst *, struct attack *));
-STATIC_DCL boolean FDECL(hitum, (struct monst *, struct attack *));
+STATIC_DCL void FDECL(steal_it, (struct monst *, const struct Attack));
+STATIC_DCL boolean FDECL(hitum, (struct monst *, const struct Attack));
 STATIC_DCL boolean FDECL(hmon_hitmon, (struct monst *, struct obj *, int));
 STATIC_DCL int FDECL(joust, (struct monst *, struct obj *));
 STATIC_DCL void NDECL(demonpet);
-STATIC_DCL boolean FDECL(m_slips_free, (struct monst * mtmp,
-                                        struct attack *mattk));
-STATIC_DCL int FDECL(explum, (struct monst *, struct attack *));
+STATIC_DCL boolean FDECL(m_slips_free, (struct monst * mtmp, const struct Attack mattk));
+STATIC_DCL int FDECL(explum, (struct monst *, const struct Attack));
 STATIC_DCL void FDECL(start_engulf, (struct monst *));
 STATIC_DCL void NDECL(end_engulf);
-STATIC_DCL int FDECL(gulpum, (struct monst *, struct attack *));
+STATIC_DCL int FDECL(gulpum, (struct monst *, const struct Attack));
 STATIC_DCL boolean FDECL(hmonas, (struct monst *));
 STATIC_DCL void FDECL(nohandglow, (struct monst *));
 STATIC_DCL boolean FDECL(shade_aware, (struct obj *));
@@ -435,8 +433,15 @@ register struct monst *mtmp;
 
     if (areYouPolymorphed())
         (void) hmonas(mtmp);
-    else
-        (void) hitum(mtmp, youmonst.data->mattk);
+    else {
+	struct Attack new_attack;
+	new_attack.type = youmonst.data->mattk->type;
+	new_attack.damageType = youmonst.data->mattk->damageType;
+	new_attack.dice = youmonst.data->mattk->dice;
+	new_attack.diceSides = youmonst.data->mattk->diceSides;
+
+        (void) hitum(mtmp, new_attack);
+    }
     mtmp->mstrategy &= ~STRAT_WAITMASK;
 
 atk_done:
@@ -460,7 +465,7 @@ register struct monst *mon;
 struct obj *weapon;
 int *mhit;
 int rollneeded, armorpenalty; /* for monks */
-struct attack *uattk;
+const struct Attack uattk;
 {
     register boolean malive = TRUE;
 
@@ -513,14 +518,20 @@ struct attack *uattk;
 STATIC_OVL boolean
 hitum(mon, uattk)
 struct monst *mon;
-struct attack *uattk;
+const struct Attack uattk;
 {
     boolean malive, wep_was_destroyed = FALSE;
     struct obj *wepbefore = uwep;
     int armorpenalty, attknum = 0, x = currentX() + directionX(), y = currentY() + directionY(),
-                      tmp = find_roll_to_hit(mon, uattk->type, uwep,
+                      tmp = find_roll_to_hit(mon, uattk.type, uwep,
                                              &attknum, &armorpenalty);
     int mhit = (tmp > (dieroll = rnd(20)) || swallowed());
+
+    struct attack deprecated_uattk;
+    deprecated_uattk.type = uattk.type;
+    deprecated_uattk.damageType = uattk.damageType;
+    deprecated_uattk.dice = uattk.dice;
+    deprecated_uattk.diceSides = uattk.diceSides;
 
     if (tmp > dieroll)
         exercise(A_DEX, TRUE);
@@ -529,7 +540,7 @@ struct attack *uattk;
        overrode confirmation (assumes Stormbringer is primary weapon)
        or if the monster was killed or knocked to different location */
     if (usingTwoWeapons() && !override_confirmation && malive && m_at(x, y) == mon) {
-        tmp = find_roll_to_hit(mon, uattk->type, uswapwep, &attknum,
+        tmp = find_roll_to_hit(mon, uattk.type, uswapwep, &attknum,
                                &armorpenalty);
         mhit = (tmp > (dieroll = rnd(20)) || swallowed());
         malive = known_hitum(mon, uswapwep, &mhit, tmp, armorpenalty, uattk);
@@ -1217,11 +1228,11 @@ struct obj *obj;
 STATIC_OVL boolean
 m_slips_free(mdef, mattk)
 struct monst *mdef;
-struct attack *mattk;
+const struct Attack mattk;
 {
     struct obj *obj;
 
-    if (mattk->damageType == AD_DRIN) {
+    if (mattk.damageType == AD_DRIN) {
         /* intelligence drain attacks the head */
         obj = which_armor(mdef, W_ARMH);
     } else {
@@ -1238,7 +1249,7 @@ struct attack *mattk;
     if (obj && (obj->greased || obj->otyp == OILSKIN_CLOAK)
         && (!obj->cursed || rn2(3))) {
         You("%s %s %s %s!",
-            mattk->damageType == AD_WRAP ? "slip off of"
+            mattk.damageType == AD_WRAP ? "slip off of"
                                     : "grab, but cannot hold onto",
             s_suffix(mon_nam(mdef)), obj->greased ? "greased" : "slippery",
             /* avoid "slippery slippery cloak"
@@ -1341,7 +1352,7 @@ struct obj *otmp;
 STATIC_OVL void
 steal_it(mdef, mattk)
 struct monst *mdef;
-struct attack *mattk;
+const struct Attack mattk;
 {
     struct obj *otmp, *stealoid, **minvent_ptr;
     long unwornmask;
@@ -1416,10 +1427,10 @@ struct attack *mattk;
 int
 damageum(mdef, mattk)
 register struct monst *mdef;
-register struct attack *mattk;
+register const struct Attack mattk;
 {
     register struct permonst *pd = mdef->data;
-    int armpro, tmp = d((int) mattk->dice, (int) mattk->diceSides);
+    int armpro, tmp = d(mattk.dice, mattk.diceSides);
     boolean negated;
 
     armpro = magic_negation(mdef);
@@ -1432,7 +1443,7 @@ register struct attack *mattk;
         demonpet();
         return 0;
     }
-    switch (mattk->damageType) {
+    switch (mattk.damageType) {
     case AD_STUN:
         if (youCanSee())
             pline("%s %s for a moment.", Monnam(mdef),
@@ -1451,10 +1462,10 @@ register struct attack *mattk;
     case AD_HEAL: /* likewise */
     case AD_PHYS:
     physical:
-        if (mattk->type == AT_WEAP) {
+        if (mattk.type == AT_WEAP) {
             if (uwep)
                 tmp = 0;
-        } else if (mattk->type == AT_KICK) {
+        } else if (mattk.type == AT_KICK) {
             if (thick_skinned(pd))
                 tmp = 0;
             if (pd == &mons[PM_SHADE]) {
@@ -1482,8 +1493,9 @@ register struct attack *mattk;
             tmp = 0;
             break;
         }
-        if (youCanSee())
+        if (youCanSee()) {
             pline("%s is %s!", Monnam(mdef), on_fire(pd, mattk));
+	}
         if (pd == &mons[PM_STRAW_GOLEM] || pd == &mons[PM_PAPER_GOLEM]) {
             if (youCanSee())
                 pline("%s burns completely!", Monnam(mdef));
@@ -1588,7 +1600,7 @@ register struct attack *mattk;
         }
         break;
     case AD_BLND:
-        if (can_blnd(&youmonst, mdef, mattk->type, (struct obj *) 0)) {
+        if (can_blnd(&youmonst, mdef, mattk.type, (struct obj *) 0)) {
             if (youCanSee() && mdef->mcansee)
                 pline("%s is blinded.", Monnam(mdef));
             mdef->mcansee = 0;
@@ -1714,7 +1726,7 @@ register struct attack *mattk;
                     && !amphibious(pd)) {
                     You("drown %s...", mon_nam(mdef));
                     tmp = mdef->mhp;
-                } else if (mattk->type == AT_HUGS)
+                } else if (mattk.type == AT_HUGS)
                     pline("%s is being crushed.", Monnam(mdef));
             } else {
                 tmp = 0;
@@ -1801,12 +1813,12 @@ register struct attack *mattk;
 STATIC_OVL int
 explum(mdef, mattk)
 register struct monst *mdef;
-register struct attack *mattk;
+register const struct Attack mattk;
 {
-    register int tmp = d((int) mattk->dice, (int) mattk->diceSides);
+    register int tmp = d(mattk.dice, mattk.diceSides);
 
     You("explode!");
-    switch (mattk->damageType) {
+    switch (mattk.damageType) {
         boolean resistance; /* only for cold/fire/elec */
 
     case AD_BLND:
@@ -1841,7 +1853,7 @@ register struct attack *mattk;
         } else {
             shieldeff(mdef->mx, mdef->my);
             if (isGolem(mdef->data->monsterTypeID))
-                golemeffects(mdef, (int) mattk->damageType, tmp);
+                golemeffects(mdef, mattk.damageType, tmp);
             else
                 pline_The("blast doesn't seem to affect %s.", mon_nam(mdef));
         }
@@ -1878,7 +1890,7 @@ end_engulf()
 STATIC_OVL int
 gulpum(mdef, mattk)
 register struct monst *mdef;
-register struct attack *mattk;
+register const struct Attack mattk;
 {
 #ifdef LINT /* static char msgbuf[BUFSZ]; */
     char msgbuf[BUFSZ];
@@ -1886,7 +1898,7 @@ register struct attack *mattk;
     static char msgbuf[BUFSZ]; /* for nomovemsg */
 #endif
     register int tmp;
-    register int dam = d((int) mattk->dice, (int) mattk->diceSides);
+    register int dam = d(mattk.dice, mattk.diceSides);
     boolean fatal_gulp;
     struct obj *otmp;
     struct permonst *pd = mdef->data;
@@ -1908,11 +1920,11 @@ register struct attack *mattk;
 
         /* engulfing a cockatrice or digesting a Rider or Medusa */
         fatal_gulp = (touch_petrifies(pd) && !youResistStoning())
-                     || (mattk->damageType == AD_DGST
+                     || (mattk.damageType == AD_DGST
                          && (is_rider(pd) || (pd == &mons[PM_MEDUSA]
                                               && !youResistStoning())));
 
-        if ((mattk->damageType == AD_DGST && !youHaveSlowDigestion()) || fatal_gulp)
+        if ((mattk.damageType == AD_DGST && !youHaveSlowDigestion()) || fatal_gulp)
             eating_conducts(pd);
 
         if (fatal_gulp && !is_rider(pd)) { /* petrification */
@@ -1929,7 +1941,7 @@ register struct attack *mattk;
             instapetrify(kbuf);
         } else {
             start_engulf(mdef);
-            switch (mattk->damageType) {
+            switch (mattk.damageType) {
             case AD_DGST:
                 /* eating a Rider or its corpse is fatal */
                 if (is_rider(pd)) {
@@ -2012,7 +2024,7 @@ register struct attack *mattk;
                 }
                 break;
             case AD_BLND:
-                if (can_blnd(&youmonst, mdef, mattk->type,
+                if (can_blnd(&youmonst, mdef, mattk.type,
                              (struct obj *) 0)) {
                     if (mdef->mcansee)
                         pline("%s can't see in there!", Monnam(mdef));
@@ -2032,7 +2044,7 @@ register struct attack *mattk;
                         pline("%s seems unhurt.", Monnam(mdef));
                         dam = 0;
                     }
-                    golemeffects(mdef, (int) mattk->damageType, dam);
+                    golemeffects(mdef, (int) mattk.damageType, dam);
                 } else
                     dam = 0;
                 break;
@@ -2043,7 +2055,7 @@ register struct attack *mattk;
                         dam = 0;
                     } else
                         pline("%s is freezing to death!", Monnam(mdef));
-                    golemeffects(mdef, (int) mattk->damageType, dam);
+                    golemeffects(mdef, (int) mattk.damageType, dam);
                 } else
                     dam = 0;
                 break;
@@ -2054,7 +2066,7 @@ register struct attack *mattk;
                         dam = 0;
                     } else
                         pline("%s is burning to a crisp!", Monnam(mdef));
-                    golemeffects(mdef, (int) mattk->damageType, dam);
+                    golemeffects(mdef, (int) mattk.damageType, dam);
                 } else
                     dam = 0;
                 break;
@@ -2084,7 +2096,7 @@ register struct attack *mattk;
 void
 missum(mdef, mattk, wouldhavehit)
 register struct monst *mdef;
-register struct attack *mattk;
+register const struct Attack mattk;
 boolean wouldhavehit;
 {
     if (wouldhavehit) /* monk is missing due to penalty for wearing suit */
@@ -2114,12 +2126,6 @@ register struct monst *mon;
         sum[i] = 0;
         mattk = getMonsterAttack(youmonst.data, i, sum);
 
-	struct attack deprecated_mattk;
-	deprecated_mattk.type = mattk.type;
-	deprecated_mattk.damageType = mattk.damageType;
-	deprecated_mattk.dice = mattk.dice;
-	deprecated_mattk.diceSides = mattk.diceSides;
-	
         switch (mattk.type) {
         case AT_WEAP:
         use_weapon:
@@ -2141,7 +2147,7 @@ register struct monst *mon;
                                    &armorpenalty);
             dhit = (tmp > (dieroll = rnd(20)) || swallowed());
             /* Enemy dead, before any special abilities used */
-            if (!known_hitum(mon, weapon, &dhit, tmp, armorpenalty, &deprecated_mattk)) {
+            if (!known_hitum(mon, weapon, &dhit, tmp, armorpenalty, mattk)) {
                 sum[i] = 2;
                 break;
             } else
@@ -2153,7 +2159,7 @@ register struct monst *mon;
              * already did it.
              */
             if (dhit && mattk.damageType != AD_SPEL && mattk.damageType != AD_PHYS)
-                sum[i] = damageum(mon, &deprecated_mattk);
+                sum[i] = damageum(mon, mattk);
             break;
         case AT_CLAW:
             if (uwep && !cannotWieldThings(youmonst.data->monsterTypeID) && !weapon_used)
@@ -2175,14 +2181,14 @@ register struct monst *mon;
                 int compat;
 
                 if (!swallowed()
-                    && (compat = could_seduce(&youmonst, mon, &deprecated_mattk))) {
+                    && (compat = could_seduce(&youmonst, mon, mattk))) {
                     You("%s %s %s.",
                         mon->mcansee && haseyes(mon->data) ? "smile at"
                                                            : "talk to",
                         mon_nam(mon),
                         compat == 2 ? "engagingly" : "seductively");
                     /* doesn't anger it; no wakeup() */
-                    sum[i] = damageum(mon, &deprecated_mattk);
+                    sum[i] = damageum(mon, mattk);
                     break;
                 }
                 wakeup(mon);
@@ -2208,9 +2214,9 @@ register struct monst *mon;
                     Your("tentacles suck %s.", mon_nam(mon));
                 else
                     You("hit %s.", mon_nam(mon));
-                sum[i] = damageum(mon, &deprecated_mattk);
+                sum[i] = damageum(mon, mattk);
             } else {
-                missum(mon, &deprecated_mattk, (tmp + armorpenalty > dieroll));
+                missum(mon, mattk, (tmp + armorpenalty > dieroll));
             }
             break;
 
@@ -2226,11 +2232,11 @@ register struct monst *mon;
                 if (mon == u.ustuck) {
                     pline("%s is being %s.", Monnam(mon),
                           currentMonsterNumber() == PM_ROPE_GOLEM ? "choked" : "crushed");
-                    sum[i] = damageum(mon, &deprecated_mattk);
+                    sum[i] = damageum(mon, mattk);
                 } else if (i >= 2 && sum[i - 1] && sum[i - 2]) {
                     You("grab %s!", mon_nam(mon));
                     u.ustuck = mon;
-                    sum[i] = damageum(mon, &deprecated_mattk);
+                    sum[i] = damageum(mon, mattk);
                 }
             }
             break;
@@ -2238,7 +2244,7 @@ register struct monst *mon;
         case AT_EXPL: /* automatic hit if next to */
             dhit = -1;
             wakeup(mon);
-            sum[i] = explum(mon, &deprecated_mattk);
+            sum[i] = explum(mon, mattk);
             break;
 
         case AT_ENGL:
@@ -2250,7 +2256,7 @@ register struct monst *mon;
                     Your("attempt to surround %s is harmless.", mon_nam(mon));
                 else {
 		    int mc = monsterClass(mon->data->monsterTypeID);
-                    sum[i] = gulpum(mon, &deprecated_mattk);
+                    sum[i] = gulpum(mon, mattk);
                     if (sum[i] == 2 && (mc == S_ZOMBIE || mc == S_MUMMY)
                         && rn2(5) && !youResistSickness()) {
                         You_feel("%ssick.", (youAreSick()) ? "very " : "");
@@ -2258,7 +2264,7 @@ register struct monst *mon;
                     }
                 }
             } else {
-                missum(mon, &deprecated_mattk, FALSE);
+                missum(mon, mattk, FALSE);
             }
             break;
 

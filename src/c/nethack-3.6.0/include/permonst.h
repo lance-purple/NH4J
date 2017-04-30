@@ -31,7 +31,7 @@ struct Attack {
     int diceSides;
 };
 
-#define NO_ATTACK {0, 0, 0, 0}
+extern struct Attack NO_ATTACK;
 
 
 /*	Max # of attacks for any given monster.
