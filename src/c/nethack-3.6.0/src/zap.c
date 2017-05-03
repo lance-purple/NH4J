@@ -2428,12 +2428,12 @@ boolean ordinary;
 /* called when poly'd hero uses breath attack against self */
 void
 ubreatheu(mattk)
-struct attack *mattk;
+const struct Attack mattk;
 {
-    int dtyp = 20 + mattk->damageType - 1;      /* breath by hero */
+    int dtyp = 20 + mattk.damageType - 1;      /* breath by hero */
     const char *fltxt = flash_types[dtyp]; /* blast of <something> */
 
-    zhitu(dtyp, mattk->dice, fltxt, currentX(), currentY());
+    zhitu(dtyp, mattk.dice, fltxt, currentX(), currentY());
 }
 
 /* light damages hero in gremlin form */
