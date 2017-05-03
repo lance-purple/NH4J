@@ -2349,7 +2349,7 @@ boolean wep_was_destroyed;
                                      EF_GREASE | EF_VERBOSE);
             } else if (type == AT_WEAP || type == AT_CLAW
                        || type == AT_MAGC || type == AT_TUCH)
-                passive_obj(mon, (struct obj *) 0, &(ptr->mattk[i]));
+                monsterPassivelyAttacksObjectWith(mon, (struct obj *) 0, ptr->mattk[i].damageType);
         }
         break;
     case AD_ACID:
@@ -2371,7 +2371,7 @@ boolean wep_was_destroyed;
                                      EF_GREASE | EF_VERBOSE);
             } else if (type == AT_WEAP || type == AT_CLAW
                        || type == AT_MAGC || type == AT_TUCH)
-                passive_obj(mon, (struct obj *) 0, &(ptr->mattk[i]));
+                monsterPassivelyAttacksObjectWith(mon, (struct obj *) 0, ptr->mattk[i].damageType);
         }
         exercise(A_STR, FALSE);
         break;
@@ -2407,7 +2407,7 @@ boolean wep_was_destroyed;
                                      EF_GREASE | EF_VERBOSE);
             } else if (type == AT_WEAP || type == AT_CLAW
                        || type == AT_MAGC || type == AT_TUCH)
-                passive_obj(mon, (struct obj *) 0, &(ptr->mattk[i]));
+                monsterPassivelyAttacksObjectWith(mon, (struct obj *) 0, ptr->mattk[i].damageType);
         }
         break;
     case AD_CORR:
@@ -2418,7 +2418,7 @@ boolean wep_was_destroyed;
                                      EF_GREASE | EF_VERBOSE);
             } else if (type == AT_WEAP || type == AT_CLAW
                        || type == AT_MAGC || type == AT_TUCH)
-                passive_obj(mon, (struct obj *) 0, &(ptr->mattk[i]));
+                monsterPassivelyAttacksObjectWith(mon, (struct obj *) 0, ptr->mattk[i].damageType);
         }
         break;
     case AD_MAGM:
@@ -2443,7 +2443,7 @@ boolean wep_was_destroyed;
                        || (type >= AT_STNG && type < AT_WEAP)) {
                 break; /* no object involved */
             }
-            passive_obj(mon, obj, &(ptr->mattk[i]));
+            monsterPassivelyAttacksObjectWith(mon, obj, ptr->mattk[i].damageType);
         }
         break;
     default:
@@ -2549,10 +2549,10 @@ boolean wep_was_destroyed;
  * Assumes the attack was successful.
  */
 void
-passive_obj(mon, obj, mattk)
+monsterPassivelyAttacksObjectWith(mon, obj, damageType)
 register struct monst *mon;
 register struct obj *obj; /* null means pick uwep, uswapwep or uarmg */
-struct attack *mattk;     /* null means we find one internally */
+int damageType;
 {
     struct permonst *ptr = mon->data;
     register int i;
@@ -2560,27 +2560,79 @@ struct attack *mattk;     /* null means we find one internally */
     /* if caller hasn't specified an object, use uwep, uswapwep or uarmg */
     if (!obj) {
         obj = (usingTwoWeapons() && uswapwep && !rn2(2)) ? uswapwep : uwep;
-        if (!obj && mattk->damageType == AD_ENCH)
+        if (!obj && damageType == AD_ENCH)
             obj = uarmg; /* no weapon? then must be gloves */
         if (!obj)
             return; /* no object to affect */
     }
 
-    /* if caller hasn't specified an attack, find one */
-    if (!mattk) {
-	int nAttacks = monsterAttacks(ptr->monsterTypeID);
-        for (i = 0;; i++) {
-            if (i >= nAttacks) {
-                return; /* no passive attacks */
-	    }
-            if (ptr->mattk[i].type == AT_NONE) {
-                break; /* try this one */
-	    }
+    switch (damageType) {
+    case AD_FIRE:
+        if (!rn2(6) && !mon->mcan) {
+            (void) erode_obj(obj, NULL, ERODE_BURN, EF_NONE);
         }
-        mattk = &(ptr->mattk[i]);
+        break;
+    case AD_ACID:
+        if (!rn2(6)) {
+            (void) erode_obj(obj, NULL, ERODE_CORRODE, EF_NONE);
+        }
+        break;
+    case AD_RUST:
+        if (!mon->mcan) {
+            (void) erode_obj(obj, NULL, ERODE_RUST, EF_NONE);
+        }
+        break;
+    case AD_CORR:
+        if (!mon->mcan) {
+            (void) erode_obj(obj, NULL, ERODE_CORRODE, EF_NONE);
+        }
+        break;
+    case AD_ENCH:
+        if (!mon->mcan) {
+            if (drain_item(obj) && carried(obj)
+                && (obj->known || obj->oclass == ARMOR_CLASS)) {
+                pline("%s less effective.", Yobjnam2(obj, "seem"));
+            }
+            break;
+        }
+    default:
+        break;
     }
 
-    switch (mattk->damageType) {
+    if (carried(obj))
+        update_inventory();
+}
+
+
+void
+monsterPassivelyAttacksObject(mon, obj)
+register struct monst *mon;
+register struct obj *obj; /* null means pick uwep, uswapwep or uarmg */
+{
+    struct permonst *ptr = mon->data;
+    register int i;
+
+    /* if caller hasn't specified an object, use uwep, uswapwep or uarmg */
+    if (!obj) {
+        obj = (usingTwoWeapons() && uswapwep && !rn2(2)) ? uswapwep : uwep;
+        if (!obj)
+            return; /* no object to affect */
+    }
+
+    /* find an attack */
+    struct attack mattk;
+    int nAttacks = monsterAttacks(ptr->monsterTypeID);
+    for (i = 0;; i++) {
+        if (i >= nAttacks) {
+            return; /* no passive attacks */
+	}
+        if (ptr->mattk[i].type == AT_NONE) {
+            break; /* try this one */
+        }
+        mattk = ptr->mattk[i];
+    }
+
+    switch (mattk.damageType) {
     case AD_FIRE:
         if (!rn2(6) && !mon->mcan) {
             (void) erode_obj(obj, NULL, ERODE_BURN, EF_NONE);

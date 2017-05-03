@@ -1539,7 +1539,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
                     return 1;
                 }
             }
-            passive_obj(mon, obj, (struct attack *) 0);
+            monsterPassivelyAttacksObject(mon, obj);
         } else {
             tmiss(obj, mon, TRUE);
             if (hmode == HMON_APPLIED)

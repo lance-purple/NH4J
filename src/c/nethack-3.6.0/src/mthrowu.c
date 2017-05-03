@@ -118,8 +118,9 @@ int x, y;
                 place_object(obj, x, y);
                 if (!mtmp && x == currentX() && y == currentY())
                     mtmp = &youmonst;
-                if (mtmp && ohit)
-                    passive_obj(mtmp, obj, (struct attack *) 0);
+                if (mtmp && ohit) {
+                    monsterPassivelyAttacksObject(mtmp, obj);
+		}
                 stackobj(obj);
                 retvalu = 0;
             }
