@@ -73,7 +73,7 @@ sys_early_init()
 
     sysopt.check_save_uid = 1;
     sysopt.seduce = 1; /* if it's compiled in, default to on */
-    sysopt_seduce_set(sysopt.seduce);
+    enableSeductionAttacks((sysopt.seduce != 0));
     return;
 }
 
@@ -104,23 +104,6 @@ sysopt_release()
     if (sysopt.fmtd_wizard_list)
         free((genericptr_t) sysopt.fmtd_wizard_list),
         sysopt.fmtd_wizard_list = (char *) 0;
-    return;
-}
-
-extern struct attack sa_yes[NATTK];
-extern struct attack sa_no[NATTK];
-
-void
-sysopt_seduce_set(val)
-int val;
-{
-    struct attack *setval = val ? sa_yes : sa_no;
-    int x;
-
-    for (x = 0; x < NATTK; x++) {
-        mons[PM_INCUBUS].mattk[x] = setval[x];
-        mons[PM_SUCCUBUS].mattk[x] = setval[x];
-    }
     return;
 }
 

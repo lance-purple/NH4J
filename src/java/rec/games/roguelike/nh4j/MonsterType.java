@@ -1,6 +1,7 @@
 package rec.games.roguelike.nh4j;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class MonsterType {
@@ -3069,5 +3070,10 @@ public class MonsterType {
 		}
 		return true;
     }
+
+	public void setAttacks(Attack ... newAttacks) {
+		attacks.clear();
+		attacks.addAll(Arrays.asList(newAttacks));
+	}
 
 }

@@ -2853,7 +2853,7 @@ E void FDECL(play_sound_for_message, (const char *));
 
 E void NDECL(sys_early_init);
 E void NDECL(sysopt_release);
-E void FDECL(sysopt_seduce_set, (int));
+E void FDECL(enableSeductionAttacks, (boolean));
 
 /* ### sys/msdos/sound.c ### */
 

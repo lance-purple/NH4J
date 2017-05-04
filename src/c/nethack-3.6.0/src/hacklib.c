@@ -71,6 +71,7 @@
 #define OCCUPIED_ROOMS_CLASS "rec/games/roguelike/nh4j/OccupiedRooms"
 #define PLAYER_CHARACTER_CLASS "rec/games/roguelike/nh4j/PlayerCharacter"
 #define QUALITIES_CLASS "rec/games/roguelike/nh4j/Qualities"
+#define SYS_OPT_CLASS "rec/games/roguelike/nh4j/SysOpt"
 #define WEAPON_SKILL_CLASS "rec/games/roguelike/nh4j/WeaponSkill"
 
 jclass getJavaClass(const char* className) {
@@ -2752,6 +2753,10 @@ extern boolean monsterDoesNotAttack(const struct permonst *ptr)
 {
     int pmid = ptr->monsterTypeID;
     return javaGetBooleanFromInt(MONSTER_TYPE_CLASS, "monsterDoesNotAttack", pmid);
+}
+
+extern void enableSeductionAttacks(boolean enable) {
+  javaSetBoolean(SYS_OPT_CLASS, "enableSeductionAttacks", enable);
 }
 
 /*hacklib.c*/

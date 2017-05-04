@@ -2267,7 +2267,7 @@ int src;
             return 0;
         }
         sysopt.seduce = n;
-        sysopt_seduce_set(sysopt.seduce);
+        enableSeductionAttacks((sysopt.seduce != 0));
     } else if (src == SET_IN_SYS && match_varname(buf, "MAXPLAYERS", 10)) {
         n = atoi(bufp);
         /* XXX to get more than 25, need to rewrite all lock code */
