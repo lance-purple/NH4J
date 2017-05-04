@@ -3055,4 +3055,19 @@ public class MonsterType {
 		return getMonsterType(pmid).conveysResistances;
 	}
 
+	public static boolean monsterDoesNotAttack(int pmid) {
+		for (Attack attack : getMonsterType(pmid).attacks) {
+			if (attack.type().equals(AT.NONE)) {
+				continue;
+			} else if (attack.type().equals(AT.BOOM)) {
+                /* AT_BOOM "passive attack" (gas spore's explosion upon death)
+                isn't an attack as far as our callers are concerned */
+            	continue;
+            } else {
+            	return false;
+            }
+		}
+		return true;
+    }
+
 }

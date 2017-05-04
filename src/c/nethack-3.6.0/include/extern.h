@@ -2025,7 +2025,7 @@ E void FDECL(set_mon_data, (struct monst *, struct permonst *, int));
 E boolean FDECL(monsterHasAttackWithDamageType, (struct permonst *, const int, const int));
 E const struct Attack FDECL(monsterAttackWithDamageType, (struct permonst *, const int, const int));
 E boolean FDECL(attacktype, (struct permonst *, int));
-E boolean FDECL(noattacks, (struct permonst *));
+E boolean FDECL(monsterDoesNotAttack, (const struct permonst *));
 E boolean FDECL(poly_when_stoned, (struct permonst *));
 E boolean FDECL(resists_drli, (struct monst *));
 E boolean FDECL(resists_magm, (struct monst *));

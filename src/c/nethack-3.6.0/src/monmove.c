@@ -109,7 +109,7 @@ register struct monst *mtmp;
             || distanceSquaredToYou(x, y) > (BOLT_LIM + 1) * (BOLT_LIM + 1))
         /* can see it now, or sense it and would normally see it */
         && (canseemon(mtmp) || (sensemon(mtmp) && couldsee(x, y)))
-        && mtmp->mcanmove && !noattacks(mtmp->data)
+        && mtmp->mcanmove && !monsterDoesNotAttack(mtmp->data)
         && !onscary(currentX(), currentY(), mtmp))
         stop_occupation();
 
@@ -618,7 +618,7 @@ toofar:
      */
 
     if (!mtmp->mpeaceful || (youCauseConflict() && !resist(mtmp, RING_CLASS, 0, 0))) {
-        if (inrange && !noattacks(mdat) && currentHitPoints() > 0 && !scared && tmp != 3)
+        if (inrange && !monsterDoesNotAttack(mdat) && currentHitPoints() > 0 && !scared && tmp != 3)
             if (mattacku(mtmp))
                 return 1; /* monster died (e.g. exploded) */
 

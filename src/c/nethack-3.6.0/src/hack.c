@@ -2667,7 +2667,7 @@ monster_nearby()
                 && mtmp->m_ap_type != M_AP_OBJECT
                 && (!mtmp->mpeaceful || youAreHallucinating())
                 && (!is_hider(mtmp->data) || !mtmp->mundetected)
-                && !noattacks(mtmp->data) && mtmp->mcanmove
+                && !monsterDoesNotAttack(mtmp->data) && mtmp->mcanmove
                 && !mtmp->msleeping  /* aplvax!jcn */
                 && !onscary(currentX(), currentY(), mtmp) && canspotmon(mtmp))
                 return 1;

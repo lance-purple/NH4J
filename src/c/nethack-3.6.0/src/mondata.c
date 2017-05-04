@@ -70,27 +70,6 @@ int atyp;
     return monsterHasAttackWithDamageType(ptr, atyp, AD_ANY);
 }
 
-/* returns True if monster doesn't attack, False if it does */
-boolean
-noattacks(ptr)
-struct permonst *ptr;
-{
-    int i;
-    struct attack *mattk = ptr->mattk;
-    int nAttacks = monsterAttacks(ptr->monsterTypeID);
-
-    for (i = 0; i < nAttacks; i++) {
-        /* AT_BOOM "passive attack" (gas spore's explosion upon death)
-           isn't an attack as far as our callers are concerned */
-        if (mattk[i].type == AT_BOOM)
-            continue;
-
-        if (mattk[i].type)
-            return FALSE;
-    }
-    return TRUE;
-}
-
 /* does monster-type transform into something else when petrified? */
 boolean
 poly_when_stoned(ptr)

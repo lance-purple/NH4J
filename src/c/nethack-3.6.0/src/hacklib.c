@@ -2748,4 +2748,10 @@ extern long monsterConveysResistances(int id) {
   return javaGetLongFromInt(MONSTER_TYPE_CLASS, "monsterConveysResistances", id);
 }
 
+extern boolean monsterDoesNotAttack(const struct permonst *ptr)
+{
+    int pmid = ptr->monsterTypeID;
+    return javaGetBooleanFromInt(MONSTER_TYPE_CLASS, "monsterDoesNotAttack", pmid);
+}
+
 /*hacklib.c*/
