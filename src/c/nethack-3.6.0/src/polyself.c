@@ -1077,8 +1077,6 @@ rehumanize()
 int
 dobreathe()
 {
-    struct attack *mattk;
-
     if (youAreBeingStrangled()) {
         You_cant("breathe.  Sorry.");
         return 0;
@@ -1093,20 +1091,18 @@ dobreathe()
     if (!getdir((char *) 0))
         return 0;
 
-    mattk = attacktype_fordmg(youmonst.data, AT_BREA, AD_ANY);
-    if (!mattk)
+    struct Attack mattk = monsterAttackWithDamageType(youmonst.data, AT_BREA, AD_ANY);
+
+    if (!validAttack(mattk)) {
         impossible("bad breath attack?"); /* mouthwash needed... */
-    else if (!directionX() && !directionY() && !directionZ()) {
-	struct Attack new_mattk;
-	new_mattk.type = mattk->type;
-	new_mattk.damageType = mattk->damageType;
-	new_mattk.dice = mattk->dice;
-	new_mattk.diceSides = mattk->diceSides;
-        ubreatheu(new_mattk);
     }
-    else
-        buzz((int) (20 + mattk->damageType - 1), (int) mattk->dice, currentX(), currentY(),
+    else if (!directionX() && !directionY() && !directionZ()) {
+        ubreatheu(mattk);
+    }
+    else {
+        buzz((20 + mattk.damageType - 1), mattk.dice, currentX(), currentY(),
              directionX(), directionY());
+    }
     return 1;
 }
 
@@ -1114,15 +1110,16 @@ int
 dospit()
 {
     struct obj *otmp;
-    struct attack *mattk;
 
     if (!getdir((char *) 0))
         return 0;
-    mattk = attacktype_fordmg(youmonst.data, AT_SPIT, AD_ANY);
-    if (!mattk) {
+
+    struct Attack mattk = monsterAttackWithDamageType(youmonst.data, AT_SPIT, AD_ANY);
+
+    if (!validAttack(mattk)) {
         impossible("bad spit attack?");
     } else {
-        switch (mattk->damageType) {
+        switch (mattk.damageType) {
         case AD_BLND:
         case AD_DRST:
             otmp = mksobj(BLINDING_VENOM, TRUE, FALSE);

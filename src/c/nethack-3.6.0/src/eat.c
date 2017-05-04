@@ -2106,7 +2106,7 @@ struct obj *otmp;
         break;
     case CARROT:
         if (!swallowed()
-            || !attacktype_fordmg(u.ustuck->data, AT_ENGL, AD_BLND))
+            || !monsterHasAttackWithDamageType(u.ustuck->data, AT_ENGL, AD_BLND))
             make_blinded((long) creamed(), TRUE);
         break;
     case FORTUNE_COOKIE:

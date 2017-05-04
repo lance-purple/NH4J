@@ -2998,7 +2998,7 @@ public class MonsterType {
 	public static int monsterAttackType(int pmid, int index) {
 		ArrayList<Attack> attacks = getMonsterType(pmid).attacks;
 		if (index >= attacks.size()) {
-			return AT.ANY.id();
+			return AT.NONE.id();
 		} else {
 			return attacks.get(index).type().id();
 		}

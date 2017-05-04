@@ -6,6 +6,9 @@
 
 struct Attack NO_ATTACK = { 0, 0, 0, 0 };
 
+static boolean monsterCanCauseDamageTypeWithAttackType(const struct permonst *, const int, const int);
+
+
 /*      These routines provide basic data for any type of monster. */
 
 /* set up an individual monster's base type (initial creation, shapechange) */
@@ -26,18 +29,36 @@ int flag;
     return;
 }
 
-/* does monster-type have any attack for a specific type of damage? */
-struct attack *
-attacktype_fordmg(ptr, atyp, dtyp)
-struct permonst *ptr;
-int atyp, dtyp;
-{
-    struct attack *a;
 
-    for (a = &ptr->mattk[0]; a < &ptr->mattk[NATTK]; a++)
-        if (a->type == atyp && (dtyp == AD_ANY || a->damageType == dtyp))
-            return a;
-    return (struct attack *) 0;
+const struct Attack
+monsterAttackWithDamageType(ptr, attackType, damageType)
+struct permonst *ptr;
+const int attackType;
+const int damageType;
+{
+    int pmid = ptr->monsterTypeID;
+    int nAttacks = monsterAttacks(pmid);
+    for (int i = 0; i < nAttacks; i++)
+    {
+	struct Attack mattk = monsterAttack(pmid, i);
+        if (attackType == mattk.type)
+	{
+	    if ((damageType == AD_ANY) || (damageType == mattk.damageType))
+	    {
+                return mattk;
+	    }
+	}
+    } 
+    return NO_ATTACK;
+}
+
+/* does monster-type have any attack for a specific type of damage? */
+boolean monsterHasAttackWithDamageType(ptr, attackType, damageType)
+struct permonst *ptr;
+const int attackType;
+const int damageType;
+{
+    return validAttack(monsterAttackWithDamageType(ptr, attackType, damageType));
 }
 
 /* does monster-type have a particular type of attack */
@@ -46,7 +67,7 @@ attacktype(ptr, atyp)
 struct permonst *ptr;
 int atyp;
 {
-    return attacktype_fordmg(ptr, atyp, AD_ANY) ? TRUE : FALSE;
+    return monsterHasAttackWithDamageType(ptr, atyp, AD_ANY);
 }
 
 /* returns True if monster doesn't attack, False if it does */
@@ -149,8 +170,8 @@ struct monst *mon;
                   || mon->msleeping))
         return TRUE;
     /* yellow light, Archon; !dust vortex, !cobra, !raven */
-    if (dmgtype_fromattack(ptr, AD_BLND, AT_EXPL)
-        || dmgtype_fromattack(ptr, AD_BLND, AT_GAZE))
+    if (monsterCanCauseDamageTypeWithAttackType(ptr, AD_BLND, AT_EXPL)
+        || monsterCanCauseDamageTypeWithAttackType(ptr, AD_BLND, AT_GAZE))
         return TRUE;
     o = is_you ? uwep : MON_WEP(mon);
     if (o && o->oartifact && defends(AD_BLND, o))
@@ -443,17 +464,22 @@ struct permonst *ptr;
 
 /* does monster-type deal out a particular type of damage from a particular
    type of attack? */
-struct attack *
-dmgtype_fromattack(ptr, dtyp, atyp)
-struct permonst *ptr;
-int dtyp, atyp;
+boolean monsterCanCauseDamageTypeWithAttackType(ptr, dtyp, atyp)
+const struct permonst *ptr;
+const int dtyp;
+const int atyp;
 {
-    struct attack *a;
+    int pmid = ptr->monsterTypeID;
+    int nAttacks = monsterAttacks(pmid);
 
-    for (a = &ptr->mattk[0]; a < &ptr->mattk[NATTK]; a++)
-        if (a->damageType == dtyp && (atyp == AT_ANY || a->type == atyp))
-            return a;
-    return (struct attack *) 0;
+    for (int i = 0; i < nAttacks; i++)
+    {
+        struct Attack mattk = monsterAttack(pmid, i);
+        if (mattk.damageType == dtyp && (atyp == AT_ANY || mattk.type == atyp)) {
+            return TRUE;
+	}
+    }
+    return FALSE;
 }
 
 /* does monster-type deal out a particular type of damage from any attack */
@@ -462,7 +488,7 @@ dmgtype(ptr, dtyp)
 struct permonst *ptr;
 int dtyp;
 {
-    return dmgtype_fromattack(ptr, dtyp, AT_ANY) ? TRUE : FALSE;
+    return monsterCanCauseDamageTypeWithAttackType(ptr, dtyp, AT_ANY);
 }
 
 /* returns the maximum damage a defender can do to the attacker via
@@ -1141,6 +1167,14 @@ struct permonst *mdat;
         || mc == S_LIGHT)
         return FALSE;
     return TRUE;
+}
+
+boolean validAttack(const struct Attack attack) 
+{
+    return ((attack.type       != NO_ATTACK.type) &&
+	    (attack.damageType != NO_ATTACK.damageType) &&
+	    (attack.dice       != NO_ATTACK.dice) &&
+	    (attack.diceSides  != NO_ATTACK.diceSides));
 }
 
 #define MONSTER_DATA_CLASS "rec/games/roguelike/nh4j/MonsterData"

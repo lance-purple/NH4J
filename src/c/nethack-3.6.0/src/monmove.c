@@ -553,6 +553,7 @@ toofar:
            or similar spells by the time you reach it */
         if (dist2(mtmp->mx, mtmp->my, currentX(), currentY()) <= 49
             && !mtmp->mspec_used) {
+	    int pmid = mdat->monsterTypeID;
             struct attack *a;
 
             for (a = &mdat->mattk[0]; a < &mdat->mattk[NATTK]; a++) {

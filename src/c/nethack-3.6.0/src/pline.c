@@ -452,7 +452,7 @@ register struct monst *mtmp;
         Strcat(info, sticks(youmonst.data)
                          ? ", held by you"
                          : !swallowed() ? ", holding you"
-                                       : attacktype_fordmg(u.ustuck->data,
+                                       : monsterHasAttackWithDamageType(u.ustuck->data,
                                                            AT_ENGL, AD_DGST)
                                              ? ", digesting you"
                                              : is_animal(u.ustuck->data)

@@ -33,7 +33,7 @@
  *	Note that 1-10 correspond to the types of attack used in buzz().
  *	Please don't disturb the order unless you rewrite the buzz() code.
  */
-#define AD_ANY (-1) /* fake damage; attacktype_fordmg wildcard */
+#define AD_ANY (-1) /* fake damage; monsterAttackWithDamageType() wildcard */
 #define AD_PHYS 0   /* ordinary physical */
 #define AD_MAGM 1   /* magic missiles */
 #define AD_FIRE 2   /* fire damage */

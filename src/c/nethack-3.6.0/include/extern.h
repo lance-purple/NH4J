@@ -2020,7 +2020,8 @@ E void FDECL(decide_to_shapeshift, (struct monst *, int));
 /* ### mondata.c ### */
 
 E void FDECL(set_mon_data, (struct monst *, struct permonst *, int));
-E struct attack *FDECL(attacktype_fordmg, (struct permonst *, int, int));
+E boolean FDECL(monsterHasAttackWithDamageType, (struct permonst *, const int, const int));
+E const struct Attack FDECL(monsterAttackWithDamageType, (struct permonst *, const int, const int));
 E boolean FDECL(attacktype, (struct permonst *, int));
 E boolean FDECL(noattacks, (struct permonst *));
 E boolean FDECL(poly_when_stoned, (struct permonst *));
@@ -2042,7 +2043,6 @@ E boolean FDECL(sticks, (struct permonst *));
 E boolean FDECL(cantvomit, (struct permonst *));
 E int FDECL(num_horns, (struct permonst *));
 /* E boolean FDECL(canseemon, (struct monst *)); */
-E struct attack *FDECL(dmgtype_fromattack, (struct permonst *, int, int));
 E boolean FDECL(dmgtype, (struct permonst *, int));
 E int FDECL(max_passive_dmg, (struct monst *, struct monst *));
 E boolean FDECL(same_race, (struct permonst *, struct permonst *));

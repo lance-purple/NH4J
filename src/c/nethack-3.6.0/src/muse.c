@@ -2336,7 +2336,7 @@ boolean by_you;
        [possible extension: monst capable of casting high level clerical
        spells could toss pillar of fire at self--probably too suicidal] */
     if (!mon->mcan && !mon->mspec_used
-        && attacktype_fordmg(mon->data, AT_BREA, AD_FIRE)) {
+        && monsterHasAttackWithDamageType(mon->data, AT_BREA, AD_FIRE)) {
         odummy = zeroobj; /* otyp == STRANGE_OBJECT */
         return muse_unslime(mon, &odummy, by_you);
     }

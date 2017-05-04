@@ -1803,7 +1803,7 @@ struct obj *obj;
         prop_trouble(SICK);
     if (TimedTrouble(yourIntrinsic(BLINDED)) > (long) creamed()
         && !(swallowed()
-             && attacktype_fordmg(u.ustuck->data, AT_ENGL, AD_BLND)))
+             && monsterHasAttackWithDamageType(u.ustuck->data, AT_ENGL, AD_BLND)))
         prop_trouble(BLINDED);
     if (TimedTrouble(yourIntrinsic(HALLUC)))
         prop_trouble(HALLUC);

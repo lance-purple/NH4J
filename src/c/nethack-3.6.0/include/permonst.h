@@ -33,6 +33,8 @@ struct Attack {
 
 extern struct Attack NO_ATTACK;
 
+extern boolean validAttack(const struct Attack); /* not NO_ATTACK */
+
 
 /*	Max # of attacks for any given monster.
  */

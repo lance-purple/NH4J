@@ -1655,21 +1655,15 @@ register const struct Attack mattk;
 boolean
 gulp_blnd_check()
 {
-    struct attack *mattk;
+    if (!youAreTemporarilyBlinded() && swallowed()) {
+        struct Attack mattk = monsterAttackWithDamageType(u.ustuck->data, AT_ENGL, AD_BLND);
 
-    if (!youAreTemporarilyBlinded() && swallowed()
-        && (mattk = attacktype_fordmg(u.ustuck->data, AT_ENGL, AD_BLND))
-        && can_blnd(u.ustuck, &youmonst, mattk->type, (struct obj *) 0)) {
-        increaseTimeSinceBeingSwallowed(1); /* compensate for gulpmu change */
+	if (validAttack(mattk) && can_blnd(u.ustuck, &youmonst, mattk.type, (struct obj *) 0)) {
+            increaseTimeSinceBeingSwallowed(1); /* compensate for gulpmu change */
 
-        struct Attack new_mattk;
-        new_mattk.type = mattk->type;
-        new_mattk.damageType = mattk->damageType;
-        new_mattk.dice = mattk->dice;
-        new_mattk.diceSides = mattk->diceSides;
-
-        (void) gulpmu(u.ustuck, new_mattk);
-        return TRUE;
+            (void) gulpmu(u.ustuck, mattk);
+            return TRUE;
+        }
     }
     return FALSE;
 }
@@ -2278,12 +2272,12 @@ const struct Attack mattk;
     }
 
     if (agrinvis && !defperc
-        && (!SYSOPT_SEDUCE || (mattk.damageType != AD_SSEX)))
+        && (!SYSOPT_SEDUCE || ((validAttack(mattk)) && mattk.damageType != AD_SSEX)))
         return 0;
 
     if (monsterClass(pagr->monsterTypeID) != S_NYMPH
         && ((pagr != &mons[PM_INCUBUS] && pagr != &mons[PM_SUCCUBUS])
-            || (SYSOPT_SEDUCE && mattk.damageType != AD_SSEX)))
+            || (SYSOPT_SEDUCE && (validAttack(mattk)) && mattk.damageType != AD_SSEX)))
         return 0;
 
     if (genagr == 1 - gendef)

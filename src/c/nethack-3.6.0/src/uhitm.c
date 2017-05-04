@@ -527,12 +527,6 @@ const struct Attack uattk;
                                              &attknum, &armorpenalty);
     int mhit = (tmp > (dieroll = rnd(20)) || swallowed());
 
-    struct attack deprecated_uattk;
-    deprecated_uattk.type = uattk.type;
-    deprecated_uattk.damageType = uattk.damageType;
-    deprecated_uattk.dice = uattk.dice;
-    deprecated_uattk.diceSides = uattk.diceSides;
-
     if (tmp > dieroll)
         exercise(A_DEX, TRUE);
     malive = known_hitum(mon, uwep, &mhit, tmp, armorpenalty, uattk);
