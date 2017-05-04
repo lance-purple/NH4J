@@ -554,18 +554,15 @@ toofar:
         if (dist2(mtmp->mx, mtmp->my, currentX(), currentY()) <= 49
             && !mtmp->mspec_used) {
 	    int pmid = mdat->monsterTypeID;
-            struct attack *a;
+	    int nAttacks = monsterAttacks(pmid);
 
-            for (a = &mdat->mattk[0]; a < &mdat->mattk[NATTK]; a++) {
-                if (a->type == AT_MAGC
-                    && (a->damageType == AD_SPEL || a->damageType == AD_CLRC)) {
-		    struct Attack new_a;
-		    new_a.type = a->type;
-		    new_a.damageType = a->damageType;
-		    new_a.dice = a->dice;
-		    new_a.diceSides = a->diceSides;
+	    for (int i = 0; i < nAttacks; i++) {
+                struct Attack attk = monsterAttack(pmid, i);
 
-                    if (castmu(mtmp, new_a, FALSE, FALSE)) {
+                if (attk.type == AT_MAGC
+                    && (attk.damageType == AD_SPEL || attk.damageType == AD_CLRC)) {
+
+                    if (castmu(mtmp, attk, FALSE, FALSE)) {
                         tmp = 3;
                         break;
                     }
