@@ -2604,7 +2604,6 @@ register struct monst *mon;
 register struct obj *obj; /* null means pick uwep, uswapwep or uarmg */
 {
     struct permonst *ptr = mon->data;
-    register int i;
 
     /* if caller hasn't specified an object, use uwep, uswapwep or uarmg */
     if (!obj) {
@@ -2614,18 +2613,14 @@ register struct obj *obj; /* null means pick uwep, uswapwep or uarmg */
     }
 
     /* find an attack */
-    struct attack mattk;
-    int nAttacks = monsterAttacks(ptr->monsterTypeID);
-    for (i = 0;; i++) {
-        if (i >= nAttacks) {
-            return; /* no passive attacks */
-	}
-        if (ptr->mattk[i].type == AT_NONE) {
-            break; /* try this one */
-        }
-        mattk = ptr->mattk[i];
-    }
 
+    int pmid = ptr->monsterTypeID;
+    if (! monsterHasPassiveAttack(pmid)) {
+        return;
+    }
+    int i = monsterPassiveAttackIndex(pmid);
+    struct Attack mattk = monsterAttack(pmid, i);
+    
     switch (mattk.damageType) {
     case AD_FIRE:
         if (!rn2(6) && !mon->mcan) {

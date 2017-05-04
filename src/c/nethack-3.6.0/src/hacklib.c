@@ -2732,6 +2732,14 @@ extern const struct Attack monsterAttack(int id, int index) {
    return mattk;
 }
 
+extern boolean monsterHasPassiveAttack(int id) {
+  return javaGetBooleanFromInt(MONSTER_TYPE_CLASS, "monsterHasPassiveAttack", id);
+}
+
+extern int monsterPassiveAttackIndex(int id) {
+  return javaGetIntFromInt(MONSTER_TYPE_CLASS, "monsterPassiveAttackIndex", id);
+}
+
 extern long monsterResistances(int id) {
   return javaGetLongFromInt(MONSTER_TYPE_CLASS, "monsterHasResistances", id);
 }

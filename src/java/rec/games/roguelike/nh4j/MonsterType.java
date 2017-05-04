@@ -3031,6 +3031,22 @@ public class MonsterType {
 		}
 	}
 
+	public static boolean monsterHasPassiveAttack(int pmid) {
+		return (monsterPassiveAttackIndex(pmid) >= 0);
+	}
+
+	public static int monsterPassiveAttackIndex(int pmid) {
+		ArrayList<Attack> attacks = getMonsterType(pmid).attacks;
+		for (int i = 0; i < attacks.size(); i++) {
+			Attack attack = attacks.get(i);
+			if (AT.NONE == attack.type()) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	
 	public static long monsterHasResistances(int pmid) {
 		return getMonsterType(pmid).hasResistances;
 	}

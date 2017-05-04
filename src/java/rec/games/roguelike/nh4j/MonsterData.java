@@ -91,7 +91,7 @@ public class MonsterData {
     //#define is_wooden(ptr) ((ptr) == &mons[PM_WOOD_GOLEM])
     //#define thick_skinned(ptr) (((ptr)->mflags1 & M1_THICK_HIDE) != 0L)
     
-    public boolean isSlimeproof(int pmid) {
+    public static boolean isSlimeproof(int pmid) {
     	return (PM.GREEN_SLIME.id() == pmid) || isFlaming(pmid) || isNoncorporeal(pmid);
     }
     

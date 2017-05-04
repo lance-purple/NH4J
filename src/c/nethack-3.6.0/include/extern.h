@@ -37,6 +37,8 @@ E void FDECL(setMonsterSound, (int, int));
 E int FDECL(monsterSize, (int));
 E int FDECL(monsterAttacks, (int));
 E const struct Attack FDECL(monsterAttack, (int, int));
+E boolean FDECL(monsterHasPassiveAttack, (int));
+E int FDECL(monsterPassiveAttackIndex, (int));
 E long FDECL(monsterResistances, (int));
 E boolean FDECL(monsterTypeResistsFire, (int));
 E boolean FDECL(monsterTypeResistsStoning, (int));
