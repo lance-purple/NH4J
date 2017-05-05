@@ -1430,21 +1430,25 @@ int mdead;
     char buf[BUFSZ];
     int i, tmp;
 
+    int dpmid = mddat->monsterTypeID;
+
     for (i = 0;; i++) {
-        if (i >= monsterAttacks(mddat->monsterTypeID))
+        if (i >= monsterAttacks(dpmid))
             return (mdead | mhit); /* no passive attacks */
-        if (mddat->mattk[i].type == AT_NONE)
+        if (monsterAttack(dpmid, i).type == AT_NONE)
             break;
     }
-    if (mddat->mattk[i].dice)
-        tmp = d((int) mddat->mattk[i].dice, (int) mddat->mattk[i].diceSides);
-    else if (mddat->mattk[i].diceSides)
-        tmp = d(monsterLevel(mddat->monsterTypeID) + 1, (int) mddat->mattk[i].diceSides);
-    else
+    struct Attack mdattk = monsterAttack(dpmid, i);
+    if (mdattk.dice) {
+        tmp = d(mdattk.dice, mdattk.diceSides);
+    } else if (mdattk.diceSides) {
+        tmp = d(monsterLevel(mddat->monsterTypeID) + 1, mdattk.diceSides);
+    } else {
         tmp = 0;
+    }
 
     /* These affect the enemy even if defender killed */
-    switch (mddat->mattk[i].damageType) {
+    switch (mdattk.damageType) {
     case AD_ACID:
         if (mhit && !rn2(2)) {
             Strcpy(buf, Monnam(magr));
@@ -1477,7 +1481,7 @@ int mdead;
 
     /* These affect the enemy only if defender is still alive */
     if (rn2(3))
-        switch (mddat->mattk[i].damageType) {
+        switch (mdattk.damageType) {
         case AD_PLYS: /* Floating eye */
             if (tmp > 127)
                 tmp = 127;
@@ -1565,7 +1569,7 @@ int mdead;
 
 assess_dmg:
     if ((magr->mhp -= tmp) <= 0) {
-        monkilled(magr, "", (int) mddat->mattk[i].damageType);
+        monkilled(magr, "", mdattk.damageType);
         return (mdead | mhit | MM_AGR_DIED);
     }
     return (mdead | mhit);

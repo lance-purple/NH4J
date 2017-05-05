@@ -188,22 +188,20 @@ xchar x, y;
      * If you have >1 kick attack, you get all of them.
      */
     if (areYouPolymorphed() && attacktype(youmonst.data, AT_KICK)) {
-        struct Attack uattk;
         int sum, kickdieroll, armorpenalty,
             attknum = 0,
             tmp = find_roll_to_hit(mon, AT_KICK, (struct obj *) 0, &attknum,
                                    &armorpenalty);
+	
+	int upmid = youmonst.data->monsterTypeID;
 
-        for (i = 0; i < monsterAttacks(youmonst.data->monsterTypeID); i++) {
+        for (i = 0; i < monsterAttacks(upmid); i++) {
             /* first of two kicks might have provoked counterattack
                that has incapacitated the hero (ie, floating eye) */
             if (multi < 0)
                 break;
 
-            uattk.type = youmonst.data->mattk[i].type;
-            uattk.damageType = youmonst.data->mattk[i].damageType;
-            uattk.dice = youmonst.data->mattk[i].dice;
-            uattk.diceSides = youmonst.data->mattk[i].diceSides;
+            struct Attack uattk = monsterAttack(upmid, i);
 
             /* we only care about kicking attacks here */
             if (uattk.type != AT_KICK)
