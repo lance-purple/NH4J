@@ -39,38 +39,82 @@ public class MonsterData {
 	    return MC.EYE.equals(mc) || MC.LIGHT.equals(mc);
     }
 
-    //#define is_clinger(ptr) (((ptr)->mflags1 & M1_CLING) != 0L)
-    //#define is_swimmer(ptr) (((ptr)->mflags1 & M1_SWIM) != 0L)
-    //#define breathless(ptr) (((ptr)->mflags1 & M1_BREATHLESS) != 0L)
-    //#define amphibious(ptr) \
-    //    (((ptr)->mflags1 & (M1_AMPHIBIOUS | M1_BREATHLESS)) != 0L)
-    //#define passes_walls(ptr) (((ptr)->mflags1 & M1_WALLWALK) != 0L)
-    //#define amorphous(ptr) (((ptr)->mflags1 & M1_AMORPHOUS) != 0L)
-    
+    public static boolean isClinger(int pmid) {
+	    return MonsterType.getMonsterType(pmid).hasFlag1(M1.CLING);
+    }
+
+    public static boolean isSwimmer(int pmid) {
+	    return MonsterType.getMonsterType(pmid).hasFlag1(M1.SWIM);
+    }
+
+    public static boolean doesNotBreathe(int pmid) {
+	    return MonsterType.getMonsterType(pmid).hasFlag1(M1.BREATHLESS);
+    }
+
+    public static boolean isAmphibious(int pmid) {
+	    return MonsterType.getMonsterType(pmid).hasFlag1(M1.BREATHLESS | M1.AMPHIBIOUS);
+    }
+
+    public static boolean passesThroughWalls(int pmid) {
+	    return MonsterType.getMonsterType(pmid).hasFlag1(M1.WALLWALK);
+    }
+
+    public static boolean isAmorphous(int pmid) {
+	    return MonsterType.getMonsterType(pmid).hasFlag1(M1.AMORPHOUS);
+    }
+
     public static boolean isNoncorporeal(int pmid) {
 	    MC mc = MonsterType.getMonsterType(pmid).monsterClass();
     	return MC.GHOST.equals(mc);
     }
-    
-    //#define tunnels(ptr) (((ptr)->mflags1 & M1_TUNNEL) != 0L)
-    //#define needspick(ptr) (((ptr)->mflags1 & M1_NEEDPICK) != 0L)
-    //#define hides_under(ptr) (((ptr)->mflags1 & M1_CONCEAL) != 0L)
-    //#define is_hider(ptr) (((ptr)->mflags1 & M1_HIDE) != 0L)
-    //#define haseyes(ptr) (((ptr)->mflags1 & M1_NOEYES) == 0L)
-    //#define eyecount(ptr)                                         \
-    //    (!haseyes(ptr) ? 0 : ((ptr) == &mons[PM_CYCLOPS]          \
-    //                          || (ptr) == &mons[PM_FLOATING_EYE]) \
-    //                             ? 1                              \
-    //                             : 2)
+
+    public static boolean isTunneler(int pmid) {
+	    return MonsterType.getMonsterType(pmid).hasFlag1(M1.TUNNEL);
+    }
+
+    public static boolean needsPickaxe(int pmid) {
+	    return MonsterType.getMonsterType(pmid).hasFlag1(M1.NEEDPICK);
+    }
+
+    public static boolean hidesUnderStuff(int pmid) {
+	    return MonsterType.getMonsterType(pmid).hasFlag1(M1.CONCEAL);
+    }
+
+    public static boolean isHider(int pmid) {
+	    return MonsterType.getMonsterType(pmid).hasFlag1(M1.HIDE);
+    }
+
+    public static boolean hasEyes(int pmid) {
+	    return (! MonsterType.getMonsterType(pmid).hasFlag1(M1.NOEYES));
+    }
+
+    public static int eyeCount(int pmid) {
+	   if (MonsterType.getMonsterType(pmid).hasFlag1(M1.NOEYES)) {
+		   return 0;
+	   }
+	   else if ((PM.CYCLOPS.id() == pmid) || (PM.FLOATING_EYE.id() == pmid)) {
+		   return 1;
+	   } else {
+		   return 2;
+	   }
+    }
     
     public static boolean hasNoHands(int pmid) {
     	return (MonsterType.getMonsterType(pmid).hasFlag1(M1.NOHANDS));
     }
-    //#define nohands(ptr) (((ptr)->mflags1 & M1_NOHANDS) != 0L)
     
-    //#define nolimbs(ptr) (((ptr)->mflags1 & M1_NOLIMBS) == M1_NOLIMBS)
-    //#define notake(ptr) (((ptr)->mflags1 & M1_NOTAKE) != 0L)
-    //#define has_head(ptr) (((ptr)->mflags1 & M1_NOHEAD) == 0L)
+    public static boolean hasNoLimbs(int pmid) {
+    	return (MonsterType.getMonsterType(pmid).hasFlag1(M1.NOLIMBS));
+    }
+
+    public static boolean doesNotTakeStuff(int pmid) {
+    	return (MonsterType.getMonsterType(pmid).hasFlag1(M1.NOTAKE));
+    }
+
+    public static boolean hasAHead(int pmid) {
+    	return (! MonsterType.getMonsterType(pmid).hasFlag1(M1.NOHEAD));
+    }
+
     //#define has_horns(ptr) (num_horns(ptr) > 0)
     
     public static boolean isWhirly(int pmid) {
@@ -86,32 +130,81 @@ public class MonsterData {
     	return (MS.SILENT.id() == MonsterType.monsterSound(pmid));
     }
 
-    //#define unsolid(ptr) (((ptr)->mflags1 & M1_UNSOLID) != 0L)
-    //#define mindless(ptr) (((ptr)->mflags1 & M1_MINDLESS) != 0L)
-    //#define humanoid(ptr) (((ptr)->mflags1 & M1_HUMANOID) != 0L)
-    //#define is_animal(ptr) (((ptr)->mflags1 & M1_ANIMAL) != 0L)
-    //#define slithy(ptr) (((ptr)->mflags1 & M1_SLITHY) != 0L)
+    public static boolean isUnsolid(int pmid) {
+    	return (MonsterType.getMonsterType(pmid).hasFlag1(M1.UNSOLID));
+    }
+
+    public static boolean isMindless(int pmid) {
+    	return (MonsterType.getMonsterType(pmid).hasFlag1(M1.MINDLESS));
+    }
+
+    public static boolean isHumanoid(int pmid) {
+    	return (MonsterType.getMonsterType(pmid).hasFlag1(M1.HUMANOID));
+    }
+
+    public static boolean isAnimal(int pmid) {
+    	return (MonsterType.getMonsterType(pmid).hasFlag1(M1.ANIMAL));
+    }
+
+    public static boolean isSlithy(int pmid) {
+    	return (MonsterType.getMonsterType(pmid).hasFlag1(M1.SLITHY));
+    }
+
+    public static boolean isThickSkinned(int pmid) {
+    	return (MonsterType.getMonsterType(pmid).hasFlag1(M1.THICK_HIDE));
+    }
+
     //#define is_wooden(ptr) ((ptr) == &mons[PM_WOOD_GOLEM])
-    //#define thick_skinned(ptr) (((ptr)->mflags1 & M1_THICK_HIDE) != 0L)
     
     public static boolean isSlimeproof(int pmid) {
     	return (PM.GREEN_SLIME.id() == pmid) || isFlaming(pmid) || isNoncorporeal(pmid);
     }
     
-    //#define lays_eggs(ptr) (((ptr)->mflags1 & M1_OVIPAROUS) != 0L)
-    //#define regenerates(ptr) (((ptr)->mflags1 & M1_REGEN) != 0L)
-    //#define perceives(ptr) (((ptr)->mflags1 & M1_SEE_INVIS) != 0L)
-    //#define can_teleport(ptr) (((ptr)->mflags1 & M1_TPORT) != 0L)
-    //#define control_teleport(ptr) (((ptr)->mflags1 & M1_TPORT_CNTRL) != 0L)
+    public static boolean laysEggs(int pmid) {
+    	return (MonsterType.getMonsterType(pmid).hasFlag1(M1.OVIPAROUS));
+    }
+
+    public static boolean regenerates(int pmid) {
+    	return (MonsterType.getMonsterType(pmid).hasFlag1(M1.REGEN));
+    }
+
+    public static boolean perceivesTheInvisible(int pmid) {
+    	return (MonsterType.getMonsterType(pmid).hasFlag1(M1.SEE_INVIS));
+    }
+
+    public static boolean canTeleport(int pmid) {
+    	return (MonsterType.getMonsterType(pmid).hasFlag1(M1.TPORT));
+    }
+
+    public static boolean canControlTeleport(int pmid) {
+    	return (MonsterType.getMonsterType(pmid).hasFlag1(M1.TPORT_CNTRL));
+    }
+
     //#define telepathic(ptr)                                                \
     //    ((ptr) == &mons[PM_FLOATING_EYE] || (ptr) == &mons[PM_MIND_FLAYER] \
     //     || (ptr) == &mons[PM_MASTER_MIND_FLAYER])
     //#define is_armed(ptr) attacktype(ptr, AT_WEAP)
-    //#define acidic(ptr) (((ptr)->mflags1 & M1_ACID) != 0L)
-    //#define poisonous(ptr) (((ptr)->mflags1 & M1_POIS) != 0L)
-    //#define carnivorous(ptr) (((ptr)->mflags1 & M1_CARNIVORE) != 0L)
-    //#define herbivorous(ptr) (((ptr)->mflags1 & M1_HERBIVORE) != 0L)
-    //#define metallivorous(ptr) (((ptr)->mflags1 & M1_METALLIVORE) != 0L)
+
+    public static boolean isAcidic(int pmid) {
+    	return (MonsterType.getMonsterType(pmid).hasFlag1(M1.ACID));
+    }
+
+    public static boolean isPoisonous(int pmid) {
+    	return (MonsterType.getMonsterType(pmid).hasFlag1(M1.POIS));
+    }
+
+    public static boolean isCarnivorous(int pmid) {
+    	return (MonsterType.getMonsterType(pmid).hasFlag1(M1.CARNIVORE));
+    }
+
+    public static boolean isHerbivorous(int pmid) {
+    	return (MonsterType.getMonsterType(pmid).hasFlag1(M1.HERBIVORE));
+    }
+
+    public static boolean isMetallivorous(int pmid) {
+    	return (MonsterType.getMonsterType(pmid).hasFlag1(M1.METALLIVORE));
+    }
+
     //#define polyok(ptr) (((ptr)->mflags2 & M2_NOPOLY) == 0L)
     //#define is_shapeshifter(ptr) (((ptr)->mflags2 & M2_SHAPESHIFTER) != 0L)
     
