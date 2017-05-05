@@ -340,7 +340,7 @@ int force;
                     /* We have to check whether monsters or player
                        falls in a chasm... */
                     if (mtmp) {
-                        if (!is_flyer(mtmp->data)
+                        if (!isFlyer(mtmp->data->monsterTypeID)
                             && !is_clinger(mtmp->data)) {
                             boolean m_already_trapped = mtmp->mtrapped;
                             mtmp->mtrapped = 1;

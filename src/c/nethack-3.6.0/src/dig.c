@@ -628,10 +628,11 @@ int ttyp;
             if (oldobjs != newobjs) /* something unearthed */
                 (void) pickup(1);   /* detects pit */
         } else if (mtmp) {
-            if (is_flyer(mtmp->data) || isFloater(mtmp->data->monsterTypeID)) {
+            int pmid = mtmp->data->monsterTypeID;
+            if (isFlyer(pmid) || isFloater(pmid)) {
                 if (canseemon(mtmp))
                     pline("%s %s over the pit.", Monnam(mtmp),
-                          (is_flyer(mtmp->data)) ? "flies" : "floats");
+                          (isFlyer(pmid)) ? "flies" : "floats");
             } else if (mtmp != madeby)
                 (void) mintrap(mtmp);
         }
@@ -683,19 +684,24 @@ int ttyp;
                 spoteffects(FALSE);
             }
         } else {
-            if (shopdoor && madeby_u)
+            if (shopdoor && madeby_u) {
                 pay_for_damage("ruin", FALSE);
-            if (newobjs)
+            }
+            if (newobjs) {
                 impact_drop((struct obj *) 0, x, y, 0);
+            }
             if (mtmp) {
                 /*[don't we need special sokoban handling here?]*/
-                if (is_flyer(mtmp->data) || isFloater(mtmp->data->monsterTypeID)
+                int pmid = mtmp->data->monsterTypeID;
+                if (isFlyer(pmid) || isFloater(pmid)
                     || mtmp->data == &mons[PM_WUMPUS]
                     || (mtmp->wormno && count_wsegs(mtmp) > 5)
-                    || monsterSize(mtmp->data->monsterTypeID) >= MZ_HUGE)
+                    || monsterSize(pmid) >= MZ_HUGE) {
                     return;
-                if (mtmp == u.ustuck) /* probably a vortex */
-                    return;           /* temporary? kludge */
+                }
+                if (mtmp == u.ustuck) { /* probably a vortex */
+                    return;             /* temporary? kludge */
+                }
 
                 if (teleport_pet(mtmp, FALSE)) {
                     d_level tolevel;
@@ -2002,7 +2008,8 @@ struct monst *mtmp;
 {
     debugpline1("bury_monst: %s", mon_nam(mtmp));
     if (canseemon(mtmp)) {
-        if (is_flyer(mtmp->data) || isFloater(mtmp->data->monsterTypeID)) {
+        int pmid = mtmp->data->monsterTypeID;
+        if (isFlyer(pmid) || isFloater(pmid)) {
             pline_The("%s opens up, but %s is not swallowed!",
                       surface(mtmp->mx, mtmp->my), mon_nam(mtmp));
             return;

@@ -2109,7 +2109,10 @@ register struct monst *mtmp;
         see_it = cansee(mtmp->mx, mtmp->my);
         /* assume hero can tell what's going on for the steed */
         if (mtmp == u.usteed)
-            in_sight = TRUE;
+        in_sight = TRUE;
+
+	int pmid = mptr->monsterTypeID;
+
         switch (tt) {
         case ARROW_TRAP:
             if (trap->once && trap->tseen && !rn2(15)) {
@@ -2170,8 +2173,9 @@ register struct monst *mtmp;
                 trapkilled = TRUE;
             break;
         case SQKY_BOARD:
-            if (is_flyer(mptr))
+            if (isFlyer(mptr->monsterTypeID)) {
                 break;
+	    }
             /* stepped on a squeaky board */
             if (in_sight) {
                 if (!youAreDeaf()) {
@@ -2188,8 +2192,8 @@ register struct monst *mtmp;
             wake_nearto(mtmp->mx, mtmp->my, 40);
             break;
         case BEAR_TRAP:
-            if (monsterSize(mptr->monsterTypeID) > MZ_SMALL && !amorphous(mptr) && !is_flyer(mptr)
-                && !isWhirly(mptr->monsterTypeID) && !unsolid(mptr)) {
+            if (monsterSize(pmid) > MZ_SMALL && !amorphous(mptr) && !isFlyer(pmid)
+                && !isWhirly(pmid) && !unsolid(mptr)) {
                 mtmp->mtrapped = 1;
                 if (in_sight) {
                     pline("%s is caught in %s bear trap!", Monnam(mtmp),
@@ -2345,7 +2349,7 @@ register struct monst *mtmp;
         case PIT:
         case SPIKED_PIT:
             fallverb = "falls";
-            if (is_flyer(mptr) || isFloater(mptr->monsterTypeID)
+            if (isFlyer(pmid) || isFloater(pmid)
                 || (mtmp->wormno && count_wsegs(mtmp) > 5)
                 || is_clinger(mptr)) {
                 if (force_mintrap && !Sokoban) {
@@ -2382,9 +2386,9 @@ register struct monst *mtmp;
                            defsyms[trap_to_defsym(tt)].explanation);
                 break; /* don't activate it after all */
             }
-            if (is_flyer(mptr) || isFloater(mptr->monsterTypeID) || mptr == &mons[PM_WUMPUS]
+            if (isFlyer(pmid) || isFloater(pmid) || mptr == &mons[PM_WUMPUS]
                 || (mtmp->wormno && count_wsegs(mtmp) > 5)
-                || monsterSize(mptr->monsterTypeID) >= MZ_HUGE) {
+                || monsterSize(pmid) >= MZ_HUGE) {
                 if (force_mintrap && !Sokoban) {
                     /* openfallingtrap; not inescapable here */
                     if (in_sight) {
@@ -2550,7 +2554,7 @@ register struct monst *mtmp;
         case LANDMINE:
             if (rn2(3))
                 break; /* monsters usually don't set it off */
-            if (is_flyer(mptr)) {
+            if (isFlyer(mptr->monsterTypeID)) {
                 boolean already_seen = trap->tseen;
 
                 if (in_sight && !already_seen) {
@@ -2604,7 +2608,7 @@ register struct monst *mtmp;
             }
             break;
         case ROLLING_BOULDER_TRAP:
-            if (!is_flyer(mptr)) {
+            if (!isFlyer(pmid)) {
                 int style = ROLL | (in_sight ? 0 : LAUNCH_UNSEEN);
 
                 newsym(mtmp->mx, mtmp->my);
@@ -2774,7 +2778,7 @@ float_up()
         You("start to float in the air!");
     }
     if (u.usteed && !isFloater(u.usteed->data->monsterTypeID)
-        && !is_flyer(u.usteed->data)) {
+        && !isFlyer(u.usteed->data->monsterTypeID)) {
         if (youCanLevitateAtWill()) {
             pline("%s magically floats up!", Monnam(u.usteed));
         } else {
@@ -2900,7 +2904,7 @@ long hmask, emask; /* might cancel timeout */
                         dismount_steed(DISMOUNT_FELL);
                     selftouch("As you fall, you");
                 } else if (u.usteed && (isFloater(u.usteed->data->monsterTypeID)
-                                        || is_flyer(u.usteed->data))) {
+                                        || isFlyer(u.usteed->data->monsterTypeID))) {
                     You("settle more firmly in the saddle.");
                 } else if (youAreHallucinating()) {
                     pline("Bummer!  You've %s.",

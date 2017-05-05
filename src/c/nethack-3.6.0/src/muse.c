@@ -743,7 +743,7 @@ struct monst *mtmp;
             pline("%s has made a hole in the %s.", Monnam(mtmp),
                   surface(mtmp->mx, mtmp->my));
             pline("%s %s through...", Monnam(mtmp),
-                  is_flyer(mtmp->data) ? "dives" : "falls");
+                  isFlyer(mtmp->data->monsterTypeID) ? "dives" : "falls");
         } else if (!youAreDeaf())
             You_hear("%s crash through the %s.", something,
                      surface(mtmp->mx, mtmp->my));

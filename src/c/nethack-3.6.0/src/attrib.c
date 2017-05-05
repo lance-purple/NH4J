@@ -1609,7 +1609,7 @@ extern boolean youCanLevitateAtWill() {
 
 /* May touch surface; does not override any others */
 extern boolean youAreFlying() {
-  return ((youHaveIntrinsic(FLYING) || youHaveExtrinsic(FLYING) || (u.usteed && is_flyer(u.usteed->data)))
+  return ((youHaveIntrinsic(FLYING) || youHaveExtrinsic(FLYING) || (u.usteed && isFlyer(u.usteed->data->monsterTypeID)))
      && !youAreBlockedFrom(FLYING));
 }
 

@@ -407,22 +407,27 @@ e_survives_at(etmp, x, y)
 struct entity *etmp;
 int x, y;
 {
-    if (isNoncorporeal(etmp->edata->monsterTypeID))
+    int epmid = etmp->edata->monsterTypeID;
+    if (isNoncorporeal(epmid)) {
         return TRUE;
-    if (is_pool(x, y))
+    }
+    if (is_pool(x, y)) {
         return (boolean) ((is_u(etmp) && (canYouWalkOnWater() || youAreAmphibious() || youCanSwim()
                                           || youAreFlying() || youAreLevitating()))
                           || is_swimmer(etmp->edata)
-                          || is_flyer(etmp->edata)
-                          || isFloater(etmp->edata->monsterTypeID));
+                          || isFlyer(epmid)
+                          || isFloater(epmid));
+    }
     /* must force call to lava_effects in e_died if is_u */
-    if (is_lava(x, y))
+    if (is_lava(x, y)) {
         return (boolean) ((is_u(etmp) && (youAreLevitating() || youAreFlying()))
                           || likes_lava(etmp->edata)
-                          || is_flyer(etmp->edata));
-    if (is_db_wall(x, y))
+                          || isFlyer(epmid));
+    }
+    if (is_db_wall(x, y)) {
         return (boolean) (is_u(etmp) ? youCanPassThroughWalls()
                           : passes_walls(etmp->edata));
+    }
     return TRUE;
 }
 
@@ -515,21 +520,25 @@ boolean chunks;
     if (automiss(etmp))
         return TRUE;
 
-    if (is_flyer(etmp->edata)
+    int epmid = etmp->edata->monsterTypeID;
+
+    if (isFlyer(epmid)
         && (is_u(etmp) ? youAreAware()
-                       : (etmp->emon->mcanmove && !etmp->emon->msleeping)))
+                       : (etmp->emon->mcanmove && !etmp->emon->msleeping))) {
         /* flying requires mobility */
         misses = 5; /* out of 8 */
-    else if (isFloater(etmp->edata->monsterTypeID)
-             || (is_u(etmp) && youAreLevitating())) /* doesn't require mobility */
+    } else if (isFloater(epmid) 
+             || (is_u(etmp) && youAreLevitating())) { /* doesn't require mobility */
         misses = 3;
-    else if (chunks && is_pool(etmp->ex, etmp->ey))
+    } else if (chunks && is_pool(etmp->ex, etmp->ey)) {
         misses = 2; /* sitting ducks */
-    else
+    } else {
         misses = 0;
+    }
 
-    if (is_db_wall(etmp->ex, etmp->ey))
+    if (is_db_wall(etmp->ex, etmp->ey)) {
         misses -= 3; /* less airspace */
+    }
 
     debugpline1("Miss chance = %d (out of 8)", misses);
 
@@ -727,13 +736,16 @@ struct entity *etmp;
         debugpline1("%s in here", E_phrase(etmp, "survive"));
     } else {
         debugpline1("%s on drawbridge square", E_phrase(etmp, "are"));
-        if (is_pool(etmp->ex, etmp->ey) && !e_inview)
-            if (!youAreDeaf())
+        if (is_pool(etmp->ex, etmp->ey) && !e_inview) {
+            if (!youAreDeaf()) {
                 You_hear("a splash.");
+            }
+        }
+        int epmid = etmp->edata->monsterTypeID;
         if (e_survives_at(etmp, etmp->ex, etmp->ey)) {
-            if (e_inview && !is_flyer(etmp->edata)
-                && !isFloater(etmp->edata->monsterTypeID))
+            if (e_inview && !isFlyer(epmid) && !isFloater(epmid)) {
                 pline("%s from the bridge.", E_phrase(etmp, "fall"));
+            }
             return;
         }
         debugpline1("%s cannot survive on the drawbridge square",

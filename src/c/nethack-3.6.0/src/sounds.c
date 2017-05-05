@@ -128,7 +128,8 @@ dosounds()
         for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
             if (DEADMONSTER(mtmp))
                 continue;
-            if ((monsterClass(mtmp->data->monsterTypeID) == S_ANT && is_flyer(mtmp->data))
+            int pmid = mtmp->data->monsterTypeID;
+            if ((monsterClass(pmid) == S_ANT && isFlyer(pmid))
                 && mon_in_room(mtmp, BEEHIVE)) {
                 switch (rn2(2) + hallu) {
                 case 0:

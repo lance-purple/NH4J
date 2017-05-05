@@ -298,7 +298,9 @@ boolean force;      /* Quietly force this animal */
     }
 
     /* Is the player impaired? */
-    if (!force && !isFloater(ptr->monsterTypeID) && !is_flyer(ptr) && youAreLevitating()
+    int pmid = ptr->monsterTypeID;
+
+    if (!force && !isFloater(pmid) && !isFlyer(pmid) && youAreLevitating()
         && !youCanLevitateAtWill()) {
         You("cannot reach %s.", mon_nam(mtmp));
         return (FALSE);
@@ -330,7 +332,7 @@ boolean force;      /* Quietly force this animal */
     /* Success */
     maybewakesteed(mtmp);
     if (!force) {
-        if (youAreLevitating() && !isFloater(ptr->monsterTypeID) && !is_flyer(ptr))
+        if (youAreLevitating() && !isFloater(pmid) && !isFlyer(pmid))
             /* Must have Lev_at_will at this point */
             pline("%s magically floats up!", Monnam(mtmp));
         You("mount %s.", mon_nam(mtmp));
@@ -557,7 +559,8 @@ int reason; /* Player was thrown off etc. */
             struct permonst *mdat = mtmp->data;
 
             /* The steed may drop into water/lava */
-            if (!is_flyer(mdat) && !isFloater(mdat->monsterTypeID) && !is_clinger(mdat)) {
+            int pmid = mdat->monsterTypeID;
+            if (!isFlyer(pmid) && !isFloater(pmid) && !is_clinger(mdat)) {
                 if (is_pool(currentX(), currentY())) {
                     if (!underwater())
                         pline("%s falls into the %s!", Monnam(mtmp),

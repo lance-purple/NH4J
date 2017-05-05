@@ -1543,12 +1543,13 @@ struct mkroom *croom;
         pm = (struct permonst *) 0;
 
     if (pm) {
+        int pmid = pm->monsterTypeID;
         int loc = DRY;
-        if (monsterClass(pm->monsterTypeID) == S_EEL || amphibious(pm) || is_swimmer(pm))
+        if (monsterClass(pmid) == S_EEL || amphibious(pm) || is_swimmer(pm))
             loc = WET;
-        if (is_flyer(pm) || isFloater(pm->monsterTypeID))
+        if (isFlyer(pmid) || isFloater(pmid))
             loc |= (HOT | WET);
-        if (passes_walls(pm) || isNoncorporeal(pm->monsterTypeID))
+        if (passes_walls(pm) || isNoncorporeal(pmid))
             loc |= SOLID;
         if (flaming(pm))
             loc |= HOT;

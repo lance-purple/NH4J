@@ -53,7 +53,7 @@ extern boolean validAttack(const struct Attack); /* not NO_ATTACK */
 #include "monflag.h"
 
 struct permonst {
-	/* can't eliminate these until mon[] gone, so rename to XX */
+	/* can't eliminate these until mons[] gone, so rename to XX */
     const int monsterTypeID;    /* type ID */
     const char *XXmname;        /* full name */
     char XXmlet;                /* symbol */
@@ -72,6 +72,7 @@ struct permonst {
     uchar XXmsize;              /* physical size (3 bits) */
     uchar XXmresists;           /* resistances */
     uchar XXmconveys;             /* conveyed by eating */
+
     unsigned long mflags1;      /* boolean bitflags */
     unsigned long mflags2;      /* more boolean bitflags */
     unsigned short mflags3;     /* yet more boolean bitflags */

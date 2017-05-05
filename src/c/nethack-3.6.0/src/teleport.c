@@ -59,14 +59,16 @@ unsigned gpflags;
             return FALSE;
 
         mdat = mtmp->data;
+        int pmid = mdat->monsterTypeID;
         if (is_pool(x, y) && !ignorewater) {
-            if (mtmp == &youmonst)
+            if (mtmp == &youmonst) {
                 return (youAreLevitating() || youAreFlying() || canYouWalkOnWater() || youCanSwim()
                         || youAreAmphibious());
-            else
-                return (isFloater(mdat->monsterTypeID) || is_flyer(mdat) || is_swimmer(mdat)
+            } else {
+                return (isFloater(pmid) || isFlyer(pmid) || is_swimmer(mdat)
                         || is_clinger(mdat));
-        } else if (monsterClass(mdat->monsterTypeID) == S_EEL && rn2(13) && !ignorewater) {
+            }
+        } else if (monsterClass(pmid) == S_EEL && rn2(13) && !ignorewater) {
             return FALSE;
         } else if (is_lava(x, y)) {
             if (mtmp == &youmonst)
@@ -75,7 +77,7 @@ unsigned gpflags;
                             && uarmf->oerodeproof)
                         || (areYouPolymorphed() && likes_lava(youmonst.data)));
             else
-                return (isFloater(mdat->monsterTypeID) || is_flyer(mdat)
+                return (isFloater(mdat->monsterTypeID) || isFlyer(pmid)
                         || likes_lava(mdat));
         }
         if (passes_walls(mdat) && may_passwall(x, y))

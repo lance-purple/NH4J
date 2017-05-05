@@ -158,8 +158,10 @@ xchar x, y;
     /* anger target even if wild miss will occur */
     setmangry(mon);
 
-    if (youAreLevitating() && !rn2(3) && isVerySmallMonster(mon->data->monsterTypeID)
-        && !is_flyer(mon->data)) {
+    int pmid = mon->data->monsterTypeID;
+
+    if (youAreLevitating() && !rn2(3) && isVerySmallMonster(pmid)
+        && !isFlyer(pmid)) {
         pline("Floating in the air, you miss wildly!");
         exercise(A_DEX, FALSE);
         (void) passive(mon, FALSE, 1, AT_KICK, FALSE);
@@ -273,7 +275,7 @@ doit:
                           ? "teleports"
                           : isFloater(mon->data->monsterTypeID)
                                 ? "floats"
-                                : is_flyer(mon->data) ? "swoops"
+                                : isFlyer(pmid) ? "swoops"
                                                       : (nolimbs(mon->data)
                                                          || slithy(mon->data))
                                                             ? "slides"

@@ -85,7 +85,7 @@ set_uasmon()
     PROPSET(TELEPORT, can_teleport(mdat));
     PROPSET(TELEPORT_CONTROL, control_teleport(mdat));
     PROPSET(LEVITATION, isFloater(mdat->monsterTypeID));
-    PROPSET(FLYING, is_flyer(mdat));
+    PROPSET(FLYING, isFlyer(mdat->monsterTypeID));
     PROPSET(SWIMMING, is_swimmer(mdat));
     /* [don't touch MAGICAL_BREATHING here; both Amphibious and Breathless
        key off of it but include different monster forms...] */

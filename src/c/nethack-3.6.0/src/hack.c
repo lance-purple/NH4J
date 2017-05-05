@@ -1862,9 +1862,9 @@ boolean newspot;             /* true if called by spoteffects */
     /* check for entering water or lava */
     if (!u.ustuck && !youAreLevitating() && !youAreFlying() && is_pool_or_lava(currentX(), currentY())) {
         if (u.usteed
-            && (is_flyer(u.usteed->data) || isFloater(u.usteed->data->monsterTypeID)
+            && (isFlyer(u.usteed->data->monsterTypeID) || isFloater(u.usteed->data->monsterTypeID)
                 || is_clinger(u.usteed->data))) {
-            /* floating or clinging steed keeps hero safe (is_flyer() test
+            /* floating or clinging steed keeps hero safe (isFlyer() test
                is redundant; it can't be true since Flying yielded false) */
             return FALSE;
         } else if (u.usteed) {

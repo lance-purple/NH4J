@@ -1057,11 +1057,13 @@ const char *def;
 {
     int capitalize = (*def == highc(*def));
 
-    int msize = monsterSize(ptr->monsterTypeID);
+    int pmid = ptr->monsterTypeID;
 
-    return (isFloater(ptr->monsterTypeID) ? levitate[capitalize]
-            : (is_flyer(ptr) && msize <= MZ_SMALL) ? flys[capitalize]
-              : (is_flyer(ptr) && msize > MZ_SMALL) ? flyl[capitalize]
+    int msize = monsterSize(pmid);
+
+    return (isFloater(pmid) ? levitate[capitalize]
+            : (isFlyer(pmid) && msize <= MZ_SMALL) ? flys[capitalize]
+              : (isFlyer(pmid) && msize > MZ_SMALL) ? flyl[capitalize]
                 : slithy(ptr) ? slither[capitalize]
                   : amorphous(ptr) ? ooze[capitalize]
                     : !monsterMovementSpeed(ptr->monsterTypeID) ? immobile[capitalize]
@@ -1076,14 +1078,16 @@ const char *def;
 {
     int capitalize = 2 + (*def == highc(*def));
 
-    int msize = monsterSize(ptr->monsterTypeID);
+    int pmid = ptr->monsterTypeID;
 
-    return (isFloater(ptr->monsterTypeID) ? levitate[capitalize]
-            : (is_flyer(ptr) && msize <= MZ_SMALL) ? flys[capitalize]
-              : (is_flyer(ptr) && msize > MZ_SMALL) ? flyl[capitalize]
+    int msize = monsterSize(pmid);
+
+    return (isFloater(pmid) ? levitate[capitalize]
+            : (isFlyer(pmid) && msize <= MZ_SMALL) ? flys[capitalize]
+              : (isFlyer(pmid) && msize > MZ_SMALL) ? flyl[capitalize]
                 : slithy(ptr) ? slither[capitalize]
                   : amorphous(ptr) ? ooze[capitalize]
-                    : !monsterMovementSpeed(ptr->monsterTypeID) ? immobile[capitalize]
+                    : !monsterMovementSpeed(pmid) ? immobile[capitalize]
                       : nolimbs(ptr) ? crawl[capitalize]
                         : def);
 }
@@ -1228,6 +1232,10 @@ boolean monsterTypeResistsStoning(int pmid) {
 
 boolean cannotUseTwoWeapons(struct permonst* ptr) {
     return (monsterAttack(ptr->monsterTypeID, 1).type != AT_WEAP);
+}
+
+boolean isFlyer(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isFlyer", pmid);
 }
 
 /*mondata.c*/

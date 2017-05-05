@@ -428,10 +428,12 @@ register struct monst *mtmp;
     boolean inpool, inlava, infountain;
 
     /* [what about ceiling clingers?] */
+    int pmid = mtmp->data->monsterTypeID;
+
     inpool = (is_pool(mtmp->mx, mtmp->my)
-              && !(is_flyer(mtmp->data) || isFloater(mtmp->data->monsterTypeID)));
+              && !(isFlyer(pmid) || isFloater(pmid)));
     inlava = (is_lava(mtmp->mx, mtmp->my)
-              && !(is_flyer(mtmp->data) || isFloater(mtmp->data->monsterTypeID)));
+              && !(isFlyer(pmid) || isFloater(pmid)));
     infountain = IS_FOUNTAIN(levl[mtmp->mx][mtmp->my].typ);
 
     /* Flying and levitation keeps our steed out of the liquid */
@@ -1173,6 +1175,7 @@ long *info;  /* long info[9] */
 long flag;
 {
     struct permonst *mdat = mon->data;
+    int pmid = mdat->monsterTypeID;
     register struct trap *ttmp;
     xchar x, y, nx, ny;
     int cnt = 0;
@@ -1187,10 +1190,10 @@ long flag;
     nowtyp = levl[x][y].typ;
 
     nodiag = NODIAG(mdat - mons);
-    wantpool = monsterClass(mdat->monsterTypeID) == S_EEL;
-    poolok = (is_flyer(mdat) || is_clinger(mdat)
+    wantpool = monsterClass(pmid) == S_EEL;
+    poolok = (isFlyer(pmid) || is_clinger(mdat)
               || (is_swimmer(mdat) && !wantpool));
-    lavaok = (is_flyer(mdat) || is_clinger(mdat) || likes_lava(mdat));
+    lavaok = (isFlyer(pmid) || is_clinger(mdat) || likes_lava(mdat));
     thrudoor = ((flag & (ALLOW_WALL | BUSTDOOR)) != 0L);
     if (flag & ALLOW_DIG) {
         struct obj *mw_tmp;
@@ -1356,15 +1359,15 @@ nexttry: /* eels prefer the water, but if there is no water nearby,
                         && ttmp->ttyp != STATUE_TRAP
                         && ((ttmp->ttyp != PIT && ttmp->ttyp != SPIKED_PIT
                              && ttmp->ttyp != TRAPDOOR && ttmp->ttyp != HOLE)
-                            || (!is_flyer(mdat) && !isFloater(mdat->monsterTypeID)
+                            || (!isFlyer(pmid) && !isFloater(pmid)
                                 && !is_clinger(mdat)) || Sokoban)
                         && (ttmp->ttyp != SLP_GAS_TRAP || !resists_sleep(mon))
                         && (ttmp->ttyp != BEAR_TRAP
-                            || (monsterSize(mdat->monsterTypeID) > MZ_SMALL && !amorphous(mdat)
-                                && !is_flyer(mdat) && !isFloater(mdat->monsterTypeID)
-                                && !isWhirly(mdat->monsterTypeID) && !unsolid(mdat)))
+                            || (monsterSize(pmid) > MZ_SMALL && !amorphous(mdat)
+                                && !isFlyer(pmid) && !isFloater(pmid)
+                                && !isWhirly(pmid) && !unsolid(mdat)))
                         && (ttmp->ttyp != FIRE_TRAP || !resists_fire(mon))
-                        && (ttmp->ttyp != SQKY_BOARD || !is_flyer(mdat))
+                        && (ttmp->ttyp != SQKY_BOARD || !isFlyer(pmid))
                         && (ttmp->ttyp != WEB
                             || (!amorphous(mdat) && !webmaker(mdat)))
                         && (ttmp->ttyp != ANTI_MAGIC || !resists_magm(mon))) {

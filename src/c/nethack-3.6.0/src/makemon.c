@@ -72,7 +72,7 @@ struct permonst *ptr;
             return TRUE;
     } else if (areYouOnAirLevel()) {
 	int pmid = ptr->monsterTypeID;
-        if (!(is_flyer(ptr) && monsterClass(pmid) != S_TRAPPER) && !isFloater(pmid)
+        if (!(isFlyer(pmid) && monsterClass(pmid) != S_TRAPPER) && !isFloater(pmid)
             && !amorphous(ptr) && !isNoncorporeal(pmid) && !isWhirly(pmid))
             return TRUE;
     }

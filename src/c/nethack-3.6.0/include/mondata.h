@@ -16,7 +16,6 @@
 
 #define is_lminion(mon) \
     (is_minion((mon)->data) && mon_aligntyp(mon) == A_LAWFUL)
-#define is_flyer(ptr) (((ptr)->mflags1 & M1_FLY) != 0L)
 
 #define is_clinger(ptr) (((ptr)->mflags1 & M1_CLING) != 0L)
 #define is_swimmer(ptr) (((ptr)->mflags1 & M1_SWIM) != 0L)

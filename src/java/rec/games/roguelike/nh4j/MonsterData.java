@@ -29,7 +29,10 @@ public class MonsterData {
     //
     //#define is_lminion(mon) \
     //    (is_minion((mon)->data) && mon_aligntyp(mon) == A_LAWFUL)
-    //#define is_flyer(ptr) (((ptr)->mflags1 & M1_FLY) != 0L)
+	
+	public static boolean isFlyer(int pmid) {
+		return MonsterType.getMonsterType(pmid).hasFlag1(M1.FLY);
+	}
 
     public static boolean isFloater(int pmid) {
 	    MC mc = MonsterType.getMonsterType(pmid).monsterClass();
