@@ -225,14 +225,18 @@ boolean message;
             register int i;
 
             blast[0] = '\0';
-            for (i = 0; i < monsterAttacks(mdat->monsterTypeID); i++)
-                if (mdat->mattk[i].type == AT_ENGL)
+	    int pmid = mdat->monsterTypeID;
+            for (i = 0; i < monsterAttacks(pmid); i++) {
+                if (monsterAttack(pmid, i).type == AT_ENGL) {
                     break;
-            if (mdat->mattk[i].type != AT_ENGL)
+		}
+	    }
+	    struct Attack mattk = monsterAttack(pmid, i);
+            if (mattk.type != AT_ENGL) {
                 impossible("Swallower has no engulfing attack?");
-            else {
-                if (isWhirly(mdat->monsterTypeID)) {
-                    switch (mdat->mattk[i].damageType) {
+	    } else {
+                if (isWhirly(pmid)) {
+                    switch (mattk.damageType) {
                     case AD_ELEC:
                         Strcpy(blast, " in a shower of sparks");
                         break;
@@ -261,7 +265,8 @@ getMonsterAttack(mptr, indx, prev_result)
 struct permonst *mptr;
 int indx, prev_result[];
 {
-    struct Attack attk = monsterAttack(mptr->monsterTypeID, indx);
+    int pmid = mptr->monsterTypeID;
+    struct Attack attk = monsterAttack(pmid, indx);
 
     /* prevent a monster with two consecutive disease or hunger attacks
        from hitting with both of them on the same turn; if the first has
@@ -269,7 +274,7 @@ int indx, prev_result[];
     if (indx > 0 && prev_result[indx - 1] > 0
         && (attk.damageType == AD_DISE || attk.damageType == AD_PEST
             || attk.damageType == AD_FAMN)
-        && attk.damageType == mptr->mattk[indx - 1].damageType) {
+        && attk.damageType == monsterAttack(pmid, indx - 1).damageType) {
         attk.damageType = AD_STUN;
     }
     return attk;
