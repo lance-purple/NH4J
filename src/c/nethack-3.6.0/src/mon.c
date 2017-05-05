@@ -1119,21 +1119,24 @@ struct obj *otmp;
     if (iquan > 1) {
         boolean glomper = FALSE;
 
-        if (monsterClass(mtmp->data->monsterTypeID) == S_DRAGON
+	int pmid = mtmp->data->monsterTypeID;
+
+        if (monsterClass(pmid) == S_DRAGON
             && (otmp->oclass == COIN_CLASS
-                || otmp->oclass == GEM_CLASS))
+                || otmp->oclass == GEM_CLASS)) {
             glomper = TRUE;
-        else {
-	    int nAttacks = monsterAttacks(mtmp->data->monsterTypeID);
+	} else {
+	    int nAttacks = monsterAttacks(pmid);
             for (nattk = 0; nattk < nAttacks; nattk++) {
-                if (mtmp->data->mattk[nattk].type == AT_ENGL) {
+                if (monsterAttack(pmid, nattk).type == AT_ENGL) {
                     glomper = TRUE;
                     break;
                 }
 	    }
 	}
-        if ((mtmp->data->mflags1 & M1_NOHANDS) && !glomper)
+        if ((mtmp->data->mflags1 & M1_NOHANDS) && !glomper) {
             return 1;
+	}
     }
 
     /* steeds don't pick up stuff (to avoid shop abuse) */
@@ -1881,14 +1884,17 @@ boolean was_swallowed; /* digestion */
     }
 
     /* Gas spores always explode upon death */
-    for (i = 0; i < monsterAttacks(mdat->monsterTypeID); i++) {
-        if (mdat->mattk[i].type == AT_BOOM) {
-            if (mdat->mattk[i].dice)
-                tmp = d((int) mdat->mattk[i].dice, (int) mdat->mattk[i].diceSides);
-            else if (mdat->mattk[i].diceSides)
-                tmp = d(monsterLevel(mdat->monsterTypeID) + 1, (int) mdat->mattk[i].diceSides);
-            else
+    int pmid = mdat->monsterTypeID;
+    for (i = 0; i < monsterAttacks(pmid); i++) {
+	struct Attack mattk = monsterAttack(pmid, i);
+        if (mattk.type == AT_BOOM) {
+            if (mattk.dice) {
+                tmp = d(mattk.dice, mattk.diceSides);
+	    } else if (mattk.diceSides) {
+                tmp = d(monsterLevel(mdat->monsterTypeID) + 1, mattk.diceSides);
+	    } else {
                 tmp = 0;
+	    }
             if (was_swallowed && magr) {
                 if (magr == &youmonst) {
                     There("is an explosion in your %s!", body_part(STOMACH));
@@ -2442,7 +2448,8 @@ void
 m_respond(mtmp)
 struct monst *mtmp;
 {
-    if (monsterSound(mtmp->data->monsterTypeID) == MS_SHRIEK) {
+    int pmid = mtmp->data->monsterTypeID;
+    if (monsterSound(pmid) == MS_SHRIEK) {
         if (!youAreDeaf()) {
             pline("%s shrieks.", Monnam(mtmp));
             stop_occupation();
@@ -2458,16 +2465,13 @@ struct monst *mtmp;
     if (mtmp->data == &mons[PM_MEDUSA]) {
         register int i;
 
-        for (i = 0; i < monsterAttacks(mtmp->data->monsterTypeID); i++)
-            if (mtmp->data->mattk[i].type == AT_GAZE) {
-		struct Attack new_mattk;
-		new_mattk.type = mtmp->data->mattk[i].type;
-		new_mattk.damageType = mtmp->data->mattk[i].damageType;
-		new_mattk.dice = mtmp->data->mattk[i].dice;
-		new_mattk.diceSides = mtmp->data->mattk[i].diceSides;
-                (void) gazemu(mtmp, new_mattk);
+        for (i = 0; i < monsterAttacks(pmid); i++) {
+	    struct Attack mattk = monsterAttack(pmid, i);
+            if (mattk.type == AT_GAZE) {
+                (void) gazemu(mtmp, mattk);
                 break;
             }
+	}
     }
 }
 

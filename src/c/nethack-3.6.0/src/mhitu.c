@@ -2602,23 +2602,29 @@ register const struct Attack mattk;
 {
     int i, tmp;
 
+    int upmid = youmonst.data->monsterTypeID;
+    int oldupmid = olduasmon->monsterTypeID;
+
     for (i = 0;; i++) {
-        if (i >= monsterAttacks(olduasmon->monsterTypeID))
+        if (i >= monsterAttacks(oldupmid)) {
             return 1;
-        if (olduasmon->mattk[i].type == AT_NONE
-            || olduasmon->mattk[i].type == AT_BOOM)
+	}
+	int olduatype = monsterAttack(oldupmid, i).type;
+        if (olduatype == AT_NONE || olduatype == AT_BOOM) {
             break;
+	}
     }
-    if (olduasmon->mattk[i].dice)
-        tmp =
-            d((int) olduasmon->mattk[i].dice, (int) olduasmon->mattk[i].diceSides);
-    else if (olduasmon->mattk[i].diceSides)
-        tmp = d(monsterLevel(olduasmon->monsterTypeID) + 1, (int) olduasmon->mattk[i].diceSides);
-    else
+    struct Attack oldumattk = monsterAttack(oldupmid, i);
+    if (oldumattk.dice) {
+        tmp = d(oldumattk.dice, oldumattk.diceSides);
+    } else if (oldumattk.diceSides) {
+        tmp = d(monsterLevel(oldupmid) + 1, oldumattk.diceSides);
+    } else {
         tmp = 0;
+    }
 
     /* These affect the enemy even if you were "killed" (rehumanized) */
-    switch (olduasmon->mattk[i].damageType) {
+    switch (oldumattk.damageType) {
     case AD_ACID:
         if (!rn2(2)) {
             pline("%s is splashed by your acid!", Monnam(mtmp));
@@ -2672,10 +2678,11 @@ register const struct Attack mattk;
         return 1;
 
     /* These affect the enemy only if you are still a monster */
+    struct Attack umattk = monsterAttack(upmid, i);
     if (rn2(3))
-        switch (youmonst.data->mattk[i].damageType) {
+        switch (umattk.damageType) {
         case AD_PHYS:
-            if (youmonst.data->mattk[i].type == AT_BOOM) {
+            if (umattk.type == AT_BOOM) {
                 You("explode!");
                 /* KMH, balance patch -- this is okay with unchanging */
                 rehumanize();
@@ -2691,7 +2698,7 @@ register const struct Attack mattk;
                 if (mtmp->mcansee && haseyes(mtmp->data) && rn2(3)
                     && (perceives(mtmp->data) || !youAreInvisibleToOthers())) {
                     if (youCannotSee()) {
-			javaString youMonsterName = monsterTypeName(youmonst.data->monsterTypeID);
+			javaString youMonsterName = monsterTypeName(upmid);
                         pline("As a blind %s, you cannot defend yourself.",
                               youMonsterName.c_str);
 			releaseJavaString(youMonsterName);
@@ -2723,7 +2730,7 @@ register const struct Attack mattk;
             if (maximumHitPointsAsMonster() < currentHitPointsAsMonster()) {
                 setMaximumHitPointsAsMonster(currentHitPointsAsMonster());
             }
-            if (maximumHitPointsAsMonster() > ((monsterLevel(youmonst.data->monsterTypeID) + 1) * 8))
+            if (maximumHitPointsAsMonster() > ((monsterLevel(upmid) + 1) * 8))
                 (void) split_mon(&youmonst, mtmp);
             break;
         case AD_STUN: /* Yellow mold */

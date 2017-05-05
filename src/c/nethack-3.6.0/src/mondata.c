@@ -264,7 +264,6 @@ boolean
 ranged_attk(ptr)
 struct permonst *ptr;
 {
-    register int i, atyp;
     long atk_mask = (1L << AT_BREA) | (1L << AT_SPIT) | (1L << AT_GAZE);
 
     /* was: (attacktype(ptr, AT_BREA) || attacktype(ptr, AT_WEAP)
@@ -272,9 +271,10 @@ struct permonst *ptr;
      *       || attacktype(ptr, AT_MAGC));
      * but that's too slow -dlc
      */
-    int nAttacks = monsterAttacks(ptr->monsterTypeID);
-    for (i = 0; i < nAttacks; i++) {
-        atyp = ptr->mattk[i].type;
+    int pmid = ptr->monsterTypeID;
+    int nAttacks = monsterAttacks(pmid);
+    for (int i = 0; i < nAttacks; i++) {
+        int atyp = monsterAttack(pmid, i).type;
         if (atyp >= AT_WEAP)
             return TRUE;
         /* assert(atyp < 32); */
@@ -477,12 +477,12 @@ max_passive_dmg(mdef, magr)
 register struct monst *mdef, *magr;
 {
     int i, dmg = 0, multi2 = 0;
-    uchar damageType;
 
     /* each attack by magr can result in passive damage */
-    int nAgressorAttacks = monsterAttacks(magr->data->monsterTypeID);
-    for (i = 0; i < nAgressorAttacks; i++)
-        switch (magr->data->mattk[i].type) {
+    int magrpmid = magr->data->monsterTypeID;
+    int nAgressorAttacks = monsterAttacks(magrpmid);
+    for (i = 0; i < nAgressorAttacks; i++) {
+        switch (monsterAttack(magrpmid, i).type) {
         case AT_CLAW:
         case AT_BITE:
         case AT_KICK:
@@ -498,26 +498,31 @@ register struct monst *mdef, *magr;
         default:
             break;
         }
+    }
 
+    int mdefpmid = mdef->data->monsterTypeID;
     int nDefenderAttacks = monsterAttacks(magr->data->monsterTypeID);
-    for (i = 0; i < nDefenderAttacks; i++)
-        if (mdef->data->mattk[i].type == AT_NONE
-            || mdef->data->mattk[i].type == AT_BOOM) {
-            damageType = mdef->data->mattk[i].damageType;
+    for (i = 0; i < nDefenderAttacks; i++) {
+	struct Attack mattk = monsterAttack(mdefpmid, i);
+        if (mattk.type == AT_NONE || mattk.type == AT_BOOM) {
+            int damageType = mattk.damageType;
             if ((damageType == AD_ACID && !resists_acid(magr))
                 || (damageType == AD_COLD && !resists_cold(magr))
                 || (damageType == AD_FIRE && !resists_fire(magr))
                 || (damageType == AD_ELEC && !resists_elec(magr))
                 || damageType == AD_PHYS) {
-                dmg = mdef->data->mattk[i].dice;
-                if (!dmg)
-                    dmg = monsterLevel(mdef->data->monsterTypeID) + 1;
-                dmg *= mdef->data->mattk[i].diceSides;
-            } else
+                dmg = mattk.dice;
+                if (!dmg) {
+                    dmg = monsterLevel(mdefpmid) + 1;
+		}
+                dmg *= mattk.diceSides;
+            } else {
                 dmg = 0;
+	    }
 
             return dmg * multi2;
         }
+    }
     return 0;
 }
 
@@ -1222,7 +1227,7 @@ boolean monsterTypeResistsStoning(int pmid) {
 }
 
 boolean cannotUseTwoWeapons(struct permonst* ptr) {
-    return ((ptr)->mattk[1].type != AT_WEAP);
+    return (monsterAttack(ptr->monsterTypeID, 1).type != AT_WEAP);
 }
 
 /*mondata.c*/

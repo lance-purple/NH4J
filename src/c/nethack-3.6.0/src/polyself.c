@@ -1169,13 +1169,15 @@ dospinweb()
             expels(u.ustuck, u.ustuck->data, TRUE);
             return 0;
         }
-        if (isWhirly(u.ustuck->data->monsterTypeID)) {
+	int ustuckpmid = u.ustuck->data->monsterTypeID;
+        if (isWhirly(ustuckpmid)) {
             int i;
-	    int nAttacks = monsterAttacks(u.ustuck->data->monsterTypeID);
+	    int nAttacks = monsterAttacks(ustuckpmid);
 
             for (i = 0; i < nAttacks; i++) {
-                if (u.ustuck->data->mattk[i].type == AT_ENGL)
+                if (monsterAttack(ustuckpmid, i).type == AT_ENGL) {
                     break;
+		}
 	    }
             if (i == nAttacks) {
                 impossible("Swallower has no engulfing attack?");
@@ -1183,7 +1185,7 @@ dospinweb()
                 char sweep[30];
 
                 sweep[0] = '\0';
-                switch (u.ustuck->data->mattk[i].damageType) {
+                switch (monsterAttack(ustuckpmid, i).damageType) {
                 case AD_FIRE:
                     Strcpy(sweep, "ignites and ");
                     break;
@@ -1300,11 +1302,13 @@ dogaze()
     int i;
     uchar damageType = 0;
 
-    int nAttacks = monsterAttacks(youmonst.data->monsterTypeID);
+    int upmid = youmonst.data->monsterTypeID;
+    int nAttacks = monsterAttacks(upmid);
 
     for (i = 0; i < nAttacks; i++) {
-        if (youmonst.data->mattk[i].type == AT_GAZE) {
-            damageType = youmonst.data->mattk[i].damageType;
+	struct Attack uattk = monsterAttack(upmid, i);
+        if (uattk.type == AT_GAZE) {
+            damageType = uattk.damageType;
             break;
         }
     }
@@ -1393,11 +1397,12 @@ dogaze()
 
                 if (mtmp->data == &mons[PM_FLOATING_EYE] && !mtmp->mcan) {
                     if (!youHaveFreeAction()) {
+			int pmid = mtmp->data->monsterTypeID;
                         You("are frozen by %s gaze!",
                             s_suffix(mon_nam(mtmp)));
                         nomul((currentExperienceLevel() > 6 || rn2(4))
                                   ? -d((int) mtmp->m_lev + 1,
-                                       (int) mtmp->data->mattk[0].diceSides)
+                                       (int) monsterAttack(pmid, 0).diceSides)
                                   : -200);
                         multi_reason = "frozen by a monster's gaze";
                         nomovemsg = 0;
