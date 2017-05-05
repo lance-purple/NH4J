@@ -431,16 +431,11 @@ register struct monst *mtmp;
             || mtmp->my != currentY() + directionY())) /* it moved */
         return FALSE;
 
-    if (areYouPolymorphed())
+    if (areYouPolymorphed()) {
         (void) hmonas(mtmp);
-    else {
-	struct Attack new_attack;
-	new_attack.type = youmonst.data->mattk->type;
-	new_attack.damageType = youmonst.data->mattk->damageType;
-	new_attack.dice = youmonst.data->mattk->dice;
-	new_attack.diceSides = youmonst.data->mattk->diceSides;
-
-        (void) hitum(mtmp, new_attack);
+    } else {
+	int upmid = youmonst.data->monsterTypeID;
+        (void) hitum(mtmp, monsterAttack(upmid, 0));
     }
     mtmp->mstrategy &= ~STRAT_WAITMASK;
 
@@ -2317,24 +2312,29 @@ boolean wep_was_destroyed;
     register struct permonst *ptr = mon->data;
     register int i, tmp;
 
-    int nAttacks = monsterAttacks(ptr->monsterTypeID);
+    int pmid = ptr->monsterTypeID;
+    int nAttacks = monsterAttacks(pmid);
     for (i = 0;; i++) {
-        if (i >= nAttacks)
+        if (i >= nAttacks) {
             return (malive | mhit); /* no passive attacks */
-        if (ptr->mattk[i].type == AT_NONE)
+	}
+        if (monsterAttack(pmid, i).type == AT_NONE) {
             break; /* try this one */
+	}
     }
     /* Note: tmp not always used */
-    if (ptr->mattk[i].dice)
-        tmp = d((int) ptr->mattk[i].dice, (int) ptr->mattk[i].diceSides);
-    else if (ptr->mattk[i].diceSides)
-        tmp = d((int) mon->m_lev + 1, (int) ptr->mattk[i].diceSides);
-    else
+    struct Attack mattk = monsterAttack(pmid, i);
+    if (mattk.dice) {
+        tmp = d(mattk.dice, mattk.diceSides);
+    } else if (mattk.diceSides) {
+        tmp = d((int) mon->m_lev + 1, mattk.diceSides);
+    } else {
         tmp = 0;
+    }
 
     /*  These affect you even if they just died.
      */
-    switch (ptr->mattk[i].damageType) {
+    switch (mattk.damageType) {
     case AD_FIRE:
         if (mhit && !mon->mcan) {
             if (type == AT_KICK) {
@@ -2342,30 +2342,36 @@ boolean wep_was_destroyed;
                     (void) erode_obj(uarmf, xname(uarmf), ERODE_BURN,
                                      EF_GREASE | EF_VERBOSE);
             } else if (type == AT_WEAP || type == AT_CLAW
-                       || type == AT_MAGC || type == AT_TUCH)
-                monsterPassivelyAttacksObjectWith(mon, (struct obj *) 0, ptr->mattk[i].damageType);
+                       || type == AT_MAGC || type == AT_TUCH) {
+                monsterPassivelyAttacksObjectWith(mon, (struct obj *) 0, mattk.damageType);
+	    }
         }
         break;
     case AD_ACID:
         if (mhit && rn2(2)) {
-            if (youCannotSee() || !flags.verbose)
+            if (youCannotSee() || !flags.verbose) {
                 You("are splashed!");
-            else
+	    } else {
                 You("are splashed by %s acid!", s_suffix(mon_nam(mon)));
+	    }
 
-            if (!youResistAcid())
+            if (!youResistAcid()) {
                 mdamageu(mon, tmp);
-            if (!rn2(30))
+	    }
+            if (!rn2(30)) {
                 erode_armor(&youmonst, ERODE_CORRODE);
+	    }
         }
         if (mhit) {
             if (type == AT_KICK) {
-                if (uarmf && !rn2(6))
+                if (uarmf && !rn2(6)) {
                     (void) erode_obj(uarmf, xname(uarmf), ERODE_CORRODE,
                                      EF_GREASE | EF_VERBOSE);
+		}
             } else if (type == AT_WEAP || type == AT_CLAW
-                       || type == AT_MAGC || type == AT_TUCH)
-                monsterPassivelyAttacksObjectWith(mon, (struct obj *) 0, ptr->mattk[i].damageType);
+                       || type == AT_MAGC || type == AT_TUCH) {
+                monsterPassivelyAttacksObjectWith(mon, (struct obj *) 0, mattk.damageType);
+	    }
         }
         exercise(A_STR, FALSE);
         break;
@@ -2400,8 +2406,9 @@ boolean wep_was_destroyed;
                     (void) erode_obj(uarmf, xname(uarmf), ERODE_RUST,
                                      EF_GREASE | EF_VERBOSE);
             } else if (type == AT_WEAP || type == AT_CLAW
-                       || type == AT_MAGC || type == AT_TUCH)
-                monsterPassivelyAttacksObjectWith(mon, (struct obj *) 0, ptr->mattk[i].damageType);
+                       || type == AT_MAGC || type == AT_TUCH) {
+                monsterPassivelyAttacksObjectWith(mon, (struct obj *) 0, mattk.damageType);
+	    }
         }
         break;
     case AD_CORR:
@@ -2411,8 +2418,9 @@ boolean wep_was_destroyed;
                     (void) erode_obj(uarmf, xname(uarmf), ERODE_CORRODE,
                                      EF_GREASE | EF_VERBOSE);
             } else if (type == AT_WEAP || type == AT_CLAW
-                       || type == AT_MAGC || type == AT_TUCH)
-                monsterPassivelyAttacksObjectWith(mon, (struct obj *) 0, ptr->mattk[i].damageType);
+                       || type == AT_MAGC || type == AT_TUCH) {
+                monsterPassivelyAttacksObjectWith(mon, (struct obj *) 0, mattk.damageType);
+	    }
         }
         break;
     case AD_MAGM:
@@ -2437,7 +2445,7 @@ boolean wep_was_destroyed;
                        || (type >= AT_STNG && type < AT_WEAP)) {
                 break; /* no object involved */
             }
-            monsterPassivelyAttacksObjectWith(mon, obj, ptr->mattk[i].damageType);
+            monsterPassivelyAttacksObjectWith(mon, obj, mattk.damageType);
         }
         break;
     default:
@@ -2447,7 +2455,7 @@ boolean wep_was_destroyed;
     /*  These only affect you if they still live.
      */
     if (malive && !mon->mcan && rn2(3)) {
-        switch (ptr->mattk[i].damageType) {
+        switch (mattk.damageType) {
         case AD_PLYS:
             if (ptr == &mons[PM_FLOATING_EYE]) {
                 if (!canseemon(mon)) {
