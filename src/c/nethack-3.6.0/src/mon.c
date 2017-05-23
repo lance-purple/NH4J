@@ -1136,7 +1136,7 @@ struct obj *otmp;
                 }
 	    }
 	}
-        if ((mtmp->data->mflags1 & M1_NOHANDS) && !glomper) {
+        if (hasNoHands(mtmp->data->monsterTypeID) && !glomper) {
             return 1;
 	}
     }

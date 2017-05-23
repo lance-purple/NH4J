@@ -71,9 +71,9 @@ struct permonst {
     uchar XXmsound;             /* noise it makes (6 bits) */
     uchar XXmsize;              /* physical size (3 bits) */
     uchar XXmresists;           /* resistances */
-    uchar XXmconveys;             /* conveyed by eating */
+    uchar XXmconveys;           /* conveyed by eating */
 
-    unsigned long mflags1;      /* boolean bitflags */
+    unsigned long XXmflags1;    /* boolean bitflags */
     unsigned long mflags2;      /* more boolean bitflags */
     unsigned short mflags3;     /* yet more boolean bitflags */
 #ifdef TEXTCOLOR

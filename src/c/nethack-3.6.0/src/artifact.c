@@ -767,9 +767,9 @@ struct monst *mtmp;
     } else if (weap->spfx & SPFX_DCLAS) {
         return (weap->mtype == (unsigned long) monsterClass(ptr->monsterTypeID));
     } else if (weap->spfx & SPFX_DFLAG1) {
-        return ((ptr->mflags1 & weap->mtype) != 0L);
+        return isAffectedByWeaponFlag1(ptr->monsterTypeID, weap->mtype);
     } else if (weap->spfx & SPFX_DFLAG2) {
-        return ((ptr->mflags2 & weap->mtype)
+        return (isAffectedByWeaponFlag2(ptr->monsterTypeID, weap->mtype)
                 || (yours
                     && ((!areYouPolymorphed() && (urace.selfmask & weap->mtype))
                         || ((weap->mtype & M2_WERE) && lycanthropeType() >= LOW_PM))));

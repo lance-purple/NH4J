@@ -1166,8 +1166,6 @@ boolean validAttack(const struct Attack attack)
 	    (attack.diceSides  != NO_ATTACK.diceSides));
 }
 
-#define MONSTER_DATA_CLASS "rec/games/roguelike/nh4j/MonsterData"
-
 extern boolean javaGetBooleanFromInt(const char* classname, const char* methodname, int i);
 extern boolean javaGetIntFromInt(const char* classname, const char* methodname, int i);
 

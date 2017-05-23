@@ -13,6 +13,16 @@
 E JNIEnv* jni_env;
 E JavaVM* java_vm;
 
+#define CONTEXT_CLASS "rec/games/roguelike/nh4j/Context"
+#define MONSTER_DATA_CLASS "rec/games/roguelike/nh4j/MonsterData"
+#define MONSTER_TYPE_CLASS "rec/games/roguelike/nh4j/MonsterType"
+#define NOVEL_CLASS "rec/games/roguelike/nh4j/TributeNovel"
+#define OCCUPIED_ROOMS_CLASS "rec/games/roguelike/nh4j/OccupiedRooms"
+#define PLAYER_CHARACTER_CLASS "rec/games/roguelike/nh4j/PlayerCharacter"
+#define QUALITIES_CLASS "rec/games/roguelike/nh4j/Qualities"
+#define SYS_OPT_CLASS "rec/games/roguelike/nh4j/SysOpt"
+#define WEAPON_SKILL_CLASS "rec/games/roguelike/nh4j/WeaponSkill"
+
 typedef struct {
     jstring j_str;
     const char* c_str;
@@ -129,6 +139,9 @@ E const char *FDECL(glow_color, (int));
 E void FDECL(Sting_effects, (int));
 E int FDECL(retouch_object, (struct obj **, BOOLEAN_P));
 E void FDECL(retouch_equipment, (int));
+
+E boolean FDECL(isAffectedByWeaponFlag1, (int, long));
+E boolean FDECL(isAffectedByWeaponFlag2, (int, long));
 
 /* ### attrib.c ### */
 

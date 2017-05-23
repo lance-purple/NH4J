@@ -65,15 +65,6 @@
 #define Static static
 #endif
 
-#define CONTEXT_CLASS "rec/games/roguelike/nh4j/Context"
-#define MONSTER_TYPE_CLASS "rec/games/roguelike/nh4j/MonsterType"
-#define NOVEL_CLASS "rec/games/roguelike/nh4j/TributeNovel"
-#define OCCUPIED_ROOMS_CLASS "rec/games/roguelike/nh4j/OccupiedRooms"
-#define PLAYER_CHARACTER_CLASS "rec/games/roguelike/nh4j/PlayerCharacter"
-#define QUALITIES_CLASS "rec/games/roguelike/nh4j/Qualities"
-#define SYS_OPT_CLASS "rec/games/roguelike/nh4j/SysOpt"
-#define WEAPON_SKILL_CLASS "rec/games/roguelike/nh4j/WeaponSkill"
-
 jclass getJavaClass(const char* className) {
     jclass javaClass = (*jni_env)->FindClass(jni_env, className);
     if ((*jni_env)->ExceptionCheck(jni_env)) {
@@ -131,6 +122,13 @@ boolean javaGetBooleanFromInt(const char* classname, const char* methodname, int
     jmethodID method = getStaticMethod(you_class, methodname, "(I)Z");
     return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method, i);
 }
+
+boolean javaGetBooleanFromIntAndLong(const char* classname, const char* methodname, int i, long j) {
+    jclass you_class = getJavaClass(classname);
+    jmethodID method = getStaticMethod(you_class, methodname, "(IJ)Z");
+    return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method, i, j);
+}
+
 
 jstring javaGetStringFromInt(const char* classname, const char* methodname, int i) {
     jclass you_class = getJavaClass(classname);
@@ -2757,6 +2755,14 @@ extern boolean monsterDoesNotAttack(const struct permonst *ptr)
 
 extern void enableSeductionAttacks(boolean enable) {
   javaSetBoolean(SYS_OPT_CLASS, "enableSeductionAttacks", enable);
+}
+
+extern boolean isAffectedByWeaponFlag1(int pmid, long weaponFlag1) {
+  return javaGetBooleanFromIntAndLong(MONSTER_DATA_CLASS, "isAffectedByWeaponFlag1", pmid, weaponFlag1);
+}
+
+extern boolean isAffectedByWeaponFlag2(int pmid, long weaponFlag2) {
+  return javaGetBooleanFromIntAndLong(MONSTER_DATA_CLASS, "isAffectedByWeaponFlag2", pmid, weaponFlag2);
 }
 
 /*hacklib.c*/

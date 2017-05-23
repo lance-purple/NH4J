@@ -389,6 +389,14 @@ public class MonsterData {
 		return false;
 	}
 	
+	public static final boolean isAffectedByWeaponFlag1(int pmid, long weaponFlag1) {
+		return MonsterType.getMonsterType(pmid).hasFlag1(weaponFlag1);
+	}
+
+	public static final boolean isAffectedByWeaponFlag2(int pmid, long weaponFlag2) {
+		return MonsterType.getMonsterType(pmid).hasFlag2(weaponFlag2);
+	}
+
     //#define befriend_with_obj(ptr, obj) \
     //    ((obj)->oclass == FOOD_CLASS && is_domestic(ptr))
 
