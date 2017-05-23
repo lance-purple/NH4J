@@ -494,7 +494,7 @@ boolean td; /* td == TRUE : trap door or hole */
         ; /* KMH -- You can't escape the Sokoban level traps */
     else if (youAreLevitating() || u.ustuck
              || (!canYouFallThroughCurrentLevel() && !levl[currentX()][currentY()].candig) || youAreFlying()
-             || is_clinger(youmonst.data)
+             || isClinger(youmonst.data->monsterTypeID)
              || (areYouInHell() && ! haveInvokedGateToSanctum() && newlevel == bottom)) {
         dont_fall = "don't fall in.";
     } else if (monsterSize(youmonst.data->monsterTypeID) >= MZ_HUGE) {
@@ -726,7 +726,7 @@ int *fail_reason;
     delobj(statue);
 
     /* avoid hiding under nothing */
-    if (x == currentX() && y == currentY() && areYouPolymorphed() && hides_under(youmonst.data)
+    if (x == currentX() && y == currentY() && areYouPolymorphed() && hidesUnderStuff(youmonst.data->monsterTypeID)
         && !OBJ_AT(x, y)) {
         setLurking(FALSE);
     }
@@ -843,7 +843,7 @@ unsigned trflags;
         if (!youKeepFumbling() && ttype != MAGIC_PORTAL && ttype != VIBRATING_SQUARE
             && ttype != ANTI_MAGIC && !forcebungle && !plunged && !adj_pit
             && (!rn2(5) || ((ttype == PIT || ttype == SPIKED_PIT)
-                            && is_clinger(youmonst.data)))) {
+                            && isClinger(youmonst.data->monsterTypeID)))) {
             You("escape %s %s.", (ttype == ARROW_TRAP && !trap->madeby_u)
                                      ? "an"
                                      : a_your[trap->madeby_u],
@@ -983,8 +983,8 @@ unsigned trflags;
         if ((youAreLevitating() || youAreFlying()) && !forcetrap)
             break;
         feeltrap(trap);
-        if (amorphous(youmonst.data) || isWhirly(youmonst.data->monsterTypeID)
-            || unsolid(youmonst.data)) {
+        if (isAmorphous(youmonst.data->monsterTypeID) || isWhirly(youmonst.data->monsterTypeID)
+            || isUnsolid(youmonst.data->monsterTypeID)) {
             pline("%s bear trap closes harmlessly through you.",
                   A_Your[trap->madeby_u]);
             break;
@@ -1015,7 +1015,7 @@ unsigned trflags;
 
     case SLP_GAS_TRAP:
         seetrap(trap);
-        if (youResistSleep() || breathless(youmonst.data)) {
+        if (youResistSleep() || doesNotBreathe(youmonst.data->monsterTypeID)) {
             You("are enveloped in a cloud of gas!");
         } else {
             pline("A cloud of gas puts you to sleep!");
@@ -1092,7 +1092,7 @@ unsigned trflags;
         if (!Sokoban && (youAreLevitating() || (youAreFlying() && !plunged)))
             break;
         feeltrap(trap);
-        if (!Sokoban && is_clinger(youmonst.data) && !plunged) {
+        if (!Sokoban && isClinger(youmonst.data->monsterTypeID) && !plunged) {
             if (trap->tseen) {
                 You_see("%s %spit below you.", a_your[trap->madeby_u],
                         ttype == SPIKED_PIT ? "spiked " : "");
@@ -1163,7 +1163,7 @@ unsigned trflags;
             } else {
                 /* plunging flyers take spike damage but not pit damage */
                 if (!adj_pit
-                    && !(plunged && (youAreFlying() || is_clinger(youmonst.data))))
+                    && !(plunged && (youAreFlying() || isClinger(youmonst.data->monsterTypeID))))
                     losehp(Maybe_Half_Phys(rnd(6)),
                            plunged ? "deliberately plunged into a pit"
                                    : "fell into a pit",
@@ -1205,9 +1205,9 @@ unsigned trflags;
 
     case WEB: /* Our luckless player has stumbled into a web. */
         feeltrap(trap);
-        if (amorphous(youmonst.data) || isWhirly(youmonst.data->monsterTypeID)
-            || unsolid(youmonst.data)) {
-            if (acidic(youmonst.data) || currentMonsterNumber() == PM_GELATINOUS_CUBE
+        if (isAmorphous(youmonst.data->monsterTypeID) || isWhirly(youmonst.data->monsterTypeID)
+            || isUnsolid(youmonst.data->monsterTypeID)) {
+            if (isAcidic(youmonst.data->monsterTypeID) || currentMonsterNumber() == PM_GELATINOUS_CUBE
                 || currentMonsterNumber() == PM_FIRE_ELEMENTAL) {
                 if (webmsgok)
                     You("%s %s spider web!",
@@ -1528,7 +1528,7 @@ struct obj *otmp;
         steedhit = TRUE;
         break;
     case SLP_GAS_TRAP:
-        if (!resists_sleep(steed) && !breathless(steed->data)
+        if (!resists_sleep(steed) && !doesNotBreathe(steed->data->monsterTypeID)
             && !steed->msleeping && steed->mcanmove) {
             if (sleep_monst(steed, rnd(25), -1))
                 /* no in_sight check here; you can feel it even if blind */
@@ -2067,7 +2067,7 @@ register struct monst *mtmp;
             } else {
                 mtmp->mtrapped = 0;
             }
-        } else if (metallivorous(mptr)) {
+        } else if (isMetallivorous(mptr->monsterTypeID)) {
             if (trap->ttyp == BEAR_TRAP) {
                 if (canseemon(mtmp))
                     pline("%s eats a bear trap!", Monnam(mtmp));
@@ -2092,7 +2092,7 @@ register struct monst *mtmp;
         if (mtmp == u.usteed)
             inescapable = TRUE;
         if (!inescapable && ((mtmp->mtrapseen & (1 << (tt - 1))) != 0
-                             || (tt == HOLE && !mindless(mptr)))) {
+                             || (tt == HOLE && !isMindless(mptr->monsterTypeID)))) {
             /* it has been in such a trap - perhaps it escapes */
             if (rn2(4))
                 return 0;
@@ -2192,8 +2192,8 @@ register struct monst *mtmp;
             wake_nearto(mtmp->mx, mtmp->my, 40);
             break;
         case BEAR_TRAP:
-            if (monsterSize(pmid) > MZ_SMALL && !amorphous(mptr) && !isFlyer(pmid)
-                && !isWhirly(pmid) && !unsolid(mptr)) {
+            if (monsterSize(pmid) > MZ_SMALL && !isAmorphous(pmid) && !isFlyer(pmid)
+                && !isWhirly(pmid) && !isUnsolid(pmid)) {
                 mtmp->mtrapped = 1;
                 if (in_sight) {
                     pline("%s is caught in %s bear trap!", Monnam(mtmp),
@@ -2215,7 +2215,7 @@ register struct monst *mtmp;
                 trapkilled = thitm(0, mtmp, (struct obj *) 0, d(2, 4), FALSE);
             break;
         case SLP_GAS_TRAP:
-            if (!resists_sleep(mtmp) && !breathless(mptr) && !mtmp->msleeping
+            if (!resists_sleep(mtmp) && !doesNotBreathe(mptr->monsterTypeID) && !mtmp->msleeping
                 && mtmp->mcanmove) {
                 if (sleep_monst(mtmp, rnd(25), -1) && in_sight) {
                     pline("%s suddenly falls asleep!", Monnam(mtmp));
@@ -2351,7 +2351,7 @@ register struct monst *mtmp;
             fallverb = "falls";
             if (isFlyer(pmid) || isFloater(pmid)
                 || (mtmp->wormno && count_wsegs(mtmp) > 5)
-                || is_clinger(mptr)) {
+                || isClinger(mptr->monsterTypeID)) {
                 if (force_mintrap && !Sokoban) {
                     /* openfallingtrap; not inescapable here */
                     if (in_sight) {
@@ -2364,7 +2364,7 @@ register struct monst *mtmp;
                     break;               /* avoids trap */
                 fallverb = "is dragged"; /* sokoban pit */
             }
-            if (!passes_walls(mptr))
+            if (!passesThroughWalls(mptr->monsterTypeID))
                 mtmp->mtrapped = 1;
             if (in_sight) {
                 pline("%s %s into %s pit!", Monnam(mtmp), fallverb,
@@ -2430,8 +2430,8 @@ register struct monst *mtmp;
             /* Monster in a web. */
             if (webmaker(mptr))
                 break;
-            if (amorphous(mptr) || isWhirly(mptr->monsterTypeID) || unsolid(mptr)) {
-                if (acidic(mptr) || mptr == &mons[PM_GELATINOUS_CUBE]
+            if (isAmorphous(mptr->monsterTypeID) || isWhirly(mptr->monsterTypeID) || isUnsolid(mptr->monsterTypeID)) {
+                if (isAcidic(mptr->monsterTypeID) || mptr == &mons[PM_GELATINOUS_CUBE]
                     || mptr == &mons[PM_FIRE_ELEMENTAL]) {
                     if (in_sight)
                         pline("%s %s %s spider web!", Monnam(mtmp),
@@ -2534,7 +2534,7 @@ register struct monst *mtmp;
                         break;
                 if (otmp)
                     dmgval2 += rnd(4);
-                if (passes_walls(mptr))
+                if (passesThroughWalls(mptr->monsterTypeID))
                     dmgval2 = (dmgval2 + 3) / 4;
 
                 if (in_sight)
@@ -2766,9 +2766,9 @@ float_up()
     } else if (inWater()) {
         spoteffects(TRUE);
     } else if (swallowed()) {
-        You(is_animal(u.ustuck->data) ? "float away from the %s."
+        You(isAnimal(u.ustuck->data->monsterTypeID) ? "float away from the %s."
                                       : "spiral up into %s.",
-            is_animal(u.ustuck->data) ? surface(currentX(), currentY())
+            isAnimal(u.ustuck->data->monsterTypeID) ? surface(currentX(), currentY())
                                       : mon_nam(u.ustuck));
     } else if (youAreHallucinating()) {
         pline("Up, up, and awaaaay!  You're walking on air!");
@@ -2836,7 +2836,7 @@ long hmask, emask; /* might cancel timeout */
     }
     if (swallowed()) {
         You("float down, but you are still %s.",
-            is_animal(u.ustuck->data) ? "swallowed" : "engulfed");
+            isAnimal(u.ustuck->data->monsterTypeID) ? "swallowed" : "engulfed");
         return 1;
     }
 
@@ -2962,7 +2962,7 @@ climb_pit()
         display_nhwindow(WIN_MESSAGE, FALSE);
         clear_nhwindow(WIN_MESSAGE);
         You("free your %s.", body_part(LEG));
-    } else if ((youAreFlying() || is_clinger(youmonst.data)) && !Sokoban) {
+    } else if ((youAreFlying() || isClinger(youmonst.data->monsterTypeID)) && !Sokoban) {
         /* eg fell in pit, then poly'd to a flying monster;
            or used '>' to deliberately enter it */
         You("%s from the pit.", youAreFlying() ? "fly" : "climb");
@@ -3603,7 +3603,7 @@ drown()
         vision_full_recalc = 1;
         return FALSE;
     }
-    if ((youCanTeleport() || can_teleport(youmonst.data)) && youAreAware()
+    if ((youCanTeleport() || canTeleport(youmonst.data->monsterTypeID)) && youAreAware()
         && (youHaveTeleportControl() || rn2(3) < currentLuckWithBonus() + 2)) {
         You("attempt a teleport spell."); /* utcsri!carroll */
         if (!level.flags.noteleport) {
@@ -3722,7 +3722,7 @@ dountrap()
         pline("You're too strained to do that.");
         return 0;
     }
-    if ((nohands(youmonst.data) && !webmaker(youmonst.data))
+    if ((hasNoHands(youmonst.data->monsterTypeID) && !webmaker(youmonst.data))
         || !monsterMovementSpeed(youmonst.data->monsterTypeID)) {
         pline("And just how do you expect to do that?");
         return 0;
@@ -3928,7 +3928,7 @@ struct monst *mtmp;
 {
     if (!ttmp->madeby_u) {
         if (rnl(10) < 8 && !mtmp->mpeaceful && !mtmp->msleeping
-            && !mtmp->mfrozen && !mindless(mtmp->data)
+            && !mtmp->mfrozen && !isMindless(mtmp->data->monsterTypeID)
             && monsterClass(mtmp->data->monsterTypeID) != S_HUMAN) {
             mtmp->mpeaceful = 1;
             set_malign(mtmp); /* reset alignment */
@@ -4058,7 +4058,7 @@ boolean stuff;
         pline("%s is %s for you to lift.", Monnam(mtmp),
               stuff ? "carrying too much" : "too heavy");
         if (!ttmp->madeby_u && !mtmp->mpeaceful && mtmp->mcanmove
-            && !mindless(mtmp->data) && monsterClass(mtmp->data->monsterTypeID) != S_HUMAN
+            && !isMindless(mtmp->data->monsterTypeID) && monsterClass(mtmp->data->monsterTypeID) != S_HUMAN
             && rnl(10) < 3) {
             mtmp->mpeaceful = 1;
             set_malign(mtmp); /* reset alignment */

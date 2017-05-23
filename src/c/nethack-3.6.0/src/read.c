@@ -1662,8 +1662,8 @@ boolean confused, helmet_protects, byu, skip_uswallow;
         return;
     otmp2->quan = confused ? rn1(5, 2) : 1;
     otmp2->owt = weight(otmp2);
-    if (!amorphous(youmonst.data) && !youCanPassThroughWalls()
-        && !isNoncorporeal(youmonst.data->monsterTypeID) && !unsolid(youmonst.data)) {
+    if (!isAmorphous(youmonst.data->monsterTypeID) && !youCanPassThroughWalls()
+        && !isNoncorporeal(youmonst.data->monsterTypeID) && !isUnsolid(youmonst.data->monsterTypeID)) {
         You("are hit by %s!", doname(otmp2));
         dmg = dmgval(otmp2, &youmonst) * otmp2->quan;
         if (uarmh && helmet_protects) {
@@ -1704,8 +1704,9 @@ boolean confused, byu;
 
     /* Find the monster here (won't be player) */
     mtmp = m_at(x, y);
-    if (mtmp && !amorphous(mtmp->data) && !passes_walls(mtmp->data)
-        && !isNoncorporeal(mtmp->data->monsterTypeID) && !unsolid(mtmp->data)) {
+    int mpmid = mtmp->data->monsterTypeID;
+    if (mtmp && !isAmorphous(mpmid) && !passesThroughWalls(mpmid)
+        && !isNoncorporeal(mpmid) && !isUnsolid(mpmid)) {
         struct obj *helmet = which_armor(mtmp, W_ARMH);
         int mdmg;
 
@@ -1872,7 +1873,7 @@ struct obj *obj;
         if (swallowed()) {
             if (youCannotSee())
                 ; /* no feedback */
-            else if (is_animal(u.ustuck->data))
+            else if (isAnimal(u.ustuck->data->monsterTypeID))
                 pline("%s %s is lit.", s_suffix(Monnam(u.ustuck)),
                       mbodypart(u.ustuck, STOMACH));
             else if (isWhirly(u.ustuck->data->monsterTypeID))
@@ -2280,8 +2281,8 @@ struct obj *sobj;
         uball->owt += 160 * (1 + sobj->cursed);
         return;
     }
-    if (amorphous(youmonst.data) || isWhirly(youmonst.data->monsterTypeID)
-        || unsolid(youmonst.data)) {
+    int upmid = youmonst.data->monsterTypeID;
+    if (isAmorphous(upmid) || isWhirly(upmid) || isUnsolid(upmid)) {
         if (!reuse_ball) {
             pline("A ball and chain appears, then falls away.");
             dropy(mkobj(BALL_CLASS, TRUE));

@@ -615,9 +615,9 @@ register xchar x, y;
 {
     return (boolean) ((Sokoban && sobj_at(BOULDER, x, y))
                       || (IS_ROCK(levl[x][y].typ)
-                          && (!tunnels(mdat) || needspick(mdat)
+                          && (!isTunneler(mdat->monsterTypeID) || needsPickaxe(mdat->monsterTypeID)
                               || !may_dig(x, y))
-                          && !(passes_walls(mdat) && may_passwall(x, y))));
+                          && !(passesThroughWalls(mdat->monsterTypeID) && may_passwall(x, y))));
 }
 
 /* caller has already decided that it's a tight diagonal; check whether a
@@ -632,8 +632,8 @@ struct monst *mon;
 
     /* too big? */
     if (isBigMonster(ptr->monsterTypeID)
-        && !(amorphous(ptr) || isWhirly(ptr->monsterTypeID) || isNoncorporeal(ptr->monsterTypeID)
-             || slithy(ptr) || can_fog(mon)))
+        && !(isAmorphous(ptr->monsterTypeID) || isWhirly(ptr->monsterTypeID) || isNoncorporeal(ptr->monsterTypeID)
+             || isSlithy(ptr->monsterTypeID) || can_fog(mon)))
         return 1;
 
     /* lugging too much junk? */
@@ -691,7 +691,7 @@ int mode;
                     You("cannot pass through the bars.");
                 return FALSE;
             }
-        } else if (tunnels(youmonst.data) && !needspick(youmonst.data)) {
+        } else if (isTunneler(youmonst.data->monsterTypeID) && !needsPickaxe(youmonst.data->monsterTypeID)) {
             /* Eat the rock. */
             if (mode == DO_MOVE && still_chewing(x, y))
                 return FALSE;
@@ -723,13 +723,13 @@ int mode;
             else if (can_ooze(&youmonst)) {
                 if (mode == DO_MOVE)
                     You("ooze under the door.");
-            } else if (tunnels(youmonst.data) && !needspick(youmonst.data)) {
+            } else if (isTunneler(youmonst.data->monsterTypeID) && !needsPickaxe(youmonst.data->monsterTypeID)) {
                 /* Eat the door. */
                 if (mode == DO_MOVE && still_chewing(x, y))
                     return FALSE;
             } else {
                 if (mode == DO_MOVE) {
-                    if (amorphous(youmonst.data))
+                    if (isAmorphous(youmonst.data->monsterTypeID))
                         You(
    "try to ooze under the door, but can't squeeze your possessions through.");
                     if (flags.autoopen && !running() && !youAreConfused()
@@ -796,7 +796,7 @@ int mode;
         struct trap *t = t_at(x, y);
 
         if ((t && t->tseen)
-            || (!youAreLevitating() && !youAreFlying() && !is_clinger(youmonst.data)
+            || (!youAreLevitating() && !youAreFlying() && !isClinger(youmonst.data->monsterTypeID)
                 && is_pool_or_lava(x, y) && levl[x][y].seenv))
             return FALSE;
     }
@@ -816,7 +816,7 @@ int mode;
             return FALSE;
         if (mode == DO_MOVE) {
             /* tunneling monsters will chew before pushing */
-            if (tunnels(youmonst.data) && !needspick(youmonst.data)
+            if (isTunneler(youmonst.data->monsterTypeID) && !needsPickaxe(youmonst.data->monsterTypeID)
                 && !Sokoban) {
                 if (still_chewing(x, y))
                     return FALSE;
@@ -828,7 +828,7 @@ int mode;
             /* don't pick two boulders in a row, unless there's a way thru */
             if (sobj_at(BOULDER, ux, uy) && !Sokoban) {
                 if (!youCanPassThroughWalls()
-                    && !(tunnels(youmonst.data) && !needspick(youmonst.data))
+                    && !(isTunneler(youmonst.data->monsterTypeID) && !needsPickaxe(youmonst.data->monsterTypeID))
                     && !carrying(PICK_AXE) && !carrying(DWARVISH_MATTOCK)
                     && !((obj = carrying(WAN_DIGGING))
                          && !objects[obj->otyp].oc_name_known))
@@ -1278,7 +1278,7 @@ domove()
                 skates = find_skates();
             if ((uarmf && uarmf->otyp == skates) || resists_cold(&youmonst)
                 || youAreFlying() || isFloater(youmonst.data->monsterTypeID)
-                || is_clinger(youmonst.data) || isWhirly(youmonst.data->monsterTypeID))
+                || isClinger(youmonst.data->monsterTypeID) || isWhirly(youmonst.data->monsterTypeID))
                 on_ice = FALSE;
             else if (!rn2(youResistCold() ? 3 : 2)) {
                 setYourIntrinsicMask(FUMBLING, FROMOUTSIDE);
@@ -1321,7 +1321,7 @@ domove()
             return;
         }
         if (((trap = t_at(x, y)) && trap->tseen)
-            || (youCannotSee() && !youAreLevitating() && !youAreFlying() && !is_clinger(youmonst.data)
+            || (youCannotSee() && !youAreLevitating() && !youAreFlying() && !isClinger(youmonst.data->monsterTypeID)
                 && is_pool_or_lava(x, y) && levl[x][y].seenv)) {
             if (runningPace() >= RUN_TIL_DIVERTED) {
                 nomul(0);
@@ -1428,7 +1428,7 @@ domove()
             return;
         }
         if (context.forcefight || !mtmp->mundetected || sensemon(mtmp)
-            || ((hides_under(mtmp->data) || monsterClass(mtmp->data->monsterTypeID) == S_EEL)
+            || ((hidesUnderStuff(mtmp->data->monsterTypeID) || monsterClass(mtmp->data->monsterTypeID) == S_EEL)
                 && !is_safepet(mtmp))) {
             /* try to attack; note that it might evade */
             /* also, we don't attack tame when _safepet_ */
@@ -1572,7 +1572,7 @@ domove()
      * Ceiling-hiding pets are skipped by this section of code, to
      * be caught by the normal falling-monster code.
      */
-    if (is_safepet(mtmp) && !(is_hider(mtmp->data) && mtmp->mundetected)) {
+    if (is_safepet(mtmp) && !(isHider(mtmp->data->monsterTypeID) && mtmp->mundetected)) {
         /* if trapped, there's a chance the pet goes wild */
         if (mtmp->mtrapped) {
             if (!rn2(mtmp->mtame)) {
@@ -1676,7 +1676,7 @@ domove()
                 nomul(0);
     }
 
-    if (hides_under(youmonst.data) || (monsterClass(youmonst.data->monsterTypeID) == S_EEL) || directionX()
+    if (hidesUnderStuff(youmonst.data->monsterTypeID) || (monsterClass(youmonst.data->monsterTypeID) == S_EEL) || directionX()
         || directionY())
         (void) hideunder(&youmonst);
 
@@ -1863,7 +1863,7 @@ boolean newspot;             /* true if called by spoteffects */
     if (!u.ustuck && !youAreLevitating() && !youAreFlying() && is_pool_or_lava(currentX(), currentY())) {
         if (u.usteed
             && (isFlyer(u.usteed->data->monsterTypeID) || isFloater(u.usteed->data->monsterTypeID)
-                || is_clinger(u.usteed->data))) {
+                || isClinger(u.usteed->data->monsterTypeID))) {
             /* floating or clinging steed keeps hero safe (isFlyer() test
                is redundant; it can't be true since Flying yielded false) */
             return FALSE;
@@ -2402,7 +2402,7 @@ dopickup()
     /* uswallow case added by GAN 01/29/87 */
     if (swallowed()) {
         if (!u.ustuck->minvent) {
-            if (is_animal(u.ustuck->data)) {
+            if (isAnimal(u.ustuck->data->monsterTypeID)) {
                 You("pick up %s tongue.", s_suffix(mon_nam(u.ustuck)));
                 pline("But it's kind of slimy, so you drop it.");
             } else
@@ -2415,7 +2415,7 @@ dopickup()
         }
     }
     if (is_pool(currentX(), currentY())) {
-        if (canYouWalkOnWater() || isFloater(youmonst.data->monsterTypeID) || is_clinger(youmonst.data)
+        if (canYouWalkOnWater() || isFloater(youmonst.data->monsterTypeID) || isClinger(youmonst.data->monsterTypeID)
             || (youAreFlying() && !youNeedNotBreathe())) {
             You("cannot dive into the water to pick things up.");
             return 0;
@@ -2425,7 +2425,7 @@ dopickup()
         }
     }
     if (is_lava(currentX(), currentY())) {
-        if (canYouWalkOnWater() || isFloater(youmonst.data->monsterTypeID) || is_clinger(youmonst.data)
+        if (canYouWalkOnWater() || isFloater(youmonst.data->monsterTypeID) || isClinger(youmonst.data->monsterTypeID)
             || (youAreFlying() && !youNeedNotBreathe())) {
             You_cant("reach the bottom to pick things up.");
             return 0;
@@ -2550,7 +2550,7 @@ lookaround()
                 /* water and lava only stop you if directly in front, and stop
                  * you even if you are running
                  */
-                if (!youAreLevitating() && !youAreFlying() && !is_clinger(youmonst.data)
+                if (!youAreLevitating() && !youAreFlying() && !isClinger(youmonst.data->monsterTypeID)
                     && x == currentX() + directionX() && y == currentY() + directionY())
                     /* No canYouWalkOnWater() check; otherwise they'd be able
                      * to test boots by trying to SHIFT-direction
@@ -2666,7 +2666,7 @@ monster_nearby()
             if ((mtmp = m_at(x, y)) && mtmp->m_ap_type != M_AP_FURNITURE
                 && mtmp->m_ap_type != M_AP_OBJECT
                 && (!mtmp->mpeaceful || youAreHallucinating())
-                && (!is_hider(mtmp->data) || !mtmp->mundetected)
+                && (!isHider(mtmp->data->monsterTypeID) || !mtmp->mundetected)
                 && !monsterDoesNotAttack(mtmp->data) && mtmp->mcanmove
                 && !mtmp->msleeping  /* aplvax!jcn */
                 && !onscary(currentX(), currentY(), mtmp) && canspotmon(mtmp))

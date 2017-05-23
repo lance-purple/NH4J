@@ -50,7 +50,8 @@ STATIC_DCL int FDECL(spell_hit_bonus, (int));
 #define is_hero_spell(type) ((type) >= 10 && (type) < 20)
 
 static boolean M_IN_WATER(struct permonst* ptr) {
-    return (monsterClass(ptr->monsterTypeID) == S_EEL || amphibious(ptr) || is_swimmer(ptr));
+    int pmid = ptr->monsterTypeID;
+    return (monsterClass(pmid) == S_EEL || isAmphibious(pmid) || isSwimmer(pmid));
 }
 
 STATIC_VAR const char are_blinded_by_the_flash[] =
@@ -273,7 +274,7 @@ struct obj *otmp;
     case SPE_KNOCK:
         wake = FALSE; /* don't want immediate counterattack */
         if (swallowed() && mtmp == u.ustuck) {
-            if (is_animal(mtmp->data)) {
+            if (isAnimal(mtmp->data->monsterTypeID)) {
                 if (youCannotSee())
                     You_feel("a sudden rush of air!");
                 else
@@ -1692,7 +1693,7 @@ struct obj *obj;
            non-omnivorous form, regardless of whether it's herbivorous,
            non-eating, or something stranger) */
         if (Role_if(PM_MONK) || vegetarianConduct()
-            || !carnivorous(youmonst.data))
+            || !isCarnivorous(youmonst.data->monsterTypeID))
             Norep("You smell the odor of meat.");
         else
             Norep("You smell a delicious smell.");
@@ -1793,7 +1794,7 @@ struct obj *obj, *otmp;
             if (obj_shudders(obj)) {
                 boolean cover =
                     ((obj == level.objects[currentX()][currentY()]) && lurking()
-                     && hides_under(youmonst.data));
+                     && hidesUnderStuff(youmonst.data->monsterTypeID));
 
                 if (cansee(obj->ox, obj->oy))
                     learn_it = TRUE;
@@ -1968,7 +1969,7 @@ schar zz;
         next_obj = otmp->nexthere;
         /* for zap downwards, don't hit object poly'd hero is hiding under */
         if (zz > 0 && lurking() && otmp == level.objects[currentX()][currentY()]
-            && hides_under(youmonst.data))
+            && hidesUnderStuff(youmonst.data->monsterTypeID))
             continue;
 
         hitanything += (*fhito)(otmp, obj);
@@ -2797,7 +2798,7 @@ struct obj *obj; /* wand or spell */
         /* game flavor: if you're hiding under "something"
          * a zap upward should hit that "something".
          */
-        if (lurking() && hides_under(youmonst.data)) {
+        if (lurking() && hidesUnderStuff(youmonst.data->monsterTypeID)) {
             int hitit = 0;
             otmp = level.objects[currentX()][currentY()];
 
@@ -3172,7 +3173,7 @@ struct obj **pobj; /* object tossed/used, set to NULL
                    prepared for multiple hits so just get first one
                    that's either visible or could see its invisible
                    self.  [No tmp_at() cleanup is needed here.] */
-                if (!mtmp->minvis || perceives(mtmp->data))
+                if (!mtmp->minvis || perceivesTheInvisible(mtmp->data->monsterTypeID))
                     return mtmp;
             } else if (weapon != ZAPPED_WAND) {
                 /* THROWN_WEAPON, KICKED_WEAPON */
@@ -3907,7 +3908,7 @@ register int dx, dy;
                             pline("%s disintegrates.", Monnam(mon));
                             pline("%s body reintegrates before your %s!",
                                   s_suffix(Monnam(mon)),
-                                  (eyecount(youmonst.data) == 1)
+                                  (eyeCount(youmonst.data->monsterTypeID) == 1)
                                       ? body_part(EYE)
                                       : makeplural(body_part(EYE)));
                             pline("%s resurrects!", Monnam(mon));
@@ -4264,7 +4265,7 @@ short exploding_wand_typ;
                     /* probably ought to do some hefty damage to any
                        non-ice creature caught in freezing water;
                        at a minimum, eels are forced out of hiding */
-                    if (is_swimmer(mon->data) && mon->mundetected) {
+                    if (isSwimmer(mon->data->monsterTypeID) && mon->mundetected) {
                         mon->mundetected = 0;
                         newsym(x, y);
                     }
@@ -4653,7 +4654,7 @@ register int osym, dmgtyp;
             pline("%s %s %s!", mult, xname(obj),
                   destroy_strings[dindx][(cnt > 1L)]);
             if (osym == POTION_CLASS && dmgtyp != AD_COLD) {
-                if (!breathless(youmonst.data) || haseyes(youmonst.data))
+                if (!doesNotBreathe(youmonst.data->monsterTypeID) || hasEyes(youmonst.data->monsterTypeID))
                     potionbreathe(obj);
             }
             if (obj->owornmask) {

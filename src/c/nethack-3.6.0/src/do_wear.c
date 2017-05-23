@@ -221,7 +221,7 @@ Boots_off(VOID_ARGS)
     case WATER_WALKING_BOOTS:
         /* check for lava since fireproofed boots make it viable */
         if ((is_pool(currentX(), currentY()) || is_lava(currentX(), currentY()))
-            && !youAreLevitating() && !youAreFlying() && !is_clinger(youmonst.data)
+            && !youAreLevitating() && !youAreFlying() && !isClinger(youmonst.data->monsterTypeID)
             && !context.takeoff.cancelled_don
             /* avoid recursive call to lava_effects() */
             && !iflags.in_lava_effects) {
@@ -775,7 +775,7 @@ Amulet_off()
             /* intrinsic magical breathing must be set off
                 before calling drown() */
             setworn((struct obj *) 0, W_AMUL);
-            if (!breathless(youmonst.data) && !amphibious(youmonst.data)
+            if (!doesNotBreathe(youmonst.data->monsterTypeID) && !isAmphibious(youmonst.data->monsterTypeID)
                 && !youCanSwim()) {
                 You("suddenly inhale an unhealthy amount of water!");
                 (void) drown();
@@ -1647,7 +1647,7 @@ boolean noisy;
             if (noisy)
                 already_wearing(c_boots);
             err++;
-        } else if (areYouPolymorphed() && slithy(youmonst.data)) {
+        } else if (areYouPolymorphed() && isSlithy(youmonst.data->monsterTypeID)) {
             if (noisy)
                 You("have no feet..."); /* not body_part(FOOT) */
             err++;
@@ -1777,14 +1777,15 @@ struct obj *obj;
         if (ring) {
             char answer, qbuf[QBUFSZ];
             int res = 0;
+	    int upmid = youmonst.data->monsterTypeID;
 
-            if (nolimbs(youmonst.data)) {
+            if (hasNoLimbs(upmid)) {
                 You("cannot make the ring stick to your body.");
                 return 0;
             }
             if (uleft && uright) {
                 There("are no more %s%s to fill.",
-                      humanoid(youmonst.data) ? "ring-" : "",
+                      isHumanoid(upmid) ? "ring-" : "",
                       makeplural(body_part(FINGER)));
                 return 0;
             }
@@ -1795,7 +1796,7 @@ struct obj *obj;
             } else {
                 do {
                     Sprintf(qbuf, "Which %s%s, Right or Left?",
-                            humanoid(youmonst.data) ? "ring-" : "",
+                            isHumanoid(upmid) ? "ring-" : "",
                             body_part(FINGER));
                     answer = yn_function(qbuf, "rl", '\0');
                     switch (answer) {
@@ -1929,8 +1930,8 @@ dowear()
     struct obj *otmp;
 
     /* cantweararm() checks for suits of armor, not what we want here;
-       verysmall() or nohands() checks for shields, gloves, etc... */
-    if ((isVerySmallMonster(youmonst.data->monsterTypeID) || nohands(youmonst.data))) {
+       verysmall() or hasNoHands() checks for shields, gloves, etc... */
+    if ((isVerySmallMonster(youmonst.data->monsterTypeID) || hasNoHands(youmonst.data->monsterTypeID))) {
         pline("Don't even bother.");
         return 0;
     }
@@ -1954,7 +1955,7 @@ doputon()
         && uarm && uarmu && uarmc && uarmh && uarms && uarmg && uarmf) {
         /* 'P' message doesn't mention armor */
         Your("%s%s are full, and you're already wearing an amulet and %s.",
-             humanoid(youmonst.data) ? "ring-" : "",
+             isHumanoid(youmonst.data->monsterTypeID) ? "ring-" : "",
              makeplural(body_part(FINGER)),
              (ublindf->otyp == LENSES) ? "some lenses" : "a blindfold");
         return 0;
@@ -2022,7 +2023,7 @@ glibr()
     leftfall = (uleft && !uleft->cursed
                 && (!uwep || !welded(uwep) || !bimanual(uwep)));
     rightfall = (uright && !uright->cursed && (!welded(uwep)));
-    if (!uarmg && (leftfall || rightfall) && !nolimbs(youmonst.data)) {
+    if (!uarmg && (leftfall || rightfall) && !hasNoLimbs(youmonst.data->monsterTypeID)) {
         /* changed so cursed rings don't fall off, GAN 10/30/86 */
         Your("%s off your %s.",
              (leftfall && rightfall) ? "rings slip" : "ring slips",
@@ -2139,7 +2140,7 @@ int otyp;
     if (ring && ring->otyp == otyp) {
         /* reasons ring can't be removed match those checked by select_off();
            limbless case has extra checks because ordinarily it's temporary */
-        if (nolimbs(youmonst.data) && uamul
+        if (hasNoLimbs(youmonst.data->monsterTypeID) && uamul
             && uamul->otyp == AMULET_OF_UNCHANGING && uamul->cursed)
             return uamul;
         if (welded(uwep) && (ring == uright || bimanual(uwep)))
@@ -2176,7 +2177,7 @@ register struct obj *otmp;
 
     /* special ring checks */
     if (otmp == uright || otmp == uleft) {
-        if (nolimbs(youmonst.data)) {
+        if (hasNoLimbs(youmonst.data->monsterTypeID)) {
             pline_The("ring is stuck.");
             return 0;
         }

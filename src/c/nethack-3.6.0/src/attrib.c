@@ -740,7 +740,7 @@ int
 is_innate(intrinsic)
 int intrinsic;
 {
-    if (intrinsic == BLINDED && !haseyes(youmonst.data))
+    if (intrinsic == BLINDED && !hasEyes(youmonst.data->monsterTypeID))
         return 1;
     return innately(intrinsic);
 }
@@ -1451,13 +1451,13 @@ extern boolean youAreBlindfolded() {
 /* you are blind because of a blindfold, and *only* that */
 extern boolean youAreBlindDueToBlindfold() {
     return (youAreBlindfolded() && ublindf->oartifact != ART_EYES_OF_THE_OVERWORLD 
-     && !permanentlyBlind() && !youAreTemporarilyBlinded() && haseyes(youmonst.data));
+     && !permanentlyBlind() && !youAreTemporarilyBlinded() && hasEyes(youmonst.data->monsterTypeID));
 }
 
 /* you cannot see for whatever reason */
 extern boolean youCannotSee() {
     return ((permanentlyBlind() || youAreTemporarilyBlinded() || youAreBlindfolded()
-      || !haseyes(youmonst.data)) 
+      || !hasEyes(youmonst.data->monsterTypeID)) 
      && !(ublindf && ublindf->oartifact == ART_EYES_OF_THE_OVERWORLD));
     /* ...the Eyes operate even when you really are blind
            or don't have any eyes */
@@ -1616,16 +1616,16 @@ extern boolean youAreFlying() {
 /* Get wet, don't go under water unless if amphibious */
 extern boolean youCanSwim() {
   return (youHaveIntrinsic(SWIMMING) || youHaveExtrinsic(SWIMMING) ||
-		   (u.usteed && is_swimmer(u.usteed->data)));
+		   (u.usteed && isSwimmer(u.usteed->data->monsterTypeID)));
 }
 
 /* Get wet, may go under surface */
 extern boolean youAreAmphibious() {
-  return (youHaveIntrinsic(MAGICAL_BREATHING) || youHaveExtrinsic(MAGICAL_BREATHING) || amphibious(youmonst.data));
+  return (youHaveIntrinsic(MAGICAL_BREATHING) || youHaveExtrinsic(MAGICAL_BREATHING) || isAmphibious(youmonst.data->monsterTypeID));
 }
 
 extern boolean youNeedNotBreathe() {
-  return (youHaveIntrinsic(MAGICAL_BREATHING) || youHaveExtrinsic(MAGICAL_BREATHING) || breathless(youmonst.data));
+  return (youHaveIntrinsic(MAGICAL_BREATHING) || youHaveExtrinsic(MAGICAL_BREATHING) || doesNotBreathe(youmonst.data->monsterTypeID));
 }
 
 extern boolean youCanPassThroughWalls() {

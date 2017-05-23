@@ -200,13 +200,13 @@ in_trouble()
         || stuck_ring(uleft, RIN_LEVITATION)
         || stuck_ring(uright, RIN_LEVITATION))
         return TROUBLE_CURSED_LEVITATION;
-    if (nohands(youmonst.data) || !freehand()) {
+    if (hasNoHands(youmonst.data->monsterTypeID) || !freehand()) {
         /* for bag/box access [cf use_container()]...
            make sure it's a case that we know how to handle;
            otherwise "fix all troubles" would get stuck in a loop */
         if (welded(uwep))
             return TROUBLE_UNUSEABLE_HANDS;
-        if (areYouPolymorphed() && nohands(youmonst.data)
+        if (areYouPolymorphed() && hasNoHands(youmonst.data->monsterTypeID)
             && (!youAreUnchanging() || ((otmp = unchanger()) != 0 && otmp->cursed)))
             return TROUBLE_UNUSEABLE_HANDS;
     }
@@ -229,7 +229,7 @@ in_trouble()
             return TROUBLE_SADDLE;
     }
 
-    if (yourIntrinsic(BLINDED) > 1 && haseyes(youmonst.data)
+    if (yourIntrinsic(BLINDED) > 1 && hasEyes(youmonst.data->monsterTypeID)
         && (!swallowed()
             || !monsterHasAttackWithDamageType(u.ustuck->data, AT_ENGL, AD_BLND)))
         return TROUBLE_BLIND;
@@ -417,7 +417,7 @@ int trouble;
             otmp = uwep;
             goto decurse;
         }
-        if (areYouPolymorphed() && nohands(youmonst.data)) {
+        if (areYouPolymorphed() && hasNoHands(youmonst.data->monsterTypeID)) {
             if (!youAreUnchanging()) {
                 Your("shape becomes uncertain.");
                 rehumanize(); /* "You return to {normal} form." */
@@ -426,7 +426,7 @@ int trouble;
                 goto decurse;
             }
         }
-        if (nohands(youmonst.data) || !freehand())
+        if (hasNoHands(youmonst.data->monsterTypeID) || !freehand())
             impossible("fix_worst_trouble: couldn't cure hands.");
         break;
     case TROUBLE_CURSED_BLINDFOLD:
@@ -490,7 +490,7 @@ int trouble;
     case TROUBLE_BLIND: {
         const char *eyes = body_part(EYE);
 
-        if (eyecount(youmonst.data) != 1)
+        if (eyeCount(youmonst.data->monsterTypeID) != 1)
             eyes = makeplural(eyes);
         Your("%s %s better.", eyes, vtense(eyes, "feel"));
         setCreamed(0);

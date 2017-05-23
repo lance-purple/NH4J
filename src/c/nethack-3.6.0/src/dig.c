@@ -61,7 +61,7 @@ boolean waslit, rockit;
         if (t_at(x, y))
             return;                   /* don't cover the portal */
         if ((mtmp = m_at(x, y)) != 0) /* make sure crucial monsters survive */
-            if (!passes_walls(mtmp->data))
+            if (!passesThroughWalls(mtmp->data->monsterTypeID))
                 (void) rloc(mtmp, TRUE);
     } else if (lev->typ == ROOM)
         return;
@@ -1396,13 +1396,14 @@ zap_dig()
 
     if (swallowed()) {
         mtmp = u.ustuck;
+	int pmid = mtmp->data->monsterTypeID;
 
-        if (!isWhirly(mtmp->data->monsterTypeID)) {
-            if (is_animal(mtmp->data))
+        if (!isWhirly(pmid)) {
+            if (isAnimal(pmid))
                 You("pierce %s %s wall!", s_suffix(mon_nam(mtmp)),
                     mbodypart(mtmp, STOMACH));
             mtmp->mhp = 1; /* almost dead */
-            expels(mtmp, mtmp->data, !is_animal(mtmp->data));
+            expels(mtmp, mtmp->data, !isAnimal(pmid));
         }
         return;
     } /* swallowed */
@@ -1992,9 +1993,9 @@ long timeout;
 
         /* a hiding monster may be exposed */
         if (mtmp && !OBJ_AT(x, y) && mtmp->mundetected
-            && hides_under(mtmp->data)) {
+            && hidesUnderStuff(mtmp->data->monsterTypeID)) {
             mtmp->mundetected = 0;
-        } else if (x == currentX() && y == currentY() && lurking() && hides_under(youmonst.data))
+        } else if (x == currentX() && y == currentY() && lurking() && hidesUnderStuff(youmonst.data->monsterTypeID))
             (void) hideunder(&youmonst);
         newsym(x, y);
     } else if (in_invent)
@@ -2056,27 +2057,27 @@ void
 escape_tomb()
 {
     debugpline0("escape_tomb");
-    if ((youCanTeleport() || can_teleport(youmonst.data))
+    if ((youCanTeleport() || canTeleport(youmonst.data))
         && (youHaveTeleportControl() || rn2(3) < Luck+2)) {
         You("attempt a teleport spell.");
         (void) dotele();        /* calls unearth_you() */
     } else if (buried()) { /* still buried after 'port attempt */
         boolean good;
 
-        if (amorphous(youmonst.data) || youCanPassThroughWalls()
+        if (isAmorphous(youmonst.data) || youCanPassThroughWalls()
             || isNoncorporeal(youmonst.data->monsterTypeID)
-            || (unsolid(youmonst.data)
+            || (isUnsolid(youmonst.data)
                 && youmonst.data != &mons[PM_WATER_ELEMENTAL])
-            || (tunnels(youmonst.data) && !needspick(youmonst.data))) {
+            || (isTunneler(youmonst.data) && !needsPickaxe(youmonst.data))) {
             You("%s up through the %s.",
-                (tunnels(youmonst.data) && !needspick(youmonst.data))
+                (isTunneler(youmonst.data) && !needsPickaxe(youmonst.data))
                    ? "try to tunnel"
-                   : (amorphous(youmonst.data))
+                   : (isAmorphous(youmonst.data))
                       ? "ooze"
                       : "phase",
                 surface(currentX(), currentY()));
 
-            good = (tunnels(youmonst.data) && !needspick(youmonst.data))
+            good = (isTunneler(youmonst.data) && !needsPickaxe(youmonst.data))
                       ? dighole(TRUE, FALSE, (coord *)0) : TRUE;
             if (good)
                 unearth_you();

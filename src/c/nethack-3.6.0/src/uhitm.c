@@ -131,7 +131,7 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
      */
     if (!canspotmon(mtmp) && !glyph_is_warning(glyph_at(bhitpos.x, bhitpos.y))
         && !glyph_is_invisible(levl[bhitpos.x][bhitpos.y].glyph)
-        && !(youCanSee() && mtmp->mundetected && hides_under(mtmp->data))) {
+        && !(youCanSee() && mtmp->mundetected && hidesUnderStuff(mtmp->data->monsterTypeID))) {
         pline("Wait!  There's %s there you can't see!", something);
         map_invisible(bhitpos.x, bhitpos.y);
         /* if it was an invisible mimic, treat it as if we stumbled
@@ -163,7 +163,7 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
 
     if (mtmp->mundetected && !canseemon(mtmp)
         && !glyph_is_warning(glyph_at(bhitpos.x, bhitpos.y))
-        && (hides_under(mtmp->data) || monsterClass(mtmp->data->monsterTypeID) == S_EEL)) {
+        && (hidesUnderStuff(mtmp->data->monsterTypeID) || monsterClass(mtmp->data->monsterTypeID) == S_EEL)) {
         mtmp->mundetected = mtmp->msleeping = 0;
         newsym(mtmp->mx, mtmp->my);
         if (glyph_is_invisible(levl[mtmp->mx][mtmp->my].glyph)) {
@@ -364,7 +364,7 @@ register struct monst *mtmp;
                 }
 
             if (inshop || foo || (IS_ROCK(levl[currentX()][currentY()].typ)
-                                  && !passes_walls(mtmp->data))) {
+                                  && !passesThroughWalls(mtmp->data->monsterTypeID))) {
                 char buf[BUFSZ];
 
                 monflee(mtmp, rnd(6), FALSE, FALSE);
@@ -908,7 +908,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                             if (!thrown && obj->quan > 1L)
                                 what = An(singular(obj, xname));
                             /* note: s_suffix returns a modifiable buffer */
-                            if (haseyes(mdat)
+                            if (hasEyes(mdat->monsterTypeID)
                                 && mdat != &mons[PM_FLOATING_EYE])
                                 whom = strcat(strcat(s_suffix(whom), " "),
                                               mbodypart(mon, FACE));
@@ -1073,7 +1073,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
     } else if (unarmed && tmp > 1 && !thrown && !obj && !areYouPolymorphed()) {
         /* VERY small chance of stunning opponent if unarmed. */
         if (rnd(100) < weaponSkill(P_BARE_HANDED_COMBAT) && !isBigMonster(mdat->monsterTypeID)
-            && !thick_skinned(mdat)) {
+            && !isThickSkinned(mdat->monsterTypeID)) {
             if (canspotmon(mon))
                 pline("%s %s from your powerful strike!", Monnam(mon),
                       makeplural(stagger(mon->data, "stagger")));
@@ -1150,8 +1150,9 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
             fmt = "%s is seared!";
         }
         /* note: s_suffix returns a modifiable buffer */
-        if (!isNoncorporeal(mdat->monsterTypeID) && !amorphous(mdat))
+        if (!isNoncorporeal(mdat->monsterTypeID) && !isAmorphous(mdat->monsterTypeID)) {
             whom = strcat(s_suffix(whom), " flesh");
+	}
         pline(fmt, whom);
     }
     /* if a "no longer poisoned" message is coming, it will be last;
@@ -1280,7 +1281,7 @@ struct obj *obj;   /* weapon */
 
     /* odds to joust are expert:80%, skilled:60%, basic:40%, unskilled:20% */
     if ((joust_dieroll = rn2(5)) < skill_rating) {
-        if (joust_dieroll == 0 && rnl(50) == (50 - 1) && !unsolid(mon->data)
+        if (joust_dieroll == 0 && rnl(50) == (50 - 1) && !isUnsolid(mon->data->monsterTypeID)
             && !obj_resists(obj, 0, 100))
             return -1; /* hit that breaks lance */
         return 1;      /* successful joust */
@@ -1455,7 +1456,7 @@ register const struct Attack mattk;
             if (uwep)
                 tmp = 0;
         } else if (mattk.type == AT_KICK) {
-            if (thick_skinned(pd))
+            if (isThickSkinned(pd->monsterTypeID))
                 tmp = 0;
             if (pd == &mons[PM_SHADE]) {
                 if (!(uarmf && uarmf->blessed)) {
@@ -1672,7 +1673,7 @@ register const struct Attack mattk;
     case AD_DRIN: {
         struct obj *helmet;
 
-        if (notonhead || !has_head(pd)) {
+        if (notonhead || !hasAHead(pd->monsterTypeID)) {
             pline("%s doesn't seem harmed.", Monnam(mdef));
             tmp = 0;
             if (!youAreUnchanging() && pd == &mons[PM_GREEN_SLIME]) {
@@ -1711,8 +1712,8 @@ register const struct Attack mattk;
                 }
             } else if (u.ustuck == mdef) {
                 /* Monsters don't wear amulets of magical breathing */
-                if (is_pool(currentX(), currentY()) && !is_swimmer(pd)
-                    && !amphibious(pd)) {
+                if (is_pool(currentX(), currentY()) && !isSwimmer(pd->monsterTypeID)
+                    && !isAmphibious(pd->monsterTypeID)) {
                     You("drown %s...", mon_nam(mdef));
                     tmp = mdef->mhp;
                 } else if (mattk.type == AT_HUGS)
@@ -1818,7 +1819,7 @@ register const struct Attack mattk;
         }
         break;
     case AD_HALU:
-        if (haseyes(mdef->data) && mdef->mcansee) {
+        if (hasEyes(mdef->data->monsterTypeID) && mdef->mcansee) {
             pline("%s is affected by your flash of light!", Monnam(mdef));
             mdef->mconf = 1;
         }
@@ -1998,7 +1999,7 @@ register const struct Attack mattk;
             case AD_PHYS:
                 if (youmonst.data == &mons[PM_FOG_CLOUD]) {
                     pline("%s is laden with your moisture.", Monnam(mdef));
-                    if (amphibious(pd) && !flaming(pd)) {
+                    if (isAmphibious(pd->monsterTypeID) && !flaming(pd)) {
                         dam = 0;
                         pline("%s seems unharmed.", Monnam(mdef));
                     }
@@ -2071,9 +2072,9 @@ register const struct Attack mattk;
                 if (mdef->mhp <= 0) /* not lifesaved */
                     return 2;
             }
-            You("%s %s!", is_animal(youmonst.data) ? "regurgitate" : "expel",
+            You("%s %s!", isAnimal(youmonst.data->monsterTypeID) ? "regurgitate" : "expel",
                 mon_nam(mdef));
-            if (youHaveSlowDigestion() || is_animal(youmonst.data)) {
+            if (youHaveSlowDigestion() || isAnimal(youmonst.data->monsterTypeID)) {
                 pline("Obviously, you didn't like %s taste.",
                       s_suffix(mon_nam(mdef)));
             }
@@ -2172,7 +2173,7 @@ register struct monst *mon;
                 if (!swallowed()
                     && (compat = could_seduce(&youmonst, mon, mattk))) {
                     You("%s %s %s.",
-                        mon->mcansee && haseyes(mon->data) ? "smile at"
+                        mon->mcansee && hasEyes(mon->data->monsterTypeID) ? "smile at"
                                                            : "talk to",
                         mon_nam(mon),
                         compat == 2 ? "engagingly" : "seductively");

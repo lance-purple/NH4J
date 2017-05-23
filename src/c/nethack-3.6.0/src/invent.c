@@ -975,7 +975,7 @@ register const char *let, *word;
 
     /* Equivalent of an "ugly check" for gold */
     if (usegold && !strcmp(word, "eat")
-        && (!metallivorous(youmonst.data)
+        && (!isMetallivorous(youmonst.data->monsterTypeID)
             || youmonst.data == &mons[PM_RUST_MONSTER]))
         usegold = FALSE;
 
@@ -3160,7 +3160,7 @@ long numused;
             (void) stolen_value(otmp, otmp->ox, otmp->oy, FALSE, FALSE);
     }
     delobj(otmp);
-    if (at_u && lurking() && hides_under(youmonst.data))
+    if (at_u && lurking() && hidesUnderStuff(youmonst.data->monsterTypeID))
         (void) hideunder(&youmonst);
 }
 

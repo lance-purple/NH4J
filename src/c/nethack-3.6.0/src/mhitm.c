@@ -550,7 +550,7 @@ const struct Attack mattk;
     }
 
     if (magr->mcan || !magr->mcansee
-        || (magr->minvis && !perceives(mdef->data)) || !mdef->mcansee
+        || (magr->minvis && !perceivesTheInvisible(mdef->data->monsterTypeID)) || !mdef->mcansee
         || mdef->msleeping) {
         if (vis)
             pline("but nothing happens.");
@@ -567,7 +567,7 @@ const struct Attack mattk;
                         magr, "The gaze is reflected away by %s %s.");
                 return MM_MISS;
             }
-            if (mdef->minvis && !perceives(magr->data)) {
+            if (mdef->minvis && !perceivesTheInvisible(magr->data->monsterTypeID)) {
                 if (canseemon(magr)) {
                     pline(
                       "%s doesn't seem to notice that %s gaze was reflected.",
@@ -601,7 +601,7 @@ struct monst *magr, *mdef;
 
     /* (hypothetical) engulfers who can pass through walls aren't
      limited by rock|trees|bars */
-    if ((magr == &youmonst) ? youCanPassThroughWalls() : passes_walls(magr->data))
+    if ((magr == &youmonst) ? youCanPassThroughWalls() : passesThroughWalls(magr->data->monsterTypeID))
         return TRUE;
 
     /* don't swallow something in a spot where attacker wouldn't
@@ -838,7 +838,7 @@ register const struct Attack mattk;
     case AD_HEAL:
     case AD_PHYS:
     physical:
-        if (mattk.type == AT_KICK && thick_skinned(pd)) {
+        if (mattk.type == AT_KICK && isThickSkinned(pd->monsterTypeID)) {
             tmp = 0;
         } else if (mattk.type == AT_WEAP) {
             if (otmp) {
@@ -1084,7 +1084,7 @@ register const struct Attack mattk;
         tmp = 0;
         break;
     case AD_HALU:
-        if (!magr->mcan && haseyes(pd) && mdef->mcansee) {
+        if (!magr->mcan && hasEyes(pd->monsterTypeID) && mdef->mcansee) {
             if (vis)
                 pline("%s looks %sconfused.", Monnam(mdef),
                       mdef->mconf ? "more " : "");
@@ -1242,7 +1242,7 @@ register const struct Attack mattk;
         }
         break;
     case AD_DRIN:
-        if (notonhead || !has_head(pd)) {
+        if (notonhead || !hasAHead(pd->monsterTypeID)) {
             if (vis)
                 pline("%s doesn't seem harmed.", Monnam(mdef));
             /* Not clear what to do for green slimes */
@@ -1488,8 +1488,8 @@ int mdead;
             if (mddat == &mons[PM_FLOATING_EYE]) {
                 if (!rn2(4))
                     tmp = 127;
-                if (magr->mcansee && haseyes(madat) && mdef->mcansee
-                    && (perceives(madat) || !mdef->minvis)) {
+                if (magr->mcansee && hasEyes(madat->monsterTypeID) && mdef->mcansee
+                    && (perceivesTheInvisible(madat->monsterTypeID) || !mdef->minvis)) {
                     Sprintf(buf, "%s gaze is reflected by %%s %%s.",
                             s_suffix(Monnam(mdef)));
                     if (mon_reflects(magr,

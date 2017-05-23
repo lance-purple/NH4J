@@ -487,11 +487,12 @@ extcmd_via_menu()
 STATIC_PTR int
 domonability(VOID_ARGS)
 {
+    int upmid = youmonst.data->monsterTypeID;
     if (can_breathe(youmonst.data))
         return dobreathe();
     else if (attacktype(youmonst.data, AT_SPIT))
         return dospit();
-    else if (monsterClass(youmonst.data->monsterTypeID) == S_NYMPH)
+    else if (monsterClass(upmid) == S_NYMPH)
         return doremove();
     else if (attacktype(youmonst.data, AT_GAZE))
         return dogaze();
@@ -499,7 +500,7 @@ domonability(VOID_ARGS)
         return dosummon();
     else if (webmaker(youmonst.data))
         return dospinweb();
-    else if (is_hider(youmonst.data))
+    else if (isHider(upmid))
         return dohide();
     else if (is_mind_flayer(youmonst.data))
         return domindblast();
@@ -512,13 +513,13 @@ domonability(VOID_ARGS)
     } else if (isUnicorn(youmonst.data->monsterTypeID)) {
         use_unicorn_horn((struct obj *) 0);
         return 1;
-    } else if (monsterSound(youmonst.data->monsterTypeID) == MS_SHRIEK) {
+    } else if (monsterSound(upmid) == MS_SHRIEK) {
         You("shriek.");
         if (buried())
             pline("Unfortunately sound does not carry well through rock.");
         else
             aggravate();
-    } else if (monsterClass(youmonst.data->monsterTypeID) == S_VAMPIRE)
+    } else if (monsterClass(upmid) == S_VAMPIRE)
         return dopoly();
     else if (areYouPolymorphed())
         pline("Any special ability you may have is purely reflexive.");
@@ -1703,19 +1704,20 @@ int final;
     if (youAreHallucinating())
         you_are("hallucinating", "");
     if (youCannotSee()) {
-        /* from_what() (currently wizard-mode only) checks !haseyes()
+	int upmid = youmonst.data->monsterTypeID;
+        /* from_what() (currently wizard-mode only) checks !hasEyes()
            before permanentlyBlind, so we should too */
         Sprintf(buf, "%s blind",
-                !haseyes(youmonst.data) ? "innately"
+                !hasEyes(upmid) ? "innately"
                 : permanentlyBlind() ? "permanently"
                   /* better phrasing desperately wanted... */
                   : youAreBlindDueToBlindfold() ? "deliberately"
                     : "temporarily");
         if (wizard && youAreTemporarilyBlinded()
-            && !permanentlyBlind() && haseyes(youmonst.data))
+            && !permanentlyBlind() && hasEyes(upmid))
             Sprintf(eos(buf), " (%ld)", yourIntrinsicTimeout(BLINDED));
         /* !haseyes: avoid "you are innately blind innately" */
-        you_are(buf, !haseyes(youmonst.data) ? "" : from_what(BLINDED));
+        you_are(buf, !hasEyes(upmid) ? "" : from_what(BLINDED));
     }
     if (youAreDeaf())
         you_are("deaf", from_what(DEAF));
@@ -1854,7 +1856,7 @@ int final;
     /* report being weaponless; distinguish whether gloves are worn */
     if (!uwep) {
         you_are(uarmg ? "empty handed" /* gloves imply hands */
-                      : humanoid(youmonst.data)
+                      : isHumanoid(youmonst.data->monsterTypeID)
                          /* hands but no weapon and no gloves */
                          ? "bare handed"
                          /* alternate phrasing for paws or lack of hands */
@@ -1968,7 +1970,7 @@ int final;
         you_can("recognize detrimental food", "");
 
     /*** Vision and senses ***/
-    if (youCanSee() && (youAreTemporarilyBlinded() || !haseyes(youmonst.data)))
+    if (youCanSee() && (youAreTemporarilyBlinded() || !hasEyes(youmonst.data->monsterTypeID)))
         you_can("see", from_what(-BLINDED)); /* Eyes of the Overworld */
     if (youCanSeeInvisible()) {
         if (youCanSee())
@@ -2183,7 +2185,7 @@ int final;
             Sprintf(eos(buf), " (%d)", timeRemainingAsMonster());
         you_are(buf, "");
     }
-    if (lays_eggs(youmonst.data) && flags.female) /* areYouPolymorphed() */
+    if (laysEggs(youmonst.data->monsterTypeID) && flags.female) /* areYouPolymorphed() */
         you_can("lay eggs", "");
     if (lycanthropeType() >= LOW_PM) {
         /* "you are a werecreature [in beast form]" */
@@ -2470,20 +2472,21 @@ int msgflag;          /* for variant message phrasing */
             ; /* something unexpected; leave 'buf' as-is */
         }
     } else if (lurking()) {
+	int upmid = youmonst.data->monsterTypeID;
         bp = eos(buf); /* points past "hiding" */
-        if (monsterClass(youmonst.data->monsterTypeID) == S_EEL) {
+        if (monsterClass(upmid) == S_EEL) {
             if (is_pool(currentX(), currentY()))
                 Sprintf(bp, " in the %s", waterbody_name(currentX(), currentY()));
-        } else if (hides_under(youmonst.data)) {
+        } else if (hidesUnderStuff(upmid)) {
             struct obj *o = level.objects[currentX()][currentY()];
 
             if (o)
                 Sprintf(bp, " underneath %s", ansimpleoname(o));
-        } else if (is_clinger(youmonst.data) || youAreFlying()) {
+        } else if (isClinger(upmid) || youAreFlying()) {
             /* Flying: 'lurker above' hides on ceiling but doesn't cling */
             Sprintf(bp, " on the %s", ceiling(currentX(), currentY()));
         } else {
-            /* on floor; is_hider() but otherwise not special: 'trapper' */
+            /* on floor; isHider() but otherwise not special: 'trapper' */
             if (currentlyTrapped() && currentTrapType() == TT_PIT) {
                 struct trap *t = t_at(currentX(), currentY());
 

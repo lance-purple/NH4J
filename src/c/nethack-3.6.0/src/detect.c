@@ -1182,7 +1182,7 @@ genericptr_t num;
             (*(int *) num)++;
         }
         if (mtmp->mundetected
-            && (is_hider(mtmp->data) || monsterClass(mtmp->data->monsterTypeID) == S_EEL)) {
+            && (isHider(mtmp->data->monsterTypeID) || monsterClass(mtmp->data->monsterTypeID) == S_EEL)) {
             mtmp->mundetected = 0;
             newsym(zx, zy);
             (*(int *) num)++;
@@ -1277,7 +1277,7 @@ openit()
     int num = 0;
 
     if (swallowed()) {
-        if (is_animal(u.ustuck->data)) {
+        if (isAnimal(u.ustuck->data->monsterTypeID)) {
             if (youCannotSee())
                 pline("Its mouth opens!");
             else
@@ -1409,7 +1409,7 @@ register int aflag; /* intrinsic autosearch vs explicit searching */
                         }
                         if (!canspotmon(mtmp)) {
                             if (mtmp->mundetected
-                                && (is_hider(mtmp->data)
+                                && (isHider(mtmp->data->monsterTypeID)
                                     || monsterClass(mtmp->data->monsterTypeID) == S_EEL))
                                 mtmp->mundetected = 0;
                             newsym(x, y);

@@ -945,12 +945,12 @@ genericptr_t p2;
 
         /* Non living and non breathing monsters are not concerned */
         if (!(isNonliving(mtmp->data->monsterTypeID) || is_vampshifter(mtmp))
-            && !breathless(mtmp->data)) {
+            && !doesNotBreathe(mtmp->data->monsterTypeID)) {
             if (cansee(mtmp->mx, mtmp->my))
                 pline("%s coughs!", Monnam(mtmp));
             if (heros_fault(reg))
                 setmangry(mtmp);
-            if (haseyes(mtmp->data) && mtmp->mcansee) {
+            if (hasEyes(mtmp->data->monsterTypeID) && mtmp->mcansee) {
                 mtmp->mblinded = 1;
                 mtmp->mcansee = 0;
             }

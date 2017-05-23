@@ -742,7 +742,7 @@ namefloorobj()
        been moved off the hero's '@' yet, but there's no way to adjust
        the help text once getpos() has started */
     Sprintf(buf, "object on map (or '.' for one %s you)",
-            (lurking() && hides_under(youmonst.data)) ? "over" : "under");
+            (lurking() && hidesUnderStuff(youmonst.data->monsterTypeID)) ? "over" : "under");
     if (getpos(&cc, FALSE, buf) < 0 || cc.x <= 0)
         return;
     if (cc.x == currentX() && cc.y == currentY()) {

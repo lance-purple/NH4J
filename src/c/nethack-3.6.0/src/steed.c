@@ -29,8 +29,8 @@ struct monst *mtmp;
     struct permonst *ptr = mtmp->data;
 
     return (index(steeds, monsterClass(ptr->monsterTypeID)) && (monsterSize(ptr->monsterTypeID) >= MZ_MEDIUM)
-            && (!humanoid(ptr) || monsterClass(ptr->monsterTypeID) == S_CENTAUR) && !amorphous(ptr)
-            && !isNoncorporeal(ptr->monsterTypeID) && !isWhirly(ptr->monsterTypeID) && !unsolid(ptr));
+            && (!isHumanoid(ptr->monsterTypeID) || monsterClass(ptr->monsterTypeID) == S_CENTAUR) && !isAmorphous(ptr->monsterTypeID)
+            && !isNoncorporeal(ptr->monsterTypeID) && !isWhirly(ptr->monsterTypeID) && !isUnsolid(ptr->monsterTypeID));
 }
 
 int
@@ -156,9 +156,9 @@ can_ride(mtmp)
 struct monst *mtmp;
 {
     int upmid = youmonst.data->monsterTypeID;
-    return (mtmp->mtame && humanoid(youmonst.data)
+    return (mtmp->mtame && isHumanoid(upmid)
             && !isVerySmallMonster(upmid) && !isBigMonster(upmid)
-            && (!underwater() || is_swimmer(mtmp->data)));
+            && (!underwater() || isSwimmer(upmid)));
 }
 
 int
@@ -224,8 +224,8 @@ boolean force;      /* Quietly force this animal */
 
     int upmid = youmonst.data->monsterTypeID;
 
-    if (areYouPolymorphed() && (!humanoid(youmonst.data) || isVerySmallMonster(upmid)
-                   || isBigMonster(upmid) || slithy(youmonst.data))) {
+    if (areYouPolymorphed() && (!isHumanoid(upmid) || isVerySmallMonster(upmid)
+                   || isBigMonster(upmid) || isSlithy(upmid))) {
         You("won't fit on a saddle.");
         return (FALSE);
     }
@@ -288,7 +288,7 @@ boolean force;      /* Quietly force this animal */
             m_unleash(mtmp, FALSE);
         return (FALSE);
     }
-    if (!force && underwater() && !is_swimmer(ptr)) {
+    if (!force && underwater() && !isSwimmer(ptr->monsterTypeID)) {
         You_cant("ride that creature while under water.");
         return (FALSE);
     }
@@ -560,12 +560,12 @@ int reason; /* Player was thrown off etc. */
 
             /* The steed may drop into water/lava */
             int pmid = mdat->monsterTypeID;
-            if (!isFlyer(pmid) && !isFloater(pmid) && !is_clinger(mdat)) {
+            if (!isFlyer(pmid) && !isFloater(pmid) && !isClinger(pmid)) {
                 if (is_pool(currentX(), currentY())) {
                     if (!underwater())
                         pline("%s falls into the %s!", Monnam(mtmp),
                               surface(currentX(), currentY()));
-                    if (!is_swimmer(mdat) && !amphibious(mdat)) {
+                    if (!isSwimmer(pmid) && !isAmphibious(pmid)) {
                         killed(mtmp);
                         adjalign(-1);
                     }

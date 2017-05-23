@@ -59,7 +59,7 @@ dosounds()
             if (DEADMONSTER(mtmp))
                 continue;
             if ((mtmp->msleeping || is_lord(mtmp->data)
-                 || is_prince(mtmp->data)) && !is_animal(mtmp->data)
+                 || is_prince(mtmp->data)) && !isAnimal(mtmp->data->monsterTypeID)
                 && mon_in_room(mtmp, COURT)) {
                 /* finding one is enough, at least for now */
                 int which = rn2(3) + hallu;
@@ -203,7 +203,7 @@ dosounds()
         for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
             if (DEADMONSTER(mtmp))
                 continue;
-            if ((mtmp->msleeping || is_animal(mtmp->data))
+            if ((mtmp->msleeping || isAnimal(mtmp->data->monsterTypeID))
                 && mon_in_room(mtmp, ZOO)) {
                 You_hear1(zoo_msg[rn2(2) + hallu]);
                 return;
@@ -459,7 +459,7 @@ beg(mtmp)
 register struct monst *mtmp;
 {
     if (mtmp->msleeping || !mtmp->mcanmove
-        || !(carnivorous(mtmp->data) || herbivorous(mtmp->data)))
+        || !(isCarnivorous(mtmp->data->monsterTypeID) || isHerbivorous(mtmp->data->monsterTypeID)))
         return;
 
     /* presumably nearness and soundok checks have already been made */

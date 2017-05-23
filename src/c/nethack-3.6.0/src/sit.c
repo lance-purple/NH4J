@@ -41,7 +41,7 @@ dosit()
         You("are already sitting on %s.", mon_nam(u.usteed));
         return 0;
     }
-    if (lurking() && is_hider(youmonst.data) && currentMonsterNumber() != PM_TRAPPER)
+    if (lurking() && isHider(youmonst.data->monsterTypeID) && currentMonsterNumber() != PM_TRAPPER)
         setLurking(FALSE); /* no longer on the ceiling */
 
     if (!can_reach_floor(FALSE)) {
@@ -55,7 +55,7 @@ dosit()
     } else if (u.ustuck && !sticks(youmonst.data)) {
         /* holding monster is next to hero rather than beneath, but
            hero is in no condition to actually sit at has/her own spot */
-        if (humanoid(u.ustuck->data))
+        if (isHumanoid(u.ustuck->data->monsterTypeID))
             pline("%s won't offer %s lap.", Monnam(u.ustuck), mhis(u.ustuck));
         else
             pline("%s has no lap.", Monnam(u.ustuck));
@@ -130,7 +130,7 @@ dosit()
             (void) water_damage(uarm, "armor", TRUE);
     } else if (IS_SINK(typ)) {
         You(sit_message, defsyms[S_sink].explanation);
-        Your("%s gets wet.", humanoid(youmonst.data) ? "rump" : "underside");
+        Your("%s gets wet.", isHumanoid(youmonst.data->monsterTypeID) ? "rump" : "underside");
     } else if (IS_ALTAR(typ)) {
         You(sit_message, defsyms[S_altar].explanation);
         altar_wrath(currentX(), currentY());
@@ -284,7 +284,7 @@ dosit()
             pline_The("throne vanishes in a puff of logic.");
             newsym(currentX(), currentY());
         }
-    } else if (lays_eggs(youmonst.data)) {
+    } else if (laysEggs(youmonst.data->monsterTypeID)) {
         struct obj *uegg;
 
         if (!flags.female) {

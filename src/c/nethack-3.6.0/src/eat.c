@@ -88,7 +88,7 @@ register struct obj *obj;
     /* above also prevents the Amulet from being eaten, so we must never
        allow fake amulets to be eaten either [which is already the case] */
 
-    if (metallivorous(youmonst.data) && is_metallic(obj)
+    if (isMetallivorous(youmonst.data->monsterTypeID) && is_metallic(obj)
         && (youmonst.data != &mons[PM_RUST_MONSTER] || is_rustprone(obj)))
         return TRUE;
 
@@ -508,7 +508,7 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
          * player mind flayer is eating something's brain
          */
         eating_conducts(pd);
-        if (mindless(pd)) { /* (cannibalism not possible here) */
+        if (isMindless(pd->monsterTypeID)) { /* (cannibalism not possible here) */
             pline("%s doesn't notice.", Monnam(mdef));
             /* all done; no extra harm inflicted upon target */
             return MM_MISS;
@@ -574,7 +574,7 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
         /*
          * monster mind flayer is eating another monster's brain
          */
-        if (mindless(pd)) {
+        if (isMindless(pd->monsterTypeID)) {
             if (visflag)
                 pline("%s doesn't notice.", Monnam(mdef));
             return MM_MISS;
@@ -703,7 +703,7 @@ register int pm;
         }
     /* Fall through */
     default:
-        if (acidic(&mons[pm]) && youAreTurningToStone())
+        if (isAcidic(mons[pm].monsterTypeID) && youAreTurningToStone())
             fix_petrification();
         break;
     }
@@ -775,11 +775,11 @@ register struct permonst *ptr;
         ifdebugresist("can get poison resistance");
         break;
     case TELEPORT:
-        res = can_teleport(ptr);
+        res = canTeleport(ptr->monsterTypeID);
         ifdebugresist("can get teleport");
         break;
     case TELEPORT_CONTROL:
-        res = control_teleport(ptr);
+        res = canControlTeleport(ptr->monsterTypeID);
         ifdebugresist("can get teleport control");
         break;
     case TELEPAT:
@@ -1429,7 +1429,7 @@ struct obj *otmp;
     const char *mesg = 0;
     register int tmp;
 
-    if (metallivorous(youmonst.data)) {
+    if (isMetallivorous(youmonst.data->monsterTypeID)) {
         mesg = "You bite right into the metal tin...";
         tmp = 0;
     } else if (cannotWieldThings(youmonst.data->monsterTypeID)) { /* nohands || isVerySmallMonster */
@@ -1603,11 +1603,11 @@ struct obj *otmp;
         else
             useupf(otmp, 1L);
         return 2;
-    } else if (acidic(&mons[mnum]) && !youResistAcid()) {
+    } else if (isAcidic(mons[mnum].monsterTypeID) && !youResistAcid()) {
         tp++;
         You("have a very bad case of stomach acid.");   /* not body_part() */
         losehp(rnd(15), "acidic corpse", KILLED_BY_AN); /* acid damage */
-    } else if (poisonous(&mons[mnum]) && rn2(5)) {
+    } else if (isPoisonous(mons[mnum].monsterTypeID) && rn2(5)) {
         tp++;
         pline("Ecch - that must have been poisonous!");
         if (!youResistPoison()) {
@@ -1652,11 +1652,12 @@ struct obj *otmp;
         You("peck the eyeball with delight.");
     } else {
         /* [is this right?  omnivores end up always disliking the taste] */
+	int upmid = youmonst.data->monsterTypeID;
         boolean yummy = isVeganOption(mons[mnum].monsterTypeID)
-                           ? (!carnivorous(youmonst.data)
-                              && herbivorous(youmonst.data))
-                           : (carnivorous(youmonst.data)
-                              && !herbivorous(youmonst.data));
+                           ? (!isCarnivorous(upmid)
+                              && isHerbivorous(upmid))
+                           : (isCarnivorous(upmid)
+                              && !isHerbivorous(upmid));
 
         pline("%s%s %s!",
               type_is_pname(&mons[mnum])
@@ -1731,6 +1732,7 @@ STATIC_OVL void
 fprefx(otmp)
 struct obj *otmp;
 {
+    int upmid = youmonst.data->monsterTypeID;
     switch (otmp->otyp) {
     case FOOD_RATION:
         if (currentNutrition() <= 200)
@@ -1740,7 +1742,7 @@ struct obj *otmp;
             pline("That satiated your %s!", body_part(STOMACH));
         break;
     case TRIPE_RATION:
-        if (carnivorous(youmonst.data) && !humanoid(youmonst.data)) {
+        if (isCarnivorous(upmid) && !isHumanoid(upmid)) {
             pline("That tripe ration was surprisingly good!");
 	} else if (areYouOrcish()) {
             pline(youAreHallucinating() ? "Tastes great! Less filling!"
@@ -1893,7 +1895,7 @@ struct obj *otmp;
                 set_mimic_blocking();
                 see_monsters();
                 if (youAreInvisibleToOthers() && !oldprop && !yourIntrinsic(SEE_INVIS)
-                    && !perceives(youmonst.data) && youCanSee()) {
+                    && !perceivesTheInvisible(youmonst.data->monsterTypeID) && youCanSee()) {
                     newsym(currentX(), currentY());
                     pline("Suddenly you can see yourself.");
                     makeknown(typ);
@@ -2276,7 +2278,7 @@ struct obj *otmp;
         else
             return 2;
     }
-    if (cadaver && poisonous(&mons[mnum]) && !youResistPoison()) {
+    if (cadaver && isPoisonous(mons[mnum].monsterTypeID) && !youResistPoison()) {
         /* poisonous */
         Sprintf(buf, "%s like %s might be poisonous! %s", foodsmell,
                 it_or_they, eat_it_anyway);
@@ -2299,7 +2301,7 @@ struct obj *otmp;
         else
             return 2;
     }
-    if (cadaver && acidic(&mons[mnum]) && !youResistAcid()) {
+    if (cadaver && isAcidic(mons[mnum].monsterTypeID) && !youResistAcid()) {
         Sprintf(buf, "%s rather acidic. %s", foodsmell, eat_it_anyway);
         if (yn_function(buf, ynchars, 'n') == 'n')
             return 1;
@@ -2652,7 +2654,7 @@ gethungry()
         return; /* you don't feel hungrier */
 
     if ((!sleepingSinceMove() || !rn2(10)) /* slow metabolic rate while asleep */
-        && (carnivorous(youmonst.data) || herbivorous(youmonst.data))
+        && (isCarnivorous(youmonst.data->monsterTypeID) || isHerbivorous(youmonst.data->monsterTypeID))
         && !youHaveSlowDigestion()) {
         decreaseCurrentNutrition(1); /* ordinary food consumption */
     }
@@ -2945,11 +2947,11 @@ int corpsecheck; /* 0, no check, 1, corpses, 2, tinnable corpses */
     /* if we can't touch floor objects then use invent food only */
     if (!can_reach_floor(TRUE) || (feeding && u.usteed)
         || (is_pool_or_lava(currentX(), currentY())
-            && (canYouWalkOnWater() || is_clinger(youmonst.data)
+            && (canYouWalkOnWater() || isClinger(youmonst.data->monsterTypeID)
                 || (youAreFlying() && !youNeedNotBreathe()))))
         goto skipfloor;
 
-    if (feeding && metallivorous(youmonst.data)) {
+    if (feeding && isMetallivorous(youmonst.data->monsterTypeID)) {
         struct obj *gold;
         struct trap *ttmp = t_at(currentX(), currentY());
 
@@ -3160,7 +3162,7 @@ int threat;
     /* flesh from lizards and acidic critters stops petrification */
     case STONED:
         return (boolean) (mndx >= LOW_PM
-                          && (mndx == PM_LIZARD || acidic(&mons[mndx])));
+                          && (mndx == PM_LIZARD || isAcidic(mons[mndx].monsterTypeID)));
     /* no tins can cure these (yet?) */
     case SLIMED:
     case SICK:

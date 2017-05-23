@@ -1545,11 +1545,11 @@ struct mkroom *croom;
     if (pm) {
         int pmid = pm->monsterTypeID;
         int loc = DRY;
-        if (monsterClass(pmid) == S_EEL || amphibious(pm) || is_swimmer(pm))
+        if (monsterClass(pmid) == S_EEL || isAmphibious(pmid) || isSwimmer(pmid))
             loc = WET;
         if (isFlyer(pmid) || isFloater(pmid))
             loc |= (HOT | WET);
-        if (passes_walls(pm) || isNoncorporeal(pmid))
+        if (passesThroughWalls(pmid) || isNoncorporeal(pmid))
             loc |= SOLID;
         if (flaming(pm))
             loc |= HOT;

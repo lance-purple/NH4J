@@ -242,10 +242,10 @@ int *shotlimit_p; /* (see dothrow()) */
     *shotlimit_p = (multi || save_cm) ? multi + 1 : 0;
     multi = 0; /* reset; it's been used up */
 
-    if (notake(youmonst.data)) {
+    if (doesNotTakeStuff(youmonst.data->monsterTypeID)) {
         You("are physically incapable of throwing or shooting anything.");
         return FALSE;
-    } else if (nohands(youmonst.data)) {
+    } else if (hasNoHands(youmonst.data->monsterTypeID)) {
         You_cant("throw or shoot without hands."); /* not body_part(HAND) */
         return FALSE;
         /*[what about !freehand(), aside from cursed missile launcher?]*/
@@ -1593,7 +1593,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
         /* this assumes that guaranteed_hit is due to swallowing */
         wakeup(mon);
         if (obj->otyp == CORPSE && touch_petrifies(&mons[obj->corpsenm])) {
-            if (is_animal(u.ustuck->data)) {
+            if (isAnimal(u.ustuck->data->monsterTypeID)) {
                 minstapetrify(u.ustuck, TRUE);
                 /* Don't leave a cockatrice corpse available in a statue */
                 if (!swallowed()) {
@@ -1604,7 +1604,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
         }
         pline("%s into %s %s.", Tobjnam(obj, "vanish"),
               s_suffix(mon_nam(mon)),
-              is_animal(u.ustuck->data) ? "entrails" : "currents");
+              isAnimal(u.ustuck->data->monsterTypeID) ? "entrails" : "currents");
     } else {
         tmiss(obj, mon, TRUE);
     }
@@ -1782,6 +1782,7 @@ boolean hero_caused; /* is this the hero's fault? */
 boolean from_invent;
 {
     boolean fracture = FALSE;
+    int upmid = youmonst.data->monsterTypeID;
 
     switch (obj->oclass == POTION_CLASS ? POT_WATER : obj->otyp) {
     case MIRROR:
@@ -1793,16 +1794,17 @@ boolean from_invent;
         if (obj->otyp == POT_OIL && obj->lamplit) {
             explode_oil(obj, x, y);
         } else if (distanceSquaredToYou(x, y) <= 2) {
-            if (!breathless(youmonst.data) || haseyes(youmonst.data)) {
+            if (!doesNotBreathe(upmid) || hasEyes(upmid)) {
                 if (obj->otyp != POT_WATER) {
-                    if (!breathless(youmonst.data)) {
+                    if (!doesNotBreathe(upmid)) {
                         /* [what about "familiar odor" when known?] */
                         You("smell a peculiar odor...");
                     } else {
                         const char *eyes = body_part(EYE);
 
-                        if (eyecount(youmonst.data) != 1)
+                        if (eyeCount(upmid) != 1) {
                             eyes = makeplural(eyes);
+			}
                         Your("%s %s.", eyes, vtense(eyes, "water"));
                     }
                 }
@@ -1940,7 +1942,7 @@ struct obj *obj;
     }
     freeinv(obj);
     if (swallowed()) {
-        pline(is_animal(u.ustuck->data) ? "%s in the %s's entrails."
+        pline(isAnimal(u.ustuck->data->monsterTypeID) ? "%s in the %s's entrails."
                                         : "%s into %s.",
               "The money disappears", mon_nam(u.ustuck));
         add_to_minv(u.ustuck, obj);

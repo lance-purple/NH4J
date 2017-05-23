@@ -46,7 +46,7 @@ register const struct Attack mattk;
             break;
         case AT_KICK:
             pline("%s kicks%c", Monnam(mtmp),
-                  thick_skinned(youmonst.data) ? '.' : '!');
+                  isThickSkinned(youmonst.data->monsterTypeID) ? '.' : '!');
             break;
         case AT_STNG:
             pline("%s stings!", Monnam(mtmp));
@@ -152,14 +152,14 @@ register const struct Attack mattk;
     compat = ((mattk.damageType == AD_SEDU || mattk.damageType == AD_SSEX)
               && could_seduce(mtmp, &youmonst, NO_ATTACK));
 
-    if (!mtmp->mcansee || (youAreInvisibleToOthers() && !perceives(mtmp->data))) {
+    if (!mtmp->mcansee || (youAreInvisibleToOthers() && !perceivesTheInvisible(mtmp->data->monsterTypeID))) {
         const char *swings =
             mattk.type == AT_BITE
                 ? "snaps"
                 : mattk.type == AT_KICK
                       ? "kicks"
                       : (mattk.type == AT_STNG || mattk.type == AT_BUTT
-                         || nolimbs(mtmp->data))
+                         || hasNoLimbs(mtmp->data->monsterTypeID))
                             ? "lunges"
                             : "swings";
 
@@ -218,7 +218,7 @@ struct permonst *mdat; /* if mtmp is polymorphed, mdat != mtmp->data */
 boolean message;
 {
     if (message) {
-        if (is_animal(mdat))
+        if (isAnimal(mdat->monsterTypeID))
             You("get regurgitated!");
         else {
             char blast[40];
@@ -311,7 +311,7 @@ register struct monst *mtmp;
 
     if (!ranged)
         nomul(0);
-    if (mtmp->mhp <= 0 || (underwater() && !is_swimmer(mtmp->data)))
+    if (mtmp->mhp <= 0 || (underwater() && !isSwimmer(mtmp->data->monsterTypeID)))
         return 0;
 
     /* If swallowed, can only be affected by u.ustuck */
@@ -349,7 +349,7 @@ register struct monst *mtmp;
         if (!canspotmon(mtmp))
             map_invisible(mtmp->mx, mtmp->my);
         setLurking(FALSE);
-        if (is_hider(youmonst.data) && currentMonsterNumber() != PM_TRAPPER) {
+        if (isHider(youmonst.data->monsterTypeID) && currentMonsterNumber() != PM_TRAPPER) {
             /* ceiling hider */
             coord cc; /* maybe we need a unexto() function? */
             struct obj *obj;
@@ -519,7 +519,7 @@ register struct monst *mtmp;
     tmp += mtmp->m_lev;
     if (multi < 0)
         tmp += 4;
-    if ((youAreInvisibleToOthers() && !perceives(mdat)) || !mtmp->mcansee)
+    if ((youAreInvisibleToOthers() && !perceivesTheInvisible(mdat->monsterTypeID)) || !mtmp->mcansee)
         tmp -= 2;
     if (mtmp->mtrapped)
         tmp -= 2;
@@ -627,7 +627,7 @@ register struct monst *mtmp;
                 if (foundyou) {
                     if (tmp > (j = rnd(20 + i))) {
                         if (mattk.type != AT_KICK
-                            || !thick_skinned(youmonst.data))
+                            || !isThickSkinned(youmonst.data->monsterTypeID))
                             sum[i] = hitmu(mtmp, mattk);
                     } else
                         missmu(mtmp, (tmp == j), mattk);
@@ -670,7 +670,7 @@ register struct monst *mtmp;
                     } else {
                         missmu(mtmp, (tmp == j), mattk);
                     }
-                } else if (is_animal(mtmp->data)) {
+                } else if (isAnimal(mtmp->data->monsterTypeID)) {
                     pline("%s gulps some air!", Monnam(mtmp));
                 } else {
                     if (youseeit)
@@ -882,7 +882,7 @@ register const struct Attack mattk;
     /*  If the monster is undetected & hits you, you should know where
      *  the attack came from.
      */
-    if (mtmp->mundetected && (hides_under(mdat) || monsterClass(mdat->monsterTypeID) == S_EEL)) {
+    if (mtmp->mundetected && (hidesUnderStuff(mdat->monsterTypeID) || monsterClass(mdat->monsterTypeID) == S_EEL)) {
         mtmp->mundetected = 0;
         if (!(youCannotSee() ? youHaveTelepathyWhenBlind() : youHaveTelepathyWhenNotBlind())) {
             struct obj *obj;
@@ -1085,7 +1085,7 @@ register const struct Attack mattk;
         break;
     case AD_DRIN:
         hitmsg(mtmp, mattk);
-        if (defends(AD_DRIN, uwep) || !has_head(youmonst.data)) {
+        if (defends(AD_DRIN, uwep) || !hasAHead(youmonst.data->monsterTypeID)) {
             You("don't seem harmed.");
             /* Not clear what to do for green slimes */
             break;
@@ -1104,7 +1104,7 @@ register const struct Attack mattk;
         mdamageu(mtmp, dmg);
 
         if (!uarmh || uarmh->otyp != DUNCE_CAP) {
-            /* eat_brains() will miss if target is mindless (won't
+            /* eat_brains() will miss if target isMindless() (won't
                happen here; hero is considered to retain his mind
                regardless of current shape) or is noncorporeal
                (can't happen here; no one can poly into a ghost
@@ -1283,7 +1283,7 @@ register const struct Attack mattk;
     /* else FALLTHRU */
     case AD_SITM: /* for now these are the same */
     case AD_SEDU:
-        if (is_animal(mtmp->data)) {
+        if (isAnimal(mtmp->data->monsterTypeID)) {
             hitmsg(mtmp, mattk);
             if (mtmp->mcan)
                 break;
@@ -1318,9 +1318,9 @@ register const struct Attack mattk;
         case 0:
             break;
         default:
-            if (!is_animal(mtmp->data) && !tele_restrict(mtmp))
+            if (!isAnimal(mtmp->data->monsterTypeID) && !tele_restrict(mtmp))
                 (void) rloc(mtmp, TRUE);
-            if (is_animal(mtmp->data) && *buf) {
+            if (isAnimal(mtmp->data->monsterTypeID) && *buf) {
                 if (canseemon(mtmp))
                     pline("%s tries to %s away with %s.", Monnam(mtmp),
                           locomotion(mtmp->data, "run"), buf);
@@ -1702,7 +1702,7 @@ register const struct Attack mattk;
         place_monster(mtmp, currentX(), currentY());
         u.ustuck = mtmp;
         newsym(mtmp->mx, mtmp->my);
-        if (is_animal(mtmp->data) && u.usteed) {
+        if (isAnimal(mtmp->data->monsterTypeID) && u.usteed) {
             char buf[BUFSZ];
             /* Too many quirks presently if hero and steed
              * are swallowed. Pretend purple worms don't
@@ -1802,7 +1802,7 @@ register const struct Attack mattk;
                 flaming(youmonst.data)
                     ? "are smoldering out!"
                     : youNeedNotBreathe() ? "find it mildly uncomfortable."
-                                 : amphibious(youmonst.data)
+                                 : isAmphibious(youmonst.data->monsterTypeID)
                                        ? "feel comforted."
                                        : "can barely breathe!");
             /* NB: Amphibious includes Breathless */
@@ -1902,12 +1902,12 @@ register const struct Attack mattk;
 
     if (touch_petrifies(youmonst.data) && !resists_ston(mtmp)) {
         pline("%s very hurriedly %s you!", Monnam(mtmp),
-              is_animal(mtmp->data) ? "regurgitates" : "expels");
+              isAnimal(mtmp->data->monsterTypeID) ? "regurgitates" : "expels");
         expels(mtmp, mtmp->data, FALSE);
     } else if (!timeSinceBeingSwallowed() || monsterSize(youmonst.data->monsterTypeID) >= MZ_HUGE) {
-        You("get %s!", is_animal(mtmp->data) ? "regurgitated" : "expelled");
+        You("get %s!", isAnimal(mtmp->data->monsterTypeID) ? "regurgitated" : "expelled");
         if (flags.verbose
-            && (is_animal(mtmp->data)
+            && (isAnimal(mtmp->data->monsterTypeID)
                 || (dmgtype(mtmp->data, AD_DGST) && youHaveSlowDigestion())))
             pline("Obviously %s doesn't like your taste.", mon_nam(mtmp));
         expels(mtmp, mtmp->data, FALSE);
@@ -2257,7 +2257,7 @@ const struct Attack mattk;
     boolean agrinvis, defperc;
     xchar genagr, gendef;
 
-    if (is_animal(magr->data))
+    if (isAnimal(magr->data->monsterTypeID))
         return 0;
     if (magr == &youmonst) {
         pagr = youmonst.data;
@@ -2272,7 +2272,7 @@ const struct Attack mattk;
         defperc = youCanSeeInvisible();
         gendef = poly_gender();
     } else {
-        defperc = perceives(mdef->data);
+        defperc = perceivesTheInvisible(mdef->data->monsterTypeID);
         gendef = gender(mdef);
     }
 
@@ -2695,8 +2695,8 @@ register const struct Attack mattk;
             if (currentMonsterNumber() == PM_FLOATING_EYE) {
                 if (!rn2(4))
                     tmp = 127;
-                if (mtmp->mcansee && haseyes(mtmp->data) && rn2(3)
-                    && (perceives(mtmp->data) || !youAreInvisibleToOthers())) {
+                if (mtmp->mcansee && hasEyes(mtmp->data->monsterTypeID) && rn2(3)
+                    && (perceivesTheInvisible(mtmp->data->monsterTypeID) || !youAreInvisibleToOthers())) {
                     if (youCannotSee()) {
 			javaString youMonsterName = monsterTypeName(upmid);
                         pline("As a blind %s, you cannot defend yourself.",

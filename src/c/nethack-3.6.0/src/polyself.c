@@ -78,19 +78,19 @@ set_uasmon()
 
     PROPSET(STUNNED, (mdat == &mons[PM_STALKER] || is_bat(mdat)));
     PROPSET(HALLUC_RES, dmgtype(mdat, AD_HALU));
-    PROPSET(SEE_INVIS, perceives(mdat));
+    PROPSET(SEE_INVIS, perceivesTheInvisible(mdat->monsterTypeID));
     PROPSET(TELEPAT, telepathic(mdat));
     PROPSET(INFRAVISION, !!infravision(mdat));
     PROPSET(INVIS, pm_invisible(mdat));
-    PROPSET(TELEPORT, can_teleport(mdat));
-    PROPSET(TELEPORT_CONTROL, control_teleport(mdat));
+    PROPSET(TELEPORT, canTeleport(mdat->monsterTypeID));
+    PROPSET(TELEPORT_CONTROL, canControlTeleport(mdat->monsterTypeID));
     PROPSET(LEVITATION, isFloater(mdat->monsterTypeID));
     PROPSET(FLYING, isFlyer(mdat->monsterTypeID));
-    PROPSET(SWIMMING, is_swimmer(mdat));
+    PROPSET(SWIMMING, isSwimmer(mdat->monsterTypeID));
     /* [don't touch MAGICAL_BREATHING here; both Amphibious and Breathless
        key off of it but include different monster forms...] */
-    PROPSET(PASSES_WALLS, passes_walls(mdat));
-    PROPSET(REGENERATION, regenerates(mdat));
+    PROPSET(PASSES_WALLS, passesThroughWalls(mdat->monsterTypeID));
+    PROPSET(REGENERATION, regenerates(mdat->monsterTypeID));
     PROPSET(REFLECTING, (mdat == &mons[PM_SILVER_DRAGON]));
 
     float_vs_flight(); /* maybe toggle (BFlying & I_SPECIAL) */
@@ -712,7 +712,7 @@ int mntmp;
         }
     }
     check_strangling(FALSE); /* maybe stop strangling */
-    if (nohands(youmonst.data))
+    if (hasNoHands(youmonst.data->monsterTypeID))
         setYourIntrinsic(SLIPPERY_FINGERS, 0);
 
     /*
@@ -795,7 +795,7 @@ int mntmp;
             pline(use_thec, monsterc, "remove an iron ball");
         if (attacktype(youmonst.data, AT_GAZE))
             pline(use_thec, monsterc, "gaze at monsters");
-        if (is_hider(youmonst.data))
+        if (isHider(youmonst.data->monsterTypeID))
             pline(use_thec, monsterc, "hide");
         if (is_were(youmonst.data))
             pline(use_thec, monsterc, "summon help");
@@ -812,12 +812,12 @@ int mntmp;
         if (isVampire(youmonst.data->monsterTypeID))
             pline(use_thec, monsterc, "change shape");
 
-        if (lays_eggs(youmonst.data) && flags.female)
+        if (laysEggs(youmonst.data->monsterTypeID) && flags.female)
             pline(use_thec, "sit", "lay an egg");
     }
 
     /* you now know what an egg of your type looks like */
-    if (lays_eggs(youmonst.data)) {
+    if (laysEggs(youmonst.data->monsterTypeID)) {
         learn_egg_type(currentMonsterNumber());
         /* make queen bees recognize killer bee eggs */
         learn_egg_type(egg_type_from_parent(currentMonsterNumber(), TRUE));
@@ -840,8 +840,8 @@ int mntmp;
         setCurrentTrapTimeout(0);
         pline_The("lava now feels soothing.");
     }
-    if (amorphous(youmonst.data) || isWhirly(youmonst.data->monsterTypeID)
-        || unsolid(youmonst.data)) {
+    if (isAmorphous(youmonst.data->monsterTypeID) || isWhirly(youmonst.data->monsterTypeID)
+        || isUnsolid(youmonst.data->monsterTypeID)) {
         if (youAreBeingPunished()) {
             You("slip out of the iron chain.");
             unpunish();
@@ -851,8 +851,8 @@ int mntmp;
         }
     }
     if (currentlyTrapped() && (currentTrapType() == TT_WEB || currentTrapType() == TT_BEARTRAP)
-        && (amorphous(youmonst.data) || isWhirly(youmonst.data->monsterTypeID)
-            || unsolid(youmonst.data) || (monsterSize(youmonst.data->monsterTypeID) <= MZ_SMALL
+        && (isAmorphous(youmonst.data->monsterTypeID) || isWhirly(youmonst.data->monsterTypeID)
+            || isUnsolid(youmonst.data->monsterTypeID) || (monsterSize(youmonst.data->monsterTypeID) <= MZ_SMALL
                                           && currentTrapType() == TT_BEARTRAP))) {
         You("are no longer stuck in the %s.",
             currentTrapType() == TT_WEB ? "web" : "bear trap");
@@ -978,7 +978,7 @@ break_armor()
         }
     }
     if (cannotWieldThings(youmonst.data->monsterTypeID)
-        || slithy(youmonst.data) || monsterClass(youmonst.data->monsterTypeID) == S_CENTAUR) {
+        || isSlithy(youmonst.data->monsterTypeID) || monsterClass(youmonst.data->monsterTypeID) == S_CENTAUR) {
         if ((otmp = uarmf) != 0) {
             if (donning(otmp))
                 cancel_don();
@@ -1165,7 +1165,7 @@ dospinweb()
     }
     if (swallowed()) {
         You("release web fluid inside %s.", mon_nam(u.ustuck));
-        if (is_animal(u.ustuck->data)) {
+        if (isAnimal(u.ustuck->data->monsterTypeID)) {
             expels(u.ustuck, u.ustuck->data, TRUE);
             return 0;
         }
@@ -1336,7 +1336,7 @@ dogaze()
             continue;
         if (canseemon(mtmp) && couldsee(mtmp->mx, mtmp->my)) {
             looked++;
-            if (youAreInvisibleToOthers() && !perceives(mtmp->data)) {
+            if (youAreInvisibleToOthers() && !perceivesTheInvisible(mtmp->data->monsterTypeID)) {
                 pline("%s seems not to notice your gaze.", Monnam(mtmp));
             } else if (mtmp->minvis && !youCanSeeInvisible()) {
                 You_cant("see where to gaze at %s.", Monnam(mtmp));
@@ -1356,7 +1356,7 @@ dogaze()
                     setmangry(mtmp);
                 }
                 if (!mtmp->mcanmove || mtmp->mstun || mtmp->msleeping
-                    || !mtmp->mcansee || !haseyes(mtmp->data)) {
+                    || !mtmp->mcansee || !hasEyes(mtmp->data->monsterTypeID)) {
                     looked--;
                     continue;
                 }
@@ -1438,7 +1438,7 @@ dohide()
 {
     int umc = monsterClass(youmonst.data->monsterTypeID);
     boolean ismimic = (umc == S_MIMIC);
-    boolean on_ceiling = is_clinger(youmonst.data) || youAreFlying();
+    boolean on_ceiling = isClinger(youmonst.data->monsterTypeID) || youAreFlying();
 
     /* can't hide while being held (or holding) or while trapped
        (except for floor hiders [trapper or mimic] in pits) */
@@ -1446,7 +1446,7 @@ dohide()
         You_cant("hide while you're %s.",
                  !u.ustuck ? "trapped" : !sticks(youmonst.data)
                                              ? "being held"
-                                             : humanoid(u.ustuck->data)
+                                             : isHumanoid(u.ustuck->data->monsterTypeID)
                                                    ? "holding someone"
                                                    : "holding that creature");
         if (lurking()
@@ -1467,7 +1467,7 @@ dohide()
         setLurking(FALSE);
         return 0;
     }
-    if (hides_under(youmonst.data) && !level.objects[currentX()][currentY()]) {
+    if (hidesUnderStuff(youmonst.data->monsterTypeID) && !level.objects[currentX()][currentY()]) {
         There("is nothing to hide under here.");
         setLurking(FALSE);
         return 0;
@@ -1478,7 +1478,7 @@ dohide()
         setLurking(FALSE);
         return 0;
     }
-    if ((is_hider(youmonst.data) && !youAreFlying()) /* floor hider */
+    if ((isHider(youmonst.data->monsterTypeID) && !youAreFlying()) /* floor hider */
         && (areYouOnAirLevel() || areYouOnWaterLevel())) {
         There("is nowhere to hide beneath you.");
         setLurking(FALSE);
@@ -1684,7 +1684,7 @@ int part;
         return humanoid_parts[part]; /* yeti/sasquatch, monkey/ape */
     }
     if ((part == HAND || part == HANDED)
-        && (humanoid(mptr) && attacktype(mptr, AT_CLAW)
+        && (isHumanoid(mptr->monsterTypeID) && attacktype(mptr, AT_CLAW)
             && !index(not_claws, mc) && mptr != &mons[PM_STONE_GOLEM]
             && mptr != &mons[PM_INCUBUS] && mptr != &mons[PM_SUCCUBUS]))
         return (part == HAND) ? "claw" : "clawed";
@@ -1699,7 +1699,7 @@ int part;
         return "tentacle";
     if (mptr == &mons[PM_FLOATING_EYE] && part == EYE)
         return "cornea";
-    if (humanoid(mptr) && (part == ARM || part == FINGER || part == FINGERTIP
+    if (isHumanoid(mptr->monsterTypeID) && (part == ARM || part == FINGER || part == FINGERTIP
                            || part == HAND || part == HANDED))
         return humanoid_parts[part];
     if (mptr == &mons[PM_RAVEN])
@@ -1722,7 +1722,7 @@ int part;
         return fish_parts[part];
     if (mc == S_WORM)
         return worm_parts[part];
-    if (slithy(mptr) || (mc == S_DRAGON && part == HAIR))
+    if (isSlithy(mptr->monsterTypeID) || (mc == S_DRAGON && part == HAIR))
         return snake_parts[part];
     if (mc == S_EYE)
         return sphere_parts[part];
@@ -1733,7 +1733,7 @@ int part;
         return vortex_parts[part];
     if (mc == S_FUNGUS)
         return fungus_parts[part];
-    if (humanoid(mptr))
+    if (isHumanoid(mptr->monsterTypeID))
         return humanoid_parts[part];
     return animal_parts[part];
 }
@@ -1751,7 +1751,7 @@ poly_gender()
     /* Returns gender of polymorphed player;
      * 0/1=same meaning as flags.female, 2=none.
      */
-    if (is_neuter(youmonst.data) || !humanoid(youmonst.data))
+    if (is_neuter(youmonst.data) || !isHumanoid(youmonst.data->monsterTypeID))
         return 2;
     return flags.female;
 }

@@ -443,7 +443,7 @@ register struct obj *spellbook;
 
         if (dullbook > 0) {
             eyes = body_part(EYE);
-            if (eyecount(youmonst.data) > 1)
+            if (eyeCount(youmonst.data->monsterTypeID) > 1)
                 eyes = makeplural(eyes);
             pline("This book is so dull that you can't keep your %s open.",
                   eyes);
@@ -796,7 +796,7 @@ cast_protection()
                                    ? "mist"
                                    : isWhirly(u.ustuck->data->monsterTypeID)
                                       ? "maelstrom"
-                                      : is_animal(u.ustuck->data)
+                                      : isAnimal(u.ustuck->data->monsterTypeID)
                                          ? "maw"
                                          : "ooze")
                                 : (inWater()

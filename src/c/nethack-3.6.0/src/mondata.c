@@ -143,7 +143,7 @@ struct monst *mon;
     struct obj *o;
 
     if (is_you ? (youCannotSee() || youAreUnaware())
-               : (mon->mblinded || !mon->mcansee || !haseyes(ptr)
+               : (mon->mblinded || !mon->mcansee || !hasEyes(ptr->monsterTypeID)
                   /* BUG: temporary sleep sets mfrozen, but since
                           paralysis does too, we can't check it */
                   || mon->msleeping))
@@ -185,7 +185,7 @@ struct obj *obj; /* type == AT_WEAP, AT_SPIT */
     const char *s;
 
     /* no eyes protect against all attacks for now */
-    if (!haseyes(mdef->data))
+    if (!hasEyes(mdef->data->monsterTypeID))
         return FALSE;
 
     switch (type) {
@@ -308,10 +308,11 @@ boolean
 passes_bars(mptr)
 struct permonst *mptr;
 {
-    return (boolean) (passes_walls(mptr) || amorphous(mptr) || unsolid(mptr)
-                      || isWhirly(mptr->monsterTypeID) || isVerySmallMonster(mptr->monsterTypeID)
+    int pmid = mptr->monsterTypeID;
+    return (boolean) (passesThroughWalls(pmid) || isAmorphous(pmid) || isUnsolid(pmid)
+                      || isWhirly(pmid) || isVerySmallMonster(pmid)
                       || dmgtype(mptr, AD_CORR) || dmgtype(mptr, AD_RUST)
-                      || (slithy(mptr) && !isBigMonster(mptr->monsterTypeID)));
+                      || (isSlithy(pmid) && !isBigMonster(pmid)));
 }
 
 /* returns True if monster can blow (whistle, etc) */
@@ -320,9 +321,9 @@ can_blow(mtmp)
 register struct monst *mtmp;
 {
     int pmid = mtmp->data->monsterTypeID;
-    if ((isSilent(mtmp->data->monsterTypeID) || monsterSound(pmid) == MS_BUZZ)
-        && (breathless(mtmp->data) || isVerySmallMonster(mtmp->data->monsterTypeID)
-            || !has_head(mtmp->data) || monsterClass(pmid) == S_EEL))
+    if ((isSilent(pmid) || monsterSound(pmid) == MS_BUZZ)
+        && (doesNotBreathe(pmid) || isVerySmallMonster(pmid)
+            || !hasAHead(pmid) || monsterClass(pmid) == S_EEL))
         return FALSE;
     if ((mtmp == &youmonst) && youAreBeingStrangled())
         return FALSE;
@@ -344,18 +345,18 @@ struct monst *mon;
        who don't need to breathe (brain, if any, doesn't care).
        Mindless creatures who do need to breath are vulnerable, as
        are non-breathing creatures which have higher brain function. */
-    if (!has_head(mon->data))
+    if (!hasAHead(mon->data->monsterTypeID))
         return FALSE;
     if (mon == &youmonst) {
         /* hero can't be mindless but poly'ing into mindless form can
            confer strangulation protection */
-        nobrainer = mindless(youmonst.data);
+        nobrainer = isMindless(youmonst.data->monsterTypeID);
         nonbreathing = youNeedNotBreathe();
     } else {
-        nobrainer = mindless(mon->data);
+        nobrainer = isMindless(mon->data->monsterTypeID);
         /* monsters don't wear amulets of magical breathing,
            so second part doesn't achieve anything useful... */
-        nonbreathing = (breathless(mon->data)
+        nonbreathing = (doesNotBreathe(mon->data->monsterTypeID)
                         || ((mamul = which_armor(mon, W_AMUL)) != 0
                             && (mamul->otyp == AMULET_OF_MAGICAL_BREATHING)));
     }
@@ -370,7 +371,7 @@ register struct permonst *ptr;
     if (uwep && uwep->oartifact == ART_EXCALIBUR)
         return TRUE;
     else
-        return (boolean) haseyes(ptr);
+        return (boolean) hasEyes(ptr->monsterTypeID);
 }
 
 /* creature will slide out of armor */
@@ -391,7 +392,7 @@ register struct permonst *ptr;
         return FALSE;
 
     return (boolean) (isBigMonster(ptr->monsterTypeID)
-                      || (monsterSize(ptr->monsterTypeID) > MZ_SMALL && !humanoid(ptr))
+                      || (monsterSize(ptr->monsterTypeID) > MZ_SMALL && !isHumanoid(ptr->monsterTypeID))
                       /* special cases of humanoids that cannot wear suits */
                       || ptr == &mons[PM_MARILITH]
                       || ptr == &mons[PM_WINGED_GARGOYLE]);
@@ -902,7 +903,7 @@ register struct monst *mtmp;
 {
     if (is_neuter(mtmp->data) || !canspotmon(mtmp))
         return 2;
-    return (humanoid(mtmp->data) || (monsterGenerationMask(mtmp->data->monsterTypeID) & G_UNIQ)
+    return (isHumanoid(mtmp->data->monsterTypeID) || (monsterGenerationMask(mtmp->data->monsterTypeID) & G_UNIQ)
             || type_is_pname(mtmp->data)) ? (int) mtmp->female : 2;
 }
 
@@ -1064,10 +1065,10 @@ const char *def;
     return (isFloater(pmid) ? levitate[capitalize]
             : (isFlyer(pmid) && msize <= MZ_SMALL) ? flys[capitalize]
               : (isFlyer(pmid) && msize > MZ_SMALL) ? flyl[capitalize]
-                : slithy(ptr) ? slither[capitalize]
-                  : amorphous(ptr) ? ooze[capitalize]
-                    : !monsterMovementSpeed(ptr->monsterTypeID) ? immobile[capitalize]
-                      : nolimbs(ptr) ? crawl[capitalize]
+                : isSlithy(pmid) ? slither[capitalize]
+                  : isAmorphous(pmid) ? ooze[capitalize]
+                    : !monsterMovementSpeed(pmid) ? immobile[capitalize]
+                      : hasNoLimbs(pmid) ? crawl[capitalize]
                         : def);
 }
 
@@ -1085,10 +1086,10 @@ const char *def;
     return (isFloater(pmid) ? levitate[capitalize]
             : (isFlyer(pmid) && msize <= MZ_SMALL) ? flys[capitalize]
               : (isFlyer(pmid) && msize > MZ_SMALL) ? flyl[capitalize]
-                : slithy(ptr) ? slither[capitalize]
-                  : amorphous(ptr) ? ooze[capitalize]
+                : isSlithy(pmid) ? slither[capitalize]
+                  : isAmorphous(pmid) ? ooze[capitalize]
                     : !monsterMovementSpeed(pmid) ? immobile[capitalize]
-                      : nolimbs(ptr) ? crawl[capitalize]
+                      : hasNoLimbs(pmid) ? crawl[capitalize]
                         : def);
 }
 
@@ -1236,6 +1237,134 @@ boolean cannotUseTwoWeapons(struct permonst* ptr) {
 
 boolean isFlyer(int pmid) {
     return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isFlyer", pmid);
+}
+
+boolean isClinger(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isClinger", pmid);
+}
+
+boolean isSwimmer(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isSwimmer", pmid);
+}
+
+boolean doesNotBreathe(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "doesNotBreathe", pmid);
+}
+
+boolean isAmphibious(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isAmphibious", pmid);
+}
+
+boolean passesThroughWalls(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "passesThroughWalls", pmid);
+}
+
+boolean isAmorphous(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isAmorphous", pmid);
+}
+
+boolean isTunneler(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isTunneler", pmid);
+}
+
+boolean needsPickaxe(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "needsPickaxe", pmid);
+}
+
+boolean hidesUnderStuff(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "hidesUnderStuff", pmid);
+}
+
+boolean isHider(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isHider", pmid);
+}
+
+boolean hasEyes(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "hasEyes", pmid);
+}
+
+int eyeCount(int pmid) {
+    return javaGetIntFromInt(MONSTER_DATA_CLASS, "eyeCount", pmid);
+}
+
+boolean hasNoHands(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "hasNoHands", pmid);
+}
+
+boolean hasNoLimbs(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "hasNoLimbs", pmid);
+}
+
+boolean doesNotTakeStuff(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "doesNotTakeStuff", pmid);
+}
+
+boolean hasAHead(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "hasAHead", pmid);
+}
+
+boolean isUnsolid(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isUnsolid", pmid);
+}
+
+boolean isMindless(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isMindless", pmid);
+}
+
+boolean isHumanoid(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isHumanoid", pmid);
+}
+
+boolean isAnimal(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isAnimal", pmid);
+}
+
+boolean isSlithy(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isSlithy", pmid);
+}
+
+boolean isThickSkinned(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isThickSkinned", pmid);
+}
+
+boolean laysEggs(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "laysEggs", pmid);
+}
+
+boolean regenerates(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "regenerates", pmid);
+}
+
+boolean perceivesTheInvisible(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "perceivesTheInvisible", pmid);
+}
+
+boolean canTeleport(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "canTeleport", pmid);
+}
+
+boolean canControlTeleport(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "canControlTeleport", pmid);
+}
+
+boolean isAcidic(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isAcidic", pmid);
+}
+
+boolean isPoisonous(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isPoisonous", pmid);
+}
+
+boolean isCarnivorous(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isCarnivorous", pmid);
+}
+
+boolean isHerbivorous(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isHerbivorous", pmid);
+}
+
+boolean isMetallivorous(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isMetallivorous", pmid);
 }
 
 /*mondata.c*/

@@ -165,7 +165,7 @@ mon_regen(mon, digest_meal)
 struct monst *mon;
 boolean digest_meal;
 {
-    if (mon->mhp < mon->mhpmax && (moves % 20 == 0 || regenerates(mon->data)))
+    if (mon->mhp < mon->mhpmax && (moves % 20 == 0 || regenerates(mon->data->monsterTypeID)))
         mon->mhp++;
     if (mon->mspec_used)
         mon->mspec_used--;
@@ -295,7 +295,7 @@ int *inrange, *nearby, *scared;
      * running into you by accident but possibly attacking the spot
      * where it guesses you are.
      */
-    if (!mtmp->mcansee || (youAreInvisibleToOthers() && !perceives(mtmp->data))) {
+    if (!mtmp->mcansee || (youAreInvisibleToOthers() && !perceivesTheInvisible(mtmp->data->monsterTypeID))) {
         seescaryx = mtmp->mux;
         seescaryy = mtmp->muy;
     } else {
@@ -388,7 +388,7 @@ register struct monst *mtmp;
         mtmp->mstun = 0;
 
     /* some monsters teleport */
-    if (mtmp->mflee && !rn2(40) && can_teleport(mdat) && !mtmp->iswiz
+    if (mtmp->mflee && !rn2(40) && canTeleport(mdat->monsterTypeID) && !mtmp->iswiz
         && !level.flags.noteleport) {
         (void) rloc(mtmp, TRUE);
         return 0;
@@ -493,7 +493,7 @@ register struct monst *mtmp;
                 continue;
             if (m2->mpeaceful == mtmp->mpeaceful)
                 continue;
-            if (mindless(m2->data))
+            if (isMindless(m2->data->monsterTypeID))
                 continue;
             if (m2 == mtmp)
                 continue;
@@ -743,7 +743,7 @@ register int after;
             finish_meating(mtmp);
         return 3; /* still eating */
     }
-    if (hides_under(ptr) && OBJ_AT(mtmp->mx, mtmp->my) && rn2(10))
+    if (hidesUnderStuff(ptr->monsterTypeID) && OBJ_AT(mtmp->mx, mtmp->my) && rn2(10))
         return 0; /* do not leave hiding place */
 
     set_apparxy(mtmp);
@@ -752,7 +752,7 @@ register int after;
      * other calls of m_move (ex. leprechauns dodging)
      */
     if (!areYouOnRogueLevel())
-        can_tunnel = tunnels(ptr);
+        can_tunnel = isTunneler(ptr->monsterTypeID);
     can_open = !(cannotWieldThings(ptr->monsterTypeID));
     can_unlock =
         ((can_open && monhaskey(mtmp, TRUE)) || mtmp->iswiz || is_rider(ptr));
@@ -852,7 +852,7 @@ not_special:
 	int mc = monsterClass(ptr->monsterTypeID);
 
         if (!mtmp->mcansee
-            || (should_see && youAreInvisibleToOthers() && !perceives(ptr) && rn2(11))
+            || (should_see && youAreInvisibleToOthers() && !perceivesTheInvisible(ptr->monsterTypeID) && rn2(11))
             || is_obj_mappear(&youmonst,STRANGE_OBJECT) || lurking()
             || (is_obj_mappear(&youmonst,GOLD_PIECE) && !likes_gold(ptr))
             || (mtmp->mpeaceful && !mtmp->isshk) /* allow shks to follow */
@@ -893,11 +893,11 @@ not_special:
             /* look for gold or jewels nearby */
             likegold = (likes_gold(ptr) && pctload < 95);
             likegems = (likes_gems(ptr) && pctload < 85);
-            uses_items = (!mindless(ptr) && !is_animal(ptr) && pctload < 75);
+            uses_items = (!isMindless(ptr->monsterTypeID) && !isAnimal(ptr->monsterTypeID) && pctload < 75);
             likeobjs = (likes_objs(ptr) && pctload < 75);
             likemagic = (likes_magic(ptr) && pctload < 85);
             likerock = (throws_rocks(ptr) && pctload < 50 && !Sokoban);
-            conceals = hides_under(ptr);
+            conceals = hidesUnderStuff(ptr->monsterTypeID);
             setlikes = TRUE;
         }
     }
@@ -1004,7 +1004,7 @@ not_special:
     }
 
     /* don't tunnel if hostile and close enough to prefer a weapon */
-    if (can_tunnel && needspick(ptr)
+    if (can_tunnel && needsPickaxe(ptr->monsterTypeID)
         && ((!mtmp->mpeaceful || youCauseConflict())
             && dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) <= 8))
         can_tunnel = FALSE;
@@ -1021,7 +1021,7 @@ not_special:
     /* unicorn may not be able to avoid hero on a noteleport level */
     if (isUnicorn(ptr->monsterTypeID) && !level.flags.noteleport)
         flag |= NOTONL;
-    if (passes_walls(ptr))
+    if (passesThroughWalls(ptr->monsterTypeID))
         flag |= (ALLOW_WALL | ALLOW_ROCK);
     if (passes_bars(ptr))
         flag |= ALLOW_BARS;
@@ -1103,7 +1103,7 @@ not_special:
         if (mmoved == 1 && (currentX() != nix || currentY() != niy) && itsstuck(mtmp))
             return 3;
 
-        if (mmoved == 1 && can_tunnel && needspick(ptr)
+        if (mmoved == 1 && can_tunnel && needsPickaxe(ptr->monsterTypeID)
             && ((IS_ROCK(levl[nix][niy].typ) && may_dig(nix, niy))
                 || closed_door(nix, niy))) {
             if (closed_door(nix, niy)) {
@@ -1215,15 +1215,15 @@ postmov:
 
             /* open a door, or crash through it, if you can */
             if (IS_DOOR(levl[mtmp->mx][mtmp->my].typ)
-                && !passes_walls(ptr) /* doesn't need to open doors */
+                && !passesThroughWalls(ptr->monsterTypeID) /* doesn't need to open doors */
                 && !can_tunnel) {     /* taken care of below */
                 struct rm *here = &levl[mtmp->mx][mtmp->my];
                 boolean btrapped = (here->doormask & D_TRAPPED),
                         observeit = canseeit && canspotmon(mtmp);
 
                 if (here->doormask & (D_LOCKED | D_CLOSED)
-                    && (amorphous(ptr)
-                        || (!amorphous(ptr) && can_fog(mtmp)
+                    && (isAmorphous(ptr->monsterTypeID)
+                        || (!isAmorphous(ptr->monsterTypeID) && can_fog(mtmp)
                             && vamp_shift(mtmp, &mons[PM_FOG_CLOUD])))) {
                     if (flags.verbose && canseemon(mtmp))
                         pline("%s %s under the door.", Monnam(mtmp),
@@ -1312,7 +1312,7 @@ postmov:
                     Norep("%s %s %s the iron bars.", Monnam(mtmp),
                           /* pluralization fakes verb conjugation */
                           makeplural(locomotion(ptr, "pass")),
-                          passes_walls(ptr) ? "through" : "between");
+                          passesThroughWalls(ptr->monsterTypeID) ? "through" : "between");
             }
 
             /* possibly dig */
@@ -1341,15 +1341,15 @@ postmov:
                 likegold = (likes_gold(ptr) && pctload < 95);
                 likegems = (likes_gems(ptr) && pctload < 85);
                 uses_items =
-                    (!mindless(ptr) && !is_animal(ptr) && pctload < 75);
+                    (!isMindless(ptr->monsterTypeID) && !isAnimal(ptr->monsterTypeID) && pctload < 75);
                 likeobjs = (likes_objs(ptr) && pctload < 75);
                 likemagic = (likes_magic(ptr) && pctload < 85);
                 likerock = (throws_rocks(ptr) && pctload < 50 && !Sokoban);
-                conceals = hides_under(ptr);
+                conceals = hidesUnderStuff(ptr->monsterTypeID);
             }
 
             /* Maybe a rock mole just ate some metal object */
-            if (metallivorous(ptr)) {
+            if (isMetallivorous(ptr->monsterTypeID)) {
                 if (meatmetal(mtmp) == 2)
                     return 2; /* it died */
             }
@@ -1387,7 +1387,7 @@ postmov:
             }
         }
 
-        if (hides_under(ptr) || monsterClass(ptr->monsterTypeID) == S_EEL) {
+        if (hidesUnderStuff(ptr->monsterTypeID) || monsterClass(ptr->monsterTypeID) == S_EEL) {
             /* Always set--or reset--mundetected if it's already hidden
                (just in case the object it was hiding under went away);
                usually set mundetected unless monster can't move.  */
@@ -1454,7 +1454,7 @@ register struct monst *mtmp;
     if (mx == currentX() && my == currentY())
         goto found_you;
 
-    notseen = (!mtmp->mcansee || (youAreInvisibleToOthers() && !perceives(mtmp->data)));
+    notseen = (!mtmp->mcansee || (youAreInvisibleToOthers() && !perceivesTheInvisible(mtmp->data->monsterTypeID)));
     /* add cases as required.  eg. Displacement ... */
     if (notseen || underwater()) {
         /* Xorns can smell quantities of valuable metal
@@ -1483,7 +1483,7 @@ register struct monst *mtmp;
             my = currentY() - disp + rn2(2 * disp + 1);
         } while (!isok(mx, my)
                  || (disp != 2 && mx == mtmp->mx && my == mtmp->my)
-                 || ((mx != currentX() || my != currentY()) && !passes_walls(mtmp->data)
+                 || ((mx != currentX() || my != currentY()) && !passesThroughWalls(mtmp->data->monsterTypeID)
                      && !(accessible(mx, my)
                           || (closed_door(mx, my)
                               && (can_ooze(mtmp) || can_fog(mtmp)))))
@@ -1577,7 +1577,7 @@ boolean
 can_ooze(mtmp)
 struct monst *mtmp;
 {
-    if (!amorphous(mtmp->data) || stuff_prevents_passage(mtmp))
+    if (!isAmorphous(mtmp->data->monsterTypeID) || stuff_prevents_passage(mtmp))
         return FALSE;
     return TRUE;
 }

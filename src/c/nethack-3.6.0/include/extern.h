@@ -2082,6 +2082,39 @@ E boolean FDECL(cannotWieldThings, (int));
 E boolean FDECL(cannotUseTwoWeapons, (struct permonst *));
 E boolean FDECL(isFlyer, (int));
 
+E boolean FDECL(isClinger, (int));
+E boolean FDECL(isSwimmer, (int));
+E boolean FDECL(doesNotBreathe, (int));
+E boolean FDECL(isAmphibious, (int));
+E boolean FDECL(passesThroughWalls, (int));
+E boolean FDECL(isAmorphous, (int));
+E boolean FDECL(isTunneler, (int));
+E boolean FDECL(needsPickaxe, (int));
+E boolean FDECL(hidesUnderStuff, (int));
+E boolean FDECL(isHider, (int));
+E boolean FDECL(hasEyes, (int));
+E int FDECL(eyeCount, (int));
+E boolean FDECL(hasNoHands, (int));
+E boolean FDECL(hasNoLimbs, (int));
+E boolean FDECL(doesNotTakeStuff, (int));
+E boolean FDECL(hasAHead, (int));
+E boolean FDECL(isUnsolid, (int));
+E boolean FDECL(isMindless, (int));
+E boolean FDECL(isHumanoid, (int));
+E boolean FDECL(isAnimal, (int));
+E boolean FDECL(isSlithy, (int));
+E boolean FDECL(isThickSkinned, (int));
+E boolean FDECL(laysEggs, (int));
+E boolean FDECL(regenerates, (int));
+E boolean FDECL(perceivesTheInvisible, (int));
+E boolean FDECL(canTeleport, (int));
+E boolean FDECL(canControlTeleport, (int));
+E boolean FDECL(isAcidic, (int));
+E boolean FDECL(isPoisonous, (int));
+E boolean FDECL(isCarnivorous, (int));
+E boolean FDECL(isHerbivorous, (int));
+E boolean FDECL(isMetallivorous, (int));
+
 /* ### monmove.c ### */
 
 E boolean FDECL(itsstuck, (struct monst *));

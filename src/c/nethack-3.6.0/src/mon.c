@@ -474,7 +474,7 @@ register struct monst *mtmp;
          * protect their stuff. Fire resistant monsters can only protect
          * themselves  --ALI
          */
-        if (!is_clinger(mtmp->data) && !likes_lava(mtmp->data)) {
+        if (!isClinger(mtmp->data->monsterTypeID) && !likes_lava(mtmp->data)) {
             if (!resists_fire(mtmp)) {
                 if (cansee(mtmp->mx, mtmp->my))
                     pline("%s %s.", Monnam(mtmp),
@@ -503,8 +503,8 @@ register struct monst *mtmp;
          * water damage to dead monsters' inventory, but survivors need to
          * be handled here.  Swimmers are able to protect their stuff...
          */
-        if (!is_clinger(mtmp->data) && !is_swimmer(mtmp->data)
-            && !amphibious(mtmp->data)) {
+        if (!isClinger(mtmp->data->monsterTypeID) && !isSwimmer(mtmp->data->monsterTypeID)
+            && !isAmphibious(mtmp->data->monsterTypeID)) {
             if (cansee(mtmp->mx, mtmp->my)) {
                 pline("%s drowns.", Monnam(mtmp));
             }
@@ -674,7 +674,7 @@ movemon()
         if (minliquid(mtmp))
             continue;
 
-        if (is_hider(mtmp->data)) {
+        if (isHider(mtmp->data->monsterTypeID)) {
             /* unwatched mimics and piercers may hide again  [MRS] */
             if (restrap(mtmp))
                 continue;
@@ -997,7 +997,7 @@ register const char *str;
                 /* let a handful of corpse types thru to can_carry() */
                 && !touch_petrifies(&mons[otmp->corpsenm])
                 && otmp->corpsenm != PM_LIZARD
-                && !acidic(&mons[otmp->corpsenm]))
+                && !isAcidic(mons[otmp->corpsenm].monsterTypeID))
                 continue;
             if (!touch_artifact(otmp, mtmp))
                 continue;
@@ -1095,7 +1095,7 @@ struct obj *otmp;
     struct permonst *mdat = mtmp->data;
     short nattk = 0;
 
-    if (notake(mdat))
+    if (doesNotTakeStuff(mdat->monsterTypeID))
         return 0; /* can't carry anything */
 
     if (otyp == CORPSE && touch_petrifies(&mons[otmp->corpsenm])
@@ -1191,15 +1191,15 @@ long flag;
 
     nodiag = NODIAG(mdat - mons);
     wantpool = monsterClass(pmid) == S_EEL;
-    poolok = (isFlyer(pmid) || is_clinger(mdat)
-              || (is_swimmer(mdat) && !wantpool));
-    lavaok = (isFlyer(pmid) || is_clinger(mdat) || likes_lava(mdat));
+    poolok = (isFlyer(pmid) || isClinger(pmid)
+              || (isSwimmer(pmid) && !wantpool));
+    lavaok = (isFlyer(pmid) || isClinger(pmid) || likes_lava(mdat));
     thrudoor = ((flag & (ALLOW_WALL | BUSTDOOR)) != 0L);
     if (flag & ALLOW_DIG) {
         struct obj *mw_tmp;
 
         /* need to be specific about what can currently be dug */
-        if (!needspick(mdat)) {
+        if (!needsPickaxe(mdat->monsterTypeID)) {
             rockok = treeok = TRUE;
         } else if ((mw_tmp = MON_WEP(mon)) && mw_tmp->cursed
                    && mon->weapon_check == NO_WEAPON_WANTED) {
@@ -1238,7 +1238,7 @@ nexttry: /* eels prefer the water, but if there is no water nearby,
             /* KMH -- Added iron bars */
             if (ntyp == IRONBARS && !(flag & ALLOW_BARS))
                 continue;
-            if (IS_DOOR(ntyp) && !(amorphous(mdat) || can_fog(mon))
+            if (IS_DOOR(ntyp) && !(isAmorphous(mdat->monsterTypeID) || can_fog(mon))
                 && (((levl[nx][ny].doormask & D_CLOSED) && !(flag & OPENDOOR))
                     || ((levl[nx][ny].doormask & D_LOCKED)
                         && !(flag & UNLOCKDOOR))) && !thrudoor)
@@ -1259,7 +1259,7 @@ nexttry: /* eels prefer the water, but if there is no water nearby,
                 && (lavaok || !is_lava(nx, ny))) {
                 int dispx, dispy;
                 boolean monseeu = (mon->mcansee
-                                   && (!youAreInvisibleToOthers() || perceives(mdat)));
+                                   && (!youAreInvisibleToOthers() || perceivesTheInvisible(mdat->monsterTypeID)));
                 boolean checkobj = OBJ_AT(nx, ny);
 
                 /* Displacement also displaces the Elbereth/scare monster,
@@ -1360,16 +1360,16 @@ nexttry: /* eels prefer the water, but if there is no water nearby,
                         && ((ttmp->ttyp != PIT && ttmp->ttyp != SPIKED_PIT
                              && ttmp->ttyp != TRAPDOOR && ttmp->ttyp != HOLE)
                             || (!isFlyer(pmid) && !isFloater(pmid)
-                                && !is_clinger(mdat)) || Sokoban)
+                                && !isClinger(pmid)) || Sokoban)
                         && (ttmp->ttyp != SLP_GAS_TRAP || !resists_sleep(mon))
                         && (ttmp->ttyp != BEAR_TRAP
-                            || (monsterSize(pmid) > MZ_SMALL && !amorphous(mdat)
+                            || (monsterSize(pmid) > MZ_SMALL && !isAmorphous(pmid)
                                 && !isFlyer(pmid) && !isFloater(pmid)
-                                && !isWhirly(pmid) && !unsolid(mdat)))
+                                && !isWhirly(pmid) && !isUnsolid(pmid)))
                         && (ttmp->ttyp != FIRE_TRAP || !resists_fire(mon))
                         && (ttmp->ttyp != SQKY_BOARD || !isFlyer(pmid))
                         && (ttmp->ttyp != WEB
-                            || (!amorphous(mdat) && !webmaker(mdat)))
+                            || (!isAmorphous(pmid) && !webmaker(mdat)))
                         && (ttmp->ttyp != ANTI_MAGIC || !resists_magm(mon))) {
                         if (!(flag & ALLOW_TRAPS)) {
                             if (mon->mtrapseen & (1L << (ttmp->ttyp - 1)))
@@ -1755,12 +1755,12 @@ register struct monst *mtmp;
         /* this only happens if shapeshifted */
         if (mndx >= LOW_PM && mndx != monsndx(mtmp->data)) {
             char buf[BUFSZ];
-            boolean in_door = (amorphous(mtmp->data)
+            boolean in_door = (isAmorphous(mtmp->data->monsterTypeID)
                                && closed_door(mtmp->mx, mtmp->my)),
                 /* alternate message phrasing for some monster types */
                 spec_mon = (isNonliving(mtmp->data->monsterTypeID)
                             || isNoncorporeal(mtmp->data->monsterTypeID)
-                            || amorphous(mtmp->data));
+                            || isAmorphous(mtmp->data->monsterTypeID));
 
             /* construct a format string before transformation */
             Sprintf(buf, "The %s%s suddenly %s and rises as %%s!",
@@ -2057,7 +2057,7 @@ struct monst *mdef;
         wasinside = TRUE;
     mondead(mdef);
     if (wasinside) {
-        if (is_animal(mdef->data))
+        if (isAnimal(mdef->data->monsterTypeID))
             You("%s through an opening in the new %s.",
                 locomotion(youmonst.data, "jump"), xname(otmp));
     }
@@ -2496,7 +2496,7 @@ struct monst *mtmp;
     } else
         adjalign(-1); /* attacking peaceful monsters is bad */
     if (couldsee(mtmp->mx, mtmp->my)) {
-        if (humanoid(mtmp->data) || mtmp->isshk || mtmp->isgd)
+        if (isHumanoid(mtmp->data->monsterTypeID) || mtmp->isshk || mtmp->isgd)
             pline("%s gets angry!", Monnam(mtmp));
         else if (flags.verbose && !youAreDeaf())
             growl(mtmp);
@@ -2719,7 +2719,7 @@ struct monst *mtmp;
         ; /* can't hide while stuck in a non-pit trap */
     } else if (mc == S_EEL) {
         undetected = (is_pool(x, y) && !areYouOnWaterLevel());
-    } else if (hides_under(mtmp->data) && OBJ_AT(x, y)) {
+    } else if (hidesUnderStuff(mtmp->data->monsterTypeID) && OBJ_AT(x, y)) {
         struct obj *otmp = level.objects[x][y];
 
         /* most monsters won't hide under cockatrice corpse */
@@ -2742,16 +2742,16 @@ hide_monst(mon)
 struct monst *mon;
 {
     int mc = monsterClass(mon->data->monsterTypeID);
-    boolean hider_under = hides_under(mon->data) || mc == S_EEL;
+    boolean hider_under = hidesUnderStuff(mon->data->monsterTypeID) || mc == S_EEL;
 
-    if ((is_hider(mon->data) || hider_under)
+    if ((isHider(mon->data->monsterTypeID) || hider_under)
         && !(mon->mundetected || mon->m_ap_type)) {
         xchar x = mon->mx, y = mon->my;
         char save_viz = viz_array[y][x];
 
         /* override vision, forcing hero to be unable to see monster's spot */
         viz_array[y][x] &= ~(IN_SIGHT | COULD_SEE);
-        if (is_hider(mon->data))
+        if (isHider(mon->data->monsterTypeID))
             (void) restrap(mon);
         /* try again if mimic missed its 1/3 chance to hide */
         if (mc == S_MIMIC && !mon->m_ap_type)
@@ -2776,7 +2776,7 @@ boolean construct;
         /* if (animal_list) impossible("animal_list already exists"); */
 
         for (n = 0, i = LOW_PM; i < SPECIAL_PM; i++)
-            if (is_animal(&mons[i]))
+            if (isAnimal(mons[i].monsterTypeID))
                 animal_temp[n++] = i;
         /* if (n == 0) animal_temp[n++] = NON_PM; */
 
@@ -2896,7 +2896,7 @@ int mndx;
 
         /* reject notake because object manipulation is expected
            and nohead because speech capability is expected */
-        if (notake(ptr) || !has_head(ptr))
+        if (doesNotTakeStuff(ptr->monsterTypeID) || !hasAHead(ptr->monsterTypeID))
             return FALSE;
         /* [should we check ptr->msound here too?] */
     }
@@ -2980,7 +2980,7 @@ struct monst *mon;
             tryct = 5;
             do {
                 mndx = rn1(SPECIAL_PM - LOW_PM, LOW_PM);
-                if (humanoid(&mons[mndx]) && polyok(&mons[mndx]))
+                if (isHumanoid(mons[mndx].monsterTypeID) && polyok(&mons[mndx]))
                     break;
             } while (--tryct > 0);
             if (!tryct)
@@ -3217,10 +3217,10 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
         if (swallowed()) {
             if (!attacktype(mdat, AT_ENGL)) {
                 /* Does mdat care? */
-                if (!isNoncorporeal(mdat->monsterTypeID) && !amorphous(mdat)
+                if (!isNoncorporeal(mdat->monsterTypeID) && !isAmorphous(mdat->monsterTypeID)
                     && !isWhirly(mdat->monsterTypeID) && (mdat != &mons[PM_YELLOW_LIGHT])) {
                     You("break out of %s%s!", mon_nam(mtmp),
-                        (is_animal(mdat) ? "'s stomach" : ""));
+                        (isAnimal(mdat->monsterTypeID) ? "'s stomach" : ""));
                     mtmp->mhp = 1; /* almost dead */
                 }
                 expels(mtmp, olddata, FALSE);
@@ -3327,7 +3327,7 @@ int mnum;
      * grow into queen bees.  Ditto for [winged-]gargoyles.
      */
     if (mnum == PM_KILLER_BEE || mnum == PM_GARGOYLE
-        || (lays_eggs(&mons[mnum])
+        || (laysEggs(mons[mnum].monsterTypeID)
             && (BREEDER_EGG
                 || (mnum != PM_QUEEN_BEE && mnum != PM_WINGED_GARGOYLE))))
         return mnum;
@@ -3337,7 +3337,7 @@ int mnum;
 /* type of egg laid by #sit; usually matches parent */
 int
 egg_type_from_parent(mnum, force_ordinary)
-int mnum; /* parent monster; caller must handle lays_eggs() check */
+int mnum; /* parent monster; caller must handle laysEggs() check */
 boolean force_ordinary;
 {
     if (force_ordinary || !BREEDER_EGG) {

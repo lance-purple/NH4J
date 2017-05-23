@@ -28,16 +28,17 @@ struct monst *mon;
     dummy.oartifact = 1; /* so real artifact won't override "don't keep it" */
     pickaxe = unihorn = key = (struct obj *) 0;
     wep = MON_WEP(mon);
+    int pmid = mon->data->monsterTypeID;
 
-    if (is_animal(mon->data) || mindless(mon->data)) {
+    if (isAnimal(pmid) || isMindless(pmid)) {
         /* won't hang on to any objects of these types */
         pickaxe = unihorn = key = &dummy; /* act as if already have them */
     } else {
         /* don't hang on to pick-axe if can't use one or don't need one */
-        if (!tunnels(mon->data) || !needspick(mon->data))
+        if (!isTunneler(pmid) || !needsPickaxe(pmid))
             pickaxe = &dummy;
         /* don't hang on to key if can't open doors */
-        if (nohands(mon->data) || isVerySmallMonster(mon->data->monsterTypeID))
+        if (hasNoHands(pmid) || isVerySmallMonster(pmid))
             key = &dummy;
     }
     if (wep) {
@@ -267,7 +268,7 @@ boolean devour;
            pet as "it".  However, we want "it" if invisible/unsensed
            pet eats visible food. */
         if (sawpet || (seeobj && canspotmon(mtmp))) {
-            if (tunnels(mtmp->data))
+            if (isTunneler(mtmp->data->monsterTypeID))
                 pline("%s digs in.", noit_Monnam(mtmp));
             else
                 pline("%s %s %s.", noit_Monnam(mtmp),
@@ -350,8 +351,9 @@ dog_hunger(mtmp, edog)
 register struct monst *mtmp;
 register struct edog *edog;
 {
+    int pmid = mtmp->data->monsterTypeID;
     if (monstermoves > edog->hungrytime + 500) {
-        if (!carnivorous(mtmp->data) && !herbivorous(mtmp->data)) {
+        if (!isCarnivorous(pmid) && !isHerbivorous(pmid)) {
             edog->hungrytime = monstermoves + 500;
             /* but not too high; it might polymorph */
         } else if (!edog->mhpmax_penalty) {
@@ -679,7 +681,7 @@ register int after; /* this is extra fast monster movement */
         return 0;
 
     allowflags = ALLOW_M | ALLOW_TRAPS | ALLOW_SSM | ALLOW_SANCT;
-    if (passes_walls(mtmp->data))
+    if (passesThroughWalls(mtmp->data->monsterTypeID))
         allowflags |= (ALLOW_ROCK | ALLOW_WALL);
     if (passes_bars(mtmp->data))
         allowflags |= ALLOW_BARS;
@@ -704,7 +706,7 @@ register int after; /* this is extra fast monster movement */
         You("get released!");
     }
 #endif
-    if (!nohands(mtmp->data) && !isVerySmallMonster(mtmp->data->monsterTypeID)) {
+    if (!hasNoHands(mtmp->data->monsterTypeID) && !isVerySmallMonster(mtmp->data->monsterTypeID)) {
         allowflags |= OPENDOOR;
         if (monhaskey(mtmp, TRUE))
             allowflags |= UNLOCKDOOR;
@@ -713,7 +715,7 @@ register int after; /* this is extra fast monster movement */
     }
     if (is_giant(mtmp->data))
         allowflags |= BUSTDOOR;
-    if (tunnels(mtmp->data)
+    if (isTunneler(mtmp->data->monsterTypeID)
         && !areYouOnRogueLevel()) /* same restriction as m_move() */
         allowflags |= ALLOW_DIG;
     cnt = mfndpos(mtmp, poss, info, allowflags);
@@ -759,8 +761,8 @@ register int after; /* this is extra fast monster movement */
 
             if ((int) mtmp2->m_lev >= (int) mtmp->m_lev + 2
                 || (mtmp2->data == &mons[PM_FLOATING_EYE] && rn2(10)
-                    && mtmp->mcansee && haseyes(mtmp->data) && mtmp2->mcansee
-                    && (perceives(mtmp->data) || !mtmp2->minvis))
+                    && mtmp->mcansee && hasEyes(mtmp->data->monsterTypeID) && mtmp2->mcansee
+                    && (perceivesTheInvisible(mtmp->data->monsterTypeID) || !mtmp2->minvis))
                 || (mtmp2->data == &mons[PM_GELATINOUS_CUBE] && rn2(10))
                 || (max_passive_dmg(mtmp2, mtmp) >= mtmp->mhp)
                 || ((mtmp->mhp * 4 < mtmp->mhpmax
@@ -889,7 +891,7 @@ newdogpos:
         if (((IS_ROCK(levl[nix][niy].typ) && may_dig(nix, niy))
              || closed_door(nix, niy))
             && mtmp->weapon_check != NO_WEAPON_WANTED
-            && tunnels(mtmp->data) && needspick(mtmp->data)) {
+            && isTunneler(mtmp->data->monsterTypeID) && needsPickaxe(mtmp->data->monsterTypeID)) {
             if (closed_door(nix, niy)) {
                 if (!(mw_tmp = MON_WEP(mtmp)) || !is_pick(mw_tmp)
                     || !is_axe(mw_tmp))
@@ -964,7 +966,7 @@ could_reach_item(mon, nx, ny)
 struct monst *mon;
 xchar nx, ny;
 {
-    if ((!is_pool(nx, ny) || is_swimmer(mon->data))
+    if ((!is_pool(nx, ny) || isSwimmer(mon->data->monsterTypeID))
         && (!is_lava(nx, ny) || likes_lava(mon->data))
         && (!sobj_at(BOULDER, nx, ny) || throws_rocks(mon->data)))
         return TRUE;
@@ -998,8 +1000,8 @@ xchar mx, my, fx, fy;
                 continue;
             if (dist2(i, j, fx, fy) >= dist)
                 continue;
-            if (IS_ROCK(levl[i][j].typ) && !passes_walls(mon->data)
-                && (!may_dig(i, j) || !tunnels(mon->data)))
+            if (IS_ROCK(levl[i][j].typ) && !passesThroughWalls(mon->data->monsterTypeID)
+                && (!may_dig(i, j) || !isTunneler(mon->data->monsterTypeID)))
                 continue;
             if (IS_DOOR(levl[i][j].typ)
                 && (levl[i][j].doormask & (D_CLOSED | D_LOCKED)))

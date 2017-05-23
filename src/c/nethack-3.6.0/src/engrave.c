@@ -157,7 +157,7 @@ boolean check_pit;
 
     return (boolean) ((!youAreLevitating() || areYouOnAirLevel()
                        || areYouOnWaterLevel())
-                      && (!lurking() || !is_hider(youmonst.data)
+                      && (!lurking() || !isHider(youmonst.data->monsterTypeID)
                           || currentMonsterNumber() == PM_TRAPPER));
 }
 
@@ -180,7 +180,7 @@ register int x, y;
 {
     register struct rm *lev = &levl[x][y];
 
-    if (x == currentX() && y == currentY() && swallowed() && is_animal(u.ustuck->data))
+    if (x == currentX() && y == currentY() && swallowed() && isAnimal(u.ustuck->data->monsterTypeID))
         return "maw";
     else if (IS_AIR(lev->typ) && areYouOnAirLevel())
         return "air";
@@ -496,7 +496,7 @@ doengrave()
     /* Can the adventurer engrave at all? */
 
     if (swallowed()) {
-        if (is_animal(u.ustuck->data)) {
+        if (isAnimal(u.ustuck->data->monsterTypeID)) {
             pline("What would you write?  \"Jonah was here\"?");
             return 0;
         } else if (isWhirly(u.ustuck->data->monsterTypeID)) {

@@ -155,7 +155,7 @@ const char *verb;
                           vtense((const char *) 0, verb),
                           (mtmp) ? "" : " with you");
             if (mtmp) {
-                if (!passes_walls(mtmp->data) && !throws_rocks(mtmp->data)) {
+                if (!passesThroughWalls(mtmp->data->monsterTypeID) && !throws_rocks(mtmp->data)) {
                     if (hmon(mtmp, obj, TRUE) && !isWhirly(mtmp->data->monsterTypeID))
                         return FALSE; /* still alive */
                 }
@@ -643,7 +643,7 @@ boolean with_impact;
                 could_heal = (obj->corpsenm == PM_NURSE);
             }
             (void) mpickobj(u.ustuck, obj);
-            if (is_animal(u.ustuck->data)) {
+            if (isAnimal(u.ustuck->data->monsterTypeID)) {
                 if (could_poly || could_slime) {
                     (void) newcham(u.ustuck,
                                    could_poly ? (struct permonst *) 0
@@ -924,7 +924,7 @@ dodown()
     }
     if (u.ustuck) {
         You("are %s, and cannot go down.",
-            !swallowed() ? "being held" : is_animal(u.ustuck->data)
+            !swallowed() ? "being held" : isAnimal(u.ustuck->data->monsterTypeID)
                                              ? "swallowed"
                                              : "engulfed");
         return 1;
@@ -983,7 +983,7 @@ doup()
     }
     if (u.ustuck) {
         You("are %s, and cannot go up.",
-            !swallowed() ? "being held" : is_animal(u.ustuck->data)
+            !swallowed() ? "being held" : isAnimal(u.ustuck->data->monsterTypeID)
                                              ? "swallowed"
                                              : "engulfed");
         return 1;

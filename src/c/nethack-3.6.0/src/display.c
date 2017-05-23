@@ -2480,4 +2480,23 @@ void display_self()
 }
 
 
+/*
+ * sensemon()
+ *
+ * Returns true if the hero can sense the given monster.  This includes
+ * monsters that are hiding or mimicing other monsters.
+ */
+boolean tp_sensemon(struct monst* mon)
+{
+    /* The hero can always sense a monster IF:   */
+    /* 1. the monster has a brain to sense       */ 
+    /* AND     2a. hero is blind and telepathic  */ 
+    /* OR 2b. hero is using a telepathy inducing */
+    /*        object and in range                */
+    return (!isMindless(mon->data->monsterTypeID))
+      && ((youCannotSee() && youHaveTelepathyWhenBlind())
+          || (youHaveTelepathyWhenNotBlind()
+              && (distanceSquaredToYou(mon->mx, mon->my) <= (BOLT_LIM * BOLT_LIM))));
+}
+
 /*display.c*/

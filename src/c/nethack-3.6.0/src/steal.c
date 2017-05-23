@@ -107,7 +107,7 @@ register struct monst *mtmp;
             what = makeplural(body_part(FOOT));
         }
         /* [ avoid "between your rear regions" :-] */
-        if (slithy(who->data))
+        if (isSlithy(who->data->monsterTypeID))
             what = "coils";
         /* reduce "rear hooves/claws" to "hooves/claws" */
         if (!strncmp(what, "rear ", 5))
@@ -273,7 +273,7 @@ char *objnambuf;
         return 1; /* let her flee */
     }
 
-    monkey_business = is_animal(mtmp->data);
+    monkey_business = isAnimal(mtmp->data->monsterTypeID);
     if (monkey_business || uarmg) {
         ; /* skip ring special cases */
     } else if (yourExtrinsic(ADORNED) & LEFT_RING) {
@@ -550,7 +550,7 @@ struct monst *mtmp;
            to steal are mergable */
         (void) mpickobj(mtmp, otmp); /* may merge and free otmp */
         pline("%s stole %s!", Monnam(mtmp), doname(otmp));
-        if (can_teleport(mtmp->data) && !tele_restrict(mtmp))
+        if (canTeleport(mtmp->data->monsterTypeID) && !tele_restrict(mtmp))
             (void) rloc(mtmp, TRUE);
     }
 }

@@ -1292,7 +1292,8 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                 return FALSE;
             wepdesc = artilist[ART_VORPAL_BLADE].name;
             if (!youdefend) {
-                if (!has_head(mdef->data) || notonhead || swallowed()) {
+		int pmid = mdef->data->monsterTypeID;
+                if (!hasAHead(pmid) || notonhead || swallowed()) {
                     if (youattack)
                         pline("Somehow, you miss %s wildly.", mon_nam(mdef));
                     else if (vis)
@@ -1300,7 +1301,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                     *dmgptr = 0;
                     return (boolean) (youattack || vis);
                 }
-                if (isNoncorporeal(mdef->data->monsterTypeID) || amorphous(mdef->data)) {
+                if (isNoncorporeal(pmid) || isAmorphous(pmid)) {
                     pline("%s slices through %s %s.", wepdesc,
                           s_suffix(mon_nam(mdef)), mbodypart(mdef, NECK));
                     return TRUE;
@@ -1313,13 +1314,14 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                 otmp->dknown = TRUE;
                 return TRUE;
             } else {
-                if (!has_head(youmonst.data)) {
+		int upmid = youmonst.data->monsterTypeID;
+                if (!hasAHead(upmid)) {
                     pline("Somehow, %s misses you wildly.",
                           magr ? mon_nam(magr) : wepdesc);
                     *dmgptr = 0;
                     return TRUE;
                 }
-                if (isNoncorporeal(youmonst.data->monsterTypeID) || amorphous(youmonst.data)) {
+                if (isNoncorporeal(upmid) || isAmorphous(upmid)) {
                     pline("%s slices through your %s.", wepdesc,
                           body_part(NECK));
                     return TRUE;

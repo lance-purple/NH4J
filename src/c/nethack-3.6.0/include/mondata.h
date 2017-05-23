@@ -17,56 +17,19 @@
 #define is_lminion(mon) \
     (is_minion((mon)->data) && mon_aligntyp(mon) == A_LAWFUL)
 
-#define is_clinger(ptr) (((ptr)->mflags1 & M1_CLING) != 0L)
-#define is_swimmer(ptr) (((ptr)->mflags1 & M1_SWIM) != 0L)
-#define breathless(ptr) (((ptr)->mflags1 & M1_BREATHLESS) != 0L)
-#define amphibious(ptr) \
-    (((ptr)->mflags1 & (M1_AMPHIBIOUS | M1_BREATHLESS)) != 0L)
-#define passes_walls(ptr) (((ptr)->mflags1 & M1_WALLWALK) != 0L)
-#define amorphous(ptr) (((ptr)->mflags1 & M1_AMORPHOUS) != 0L)
-
-#define tunnels(ptr) (((ptr)->mflags1 & M1_TUNNEL) != 0L)
-#define needspick(ptr) (((ptr)->mflags1 & M1_NEEDPICK) != 0L)
-#define hides_under(ptr) (((ptr)->mflags1 & M1_CONCEAL) != 0L)
-#define is_hider(ptr) (((ptr)->mflags1 & M1_HIDE) != 0L)
-#define haseyes(ptr) (((ptr)->mflags1 & M1_NOEYES) == 0L)
-#define eyecount(ptr)                                         \
-    (!haseyes(ptr) ? 0 : ((ptr) == &mons[PM_CYCLOPS]          \
-                          || (ptr) == &mons[PM_FLOATING_EYE]) \
-                             ? 1                              \
-                             : 2)
-#define nohands(ptr) (((ptr)->mflags1 & M1_NOHANDS) != 0L)
-#define nolimbs(ptr) (((ptr)->mflags1 & M1_NOLIMBS) == M1_NOLIMBS)
-#define notake(ptr) (((ptr)->mflags1 & M1_NOTAKE) != 0L)
-#define has_head(ptr) (((ptr)->mflags1 & M1_NOHEAD) == 0L)
 #define has_horns(ptr) (num_horns(ptr) > 0)
 
 #define flaming(ptr)                                                     \
     ((ptr) == &mons[PM_FIRE_VORTEX] || (ptr) == &mons[PM_FLAMING_SPHERE] \
      || (ptr) == &mons[PM_FIRE_ELEMENTAL] || (ptr) == &mons[PM_SALAMANDER])
 
-#define unsolid(ptr) (((ptr)->mflags1 & M1_UNSOLID) != 0L)
-#define mindless(ptr) (((ptr)->mflags1 & M1_MINDLESS) != 0L)
-#define humanoid(ptr) (((ptr)->mflags1 & M1_HUMANOID) != 0L)
-#define is_animal(ptr) (((ptr)->mflags1 & M1_ANIMAL) != 0L)
-#define slithy(ptr) (((ptr)->mflags1 & M1_SLITHY) != 0L)
 #define is_wooden(ptr) ((ptr) == &mons[PM_WOOD_GOLEM])
-#define thick_skinned(ptr) (((ptr)->mflags1 & M1_THICK_HIDE) != 0L)
 
-#define lays_eggs(ptr) (((ptr)->mflags1 & M1_OVIPAROUS) != 0L)
-#define regenerates(ptr) (((ptr)->mflags1 & M1_REGEN) != 0L)
-#define perceives(ptr) (((ptr)->mflags1 & M1_SEE_INVIS) != 0L)
-#define can_teleport(ptr) (((ptr)->mflags1 & M1_TPORT) != 0L)
-#define control_teleport(ptr) (((ptr)->mflags1 & M1_TPORT_CNTRL) != 0L)
 #define telepathic(ptr)                                                \
     ((ptr) == &mons[PM_FLOATING_EYE] || (ptr) == &mons[PM_MIND_FLAYER] \
      || (ptr) == &mons[PM_MASTER_MIND_FLAYER])
 #define is_armed(ptr) attacktype(ptr, AT_WEAP)
-#define acidic(ptr) (((ptr)->mflags1 & M1_ACID) != 0L)
-#define poisonous(ptr) (((ptr)->mflags1 & M1_POIS) != 0L)
-#define carnivorous(ptr) (((ptr)->mflags1 & M1_CARNIVORE) != 0L)
-#define herbivorous(ptr) (((ptr)->mflags1 & M1_HERBIVORE) != 0L)
-#define metallivorous(ptr) (((ptr)->mflags1 & M1_METALLIVORE) != 0L)
+
 #define polyok(ptr) (((ptr)->mflags2 & M2_NOPOLY) == 0L)
 #define is_shapeshifter(ptr) (((ptr)->mflags2 & M2_SHAPESHIFTER) != 0L)
 #define is_undead(ptr) (((ptr)->mflags2 & M2_UNDEAD) != 0L)

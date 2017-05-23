@@ -65,8 +65,8 @@ unsigned gpflags;
                 return (youAreLevitating() || youAreFlying() || canYouWalkOnWater() || youCanSwim()
                         || youAreAmphibious());
             } else {
-                return (isFloater(pmid) || isFlyer(pmid) || is_swimmer(mdat)
-                        || is_clinger(mdat));
+                return (isFloater(pmid) || isFlyer(pmid) || isSwimmer(pmid)
+                        || isClinger(pmid));
             }
         } else if (monsterClass(pmid) == S_EEL && rn2(13) && !ignorewater) {
             return FALSE;
@@ -80,9 +80,9 @@ unsigned gpflags;
                 return (isFloater(mdat->monsterTypeID) || isFlyer(pmid)
                         || likes_lava(mdat));
         }
-        if (passes_walls(mdat) && may_passwall(x, y))
+        if (passesThroughWalls(mdat->monsterTypeID) && may_passwall(x, y))
             return TRUE;
-        if (amorphous(mdat) && closed_door(x, y))
+        if (isAmorphous(mdat->monsterTypeID) && closed_door(x, y))
             return TRUE;
     }
     if (!accessible(x, y)) {
@@ -519,7 +519,7 @@ dotele()
         register int sp_no = 0, energy = 0;
 
         if (!youCanTeleport() || (currentExperienceLevel() < (Role_if(PM_WIZARD) ? 8 : 12)
-                               && !can_teleport(youmonst.data))) {
+                               && !canTeleport(youmonst.data->monsterTypeID))) {
             /* Try to use teleport away spell. */
             if (objects[SPE_TELEPORT_AWAY].oc_name_known && !youAreConfused())
                 for (sp_no = 0; sp_no < MAXSPELL; sp_no++)

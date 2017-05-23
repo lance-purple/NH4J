@@ -414,7 +414,7 @@ int x, y;
     if (is_pool(x, y)) {
         return (boolean) ((is_u(etmp) && (canYouWalkOnWater() || youAreAmphibious() || youCanSwim()
                                           || youAreFlying() || youAreLevitating()))
-                          || is_swimmer(etmp->edata)
+                          || isSwimmer(epmid)
                           || isFlyer(epmid)
                           || isFloater(epmid));
     }
@@ -426,7 +426,7 @@ int x, y;
     }
     if (is_db_wall(x, y)) {
         return (boolean) (is_u(etmp) ? youCanPassThroughWalls()
-                          : passes_walls(etmp->edata));
+                          : passesThroughWalls(epmid));
     }
     return TRUE;
 }
@@ -499,8 +499,9 @@ STATIC_OVL boolean
 automiss(etmp)
 struct entity *etmp;
 {
-    return (boolean) ((is_u(etmp) ? youCanPassThroughWalls() : passes_walls(etmp->edata))
-                      || isNoncorporeal(etmp->edata->monsterTypeID));
+    int epmid = etmp->edata->monsterTypeID;
+    return (boolean) ((is_u(etmp) ? youCanPassThroughWalls() : passesThroughWalls(epmid))
+                      || isNoncorporeal(epmid));
 }
 
 /*

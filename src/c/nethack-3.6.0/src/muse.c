@@ -275,7 +275,7 @@ struct monst *mtmp;
     boolean immobile = (monsterMovementSpeed(mtmp->data->monsterTypeID) == 0);
     int fraction;
 
-    if (is_animal(mtmp->data) || mindless(mtmp->data))
+    if (isAnimal(mtmp->data->monsterTypeID) || isMindless(mtmp->data->monsterTypeID))
         return FALSE;
     if (dist2(x, y, mtmp->mux, mtmp->muy) > 25)
         return FALSE;
@@ -289,7 +289,7 @@ struct monst *mtmp;
      * silly trying to use the same cursed horn round after round
      */
     if (mtmp->mconf || mtmp->mstun || !mtmp->mcansee) {
-        if (!isUnicorn(mtmp->data->monsterTypeID) && !nohands(mtmp->data)) {
+        if (!isUnicorn(mtmp->data->monsterTypeID) && !hasNoHands(mtmp->data->monsterTypeID)) {
             for (obj = mtmp->minvent; obj; obj = obj->nobj)
                 if (obj->otyp == UNICORN_HORN && !obj->cursed)
                     break;
@@ -330,7 +330,7 @@ struct monst *mtmp;
      * These would be hard to combine because of the control flow.
      * Pestilence won't use healing even when blind.
      */
-    if (!mtmp->mcansee && !nohands(mtmp->data)
+    if (!mtmp->mcansee && !hasNoHands(mtmp->data->monsterTypeID)
         && mtmp->data != &mons[PM_PESTILENCE]) {
         if ((obj = m_carrying(mtmp, POT_FULL_HEALING)) != 0) {
             m.defensive = obj;
@@ -355,7 +355,7 @@ struct monst *mtmp;
         return FALSE;
 
     if (mtmp->mpeaceful) {
-        if (!nohands(mtmp->data)) {
+        if (!hasNoHands(mtmp->data->monsterTypeID)) {
             if ((obj = m_carrying(mtmp, POT_FULL_HEALING)) != 0) {
                 m.defensive = obj;
                 m.has_defense = MUSE_POT_FULL_HEALING;
@@ -404,7 +404,7 @@ struct monst *mtmp;
         int xx, yy, i, locs[10][2];
         boolean ignore_boulders = (isVerySmallMonster(mtmp->data->monsterTypeID)
                                    || throws_rocks(mtmp->data)
-                                   || passes_walls(mtmp->data)),
+                                   || passesThroughWalls(mtmp->data->monsterTypeID)),
             diag_ok = !NODIAG(monsndx(mtmp->data));
 
         for (i = 0; i < 10; ++i) /* 10: 9 spots plus sentinel */
@@ -452,7 +452,7 @@ struct monst *mtmp;
         }
     }
 
-    if (nohands(mtmp->data)) /* can't use objects */
+    if (hasNoHands(mtmp->data->monsterTypeID)) /* can't use objects */
         goto botm;
 
     if (is_mercenary(mtmp->data) && (obj = m_carrying(mtmp, BUGLE)) != 0) {
@@ -534,7 +534,7 @@ struct monst *mtmp;
         }
         nomore(MUSE_SCR_TELEPORTATION);
         if (obj->otyp == SCR_TELEPORTATION && mtmp->mcansee
-            && haseyes(mtmp->data)
+            && hasEyes(mtmp->data->monsterTypeID)
             && (!obj->cursed || (!(mtmp->isshk && inhishop(mtmp))
                                  && !mtmp->isgd && !mtmp->ispriest))) {
             /* see WAN_TELEPORTATION case above */
@@ -1001,7 +1001,7 @@ struct monst *mtmp;
     int trycnt = 0;
     int mc = monsterClass(pm->monsterTypeID);
 
-    if (is_animal(pm) || attacktype(pm, AT_EXPL) || mindless(mtmp->data)
+    if (isAnimal(pm->monsterTypeID) || attacktype(pm, AT_EXPL) || isMindless(pm->monsterTypeID)
         || mc == S_GHOST || mc == S_KOP)
         return 0;
 try_again:
@@ -1071,8 +1071,8 @@ struct monst *mtmp;
 
     m.offensive = (struct obj *) 0;
     m.has_offense = 0;
-    if (mtmp->mpeaceful || is_animal(mtmp->data) || mindless(mtmp->data)
-        || nohands(mtmp->data))
+    if (mtmp->mpeaceful || isAnimal(mtmp->data->monsterTypeID) || isMindless(mtmp->data->monsterTypeID)
+        || hasNoHands(mtmp->data->monsterTypeID))
         return FALSE;
     if (swallowed())
         return FALSE;
@@ -1168,11 +1168,11 @@ struct monst *mtmp;
         nomore(MUSE_SCR_EARTH);
         if (obj->otyp == SCR_EARTH
             && ((helmet && is_metallic(helmet)) || mtmp->mconf
-                || amorphous(mtmp->data) || passes_walls(mtmp->data)
-                || isNoncorporeal(mtmp->data->monsterTypeID) || unsolid(mtmp->data)
+                || isAmorphous(mtmp->data->monsterTypeID) || passesThroughWalls(mtmp->data->monsterTypeID)
+                || isNoncorporeal(mtmp->data->monsterTypeID) || isUnsolid(mtmp->data->monsterTypeID)
                 || !rn2(10))
             && dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) <= 2
-            && mtmp->mcansee && haseyes(mtmp->data)
+            && mtmp->mcansee && hasEyes(mtmp->data->monsterTypeID)
             && !areYouOnRogueLevel()
             && (!areYouInEndgame() || areYouOnEarthLevel())) {
             m.offensive = obj;
@@ -1182,7 +1182,7 @@ struct monst *mtmp;
         nomore(MUSE_SCR_FIRE);
         if (obj->otyp == SCR_FIRE && resists_fire(mtmp)
             && dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) <= 2
-            && mtmp->mcansee && haseyes(mtmp->data)) {
+            && mtmp->mcansee && hasEyes(mtmp->data)) {
             m.offensive = obj;
             m.has_offense = MUSE_SCR_FIRE;
         }
@@ -1543,7 +1543,7 @@ struct monst *mtmp;
     int difficulty = monstr[(monsndx(pm))];
     int mc = monsterClass(pm->monsterTypeID);
 
-    if (is_animal(pm) || attacktype(pm, AT_EXPL) || mindless(mtmp->data)
+    if (isAnimal(pm->monsterTypeID) || attacktype(pm, AT_EXPL) || isMindless(pm->monsterTypeID)
         || mc == S_GHOST || mc == S_KOP)
         return 0;
     if (difficulty > 7 && !rn2(35))
@@ -1552,8 +1552,8 @@ struct monst *mtmp;
     case 0: {
         struct obj *helmet = which_armor(mtmp, W_ARMH);
 
-        if ((helmet && is_metallic(helmet)) || amorphous(pm)
-            || passes_walls(pm) || isNoncorporeal(pm->monsterTypeID) || unsolid(pm))
+        if ((helmet && is_metallic(helmet)) || isAmorphous(pm->monsterTypeID)
+            || passesThroughWalls(pm->monsterTypeID) || isNoncorporeal(pm->monsterTypeID) || isUnsolid(pm->monsterTypeID))
             return SCR_EARTH;
     } /* fall through */
     case 1:
@@ -1608,7 +1608,7 @@ struct monst *mtmp;
 
     m.misc = (struct obj *) 0;
     m.has_misc = 0;
-    if (is_animal(mdat) || mindless(mdat))
+    if (isAnimal(mdat->monsterTypeID) || isMindless(mdat->monsterTypeID))
         return 0;
     if (swallowed() && stuck)
         return FALSE;
@@ -1623,7 +1623,7 @@ struct monst *mtmp;
     if (!stuck && !immobile && (mtmp->cham == NON_PM)
         && monstr[(pmidx = monsndx(mdat))] < 6) {
         boolean ignore_boulders = (isVerySmallMonster(mdat->monsterTypeID) || throws_rocks(mdat)
-                                   || passes_walls(mdat)),
+                                   || passesThroughWalls(mdat->monsterTypeID)),
             diag_ok = !NODIAG(pmidx);
 
         for (xx = x - 1; xx <= x + 1; xx++)
@@ -1643,7 +1643,7 @@ struct monst *mtmp;
                         }
                     }
     }
-    if (nohands(mdat))
+    if (hasNoHands(mdat->monsterTypeID))
         return 0;
 
 #define nomore(x)       if (m.has_misc == x) continue
@@ -1979,7 +1979,7 @@ struct monst *mtmp;
     int difficulty = monstr[(monsndx(pm))];
     int mc = monsterClass(pm->monsterTypeID);
 
-    if (is_animal(pm) || attacktype(pm, AT_EXPL) || mindless(mtmp->data)
+    if (isAnimal(pm->monsterTypeID) || attacktype(pm, AT_EXPL) || isMindless(pm->monsterTypeID)
         || mc == S_GHOST || mc == S_KOP)
         return 0;
     /* Unlike other rnd_item functions, we only allow _weak_ monsters
@@ -2015,7 +2015,7 @@ struct obj *obj;
 {
     int typ = obj->otyp;
 
-    if (is_animal(mon->data) || mindless(mon->data)
+    if (isAnimal(mon->data->monsterTypeID) || isMindless(mon->data->monsterTypeID)
         || mon->data == &mons[PM_GHOST]) /* don't loot bones piles */
         return FALSE;
 
@@ -2059,7 +2059,7 @@ struct obj *obj;
         break;
     case TOOL_CLASS:
         if (typ == PICK_AXE)
-            return (boolean) needspick(mon->data);
+            return (boolean) needsPickaxe(mon->data->monsterTypeID);
         if (typ == UNICORN_HORN)
             return (boolean) (!obj->cursed && !isUnicorn(mon->data->monsterTypeID));
         if (typ == FROST_HORN || typ == FIRE_HORN)
@@ -2195,7 +2195,7 @@ boolean stoning;
     boolean vis = canseemon(mon), tinned = obj->otyp == TIN,
             food = obj->otyp == CORPSE || tinned,
             acid = obj->otyp == POT_ACID
-                   || (food && acidic(&mons[obj->corpsenm])),
+                   || (food && isAcidic(mons[obj->corpsenm].monsterTypeID)),
             lizard = food && obj->corpsenm == PM_LIZARD;
     int nutrit = food ? dog_nutrition(mon, obj) : 0; /* also sets meating */
 
@@ -2274,7 +2274,7 @@ boolean tinok;
         return FALSE;
     /* corpse, or tin that mon can open */
     return (boolean) (obj->corpsenm == PM_LIZARD
-                      || (acidic(&mons[obj->corpsenm])
+                      || (isAcidic(mons[obj->corpsenm].monsterTypeID)
                           && (obj->corpsenm != PM_GREEN_SLIME
                               || isSlimeproof(mon->data->monsterTypeID))));
 }
@@ -2288,7 +2288,7 @@ struct monst *mon;
 
     /* monkeys who manage to steal tins can't open and eat them
        even if they happen to also have the appropriate tool */
-    if (is_animal(mon->data))
+    if (isAnimal(mon->data->monsterTypeID))
         return FALSE;
 
     mwep = MON_WEP(mon);
@@ -2421,7 +2421,7 @@ struct obj *obj;
 {
     /* scroll of fire, non-empty wand or horn of fire */
     if (obj->otyp == SCR_FIRE)
-        return (haseyes(mon->data) && mon->mcansee);
+        return (hasEyes(mon->data->monsterTypeID) && mon->mcansee);
     /* hero doesn't need hands or even limbs to zap, so mon doesn't either */
     return ((obj->otyp == WAN_FIRE || obj->otyp == FIRE_HORN)
             && obj->spe > 0);

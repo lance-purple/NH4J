@@ -233,11 +233,11 @@ boolean talk;
     } else if (priorBlinded && !xtime) {
         /* clearing temporary blindness without toggling blindness */
         if (talk) {
-            if (!haseyes(youmonst.data)) {
+            if (!hasEyes(youmonst.data->monsterTypeID)) {
                 strange_feeling((struct obj *) 0, (char *) 0);
             } else if (youAreBlindfolded()) {
                 eyes = body_part(EYE);
-                if (eyecount(youmonst.data) != 1)
+                if (eyeCount(youmonst.data->monsterTypeID) != 1)
                     eyes = makeplural(eyes);
                 Your(eyemsg, eyes, vtense(eyes, "itch"));
             } else { /* Eyes of the Overworld */
@@ -259,11 +259,11 @@ boolean talk;
     } else if (!priorBlinded && xtime) {
         /* setting temporary blindness without toggling blindness */
         if (talk) {
-            if (!haseyes(youmonst.data)) {
+            if (!hasEyes(youmonst.data->monsterTypeID)) {
                 strange_feeling((struct obj *) 0, (char *) 0);
             } else if (youAreBlindfolded()) {
                 eyes = body_part(EYE);
-                if (eyecount(youmonst.data) != 1)
+                if (eyeCount(youmonst.data->monsterTypeID) != 1)
                     eyes = makeplural(eyes);
                 Your(eyemsg, eyes, vtense(eyes, "twitch"));
             } else { /* Eyes of the Overworld */
@@ -333,12 +333,12 @@ long mask; /* nonzero if resistance status should change by mask */
 
         /* clearing temporary hallucination without toggling vision */
         if (!changed && !yourIntrinsic(HALLUC) && old && talk) {
-            if (!haseyes(youmonst.data)) {
+            if (!hasEyes(youmonst.data->monsterTypeID)) {
                 strange_feeling((struct obj *) 0, (char *) 0);
             } else if (youCannotSee()) {
                 const char *eyes = body_part(EYE);
 
-                if (eyecount(youmonst.data) != 1)
+                if (eyeCount(youmonst.data->monsterTypeID) != 1)
                     eyes = makeplural(eyes);
                 Your(eyemsg, eyes, vtense(eyes, "itch"));
             } else { /* Grayswandir */
@@ -1247,7 +1247,7 @@ boolean your_fault;
                         s_suffix(x_monnam(mon, ARTICLE_THE, (char *) 0,
                                           (SUPPRESS_IT | SUPPRESS_SADDLE),
                                           FALSE)));
-            } else if (has_head(mon->data)) {
+            } else if (hasAHead(mon->data->monsterTypeID)) {
                 Sprintf(buf, "%s %s", s_suffix(mnam),
                         (notonhead ? "body" : "head"));
             } else {
@@ -1379,7 +1379,7 @@ boolean your_fault;
             mon_adjust_speed(mon, 1, obj);
             break;
         case POT_BLINDNESS:
-            if (haseyes(mon->data)) {
+            if (hasEyes(mon->data->monsterTypeID)) {
                 register int btmp = 64 + rn2(32)
                             + rn2(32) * !resist(mon, POTION_CLASS, 0, NOTELL);
 
@@ -1464,11 +1464,12 @@ boolean your_fault;
 
     /* Note: potionbreathe() does its own docall() */
     if ((distance == 0 || ((distance < 3) && rn2(5)))
-        && (!breathless(youmonst.data) || haseyes(youmonst.data)))
+        && (!doesNotBreathe(youmonst.data->monsterTypeID) || hasEyes(youmonst.data->monsterTypeID))) {
         potionbreathe(obj);
-    else if (obj->dknown && !objects[obj->otyp].oc_name_known
-             && !objects[obj->otyp].oc_uname && cansee(mon->mx, mon->my))
+    } else if (obj->dknown && !objects[obj->otyp].oc_name_known
+             && !objects[obj->otyp].oc_uname && cansee(mon->mx, mon->my)) {
         docall(obj);
+    }
     if (youAreCurrentlyOccupyingAShop() && obj->unpaid) {
         struct monst *shkp = shop_keeper(shopLocatedAt(currentX(), currentY()));
 
@@ -1492,12 +1493,12 @@ register struct obj *obj;
     case POT_RESTORE_ABILITY:
     case POT_GAIN_ABILITY:
         if (obj->cursed) {
-            if (!breathless(youmonst.data))
+            if (!doesNotBreathe(youmonst.data->monsterTypeID))
                 pline("Ulch!  That potion smells terrible!");
-            else if (haseyes(youmonst.data)) {
+            else if (hasEyes(youmonst.data->monsterTypeID)) {
                 const char *eyes = body_part(EYE);
 
-                if (eyecount(youmonst.data) != 1)
+                if (eyeCount(youmonst.data->monsterTypeID) != 1)
                     eyes = makeplural(eyes);
                 Your("%s %s!", eyes, vtense(eyes, "sting"));
             }
@@ -1787,7 +1788,7 @@ dodip()
         if (yn(upstart(qtoo)) == 'y') {
             if (youAreLevitating()) {
                 floating_above(pooltype);
-            } else if (u.usteed && !is_swimmer(u.usteed->data)
+            } else if (u.usteed && !isSwimmer(u.usteed->data->monsterTypeID)
                        && weaponSkill(P_RIDING) < P_BASIC) {
                 rider_cant_reach(); /* not skilled enough to reach */
             } else {
@@ -1887,7 +1888,7 @@ dodip()
             pline("BOOM!  They explode!");
             wake_nearto(currentX(), currentY(), (BOLT_LIM + 1) * (BOLT_LIM + 1));
             exercise(A_STR, FALSE);
-            if (!breathless(youmonst.data) || haseyes(youmonst.data))
+            if (!doesNotBreathe(youmonst.data->monsterTypeID) || hasEyes(youmonst.data->monsterTypeID))
                 potionbreathe(obj);
             useupall(obj);
             useup(potion);

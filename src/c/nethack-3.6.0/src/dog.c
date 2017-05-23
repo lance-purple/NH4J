@@ -541,7 +541,7 @@ long nmv; /* number of moves */
      * of dying the next time we call dog_move()
      */
     if (mtmp->mtame && !mtmp->isminion
-        && (carnivorous(mtmp->data) || herbivorous(mtmp->data))) {
+        && (isCarnivorous(mtmp->data->monsterTypeID) || isHerbivorous(mtmp->data->monsterTypeID))) {
         struct edog *edog = EDOG(mtmp);
 
         if ((monstermoves > edog->hungrytime + 500 && mtmp->mhp < 3)
@@ -557,7 +557,7 @@ long nmv; /* number of moves */
     }
 
     /* recover lost hit points */
-    if (!regenerates(mtmp->data))
+    if (!regenerates(mtmp->data->monsterTypeID))
         imv /= 20;
     if (mtmp->mhp + imv >= mtmp->mhpmax)
         mtmp->mhp = mtmp->mhpmax;
@@ -625,7 +625,7 @@ boolean pets_only; /* true for ascension or final escape */
             if (stay_behind) {
                 if (mtmp->mleashed) {
                     pline("%s leash suddenly comes loose.",
-                          humanoid(mtmp->data)
+                          isHumanoid(mtmp->data->monsterTypeID)
                               ? (mtmp->female ? "Her" : "His")
                               : "Its");
                     m_unleash(mtmp, FALSE);
@@ -740,7 +740,8 @@ struct monst *mon;
 register struct obj *obj;
 {
     struct permonst *mptr = mon->data, *fptr = 0;
-    boolean carni = carnivorous(mptr), herbi = herbivorous(mptr), starving;
+    int pmid = mptr->monsterTypeID;
+    boolean carni = isCarnivorous(pmid), herbi = isHerbivorous(pmid), starving;
 
     if (is_quest_artifact(obj) || obj_resists(obj, 0, 95))
         return obj->cursed ? TABU : APPORT;
@@ -792,8 +793,8 @@ register struct obj *obj;
             if ((peek_at_iced_corpse_age(obj) + 50L <= monstermoves
                  && obj->corpsenm != PM_LIZARD && obj->corpsenm != PM_LICHEN
                  && monsterClass(mptr->monsterTypeID) != S_FUNGUS)
-                || (acidic(fptr) && !resists_acid(mon))
-                || (poisonous(fptr) && !resists_poison(mon)))
+                || (isAcidic(fptr->monsterTypeID) && !resists_acid(mon))
+                || (isPoisonous(fptr->monsterTypeID) && !resists_poison(mon)))
                 return POISON;
             /* turning into slime is preferable to starvation */
             else if (fptr == &mons[PM_GREEN_SLIME] && !isSlimeproof(mon->data->monsterTypeID))
@@ -802,7 +803,7 @@ register struct obj *obj;
                 return herbi ? CADAVER : MANFOOD;
             /* most humanoids will avoid cannibalism unless starving;
                arbitrary: elves won't eat other elves even then */
-            else if (humanoid(mptr) && same_race(mptr, fptr)
+            else if (isHumanoid(mptr->monsterTypeID) && same_race(mptr, fptr)
                      && (!is_undead(mptr)
 			 && monsterClass(fptr->monsterTypeID) != S_KOBOLD
                          && monsterClass(fptr->monsterTypeID) != S_ORC 
@@ -817,7 +818,7 @@ register struct obj *obj;
                          ? ACCFOOD
                          : MANFOOD;
         case TIN:
-            return metallivorous(mptr) ? ACCFOOD : MANFOOD;
+            return isMetallivorous(mptr->monsterTypeID) ? ACCFOOD : MANFOOD;
         case APPLE:
         case CARROT:
             return herbi ? DOGFOOD : starving ? ACCFOOD : MANFOOD;
@@ -841,7 +842,7 @@ register struct obj *obj;
             return TABU;
         if (mptr == &mons[PM_GELATINOUS_CUBE] && is_organic(obj))
             return ACCFOOD;
-        if (metallivorous(mptr) && is_metallic(obj)
+        if (isMetallivorous(mptr->monsterTypeID) && is_metallic(obj)
             && (is_rustprone(obj) || mptr != &mons[PM_RUST_MONSTER])) {
             /* Non-rustproofed ferrous based metals are preferred. */
             return (is_rustprone(obj) && !obj->oerodeproof) ? DOGFOOD
@@ -985,8 +986,8 @@ boolean was_dead;
             if (!rn2(edog->abuse + 1))
                 mtmp->mpeaceful = 1;
         if (!quietly && cansee(mtmp->mx, mtmp->my)) {
-            if (haseyes(youmonst.data)) {
-                if (haseyes(mtmp->data))
+            if (hasEyes(youmonst.data->monsterTypeID)) {
+                if (hasEyes(mtmp->data->monsterTypeID))
                     pline("%s %s to look you in the %s.", Monnam(mtmp),
                           mtmp->mpeaceful ? "seems unable" : "refuses",
                           body_part(EYE));

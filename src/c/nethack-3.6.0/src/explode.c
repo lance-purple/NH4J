@@ -317,7 +317,7 @@ int expltype;
                 }
                 if (swallowed() && mtmp == u.ustuck) {
                     const char *adj = NULL;
-                    if (is_animal(u.ustuck->data)) {
+                    if (isAnimal(u.ustuck->data->monsterTypeID)) {
                         switch (damageType) {
                         case AD_FIRE:
                             adj = "heartburn";

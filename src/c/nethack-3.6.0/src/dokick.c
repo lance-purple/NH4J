@@ -38,6 +38,7 @@ register boolean clumsy;
     int kick_skill = P_NONE;
     int blessed_foot_damage = 0;
     boolean trapkilled = FALSE;
+    int pmid = mon->data->monsterTypeID;
 
     if (uarmf && uarmf->otyp == KICKING_BOOTS)
         dmg += 5;
@@ -47,7 +48,7 @@ register boolean clumsy;
         dmg /= 2;
 
     /* kicking a dragon or an elephant will not harm it */
-    if (thick_skinned(mon->data))
+    if (isThickSkinned(pmid))
         dmg = 0;
 
     /* attacking a shade is useless */
@@ -253,12 +254,12 @@ xchar x, y;
         clumsy = TRUE;
 doit:
     You("kick %s.", mon_nam(mon));
-    if (!rn2(clumsy ? 3 : 4) && (clumsy || !isBigMonster(mon->data->monsterTypeID))
-        && mon->mcansee && !mon->mtrapped && !thick_skinned(mon->data)
-        && monsterClass(mon->data->monsterTypeID) != S_EEL && haseyes(mon->data) && mon->mcanmove
+    if (!rn2(clumsy ? 3 : 4) && (clumsy || !isBigMonster(pmid))
+        && mon->mcansee && !mon->mtrapped && !isThickSkinned(pmid)
+        && monsterClass(pmid) != S_EEL && hasEyes(pmid) && mon->mcanmove
         && !mon->mstun && !mon->mconf && !mon->msleeping
-        && monsterMovementSpeed(mon->data->monsterTypeID) >= 12) {
-        if (!nohands(mon->data) && !rn2(martial() ? 5 : 3)) {
+        && monsterMovementSpeed(pmid) >= 12) {
+        if (!hasNoHands(pmid) && !rn2(martial() ? 5 : 3)) {
             pline("%s blocks your %skick.", Monnam(mon),
                   clumsy ? "clumsy " : "");
             (void) passive(mon, FALSE, 1, AT_KICK, FALSE);
@@ -271,13 +272,13 @@ doit:
                     newsym(x, y);
                 }
                 pline("%s %s, %s evading your %skick.", Monnam(mon),
-                      (!level.flags.noteleport && can_teleport(mon->data))
+                      (!level.flags.noteleport && canTeleport(pmid))
                           ? "teleports"
-                          : isFloater(mon->data->monsterTypeID)
+                          : isFloater(pmid)
                                 ? "floats"
                                 : isFlyer(pmid) ? "swoops"
-                                                      : (nolimbs(mon->data)
-                                                         || slithy(mon->data))
+                                                      : (hasNoLimbs(pmid)
+                                                         || isSlithy(pmid))
                                                             ? "slides"
                                                             : "jumps",
                       clumsy ? "easily" : "nimbly", clumsy ? "clumsy " : "");
@@ -761,11 +762,12 @@ dokick()
     register struct monst *mtmp;
     boolean no_kick = FALSE;
     char buf[BUFSZ];
+    int upmid = youmonst.data->monsterTypeID;
 
-    if (nolimbs(youmonst.data) || slithy(youmonst.data)) {
+    if (hasNoLimbs(upmid) || isSlithy(upmid)) {
         You("have no legs to kick with.");
         no_kick = TRUE;
-    } else if (isVerySmallMonster(youmonst.data->monsterTypeID)) {
+    } else if (isVerySmallMonster(upmid)) {
         You("are too small to do any kicking.");
         no_kick = TRUE;
     } else if (u.usteed) {
@@ -841,7 +843,7 @@ dokick()
             You_cant("move your %s!", body_part(LEG));
             break;
         case 1:
-            if (is_animal(u.ustuck->data)) {
+            if (isAnimal(u.ustuck->data->monsterTypeID)) {
                 pline("%s burps loudly.", Monnam(u.ustuck));
                 break;
             }

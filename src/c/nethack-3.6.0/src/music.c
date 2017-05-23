@@ -266,7 +266,7 @@ int force;
         for (y = start_y; y <= end_y; y++) {
             if ((mtmp = m_at(x, y)) != 0) {
                 wakeup(mtmp); /* peaceful monster will become hostile */
-                if (mtmp->mundetected && is_hider(mtmp->data)) {
+                if (mtmp->mundetected && isHider(mtmp->data->monsterTypeID)) {
                     mtmp->mundetected = 0;
                     if (cansee(x, y))
                         pline("%s is shaken loose from the ceiling!",
@@ -341,14 +341,14 @@ int force;
                        falls in a chasm... */
                     if (mtmp) {
                         if (!isFlyer(mtmp->data->monsterTypeID)
-                            && !is_clinger(mtmp->data)) {
+                            && !isClinger(mtmp->data->monsterTypeID)) {
                             boolean m_already_trapped = mtmp->mtrapped;
                             mtmp->mtrapped = 1;
                             if (!m_already_trapped) { /* suppress messages */
                                 if (cansee(x, y))
                                     pline("%s falls into a chasm!",
                                           Monnam(mtmp));
-                                else if (humanoid(mtmp->data))
+                                else if (isHumanoid(mtmp->data->monsterTypeID))
                                     You_hear("a scream!");
                             }
                             /* Falling is okay for falling down
@@ -376,7 +376,7 @@ int force;
                         }
                     } else if (x == currentX() && y == currentY()) {
                         if (youAreLevitating() || youAreFlying()
-                            || is_clinger(youmonst.data)) {
+                            || isClinger(youmonst.data->monsterTypeID)) {
                             if (!tu_pit) { /* no pit here previously */
                                 pline("A chasm opens up under you!");
                                 You("don't fall in!");
@@ -405,8 +405,8 @@ int force;
                                 exercise(A_DEX, TRUE);
                             else
                                 selftouch(
-                                    (areYouPolymorphed() && (slithy(youmonst.data)
-                                                || nolimbs(youmonst.data)))
+                                    (areYouPolymorphed() && (isSlithy(youmonst.data->monsterTypeID)
+                                                || hasNoLimbs(youmonst.data->monsterTypeID)))
                                         ? "Shaken, you"
                                         : "Falling down, you");
                         }

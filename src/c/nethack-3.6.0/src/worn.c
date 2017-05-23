@@ -454,11 +454,11 @@ boolean creation;
      * except for the additional restriction on intelligence.  (Players
      * are always intelligent, even if polymorphed).
      */
-    if (isVerySmallMonster(mon->data->monsterTypeID) || nohands(mon->data) || is_animal(mon->data))
+    if (isVerySmallMonster(mon->data->monsterTypeID) || hasNoHands(mon->data->monsterTypeID) || isAnimal(mon->data->monsterTypeID))
         return;
     /* give mummies a chance to wear their wrappings
      * and let skeletons wear their initial armor */
-    if (mindless(mon->data)
+    if (isMindless(mon->data->monsterTypeID)
         && (!creation || (monsterClass(mon->data->monsterTypeID) != S_MUMMY
                           && mon->data != &mons[PM_SKELETON])))
         return;
@@ -475,7 +475,7 @@ boolean creation;
     if (!MON_WEP(mon) || !bimanual(MON_WEP(mon)))
         m_dowear_type(mon, W_ARMS, creation, FALSE);
     m_dowear_type(mon, W_ARMG, creation, FALSE);
-    if (!slithy(mon->data) && monsterClass(mon->data->monsterTypeID) != S_CENTAUR)
+    if (!isSlithy(mon->data->monsterTypeID) && monsterClass(mon->data->monsterTypeID) != S_CENTAUR)
         m_dowear_type(mon, W_ARMF, creation, FALSE);
     if (!cantweararm(mon->data))
         m_dowear_type(mon, W_ARM, creation, FALSE);
@@ -772,7 +772,7 @@ boolean polyspot;
     register struct obj *otmp;
     struct permonst *mdat = mon->data;
     boolean vis = cansee(mon->mx, mon->my);
-    boolean handless_or_tiny = (nohands(mdat) || isVerySmallMonster(mdat->monsterTypeID));
+    boolean handless_or_tiny = (hasNoHands(mdat->monsterTypeID) || isVerySmallMonster(mdat->monsterTypeID));
     const char *pronoun = mhim(mon), *ppronoun = mhis(mon);
 
     if (breakarm(mdat)) {
@@ -885,7 +885,7 @@ boolean polyspot;
             m_lose_armor(mon, otmp);
         }
     }
-    if (handless_or_tiny || slithy(mdat) || monsterClass(mdat->monsterTypeID) == S_CENTAUR) {
+    if (handless_or_tiny || isSlithy(mdat->monsterTypeID) || monsterClass(mdat->monsterTypeID) == S_CENTAUR) {
         if ((otmp = which_armor(mon, W_ARMF)) != 0) {
             if (vis) {
                 if (isWhirly(mon->data->monsterTypeID))

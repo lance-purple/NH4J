@@ -214,9 +214,10 @@ int rx, ry, *resp;
                we're usually forced to use generic pronoun here) */
             if (mtmp) {
                 mptr = &mons[mtmp->mnum];
+		int pmid = mptr->monsterTypeID;
                 /* can't use mhe() here; it calls pronoun_gender() which
                    expects monster to be on the map (visibility check) */
-                if ((humanoid(mptr) || (monsterGenerationMask(mptr->monsterTypeID) & G_UNIQ)
+                if ((isHumanoid(pmid) || (monsterGenerationMask(pmid) & G_UNIQ)
                      || type_is_pname(mptr)) && !is_neuter(mptr))
                     gndr = (int) mtmp->female;
             } else {
@@ -259,10 +260,11 @@ int rx, ry, *resp;
 	javaString monsterName = NO_JAVA_STRING;
 
         mptr = &mons[statue->corpsenm];
+	int pmid = mptr->monsterTypeID;
         if (youCannotSee()) { /* ignore statue->dknown; it'll always be set */
             Sprintf(buf, "%s %s",
                     (rx == currentX() && ry == currentY()) ? "This" : "That",
-                    humanoid(mptr) ? "person" : "creature");
+                    isHumanoid(pmid) ? "person" : "creature");
             what = buf;
         } else {
 	    monsterName = monsterTypeName(mptr->monsterTypeID);
@@ -304,7 +306,7 @@ register struct obj *obj;
     boolean interference = (swallowed() && isWhirly(u.ustuck->data->monsterTypeID)
                             && !rn2(Role_if(PM_HEALER) ? 10 : 3));
 
-    if (nohands(youmonst.data)) {
+    if (hasNoHands(youmonst.data->monsterTypeID)) {
         You("have no hands!"); /* not `body_part(HAND)' */
         return 0;
     } else if (youAreDeaf()) {
@@ -721,7 +723,7 @@ register xchar x, y;
             > dist2(x, y, mtmp->mx, mtmp->my)) {
             if (!um_dist(mtmp->mx, mtmp->my, 3)) {
                 ; /* still close enough */
-            } else if (otmp->cursed && !breathless(mtmp->data)) {
+            } else if (otmp->cursed && !doesNotBreathe(mtmp->data->monsterTypeID)) {
                 if (um_dist(mtmp->mx, mtmp->my, 5)
                     || (mtmp->mhp -= rnd(2)) <= 0) {
                     boolean save_pacifism = pacifistConduct();
@@ -855,8 +857,10 @@ struct obj *obj;
     mtmp = bhit(directionX(), directionY(), COLNO, INVIS_BEAM,
                 (int FDECL((*), (MONST_P, OBJ_P))) 0,
                 (int FDECL((*), (OBJ_P, OBJ_P))) 0, &obj);
-    if (!mtmp || !haseyes(mtmp->data) || notonhead)
+    if (!mtmp || !hasEyes(mtmp->data->monsterTypeID) || notonhead)
         return 1;
+
+    int pmid = mtmp->data->monsterTypeID;
 
     /* couldsee(mtmp->mx, mtmp->my) is implied by the fact that bhit()
        targetted it, so we can ignore possibility of X-ray vision */
@@ -866,8 +870,8 @@ struct obj *obj;
 #define SEENMON (MONSEEN_NORMAL | MONSEEN_SEEINVIS | MONSEEN_INFRAVIS)
     how_seen = vis ? howmonseen(mtmp) : 0;
     /* whether monster is able to use its vision-based capabilities */
-    monable = !mtmp->mcan && (!mtmp->minvis || perceives(mtmp->data));
-    mlet = monsterClass(mtmp->data->monsterTypeID);
+    monable = !mtmp->mcan && (!mtmp->minvis || perceivesTheInvisible(pmid));
+    mlet = monsterClass(pmid);
     if (mtmp->msleeping) {
         if (vis)
             pline("%s is too tired to look at your %s.", Monnam(mtmp),
@@ -875,7 +879,7 @@ struct obj *obj;
     } else if (!mtmp->mcansee) {
         if (vis)
             pline("%s can't see anything right now.", Monnam(mtmp));
-    } else if (invis_mirror && !perceives(mtmp->data)) {
+    } else if (invis_mirror && !perceivesTheInvisible(pmid)) {
         if (vis)
             pline("%s fails to notice your %s.", Monnam(mtmp), mirror);
         /* infravision doesn't produce an image in the mirror */
@@ -922,17 +926,17 @@ struct obj *obj;
         (void) mpickobj(mtmp, obj);
         if (!tele_restrict(mtmp))
             (void) rloc(mtmp, TRUE);
-    } else if (!isUnicorn(mtmp->data->monsterTypeID) && !humanoid(mtmp->data)
-               && (!mtmp->minvis || perceives(mtmp->data)) && rn2(5)) {
+    } else if (!isUnicorn(pmid) && !isHumanoid(pmid)
+               && (!mtmp->minvis || perceivesTheInvisible(pmid)) && rn2(5)) {
         if (vis)
             pline("%s is frightened by its reflection.", Monnam(mtmp));
         monflee(mtmp, d(2, 4), FALSE, FALSE);
     } else if (youCanSee()) {
         if (mtmp->minvis && !youCanSeeInvisible())
             ;
-        else if ((mtmp->minvis && !perceives(mtmp->data))
+        else if ((mtmp->minvis && !perceivesTheInvisible(pmid))
                  /* redundant: can't get here if these are true */
-                 || !haseyes(mtmp->data) || notonhead || !mtmp->mcansee)
+                 || !hasEyes(pmid) || notonhead || !mtmp->mcansee)
             pline("%s doesn't seem to notice %s reflection.", Monnam(mtmp),
                   mhis(mtmp));
         else
@@ -1504,7 +1508,9 @@ int magic; /* 0=Physical, otherwise skill level */
 {
     coord cc;
 
-    if (!magic && (nolimbs(youmonst.data) || slithy(youmonst.data))) {
+    int upmid = youmonst.data->monsterTypeID;
+
+    if (!magic && (hasNoLimbs(upmid) || isSlithy(upmid))) {
         /* normally (nolimbs || slithy) implies no jumping,
            but that isn't necessarily the case for knights */
         You_cant("jump; you have no legs!");
@@ -1960,22 +1966,23 @@ long timeout;
     cansee_spot = cansee(cc.x, cc.y);
     mtmp = make_familiar(figurine, cc.x, cc.y, TRUE);
     if (mtmp) {
+        int pmid = mtmp->data->monsterTypeID;
         char and_vanish[BUFSZ];
         struct obj *mshelter = level.objects[mtmp->mx][mtmp->my];
         Sprintf(monnambuf, "%s", an(m_monnam(mtmp)));
 
         and_vanish[0] = '\0';
         if ((mtmp->minvis && !youCanSeeInvisible())
-            || (monsterClass(mtmp->data->monsterTypeID) == S_MIMIC
+            || (monsterClass(pmid) == S_MIMIC
                 && mtmp->m_ap_type != M_AP_NOTHING))
             suppress_see = TRUE;
 
         if (mtmp->mundetected) {
-            if (hides_under(mtmp->data) && mshelter) {
+            if (hidesUnderStuff(pmid) && mshelter) {
                 Sprintf(and_vanish, " and %s under %s",
                         locomotion(mtmp->data, "crawl"), doname(mshelter));
-            } else if (monsterClass(mtmp->data->monsterTypeID) == S_MIMIC
-                       || monsterClass(mtmp->data->monsterTypeID) == S_EEL) {
+            } else if (monsterClass(pmid) == S_MIMIC
+                       || monsterClass(pmid) == S_EEL) {
                 suppress_see = TRUE;
             } else
                 Strcpy(and_vanish, " and vanish");
@@ -2061,13 +2068,13 @@ boolean quietly;
         return FALSE;
     }
     if (IS_ROCK(levl[x][y].typ)
-        && !(passes_walls(&mons[obj->corpsenm]) && may_passwall(x, y))) {
+        && !(passesThroughWalls(mons[obj->corpsenm].monsterTypeID) && may_passwall(x, y))) {
         if (!quietly)
             You("cannot place a figurine in %s!",
                 IS_TREE(levl[x][y].typ) ? "a tree" : "solid rock");
         return FALSE;
     }
-    if (sobj_at(BOULDER, x, y) && !passes_walls(&mons[obj->corpsenm])
+    if (sobj_at(BOULDER, x, y) && !passesThroughWalls(mons[obj->corpsenm].monsterTypeID)
         && !throws_rocks(&mons[obj->corpsenm])) {
         if (!quietly)
             You("cannot fit the figurine on the boulder.");
@@ -2147,7 +2154,7 @@ struct obj *obj;
         if (otmp != &zeroobj) {
             You("cover %s with a thick layer of grease.", yname(otmp));
             otmp->greased = 1;
-            if (obj->cursed && !nohands(youmonst.data)) {
+            if (obj->cursed && !hasNoHands(youmonst.data->monsterTypeID)) {
                 incrementYourIntrinsicTimeout(SLIPPERY_FINGERS, rnd(15));
                 pline("Some of the grease gets all over your %s.",
                       makeplural(body_part(HAND)));
@@ -2319,13 +2326,13 @@ struct obj *otmp;
     int levtyp = levl[currentX()][currentY()].typ;
     const char *occutext = "setting the trap";
 
-    if (nohands(youmonst.data))
+    if (hasNoHands(youmonst.data->monsterTypeID))
         what = "without hands";
     else if (youAreStunned())
         what = "while stunned";
     else if (swallowed())
         what =
-            is_animal(u.ustuck->data) ? "while swallowed" : "while engulfed";
+            isAnimal(u.ustuck->data->monsterTypeID) ? "while swallowed" : "while engulfed";
     else if (underwater())
         what = "underwater";
     else if (youAreLevitating())
@@ -3110,7 +3117,7 @@ struct obj *obj;
                                  "?", obj, yname, ysimple_name, "the wand")))
         return 0;
 
-    if (nohands(youmonst.data)) {
+    if (hasNoHands(youmonst.data->monsterTypeID)) {
         You_cant("break %s without hands!", yname(obj));
         return 0;
     } else if (ACURR(A_STR) < (is_fragile ? 5 : 10)) {

@@ -425,7 +425,7 @@ struct obj *obj;         /* missile (or stack providing it) */
                 } else if (singleobj->otyp == BLINDING_VENOM) {
                     const char *eyes = body_part(EYE);
 
-                    if (eyecount(youmonst.data) != 1)
+                    if (eyeCount(youmonst.data->monsterTypeID) != 1)
                         eyes = makeplural(eyes);
                     /* venom in the eyes */
                     if (youCanSee())

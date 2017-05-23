@@ -65,7 +65,7 @@ struct permonst *ptr;
         /* no restrictions? */
     } else if (areYouOnWaterLevel()) {
         /* just monsters that can swim */
-        if (!is_swimmer(ptr))
+        if (!isSwimmer(ptr->monsterTypeID))
             return TRUE;
     } else if (areYouOnFireLevel()) {
         if (!monsterTypeResistsFire(ptr->monsterTypeID))
@@ -73,7 +73,7 @@ struct permonst *ptr;
     } else if (areYouOnAirLevel()) {
 	int pmid = ptr->monsterTypeID;
         if (!(isFlyer(pmid) && monsterClass(pmid) != S_TRAPPER) && !isFloater(pmid)
-            && !amorphous(ptr) && !isNoncorporeal(pmid) && !isWhirly(pmid))
+            && !isAmorphous(pmid) && !isNoncorporeal(pmid) && !isWhirly(pmid))
             return TRUE;
     }
     return FALSE;
@@ -277,7 +277,7 @@ register struct monst *mtmp;
         break;
 
     case S_ANGEL:
-        if (humanoid(ptr)) {
+        if (isHumanoid(ptr->monsterTypeID)) {
             /* create minion stuff; can't use mongets */
             otmp = mksobj(LONG_SWORD, FALSE, FALSE);
 
@@ -1145,7 +1145,7 @@ int mmflags;
     else
         mtmp->female = rn2(2); /* ignored for neuters */
 
-    if (areYouOnASokobanLevel() && !mindless(ptr)) /* know about traps here */
+    if (areYouOnASokobanLevel() && !isMindless(ptr->monsterTypeID)) /* know about traps here */
         mtmp->mtrapseen = (1L << (PIT - 1)) | (1L << (HOLE - 1));
     /* quest leader and nemesis both know about all trap types */
     if (msound == MS_LEADER || msound == MS_NEMESIS)
@@ -1753,7 +1753,7 @@ struct monst *mtmp, *victim;
         } else if (canspotmon(mtmp)) {
 	    javaString monsterName = monsterTypeName(ptr->monsterTypeID);
             pline("%s %s %s.", Monnam(mtmp),
-                  humanoid(ptr) ? "becomes" : "grows up into",
+                  isHumanoid(ptr->monsterTypeID) ? "becomes" : "grows up into",
                   an(monsterName.c_str));
 	    releaseJavaString(monsterName);
         }

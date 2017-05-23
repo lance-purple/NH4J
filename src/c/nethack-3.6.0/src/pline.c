@@ -455,7 +455,7 @@ register struct monst *mtmp;
                                        : monsterHasAttackWithDamageType(u.ustuck->data,
                                                            AT_ENGL, AD_DGST)
                                              ? ", digesting you"
-                                             : is_animal(u.ustuck->data)
+                                             : isAnimal(u.ustuck->data->monsterTypeID)
                                                    ? ", swallowing you"
                                                    : ", engulfing you");
     if (mtmp == u.usteed)
@@ -503,7 +503,7 @@ ustatusline()
         Strcat(info, ", blind");
         if (creamed()) {
             if ((long) creamed() < yourIntrinsic(BLINDED) || youAreBlindfolded()
-                || !haseyes(youmonst.data))
+                || !hasEyes(youmonst.data->monsterTypeID))
                 Strcat(info, ", cover");
             Strcat(info, "ed by sticky goop");
         } /* note: "goop" == "glop"; variation is intentional */

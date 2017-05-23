@@ -1686,7 +1686,7 @@ int croaked;
     if (numsk > 1) {
         if (cansee(shkp->mx, shkp->my) && croaked) {
             takes[0] = '\0';
-            if (has_head(shkp->data) && !rn2(2))
+            if (hasAHead(shkp->data->monsterTypeID) && !rn2(2))
                 Sprintf(takes, ", shakes %s %s,", mhis(shkp),
                         mbodypart(shkp, HEAD));
             pline("%s %slooks at your corpse%s and %s.", Monnam(shkp),
@@ -3368,7 +3368,7 @@ boolean catchup; /* restoring a level */
                 return 0;
         if (x == shkp->mx && y == shkp->my)
             return 0;
-        if ((mtmp = m_at(x, y)) && (!passes_walls(mtmp->data)))
+        if ((mtmp = m_at(x, y)) && (!passesThroughWalls(mtmp->data->monsterTypeID)))
             return 0;
     }
     if ((ttmp = t_at(x, y)) != 0) {
@@ -3659,7 +3659,7 @@ register int fall;
                && (ESHK(shkp)->billct || ESHK(shkp)->debit)) {
         register struct obj *obj, *obj2;
 
-        if (nolimbs(shkp->data)) {
+        if (hasNoLimbs(shkp->data->monsterTypeID)) {
             grabs = "knocks off";
 #if 0
             /* This is what should happen, but for balance
