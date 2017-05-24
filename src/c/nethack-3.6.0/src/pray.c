@@ -1310,7 +1310,7 @@ dosacrifice()
                 value = eaten_stat(value, otmp);
         }
 
-        if (your_race(ptr)) {
+        if (isOfYourRace(ptr->monsterTypeID, urace.selfmask)) {
             if (is_demon(youmonst.data)) {
                 You("find the idea very satisfying.");
                 exercise(A_WIS, TRUE);
@@ -1392,7 +1392,7 @@ dosacrifice()
             adjalign(-3);
             value = -1;
             setYourIntrinsicMask(AGGRAVATE_MONSTER, FROMOUTSIDE);
-        } else if (is_undead(ptr)) { /* Not demons--no demon corpses */
+        } else if (isUndead(ptr->monsterTypeID)) { /* Not demons--no demon corpses */
             if (currentAlignmentType() != A_CHAOTIC)
                 value += 1;
         } else if (isUnicorn(ptr->monsterTypeID)) {
@@ -1765,7 +1765,7 @@ boolean praying; /* false means no messages should be given */
             p_type = 3;
     }
 
-    if (is_undead(youmonst.data) && !areYouInHell()
+    if (isUndead(youmonst.data->monsterTypeID) && !areYouInHell()
         && (p_aligntyp == A_LAWFUL || (p_aligntyp == A_NEUTRAL && !rn2(10))))
         p_type = -1;
     /* Note:  when !praying, the random factor for neutrals makes the
@@ -1901,7 +1901,7 @@ doturn()
     setAtheistConduct(FALSE);
 
     if ((currentAlignmentType() != A_CHAOTIC
-         && (is_demon(youmonst.data) || is_undead(youmonst.data)))
+         && (is_demon(youmonst.data) || isUndead(youmonst.data->monsterTypeID)))
         || divineWrath() > 6) { /* "Die, mortal!" */
         pline("For some reason, %s seems to ignore you.", u_gname());
         aggravate();
@@ -1929,7 +1929,7 @@ doturn()
             continue;
 
         if (!mtmp->mpeaceful
-            && (is_undead(mtmp->data) || is_vampshifter(mtmp)
+            && (isUndead(mtmp->data->monsterTypeID) || is_vampshifter(mtmp)
                 || (is_demon(mtmp->data) && (currentExperienceLevel() > (MAXULEV / 2))))) {
             mtmp->msleeping = 0;
             if (youAreConfused()) {

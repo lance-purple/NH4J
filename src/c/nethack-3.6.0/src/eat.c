@@ -622,9 +622,9 @@ boolean allowmsg;
            and also shouldn't eat current species when polymorphed
            (even if having the form of something which doesn't care
            about cannibalism--hero's innate traits aren't altered) */
-        && (your_race(fptr) || (areYouPolymorphed() && same_race(youmonst.data, fptr)))) {
+        && (isOfYourRace(fptr->monsterTypeID, urace.selfmask) || (areYouPolymorphed() && same_race(youmonst.data, fptr)))) {
         if (allowmsg) {
-            if (areYouPolymorphed() && your_race(fptr))
+            if (areYouPolymorphed() && isOfYourRace(fptr->monsterTypeID, urace.selfmask))
                 You("have a bad feeling deep inside.");
             You("cannibal!  You will regret this!");
         }
@@ -1763,7 +1763,7 @@ struct obj *otmp;
     case MEAT_RING:
         goto give_feedback;
     case CLOVE_OF_GARLIC:
-        if (is_undead(youmonst.data)) {
+        if (isUndead(youmonst.data->monsterTypeID)) {
             make_vomiting((long) rn1(context.victual.reqtime, 5), FALSE);
             break;
         }
@@ -2103,7 +2103,7 @@ struct obj *otmp;
 {
     switch (otmp->otyp) {
     case SPRIG_OF_WOLFSBANE:
-        if (lycanthropeType() >= LOW_PM || is_were(youmonst.data))
+        if (lycanthropeType() >= LOW_PM || isWere(youmonst.data->monsterTypeID))
             you_unwere(TRUE);
         break;
     case CARROT:

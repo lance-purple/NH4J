@@ -330,7 +330,7 @@ register struct monst *mtmp;
             /* Your steed won't attack you */
             return 0;
         /* Orcs like to steal and eat horses and the like */
-        if (!rn2(is_orc(mtmp->data) ? 2 : 4)
+        if (!rn2(isOrc(mtmp->data->monsterTypeID) ? 2 : 4)
             && distanceSquaredToYou(mtmp->mx, mtmp->my) <= 2) {
             /* Attack your steed instead */
             i = mattackm(mtmp, u.usteed);
@@ -540,8 +540,8 @@ register struct monst *mtmp;
             (void) msummon(mtmp);
 
     /*  Special lycanthrope handling code */
-    if ((mtmp->cham == NON_PM) && is_were(mdat) && !range2) {
-        if (is_human(mdat)) {
+    if ((mtmp->cham == NON_PM) && isWere(mdat->monsterTypeID) && !range2) {
+        if (isHuman(mdat->monsterTypeID)) {
             if (!rn2(5 - (night() * 2)) && !mtmp->mcan)
                 new_were(mtmp);
         } else if (!rn2(30) && !mtmp->mcan)
@@ -904,7 +904,7 @@ register const struct Attack mattk;
 
     /*  First determine the base damage done */
     dmg = d(mattk.dice, mattk.diceSides);
-    if ((is_undead(mdat) || is_vampshifter(mtmp)) && midnight())
+    if ((isUndead(mdat->monsterTypeID) || is_vampshifter(mtmp)) && midnight())
         dmg += d(mattk.dice, mattk.diceSides); /* extra damage */
 
     /*  Next a cancellation factor.
@@ -1505,7 +1505,7 @@ register const struct Attack mattk;
         break;
     case AD_DETH:
         pline("%s reaches out with its deadly touch.", Monnam(mtmp));
-        if (is_undead(youmonst.data)) {
+        if (isUndead(youmonst.data->monsterTypeID)) {
             /* Still does normal damage */
             pline("Was that the touch of death?");
             break;
@@ -1600,7 +1600,7 @@ register const struct Attack mattk;
         if (youTakeHalfDamageFromPhysicalAttacks()
             /* Mitre of Holiness */
             || (Role_if(PM_PRIEST) && uarmh && is_quest_artifact(uarmh)
-                && (is_undead(mtmp->data) || is_demon(mtmp->data)
+                && (isUndead(mtmp->data->monsterTypeID) || is_demon(mtmp->data)
                     || is_vampshifter(mtmp))))
             dmg = (dmg + 1) / 2;
 

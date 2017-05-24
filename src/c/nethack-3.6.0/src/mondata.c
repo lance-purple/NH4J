@@ -87,10 +87,11 @@ resists_drli(mon)
 struct monst *mon;
 {
     struct permonst *ptr = mon->data;
+    int pmid = ptr->monsterTypeID;
     struct obj *wep;
 
-    if (is_undead(ptr) || is_demon(ptr) || is_were(ptr)
-        /* is_were() doesn't handle hero in human form */
+    if (isUndead(pmid) || is_demon(ptr) || isWere(pmid)
+        /* isWere() doesn't handle hero in human form */
         || (mon == &youmonst && lycanthropeType() >= LOW_PM)
         || ptr == &mons[PM_DEATH] || is_vampshifter(mon))
         return TRUE;
@@ -297,8 +298,9 @@ boolean
 hates_silver(ptr)
 register struct permonst *ptr;
 {
-    int mc = monsterClass(ptr->monsterTypeID);
-    return (boolean) (is_were(ptr) || mc == S_VAMPIRE || is_demon(ptr)
+    int pmid = ptr->monsterTypeID;
+    int mc = monsterClass(pmid);
+    return (boolean) (isWere(pmid) || mc == S_VAMPIRE || is_demon(ptr)
                       || ptr == &mons[PM_SHADE]
                       || (mc == S_IMP && ptr != &mons[PM_TENGU]));
 }
@@ -535,19 +537,22 @@ struct permonst *pm1, *pm2;
     int let1 = monsterClass(pm1->monsterTypeID);
     int let2 = monsterClass(pm2->monsterTypeID);
 
+    int pmid1 = pm1->monsterTypeID;
+    int pmid2 = pm2->monsterTypeID;
+
     if (pm1 == pm2)
         return TRUE; /* exact match */
     /* player races have their own predicates */
-    if (is_human(pm1))
-        return is_human(pm2);
-    if (is_elf(pm1))
-        return is_elf(pm2);
-    if (is_dwarf(pm1))
-        return is_dwarf(pm2);
-    if (is_gnome(pm1))
-        return is_gnome(pm2);
-    if (is_orc(pm1))
-        return is_orc(pm2);
+    if (isHuman(pmid1))
+        return isHuman(pmid2);
+    if (isElf(pmid1))
+        return isElf(pmid2);
+    if (isDwarf(pmid1))
+        return isDwarf(pmid2);
+    if (isGnome(pmid1))
+        return isGnome(pmid2);
+    if (isOrc(pmid1))
+        return isOrc(pmid2);
     /* other creatures are less precise */
     if (is_giant(pm1))
         return is_giant(pm2); /* open to quibbling here */
@@ -586,7 +591,7 @@ struct permonst *pm1, *pm2;
         return FALSE;
     if (is_demon(pm1))
         return is_demon(pm2);
-    if (is_undead(pm1)) {
+    if (isUndead(pm1->monsterTypeID)) {
         if (let1 == S_ZOMBIE)
             return (let2 == S_ZOMBIE);
         if (let1 == S_MUMMY)
@@ -599,7 +604,7 @@ struct permonst *pm1, *pm2;
             return (let2 == S_WRAITH);
         if (let1 == S_GHOST)
             return (let2 == S_GHOST);
-    } else if (is_undead(pm2))
+    } else if (isUndead(pm2->monsterTypeID))
         return FALSE;
 
     /* check for monsters which grow into more mature forms */
@@ -1167,6 +1172,7 @@ boolean validAttack(const struct Attack attack)
 }
 
 extern boolean javaGetBooleanFromInt(const char* classname, const char* methodname, int i);
+extern boolean javaGetBooleanFromIntAndLong(const char* classname, const char* methodname, int i, long j);
 extern boolean javaGetIntFromInt(const char* classname, const char* methodname, int i);
 
 int emitsLightWithRange(int pmid) {
@@ -1363,6 +1369,50 @@ boolean isHerbivorous(int pmid) {
 
 boolean isMetallivorous(int pmid) {
     return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isMetallivorous", pmid);
+}
+
+boolean okToPolymorphInto(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "okToPolymorphInto", pmid);
+}
+
+boolean isShapeshifter(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isShapeshifter", pmid);
+}
+
+boolean isUndead(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isUndead", pmid);
+}
+
+boolean isWere(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isWere", pmid);
+}
+
+boolean isElf(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isElf", pmid);
+}
+
+boolean isDwarf(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isDwarf", pmid);
+}
+
+boolean isGnome(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isGnome", pmid);
+}
+
+boolean isOrc(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isOrc", pmid);
+}
+
+boolean isHuman(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isHuman", pmid);
+}
+
+boolean isOfYourRace(int pmid, long race) {
+    return javaGetBooleanFromIntAndLong(MONSTER_DATA_CLASS, "isOfYourRace", pmid, race);
+}
+
+boolean isBat(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isBat", pmid);
 }
 
 /*mondata.c*/

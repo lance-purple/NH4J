@@ -224,7 +224,7 @@ register struct monst *mtmp;
                 w2 = KNIFE;
             if (w2)
                 (void) mongets(mtmp, w2);
-        } else if (is_elf(ptr)) {
+        } else if (isElf(ptr->monsterTypeID)) {
             if (rn2(2))
                 (void) mongets(mtmp,
                                rn2(2) ? ELVEN_MITHRIL_COAT : ELVEN_CLOAK);
@@ -318,7 +318,7 @@ register struct monst *mtmp;
                 (void) mongets(mtmp, ELVEN_MITHRIL_COAT);
             if (!rn2(10))
                 (void) mongets(mtmp, DWARVISH_CLOAK);
-        } else if (is_dwarf(ptr)) {
+        } else if (isDwarf(ptr->monsterTypeID)) {
             if (rn2(7))
                 (void) mongets(mtmp, DWARVISH_CLOAK);
             if (rn2(7))
@@ -1194,7 +1194,7 @@ int mmflags;
             mtmp->mpeaceful = TRUE;
         break;
     case S_BAT:
-        if (areYouInHell() && is_bat(ptr))
+        if (areYouInHell() && isBat(ptr->monsterTypeID))
             mon_adjust_speed(mtmp, 2, (struct obj *) 0);
         break;
     }
@@ -1606,7 +1606,8 @@ int spc;
 /* like mkclass(), but excludes difficulty considerations; used when
    player with polycontrol picks a class instead of a specific type;
    genocided types are avoided but extinct ones are acceptable; we don't
-   check polyok() here--caller accepts some choices !polyok() would reject */
+   check okToPolymorphInto() here--caller accepts some choices
+   !okToPolymorphInto() would reject */
 int
 mkclass_poly(class)
 int class;

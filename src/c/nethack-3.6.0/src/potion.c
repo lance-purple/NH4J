@@ -577,7 +577,7 @@ register struct obj *otmp;
             break;
         }
         unkn++;
-        if (is_undead(youmonst.data) || is_demon(youmonst.data)
+        if (isUndead(youmonst.data->monsterTypeID) || is_demon(youmonst.data)
             || currentAlignmentType() == A_CHAOTIC) {
             if (otmp->blessed) {
                 pline("This burns like acid!");
@@ -1389,8 +1389,8 @@ boolean your_fault;
             }
             break;
         case POT_WATER:
-            if (is_undead(mon->data) || is_demon(mon->data)
-                || is_were(mon->data) || is_vampshifter(mon)) {
+            if (isUndead(mon->data->monsterTypeID) || is_demon(mon->data)
+                || isWere(mon->data->monsterTypeID) || is_vampshifter(mon)) {
                 if (obj->blessed) {
                     pline("%s %s in pain!", Monnam(mon),
                           isSilent(mon->data->monsterTypeID) ? "writhes" : "shrieks");
@@ -1400,7 +1400,7 @@ boolean your_fault;
                     /* should only be by you */
                     if (mon->mhp < 1)
                         killed(mon);
-                    else if (is_were(mon->data) && !is_human(mon->data))
+                    else if (isWere(mon->data->monsterTypeID) && !isHuman(mon->data->monsterTypeID))
                         new_were(mon); /* revert to human */
                 } else if (obj->cursed) {
                     angermon = FALSE;
@@ -1409,7 +1409,7 @@ boolean your_fault;
                     mon->mhp += d(2, 6);
                     if (mon->mhp > mon->mhpmax)
                         mon->mhp = mon->mhpmax;
-                    if (is_were(mon->data) && is_human(mon->data)
+                    if (isWere(mon->data->monsterTypeID) && isHuman(mon->data->monsterTypeID)
                         && !youHaveProtectionFromShapeChangers())
                         new_were(mon); /* transform into beast */
                 }

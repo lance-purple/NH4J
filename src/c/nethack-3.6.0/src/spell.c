@@ -295,7 +295,7 @@ struct obj *book2;
             if (DEADMONSTER(mtmp))
                 continue;
 
-            if ((is_undead(mtmp->data) || is_vampshifter(mtmp))
+            if ((isUndead(mtmp->data->monsterTypeID) || is_vampshifter(mtmp))
                 && cansee(mtmp->mx, mtmp->my)) {
                 mtmp->mpeaceful = TRUE;
                 if (sgn(monsterAlignment(mtmp->data->monsterTypeID)) == sgn(currentAlignmentType())

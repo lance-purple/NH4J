@@ -1409,7 +1409,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
     }
 
     tmp += omon_adj(mon, obj, TRUE);
-    if (is_orc(mon->data) && areYouElvish()) {
+    if (isOrc(mon->data->monsterTypeID) && areYouElvish()) {
         tmp++;
     }
     if (guaranteed_hit) {
@@ -1479,7 +1479,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
                  * Polymorphing won't make you a bow expert.
                  */
                 if ((Race_if(PM_ELF) || Role_if(PM_SAMURAI))
-                    && (!areYouPolymorphed() || your_race(youmonst.data))
+                    && (!areYouPolymorphed() || isOfYourRace(youmonst.data->monsterTypeID, urace.selfmask))
                     && objects[uwep->otyp].oc_skill == P_BOW) {
                     tmp++;
                     if (Race_if(PM_ELF) && uwep->otyp == ELVEN_BOW)

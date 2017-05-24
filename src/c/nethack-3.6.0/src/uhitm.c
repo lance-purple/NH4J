@@ -235,7 +235,7 @@ struct monst *mtmp;
 
 boolean areYouElvish() {
     if (areYouPolymorphed()) {
-        return is_elf(youmonst.data);
+        return isElf(youmonst.data->monsterTypeID);
     } else {
        	return Race_if(PM_ELF);
     }
@@ -243,7 +243,7 @@ boolean areYouElvish() {
 
 boolean areYouOrcish() {
     if (areYouPolymorphed()) {
-        return is_orc(youmonst.data);
+        return isOrc(youmonst.data->monsterTypeID);
     } else {
        	return Race_if(PM_ORC);
     }
@@ -299,7 +299,7 @@ int *attk_count, *role_roll_penalty;
         else if (!uwep && !uarms)
             tmp += (currentExperienceLevel() / 3) + 2;
     }
-    if (is_orc(mtmp->data) && areYouElvish()) {
+    if (isOrc(mtmp->data->monsterTypeID) && areYouElvish()) {
         tmp++;
     }
 
@@ -605,7 +605,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
         valid_weapon_attack = (tmp > 1);
         /* blessed gloves give bonuses when fighting 'bare-handed' */
         if (uarmg && uarmg->blessed
-            && (is_undead(mdat) || is_demon(mdat) || is_vampshifter(mon)))
+            && (isUndead(mdat->monsterTypeID) || is_demon(mdat) || is_vampshifter(mon)))
             tmp += rnd(4);
         /* So do silver rings.  Note: rings are worn under gloves, so you
          * don't get both bonuses.
@@ -882,7 +882,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
 #undef useup_eggs
                 }
                 case CLOVE_OF_GARLIC: /* no effect against demons */
-                    if (is_undead(mdat) || is_vampshifter(mon)) {
+                    if (isUndead(mdat->monsterTypeID) || is_vampshifter(mon)) {
                         monflee(mon, d(2, 4), FALSE, TRUE);
                     }
                     tmp = 1;

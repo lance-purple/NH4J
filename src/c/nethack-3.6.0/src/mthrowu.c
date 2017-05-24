@@ -385,7 +385,7 @@ struct obj *obj;         /* missile (or stack providing it) */
                 hitv = 3 - distmin(currentX(), currentY(), mon->mx, mon->my);
                 if (hitv < -4)
                     hitv = -4;
-                if (is_elf(mon->data)
+                if (isElf(mon->data->monsterTypeID)
                     && objects[singleobj->otyp].oc_skill == P_BOW) {
                     hitv++;
                     if (MON_WEP(mon) && MON_WEP(mon)->otyp == ELVEN_BOW)
@@ -621,9 +621,9 @@ struct monst *mtmp;
             break;
         }
         /* racial bonus */
-        if ((is_elf(mtmp->data) && otmp->otyp == ELVEN_ARROW && mwep
+        if ((isElf(mtmp->data->monsterTypeID) && otmp->otyp == ELVEN_ARROW && mwep
              && mwep->otyp == ELVEN_BOW)
-            || (is_orc(mtmp->data) && otmp->otyp == ORCISH_ARROW && mwep
+            || (isOrc(mtmp->data->monsterTypeID) && otmp->otyp == ORCISH_ARROW && mwep
                 && mwep->otyp == ORCISH_BOW))
             multishot++;
 

@@ -151,7 +151,7 @@ dosounds()
         for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
             if (DEADMONSTER(mtmp))
                 continue;
-            if ((is_undead(mtmp->data) || is_vampshifter(mtmp))
+            if ((isUndead(mtmp->data->monsterTypeID) || is_vampshifter(mtmp))
                 && mon_in_room(mtmp, MORGUE)) {
                 const char *hair = body_part(HAIR); /* hair/fur/scales */
 
@@ -804,9 +804,9 @@ register struct monst *mtmp;
                  && moves > EDOG(mtmp)->hungrytime)
             verbl_msg = "I'm hungry.";
         /* Specific monsters' interests */
-        else if (is_elf(ptr))
+        else if (isElf(ptr->monsterTypeID))
             pline_msg = "curses orcs.";
-        else if (is_dwarf(ptr))
+        else if (isDwarf(ptr->monsterTypeID))
             pline_msg = "talks about mining.";
         else if (likes_magic(ptr))
             pline_msg = "talks about spellcraft.";

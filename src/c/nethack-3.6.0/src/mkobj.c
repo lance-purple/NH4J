@@ -893,7 +893,7 @@ boolean artif;
                 int tryct2 = 0;
                 do
                     otmp->corpsenm = rndmonnum();
-                while (is_human(&mons[otmp->corpsenm]) && tryct2++ < 30);
+                while (isHuman(mons[otmp->corpsenm].monsterTypeID) && tryct2++ < 30);
                 blessorcurse(otmp, 4);
                 break;
             }

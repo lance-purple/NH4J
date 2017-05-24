@@ -205,20 +205,45 @@ public class MonsterData {
     	return (MonsterType.getMonsterType(pmid).hasFlag1(M1.METALLIVORE));
     }
 
-    //#define polyok(ptr) (((ptr)->mflags2 & M2_NOPOLY) == 0L)
-    //#define is_shapeshifter(ptr) (((ptr)->mflags2 & M2_SHAPESHIFTER) != 0L)
-    
+    public static boolean okToPolymorphInto(int pmid) {
+    	return (! MonsterType.getMonsterType(pmid).hasFlag2(M2.NOPOLY));    	
+    }
+
+    public static boolean isShapeshifter(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.SHAPESHIFTER);
+    }
+
     public static boolean isUndead(int pmid) {
     	return MonsterType.getMonsterType(pmid).hasFlag2(M2.UNDEAD);
     }
-    
-    //#define is_were(ptr) (((ptr)->mflags2 & M2_WERE) != 0L)
-    //#define is_elf(ptr) (((ptr)->mflags2 & M2_ELF) != 0L)
-    //#define is_dwarf(ptr) (((ptr)->mflags2 & M2_DWARF) != 0L)
-    //#define is_gnome(ptr) (((ptr)->mflags2 & M2_GNOME) != 0L)
-    //#define is_orc(ptr) (((ptr)->mflags2 & M2_ORC) != 0L)
-    //#define is_human(ptr) (((ptr)->mflags2 & M2_HUMAN) != 0L)
-    //#define your_race(ptr) (((ptr)->mflags2 & urace.selfmask) != 0L)
+
+    public static boolean isWere(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.WERE);
+    }
+
+    public static boolean isElf(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.ELF);
+    }
+
+    public static boolean isDwarf(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.DWARF);
+    }
+
+    public static boolean isGnome(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.GNOME);
+    }
+
+    public static boolean isOrc(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.ORC);
+    }
+
+    public static boolean isHuman(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.HUMAN);
+    }
+
+    public static boolean isOfYourRace(int pmid, long yourRace) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(yourRace);
+    }
     
 	public static boolean isBat(int pmid) {
 		return PM.matchesOneOf(pmid, PM.BAT, PM.GIANT_BAT, PM.VAMPIRE_BAT);

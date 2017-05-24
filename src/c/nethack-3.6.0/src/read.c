@@ -2157,7 +2157,7 @@ int how;
                 killplayer++;
                 break;
             }
-            if (is_human(ptr))
+            if (isHuman(ptr->monsterTypeID))
                 adjalign(-sgn(currentAlignmentType()));
             if (is_demon(ptr))
                 adjalign(sgn(currentAlignmentType()));

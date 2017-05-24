@@ -496,7 +496,7 @@ domonability(VOID_ARGS)
         return doremove();
     else if (attacktype(youmonst.data, AT_GAZE))
         return dogaze();
-    else if (is_were(youmonst.data))
+    else if (isWere(youmonst.data->monsterTypeID))
         return dosummon();
     else if (webmaker(youmonst.data))
         return dospinweb();

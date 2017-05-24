@@ -76,7 +76,7 @@ set_uasmon()
                         || dmgtype(mdat, AD_RBRE)));
     PROPSET(SICK_RES, (monsterClass(mdat->monsterTypeID) == S_FUNGUS || mdat == &mons[PM_GHOUL]));
 
-    PROPSET(STUNNED, (mdat == &mons[PM_STALKER] || is_bat(mdat)));
+    PROPSET(STUNNED, (mdat == &mons[PM_STALKER] || isBat(mdat->monsterTypeID)));
     PROPSET(HALLUC_RES, dmgtype(mdat, AD_HALU));
     PROPSET(SEE_INVIS, perceivesTheInvisible(mdat->monsterTypeID));
     PROPSET(TELEPAT, telepathic(mdat));
@@ -455,12 +455,12 @@ int psflags;
                 /* Note:  humans are illegal as monsters, but an
                  * illegal monster forces newman(), which is what we
                  * want if they specified a human.... */
-            } else if (!polyok(&mons[mntmp])
-                       && !(mntmp == PM_HUMAN || your_race(&mons[mntmp])
+            } else if (!okToPolymorphInto(mons[mntmp].monsterTypeID)
+                       && !(mntmp == PM_HUMAN || isOfYourRace(mons[mntmp].monsterTypeID, urace.selfmask)
                             || mntmp == urole.malenum
                             || mntmp == urole.femalenum)) {
 
-                /* mkclass_poly() can pick a !polyok()
+                /* mkclass_poly() can pick a !okToPolymorphInto()
                    candidate; if so, usually try again */
                 if (class) {
                     if (rn2(3) || --tryct > 0)
@@ -490,10 +490,10 @@ int psflags;
         if (draconian && (tryct <= 0 || mntmp == armor_to_dragon(uarm->otyp)))
             goto do_merge;
         if (isvamp && (tryct <= 0 || mntmp == PM_WOLF || mntmp == PM_FOG_CLOUD
-                       || is_bat(&mons[mntmp])))
+                       || isBat(mons[mntmp].monsterTypeID)))
             goto do_vampyr;
     } else if (draconian || iswere || isvamp) {
-        /* special changes that don't require polyok() */
+        /* special changes that don't require okToPolymorphInto() */
         if (draconian) {
         do_merge:
             mntmp = armor_to_dragon(uarm->otyp);
@@ -564,17 +564,17 @@ int psflags;
         do {
             /* randomly pick an "ordinary" monster */
             mntmp = rn1(SPECIAL_PM - LOW_PM, LOW_PM);
-            if (polyok(&mons[mntmp]) && !is_placeholder(&mons[mntmp]))
+            if (okToPolymorphInto(mons[mntmp].monsterTypeID) && !is_placeholder(&mons[mntmp]))
                 break;
         } while (--tryct > 0);
     }
 
-    /* The below polyok() fails either if everything is genocided, or if
+    /* The below okToPolymorphInto() fails either if everything is genocided, or if
      * we deliberately chose something illegal to force newman().
      */
     sex_change_ok++;
-    if (!polyok(&mons[mntmp]) || (!forcecontrol && !rn2(5))
-        || your_race(&mons[mntmp])) {
+    if (!okToPolymorphInto(mons[mntmp].monsterTypeID) || (!forcecontrol && !rn2(5))
+        || isOfYourRace(mons[mntmp].monsterTypeID, urace.selfmask)) {
         newman();
     } else {
         (void) polymon(mntmp);
@@ -797,7 +797,7 @@ int mntmp;
             pline(use_thec, monsterc, "gaze at monsters");
         if (isHider(youmonst.data->monsterTypeID))
             pline(use_thec, monsterc, "hide");
-        if (is_were(youmonst.data))
+        if (isWere(youmonst.data->monsterTypeID))
             pline(use_thec, monsterc, "summon help");
         if (webmaker(youmonst.data))
             pline(use_thec, monsterc, "spin a web");

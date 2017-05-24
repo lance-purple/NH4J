@@ -2245,7 +2245,7 @@ boolean stoning;
     if (lizard && (mon->mconf || mon->mstun)) {
         mon->mconf = 0;
         mon->mstun = 0;
-        if (vis && !is_bat(mon->data) && mon->data != &mons[PM_STALKER])
+        if (vis && !isBat(mon->data->monsterTypeID) && mon->data != &mons[PM_STALKER])
             pline("%s seems steadier now.", Monnam(mon));
     }
     if (mon->mtame && !mon->isminion && nutrit > 0) {
@@ -2465,7 +2465,7 @@ struct monst *mon;
     case PM_WOOD_NYMPH:
         return TRUE;
     default:
-        if (is_elf(ptr) && !is_prince(ptr) && !is_lord(ptr)
+        if (isElf(ptr->monsterTypeID) && !is_prince(ptr) && !is_lord(ptr)
             && ptr != &mons[PM_GREY_ELF])
             return TRUE;
         break;

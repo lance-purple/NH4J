@@ -157,7 +157,7 @@ struct monst *mon;
 
     /* Blessed weapons used against undead or demons */
     if (Is_weapon && otmp->blessed
-        && (is_demon(ptr) || is_undead(ptr) || is_vampshifter(mon)))
+        && (is_demon(ptr) || isUndead(ptr->monsterTypeID) || is_vampshifter(mon)))
         tmp += 2;
 
     if (is_spear(otmp) && index(kebabable, monsterClass(ptr->monsterTypeID)))
@@ -323,7 +323,7 @@ struct monst *mon;
         int bonus = 0;
 
         if (otmp->blessed
-            && (is_undead(ptr) || is_demon(ptr) || is_vampshifter(mon)))
+            && (isUndead(ptr->monsterTypeID) || is_demon(ptr) || is_vampshifter(mon)))
             bonus += rnd(4);
         if (is_axe(otmp) && is_wooden(ptr))
             bonus += rnd(4);

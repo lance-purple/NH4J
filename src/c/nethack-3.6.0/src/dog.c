@@ -804,15 +804,15 @@ register struct obj *obj;
             /* most humanoids will avoid cannibalism unless starving;
                arbitrary: elves won't eat other elves even then */
             else if (isHumanoid(mptr->monsterTypeID) && same_race(mptr, fptr)
-                     && (!is_undead(mptr)
+                     && (!isUndead(mptr->monsterTypeID)
 			 && monsterClass(fptr->monsterTypeID) != S_KOBOLD
                          && monsterClass(fptr->monsterTypeID) != S_ORC 
 			 && monsterClass(fptr->monsterTypeID) != S_OGRE))
-                return (starving && carni && !is_elf(mptr)) ? ACCFOOD : TABU;
+                return (starving && carni && !isElf(mptr->monsterTypeID)) ? ACCFOOD : TABU;
             else
                 return carni ? CADAVER : MANFOOD;
         case CLOVE_OF_GARLIC:
-            return (is_undead(mptr) || is_vampshifter(mon))
+            return (isUndead(mptr->monsterTypeID) || is_vampshifter(mon))
                       ? TABU
                       : (herbi || starving)
                          ? ACCFOOD
@@ -923,7 +923,7 @@ register struct obj *obj;
     if (mtmp->mtame || !mtmp->mcanmove
         /* monsters with conflicting structures cannot be tamed */
         || mtmp->isshk || mtmp->isgd || mtmp->ispriest || mtmp->isminion
-        || is_covetous(mtmp->data) || is_human(mtmp->data)
+        || is_covetous(mtmp->data) || isHuman(mtmp->data->monsterTypeID)
         || (is_demon(mtmp->data) && !is_demon(youmonst.data))
         || (obj && dogfood(mtmp, obj) >= MANFOOD))
         return FALSE;

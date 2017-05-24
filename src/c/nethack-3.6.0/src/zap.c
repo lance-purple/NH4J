@@ -193,7 +193,7 @@ struct obj *otmp;
         wake = FALSE;
         if (unturn_dead(mtmp))
             wake = TRUE;
-        if (is_undead(mtmp->data) || is_vampshifter(mtmp)) {
+        if (isUndead(mtmp->data->monsterTypeID) || is_vampshifter(mtmp)) {
             reveal_invis = TRUE;
             wake = TRUE;
             dmg = rnd(8);
@@ -2317,7 +2317,7 @@ boolean ordinary;
     case SPE_TURN_UNDEAD:
         learn_it = TRUE;
         (void) unturn_dead(&youmonst);
-        if (is_undead(youmonst.data)) {
+        if (isUndead(youmonst.data->monsterTypeID)) {
             You_feel("frightened and %sstunned.",
                      youAreStunned() ? "even more " : "");
             make_stunned(yourIntrinsicTimeout(STUNNED) + (long) rnd(30), FALSE);
@@ -2593,7 +2593,7 @@ boolean youattack, allow_cancel_kill, self_cancel;
     } else {
         mdef->mcan = TRUE;
 
-        if (is_were(mdef->data) && monsterClass(mdef->data->monsterTypeID) != S_HUMAN)
+        if (isWere(mdef->data->monsterTypeID) && monsterClass(mdef->data->monsterTypeID) != S_HUMAN)
             were_change(mdef);
 
         if (mdef->data == &mons[PM_CLAY_GOLEM]) {

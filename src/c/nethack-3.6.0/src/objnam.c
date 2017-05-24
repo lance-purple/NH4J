@@ -3383,7 +3383,7 @@ typfnd:
             }
             break;
         case FIGURINE:
-            if (!(monsterGenerationMask(mons[mntmp].monsterTypeID) & G_UNIQ) && !is_human(&mons[mntmp])
+            if (!(monsterGenerationMask(mons[mntmp].monsterTypeID) & G_UNIQ) && !isHuman(mons[mntmp].monsterTypeID)
 #ifdef MAIL
                 && mntmp != PM_MAIL_DAEMON
 #endif

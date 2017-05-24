@@ -8,10 +8,10 @@ void
 were_change(mon)
 register struct monst *mon;
 {
-    if (!is_were(mon->data))
+    if (!isWere(mon->data->monsterTypeID))
         return;
 
-    if (is_human(mon->data)) {
+    if (isHuman(mon->data->monsterTypeID)) {
         if (!youHaveProtectionFromShapeChangers()
             && !rn2(night() ? (flags.moonphase == FULL_MOON ? 3 : 30)
                             : (flags.moonphase == FULL_MOON ? 10 : 50))) {
@@ -105,7 +105,7 @@ register struct monst *mon;
     if (canseemon(mon) && !youAreHallucinating()) {
 	javaString monsterName = monsterTypeName(mons[pm].monsterTypeID);
         pline("%s changes into a %s.", Monnam(mon),
-              is_human(&mons[pm]) ? "human" : monsterName.c_str + 4);
+              isHuman(mons[pm].monsterTypeID) ? "human" : monsterName.c_str + 4);
 	releaseJavaString(monsterName);
     }
 
@@ -203,7 +203,7 @@ boolean purify;
         You_feel("purified.");
         setLycanthropeType(NON_PM); /* cure lycanthropy */
     }
-    if (!youAreUnchanging() && is_were(youmonst.data)
+    if (!youAreUnchanging() && isWere(youmonst.data->monsterTypeID)
         && (!controllable_poly || yn("Remain in beast form?") == 'n'))
         rehumanize();
 }

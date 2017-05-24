@@ -1027,9 +1027,9 @@ not_special:
         flag |= ALLOW_BARS;
     if (can_tunnel)
         flag |= ALLOW_DIG;
-    if (is_human(ptr) || ptr == &mons[PM_MINOTAUR])
+    if (isHuman(ptr->monsterTypeID) || ptr == &mons[PM_MINOTAUR])
         flag |= ALLOW_SSM;
-    if (is_undead(ptr) && monsterClass(ptr->monsterTypeID) != S_GHOST)
+    if (isUndead(ptr->monsterTypeID) && monsterClass(ptr->monsterTypeID) != S_GHOST)
         flag |= NOGARLIC;
     if (is_vampshifter(mtmp))
         flag |= NOGARLIC;

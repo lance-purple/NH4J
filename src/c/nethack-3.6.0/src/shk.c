@@ -2487,10 +2487,10 @@ char *buf;
     Strcat(buf, honored[rn2(SIZE(honored) - 1) + becameDemigod()]);
     if (isVampire(youmonst.data->monsterTypeID))
         Strcat(buf, (flags.female) ? " dark lady" : " dark lord");
-    else if (is_elf(youmonst.data))
+    else if (isElf(youmonst.data->monsterTypeID))
         Strcat(buf, (flags.female) ? " hiril" : " hir");
     else
-        Strcat(buf, !is_human(youmonst.data) ? " creature" : (flags.female)
+        Strcat(buf, !isHuman(youmonst.data->monsterTypeID) ? " creature" : (flags.female)
                                                                  ? " lady"
                                                                  : " sir");
 }

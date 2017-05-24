@@ -2128,6 +2128,18 @@ E boolean FDECL(isCarnivorous, (int));
 E boolean FDECL(isHerbivorous, (int));
 E boolean FDECL(isMetallivorous, (int));
 
+E boolean FDECL(okToPolymorphInto, (int));
+E boolean FDECL(isShapeshifter, (int));
+E boolean FDECL(isUndead, (int));
+E boolean FDECL(isWere, (int));
+E boolean FDECL(isElf, (int));
+E boolean FDECL(isDwarf, (int));
+E boolean FDECL(isGnome, (int));
+E boolean FDECL(isOrc, (int));
+E boolean FDECL(isHuman, (int));
+E boolean FDECL(isOfYourRace, (int, long));
+E boolean FDECL(isBat, (int));
+
 /* ### monmove.c ### */
 
 E boolean FDECL(itsstuck, (struct monst *));

@@ -28,9 +28,10 @@ STATIC_DCL struct obj *FDECL(make_corpse, (struct monst *, unsigned));
 STATIC_DCL void FDECL(m_detach, (struct monst *, struct permonst *));
 STATIC_DCL void FDECL(lifesaved_monster, (struct monst *));
 
-#define LEVEL_SPECIFIC_NOCORPSE(mdat) \
-    (areYouOnRogueLevel()            \
-     || (level.flags.graveyard && is_undead(mdat) && rn2(3)))
+static boolean LEVEL_SPECIFIC_NOCORPSE(int pmid) {
+    return (areYouOnRogueLevel()
+     || (level.flags.graveyard && isUndead(pmid) && rn2(3)));
+}
 
 #if 0
 /* part of the original warning code which was replaced in 3.3.1 */
@@ -176,17 +177,17 @@ int mndx, mode;
         break;
     default:
         if (mndx >= LOW_PM && mndx < NUMMONS) {
-            struct permonst *ptr = &mons[mndx];
+            int pmid = mons[mndx].monsterTypeID;
 
-            if (is_human(ptr))
+            if (isHuman(pmid))
                 mndx = PM_HUMAN;
-            else if (is_elf(ptr))
+            else if (isElf(pmid))
                 mndx = PM_ELF;
-            else if (is_dwarf(ptr))
+            else if (isDwarf(pmid))
                 mndx = PM_DWARF;
-            else if (is_gnome(ptr))
+            else if (isGnome(pmid))
                 mndx = PM_GNOME;
-            else if (is_orc(ptr))
+            else if (isOrc(pmid))
                 mndx = PM_ORC;
         }
         break;
@@ -205,8 +206,9 @@ int mndx;
      * As of 3.6.0 we just check M2_SHAPESHIFTER instead of having a
      * big switch statement with hardcoded shapeshifter types here.
      */
-    if (mndx >= LOW_PM && is_shapeshifter(&mons[mndx]))
+    if (mndx >= LOW_PM && isShapeshifter(mons[mndx].monsterTypeID)) {
         mcham = mndx;
+    }
     return mcham;
 }
 
@@ -1933,7 +1935,7 @@ boolean was_swallowed; /* digestion */
     /* must duplicate this below check in xkilled() since it results in
      * creating no objects as well as no corpse
      */
-    if (LEVEL_SPECIFIC_NOCORPSE(mdat))
+    if (LEVEL_SPECIFIC_NOCORPSE(mdat->monsterTypeID))
         return FALSE;
 
     if (((isBigMonster(mdat->monsterTypeID) || mdat == &mons[PM_LIZARD]) && !mon->mcloned)
@@ -2205,7 +2207,7 @@ int dest; /* dest==1, normal; dest==0, don't print message; dest==2, don't
         goto cleanup;
     }
 
-    if ((dest & 2) || LEVEL_SPECIFIC_NOCORPSE(mdat))
+    if ((dest & 2) || LEVEL_SPECIFIC_NOCORPSE(mdat->monsterTypeID))
         goto cleanup;
 
 #ifdef MAIL
@@ -2254,7 +2256,7 @@ int dest; /* dest==1, normal; dest==0, don't print message; dest==2, don't
 
 cleanup:
     /* punish bad behaviour */
-    if (is_human(mdat) && (!always_hostile(mdat) && mtmp->malign <= 0)
+    if (isHuman(mdat->monsterTypeID) && (!always_hostile(mdat) && mtmp->malign <= 0)
         && (mndx < PM_ARCHEOLOGIST || mndx > PM_WIZARD)
         && currentAlignmentType() != A_CHAOTIC) {
         unsetYourIntrinsicMask(TELEPAT, INTRINSIC);
@@ -2623,7 +2625,7 @@ rescham()
             (void) newcham(mtmp, &mons[mcham], FALSE, FALSE);
             mtmp->cham = NON_PM;
         }
-        if (is_were(mtmp->data) && monsterClass(mtmp->data->monsterTypeID) != S_HUMAN)
+        if (isWere(mtmp->data->monsterTypeID) && monsterClass(mtmp->data->monsterTypeID) != S_HUMAN)
             new_were(mtmp);
         if (mtmp->m_ap_type && cansee(mtmp->mx, mtmp->my)) {
             seemimic(mtmp);
@@ -2666,7 +2668,7 @@ struct monst *mon;
         if (mcham >= LOW_PM) {
             mon->cham = NON_PM;
             (void) newcham(mon, &mons[mcham], FALSE, FALSE);
-        } else if (is_were(mon->data) && !is_human(mon->data)) {
+        } else if (isWere(mon->data->monsterTypeID) && !isHuman(mon->data->monsterTypeID)) {
             new_were(mon);
         }
     } else if (mon->cham == NON_PM) {
@@ -2889,7 +2891,7 @@ int mndx;
         return TRUE; /* caller wants random */
 
     if (!accept_newcham_form(mndx))
-        return FALSE; /* geno'd or !polyok */
+        return FALSE; /* geno'd or !okToPolymorphInto */
 
     if (isspecmon(mon)) {
         struct permonst *ptr = &mons[mndx];
@@ -2980,7 +2982,7 @@ struct monst *mon;
             tryct = 5;
             do {
                 mndx = rn1(SPECIAL_PM - LOW_PM, LOW_PM);
-                if (isHumanoid(mons[mndx].monsterTypeID) && polyok(&mons[mndx]))
+                if (isHumanoid(mons[mndx].monsterTypeID) && okToPolymorphInto(mons[mndx].monsterTypeID))
                     break;
             } while (--tryct > 0);
             if (!tryct)
@@ -3080,11 +3082,11 @@ int mndx;
         return 0;
     /* select_newcham_form() might deliberately pick a player
        character type (random selection never does) which
-       polyok() rejects, so we need a special case here */
+       okToPolymorphInto() rejects, so we need a special case here */
     if (is_mplayer(mdat))
         return mdat;
-    /* polyok() rules out M2_PNAME, M2_WERE, and all humans except Kops */
-    return polyok(mdat) ? mdat : 0;
+    /* okToPolymorphInto() rules out M2_PNAME, M2_WERE, and all humans except Kops */
+    return okToPolymorphInto(mdat->monsterTypeID) ? mdat : 0;
 }
 
 void

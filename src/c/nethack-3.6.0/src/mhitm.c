@@ -329,7 +329,7 @@ register struct monst *magr, *mdef;
     }
 
     /* Elves hate orcs. */
-    if (is_elf(pa) && is_orc(pd))
+    if (isElf(pa->monsterTypeID) && isOrc(pd->monsterTypeID))
         tmp++;
 
     /* Set up the visibility of action */
@@ -1099,7 +1099,7 @@ register const struct Attack mattk;
         if (!magr->mcan && !rn2(10)) {
             mdef->mcan = 1; /* cancelled regardless of lifesave */
             mdef->mstrategy &= ~STRAT_WAITFORU;
-            if (is_were(pd) && monsterClass(pd->monsterTypeID) != S_HUMAN)
+            if (isWere(pd->monsterTypeID) && monsterClass(pd->monsterTypeID) != S_HUMAN)
                 were_change(mdef);
             if (pd == &mons[PM_CLAY_GOLEM]) {
                 if (vis) {
