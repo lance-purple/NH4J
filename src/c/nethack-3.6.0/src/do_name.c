@@ -978,7 +978,7 @@ boolean called;
             name_at_start = TRUE;
         } else if (called) {
             Sprintf(eos(buf), "%s called %s", monsterName.c_str, name);
-            name_at_start = (boolean) type_is_pname(mdat);
+            name_at_start = typeIsProperName(mdat->monsterTypeID);
         } else if (is_mplayer(mdat) && (bp = strstri(name, " the ")) != 0) {
             /* <name> the <adjective> <invisible> <saddled> <rank> */
             char pbuf[BUFSZ];
@@ -1004,7 +1004,7 @@ boolean called;
         name_at_start = FALSE;
     } else {
         Strcat(buf, monsterName.c_str);
-        name_at_start = (boolean) type_is_pname(mdat);
+        name_at_start = typeIsProperName(mdat->monsterTypeID);
     }
 
     if (name_at_start && (article == ARTICLE_YOUR || !has_adjectives)) {
@@ -1204,7 +1204,7 @@ char *code;
     do {
         name = rn1(SPECIAL_PM + BOGUSMONSIZE - LOW_PM, LOW_PM);
     } while (name < SPECIAL_PM
-             && (type_is_pname(&mons[name]) || (monsterGenerationMask(mons[name].monsterTypeID) & G_NOGEN)));
+             && (typeIsProperName(mons[name].monsterTypeID) || (monsterGenerationMask(mons[name].monsterTypeID) & G_NOGEN)));
 
     if (name >= SPECIAL_PM) {
         mname = bogusmon(buf, code);

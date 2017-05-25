@@ -279,7 +279,7 @@ moverock()
                 if (!u.usteed) {
                     if (moves > lastmovetime + 2 || moves < lastmovetime)
                         pline("With %s effort you move %s.",
-                              throws_rocks(youmonst.data) ? "little"
+                              throwsRocks(youmonst.data->monsterTypeID) ? "little"
                                                           : "great",
                               the(xname(otmp)));
                     exercise(A_STR, TRUE);
@@ -309,7 +309,7 @@ moverock()
             if (youCannotSee())
                 feel_location(sx, sy);
         cannot_push:
-            if (throws_rocks(youmonst.data)) {
+            if (throwsRocks(youmonst.data->monsterTypeID)) {
                 if (u.usteed && weaponSkill(P_RIDING) < P_BASIC) {
                     You("aren't skilled enough to %s %s from %s.",
                         (flags.pickup && !Sokoban) ? "pick up" : "push aside",
@@ -2827,7 +2827,7 @@ inv_weight()
     while (otmp) {
         if (otmp->oclass == COIN_CLASS)
             wt += (int) (((long) otmp->quan + 50L) / 100L);
-        else if (otmp->otyp != BOULDER || !throws_rocks(youmonst.data))
+        else if (otmp->otyp != BOULDER || !throwsRocks(youmonst.data->monsterTypeID))
             wt += otmp->owt;
         otmp = otmp->nobj;
     }

@@ -190,7 +190,7 @@ in_trouble()
                 continue;
             if (!isok(currentX() + i, currentY() + j)
                 || IS_ROCK(levl[currentX() + i][currentY() + j].typ)
-                || (blocked_boulder(i, j) && !throws_rocks(youmonst.data)))
+                || (blocked_boulder(i, j) && !throwsRocks(youmonst.data->monsterTypeID)))
                 count++;
         }
     if (count == 8 && !youCanPassThroughWalls())

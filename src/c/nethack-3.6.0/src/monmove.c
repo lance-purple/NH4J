@@ -126,7 +126,7 @@ struct monst *mtmp;
 
     /* creatures who are directly resistant to magical scaring:
      * Rodney, lawful minions, angels, the Riders */
-    if (mtmp->iswiz || is_lminion(mtmp) || mtmp->data == &mons[PM_ANGEL]
+    if (mtmp->iswiz || isLawfulMinion(mtmp->data->monsterTypeID) || mtmp->data == &mons[PM_ANGEL]
         || is_rider(mtmp->data))
         return FALSE;
 
@@ -849,12 +849,13 @@ not_special:
         boolean should_see = (couldsee(omx, omy)
                               && (levl[gx][gy].lit || !levl[omx][omy].lit)
                               && (dist2(omx, omy, gx, gy) <= 36));
-	int mc = monsterClass(ptr->monsterTypeID);
+	int pmid = ptr->monsterTypeID;
+	int mc = monsterClass(pmid);
 
         if (!mtmp->mcansee
-            || (should_see && youAreInvisibleToOthers() && !perceivesTheInvisible(ptr->monsterTypeID) && rn2(11))
+            || (should_see && youAreInvisibleToOthers() && !perceivesTheInvisible(pmid) && rn2(11))
             || is_obj_mappear(&youmonst,STRANGE_OBJECT) || lurking()
-            || (is_obj_mappear(&youmonst,GOLD_PIECE) && !likes_gold(ptr))
+            || (is_obj_mappear(&youmonst,GOLD_PIECE) && !likesGold(pmid))
             || (mtmp->mpeaceful && !mtmp->isshk) /* allow shks to follow */
             || ((monsndx(ptr) == PM_STALKER || mc == S_BAT
                  || mc == S_LIGHT) && !rn2(3)))
@@ -880,7 +881,7 @@ not_special:
     if ((!mtmp->mpeaceful || !rn2(10)) && (!areYouOnRogueLevel())) {
         boolean in_line = (lined_up(mtmp)
                && (distmin(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy)
-                   <= (throws_rocks(youmonst.data) ? 20 : ACURRSTR / 2 + 1)));
+                   <= (throwsRocks(youmonst.data->monsterTypeID) ? 20 : ACURRSTR / 2 + 1)));
 
         if (appr != 1 || !in_line) {
             /* Monsters in combat won't pick stuff up, avoiding the
@@ -891,13 +892,15 @@ not_special:
                 (curr_mon_load(mtmp) * 100) / max_mon_load(mtmp);
 
             /* look for gold or jewels nearby */
-            likegold = (likes_gold(ptr) && pctload < 95);
-            likegems = (likes_gems(ptr) && pctload < 85);
-            uses_items = (!isMindless(ptr->monsterTypeID) && !isAnimal(ptr->monsterTypeID) && pctload < 75);
-            likeobjs = (likes_objs(ptr) && pctload < 75);
-            likemagic = (likes_magic(ptr) && pctload < 85);
-            likerock = (throws_rocks(ptr) && pctload < 50 && !Sokoban);
-            conceals = hidesUnderStuff(ptr->monsterTypeID);
+	    int pmid = ptr->monsterTypeID;
+
+            likegold = (likesGold(pmid) && pctload < 95);
+            likegems = (likesGems(pmid) && pctload < 85);
+            uses_items = (!isMindless(pmid) && !isAnimal(pmid) && pctload < 75);
+            likeobjs = (likesObjects(pmid) && pctload < 75);
+            likemagic = (likesMagicItems(pmid) && pctload < 85);
+            likerock = (throwsRocks(pmid) && pctload < 50 && !Sokoban);
+            conceals = hidesUnderStuff(pmid);
             setlikes = TRUE;
         }
     }
@@ -967,7 +970,7 @@ not_special:
                                   && touch_petrifies(&mons[otmp->corpsenm]))))
                         && touch_artifact(otmp, mtmp)) {
                         if (can_carry(mtmp, otmp) > 0
-                            && (throws_rocks(ptr) || !sobj_at(BOULDER, xx, yy))
+                            && (throwsRocks(ptr->monsterTypeID) || !sobj_at(BOULDER, xx, yy))
                             && (!isUnicorn(ptr->monsterTypeID)
                                 || objects[otmp->otyp].oc_material == GEMSTONE)
                             /* Don't get stuck circling an Elbereth */
@@ -1012,28 +1015,30 @@ not_special:
     nix = omx;
     niy = omy;
     flag = 0L;
+
+    int pmid = ptr->monsterTypeID;
     if (mtmp->mpeaceful && (!youCauseConflict() || resist(mtmp, RING_CLASS, 0, 0)))
         flag |= (ALLOW_SANCT | ALLOW_SSM);
     else
         flag |= ALLOW_U;
-    if (is_minion(ptr) || is_rider(ptr))
+    if (isMinion(pmid) || is_rider(ptr))
         flag |= ALLOW_SANCT;
     /* unicorn may not be able to avoid hero on a noteleport level */
-    if (isUnicorn(ptr->monsterTypeID) && !level.flags.noteleport)
+    if (isUnicorn(pmid) && !level.flags.noteleport)
         flag |= NOTONL;
-    if (passesThroughWalls(ptr->monsterTypeID))
+    if (passesThroughWalls(pmid))
         flag |= (ALLOW_WALL | ALLOW_ROCK);
     if (passes_bars(ptr))
         flag |= ALLOW_BARS;
     if (can_tunnel)
         flag |= ALLOW_DIG;
-    if (isHuman(ptr->monsterTypeID) || ptr == &mons[PM_MINOTAUR])
+    if (isHuman(pmid) || ptr == &mons[PM_MINOTAUR])
         flag |= ALLOW_SSM;
-    if (isUndead(ptr->monsterTypeID) && monsterClass(ptr->monsterTypeID) != S_GHOST)
+    if (isUndead(pmid) && monsterClass(pmid) != S_GHOST)
         flag |= NOGARLIC;
     if (is_vampshifter(mtmp))
         flag |= NOGARLIC;
-    if (throws_rocks(ptr))
+    if (throwsRocks(pmid))
         flag |= ALLOW_ROCK;
     if (can_open)
         flag |= OPENDOOR;
@@ -1336,15 +1341,16 @@ postmov:
              * or if the "likegold" case got taken above */
             if (setlikes) {
                 int pctload = (curr_mon_load(mtmp) * 100) / max_mon_load(mtmp);
+		int pmid = ptr->monsterTypeID;
 
                 /* look for gold or jewels nearby */
-                likegold = (likes_gold(ptr) && pctload < 95);
-                likegems = (likes_gems(ptr) && pctload < 85);
+                likegold = (likesGold(pmid) && pctload < 95);
+                likegems = (likesGems(pmid) && pctload < 85);
                 uses_items =
-                    (!isMindless(ptr->monsterTypeID) && !isAnimal(ptr->monsterTypeID) && pctload < 75);
-                likeobjs = (likes_objs(ptr) && pctload < 75);
-                likemagic = (likes_magic(ptr) && pctload < 85);
-                likerock = (throws_rocks(ptr) && pctload < 50 && !Sokoban);
+                    (!isMindless(pmid) && !isAnimal(pmid) && pctload < 75);
+                likeobjs = (likesObjects(pmid) && pctload < 75);
+                likemagic = (likesMagicItems(pmid) && pctload < 85);
+                likerock = (throwsRocks(pmid) && pctload < 50 && !Sokoban);
                 conceals = hidesUnderStuff(ptr->monsterTypeID);
             }
 

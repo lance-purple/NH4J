@@ -1285,7 +1285,7 @@ boolean telekinesis;
        and for boulder picked up by hero poly'd into a giant; override
        availability of open inventory slot iff not already carrying one */
     if (obj->otyp == LOADSTONE
-        || (obj->otyp == BOULDER && throws_rocks(youmonst.data))) {
+        || (obj->otyp == BOULDER && throwsRocks(youmonst.data->monsterTypeID))) {
         if (inv_cnt(FALSE) < 52 || !carrying(obj->otyp)
             || merge_choice(invent, obj))
             return 1; /* lift regardless of current situation */

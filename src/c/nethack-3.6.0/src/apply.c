@@ -218,7 +218,7 @@ int rx, ry, *resp;
                 /* can't use mhe() here; it calls pronoun_gender() which
                    expects monster to be on the map (visibility check) */
                 if ((isHumanoid(pmid) || (monsterGenerationMask(pmid) & G_UNIQ)
-                     || type_is_pname(mptr)) && !isNeuter(mptr->monsterTypeID))
+                     || typeIsProperName(pmid)) && !isNeuter(pmid))
                     gndr = (int) mtmp->female;
             } else {
                 mptr = &mons[corpse->corpsenm];
@@ -269,7 +269,7 @@ int rx, ry, *resp;
         } else {
 	    monsterName = monsterTypeName(mptr->monsterTypeID);
 	    what = monsterName.c_str;
-            if (!type_is_pname(mptr))
+            if (!typeIsProperName(mptr->monsterTypeID))
                 what = The(what);
         }
         how = "fine";
@@ -2075,7 +2075,7 @@ boolean quietly;
         return FALSE;
     }
     if (sobj_at(BOULDER, x, y) && !passesThroughWalls(mons[obj->corpsenm].monsterTypeID)
-        && !throws_rocks(&mons[obj->corpsenm])) {
+        && !throwsRocks(mons[obj->corpsenm].monsterTypeID)) {
         if (!quietly)
             You("cannot fit the figurine on the boulder.");
         return FALSE;

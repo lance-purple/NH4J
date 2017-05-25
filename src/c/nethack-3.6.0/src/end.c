@@ -410,7 +410,7 @@ int how;
        "killed by the high priest" alone isn't */
     if ((monsterGenerationMask(mptr->monsterTypeID) & G_UNIQ) != 0 && !(imitator && !mimicker)
         && !(mptr == &mons[PM_HIGH_PRIEST] && !mtmp->ispriest)) {
-        if (!type_is_pname(mptr))
+        if (!typeIsProperName(mptr->monsterTypeID))
             Strcat(buf, "the ");
         killer.format = KILLED_BY;
     }
@@ -433,7 +433,7 @@ int how;
 
         if (mimicker) {
             /* realName is already correct because champtr==mptr;
-               set up fake mptr for type_is_pname/the_unique_pm */
+               set up fake mptr for typeIsProperName/the_unique_pm */
             mptr = &mons[mtmp->mappearance];
 	    releaseJavaString(fakeName);
 	    fakeName = monsterTypeName(mptr->monsterTypeID);
@@ -448,7 +448,7 @@ int how;
         /* for the alternate format, always suppress any article;
            pname and the_unique should also have s_suffix() applied,
            but vampires don't take on any shapes which warrant that */
-        if (alt || type_is_pname(mptr)) /* no article */
+        if (alt || typeIsProperName(mptr->monsterTypeID)) /* no article */
             Strcpy(shape, fakeName.c_str);
         else if (the_unique_pm(mptr)) /* "the"; don't use the() here */
             Sprintf(shape, "the %s", fakeName.c_str);
@@ -1465,7 +1465,7 @@ boolean ask;
                         && (nkilled = mvitals[i].died) > 0) {
                         if ((monsterGenerationMask(mons[i].monsterTypeID) & G_UNIQ) && i != PM_HIGH_PRIEST) {
                             Sprintf(buf, "%s%s",
-                                    !type_is_pname(&mons[i]) ? "The " : "",
+                                    !typeIsProperName(mons[i].monsterTypeID) ? "The " : "",
                                     monsterName.c_str);
                             if (nkilled > 1) {
                                 switch (nkilled) {
@@ -1576,7 +1576,7 @@ boolean ask;
 		    javaString monsterName = monsterTypeName(mons[i].monsterTypeID);
                     if ((geno & G_UNIQ) && i != PM_HIGH_PRIEST) {
                         Sprintf(buf, "%s%s",
-                                !type_is_pname(&mons[i]) ? "" : "the ",
+                                !typeIsProperName(mons[i].monsterTypeID) ? "" : "the ",
                                 monsterName.c_str);
 		    } else {
                         Strcpy(buf, makeplural(monsterName.c_str));

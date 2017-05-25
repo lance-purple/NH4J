@@ -272,7 +272,7 @@ dosit()
                 break;
             }
         } else {
-            if (is_prince(youmonst.data))
+            if (isPrince(youmonst.data->monsterTypeID))
                 You_feel("very comfortable here.");
             else
                 You_feel("somehow out of place...");

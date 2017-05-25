@@ -201,7 +201,7 @@ boolean the_pfx;
                               CXN_SINGULAR | (the_pfx ? CXN_PFX_THE : 0));
         /* not strictly needed since pname values are capitalized
            and the() is a no-op for them */
-        if (type_is_pname(&mons[food->corpsenm]))
+        if (typeIsProperName(mons[food->corpsenm].monsterTypeID))
             the_pfx = FALSE;
     } else {
         /* the ordinary case */
@@ -1302,7 +1302,7 @@ const char *mesg;
             what = monsterTypeName(mons[mnum].monsterTypeID);
             if (the_unique_pm(&mons[mnum]))
                 which = 2;
-            else if (type_is_pname(&mons[mnum]))
+            else if (typeIsProperName(mons[mnum].monsterTypeID))
                 which = 1;
         }
         if (which == 0) {
@@ -1660,7 +1660,7 @@ struct obj *otmp;
                               && !isHerbivorous(upmid));
 
         pline("%s%s %s!",
-              type_is_pname(&mons[mnum])
+              typeIsProperName(mons[mnum].monsterTypeID)
                  ? "" : the_unique_pm(&mons[mnum]) ? "The " : "This ",
               food_xname(otmp, FALSE),
               youAreHallucinating()

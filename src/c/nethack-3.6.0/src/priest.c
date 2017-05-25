@@ -70,7 +70,7 @@ register xchar omx, omy, gx, gy;
         allowflags = ALLOW_SSM | ALLOW_SANCT;
     if (passesThroughWalls(mtmp->data->monsterTypeID))
         allowflags |= (ALLOW_ROCK | ALLOW_WALL);
-    if (throws_rocks(mtmp->data))
+    if (throwsRocks(mtmp->data->monsterTypeID))
         allowflags |= ALLOW_ROCK;
     if (isTunneler(mtmp->data->monsterTypeID))
         allowflags |= ALLOW_DIG;
@@ -728,7 +728,7 @@ xchar x, y;
     register struct monst *priest;
 
     if (mon) {
-        if (is_minion(mon->data) || is_rider(mon->data))
+        if (isMinion(mon->data->monsterTypeID) || is_rider(mon->data))
             return FALSE;
         x = mon->mx, y = mon->my;
     }

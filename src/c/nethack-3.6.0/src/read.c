@@ -2072,7 +2072,7 @@ do_class_genocide()
                             || Role_if(PM_SAMURAI))) {
                         boolean named, uniq;
 
-                        named = type_is_pname(&mons[i]) ? TRUE : FALSE;
+                        named = typeIsProperName(mons[i].monsterTypeID) ? TRUE : FALSE;
                         uniq = (monsterGenerationMask(mons[i].monsterTypeID) & G_UNIQ) ? TRUE : FALSE;
                         /* one special case */
                         if (i == PM_HIGH_PRIEST)
@@ -2197,7 +2197,7 @@ int how;
 	releaseJavaString(monsterName);
 
         if ((monsterGenerationMask(ptr->monsterTypeID) & G_UNIQ) && ptr != &mons[PM_HIGH_PRIEST])
-            which = !type_is_pname(ptr) ? "the " : "";
+            which = !typeIsProperName(ptr->monsterTypeID) ? "the " : "";
     }
     if (how & REALLY) {
         /* setting no-corpse affects wishing and random tin generation */

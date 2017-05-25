@@ -323,7 +323,7 @@ nh_timeout()
                 dealloc_killer(kptr);
 
                 if ((m_idx = name_to_mon(killer.name)) >= LOW_PM) {
-                    if (type_is_pname(&mons[m_idx])) {
+                    if (typeIsProperName(mons[m_idx].monsterTypeID)) {
                         killer.format = KILLED_BY;
                     } else if (monsterGenerationMask(mons[m_idx].monsterTypeID) & G_UNIQ) {
                         Strcpy(killer.name, the(killer.name));

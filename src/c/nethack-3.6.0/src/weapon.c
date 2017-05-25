@@ -407,7 +407,7 @@ register struct monst *mtmp;
     Oselect(EGG);      /* cockatrice egg */
     if (mlet == S_KOP) /* pies are first choice for Kops */
         Oselect(CREAM_PIE);
-    if (throws_rocks(mtmp->data)) /* ...boulders for giants */
+    if (throwsRocks(mtmp->data->monsterTypeID)) /* ...boulders for giants */
         Oselect(BOULDER);
 
     /* Select polearms first; they do more damage and aren't expendable.
@@ -451,7 +451,7 @@ register struct monst *mtmp;
 
         /* shooting gems from slings; this goes just before the darts */
         /* (shooting rocks is already handled via the rwep[] ordering) */
-        if (rwep[i] == DART && !likes_gems(mtmp->data)
+        if (rwep[i] == DART && !likesGems(mtmp->data->monsterTypeID)
             && m_carrying(mtmp, SLING)) { /* propellor */
             for (otmp = mtmp->minvent; otmp; otmp = otmp->nobj)
                 if (otmp->oclass == GEM_CLASS

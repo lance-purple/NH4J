@@ -282,7 +282,7 @@ register struct monst *mtmp;
             otmp = mksobj(LONG_SWORD, FALSE, FALSE);
 
             /* maybe make it special */
-            if (!rn2(20) || is_lord(ptr))
+            if (!rn2(20) || isLord(ptr->monsterTypeID))
                 otmp = oname(otmp,
                              artiname(rn2(2) ? ART_DEMONBANE : ART_SUNSWORD));
             bless(otmp);
@@ -291,7 +291,7 @@ register struct monst *mtmp;
             otmp->spe = max(otmp->spe, spe2);
             (void) mpickobj(mtmp, otmp);
 
-            otmp = mksobj(!rn2(4) || is_lord(ptr) ? SHIELD_OF_REFLECTION
+            otmp = mksobj(!rn2(4) || isLord(ptr->monsterTypeID) ? SHIELD_OF_REFLECTION
                                                   : LARGE_SHIELD,
                           FALSE, FALSE);
             otmp->cursed = FALSE;
@@ -469,7 +469,7 @@ register struct monst *mtmp;
          * of weapon for "normal" monsters.  Certain special types
          * of monsters will get a bonus chance or different selections.
          */
-        bias = is_lord(ptr) + is_prince(ptr) * 2 + isExtraNasty(ptr->monsterTypeID);
+        bias = isLord(ptr->monsterTypeID) + isPrince(ptr->monsterTypeID) * 2 + isExtraNasty(ptr->monsterTypeID);
         switch (rnd(14 - (2 * bias))) {
         case 1:
             if (isStrongMonster(ptr->monsterTypeID))
@@ -722,7 +722,7 @@ register struct monst *mtmp;
         (void) mongets(mtmp, rnd_defensive_item(mtmp));
     if ((int) mtmp->m_lev > rn2(100))
         (void) mongets(mtmp, rnd_misc_item(mtmp));
-    if (likes_gold(ptr) && !findgold(mtmp->minvent) && !rn2(5))
+    if (likesGold(ptr->monsterTypeID) && !findgold(mtmp->minvent) && !rn2(5))
         mkmonmoney(mtmp,
                    (long) d(level_difficulty(), mtmp->minvent ? 5 : 10));
 }
@@ -1098,7 +1098,7 @@ int mmflags;
         } while (++tryct <= 50
                  /* in Sokoban, don't accept a giant on first try;
                     after that, boulder carriers are fair game */
-                 && ((tryct == 1 && throws_rocks(ptr) && areYouOnASokobanLevel())
+                 && ((tryct == 1 && throwsRocks(ptr->monsterTypeID) && areYouOnASokobanLevel())
                      || !goodpos(x, y, &fakemon, gpflags)));
         mndx = monsndx(ptr);
     }
@@ -1250,7 +1250,7 @@ int mmflags;
             set_apparxy(mtmp);
         }
     }
-    if (is_dprince(ptr) && monsterSound(ptr->monsterTypeID) == MS_BRIBE) {
+    if (isDemonPrince(ptr->monsterTypeID) && monsterSound(ptr->monsterTypeID) == MS_BRIBE) {
         mtmp->mpeaceful = mtmp->minvis = mtmp->perminvis = 1;
         mtmp->mavenge = 0;
         if (uwep && uwep->oartifact == ART_EXCALIBUR)
@@ -1793,7 +1793,7 @@ int otyp;
             /* demons never get blessed objects */
             if (otmp->blessed)
                 curse(otmp);
-        } else if (is_lminion(mtmp)) {
+        } else if (isLawfulMinion(mtmp->data->monsterTypeID)) {
             /* lawful minions don't get cursed, bad, or rusting objects */
             otmp->cursed = FALSE;
             if (otmp->spe < 0)
@@ -1816,7 +1816,7 @@ int otyp;
         }
 
         /* leaders don't tolerate inferior quality battle gear */
-        if (is_prince(mtmp->data)) {
+        if (isPrince(mtmp->data->monsterTypeID)) {
             if (otmp->oclass == WEAPON_CLASS && otmp->spe < 1)
                 otmp->spe = 1;
             else if (otmp->oclass == ARMOR_CLASS && otmp->spe < 0)
@@ -1898,7 +1898,7 @@ register struct permonst *ptr;
         return FALSE;
 
     /* minions are hostile to players that have strayed at all */
-    if (is_minion(ptr))
+    if (isMinion(ptr->monsterTypeID))
         return (boolean) (currentAlignmentRecord() >= 0);
 
     /* Last case:  a chance of a co-aligned monster being

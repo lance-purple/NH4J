@@ -178,7 +178,7 @@ ldrname()
     int i = urole.ldrnum;
 
     javaString leaderName = monsterTypeName(mons[i].monsterTypeID);
-    Sprintf(nambuf, "%s%s", type_is_pname(&mons[i]) ? "" : "the ",
+    Sprintf(nambuf, "%s%s", typeIsProperName(mons[i].monsterTypeID) ? "" : "the ",
             leaderName.c_str);
     releaseJavaString(leaderName);
     return nambuf;
@@ -205,7 +205,7 @@ neminame()
     int i = urole.neminum;
 
     javaString nemesisName = monsterTypeName(mons[i].monsterTypeID);
-    Sprintf(nambuf, "%s%s", type_is_pname(&mons[i]) ? "" : "the ",
+    Sprintf(nambuf, "%s%s", typeIsProperName(mons[i].monsterTypeID) ? "" : "the ",
             nemesisName.c_str);
     releaseJavaString(nemesisName);
     return nambuf;

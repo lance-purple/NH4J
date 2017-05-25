@@ -1765,7 +1765,7 @@ int style;
         t = t_at(bhitpos.x, bhitpos.y);
 
         if ((mtmp = m_at(bhitpos.x, bhitpos.y)) != 0) {
-            if (otyp == BOULDER && throws_rocks(mtmp->data)) {
+            if (otyp == BOULDER && throwsRocks(mtmp->data->monsterTypeID)) {
                 if (rn2(3)) {
                     pline("%s snatches the boulder.", Monnam(mtmp));
                     singleobj->otrapped = 0;

@@ -474,7 +474,7 @@ int psflags;
                 if (the_unique_pm(&mons[mntmp])) {
                     You_cant("polymorph into %s.", the(pm_name.c_str));
 		}
-                else if (!type_is_pname(&mons[mntmp])) {
+                else if (!typeIsProperName(mons[mntmp].monsterTypeID)) {
                     You_cant("polymorph into %s.", an(pm_name.c_str));
 		}
 		else {

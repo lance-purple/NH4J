@@ -68,11 +68,11 @@ struct monst *mon;
         atyp = (maligntype == A_NONE) ? A_NONE : sgn(maligntype);
     }
 
-    if (is_dprince(ptr) || (ptr == &mons[PM_WIZARD_OF_YENDOR])) {
+    if (isDemonPrince(ptr->monsterTypeID) || (ptr == &mons[PM_WIZARD_OF_YENDOR])) {
         dtype = (!rn2(20)) ? dprince(atyp) : (!rn2(4)) ? dlord(atyp)
                                                        : ndemon(atyp);
         cnt = (!rn2(4) && isNamelessMajorDemon(mons[dtype].monsterTypeID)) ? 2 : 1;
-    } else if (is_dlord(ptr)) {
+    } else if (isDemonLord(ptr->monsterTypeID)) {
         dtype = (!rn2(50)) ? dprince(atyp) : (!rn2(20)) ? dlord(atyp)
                                                         : ndemon(atyp);
         cnt = (!rn2(4) && isNamelessMajorDemon(mons[dtype].monsterTypeID)) ? 2 : 1;
@@ -80,11 +80,11 @@ struct monst *mon;
         dtype = (!rn2(20)) ? dlord(atyp) : (!rn2(6)) ? ndemon(atyp)
                                                      : monsndx(ptr);
         cnt = 1;
-    } else if (is_lminion(mon)) {
-        dtype = (is_lord(ptr) && !rn2(20))
+    } else if (isLawfulMinion(mon->data->monsterTypeID)) {
+        dtype = (isLord(ptr->monsterTypeID) && !rn2(20))
                     ? llord()
-                    : (is_lord(ptr) || !rn2(6)) ? lminion() : monsndx(ptr);
-        cnt = (!rn2(4) && !is_lord(&mons[dtype])) ? 2 : 1;
+                    : (isLord(ptr->monsterTypeID) || !rn2(6)) ? lminion() : monsndx(ptr);
+        cnt = (!rn2(4) && !isLord(mons[dtype].monsterTypeID)) ? 2 : 1;
     } else if (ptr == &mons[PM_ANGEL]) {
         /* non-lawful angels can also summon */
         if (!rn2(6)) {
@@ -100,7 +100,7 @@ struct monst *mon;
         } else {
             dtype = PM_ANGEL;
         }
-        cnt = (!rn2(4) && !is_lord(&mons[dtype])) ? 2 : 1;
+        cnt = (!rn2(4) && !isLord(mons[dtype].monsterTypeID)) ? 2 : 1;
     }
 
     if (dtype == NON_PM)
@@ -234,7 +234,7 @@ register struct monst *mtmp;
     }
 
     /* Slight advantage given. */
-    if (is_dprince(mtmp->data) && mtmp->minvis) {
+    if (isDemonPrince(mtmp->data->monsterTypeID) && mtmp->minvis) {
         boolean wasunseen = !canspotmon(mtmp);
 
         mtmp->minvis = mtmp->perminvis = 0;
@@ -366,7 +366,7 @@ lminion()
 
     for (tryct = 0; tryct < 20; tryct++) {
         ptr = mkclass(S_ANGEL, 0);
-        if (ptr && !is_lord(ptr))
+        if (ptr && !isLord(ptr->monsterTypeID))
             return (monsndx(ptr));
     }
 

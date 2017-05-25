@@ -403,7 +403,7 @@ struct monst *mtmp;
         /* Note: trap doors take precedence over teleport traps. */
         int xx, yy, i, locs[10][2];
         boolean ignore_boulders = (isVerySmallMonster(mtmp->data->monsterTypeID)
-                                   || throws_rocks(mtmp->data)
+                                   || throwsRocks(mtmp->data->monsterTypeID)
                                    || passesThroughWalls(mtmp->data->monsterTypeID)),
             diag_ok = !NODIAG(monsndx(mtmp->data));
 
@@ -1622,7 +1622,7 @@ struct monst *mtmp;
 
     if (!stuck && !immobile && (mtmp->cham == NON_PM)
         && monstr[(pmidx = monsndx(mdat))] < 6) {
-        boolean ignore_boulders = (isVerySmallMonster(mdat->monsterTypeID) || throws_rocks(mdat)
+        boolean ignore_boulders = (isVerySmallMonster(mdat->monsterTypeID) || throwsRocks(mdat->monsterTypeID)
                                    || passesThroughWalls(mdat->monsterTypeID)),
             diag_ok = !NODIAG(pmidx);
 
@@ -2465,7 +2465,7 @@ struct monst *mon;
     case PM_WOOD_NYMPH:
         return TRUE;
     default:
-        if (isElf(ptr->monsterTypeID) && !is_prince(ptr) && !is_lord(ptr)
+        if (isElf(ptr->monsterTypeID) && !isPrince(ptr->monsterTypeID) && !isLord(ptr->monsterTypeID)
             && ptr != &mons[PM_GREY_ELF])
             return TRUE;
         break;

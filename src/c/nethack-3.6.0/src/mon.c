@@ -1036,7 +1036,7 @@ struct monst *mtmp;
     struct obj *obj;
 
     for (obj = mtmp->minvent; obj; obj = obj->nobj) {
-        if (obj->otyp != BOULDER || !throws_rocks(mtmp->data))
+        if (obj->otyp != BOULDER || !throwsRocks(mtmp->data->monsterTypeID))
             curload += obj->owt;
     }
 
@@ -1155,7 +1155,7 @@ struct obj *otmp;
      */
 
     /* special--boulder throwers carry unlimited amounts of boulders */
-    if (throws_rocks(mdat) && otyp == BOULDER)
+    if (throwsRocks(mdat->monsterTypeID) && otyp == BOULDER)
         return iquan;
 
     /* nymphs deal in stolen merchandise, but not boulders or statues */
@@ -3283,7 +3283,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
      * minvent should be sorted in order to drop heaviest items first.
      */
     /* former giants can't continue carrying boulders */
-    if (mtmp->minvent && !throws_rocks(mdat)) {
+    if (mtmp->minvent && !throwsRocks(mdat->monsterTypeID)) {
         register struct obj *otmp, *otmp2;
 
         for (otmp = mtmp->minvent; otmp; otmp = otmp2) {

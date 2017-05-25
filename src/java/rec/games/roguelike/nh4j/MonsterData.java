@@ -27,8 +27,11 @@ public class MonsterData {
     //#define resists_acid(mon) (((mon)->mintrinsics & MR_ACID) != 0)
     //#define resists_ston(mon) (((mon)->mintrinsics & MR_STONE) != 0)
     //
-    //#define is_lminion(mon) \
-    //    (is_minion((mon)->data) && mon_aligntyp(mon) == A_LAWFUL)
+	
+	public static boolean isLawfulMinion(int pmid) {
+		MonsterType mt = MonsterType.getMonsterType(pmid);
+		return (mt.hasFlag2(M2.MINION) && mt.isLawful());
+	}
 	
 	public static boolean isFlyer(int pmid) {
 		return MonsterType.getMonsterType(pmid).hasFlag1(M1.FLY);
@@ -183,7 +186,10 @@ public class MonsterData {
     //#define telepathic(ptr)                                                \
     //    ((ptr) == &mons[PM_FLOATING_EYE] || (ptr) == &mons[PM_MIND_FLAYER] \
     //     || (ptr) == &mons[PM_MASTER_MIND_FLAYER])
-    //#define is_armed(ptr) attacktype(ptr, AT_WEAP)
+
+    public static boolean isArmed(int pmid) {
+    	return MonsterType.monsterHasWeaponAttack(pmid);
+    }
 
     public static boolean isAcidic(int pmid) {
     	return (MonsterType.getMonsterType(pmid).hasFlag1(M1.ACID));
@@ -324,27 +330,58 @@ public class MonsterData {
     //#define could_twoweap(ptr) ((ptr)->mattk[1].aatyp == AT_WEAP)
     //#define cantweararm(ptr) (breakarm(ptr) || sliparm(ptr))
 
-    //#define throws_rocks(ptr) (((ptr)->mflags2 & M2_ROCKTHROW) != 0L)
-    //#define type_is_pname(ptr) (((ptr)->mflags2 & M2_PNAME) != 0L)
-    //#define is_lord(ptr) (((ptr)->mflags2 & M2_LORD) != 0L)
-    //#define is_prince(ptr) (((ptr)->mflags2 & M2_PRINCE) != 0L)
+    public static boolean throwsRocks(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.ROCKTHROW);
+	}
+
+    public static boolean typeIsProperName(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.PNAME);
+	}
+
+    public static boolean isLord(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.LORD);
+	}
+
+    public static boolean isPrince(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.PRINCE);
+	}
     
     public static boolean isNamelessMajorDemon(int pmid) {
     	MonsterType m = MonsterType.getMonsterType(pmid);
     	return m.hasFlag2(M2.DEMON) && (!m.hasFlag2(M2.LORD)) && (!m.hasFlag2(M2.PRINCE));
     }
-    
-    //#define is_dlord(ptr) (is_demon(ptr) && is_lord(ptr))
-    //#define is_dprince(ptr) (is_demon(ptr) && is_prince(ptr))
-    //#define is_minion(ptr) (((ptr)->mflags2 & M2_MINION) != 0L)
-    //#define likes_gold(ptr) (((ptr)->mflags2 & M2_GREEDY) != 0L)
+
+    public static boolean isDemonLord(int pmid) {
+    	MonsterType m = MonsterType.getMonsterType(pmid);
+    	return m.hasFlag2(M2.DEMON) && m.hasFlag2(M2.LORD);
+	}
+
+    public static boolean isDemonPrince(int pmid) {
+    	MonsterType m = MonsterType.getMonsterType(pmid);
+    	return m.hasFlag2(M2.DEMON) && m.hasFlag2(M2.PRINCE);
+	}
+
+    public static boolean isMinion(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.MINION);
+	}
+
+    public static boolean likesGold(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.GREEDY);
+	}
     
     public static boolean likesGems(int pmid) {
     	return MonsterType.getMonsterType(pmid).hasFlag2(M2.JEWELS);
     }
-    //#define likes_gems(ptr) (((ptr)->mflags2 & M2_JEWELS) != 0L)
-    //#define likes_objs(ptr) (((ptr)->mflags2 & M2_COLLECT) != 0L || is_armed(ptr))
-    //#define likes_magic(ptr) (((ptr)->mflags2 & M2_MAGIC) != 0L)
+
+    public static boolean likesObjects(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.COLLECT)
+    			|| isArmed(pmid);
+    }
+
+    public static boolean likesMagicItems(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.MAGIC);
+    }
+
     //#define webmaker(ptr) \
     //    ((ptr) == &mons[PM_CAVE_SPIDER] || (ptr) == &mons[PM_GIANT_SPIDER])
     

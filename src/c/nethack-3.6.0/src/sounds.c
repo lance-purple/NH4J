@@ -58,8 +58,8 @@ dosounds()
         for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
             if (DEADMONSTER(mtmp))
                 continue;
-            if ((mtmp->msleeping || is_lord(mtmp->data)
-                 || is_prince(mtmp->data)) && !isAnimal(mtmp->data->monsterTypeID)
+            if ((mtmp->msleeping || isLord(mtmp->data->monsterTypeID)
+                 || isPrince(mtmp->data->monsterTypeID)) && !isAnimal(mtmp->data->monsterTypeID)
                 && mon_in_room(mtmp, COURT)) {
                 /* finding one is enough, at least for now */
                 int which = rn2(3) + hallu;
@@ -808,7 +808,7 @@ register struct monst *mtmp;
             pline_msg = "curses orcs.";
         else if (isDwarf(ptr->monsterTypeID))
             pline_msg = "talks about mining.";
-        else if (likes_magic(ptr))
+        else if (likesMagicItems(ptr->monsterTypeID))
             pline_msg = "talks about spellcraft.";
         else if (monsterClass(ptr->monsterTypeID) == S_CENTAUR)
             pline_msg = "discusses hunting.";
@@ -874,7 +874,7 @@ register struct monst *mtmp;
     case MS_CUSS:
         if (!mtmp->mpeaceful)
             cuss(mtmp);
-        else if (is_lminion(mtmp))
+        else if (isLawfulMinion(mtmp->data->monsterTypeID))
             verbl_msg = "It's not too late.";
         else
             verbl_msg = "We're all doomed.";

@@ -588,9 +588,9 @@ struct monst *mtmp;
         int skill = (int) objects[otmp->otyp].oc_skill;
 
         /* Assumes lords are skilled, princes are expert */
-        if (is_prince(mtmp->data))
+        if (isPrince(mtmp->data->monsterTypeID))
             multishot += 2;
-        else if (is_lord(mtmp->data))
+        else if (isLord(mtmp->data->monsterTypeID))
             multishot++;
         /* fake players treated as skilled (regardless of role limits) */
         else if (is_mplayer(mtmp->data))
@@ -812,7 +812,7 @@ register struct monst *mtmp;
                               && youmonst.m_ap_type != M_AP_MONSTER)))
         return FALSE;
 
-    ignore_boulders = (throws_rocks(mtmp->data)
+    ignore_boulders = (throwsRocks(mtmp->data->monsterTypeID)
                        || m_carrying(mtmp, WAN_STRIKING));
     return linedup(mtmp->mux, mtmp->muy, mtmp->mx, mtmp->my,
                    ignore_boulders ? 1 : 2);

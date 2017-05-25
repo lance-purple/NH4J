@@ -14,9 +14,6 @@
 #define resists_acid(mon) (((mon)->mintrinsics & MR_ACID) != 0)
 #define resists_ston(mon) (((mon)->mintrinsics & MR_STONE) != 0)
 
-#define is_lminion(mon) \
-    (is_minion((mon)->data) && mon_aligntyp(mon) == A_LAWFUL)
-
 #define has_horns(ptr) (num_horns(ptr) > 0)
 
 #define flaming(ptr)                                                     \
@@ -33,18 +30,7 @@
 #define can_breathe(ptr) attacktype(ptr, AT_BREA)
 
 #define cantweararm(ptr) (breakarm(ptr) || sliparm(ptr))
-#define throws_rocks(ptr) (((ptr)->mflags2 & M2_ROCKTHROW) != 0L)
-#define type_is_pname(ptr) (((ptr)->mflags2 & M2_PNAME) != 0L)
-#define is_lord(ptr) (((ptr)->mflags2 & M2_LORD) != 0L)
-#define is_prince(ptr) (((ptr)->mflags2 & M2_PRINCE) != 0L)
 
-#define is_dlord(ptr) (isDemon(ptr->monsterTypeID) && is_lord(ptr))
-#define is_dprince(ptr) (isDemon(ptr->monsterTypeID) && is_prince(ptr))
-#define is_minion(ptr) (((ptr)->mflags2 & M2_MINION) != 0L)
-#define likes_gold(ptr) (((ptr)->mflags2 & M2_GREEDY) != 0L)
-#define likes_gems(ptr) (((ptr)->mflags2 & M2_JEWELS) != 0L)
-#define likes_objs(ptr) (((ptr)->mflags2 & M2_COLLECT) != 0L || is_armed(ptr))
-#define likes_magic(ptr) (((ptr)->mflags2 & M2_MAGIC) != 0L)
 #define webmaker(ptr) \
     ((ptr) == &mons[PM_CAVE_SPIDER] || (ptr) == &mons[PM_GIANT_SPIDER])
 

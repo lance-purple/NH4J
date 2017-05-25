@@ -2155,7 +2155,19 @@ E boolean FDECL(racialFriendship, (int, long));
 E boolean FDECL(isExtraNasty, (int));
 E boolean FDECL(isStrongMonster, (int));
 
+E boolean FDECL(throwsRocks, (int));
+E boolean FDECL(typeIsProperName, (int));
+E boolean FDECL(isLord, (int));
+E boolean FDECL(isPrince, (int));
 E boolean FDECL(isNamelessMajorDemon, (int));
+E boolean FDECL(isDemonLord, (int));
+E boolean FDECL(isDemonPrince, (int));
+E boolean FDECL(isMinion, (int));
+E boolean FDECL(isLawfulMinion, (int));
+E boolean FDECL(likesGold, (int));
+E boolean FDECL(likesGems, (int));
+E boolean FDECL(likesObjects, (int));
+E boolean FDECL(likesMagicItems, (int));
 
 /* ### monmove.c ### */
 

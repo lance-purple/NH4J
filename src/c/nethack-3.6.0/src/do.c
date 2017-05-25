@@ -155,13 +155,13 @@ const char *verb;
                           vtense((const char *) 0, verb),
                           (mtmp) ? "" : " with you");
             if (mtmp) {
-                if (!passesThroughWalls(mtmp->data->monsterTypeID) && !throws_rocks(mtmp->data)) {
+                if (!passesThroughWalls(mtmp->data->monsterTypeID) && !throwsRocks(mtmp->data->monsterTypeID)) {
                     if (hmon(mtmp, obj, TRUE) && !isWhirly(mtmp->data->monsterTypeID))
                         return FALSE; /* still alive */
                 }
                 mtmp->mtrapped = 0;
             } else {
-                if (!youCanPassThroughWalls() && !throws_rocks(youmonst.data)) {
+                if (!youCanPassThroughWalls() && !throwsRocks(youmonst.data->monsterTypeID)) {
                     losehp(Maybe_Half_Phys(rnd(15)),
                            "squished under a boulder", NO_KILLER_PREFIX);
                     return FALSE; /* player remains trapped */

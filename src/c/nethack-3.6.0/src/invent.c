@@ -994,7 +994,7 @@ register const char *let, *word;
 
     /* another ugly check: show boulders (not statues) */
     if (*let == WEAPON_CLASS && !strcmp(word, "throw")
-        && throws_rocks(youmonst.data))
+        && throwsRocks(youmonst.data->monsterTypeID))
         useboulder = TRUE;
 
     if (allownone)

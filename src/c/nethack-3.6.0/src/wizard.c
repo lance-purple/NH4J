@@ -642,7 +642,7 @@ register struct monst *mtmp;
             verbalize("%s %s!",
                       random_malediction[rn2(SIZE(random_malediction))],
                       random_insult[rn2(SIZE(random_insult))]);
-    } else if (is_lminion(mtmp)) {
+    } else if (isLawfulMinion(mtmp->data->monsterTypeID)) {
         com_pager(rn2(QTN_ANGELIC - 1 + (youAreHallucinating() ? 1 : 0))
                   + QT_ANGELIC);
     } else {

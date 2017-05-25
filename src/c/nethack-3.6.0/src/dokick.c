@@ -301,7 +301,7 @@ register struct obj *gold;
 {
     boolean msg_given = FALSE;
 
-    if (!likes_gold(mtmp->data) && !mtmp->isshk && !mtmp->ispriest
+    if (!likesGold(mtmp->data->monsterTypeID) && !mtmp->isshk && !mtmp->ispriest
         && !mtmp->isgd && !isMercenary(mtmp->data->monsterTypeID)) {
         wakeup(mtmp);
     } else if (!mtmp->mcanmove) {
@@ -1674,7 +1674,7 @@ long num;
     char obuf[BUFSZ];
 
     Sprintf(obuf, "%s%s",
-            (otmp->otyp == CORPSE && type_is_pname(&mons[otmp->corpsenm]))
+            (otmp->otyp == CORPSE && typeIsProperName(mons[otmp->corpsenm].monsterTypeID))
                 ? ""
                 : "The ",
             cxname(otmp));

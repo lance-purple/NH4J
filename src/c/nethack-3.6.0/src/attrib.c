@@ -247,7 +247,7 @@ boolean thrown_weapon; /* thrown weapons are less deadly */
     i = name_to_mon(pkiller);
     if (i >= LOW_PM && (monsterGenerationMask(mons[i].monsterTypeID) & G_UNIQ)) {
         kprefix = KILLED_BY;
-        if (!type_is_pname(&mons[i]))
+        if (!typeIsProperName(mons[i].monsterTypeID))
             pkiller = the(pkiller);
     } else if (!strncmpi(pkiller, "the ", 4) || !strncmpi(pkiller, "an ", 3)
                || !strncmpi(pkiller, "a ", 2)) {

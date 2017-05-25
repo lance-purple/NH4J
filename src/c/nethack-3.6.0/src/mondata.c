@@ -579,8 +579,8 @@ struct permonst *pm1, *pm2;
     /* other critters get steadily messier */
     if (is_rider(pm1))
         return is_rider(pm2); /* debatable */
-    if (is_minion(pm1))
-        return is_minion(pm2); /* [needs work?] */
+    if (isMinion(pmid1))
+        return isMinion(pmid2); /* [needs work?] */
     /* tengu don't match imps (first test handled case of both being tengu) */
     if (pm1 == &mons[PM_TENGU] || pm2 == &mons[PM_TENGU])
         return FALSE;
@@ -906,10 +906,11 @@ int
 pronoun_gender(mtmp)
 register struct monst *mtmp;
 {
-    if (isNeuter(mtmp->data->monsterTypeID) || !canspotmon(mtmp))
+    int pmid = mtmp->data->monsterTypeID;
+    if (isNeuter(pmid) || !canspotmon(mtmp))
         return 2;
-    return (isHumanoid(mtmp->data->monsterTypeID) || (monsterGenerationMask(mtmp->data->monsterTypeID) & G_UNIQ)
-            || type_is_pname(mtmp->data)) ? (int) mtmp->female : 2;
+    return (isHumanoid(pmid) || (monsterGenerationMask(pmid) & G_UNIQ)
+            || typeIsProperName(pmid)) ? (int) mtmp->female : 2;
 }
 
 /* used for nearby monsters when you go to another level */
@@ -1471,8 +1472,56 @@ boolean isStrongMonster(int pmid) {
     return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isStrongMonster", pmid);
 }
 
+boolean throwsRocks(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "throwsRocks", pmid);
+}
+
+boolean typeIsProperName(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "typeIsProperName", pmid);
+}
+
+boolean isLord(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isLord", pmid);
+} 
+
+boolean isPrince(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isPrince", pmid);
+}
+
 boolean isNamelessMajorDemon(int pmid) {
     return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isNamelessMajorDemon", pmid);
+}
+
+boolean isDemonLord(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isDemonLord", pmid);
+} 
+
+boolean isDemonPrince(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isDemonPrince", pmid);
+}
+
+boolean isMinion(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isMinion", pmid);
+}
+
+boolean isLawfulMinion(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isLawfulMinion", pmid);
+}
+
+boolean likesGold(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "likesGold", pmid);
+}
+
+boolean likesGems(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "likesGems", pmid);
+}
+
+boolean likesObjects(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "likesObjects", pmid);
+}
+
+boolean likesMagicItems(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "likesMagicItems", pmid);
 }
 
 /*mondata.c*/

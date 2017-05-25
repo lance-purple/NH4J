@@ -2964,6 +2964,10 @@ public class MonsterType {
 		return getMonsterType(pmid).alignment;
 	}
 
+	public boolean isLawful() {
+		return alignment > 0;
+	}
+
 	public static void setMonsterAlignment(int pmid, int value) {
 		getMonsterType(pmid).alignment = value;
 	}
@@ -3032,21 +3036,33 @@ public class MonsterType {
 		}
 	}
 
-	public static boolean monsterHasPassiveAttack(int pmid) {
-		return (monsterPassiveAttackIndex(pmid) >= 0);
-	}
-
-	public static int monsterPassiveAttackIndex(int pmid) {
+	private static int monsterAttackTypeIndex(int pmid, AT desiredType) {
 		ArrayList<Attack> attacks = getMonsterType(pmid).attacks;
 		for (int i = 0; i < attacks.size(); i++) {
 			Attack attack = attacks.get(i);
-			if (AT.NONE == attack.type()) {
+			if (desiredType.equals(attack.type())) {
 				return i;
 			}
 		}
-		return -1;
+		return -1;		
 	}
 
+	public static int monsterPassiveAttackIndex(int pmid) {
+		return monsterAttackTypeIndex(pmid, AT.NONE);
+	}
+
+	public static boolean monsterHasPassiveAttack(int pmid) {
+		return (monsterPassiveAttackIndex(pmid) >= 0);
+	}
+	
+
+	public static int monsterWeaponAttackIndex(int pmid) {
+		return monsterAttackTypeIndex(pmid, AT.WEAP);
+	}
+
+	public static boolean monsterHasWeaponAttack(int pmid) {
+		return (monsterWeaponAttackIndex(pmid) >= 0);
+	}	
 	
 	public static long monsterHasResistances(int pmid) {
 		return getMonsterType(pmid).hasResistances;

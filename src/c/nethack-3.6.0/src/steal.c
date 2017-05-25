@@ -323,7 +323,7 @@ gotobj:
     if (otmp->o_id == stealoid)
         return 0;
 
-    if (otmp->otyp == BOULDER && !throws_rocks(mtmp->data)) {
+    if (otmp->otyp == BOULDER && !throwsRocks(mtmp->data->monsterTypeID)) {
         if (!retrycnt++)
             goto retry;
         goto cant_take;

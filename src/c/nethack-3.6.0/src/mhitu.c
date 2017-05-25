@@ -489,7 +489,7 @@ register struct monst *mtmp;
             map_invisible(mtmp->mx, mtmp->my);
 	}
         if (!youseeit) {
-            pline("%s %s!", Something, (likes_gold(mtmp->data)
+            pline("%s %s!", Something, (likesGold(mtmp->data->monsterTypeID)
                                         && youmonst.mappearance == GOLD_PIECE)
                                            ? "tries to pick you up"
                                            : "disturbs you");
@@ -852,7 +852,7 @@ struct monst *mon;
            protection is too easy); it confers minimum mc 1 instead of 0 */
         if ((is_you && ((yourIntrinsic(PROTECTION) && blessings()) || armorBonusFromProtectionSpell()))
             /* aligned priests and angels have innate intrinsic Protection */
-            || (mon->data == &mons[PM_ALIGNED_PRIEST] || is_minion(mon->data)))
+            || (mon->data == &mons[PM_ALIGNED_PRIEST] || isMinion(mon->data->monsterTypeID)))
             mc = 1;
     }
     return mc;
@@ -1199,7 +1199,7 @@ register const struct Attack mattk;
                         javaString kname = monsterTypeName(mtmp->data->monsterTypeID);
 
                         if (monsterGenerationMask(mtmp->data->monsterTypeID) & G_UNIQ) {
-                            if (!type_is_pname(mtmp->data)) {
+                            if (!typeIsProperName(mtmp->data->monsterTypeID)) {
                                 make_stoned(5L, (char *) 0, KILLED_BY, the(kname.c_str));
 			    } else {
                                 make_stoned(5L, (char *) 0, KILLED_BY, kname.c_str);

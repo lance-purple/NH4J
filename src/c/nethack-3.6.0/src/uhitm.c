@@ -1922,7 +1922,7 @@ register const struct Attack mattk;
             You("englut %s.", mon_nam(mdef));
 
             javaString monsterName = monsterTypeName(pd->monsterTypeID);
-            if (!type_is_pname(pd)) {
+            if (!typeIsProperName(pd->monsterTypeID)) {
                 Sprintf(kbuf, "swallowing %s whole", an(monsterName.c_str));
 	    } else {
                 Sprintf(kbuf, "swallowing %s whole", monsterName.c_str);
