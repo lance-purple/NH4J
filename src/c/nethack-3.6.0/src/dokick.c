@@ -55,7 +55,7 @@ register boolean clumsy;
     if (mon->data == &mons[PM_SHADE])
         dmg = 0;
 
-    if ((isUndead(mon->data->monsterTypeID) || is_demon(mon->data) || is_vampshifter(mon))
+    if ((isUndead(mon->data->monsterTypeID) || isDemon(mon->data->monsterTypeID) || is_vampshifter(mon))
         && uarmf && uarmf->blessed)
         blessed_foot_damage = 1;
 
@@ -302,7 +302,7 @@ register struct obj *gold;
     boolean msg_given = FALSE;
 
     if (!likes_gold(mtmp->data) && !mtmp->isshk && !mtmp->ispriest
-        && !mtmp->isgd && !is_mercenary(mtmp->data)) {
+        && !mtmp->isgd && !isMercenary(mtmp->data->monsterTypeID)) {
         wakeup(mtmp);
     } else if (!mtmp->mcanmove) {
         /* too light to do real damage */
@@ -363,7 +363,7 @@ register struct obj *gold;
                           : mtmp->mpeaceful
                                 ? "I'll take care of that; please move along."
                                 : "I'll take that; now get moving.");
-        } else if (is_mercenary(mtmp->data)) {
+        } else if (isMercenary(mtmp->data->monsterTypeID)) {
             long goldreqd = 0L;
 
             if (rn2(3)) {

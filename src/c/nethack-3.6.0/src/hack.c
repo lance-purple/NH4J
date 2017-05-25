@@ -2790,14 +2790,14 @@ weight_cap()
             carrcap = MAX_CARR_CAP;
         else if (!yourCorpseWeight)
             carrcap = (carrcap * (long) monsterSize(youmonst.data->monsterTypeID)) / MZ_HUMAN;
-        else if (!strongmonst(youmonst.data)
-                 || (strongmonst(youmonst.data)
+        else if (!isStrongMonster(youmonst.data->monsterTypeID)
+                 || (isStrongMonster(youmonst.data->monsterTypeID)
                      && (yourCorpseWeight > WT_HUMAN)))
             carrcap = (carrcap * (long) yourCorpseWeight / WT_HUMAN);
     }
 
     if (youAreLevitating() || areYouOnAirLevel() /* pugh@cornell */
-        || (u.usteed && strongmonst(u.usteed->data)))
+        || (u.usteed && isStrongMonster(u.usteed->data->monsterTypeID)))
         carrcap = MAX_CARR_CAP;
     else {
         if (carrcap > MAX_CARR_CAP)

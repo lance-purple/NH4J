@@ -253,25 +253,68 @@ public class MonsterData {
 	    MC mc = MonsterType.getMonsterType(pmid).monsterClass();
 	    return (MC.BAT.equals(mc) && (! isBat(pmid)));
     }
-    //#define is_giant(ptr) (((ptr)->mflags2 & M2_GIANT) != 0L)
+    
+	public static boolean isGiant(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.GIANT);
+	}
     
     public static boolean isGolem(int pmid) {
 	    MC mc = MonsterType.getMonsterType(pmid).monsterClass();
         return (MC.GOLEM.equals(mc));
     }
-    //#define is_domestic(ptr) (((ptr)->mflags2 & M2_DOMESTIC) != 0L)
-    //#define is_demon(ptr) (((ptr)->mflags2 & M2_DEMON) != 0L)
-    //#define is_mercenary(ptr) (((ptr)->mflags2 & M2_MERC) != 0L)
-    //#define is_male(ptr) (((ptr)->mflags2 & M2_MALE) != 0L)
-    //#define is_female(ptr) (((ptr)->mflags2 & M2_FEMALE) != 0L)
-    //#define is_neuter(ptr) (((ptr)->mflags2 & M2_NEUTER) != 0L)
-    //#define is_wanderer(ptr) (((ptr)->mflags2 & M2_WANDER) != 0L)
-    //#define always_hostile(ptr) (((ptr)->mflags2 & M2_HOSTILE) != 0L)
-    //#define always_peaceful(ptr) (((ptr)->mflags2 & M2_PEACEFUL) != 0L)
-    //#define race_hostile(ptr) (((ptr)->mflags2 & urace.hatemask) != 0L)
-    //#define race_peaceful(ptr) (((ptr)->mflags2 & urace.lovemask) != 0L)
-    //#define extra_nasty(ptr) (((ptr)->mflags2 & M2_NASTY) != 0L)
-    //#define strongmonst(ptr) (((ptr)->mflags2 & M2_STRONG) != 0L)
+
+	public static boolean isDomestic(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.DOMESTIC);
+	}
+
+	public static boolean isDemon(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.DEMON);
+	}
+
+	public static boolean isMercenary(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.MERC);
+	}
+
+	public static boolean isMale(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.MALE);
+	}
+
+	public static boolean isFemale(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.FEMALE);
+	}
+
+	public static boolean isNeuter(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.NEUTER);
+	}
+
+	public static boolean isWanderer(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.WANDER);
+	}
+
+	public static boolean isAlwaysHostile(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.HOSTILE);
+	}
+
+	public static boolean isAlwaysPeaceful(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.PEACEFUL);
+	}
+
+	public static boolean racialHostility(int pmid, long hateMask) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(hateMask);
+	}
+
+	public static boolean racialFriendship(int pmid, long likeMask) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(likeMask);
+	}
+
+	public static boolean isExtraNasty(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.NASTY);
+	}
+
+	public static boolean isStrongMonster(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag2(M2.STRONG);
+	}
+
     //#define can_breathe(ptr) attacktype(ptr, AT_BREA)
     
     public static boolean cannotWieldThings(int pmid) {
@@ -280,12 +323,17 @@ public class MonsterData {
     
     //#define could_twoweap(ptr) ((ptr)->mattk[1].aatyp == AT_WEAP)
     //#define cantweararm(ptr) (breakarm(ptr) || sliparm(ptr))
+
     //#define throws_rocks(ptr) (((ptr)->mflags2 & M2_ROCKTHROW) != 0L)
     //#define type_is_pname(ptr) (((ptr)->mflags2 & M2_PNAME) != 0L)
     //#define is_lord(ptr) (((ptr)->mflags2 & M2_LORD) != 0L)
     //#define is_prince(ptr) (((ptr)->mflags2 & M2_PRINCE) != 0L)
-    //#define is_ndemon(ptr) \
-    //    (is_demon(ptr) && (((ptr)->mflags2 & (M2_LORD | M2_PRINCE)) == 0L))
+    
+    public static boolean isNamelessMajorDemon(int pmid) {
+    	MonsterType m = MonsterType.getMonsterType(pmid);
+    	return m.hasFlag2(M2.DEMON) && (!m.hasFlag2(M2.LORD)) && (!m.hasFlag2(M2.PRINCE));
+    }
+    
     //#define is_dlord(ptr) (is_demon(ptr) && is_lord(ptr))
     //#define is_dprince(ptr) (is_demon(ptr) && is_prince(ptr))
     //#define is_minion(ptr) (((ptr)->mflags2 & M2_MINION) != 0L)

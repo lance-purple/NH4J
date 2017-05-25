@@ -123,7 +123,7 @@ register int nk;
     }
 
     /*  For certain "extra nasty" monsters, give even more */
-    if (extra_nasty(ptr))
+    if (isExtraNasty(ptr->monsterTypeID))
         tmp += (7 * mtmp->m_lev);
 
     /*  For higher level monsters, an additional bonus is given */

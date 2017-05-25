@@ -533,7 +533,7 @@ register struct monst *mtmp;
     }
 
     /*  Special demon handling code */
-    if ((mtmp->cham == NON_PM) && is_demon(mdat) && !range2
+    if ((mtmp->cham == NON_PM) && isDemon(mdat->monsterTypeID) && !range2
         && mtmp->data != &mons[PM_BALROG] && mtmp->data != &mons[PM_SUCCUBUS]
         && mtmp->data != &mons[PM_INCUBUS])
         if (!mtmp->mcan && !rn2(13))
@@ -1600,7 +1600,7 @@ register const struct Attack mattk;
         if (youTakeHalfDamageFromPhysicalAttacks()
             /* Mitre of Holiness */
             || (Role_if(PM_PRIEST) && uarmh && is_quest_artifact(uarmh)
-                && (isUndead(mtmp->data->monsterTypeID) || is_demon(mtmp->data)
+                && (isUndead(mtmp->data->monsterTypeID) || isDemon(mtmp->data->monsterTypeID)
                     || is_vampshifter(mtmp))))
             dmg = (dmg + 1) / 2;
 

@@ -2026,7 +2026,7 @@ role_init()
         /* if gender is random, we choose it now instead of waiting
            until the leader monster is created */
         quest_status.ldrgend =
-            is_neuter(pm) ? 2 : is_female(pm) ? 1 : is_male(pm)
+            isNeuter(pm->monsterTypeID) ? 2 : isFemale(pm->monsterTypeID) ? 1 : isMale(pm->monsterTypeID)
                                                         ? 0
                                                         : (rn2(100) < 50);
     }
@@ -2048,8 +2048,8 @@ role_init()
         pm->mflags3 |= M3_WANTSARTI | M3_WAITFORU;
         /* if gender is random, we choose it now instead of waiting
            until the nemesis monster is created */
-        quest_status.nemgend = is_neuter(pm) ? 2 : is_female(pm) ? 1
-                                   : is_male(pm) ? 0 : (rn2(100) < 50);
+        quest_status.nemgend = isNeuter(pm->monsterTypeID) ? 2 : isFemale(pm->monsterTypeID) ? 1
+                                   : isMale(pm->monsterTypeID) ? 0 : (rn2(100) < 50);
     }
 
     /* Fix up the god names */

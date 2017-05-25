@@ -157,7 +157,7 @@ struct monst *mon;
 
     /* Blessed weapons used against undead or demons */
     if (Is_weapon && otmp->blessed
-        && (is_demon(ptr) || isUndead(ptr->monsterTypeID) || is_vampshifter(mon)))
+        && (isDemon(ptr->monsterTypeID) || isUndead(ptr->monsterTypeID) || is_vampshifter(mon)))
         tmp += 2;
 
     if (is_spear(otmp) && index(kebabable, monsterClass(ptr->monsterTypeID)))
@@ -323,7 +323,7 @@ struct monst *mon;
         int bonus = 0;
 
         if (otmp->blessed
-            && (isUndead(ptr->monsterTypeID) || is_demon(ptr) || is_vampshifter(mon)))
+            && (isUndead(ptr->monsterTypeID) || isDemon(ptr->monsterTypeID) || is_vampshifter(mon)))
             bonus += rnd(4);
         if (is_axe(otmp) && is_wooden(ptr))
             bonus += rnd(4);
@@ -428,7 +428,7 @@ register struct monst *mtmp;
              * Big weapon is basically the same as bimanual.
              * All monsters can wield the remaining weapons.
              */
-            if (((strongmonst(mtmp->data)
+            if (((isStrongMonster(mtmp->data->monsterTypeID)
                   && (mtmp->misc_worn_check & W_ARMS) == 0)
                  || !objects[pwep[i]].oc_bimanual)
                 && (objects[pwep[i]].oc_material != SILVER
@@ -532,7 +532,7 @@ register struct monst *mtmp;
 {
     register struct obj *otmp;
     register int i;
-    boolean strong = strongmonst(mtmp->data);
+    boolean strong = isStrongMonster(mtmp->data->monsterTypeID);
     boolean wearing_shield = (mtmp->misc_worn_check & W_ARMS) != 0;
 
     /* prefer artifacts to everything else */
@@ -544,7 +544,7 @@ register struct monst *mtmp;
             return otmp;
     }
 
-    if (is_giant(mtmp->data)) /* giants just love to use clubs */
+    if (isGiant(mtmp->data->monsterTypeID)) /* giants just love to use clubs */
         Oselect(CLUB);
 
     /* only strong monsters can wield big (esp. long) weapons */

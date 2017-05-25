@@ -1253,7 +1253,7 @@ unsigned trflags;
             /* If mounted, the steed gets trapped.  Use mintrap
              * to do all the work.  If mtrapped is set as a result,
              * unset it and set utrap instead.  In the case of a
-             * strongmonst and mintrap said it's trapped, use a
+             * isStrongMonster and mintrap said it's trapped, use a
              * short but non-zero trap time.  Otherwise, monsters
              * have no specific strength, so use player strength.
              * This gets skipped for webmsgok, which implies that
@@ -1267,7 +1267,7 @@ unsigned trflags;
                 /* mintrap currently does not return 2(died) for webs */
                 if (mintrap(u.usteed)) {
                     u.usteed->mtrapped = 0;
-                    if (strongmonst(u.usteed->data))
+                    if (isStrongMonster(u.usteed->data->monsterTypeID))
                         str = 17;
                 } else {
                     break;
@@ -2463,7 +2463,7 @@ register struct monst *mtmp;
             default:
                 if (monsterClass(mptr->monsterTypeID) == S_GIANT
                     /* exclude baby dragons and relatively short worms */
-                    || (monsterClass(mptr->monsterTypeID) == S_DRAGON && extra_nasty(mptr))
+                    || (monsterClass(mptr->monsterTypeID) == S_DRAGON && isExtraNasty(mptr->monsterTypeID))
                     || (mtmp->wormno && count_wsegs(mtmp) > 5)) {
                     tear_web = TRUE;
                 } else if (in_sight) {
@@ -3105,7 +3105,7 @@ domagictrap()
             if (areYouOnLevel(&qstart_level))
                 You_feel(
                     "%slike the prodigal son.",
-                    (flags.female || (areYouPolymorphed() && is_neuter(youmonst.data)))
+                    (flags.female || (areYouPolymorphed() && isNeuter(youmonst.data->monsterTypeID)))
                         ? "oddly "
                         : "");
             else

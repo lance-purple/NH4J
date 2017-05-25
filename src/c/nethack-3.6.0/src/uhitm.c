@@ -605,7 +605,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
         valid_weapon_attack = (tmp > 1);
         /* blessed gloves give bonuses when fighting 'bare-handed' */
         if (uarmg && uarmg->blessed
-            && (isUndead(mdat->monsterTypeID) || is_demon(mdat) || is_vampshifter(mon)))
+            && (isUndead(mdat->monsterTypeID) || isDemon(mdat->monsterTypeID) || is_vampshifter(mon)))
             tmp += rnd(4);
         /* So do silver rings.  Note: rings are worn under gloves, so you
          * don't get both bonuses.
@@ -1427,7 +1427,7 @@ register const struct Attack mattk;
     /* since hero can't be cancelled, only defender's armor applies */
     negated = !(rn2(10) >= 3 * armpro);
 
-    if (is_demon(youmonst.data) && !rn2(13) && !uwep
+    if (isDemon(youmonst.data->monsterTypeID) && !rn2(13) && !uwep
         && currentMonsterNumber() != PM_SUCCUBUS && currentMonsterNumber() != PM_INCUBUS
         && currentMonsterNumber() != PM_BALROG) {
         demonpet();

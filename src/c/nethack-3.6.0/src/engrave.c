@@ -490,7 +490,7 @@ doengrave()
     ebuf[0] = (char) 0;
     post_engr_text[0] = (char) 0;
     maxelen = BUFSZ - 1;
-    if (is_demon(youmonst.data) || monsterClass(youmonst.data->monsterTypeID) == S_VAMPIRE)
+    if (isDemon(youmonst.data->monsterTypeID) || monsterClass(youmonst.data->monsterTypeID) == S_VAMPIRE)
         type = ENGR_BLOOD;
 
     /* Can the adventurer engrave at all? */

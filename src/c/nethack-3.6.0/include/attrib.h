@@ -70,7 +70,7 @@ struct attribs {
 };
 
 #define ATTRMAX(x)                                        \
-    ((x == A_STR && areYouPolymorphed() && strongmonst(youmonst.data)) \
+    ((x == A_STR && areYouPolymorphed() && isStrongMonster(youmonst.data->monsterTypeID)) \
          ? STR18(100)                                     \
          : urace.attrmax[x])
 #define ATTRMIN(x) (urace.attrmin[x])

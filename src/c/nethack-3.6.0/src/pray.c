@@ -1311,7 +1311,7 @@ dosacrifice()
         }
 
         if (isOfYourRace(ptr->monsterTypeID, urace.selfmask)) {
-            if (is_demon(youmonst.data)) {
+            if (isDemon(youmonst.data->monsterTypeID)) {
                 You("find the idea very satisfying.");
                 exercise(A_WIS, TRUE);
             } else if (currentAlignmentType() != A_CHAOTIC) {
@@ -1735,7 +1735,7 @@ boolean praying; /* false means no messages should be given */
     p_aligntyp = on_altar() ? a_align(currentX(), currentY()) : currentAlignmentType();
     p_trouble = in_trouble();
 
-    if (is_demon(youmonst.data) && (p_aligntyp != A_CHAOTIC)) {
+    if (isDemon(youmonst.data->monsterTypeID) && (p_aligntyp != A_CHAOTIC)) {
         if (praying)
             pline_The("very idea of praying to a %s god is repugnant to you.",
                       p_aligntyp ? "lawful" : "neutral");
@@ -1901,7 +1901,7 @@ doturn()
     setAtheistConduct(FALSE);
 
     if ((currentAlignmentType() != A_CHAOTIC
-         && (is_demon(youmonst.data) || isUndead(youmonst.data->monsterTypeID)))
+         && (isDemon(youmonst.data->monsterTypeID) || isUndead(youmonst.data->monsterTypeID)))
         || divineWrath() > 6) { /* "Die, mortal!" */
         pline("For some reason, %s seems to ignore you.", u_gname());
         aggravate();
@@ -1930,7 +1930,7 @@ doturn()
 
         if (!mtmp->mpeaceful
             && (isUndead(mtmp->data->monsterTypeID) || is_vampshifter(mtmp)
-                || (is_demon(mtmp->data) && (currentExperienceLevel() > (MAXULEV / 2))))) {
+                || (isDemon(mtmp->data->monsterTypeID) && (currentExperienceLevel() > (MAXULEV / 2))))) {
             mtmp->msleeping = 0;
             if (youAreConfused()) {
                 if (!once++)

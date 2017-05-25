@@ -79,7 +79,7 @@ register xchar omx, omy, gx, gy;
         if (monhaskey(mtmp, TRUE))
             allowflags |= UNLOCKDOOR;
     }
-    if (is_giant(mtmp->data))
+    if (isGiant(mtmp->data->monsterTypeID))
         allowflags |= BUSTDOOR;
     cnt = mfndpos(mtmp, poss, info, allowflags);
 

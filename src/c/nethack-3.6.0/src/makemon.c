@@ -190,7 +190,7 @@ register struct monst *mtmp;
             (void) mongets(mtmp, (mm != PM_ETTIN) ? BOULDER : CLUB);
         break;
     case S_HUMAN:
-        if (is_mercenary(ptr)) {
+        if (isMercenary(ptr->monsterTypeID)) {
             w1 = w2 = 0;
             switch (mm) {
             case PM_WATCHMAN:
@@ -460,7 +460,7 @@ register struct monst *mtmp;
         /* prevent djinn and mail daemons from leaving objects when
          * they vanish
          */
-        if (!is_demon(ptr))
+        if (!isDemon(ptr->monsterTypeID))
             break;
         /*FALLTHRU*/
     default:
@@ -469,16 +469,16 @@ register struct monst *mtmp;
          * of weapon for "normal" monsters.  Certain special types
          * of monsters will get a bonus chance or different selections.
          */
-        bias = is_lord(ptr) + is_prince(ptr) * 2 + extra_nasty(ptr);
+        bias = is_lord(ptr) + is_prince(ptr) * 2 + isExtraNasty(ptr->monsterTypeID);
         switch (rnd(14 - (2 * bias))) {
         case 1:
-            if (strongmonst(ptr))
+            if (isStrongMonster(ptr->monsterTypeID))
                 (void) mongets(mtmp, BATTLE_AXE);
             else
                 m_initthrow(mtmp, DART, 12);
             break;
         case 2:
-            if (strongmonst(ptr))
+            if (isStrongMonster(ptr->monsterTypeID))
                 (void) mongets(mtmp, TWO_HANDED_SWORD);
             else {
                 (void) mongets(mtmp, CROSSBOW);
@@ -490,13 +490,13 @@ register struct monst *mtmp;
             m_initthrow(mtmp, ARROW, 12);
             break;
         case 4:
-            if (strongmonst(ptr))
+            if (isStrongMonster(ptr->monsterTypeID))
                 (void) mongets(mtmp, LONG_SWORD);
             else
                 m_initthrow(mtmp, DAGGER, 3);
             break;
         case 5:
-            if (strongmonst(ptr))
+            if (isStrongMonster(ptr->monsterTypeID))
                 (void) mongets(mtmp, LUCERN_HAMMER);
             else
                 (void) mongets(mtmp, AKLYS);
@@ -542,7 +542,7 @@ register struct monst *mtmp;
      */
     switch (monsterClass(ptr->monsterTypeID)) {
     case S_HUMAN:
-        if (is_mercenary(ptr)) {
+        if (isMercenary(ptr->monsterTypeID)) {
             register int mac;
 
             switch (monsndx(ptr)) {
@@ -646,7 +646,7 @@ register struct monst *mtmp;
         if (ptr == &mons[PM_MINOTAUR]) {
             if (!rn2(3) || (in_mklev && areYouOnEarthLevel()))
                 (void) mongets(mtmp, WAN_DIGGING);
-        } else if (is_giant(ptr)) {
+        } else if (isGiant(ptr->monsterTypeID)) {
             for (cnt = rn2((int) (mtmp->m_lev / 2)); cnt; cnt--) {
                 otmp = mksobj(rnd_class(DILITHIUM_CRYSTAL, LUCKSTONE - 1),
                               FALSE, FALSE);
@@ -1131,9 +1131,9 @@ int mmflags;
     /* set up level and hit points */
     newmonhp(mtmp, mndx);
 
-    if (is_female(ptr))
+    if (isFemale(ptr->monsterTypeID))
         mtmp->female = TRUE;
-    else if (is_male(ptr))
+    else if (isMale(ptr->monsterTypeID))
         mtmp->female = FALSE;
     /* leader and nemesis gender is usually hardcoded in mons[],
        but for ones which can be random, it has already been chosen
@@ -1240,7 +1240,7 @@ int mmflags;
         (void) mongets(mtmp, mitem);
 
     if (in_mklev) {
-        if ((is_ndemon(ptr) || mndx == PM_WUMPUS
+        if ((isNamelessMajorDemon(ptr->monsterTypeID) || mndx == PM_WUMPUS
              || mndx == PM_LONG_WORM || mndx == PM_GIANT_EEL)
             && !haveSpecialItem(SPECIAL_ITEM_AMULET) && rn2(5))
             mtmp->msleeping = TRUE;
@@ -1874,18 +1874,18 @@ register struct permonst *ptr;
     aligntyp ual = currentAlignmentType();
     int msound = monsterSound(ptr->monsterTypeID);
 
-    if (always_peaceful(ptr))
+    if (isAlwaysPeaceful(ptr->monsterTypeID))
         return TRUE;
-    if (always_hostile(ptr))
+    if (isAlwaysHostile(ptr->monsterTypeID))
         return FALSE;
     if (msound == MS_LEADER || msound == MS_GUARDIAN)
         return TRUE;
     if (msound == MS_NEMESIS)
         return FALSE;
 
-    if (race_peaceful(ptr))
+    if (racialFriendship(ptr->monsterTypeID, urace.lovemask))
         return TRUE;
-    if (race_hostile(ptr))
+    if (racialHostility(ptr->monsterTypeID, urace.hatemask))
         return FALSE;
 
     /* the monster is hostile if its alignment is different from the
@@ -1947,13 +1947,13 @@ struct monst *mtmp;
             mtmp->malign = 0;
         else
             mtmp->malign = 20; /* really hostile */
-    } else if (always_peaceful(mtmp->data)) {
+    } else if (isAlwaysPeaceful(mtmp->data->monsterTypeID)) {
         int absmal = abs(mal);
         if (mtmp->mpeaceful)
             mtmp->malign = -3 * max(5, absmal);
         else
             mtmp->malign = 3 * max(5, absmal); /* renegade */
-    } else if (always_hostile(mtmp->data)) {
+    } else if (isAlwaysHostile(mtmp->data->monsterTypeID)) {
         int absmal = abs(mal);
         if (coaligned)
             mtmp->malign = 0;

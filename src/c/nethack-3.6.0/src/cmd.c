@@ -1409,7 +1409,7 @@ int final;
 
         tmpbuf[0] = '\0';
         /* here we always use current gender, not saved role gender */
-        if (!is_male(uasmon) && !is_female(uasmon) && !is_neuter(uasmon)) {
+        if (!isMale(uasmon->monsterTypeID) && !isFemale(uasmon->monsterTypeID) && !isNeuter(uasmon->monsterTypeID)) {
             Sprintf(tmpbuf, "%s ", genders[flags.female ? 1 : 0].adj);
 	}
 	
@@ -2388,7 +2388,7 @@ minimal_enlightenment()
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
     }
     /* don't want poly_gender() here; it forces `2' for non-humanoids */
-    genidx = is_neuter(youmonst.data) ? 2 : flags.female;
+    genidx = isNeuter(youmonst.data->monsterTypeID) ? 2 : flags.female;
     Sprintf(buf, fmtstr, "gender", genders[genidx].adj);
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
     if (areYouPolymorphed() && (int) inherentlyFemale() != genidx) {

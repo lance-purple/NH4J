@@ -455,7 +455,7 @@ struct monst *mtmp;
     if (hasNoHands(mtmp->data->monsterTypeID)) /* can't use objects */
         goto botm;
 
-    if (is_mercenary(mtmp->data) && (obj = m_carrying(mtmp, BUGLE)) != 0) {
+    if (isMercenary(mtmp->data->monsterTypeID) && (obj = m_carrying(mtmp, BUGLE)) != 0) {
         int xx, yy;
         struct monst *mon;
 
@@ -467,7 +467,7 @@ struct monst *mtmp;
             for (yy = y - 3; yy <= y + 3; yy++) {
                 if (!isok(xx, yy) || (xx == x && yy == y))
                     continue;
-                if ((mon = m_at(xx, yy)) != 0 && is_mercenary(mon->data)
+                if ((mon = m_at(xx, yy)) != 0 && isMercenary(mon->data->monsterTypeID)
                     && mon->data != &mons[PM_GUARD]
                     && (mon->msleeping || !mon->mcanmove)) {
                     m.defensive = obj;

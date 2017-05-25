@@ -2140,6 +2140,23 @@ E boolean FDECL(isHuman, (int));
 E boolean FDECL(isOfYourRace, (int, long));
 E boolean FDECL(isBat, (int));
 
+E boolean FDECL(isGiant, (int));
+E boolean FDECL(isDomestic, (int));
+E boolean FDECL(isDemon, (int));
+E boolean FDECL(isMercenary, (int));
+E boolean FDECL(isMale, (int));
+E boolean FDECL(isFemale, (int));
+E boolean FDECL(isNeuter, (int));
+E boolean FDECL(isWanderer, (int));
+E boolean FDECL(isAlwaysHostile, (int));
+E boolean FDECL(isAlwaysPeaceful, (int));
+E boolean FDECL(racialHostility, (int, long));
+E boolean FDECL(racialFriendship, (int, long));
+E boolean FDECL(isExtraNasty, (int));
+E boolean FDECL(isStrongMonster, (int));
+
+E boolean FDECL(isNamelessMajorDemon, (int));
+
 /* ### monmove.c ### */
 
 E boolean FDECL(itsstuck, (struct monst *));

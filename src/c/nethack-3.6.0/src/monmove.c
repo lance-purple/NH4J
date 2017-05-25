@@ -440,7 +440,7 @@ register struct monst *mtmp;
             pline("%s whispers at thin air.",
                   cansee(mtmp->mux, mtmp->muy) ? Monnam(mtmp) : "It");
 
-            if (is_demon(youmonst.data)) {
+            if (isDemon(youmonst.data->monsterTypeID)) {
                 /* "Good hunting, brother" */
                 if (!tele_restrict(mtmp))
                     (void) rloc(mtmp, TRUE);
@@ -543,7 +543,7 @@ toofar:
         || (mtmp->minvis && !rn2(3))
         || (monsterClass(mdat->monsterTypeID) == S_LEPRECHAUN && !findgold(invent)
             && (findgold(mtmp->minvent) || rn2(2)))
-        || (is_wanderer(mdat) && !rn2(4)) || (youCauseConflict() && !mtmp->iswiz)
+        || (isWanderer(mdat->monsterTypeID) && !rn2(4)) || (youCauseConflict() && !mtmp->iswiz)
         || (!mtmp->mcansee && !rn2(4)) || mtmp->mpeaceful) {
         /* Possibly cast an undirected spell if not attacking you */
         /* note that most of the time castmu() will pick a directed
@@ -756,7 +756,7 @@ register int after;
     can_open = !(cannotWieldThings(ptr->monsterTypeID));
     can_unlock =
         ((can_open && monhaskey(mtmp, TRUE)) || mtmp->iswiz || is_rider(ptr));
-    doorbuster = is_giant(ptr);
+    doorbuster = isGiant(ptr->monsterTypeID);
     if (mtmp->wormno)
         goto not_special;
     /* my dog gets special treatment */
@@ -915,7 +915,7 @@ not_special:
             && !mtmp->mpeaceful)
             minr--;
         /* guards shouldn't get too distracted */
-        if (!mtmp->mpeaceful && is_mercenary(ptr))
+        if (!mtmp->mpeaceful && isMercenary(ptr->monsterTypeID))
             minr = 1;
 
         if ((likegold || likegems || likeobjs || likemagic || likerock

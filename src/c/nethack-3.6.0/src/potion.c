@@ -577,7 +577,7 @@ register struct obj *otmp;
             break;
         }
         unkn++;
-        if (isUndead(youmonst.data->monsterTypeID) || is_demon(youmonst.data)
+        if (isUndead(youmonst.data->monsterTypeID) || isDemon(youmonst.data->monsterTypeID)
             || currentAlignmentType() == A_CHAOTIC) {
             if (otmp->blessed) {
                 pline("This burns like acid!");
@@ -1389,7 +1389,7 @@ boolean your_fault;
             }
             break;
         case POT_WATER:
-            if (isUndead(mon->data->monsterTypeID) || is_demon(mon->data)
+            if (isUndead(mon->data->monsterTypeID) || isDemon(mon->data->monsterTypeID)
                 || isWere(mon->data->monsterTypeID) || is_vampshifter(mon)) {
                 if (obj->blessed) {
                     pline("%s %s in pain!", Monnam(mon),

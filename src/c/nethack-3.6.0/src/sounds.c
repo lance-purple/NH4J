@@ -182,7 +182,7 @@ dosounds()
         for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
             if (DEADMONSTER(mtmp))
                 continue;
-            if (is_mercenary(mtmp->data)
+            if (isMercenary(mtmp->data->monsterTypeID)
 #if 0 /* don't bother excluding these */
                 && !strstri(mtmp->data->mname, "watch")
                 && !strstri(mtmp->data->mname, "guard")

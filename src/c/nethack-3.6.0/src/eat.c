@@ -1066,7 +1066,7 @@ register int pm;
     /*FALLTHRU*/
     default: {
         struct permonst *ptr = &mons[pm];
-        boolean conveys_STR = is_giant(ptr);
+        boolean conveys_STR = isGiant(ptr->monsterTypeID);
         int i, count;
 
         if (dmgtype(ptr, AD_STUN) || dmgtype(ptr, AD_HALU)

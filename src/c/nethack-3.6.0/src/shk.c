@@ -4393,7 +4393,7 @@ boolean altusage; /* used as a verbalized exclamation:  \"Cad! ...\" */
 {
     const char *res = 0;
 
-    switch (is_demon(youmonst.data) ? 3 : poly_gender()) {
+    switch (isDemon(youmonst.data->monsterTypeID) ? 3 : poly_gender()) {
     case 0:
         res = "cad";
         break;

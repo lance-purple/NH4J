@@ -71,7 +71,7 @@ get_mplname(mtmp, nam)
 register struct monst *mtmp;
 char *nam;
 {
-    boolean fmlkind = is_female(mtmp->data);
+    boolean fmlkind = isFemale(mtmp->data->monsterTypeID);
     const char *devnam;
 
     devnam = dev_name();

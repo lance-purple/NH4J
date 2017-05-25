@@ -1060,13 +1060,13 @@ struct monst *mtmp;
     int mcwt = monsterCorpseWeight(mtmp->data->monsterTypeID);
     if (!mcwt)
         maxload = (MAX_CARR_CAP * (long) monsterSize(mtmp->data->monsterTypeID)) / MZ_HUMAN;
-    else if (!strongmonst(mtmp->data)
-             || (strongmonst(mtmp->data) && (mcwt > WT_HUMAN)))
+    else if (!isStrongMonster(mtmp->data->monsterTypeID)
+             || (isStrongMonster(mtmp->data->monsterTypeID) && (mcwt > WT_HUMAN)))
         maxload = (MAX_CARR_CAP * (long) mcwt) / WT_HUMAN;
     else
         maxload = MAX_CARR_CAP; /*strong monsters w/cwt <= WT_HUMAN*/
 
-    if (!strongmonst(mtmp->data))
+    if (!isStrongMonster(mtmp->data->monsterTypeID))
         maxload /= 2;
 
     if (maxload < 1)
@@ -2256,7 +2256,7 @@ int dest; /* dest==1, normal; dest==0, don't print message; dest==2, don't
 
 cleanup:
     /* punish bad behaviour */
-    if (isHuman(mdat->monsterTypeID) && (!always_hostile(mdat) && mtmp->malign <= 0)
+    if (isHuman(mdat->monsterTypeID) && (!isAlwaysHostile(mdat->monsterTypeID) && mtmp->malign <= 0)
         && (mndx < PM_ARCHEOLOGIST || mndx > PM_WIZARD)
         && currentAlignmentType() != A_CHAOTIC) {
         unsetYourIntrinsicMask(TELEPAT, INTRINSIC);
@@ -2838,7 +2838,7 @@ int shiftflags;
     }
     /* override the 10% chance for sex change */
     ptr = mon->data;
-    if (!is_male(ptr) && !is_female(ptr) && !is_neuter(ptr))
+    if (!isMale(ptr->monsterTypeID) && !isFemale(ptr->monsterTypeID) && !isNeuter(ptr->monsterTypeID))
         mon->female = was_female;
 }
 
@@ -3094,13 +3094,13 @@ mgender_from_permonst(mtmp, mdat)
 struct monst *mtmp;
 struct permonst *mdat;
 {
-    if (is_male(mdat)) {
+    if (isMale(mdat->monsterTypeID)) {
         if (mtmp->female)
             mtmp->female = FALSE;
-    } else if (is_female(mdat)) {
+    } else if (isFemale(mdat->monsterTypeID)) {
         if (!mtmp->female)
             mtmp->female = TRUE;
-    } else if (!is_neuter(mdat)) {
+    } else if (!isNeuter(mdat->monsterTypeID)) {
         if (!rn2(10))
             mtmp->female = !mtmp->female;
     }

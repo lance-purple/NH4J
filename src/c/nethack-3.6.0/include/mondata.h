@@ -30,21 +30,6 @@
      || (ptr) == &mons[PM_MASTER_MIND_FLAYER])
 #define is_armed(ptr) attacktype(ptr, AT_WEAP)
 
-#define is_giant(ptr) (((ptr)->mflags2 & M2_GIANT) != 0L)
-
-#define is_domestic(ptr) (((ptr)->mflags2 & M2_DOMESTIC) != 0L)
-#define is_demon(ptr) (((ptr)->mflags2 & M2_DEMON) != 0L)
-#define is_mercenary(ptr) (((ptr)->mflags2 & M2_MERC) != 0L)
-#define is_male(ptr) (((ptr)->mflags2 & M2_MALE) != 0L)
-#define is_female(ptr) (((ptr)->mflags2 & M2_FEMALE) != 0L)
-#define is_neuter(ptr) (((ptr)->mflags2 & M2_NEUTER) != 0L)
-#define is_wanderer(ptr) (((ptr)->mflags2 & M2_WANDER) != 0L)
-#define always_hostile(ptr) (((ptr)->mflags2 & M2_HOSTILE) != 0L)
-#define always_peaceful(ptr) (((ptr)->mflags2 & M2_PEACEFUL) != 0L)
-#define race_hostile(ptr) (((ptr)->mflags2 & urace.hatemask) != 0L)
-#define race_peaceful(ptr) (((ptr)->mflags2 & urace.lovemask) != 0L)
-#define extra_nasty(ptr) (((ptr)->mflags2 & M2_NASTY) != 0L)
-#define strongmonst(ptr) (((ptr)->mflags2 & M2_STRONG) != 0L)
 #define can_breathe(ptr) attacktype(ptr, AT_BREA)
 
 #define cantweararm(ptr) (breakarm(ptr) || sliparm(ptr))
@@ -52,10 +37,9 @@
 #define type_is_pname(ptr) (((ptr)->mflags2 & M2_PNAME) != 0L)
 #define is_lord(ptr) (((ptr)->mflags2 & M2_LORD) != 0L)
 #define is_prince(ptr) (((ptr)->mflags2 & M2_PRINCE) != 0L)
-#define is_ndemon(ptr) \
-    (is_demon(ptr) && (((ptr)->mflags2 & (M2_LORD | M2_PRINCE)) == 0L))
-#define is_dlord(ptr) (is_demon(ptr) && is_lord(ptr))
-#define is_dprince(ptr) (is_demon(ptr) && is_prince(ptr))
+
+#define is_dlord(ptr) (isDemon(ptr->monsterTypeID) && is_lord(ptr))
+#define is_dprince(ptr) (isDemon(ptr->monsterTypeID) && is_prince(ptr))
 #define is_minion(ptr) (((ptr)->mflags2 & M2_MINION) != 0L)
 #define likes_gold(ptr) (((ptr)->mflags2 & M2_GREEDY) != 0L)
 #define likes_gems(ptr) (((ptr)->mflags2 & M2_JEWELS) != 0L)
@@ -99,6 +83,6 @@
     ((ptr) == &mons[PM_MIND_FLAYER] || (ptr) == &mons[PM_MASTER_MIND_FLAYER])
 
 #define befriend_with_obj(ptr, obj) \
-    ((obj)->oclass == FOOD_CLASS && is_domestic(ptr))
+    ((obj)->oclass == FOOD_CLASS && isDomestic(ptr->monsterTypeID))
 
 #endif /* MONDATA_H */

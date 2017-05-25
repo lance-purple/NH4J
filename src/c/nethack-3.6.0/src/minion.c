@@ -71,12 +71,12 @@ struct monst *mon;
     if (is_dprince(ptr) || (ptr == &mons[PM_WIZARD_OF_YENDOR])) {
         dtype = (!rn2(20)) ? dprince(atyp) : (!rn2(4)) ? dlord(atyp)
                                                        : ndemon(atyp);
-        cnt = (!rn2(4) && is_ndemon(&mons[dtype])) ? 2 : 1;
+        cnt = (!rn2(4) && isNamelessMajorDemon(mons[dtype].monsterTypeID)) ? 2 : 1;
     } else if (is_dlord(ptr)) {
         dtype = (!rn2(50)) ? dprince(atyp) : (!rn2(20)) ? dlord(atyp)
                                                         : ndemon(atyp);
-        cnt = (!rn2(4) && is_ndemon(&mons[dtype])) ? 2 : 1;
-    } else if (is_ndemon(ptr)) {
+        cnt = (!rn2(4) && isNamelessMajorDemon(mons[dtype].monsterTypeID)) ? 2 : 1;
+    } else if (isNamelessMajorDemon(ptr->monsterTypeID)) {
         dtype = (!rn2(20)) ? dlord(atyp) : (!rn2(6)) ? ndemon(atyp)
                                                      : monsndx(ptr);
         cnt = 1;
@@ -382,7 +382,7 @@ aligntyp atyp;
 
     for (tryct = 0; tryct < 20; tryct++) {
         ptr = mkclass(S_DEMON, 0);
-        if (ptr && is_ndemon(ptr)
+        if (ptr && isNamelessMajorDemon(ptr->monsterTypeID)
             && (atyp == A_NONE || sgn(monsterAlignment(ptr->monsterTypeID)) == sgn(atyp)))
             return (monsndx(ptr));
     }

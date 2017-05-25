@@ -33,7 +33,7 @@ void
 initedog(mtmp)
 register struct monst *mtmp;
 {
-    mtmp->mtame = is_domestic(mtmp->data) ? 10 : 5;
+    mtmp->mtame = isDomestic(mtmp->data->monsterTypeID) ? 10 : 5;
     mtmp->mpeaceful = 1;
     mtmp->mavenge = 0;
     set_malign(mtmp); /* recalc alignment now that it's tamed */
@@ -924,7 +924,7 @@ register struct obj *obj;
         /* monsters with conflicting structures cannot be tamed */
         || mtmp->isshk || mtmp->isgd || mtmp->ispriest || mtmp->isminion
         || is_covetous(mtmp->data) || isHuman(mtmp->data->monsterTypeID)
-        || (is_demon(mtmp->data) && !is_demon(youmonst.data))
+        || (isDemon(mtmp->data->monsterTypeID) && !isDemon(youmonst.data->monsterTypeID))
         || (obj && dogfood(mtmp, obj) >= MANFOOD))
         return FALSE;
 

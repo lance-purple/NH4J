@@ -218,13 +218,13 @@ int rx, ry, *resp;
                 /* can't use mhe() here; it calls pronoun_gender() which
                    expects monster to be on the map (visibility check) */
                 if ((isHumanoid(pmid) || (monsterGenerationMask(pmid) & G_UNIQ)
-                     || type_is_pname(mptr)) && !is_neuter(mptr))
+                     || type_is_pname(mptr)) && !isNeuter(mptr->monsterTypeID))
                     gndr = (int) mtmp->female;
             } else {
                 mptr = &mons[corpse->corpsenm];
-                if (is_female(mptr))
+                if (isFemale(mptr->monsterTypeID))
                     gndr = 1;
-                else if (is_male(mptr))
+                else if (isMale(mptr->monsterTypeID))
                     gndr = 0;
             }
             Sprintf(buf, "%s's dead", genders[gndr].he); /* "he"/"she"/"it" */
@@ -3061,7 +3061,7 @@ struct obj *obj;
             mtmp->mundetected = 0;
             rloc_to(mtmp, cc.x, cc.y);
             return 1;
-        } else if ((!isBigMonster(mtmp->data->monsterTypeID) && !strongmonst(mtmp->data))
+        } else if ((!isBigMonster(mtmp->data->monsterTypeID) && !isStrongMonster(mtmp->data->monsterTypeID))
                    || rn2(4)) {
             flags.confirm = FALSE;
             (void) attack_checks(mtmp, uwep);

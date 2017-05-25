@@ -229,12 +229,12 @@ change_sex()
     /* Some monsters are always of one sex and their sex can't be changed;
      * Succubi/incubi can change, but are handled below.
      *
-     * !already_polyd check necessary because is_male() and is_female()
+     * !already_polyd check necessary because isMale() and isFemale()
      * are true if the player is a priest/priestess.
      */
     if (!already_polyd
-        || (!is_male(youmonst.data) && !is_female(youmonst.data)
-            && !is_neuter(youmonst.data)))
+        || (!isMale(youmonst.data->monsterTypeID) && !isFemale(youmonst.data->monsterTypeID)
+            && !isNeuter(youmonst.data->monsterTypeID)))
         flags.female = !flags.female;
     if (already_polyd) /* poly'd: also change saved sex */
         setInherentlyFemale(!inherentlyFemale());
@@ -649,13 +649,13 @@ int mntmp;
         /* as in polyman() */
         youmonst.m_ap_type = M_AP_NOTHING;
     }
-    if (is_male(&mons[mntmp])) {
+    if (isMale(mons[mntmp].monsterTypeID)) {
         if (flags.female)
             dochange = TRUE;
-    } else if (is_female(&mons[mntmp])) {
+    } else if (isFemale(mons[mntmp].monsterTypeID)) {
         if (!flags.female)
             dochange = TRUE;
-    } else if (!is_neuter(&mons[mntmp]) && mntmp != lycanthropeType()) {
+    } else if (!isNeuter(mons[mntmp].monsterTypeID) && mntmp != lycanthropeType()) {
         if (sex_change_ok && !rn2(10))
             dochange = TRUE;
     }
@@ -665,7 +665,7 @@ int mntmp;
         flags.female = !flags.female;
         You("%s %s%s!",
             (currentMonsterNumber() != mntmp) ? "turn into a" : "feel like a new",
-            (is_male(&mons[mntmp]) || is_female(&mons[mntmp]))
+            (isMale(mons[mntmp].monsterTypeID) || isFemale(mons[mntmp].monsterTypeID))
                 ? ""
                 : flags.female ? "female " : "male ",
             monsterName.c_str);
@@ -690,7 +690,7 @@ int mntmp;
     /* New stats for monster, to last only as long as polymorphed.
      * Currently only strength gets changed.
      */
-    if (strongmonst(&mons[mntmp])) {
+    if (isStrongMonster(mons[mntmp].monsterTypeID)) {
         setYourCurrentAttr(A_STR, STR18(100));
         setYourAttrMax(A_STR, STR18(100));
     }
@@ -1751,7 +1751,7 @@ poly_gender()
     /* Returns gender of polymorphed player;
      * 0/1=same meaning as flags.female, 2=none.
      */
-    if (is_neuter(youmonst.data) || !isHumanoid(youmonst.data->monsterTypeID))
+    if (isNeuter(youmonst.data->monsterTypeID) || !isHumanoid(youmonst.data->monsterTypeID))
         return 2;
     return flags.female;
 }

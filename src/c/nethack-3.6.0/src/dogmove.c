@@ -713,7 +713,7 @@ register int after; /* this is extra fast monster movement */
         /* note:  the Wizard and Riders can unlock doors without a key;
            they won't use that ability if someone manages to tame them */
     }
-    if (is_giant(mtmp->data))
+    if (isGiant(mtmp->data->monsterTypeID))
         allowflags |= BUSTDOOR;
     if (isTunneler(mtmp->data->monsterTypeID)
         && !areYouOnRogueLevel()) /* same restriction as m_move() */

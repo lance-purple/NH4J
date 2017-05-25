@@ -2159,7 +2159,7 @@ int how;
             }
             if (isHuman(ptr->monsterTypeID))
                 adjalign(-sgn(currentAlignmentType()));
-            if (is_demon(ptr))
+            if (isDemon(ptr->monsterTypeID))
                 adjalign(sgn(currentAlignmentType()));
 
             if (!(monsterGenerationMask(ptr->monsterTypeID) & G_GENO)) {
