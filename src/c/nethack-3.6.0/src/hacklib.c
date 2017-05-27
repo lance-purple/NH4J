@@ -2769,4 +2769,12 @@ extern boolean monsterHasFlag2(int pmid, long flag2) {
     return javaGetBooleanFromIntAndLong(MONSTER_TYPE_CLASS, "hasFlag2", pmid, flag2);
 }
 
+extern void setMonsterFlag2(int pmid, long flag2) {
+    javaSetLongFromInt(MONSTER_TYPE_CLASS, "setFlag2", pmid, flag2);
+}
+
+extern void unsetMonsterFlag2(int pmid, long flag2) {
+    javaSetLongFromInt(MONSTER_TYPE_CLASS, "unsetFlag2", pmid, flag2);
+}
+
 /*hacklib.c*/

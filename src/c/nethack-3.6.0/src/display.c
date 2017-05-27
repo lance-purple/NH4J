@@ -1176,8 +1176,9 @@ see_monsters()
         newsym(mon->mx, mon->my);
         if (mon->wormno)
             see_wsegs(mon);
-        if (youAreWarnedOfMonsters() && (context.warntype.obj & mon->data->mflags2) != 0L)
+        if (youAreWarnedOfMonsters() && (monsterHasFlag2(mon->data->monsterTypeID, context.warntype.obj))) {
             new_warn_obj_cnt++;
+	}
     }
     /*
      * Make Sting glow blue or stop glowing if required.

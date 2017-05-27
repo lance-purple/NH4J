@@ -74,7 +74,7 @@ struct permonst {
     uchar XXmconveys;           /* conveyed by eating */
 
     unsigned long XXmflags1;    /* boolean bitflags */
-    unsigned long mflags2;      /* more boolean bitflags */
+    unsigned long XXmflags2;    /* more boolean bitflags */
     unsigned short mflags3;     /* yet more boolean bitflags */
 #ifdef TEXTCOLOR
     uchar mcolor; /* color to use */

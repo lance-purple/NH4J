@@ -224,6 +224,14 @@ public class MonsterType {
 		return ((flags2 & value) != 0L);
 	}
 
+	public static void setFlag2(int pmid, long value) {
+		getMonsterType(pmid).flags2 |= value;
+	}
+
+	public static void unsetFlag2(int pmid, long value) {
+		getMonsterType(pmid).flags2 &= ~(value);
+	}
+
 	
 	public MonsterType flags3(Long... flags) {
 		for (long flag : flags) {

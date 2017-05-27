@@ -1565,6 +1565,8 @@ E void FDECL(setFreshlyExitedShopIDs, (int, char));
 E char FDECL(mostRecentFreshlyExitedShopID, ());
 
 E boolean FDECL(monsterHasFlag2, (int, long));
+E void FDECL(setMonsterFlag2, (int, long));
+E void FDECL(unsetMonsterFlag2, (int, long));
 
 /* ### invent.c ### */
 

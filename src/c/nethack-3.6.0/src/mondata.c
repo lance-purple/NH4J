@@ -929,7 +929,7 @@ struct monst *mtmp;
         return TRUE;
     /* stalking types follow, but won't when fleeing unless you hold
        the Amulet */
-    return (boolean) ((mtmp->data->mflags2 & M2_STALK)
+    return (boolean) (monsterHasFlag2(mtmp->data->monsterTypeID, M2_STALK)
                       && (!mtmp->mflee || haveSpecialItem(SPECIAL_ITEM_AMULET)));
 }
 
