@@ -1568,6 +1568,10 @@ E boolean FDECL(monsterHasFlag2, (int, long));
 E void FDECL(setMonsterFlag2, (int, long));
 E void FDECL(unsetMonsterFlag2, (int, long));
 
+E boolean FDECL(monsterHasFlag3, (int, long));
+E void FDECL(setMonsterFlag3, (int, long));
+E void FDECL(unsetMonsterFlag3, (int, long));
+
 /* ### invent.c ### */
 
 E struct obj **FDECL(objarr_init, (int));
@@ -2172,6 +2176,13 @@ E boolean FDECL(likesGold, (int));
 E boolean FDECL(likesGems, (int));
 E boolean FDECL(likesObjects, (int));
 E boolean FDECL(likesMagicItems, (int));
+
+E boolean FDECL(isCovetous, (int));
+E boolean FDECL(hasInfravision, (int));
+E boolean FDECL(isInfravisible, (int));
+E boolean FDECL(isDisplacer, (int));
+
+E boolean FDECL(allowsCloseApproach, (int));
 
 /* ### monmove.c ### */
 

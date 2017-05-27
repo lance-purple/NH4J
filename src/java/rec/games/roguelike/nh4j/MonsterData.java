@@ -393,10 +393,23 @@ public class MonsterData {
     //#define is_longworm(ptr)                                                   \
     //    (((ptr) == &mons[PM_BABY_LONG_WORM]) || ((ptr) == &mons[PM_LONG_WORM]) \
     //     || ((ptr) == &mons[PM_LONG_WORM_TAIL]))
-    //#define is_covetous(ptr) ((ptr->mflags3 & M3_COVETOUS))
-    //#define infravision(ptr) ((ptr->mflags3 & M3_INFRAVISION))
-    //#define infravisible(ptr) ((ptr->mflags3 & M3_INFRAVISIBLE))
-    //#define is_displacer(ptr) (((ptr)->mflags3 & M3_DISPLACES) != 0L)
+    
+    public static boolean isCovetous(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag3(M3.COVETOUS);
+    }
+
+    public static boolean hasInfravision(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag3(M3.INFRAVISION);
+    }
+
+    public static boolean isInfravisible(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag3(M3.INFRAVISIBLE);
+    }
+
+    public static boolean isDisplacer(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag3(M3.DISPLACES);
+    }
+
     //#define is_mplayer(ptr) \
     //    (((ptr) >= &mons[PM_ARCHEOLOGIST]) && ((ptr) <= &mons[PM_WIZARD]))
     //#define is_watch(ptr) \
@@ -509,5 +522,9 @@ public class MonsterData {
 
     //#define befriend_with_obj(ptr, obj) \
     //    ((obj)->oclass == FOOD_CLASS && is_domestic(ptr))
+	
+    public static final boolean allowsCloseApproach(int pmid) {
+    	return MonsterType.getMonsterType(pmid).hasFlag3(M3.CLOSE);
+    }
 
 }

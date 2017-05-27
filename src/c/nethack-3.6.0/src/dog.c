@@ -870,8 +870,9 @@ register struct obj *obj;
 {
     /* The Wiz, Medusa and the quest nemeses aren't even made peaceful. */
     if (mtmp->iswiz || mtmp->data == &mons[PM_MEDUSA]
-        || (mtmp->data->mflags3 & M3_WANTSARTI))
+        || monsterHasFlag3(mtmp->data->monsterTypeID, M3_WANTSARTI)) {
         return FALSE;
+    }
 
     /* worst case, at least it'll be peaceful. */
     mtmp->mpeaceful = 1;
@@ -923,7 +924,7 @@ register struct obj *obj;
     if (mtmp->mtame || !mtmp->mcanmove
         /* monsters with conflicting structures cannot be tamed */
         || mtmp->isshk || mtmp->isgd || mtmp->ispriest || mtmp->isminion
-        || is_covetous(mtmp->data) || isHuman(mtmp->data->monsterTypeID)
+        || isCovetous(mtmp->data->monsterTypeID) || isHuman(mtmp->data->monsterTypeID)
         || (isDemon(mtmp->data->monsterTypeID) && !isDemon(youmonst.data->monsterTypeID))
         || (obj && dogfood(mtmp, obj) >= MANFOOD))
         return FALSE;

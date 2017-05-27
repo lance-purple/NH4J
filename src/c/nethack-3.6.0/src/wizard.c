@@ -122,7 +122,6 @@ register struct monst *mtmp;
     ((unsigned long) (w) | ((unsigned long) (x) << 16) \
      | ((unsigned long) (y) << 8) | (unsigned long) (typ))
 
-#define M_Wants(mask) (mtmp->data->mflags3 & (mask))
 
 STATIC_OVL short
 which_arti(mask)
@@ -226,8 +225,9 @@ register struct monst *mtmp;
     register struct obj *otmp;
     register struct monst *mtmp2;
 
-    if (!M_Wants(mask))
+    if (!monsterHasFlag3(mtmp->data->monsterTypeID, mask)) {
         return (unsigned long) STRAT_NONE;
+    }
 
     otyp = which_arti(mask);
     if (!mon_has_arti(mtmp, otyp)) {
@@ -251,7 +251,7 @@ register struct monst *mtmp;
 {
     unsigned long strat, dstrat;
 
-    if (!is_covetous(mtmp->data)
+    if (!isCovetous(mtmp->data->monsterTypeID)
         /* perhaps a shopkeeper has been polymorphed into a master
            lich; we don't want it teleporting to the stairs to heal
            because that will leave its shop untended */

@@ -2021,7 +2021,7 @@ role_init()
         pm = &mons[urole.ldrnum];
         setMonsterSound(pm->monsterTypeID, MS_LEADER);
         setMonsterFlag2(pm->monsterTypeID, M2_PEACEFUL);
-        pm->mflags3 |= M3_CLOSE;
+        setMonsterFlag3(pm->monsterTypeID, M3_CLOSE);
         setMonsterAlignment(pm->monsterTypeID, (alignmnt * 3));
         /* if gender is random, we choose it now instead of waiting
            until the leader monster is created */
@@ -2044,8 +2044,8 @@ role_init()
         setMonsterSound(pm->monsterTypeID, MS_NEMESIS);
         unsetMonsterFlag2(pm->monsterTypeID, M2_PEACEFUL);
         setMonsterFlag2(pm->monsterTypeID, M2_NASTY | M2_STALK | M2_HOSTILE);
-        pm->mflags3 &= ~(M3_CLOSE);
-        pm->mflags3 |= M3_WANTSARTI | M3_WAITFORU;
+        unsetMonsterFlag3(pm->monsterTypeID, M3_CLOSE);
+        setMonsterFlag3(pm->monsterTypeID, M3_WANTSARTI | M3_WAITFORU);
         /* if gender is random, we choose it now instead of waiting
            until the nemesis monster is created */
         quest_status.nemgend = isNeuter(pm->monsterTypeID) ? 2 : isFemale(pm->monsterTypeID) ? 1
@@ -2067,7 +2067,7 @@ role_init()
     quest_status.godgend = !strcmpi(align_gtitle(alignmnt), "goddess");
 
     /* Fix up infravision */
-    if (mons[urace.malenum].mflags3 & M3_INFRAVISION) {
+    if (hasInfravision(mons[urace.malenum].monsterTypeID)) {
         /* although an infravision intrinsic is possible, infravision
          * is purely a property of the physical race.  This means that we
          * must put the infravision flag in the player's current race
@@ -2077,9 +2077,10 @@ role_init()
          * but since infravision has no effect for NPCs anyway we can
          * ignore this.
          */
-        mons[urole.malenum].mflags3 |= M3_INFRAVISION;
-        if (urole.femalenum != NON_PM)
-            mons[urole.femalenum].mflags3 |= M3_INFRAVISION;
+        setMonsterFlag3(mons[urole.malenum].monsterTypeID, M3_INFRAVISION);
+        if (urole.femalenum != NON_PM) {
+            setMonsterFlag3(mons[urole.femalenum].monsterTypeID, M3_INFRAVISION);
+	}
     }
 
     /* Artifacts are fixed in hack_artifacts() */

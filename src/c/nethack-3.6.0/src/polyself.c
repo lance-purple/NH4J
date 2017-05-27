@@ -80,7 +80,7 @@ set_uasmon()
     PROPSET(HALLUC_RES, dmgtype(mdat, AD_HALU));
     PROPSET(SEE_INVIS, perceivesTheInvisible(mdat->monsterTypeID));
     PROPSET(TELEPAT, telepathic(mdat));
-    PROPSET(INFRAVISION, !!infravision(mdat));
+    PROPSET(INFRAVISION, hasInfravision(mdat->monsterTypeID));
     PROPSET(INVIS, pm_invisible(mdat));
     PROPSET(TELEPORT, canTeleport(mdat->monsterTypeID));
     PROPSET(TELEPORT_CONTROL, canControlTeleport(mdat->monsterTypeID));

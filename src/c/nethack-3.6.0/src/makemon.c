@@ -1312,13 +1312,16 @@ int mmflags;
             discard_minvent(mtmp);
         mtmp->minvent = (struct obj *) 0; /* caller expects this */
     }
-    if (ptr->mflags3 && !(mmflags & MM_NOWAIT)) {
-        if (ptr->mflags3 & M3_WAITFORU)
+    if (monsterHasFlag3(ptr->monsterTypeID, !(mmflags & MM_NOWAIT))) {
+        if (monsterHasFlag3(ptr->monsterTypeID, M3_WAITFORU)) {
             mtmp->mstrategy |= STRAT_WAITFORU;
-        if (ptr->mflags3 & M3_CLOSE)
+	}
+        if (allowsCloseApproach(ptr->monsterTypeID)) {
             mtmp->mstrategy |= STRAT_CLOSE;
-        if (ptr->mflags3 & (M3_WAITMASK | M3_COVETOUS))
+	}
+        if (monsterHasFlag3(ptr->monsterTypeID, (M3_WAITMASK | M3_COVETOUS))) {
             mtmp->mstrategy |= STRAT_APPEARMSG;
+	}
     }
 
     if (!in_mklev)

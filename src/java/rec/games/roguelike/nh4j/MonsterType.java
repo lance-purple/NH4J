@@ -244,6 +244,18 @@ public class MonsterType {
 		return ((flags3 & value) != 0L);
 	}
 
+	public static boolean hasFlag3(int pmid, long value) {
+		long flags3 = getMonsterType(pmid).flags3;
+		return ((flags3 & value) != 0L);
+	}
+
+	public static void setFlag3(int pmid, long value) {
+		getMonsterType(pmid).flags3 |= value;
+	}
+
+	public static void unsetFlag3(int pmid, long value) {
+		getMonsterType(pmid).flags3 &= (~value);
+	}
 	
 	public MonsterType color(CLR color) {
 		this.color = color;

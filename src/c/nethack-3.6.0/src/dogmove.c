@@ -687,7 +687,7 @@ register int after; /* this is extra fast monster movement */
         allowflags |= ALLOW_BARS;
     if (throwsRocks(mtmp->data->monsterTypeID))
         allowflags |= ALLOW_ROCK;
-    if (is_displacer(mtmp->data))
+    if (isDisplacer(mtmp->data->monsterTypeID))
         allowflags |= ALLOW_MDISP;
     if (youCauseConflict() && !resist(mtmp, RING_CLASS, 0, 0)) {
         allowflags |= ALLOW_U;

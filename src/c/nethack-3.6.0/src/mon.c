@@ -1106,7 +1106,7 @@ struct obj *otmp;
     if (otyp == CORPSE && is_rider(&mons[otmp->corpsenm]))
         return 0;
     if (objects[otyp].oc_material == SILVER && mon_hates_silver(mtmp)
-        && (otyp != BELL_OF_OPENING || !is_covetous(mdat)))
+        && (otyp != BELL_OF_OPENING || !isCovetous(mdat->monsterTypeID)))
         return 0;
 
     /* hostile monsters who like gold will pick up the whole stack;
@@ -1425,7 +1425,7 @@ struct monst *magr, /* monster that is currently deciding where to move */
        or if defender can barge through too, don't let attacker
        do so, otherwise they might just end up swapping places
        again when defender gets its chance to move */
-    if ((pa->mflags3 & M3_DISPLACES) != 0 && (pd->mflags3 & M3_DISPLACES) == 0
+    if (isDisplacer(pa->monsterTypeID) && isDisplacer(pd->monsterTypeID)
         /* no displacing grid bugs diagonally */
         && !(magr->mx != mdef->mx && magr->my != mdef->my
              && NODIAG(monsndx(pd)))

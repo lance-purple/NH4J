@@ -666,7 +666,7 @@ struct monst *mon;
         badalign =
             (oart->spfx & SPFX_RESTR) && oart->alignment != A_NONE
             && (oart->alignment != currentAlignmentType() || currentAlignmentRecord() < 0);
-    } else if (!is_covetous(mon->data) && !is_mplayer(mon->data)) {
+    } else if (!isCovetous(mon->data->monsterTypeID) && !is_mplayer(mon->data)) {
         badclass = self_willed && oart->role != NON_PM
                    && oart != &artilist[ART_EXCALIBUR];
         badalign = (oart->spfx & SPFX_RESTR) && oart->alignment != A_NONE

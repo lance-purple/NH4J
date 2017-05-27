@@ -1524,4 +1524,24 @@ boolean likesMagicItems(int pmid) {
     return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "likesMagicItems", pmid);
 }
 
+boolean isCovetous(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isCovetous", pmid);
+}
+
+boolean hasInfravision(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "hasInfravision", pmid);
+}
+
+boolean isInfravisible(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isInfravisible", pmid);
+}
+
+boolean isDisplacer(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isDisplacer", pmid);
+}
+
+boolean allowsCloseApproach(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "allowsCloseApproach", pmid);
+}
+
 /*mondata.c*/
