@@ -2765,4 +2765,8 @@ extern boolean isAffectedByWeaponFlag2(int pmid, long weaponFlag2) {
   return javaGetBooleanFromIntAndLong(MONSTER_DATA_CLASS, "isAffectedByWeaponFlag2", pmid, weaponFlag2);
 }
 
+extern boolean monsterHasFlag2(int pmid, long flag2) {
+    return javaGetBooleanFromIntAndLong(MONSTER_TYPE_CLASS, "hasFlag2", pmid, flag2);
+}
+
 /*hacklib.c*/

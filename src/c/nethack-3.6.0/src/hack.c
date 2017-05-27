@@ -2913,4 +2913,11 @@ struct obj *otmp;
     return 0L;
 }
 
+extern boolean MATCH_WARN_OF_MON(int pmid) {
+    return (youAreWarnedOfMonsters() &&
+       ((context.warntype.obj && monsterHasFlag2(pmid, context.warntype.obj))
+       || (context.warntype.polyd && monsterHasFlag2(pmid, context.warntype.polyd))
+       || (context.warntype.species && context.warntype.species->monsterTypeID == pmid)));
+}
+
 /*hack.c*/

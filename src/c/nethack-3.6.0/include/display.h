@@ -24,7 +24,7 @@
 extern boolean tp_sensemon(struct monst* mon);
 
 #define sensemon(mon) \
-    (tp_sensemon(mon) || youCanDetectMonsters() || MATCH_WARN_OF_MON(mon))
+    (tp_sensemon(mon) || youCanDetectMonsters() || MATCH_WARN_OF_MON(mon->data->monsterTypeID))
 
 /*
  * mon_warning() is used to warn of any dangerous monsters in your

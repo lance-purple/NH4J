@@ -218,6 +218,11 @@ public class MonsterType {
 	public boolean hasFlag2(long value) {
 		return ((flags2 & value) != 0L);
 	}
+	
+	public static boolean hasFlag2(int pmid, long value) {
+		long flags2 = getMonsterType(pmid).flags2;
+		return ((flags2 & value) != 0L);
+	}
 
 	
 	public MonsterType flags3(Long... flags) {

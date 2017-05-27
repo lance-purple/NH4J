@@ -1564,6 +1564,8 @@ E char FDECL(freshlyExitedShopIDs, (int));
 E void FDECL(setFreshlyExitedShopIDs, (int, char));
 E char FDECL(mostRecentFreshlyExitedShopID, ());
 
+E boolean FDECL(monsterHasFlag2, (int, long));
+
 /* ### invent.c ### */
 
 E struct obj **FDECL(objarr_init, (int));

@@ -2818,7 +2818,7 @@ struct monst *mon;
     if (youCanDetectMonsters())
         how_seen |= MONSEEN_DETECT;
     /* class-/type-specific warning */
-    if (MATCH_WARN_OF_MON(mon))
+    if (MATCH_WARN_OF_MON(mon->data->monsterTypeID))
         how_seen |= MONSEEN_WARNMON;
 
     return how_seen;

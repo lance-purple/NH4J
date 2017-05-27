@@ -477,7 +477,7 @@ register struct monst *mon;
         if (youAreHallucinating())
             wl = rn1(WARNCOUNT - 1, 1);
         glyph = warning_to_glyph(wl);
-    } else if (MATCH_WARN_OF_MON(mon)) {
+    } else if (MATCH_WARN_OF_MON(mon->data->monsterTypeID)) {
         glyph = mon_to_glyph(mon);
     } else {
         impossible("display_warning did not match warning type?");
@@ -665,7 +665,7 @@ xchar x, y;
     /* draw monster on top if we can sense it */
     if ((x != currentX() || y != currentY()) && (mon = m_at(x, y)) && sensemon(mon))
         display_monster(x, y, mon,
-                        (tp_sensemon(mon) || MATCH_WARN_OF_MON(mon))
+                        (tp_sensemon(mon) || MATCH_WARN_OF_MON(mon->data->monsterTypeID))
                             ? PHYSICALLY_SEEN
                             : DETECTED,
                         is_worm_tail(mon));
@@ -754,7 +754,7 @@ register int x, y;
             see_it =
                 mon && (worm_tail ? (!mon->minvis || youCanSeeInvisible())
                                   : (mon_visible(mon)) || tp_sensemon(mon)
-                                        || MATCH_WARN_OF_MON(mon));
+                                        || MATCH_WARN_OF_MON(mon->data->monsterTypeID));
             if (mon && (see_it || (!worm_tail && youCanDetectMonsters()))) {
                 if (mon->mtrapped) {
                     struct trap *trap = t_at(x, y);
@@ -788,7 +788,7 @@ register int x, y;
             if (canspotself())
                 display_self();
         } else if ((mon = m_at(x, y))
-                   && ((see_it = (tp_sensemon(mon) || MATCH_WARN_OF_MON(mon)
+                   && ((see_it = (tp_sensemon(mon) || MATCH_WARN_OF_MON(mon->data->monsterTypeID)
                                   || (see_with_infrared(mon)
                                       && mon_visible(mon))))
                        || youCanDetectMonsters())) {

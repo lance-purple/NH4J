@@ -149,13 +149,7 @@ NEARDATA extern coord bhitpos; /* place where throw or zap hits or stops */
 #define HMON_APPLIED 3 /* polearm, treated as ranged */
 #define HMON_DRAGGED 4 /* attached iron ball, pulled into mon */
 
-#define MATCH_WARN_OF_MON(mon)                                               \
-    (youAreWarnedOfMonsters() && ((context.warntype.obj                                   \
-                      && (context.warntype.obj & (mon)->data->mflags2))      \
-                     || (context.warntype.polyd                              \
-                         && (context.warntype.polyd & (mon)->data->mflags2)) \
-                     || (context.warntype.species                            \
-                         && (context.warntype.species == (mon)->data))))
+extern boolean MATCH_WARN_OF_MON(int pmid);
 
 #include "trap.h"
 #include "flag.h"
