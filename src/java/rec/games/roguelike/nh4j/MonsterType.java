@@ -261,6 +261,10 @@ public class MonsterType {
 		this.color = color;
 		return this;
 	}
+	
+	public static int color(int pmid) {
+		return getMonsterType(pmid).color.id;
+	}
 
 	private void add() {
 		monsterTypesByPMID.put(pm.id(), this);

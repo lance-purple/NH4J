@@ -1572,6 +1572,8 @@ E boolean FDECL(monsterHasFlag3, (int, long));
 E void FDECL(setMonsterFlag3, (int, long));
 E void FDECL(unsetMonsterFlag3, (int, long));
 
+E int FDECL(monsterColor, (int));
+
 /* ### invent.c ### */
 
 E struct obj **FDECL(objarr_init, (int));

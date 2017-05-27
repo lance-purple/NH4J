@@ -2439,8 +2439,10 @@ struct monst *mon;
     if (youAreHallucinating())
         return FALSE;
 #ifdef TEXTCOLOR
-    if (iflags.use_color)
-        return (ptr->mcolor == CLR_GREEN || ptr->mcolor == CLR_BRIGHT_GREEN);
+    if (iflags.use_color) {
+	int mcolor = monsterColor(ptr->monsterTypeID);
+        return (mcolor == CLR_GREEN || mcolor == CLR_BRIGHT_GREEN);
+    }
 #endif
     /* approximation */
     javaString monsterName = monsterTypeName(ptr->monsterTypeID);

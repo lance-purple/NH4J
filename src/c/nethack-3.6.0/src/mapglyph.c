@@ -27,9 +27,9 @@ static int explcolors[] = {
 #define zap_color(n) color = iflags.use_color ? zapcolors[n] : NO_COLOR
 #define cmap_color(n) color = iflags.use_color ? defsyms[n].color : NO_COLOR
 #define obj_color(n) color = iflags.use_color ? objects[n].oc_color : NO_COLOR
-#define mon_color(n) color = iflags.use_color ? mons[n].mcolor : NO_COLOR
+#define mon_color(n) color = iflags.use_color ? monsterColor(mons[n].monsterTypeID) : NO_COLOR
 #define invis_color(n) color = NO_COLOR
-#define pet_color(n) color = iflags.use_color ? mons[n].mcolor : NO_COLOR
+#define pet_color(n) color = iflags.use_color ? monsterColor(mons[n].monsterTypeID) : NO_COLOR
 #define warn_color(n) \
     color = iflags.use_color ? def_warnsyms[n].color : NO_COLOR
 #define explode_color(n) color = iflags.use_color ? explcolors[n] : NO_COLOR

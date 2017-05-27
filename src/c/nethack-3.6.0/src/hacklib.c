@@ -2789,4 +2789,8 @@ extern void unsetMonsterFlag3(int pmid, long flag2) {
     javaSetLongFromInt(MONSTER_TYPE_CLASS, "unsetFlag3", pmid, flag2);
 }
 
+extern int monsterColor(int pmid) {
+    return javaGetIntFromInt(MONSTER_TYPE_CLASS, "color", pmid);
+}
+
 /*hacklib.c*/
