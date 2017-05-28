@@ -994,7 +994,7 @@ register const struct Attack mattk;
     case AD_FIRE:
         hitmsg(mtmp, mattk);
         if (uncancelled) {
-            pline("You're %s!", on_fire(youmonst.data, mattk));
+            pline("You're %s!", on_fire(youmonst.data->monsterTypeID, mattk));
             if (youmonst.data == &mons[PM_STRAW_GOLEM]
                 || youmonst.data == &mons[PM_PAPER_GOLEM]) {
                 You("roast!");
@@ -1323,7 +1323,7 @@ register const struct Attack mattk;
             if (isAnimal(mtmp->data->monsterTypeID) && *buf) {
                 if (canseemon(mtmp))
                     pline("%s tries to %s away with %s.", Monnam(mtmp),
-                          locomotion(mtmp->data, "run"), buf);
+                          locomotion(mtmp->data->monsterTypeID, "run"), buf);
             }
             monflee(mtmp, 0, FALSE, FALSE);
             return 3;
@@ -2737,7 +2737,7 @@ register const struct Attack mattk;
             if (!mtmp->mstun) {
                 mtmp->mstun = 1;
                 pline("%s %s.", Monnam(mtmp),
-                      makeplural(stagger(mtmp->data, "stagger")));
+                      makeplural(stagger(mtmp->data->monsterTypeID, "stagger")));
             }
             tmp = 0;
             break;

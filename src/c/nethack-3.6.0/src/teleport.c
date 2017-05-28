@@ -512,7 +512,7 @@ dotele()
         }
         if (trap)
             You("%s onto the teleportation trap.",
-                locomotion(youmonst.data, "jump"));
+                locomotion(youmonst.data->monsterTypeID, "jump"));
     }
     if (!trap) {
         boolean castit = FALSE;
@@ -881,7 +881,7 @@ struct trap *trap;
 {
     You("%s onto a level teleport trap!",
         youAreLevitating() ? (const char *) "float"
-                   : locomotion(youmonst.data, "step"));
+                   : locomotion(youmonst.data->monsterTypeID, "step"));
     if (youResistMagic()) {
         shieldeff(currentX(), currentY());
     }
@@ -1154,7 +1154,7 @@ int in_sight;
             }
         } else if (tt == MAGIC_PORTAL) {
             if (areYouInEndgame()
-                && (mon_has_amulet(mtmp) || is_home_elemental(mptr))) {
+                && (mon_has_amulet(mtmp) || is_home_elemental(mptr->monsterTypeID))) {
                 if (in_sight && monsterClass(mptr->monsterTypeID) != S_ELEMENTAL) {
                     pline("%s seems to shimmer for a moment.", Monnam(mtmp));
                     seetrap(trap);

@@ -3685,7 +3685,7 @@ register int fall;
                 return;
             } else
                 pline("%s %s, and %s your backpack!", shkname(shkp),
-                      makeplural(locomotion(shkp->data, "leap")), grabs);
+                      makeplural(locomotion(shkp->data->monsterTypeID, "leap")), grabs);
         } else
             pline("%s %s your backpack!", shkname(shkp), grabs);
 

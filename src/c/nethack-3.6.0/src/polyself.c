@@ -201,7 +201,7 @@ const char *fmt, *arg;
         done(GENOCIDED);
     }
 
-    if (usingTwoWeapons() && cannotUseTwoWeapons(youmonst.data))
+    if (usingTwoWeapons() && cannotUseTwoWeapons(youmonst.data->monsterTypeID))
         untwoweapon();
 
     if (currentlyTrapped() && currentTrapType() == TT_PIT) {
@@ -716,7 +716,7 @@ int mntmp;
         setYourIntrinsic(SLIPPERY_FINGERS, 0);
 
     /*
-    mlvl = adj_lev(&mons[mntmp]);
+    mlvl = adj_lev(mons[mntmp].monsterTypeID);
      * We can't do the above, since there's no such thing as an
      * "experience level of you as a monster" for a polymorphed character.
      */
@@ -730,7 +730,7 @@ int mntmp;
             setMaximumHitPointsAsMonster(rnd(4));
         else
             setMaximumHitPointsAsMonster(d(mlvl, 8));
-        if (is_home_elemental(&mons[mntmp]))
+        if (is_home_elemental(mons[mntmp].monsterTypeID))
             multiplyMaximumHitPointsAsMonster(3);
     }
     setCurrentHitPointsAsMonster(maximumHitPointsAsMonster());
@@ -1035,7 +1035,7 @@ int alone;
             if (candropwep)
                 dropx(otmp);
             update_inventory();
-        } else if (cannotUseTwoWeapons(youmonst.data)) {
+        } else if (cannotUseTwoWeapons(youmonst.data->monsterTypeID)) {
             untwoweapon();
         }
     }

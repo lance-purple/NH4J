@@ -1080,7 +1080,7 @@ wiz_smell(VOID_ARGS)
     cc.x = currentX();
     cc.y = currentY();
     mndx = 0; /* gcc -Wall lint */
-    if (!olfaction(youmonst.data)) {
+    if (!olfaction(youmonst.data->monsterTypeID)) {
         You("are incapable of detecting odors in your present form.");
         return 0;
     }

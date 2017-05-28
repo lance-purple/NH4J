@@ -1240,7 +1240,7 @@ unsigned trflags;
             } else {
                 Sprintf(verbbuf, "%s into",
                         youAreLevitating() ? (const char *) "float"
-                                   : locomotion(youmonst.data, "stumble"));
+                                   : locomotion(youmonst.data->monsterTypeID, "stumble"));
             }
             You("%s %s spider web!", verbbuf, a_your[trap->madeby_u]);
         }
@@ -1376,7 +1376,7 @@ unsigned trflags;
         else
             Sprintf(verbbuf, "%s", youAreLevitating()
                                        ? (const char *) "float"
-                                       : locomotion(youmonst.data, "step"));
+                                       : locomotion(youmonst.data->monsterTypeID, "step"));
         You("%s onto a polymorph trap!", verbbuf);
         if (youResistMagic() || youAreUnchanging()) {
             shieldeff(currentX(), currentY());
@@ -3859,8 +3859,8 @@ boolean force_failure;
         return 0;
     }
     /* duplicate tight-space checks from test_move */
-    if (directionX() && directionY() && bad_rock(youmonst.data, currentX(), ttmp->ty)
-        && bad_rock(youmonst.data, ttmp->tx, currentY())) {
+    if (directionX() && directionY() && bad_rock(youmonst.data->monsterTypeID, currentX(), ttmp->ty)
+        && bad_rock(youmonst.data->monsterTypeID, ttmp->tx, currentY())) {
         if ((invent && (inv_weight() + weight_cap() > 600))
             || isBigMonster(youmonst.data->monsterTypeID)) {
             /* don't allow untrap if they can't get thru to it */
@@ -4719,7 +4719,7 @@ boolean disarm;
                 if (youAreHallucinating())
                     pline("What a groovy feeling!");
                 else
-                    You("%s%s...", stagger(youmonst.data, "stagger"),
+                    You("%s%s...", stagger(youmonst.data->monsterTypeID, "stagger"),
                         youResistHallucination() ? ""
                                           : youCannotSee() ? " and get dizzy"
                                                   : " and your vision blurs");

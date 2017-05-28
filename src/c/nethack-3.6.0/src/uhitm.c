@@ -1076,7 +1076,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
             && !isThickSkinned(mdat->monsterTypeID)) {
             if (canspotmon(mon))
                 pline("%s %s from your powerful strike!", Monnam(mon),
-                      makeplural(stagger(mon->data, "stagger")));
+                      makeplural(stagger(mon->data->monsterTypeID, "stagger")));
             /* avoid migrating a dead monster */
             if (mon->mhp > tmp) {
                 mhurtle(mon, directionX(), directionY(), 1);
@@ -1437,7 +1437,7 @@ register const struct Attack mattk;
     case AD_STUN:
         if (youCanSee())
             pline("%s %s for a moment.", Monnam(mdef),
-                  makeplural(stagger(pd, "stagger")));
+                  makeplural(stagger(pd->monsterTypeID, "stagger")));
         mdef->mstun = 1;
         goto physical;
     case AD_LEGS:
@@ -1484,7 +1484,7 @@ register const struct Attack mattk;
             break;
         }
         if (youCanSee()) {
-            pline("%s is %s!", Monnam(mdef), on_fire(pd, mattk));
+            pline("%s is %s!", Monnam(mdef), on_fire(pd->monsterTypeID, mattk));
 	}
         if (pd == &mons[PM_STRAW_GOLEM] || pd == &mons[PM_PAPER_GOLEM]) {
             if (youCanSee())
@@ -1915,7 +1915,7 @@ register const struct Attack mattk;
                                               && !youResistStoning())));
 
         if ((mattk.damageType == AD_DGST && !youHaveSlowDigestion()) || fatal_gulp)
-            eating_conducts(pd);
+            eating_conducts(pd->monsterTypeID);
 
         if (fatal_gulp && !is_rider(pd)) { /* petrification */
             char kbuf[BUFSZ];

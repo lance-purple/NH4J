@@ -440,13 +440,13 @@ boolean message;
 }
 
 void
-eating_conducts(pd)
-struct permonst *pd;
+eating_conducts(pmid)
+int pmid;
 {
     setFoodlessConduct(FALSE);
-    if (!isVeganOption(pd->monsterTypeID))
+    if (!isVeganOption(pmid))
         setVeganConduct(FALSE);
-    if (!isVegetarianOption(pd->monsterTypeID))
+    if (!isVegetarianOption(pmid))
         violated_vegetarian();
 }
 
@@ -507,7 +507,7 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
         /*
          * player mind flayer is eating something's brain
          */
-        eating_conducts(pd);
+        eating_conducts(pd->monsterTypeID);
         if (isMindless(pd->monsterTypeID)) { /* (cannibalism not possible here) */
             pline("%s doesn't notice.", Monnam(mdef));
             /* all done; no extra harm inflicted upon target */
@@ -1337,7 +1337,7 @@ const char *mesg;
         You("consume %s %s.", tintxts[r].txt, monsterName.c_str);
 	releaseJavaString(monsterName);
 
-        eating_conducts(&mons[mnum]);
+        eating_conducts(mons[mnum].monsterTypeID);
 
         tin->dknown = tin->known = 1;
         cprefx(mnum);

@@ -584,8 +584,8 @@ int x, y;
             wake_nearto(x,y, 10);
             return FALSE;
         }
-        if ((currentX() - x) && (currentY() - y) && bad_rock(youmonst.data, currentX(), y)
-            && bad_rock(youmonst.data, x, currentY())) {
+        if ((currentX() - x) && (currentY() - y) && bad_rock(youmonst.data->monsterTypeID, currentX(), y)
+            && bad_rock(youmonst.data->monsterTypeID, x, currentY())) {
             boolean too_much =
                 (invent && (inv_weight() + weight_cap() > 600));
             /* Move at a diagonal. */
@@ -607,8 +607,8 @@ int x, y;
         wake_nearto(x,y, 10);
         return FALSE;
     }
-    if ((currentX() - x) && (currentY() - y) && bad_rock(youmonst.data, currentX(), y)
-        && bad_rock(youmonst.data, x, currentY())) {
+    if ((currentX() - x) && (currentY() - y) && bad_rock(youmonst.data->monsterTypeID, currentX(), y)
+        && bad_rock(youmonst.data->monsterTypeID, x, currentY())) {
         /* Move at a diagonal. */
         if (Sokoban) {
             You("come to an abrupt halt!");

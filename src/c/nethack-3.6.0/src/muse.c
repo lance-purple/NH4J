@@ -820,7 +820,7 @@ struct monst *mtmp;
             struct trap *t = t_at(trapx, trapy);
 
             pline("%s %s into a %s!", Monnam(mtmp),
-                  makeplural(locomotion(mtmp->data, "jump")),
+                  makeplural(locomotion(mtmp->data->monsterTypeID, "jump")),
                   t->ttyp == TRAPDOOR ? "trap door" : "hole");
             if (levl[trapx][trapy].typ == SCORR) {
                 levl[trapx][trapy].typ = CORR;
@@ -912,7 +912,7 @@ struct monst *mtmp;
         m_flee(mtmp);
         if (vis) {
             pline("%s %s onto a teleport trap!", Monnam(mtmp),
-                  makeplural(locomotion(mtmp->data, "jump")));
+                  makeplural(locomotion(mtmp->data->monsterTypeID, "jump")));
             seetrap(t_at(trapx, trapy));
         }
         /*  don't use rloc_to() because worm tails must "move" */
@@ -1857,7 +1857,7 @@ struct monst *mtmp;
     case MUSE_POLY_TRAP:
         if (vismon)
             pline("%s deliberately %s onto a polymorph trap!", Monnam(mtmp),
-                  makeplural(locomotion(mtmp->data, "jump")));
+                  makeplural(locomotion(mtmp->data->monsterTypeID, "jump")));
         if (vis)
             seetrap(t_at(trapx, trapy));
 

@@ -35,11 +35,11 @@ extern const int monstr[];
 #define tooweak(monindx, lev) (monstr[monindx] < lev)
 
 boolean
-is_home_elemental(ptr)
-struct permonst *ptr;
+is_home_elemental(pmid)
+int pmid;
 {
-    if (monsterClass(ptr->monsterTypeID) == S_ELEMENTAL)
-        switch (monsndx(ptr)) {
+    if (monsterClass(pmid) == S_ELEMENTAL)
+        switch (pmid) {
         case PM_AIR_ELEMENTAL:
             return areYouOnAirLevel();
         case PM_FIRE_ELEMENTAL:
@@ -60,7 +60,7 @@ wrong_elem_type(ptr)
 struct permonst *ptr;
 {
     if (monsterClass(ptr->monsterTypeID) == S_ELEMENTAL) {
-        return (boolean) !is_home_elemental(ptr);
+        return (boolean) !is_home_elemental(ptr->monsterTypeID);
     } else if (areYouOnEarthLevel()) {
         /* no restrictions? */
     } else if (areYouOnWaterLevel()) {
@@ -905,7 +905,7 @@ int mndx;
 {
     struct permonst *ptr = &mons[mndx];
 
-    mon->m_lev = adj_lev(ptr);
+    mon->m_lev = adj_lev(ptr->monsterTypeID);
     if (isGolem(ptr->monsterTypeID)) {
         mon->mhpmax = mon->mhp = golemhp(mndx);
     } else if (is_rider(ptr)) {
@@ -928,7 +928,7 @@ int mndx;
         mon->mhpmax = mon->mhp = rnd(4);
     } else {
         mon->mhpmax = mon->mhp = d((int) mon->m_lev, 8);
-        if (is_home_elemental(ptr))
+        if (is_home_elemental(ptr->monsterTypeID))
             mon->mhpmax = (mon->mhp *= 3);
     }
 }
@@ -1595,7 +1595,7 @@ int spc;
         if (mk_gen_ok(first, G_GONE, mask)) {
             /* skew towards lower value monsters at lower exp. levels */
             num -= monsterGenerationMask(mons[first].monsterTypeID) & G_FREQ;
-            if (num && adj_lev(&mons[first]) > (currentExperienceLevel() * 2)) {
+            if (num && adj_lev(mons[first].monsterTypeID) > (currentExperienceLevel() * 2)) {
                 /* but not when multiple monsters are same level */
                 if (monsterLevel(mons[first].monsterTypeID) != monsterLevel(mons[first + 1].monsterTypeID))
                     num--;
@@ -1639,13 +1639,13 @@ int class;
 
 /* adjust strength of monsters based on currentLevel and currentExperienceLevel() */
 int
-adj_lev(ptr)
-register struct permonst *ptr;
+adj_lev(pmid)
+int pmid;
 {
     int tmp, tmp2;
-    int mlevel = monsterLevel(ptr->monsterTypeID);
+    int mlevel = monsterLevel(pmid);
 
-    if (ptr == &mons[PM_WIZARD_OF_YENDOR]) {
+    if (pmid == PM_WIZARD_OF_YENDOR) {
         /* does not depend on other strengths, but does get stronger
          * every time he is killed
          */
@@ -1707,7 +1707,7 @@ struct monst *mtmp, *victim;
             hp_threshold = 4;
         else if (isGolem(ptr->monsterTypeID)) /* strange creatures */
             hp_threshold = ((mtmp->mhpmax / 10) + 1) * 10 - 1;
-        else if (is_home_elemental(ptr))
+        else if (is_home_elemental(ptr->monsterTypeID))
             hp_threshold *= 3;
         lev_limit = 3 * monsterLevel(ptr->monsterTypeID) / 2; /* same as adj_lev() */
         /* If they can grow up, be sure the level is high enough for that */

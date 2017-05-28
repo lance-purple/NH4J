@@ -1341,8 +1341,8 @@ nexttry: /* eels prefer the water, but if there is no water nearby,
                     info[cnt] |= NOTONL;
                 }
                 /* check for diagonal tight squeeze */
-                if (nx != x && ny != y && bad_rock(mdat, x, ny)
-                    && bad_rock(mdat, nx, y) && cant_squeeze_thru(mon))
+                if (nx != x && ny != y && bad_rock(mdat->monsterTypeID, x, ny)
+                    && bad_rock(mdat->monsterTypeID, nx, y) && cant_squeeze_thru(mon))
                     continue;
                 /* The monster avoids a particular type of trap if it's
                  * familiar with the trap type.  Pets get ALLOW_TRAPS
@@ -2061,7 +2061,7 @@ struct monst *mdef;
     if (wasinside) {
         if (isAnimal(mdef->data->monsterTypeID))
             You("%s through an opening in the new %s.",
-                locomotion(youmonst.data, "jump"), xname(otmp));
+                locomotion(youmonst.data->monsterTypeID, "jump"), xname(otmp));
     }
 }
 
@@ -3572,7 +3572,7 @@ struct permonst *mdat;
     boolean msg_given = FALSE;
 
     if (mdat) {
-        if (!olfaction(youmonst.data))
+        if (!olfaction(youmonst.data->monsterTypeID))
             return FALSE;
         mndx = monsndx(mdat);
         switch (mndx) {

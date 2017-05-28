@@ -1058,13 +1058,11 @@ static const char *immobile[4] = { "wiggle", "Wiggle", "pulsate", "Pulsate" };
 static const char *crawl[4] = { "crawl", "Crawl", "falter", "Falter" };
 
 const char *
-locomotion(ptr, def)
-const struct permonst *ptr;
+locomotion(pmid, def)
+const int pmid;
 const char *def;
 {
     int capitalize = (*def == highc(*def));
-
-    int pmid = ptr->monsterTypeID;
 
     int msize = monsterSize(pmid);
 
@@ -1079,13 +1077,11 @@ const char *def;
 }
 
 const char *
-stagger(ptr, def)
-const struct permonst *ptr;
+stagger(pmid, def)
+const int pmid;
 const char *def;
 {
     int capitalize = 2 + (*def == highc(*def));
-
-    int pmid = ptr->monsterTypeID;
 
     int msize = monsterSize(pmid);
 
@@ -1101,13 +1097,13 @@ const char *def;
 
 /* return phrase describing the effect of fire attack on a type of monster */
 const char *
-on_fire(mptr, mattk)
-struct permonst *mptr;
+on_fire(pmid, mattk)
+int pmid;
 const struct Attack mattk;
 {
     const char *what;
 
-    switch (monsndx(mptr)) {
+    switch (pmid) {
     case PM_FLAMING_SPHERE:
     case PM_FIRE_VORTEX:
     case PM_FIRE_ELEMENTAL:
@@ -1149,11 +1145,11 @@ const struct Attack mattk;
  * We're assuming all insects can smell at a distance too.
  */
 boolean
-olfaction(mdat)
-struct permonst *mdat;
+olfaction(pmid)
+int pmid;
 {
-    int mc = monsterClass(mdat->monsterTypeID);
-    if (isGolem(mdat->monsterTypeID)
+    int mc = monsterClass(pmid);
+    if (isGolem(pmid)
         || mc == S_EYE /* spheres  */
         || mc == S_JELLY || mc == S_PUDDING
         || mc == S_BLOB  || mc == S_VORTEX
@@ -1236,8 +1232,8 @@ boolean monsterTypeResistsStoning(int pmid) {
     return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "monsterTypeResistsStoning", pmid);
 }
 
-boolean cannotUseTwoWeapons(struct permonst* ptr) {
-    return (monsterAttack(ptr->monsterTypeID, 1).type != AT_WEAP);
+boolean cannotUseTwoWeapons(int pmid) {
+    return (monsterAttack(pmid, 1).type != AT_WEAP);
 }
 
 boolean isFlyer(int pmid) {

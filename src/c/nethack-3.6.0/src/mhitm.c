@@ -825,7 +825,7 @@ register const struct Attack mattk;
             break;
         if (canseemon(mdef))
             pline("%s %s for a moment.", Monnam(mdef),
-                  makeplural(stagger(pd, "stagger")));
+                  makeplural(stagger(pd->monsterTypeID, "stagger")));
         mdef->mstun = 1;
         goto physical;
     case AD_LEGS:
@@ -870,7 +870,7 @@ register const struct Attack mattk;
             break;
         }
         if (vis) {
-            pline("%s is %s!", Monnam(mdef), on_fire(pd, mattk));
+            pline("%s is %s!", Monnam(mdef), on_fire(pd->monsterTypeID, mattk));
 	}
         if (pd == &mons[PM_STRAW_GOLEM] || pd == &mons[PM_PAPER_GOLEM]) {
             if (vis)
@@ -1532,7 +1532,7 @@ int mdead;
                 magr->mstun = 1;
                 if (canseemon(magr))
                     pline("%s %s...", Monnam(magr),
-                          makeplural(stagger(magr->data, "stagger")));
+                          makeplural(stagger(magr->data->monsterTypeID, "stagger")));
             }
             tmp = 0;
             break;
