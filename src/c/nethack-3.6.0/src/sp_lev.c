@@ -1528,7 +1528,7 @@ struct mkroom *croom;
         pm = (struct permonst *) 0;
     else if (m->id != NON_PM) {
         pm = &mons[m->id];
-        g_mvflags = (unsigned) mvitals[monsndx(pm)].mvflags;
+        g_mvflags = (unsigned) mvitals[pm->monsterTypeID].mvflags;
         if ((monsterGenerationMask(pm->monsterTypeID) & G_UNIQ) && (g_mvflags & G_EXTINCT))
             return;
         else if (g_mvflags & G_GONE)    /* genocided or extinct */
@@ -3062,7 +3062,7 @@ struct sp_coder *coder;
                         pm = rndmonst();
                     }
                     if (pm)
-                        tmpobj.corpsenm = monsndx(pm);
+                        tmpobj.corpsenm = pm->monsterTypeID;
                 }
             }
             break;

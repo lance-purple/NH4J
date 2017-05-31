@@ -405,7 +405,7 @@ struct monst *mtmp;
         boolean ignore_boulders = (isVerySmallMonster(mtmp->data->monsterTypeID)
                                    || throwsRocks(mtmp->data->monsterTypeID)
                                    || passesThroughWalls(mtmp->data->monsterTypeID)),
-            diag_ok = !NODIAG(monsndx(mtmp->data));
+            diag_ok = !NODIAG(mtmp->data->monsterTypeID);
 
         for (i = 0; i < 10; ++i) /* 10: 9 spots plus sentinel */
             locs[i][0] = locs[i][1] = 0;
@@ -997,7 +997,7 @@ rnd_defensive_item(mtmp)
 struct monst *mtmp;
 {
     struct permonst *pm = mtmp->data;
-    int difficulty = monstr[(monsndx(pm))];
+    int difficulty = monstr[pm->monsterTypeID];
     int trycnt = 0;
     int mc = monsterClass(pm->monsterTypeID);
 
@@ -1540,7 +1540,7 @@ rnd_offensive_item(mtmp)
 struct monst *mtmp;
 {
     struct permonst *pm = mtmp->data;
-    int difficulty = monstr[(monsndx(pm))];
+    int difficulty = monstr[pm->monsterTypeID];
     int mc = monsterClass(pm->monsterTypeID);
 
     if (isAnimal(pm->monsterTypeID) || attacktype(pm, AT_EXPL) || isMindless(pm->monsterTypeID)
@@ -1621,7 +1621,7 @@ struct monst *mtmp;
         return FALSE;
 
     if (!stuck && !immobile && (mtmp->cham == NON_PM)
-        && monstr[(pmidx = monsndx(mdat))] < 6) {
+        && monstr[pmidx = mdat->monsterTypeID] < 6) {
         boolean ignore_boulders = (isVerySmallMonster(mdat->monsterTypeID) || throwsRocks(mdat->monsterTypeID)
                                    || passesThroughWalls(mdat->monsterTypeID)),
             diag_ok = !NODIAG(pmidx);
@@ -1707,13 +1707,13 @@ struct monst *mtmp;
         }
         nomore(MUSE_WAN_POLYMORPH);
         if (obj->otyp == WAN_POLYMORPH && obj->spe > 0
-            && (mtmp->cham == NON_PM) && monstr[monsndx(mdat)] < 6) {
+            && (mtmp->cham == NON_PM) && monstr[mdat->monsterTypeID] < 6) {
             m.misc = obj;
             m.has_misc = MUSE_WAN_POLYMORPH;
         }
         nomore(MUSE_POT_POLYMORPH);
         if (obj->otyp == POT_POLYMORPH && (mtmp->cham == NON_PM)
-            && monstr[monsndx(mdat)] < 6) {
+            && monstr[mdat->monsterTypeID] < 6) {
             m.misc = obj;
             m.has_misc = MUSE_POT_POLYMORPH;
         }
@@ -1976,7 +1976,7 @@ rnd_misc_item(mtmp)
 struct monst *mtmp;
 {
     struct permonst *pm = mtmp->data;
-    int difficulty = monstr[(monsndx(pm))];
+    int difficulty = monstr[pm->monsterTypeID];
     int mc = monsterClass(pm->monsterTypeID);
 
     if (isAnimal(pm->monsterTypeID) || attacktype(pm, AT_EXPL) || isMindless(pm->monsterTypeID)
@@ -2032,7 +2032,7 @@ struct obj *obj;
         if (typ == WAN_DIGGING)
             return (boolean) !isFloater(mon->data->monsterTypeID);
         if (typ == WAN_POLYMORPH)
-            return (boolean) (monstr[monsndx(mon->data)] < 6);
+            return (boolean) (monstr[mon->data->monsterTypeID] < 6);
         if (objects[typ].oc_dir == RAY || typ == WAN_STRIKING
             || typ == WAN_TELEPORTATION || typ == WAN_CREATE_MONSTER)
             return TRUE;
@@ -2454,7 +2454,7 @@ struct monst *mon;
         return TRUE;
     } 
 
-    switch (monsndx(ptr)) {
+    switch (ptr->monsterTypeID) {
     case PM_FOREST_CENTAUR:
     case PM_GARTER_SNAKE:
     case PM_GECKO:

@@ -1843,7 +1843,7 @@ struct permonst *mptr;
     context.warntype.species = 0;
     context.warntype.polyd = 0;
 
-    switch (monsndx(mptr)) {
+    switch (mptr->monsterTypeID) {
     case PM_PURPLE_WORM:
         warnidx = PM_SHRIEKER;
         break;

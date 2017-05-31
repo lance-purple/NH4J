@@ -1261,7 +1261,7 @@ register const struct Attack mattk;
             && !youHaveProtectionFromShapeChangers() && !defends(AD_WERE, uwep)) {
             You_feel("feverish.");
             exercise(A_CON, FALSE);
-            setLycanthropeType(monsndx(mdat));
+            setLycanthropeType(mdat->monsterTypeID);
             retouch_equipment(2);
         }
         break;
@@ -2783,7 +2783,7 @@ struct monst *
 cloneu()
 {
     register struct monst *mon;
-    int mndx = monsndx(youmonst.data);
+    int mndx = youmonst.data->monsterTypeID;
 
     if (currentHitPointsAsMonster() <= 1)
         return (struct monst *) 0;

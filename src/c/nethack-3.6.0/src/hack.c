@@ -1645,7 +1645,7 @@ domove()
                     int tmp, mndx;
 
                     setPacifistConduct(FALSE);
-                    mndx = monsndx(mtmp->data);
+                    mndx = mtmp->data->monsterTypeID;
                     tmp = experience(mtmp, (int) mvitals[mndx].died);
                     more_experienced(tmp, 0);
                     newexplevel(); /* will decide if you go up */

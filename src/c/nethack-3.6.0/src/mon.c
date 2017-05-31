@@ -239,7 +239,7 @@ unsigned corpseflags;
     struct obj *obj = (struct obj *) 0;
     struct obj *otmp = (struct obj *) 0;
     int x = mtmp->mx, y = mtmp->my;
-    int mndx = monsndx(mdat);
+    int mndx = mdat->monsterTypeID;
     unsigned corpstatflags = corpseflags;
     boolean burythem = ((corpstatflags & CORPSTAT_BURIED) != 0);
 
@@ -259,7 +259,7 @@ unsigned corpseflags;
         /* Make dragon scales.  This assumes that the order of the
            dragons is the same as the order of the scales. */
         if (!rn2(mtmp->mrevived ? 20 : 3)) {
-            num = GRAY_DRAGON_SCALES + monsndx(mdat) - PM_GRAY_DRAGON;
+            num = GRAY_DRAGON_SCALES + mdat->monsterTypeID - PM_GRAY_DRAGON;
             obj = mksobj_at(num, x, y, FALSE, FALSE);
             obj->spe = 0;
             obj->cursed = obj->blessed = FALSE;
@@ -1428,7 +1428,7 @@ struct monst *magr, /* monster that is currently deciding where to move */
     if (isDisplacer(pa->monsterTypeID) && isDisplacer(pd->monsterTypeID)
         /* no displacing grid bugs diagonally */
         && !(magr->mx != mdef->mx && magr->my != mdef->my
-             && NODIAG(monsndx(pd)))
+             && NODIAG(pd->monsterTypeID))
         /* no displacing trapped monsters or multi-location longworms */
         && !mdef->mtrapped && (!mdef->wormno || !count_wsegs(mdef))
         /* riders can move anything; others, same size or smaller only */
@@ -1720,7 +1720,7 @@ struct monst *mtmp;
         }
         m_useup(mtmp, lifesave);
 
-        surviver = !(mvitals[monsndx(mtmp->data)].mvflags & G_GENOD);
+        surviver = !(mvitals[mtmp->data->monsterTypeID].mvflags & G_GENOD);
         mtmp->mcanmove = 1;
         mtmp->mfrozen = 0;
         if (mtmp->mtame && !mtmp->isminion) {
@@ -1755,7 +1755,7 @@ register struct monst *mtmp;
         int x = mtmp->mx, y = mtmp->my;
 
         /* this only happens if shapeshifted */
-        if (mndx >= LOW_PM && mndx != monsndx(mtmp->data)) {
+        if (mndx >= LOW_PM && mndx != mtmp->data->monsterTypeID) {
             char buf[BUFSZ];
             boolean in_door = (isAmorphous(mtmp->data->monsterTypeID)
                                && closed_door(mtmp->mx, mtmp->my)),
@@ -1835,7 +1835,7 @@ register struct monst *mtmp;
      * based on only player kills probably opens more avenues of abuse
      * for rings of conflict and such.
      */
-    tmp = monsndx(mtmp->data);
+    tmp = mtmp->data->monsterTypeID;
     if (mvitals[tmp].died < 255)
         mvitals[tmp].died++;
 
@@ -2200,7 +2200,7 @@ int dest; /* dest==1, normal; dest==0, don't print message; dest==2, don't
     }
 
     mdat = mtmp->data; /* note: mondead can change mtmp->data */
-    mndx = monsndx(mdat);
+    mndx = mdat->monsterTypeID;
 
     if (stoned) {
         stoned = FALSE;
@@ -2645,7 +2645,7 @@ restartcham()
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
         if (DEADMONSTER(mtmp))
             continue;
-        mtmp->cham = pm_to_cham(monsndx(mtmp->data));
+        mtmp->cham = pm_to_cham(mtmp->data->monsterTypeID);
         if (monsterClass(mtmp->data->monsterTypeID) == S_MIMIC && mtmp->msleeping
             && cansee(mtmp->mx, mtmp->my)) {
             set_mimic_sym(mtmp);
@@ -2672,7 +2672,7 @@ struct monst *mon;
             new_were(mon);
         }
     } else if (mon->cham == NON_PM) {
-        mon->cham = pm_to_cham(monsndx(mon->data));
+        mon->cham = pm_to_cham(mon->data->monsterTypeID);
     }
 }
 
@@ -3150,7 +3150,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
         } while (--tryct > 0);
         if (!tryct)
             return 0;
-    } else if (mvitals[monsndx(mdat)].mvflags & G_GENOD)
+    } else if (mvitals[mdat->monsterTypeID].mvflags & G_GENOD)
         return 0; /* passed in mdat is genocided */
 
     mgender_from_permonst(mtmp, mdat);
@@ -3185,7 +3185,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
     hpn = mtmp->mhp;
     hpd = mtmp->mhpmax;
     /* set level and hit points */
-    newmonhp(mtmp, monsndx(mdat));
+    newmonhp(mtmp, mdat->monsterTypeID);
     /* new hp: same fraction of max as before */
 #ifndef LINT
     mtmp->mhp = (int) (((long) hpn * (long) mtmp->mhp) / (long) hpd);
@@ -3429,7 +3429,7 @@ kill_genocided_monsters()
         mtmp2 = mtmp->nmon;
         if (DEADMONSTER(mtmp))
             continue;
-        mndx = monsndx(mtmp->data);
+        mndx = mtmp->data->monsterTypeID;
         kill_cham = (mtmp->cham >= LOW_PM
                      && (mvitals[mtmp->cham].mvflags & G_GENOD));
         if ((mvitals[mndx].mvflags & G_GENOD) || kill_cham) {
@@ -3574,7 +3574,7 @@ struct permonst *mdat;
     if (mdat) {
         if (!olfaction(youmonst.data->monsterTypeID))
             return FALSE;
-        mndx = monsndx(mdat);
+        mndx = mdat->monsterTypeID;
         switch (mndx) {
         case PM_ROTHE:
         case PM_MINOTAUR:

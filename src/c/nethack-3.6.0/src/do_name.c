@@ -998,7 +998,7 @@ boolean called;
     } else if (is_mplayer(mdat) && !areYouInEndgame()) {
         char pbuf[BUFSZ];
 
-        Strcpy(pbuf, rank_of((int) mtmp->m_lev, monsndx(mdat),
+        Strcpy(pbuf, rank_of((int) mtmp->m_lev, mdat->monsterTypeID,
                              (boolean) mtmp->female));
         Strcat(buf, lcase(pbuf));
         name_at_start = FALSE;

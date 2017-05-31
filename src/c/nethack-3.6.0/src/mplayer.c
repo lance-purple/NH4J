@@ -87,7 +87,7 @@ char *nam;
     else
         mtmp->female = 0;
     Strcat(nam, " the ");
-    Strcat(nam, rank_of((int) mtmp->m_lev, monsndx(mtmp->data),
+    Strcat(nam, rank_of((int) mtmp->m_lev, mtmp->data->monsterTypeID,
                         (boolean) mtmp->female));
 }
 
@@ -160,7 +160,7 @@ register boolean special;
         mtmp->mpeaceful = 0;
         set_malign(mtmp); /* peaceful may have changed again */
 
-        switch (monsndx(ptr)) {
+        switch (ptr->monsterTypeID) {
         case PM_ARCHEOLOGIST:
             if (rn2(2))
                 weapon = BULLWHIP;

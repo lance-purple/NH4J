@@ -345,8 +345,9 @@ rndmonnum()
 
     /* Plan A: get a level-appropriate common monster */
     ptr = rndmonst();
-    if (ptr)
-        return monsndx(ptr);
+    if (ptr) {
+        return ptr->monsterTypeID;
+    }
 
     /* Plan B: get any common monster */
     excludeflags = G_UNIQ | G_NOGEN | (areYouInHell() ? G_NOHELL : G_HELL);
@@ -1458,7 +1459,7 @@ unsigned corpstatflags;
         if (ptr) {
             int old_corpsenm = otmp->corpsenm;
 
-            otmp->corpsenm = monsndx(ptr);
+            otmp->corpsenm = ptr->monsterTypeID;
             otmp->owt = weight(otmp);
             if (otmp->otyp == CORPSE && (special_corpse(old_corpsenm)
                                          || special_corpse(otmp->corpsenm))) {
@@ -1525,7 +1526,7 @@ struct monst *mtmp;
         *mtmp2 = *mtmp;
         mtmp2->mextra = (struct mextra *) 0;
         if (mtmp->data)
-            mtmp2->mnum = monsndx(mtmp->data);
+            mtmp2->mnum = mtmp->data->monsterTypeID;
         /* invalidate pointers */
         /* m_id is needed to know if this is a revived quest leader */
         /* but m_id must be cleared when loading bones */

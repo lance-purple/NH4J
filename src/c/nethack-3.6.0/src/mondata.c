@@ -427,7 +427,7 @@ int
 num_horns(ptr)
 struct permonst *ptr;
 {
-    switch (monsndx(ptr)) {
+    switch (ptr->monsterTypeID) {
     case PM_HORNED_DEVIL: /* ? "more than one" */
     case PM_MINOTAUR:
     case PM_ASMODEUS:
@@ -609,7 +609,9 @@ struct permonst *pm1, *pm2;
 
     /* check for monsters which grow into more mature forms */
     if (let1 == let2) {
-        int m1 = monsndx(pm1), m2 = monsndx(pm2), prv, nxt;
+        int m1 = pm1->monsterTypeID;
+        int m2 = pm2->monsterTypeID;
+        int prv, nxt;
 
         /* we know m1 != m2 (very first check above); test all smaller
            forms of m1 against m2, then all larger ones; don't need to
@@ -636,22 +638,6 @@ struct permonst *pm1, *pm2;
         assorted bugs and blobs with their closest variants] */
     /* didn't match */
     return FALSE;
-}
-
-/* return an index into the mons array */
-int
-monsndx(ptr)
-struct permonst *ptr;
-{
-    register int i;
-
-    i = (int) (ptr - &mons[0]);
-    if (i < LOW_PM || i >= NUMMONS) {
-        panic("monsndx - could not index monster (%s)",
-              fmt_ptr((genericptr_t) ptr));
-        return NON_PM; /* will not get here */
-    }
-    return i;
 }
 
 /* for handling alternate spellings */

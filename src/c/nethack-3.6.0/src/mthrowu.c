@@ -597,7 +597,7 @@ struct monst *mtmp;
             multishot++;
 
         /* class bonus */
-        switch (monsndx(mtmp->data)) {
+        switch (mtmp->data->monsterTypeID) {
         case PM_MONK:
             if (skill == -P_SHURIKEN)
                 multishot++;

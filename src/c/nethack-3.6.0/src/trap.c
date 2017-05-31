@@ -2305,7 +2305,7 @@ register struct monst *mtmp;
 
                 /* paper burns very fast, assume straw is tightly
                  * packed and burns a bit slower */
-                switch (monsndx(mptr)) {
+                switch (mptr->monsterTypeID) {
                 case PM_PAPER_GOLEM:
                     immolate = TRUE;
                     alt = mtmp->mhpmax;
@@ -2451,7 +2451,7 @@ register struct monst *mtmp;
                 break;
             }
             tear_web = FALSE;
-            switch (monsndx(mptr)) {
+            switch (mptr->monsterTypeID) {
             case PM_OWLBEAR: /* Eric Backus */
             case PM_BUGBEAR:
                 if (!in_sight) {

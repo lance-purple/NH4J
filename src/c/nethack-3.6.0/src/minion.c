@@ -68,7 +68,9 @@ struct monst *mon;
         atyp = (maligntype == A_NONE) ? A_NONE : sgn(maligntype);
     }
 
-    if (isDemonPrince(ptr->monsterTypeID) || (ptr == &mons[PM_WIZARD_OF_YENDOR])) {
+    int pmid = ptr->monsterTypeID;
+
+    if (isDemonPrince(pmid) || (pmid == PM_WIZARD_OF_YENDOR)) {
         dtype = (!rn2(20)) ? dprince(atyp) : (!rn2(4)) ? dlord(atyp)
                                                        : ndemon(atyp);
         cnt = (!rn2(4) && isNamelessMajorDemon(mons[dtype].monsterTypeID)) ? 2 : 1;
@@ -78,12 +80,12 @@ struct monst *mon;
         cnt = (!rn2(4) && isNamelessMajorDemon(mons[dtype].monsterTypeID)) ? 2 : 1;
     } else if (isNamelessMajorDemon(ptr->monsterTypeID)) {
         dtype = (!rn2(20)) ? dlord(atyp) : (!rn2(6)) ? ndemon(atyp)
-                                                     : monsndx(ptr);
+                                                     : pmid;
         cnt = 1;
     } else if (isLawfulMinion(mon->data->monsterTypeID)) {
         dtype = (isLord(ptr->monsterTypeID) && !rn2(20))
                     ? llord()
-                    : (isLord(ptr->monsterTypeID) || !rn2(6)) ? lminion() : monsndx(ptr);
+                    : (isLord(ptr->monsterTypeID) || !rn2(6)) ? lminion() : pmid;
         cnt = (!rn2(4) && !isLord(mons[dtype].monsterTypeID)) ? 2 : 1;
     } else if (ptr == &mons[PM_ANGEL]) {
         /* non-lawful angels can also summon */
@@ -366,8 +368,9 @@ lminion()
 
     for (tryct = 0; tryct < 20; tryct++) {
         ptr = mkclass(S_ANGEL, 0);
-        if (ptr && !isLord(ptr->monsterTypeID))
-            return (monsndx(ptr));
+        if (ptr && !isLord(ptr->monsterTypeID)) {
+            return ptr->monsterTypeID;
+        }
     }
 
     return NON_PM;
@@ -383,8 +386,9 @@ aligntyp atyp;
     for (tryct = 0; tryct < 20; tryct++) {
         ptr = mkclass(S_DEMON, 0);
         if (ptr && isNamelessMajorDemon(ptr->monsterTypeID)
-            && (atyp == A_NONE || sgn(monsterAlignment(ptr->monsterTypeID)) == sgn(atyp)))
-            return (monsndx(ptr));
+            && (atyp == A_NONE || sgn(monsterAlignment(ptr->monsterTypeID)) == sgn(atyp))) {
+            return ptr->monsterTypeID;
+        }
     }
 
     return NON_PM;

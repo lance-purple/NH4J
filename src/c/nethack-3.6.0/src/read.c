@@ -2137,7 +2137,7 @@ int how;
                     ptr = rndmonst();
                     if (!ptr)
                         return; /* no message, like normal case */
-                    mndx = monsndx(ptr);
+                    mndx = ptr->monsterTypeID;
                     break; /* remaining checks don't apply */
                 } else
                     return;

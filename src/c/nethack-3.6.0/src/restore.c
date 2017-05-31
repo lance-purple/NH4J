@@ -411,7 +411,7 @@ boolean ghostly;
         offset = mtmp->mnum;
         mtmp->data = &mons[offset];
         if (ghostly) {
-            int mndx = monsndx(mtmp->data);
+            int mndx = mtmp->data->monsterTypeID;
             if (propagate(mndx, TRUE, ghostly) == 0) {
                 /* cookie to trigger purge in getbones() */
                 mtmp->mhpmax = DEFUNCT_MONSTER;

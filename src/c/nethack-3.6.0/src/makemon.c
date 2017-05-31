@@ -169,7 +169,7 @@ m_initweap(mtmp)
 register struct monst *mtmp;
 {
     register struct permonst *ptr = mtmp->data;
-    register int mm = monsndx(ptr);
+    register int mm = ptr->monsterTypeID;
     struct obj *otmp;
     int bias, spe2, w1, w2;
 
@@ -184,7 +184,7 @@ register struct monst *mtmp;
      *          soldiers get all sorts of things
      *          kops get clubs & cream pies.
      */
-    switch (monsterClass(ptr->monsterTypeID)) {
+    switch (monsterClass(mm)) {
     case S_GIANT:
         if (rn2(2))
             (void) mongets(mtmp, (mm != PM_ETTIN) ? BOULDER : CLUB);
@@ -533,6 +533,7 @@ register struct monst *mtmp;
     register int cnt;
     register struct obj *otmp;
     register struct permonst *ptr = mtmp->data;
+    int pmid = ptr->monsterTypeID;
 
     if (areYouOnRogueLevel())
         return;
@@ -540,12 +541,12 @@ register struct monst *mtmp;
      *  Soldiers get armour & rations - armour approximates their ac.
      *  Nymphs may get mirror or potion of object detection.
      */
-    switch (monsterClass(ptr->monsterTypeID)) {
+    switch (monsterClass(pmid)) {
     case S_HUMAN:
-        if (isMercenary(ptr->monsterTypeID)) {
+        if (isMercenary(pmid)) {
             register int mac;
 
-            switch (monsndx(ptr)) {
+            switch (pmid) {
             case PM_GUARD:
                 mac = -1;
                 break;
@@ -568,7 +569,7 @@ register struct monst *mtmp;
                 mac = -2;
                 break;
             default:
-                impossible("odd mercenary %d?", monsndx(ptr));
+                impossible("odd mercenary %d?", pmid);
                 mac = 0;
                 break;
             }
@@ -737,7 +738,7 @@ xchar x, y; /* clone's preferred location or 0 (near mon) */
     struct monst *m2;
 
     /* may be too weak or have been extinguished for population control */
-    if (mon->mhp <= 1 || (mvitals[monsndx(mon->data)].mvflags & G_EXTINCT))
+    if (mon->mhp <= 1 || (mvitals[mon->data->monsterTypeID].mvflags & G_EXTINCT))
         return (struct monst *) 0;
 
     if (x == 0) {
@@ -877,15 +878,16 @@ struct monst *mon;
 {
     struct permonst *ptr = mon->data;
     int hp = rnd(8); /* default is d8 */
+    int pmid = ptr->monsterTypeID;
 
     /* like newmonhp, but home elementals are ignored, riders use normal d8 */
-    if (isGolem(ptr->monsterTypeID)) {
+    if (isGolem(pmid)) {
         /* draining usually won't be applicable for these critters */
-        hp = golemhp(monsndx(ptr)) / monsterLevel(ptr->monsterTypeID);
-    } else if (monsterLevel(ptr->monsterTypeID) > 49) {
+        hp = golemhp(pmid) / monsterLevel(pmid);
+    } else if (monsterLevel(pmid) > 49) {
         /* arbitrary; such monsters won't be involved in draining anyway */
         hp = 4 + rnd(4); /* 5..8 */
-    } else if (monsterClass(ptr->monsterTypeID) == S_DRAGON && monsndx(ptr) >= PM_GRAY_DRAGON) {
+    } else if (monsterClass(pmid) == S_DRAGON && (pmid >= PM_GRAY_DRAGON)) {
         /* adult dragons; newmonhp() uses areYouInEndgame() ? 8 : 4 + rnd(4)
          */
         hp = 4 + rn2(5); /* 4..8 */
@@ -1071,7 +1073,7 @@ int mmflags;
     }
 
     if (ptr) {
-        mndx = monsndx(ptr);
+        mndx = ptr->monsterTypeID;
         /* if you are to make a specific monster and it has
            already been genocided, return */
         if (mvitals[mndx].mvflags & G_GENOD)
@@ -1100,7 +1102,7 @@ int mmflags;
                     after that, boulder carriers are fair game */
                  && ((tryct == 1 && throwsRocks(ptr->monsterTypeID) && areYouOnASokobanLevel())
                      || !goodpos(x, y, &fakemon, gpflags)));
-        mndx = monsndx(ptr);
+        mndx = ptr->monsterTypeID;
     }
     (void) propagate(mndx, countbirth, FALSE);
     mtmp = newmonst();
@@ -1689,7 +1691,7 @@ struct monst *mtmp, *victim;
 
     /* note:  none of the monsters with special hit point calculations
        have both little and big forms */
-    oldtype = monsndx(ptr);
+    oldtype = ptr->monsterTypeID;
     newtype = little_to_big(oldtype);
     if (newtype == PM_PRIEST && mtmp->female)
         newtype = PM_PRIESTESS;
