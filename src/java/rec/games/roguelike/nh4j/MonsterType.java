@@ -2000,19 +2000,19 @@ public class MonsterType {
 				.flags1(M1.CARNIVORE, M1.HERBIVORE, M1.HUMANOID, M1.OMNIVORE)
 				.flags2(M2.COLLECT, M2.HUMAN, M2.NOPOLY, M2.STRONG).flags3(M3.INFRAVISIBLE).color(CLR.WHITE).add();
 
-		MonsterType.of(MC.HUMAN, PM.WERERAT, "wererat").level(2).move(12).ac(10).mr(10).chaotic(7).freq(1)
+		MonsterType.of(MC.HUMAN, PM.HUMAN_WERERAT, "wererat").level(2).move(12).ac(10).mr(10).chaotic(7).freq(1)
 				.attack(AT.WEAP, AD.PHYS, 2, Dice.D4).weight(1450).nutrition(400).sound(MS.WERE).size(MZ.HUMAN)
 				.resists(MR.POISON).flags1(M1.CARNIVORE, M1.HERBIVORE, M1.HUMANOID, M1.OMNIVORE, M1.POIS, M1.REGEN)
 				.flags2(M2.COLLECT, M2.HOSTILE, M2.HUMAN, M2.NOPOLY, M2.WERE).flags3(M3.INFRAVISIBLE).color(CLR.BROWN)
 				.add();
 
-		MonsterType.of(MC.HUMAN, PM.WEREJACKAL, "werejackal").level(2).move(12).ac(10).mr(10).chaotic(7).freq(1)
+		MonsterType.of(MC.HUMAN, PM.HUMAN_WEREJACKAL, "werejackal").level(2).move(12).ac(10).mr(10).chaotic(7).freq(1)
 				.attack(AT.WEAP, AD.PHYS, 2, Dice.D4).weight(1450).nutrition(400).sound(MS.WERE).size(MZ.HUMAN)
 				.resists(MR.POISON).flags1(M1.CARNIVORE, M1.HERBIVORE, M1.HUMANOID, M1.OMNIVORE, M1.POIS, M1.REGEN)
 				.flags2(M2.COLLECT, M2.HOSTILE, M2.HUMAN, M2.NOPOLY, M2.WERE).flags3(M3.INFRAVISIBLE).color(CLR.RED)
 				.add();
 
-		MonsterType.of(MC.HUMAN, PM.WEREWOLF, "werewolf").level(5).move(12).ac(10).mr(20).chaotic(7).freq(1)
+		MonsterType.of(MC.HUMAN, PM.HUMAN_WEREWOLF, "werewolf").level(5).move(12).ac(10).mr(20).chaotic(7).freq(1)
 				.attack(AT.WEAP, AD.PHYS, 2, Dice.D4).weight(1450).nutrition(400).sound(MS.WERE).size(MZ.HUMAN)
 				.resists(MR.POISON).flags1(M1.CARNIVORE, M1.HERBIVORE, M1.HUMANOID, M1.OMNIVORE, M1.POIS, M1.REGEN)
 				.flags2(M2.COLLECT, M2.HOSTILE, M2.HUMAN, M2.NOPOLY, M2.WERE).flags3(M3.INFRAVISIBLE).color(CLR.ORANGE)
