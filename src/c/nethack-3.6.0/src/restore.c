@@ -1342,7 +1342,7 @@ boolean ghostly;
                     (isUnicorn(mtmp->data->monsterTypeID)
                      && sgn(currentAlignmentType()) == sgn(monsterAlignment(mtmp->data->monsterTypeID)))
                         ? TRUE
-                        : peace_minded(mtmp->data);
+                        : peace_minded(mtmp->data->monsterTypeID);
             set_malign(mtmp);
         } else if (elapsed > 0L) {
             mon_catchup_elapsed_time(mtmp, elapsed);

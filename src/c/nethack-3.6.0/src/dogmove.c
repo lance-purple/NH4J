@@ -335,8 +335,9 @@ boolean devour;
 
     /* limit "instant" growth to prevent potential abuse */
     if (grow && (int) mtmp->m_lev < (int) monsterLevel(mtmp->data->monsterTypeID) + 15) {
-        if (!grow_up(mtmp, (struct monst *) 0))
+        if (!grow_up_instantly(mtmp)) {
             return 2;
+	}
     }
     if (heal)
         mtmp->mhp = mtmp->mhpmax;

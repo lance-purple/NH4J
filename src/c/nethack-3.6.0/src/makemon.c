@@ -126,7 +126,7 @@ register int x, y, n;
     mm.x = x;
     mm.y = y;
     while (cnt--) {
-        if (peace_minded(mtmp->data))
+        if (peace_minded(mtmp->data->monsterTypeID))
             continue;
         /* Don't create groups of peaceful monsters since they'll get
          * in our way.  If the monster has a percentage chance so some
@@ -1155,7 +1155,7 @@ int mmflags;
 
     place_monster(mtmp, x, y);
     mtmp->mcansee = mtmp->mcanmove = TRUE;
-    mtmp->mpeaceful = (mmflags & MM_ANGRY) ? FALSE : peace_minded(ptr);
+    mtmp->mpeaceful = (mmflags & MM_ANGRY) ? FALSE : peace_minded(ptr->monsterTypeID);
 
     switch (monsterClass(ptr->monsterTypeID)) {
     case S_MIMIC:
@@ -1675,10 +1675,11 @@ int pmid;
     return ((tmp > tmp2) ? tmp2 : (tmp > 0 ? tmp : 0)); /* 0 lower limit */
 }
 
+
 /* monster earned experience and will gain some hit points; it might also
    grow into a bigger monster (baby to adult, soldier to officer, etc) */
 struct permonst *
-grow_up(mtmp, victim)
+grow_up_from_exp(mtmp, victim)
 struct monst *mtmp, *victim;
 {
     int oldtype, newtype, max_increase, cur_increase, lev_limit, hp_threshold;
@@ -1730,6 +1731,86 @@ struct monst *mtmp, *victim;
         hp_threshold = 0; /* smaller than `mhpmax + max_increase' */
         lev_limit = 50;   /* recalc below */
     }
+
+    mtmp->mhpmax += max_increase;
+    mtmp->mhp += cur_increase;
+    if (mtmp->mhpmax <= hp_threshold)
+        return ptr; /* doesn't gain a level */
+
+    if (is_mplayer(ptr))
+        lev_limit = 30; /* same as player */
+    else if (lev_limit < 5)
+        lev_limit = 5; /* arbitrary */
+    else if (lev_limit > 49)
+        lev_limit = (monsterLevel(ptr->monsterTypeID) > 49 ? 50 : 49);
+
+    if ((int) ++mtmp->m_lev >= monsterLevel(mons[newtype].monsterTypeID) && newtype != oldtype) {
+        ptr = &mons[newtype];
+        if (mvitals[newtype].mvflags & G_GENOD) { /* allow G_EXTINCT */
+            if (canspotmon(mtmp)) {
+		javaString monsterName = monsterTypeName(ptr->monsterTypeID);
+                pline("As %s grows up into %s, %s %s!", mon_nam(mtmp),
+                      an(monsterName.c_str), mhe(mtmp),
+                      isNonliving(ptr->monsterTypeID) ? "expires" : "dies");
+		releaseJavaString(monsterName);
+	    }
+            set_mon_data(mtmp, ptr, -1); /* keep mvitals[] accurate */
+            mondied(mtmp);
+            return (struct permonst *) 0;
+        } else if (canspotmon(mtmp)) {
+	    javaString monsterName = monsterTypeName(ptr->monsterTypeID);
+            pline("%s %s %s.", Monnam(mtmp),
+                  isHumanoid(ptr->monsterTypeID) ? "becomes" : "grows up into",
+                  an(monsterName.c_str));
+	    releaseJavaString(monsterName);
+        }
+        set_mon_data(mtmp, ptr, 1);    /* preserve intrinsics */
+        newsym(mtmp->mx, mtmp->my);    /* color may change */
+        lev_limit = (int) mtmp->m_lev; /* never undo increment */
+    }
+    /* sanity checks */
+    if ((int) mtmp->m_lev > lev_limit) {
+        mtmp->m_lev--; /* undo increment */
+        /* HP might have been allowed to grow when it shouldn't */
+        if (mtmp->mhpmax == hp_threshold + 1)
+            mtmp->mhpmax--;
+    }
+    if (mtmp->mhpmax > 50 * 8)
+        mtmp->mhpmax = 50 * 8; /* absolute limit */
+    if (mtmp->mhp > mtmp->mhpmax)
+        mtmp->mhp = mtmp->mhpmax;
+
+    return ptr;
+}
+
+/* monster drank a gain level potion, etc. and will gain some hit points; it might also
+   grow into a bigger monster (baby to adult, soldier to officer, etc) */
+struct permonst *
+grow_up_instantly(mtmp)
+struct monst *mtmp;
+{
+    int oldtype, newtype, max_increase, cur_increase, lev_limit, hp_threshold;
+    struct permonst *ptr = mtmp->data;
+
+    /* monster died after killing enemy but before calling this function */
+    /* currently possible if killing a gas spore */
+    if (mtmp->mhp <= 0)
+        return (struct permonst *) 0;
+
+    /* note:  none of the monsters with special hit point calculations
+       have both little and big forms */
+    oldtype = ptr->monsterTypeID;
+    newtype = little_to_big(oldtype);
+    if (newtype == PM_PRIEST && mtmp->female)
+        newtype = PM_PRIESTESS;
+
+    /* growth limits differ depending on method of advancement */
+    /* a gain level potion or wraith corpse; always go up a level
+       unless already at maximum (49 is hard upper limit except
+       for demon lords, who start at 50 and can't go any higher) */
+    max_increase = cur_increase = rnd(8);
+    hp_threshold = 0; /* smaller than `mhpmax + max_increase' */
+    lev_limit = 50;   /* recalc below */
 
     mtmp->mhpmax += max_increase;
     mtmp->mhp += cur_increase;
@@ -1872,25 +1953,25 @@ int type;
  *      (Some "animal" types are co-aligned, but also hungry.)
  */
 boolean
-peace_minded(ptr)
-register struct permonst *ptr;
+peace_minded(pmid)
+int pmid;
 {
-    aligntyp mal = monsterAlignment(ptr->monsterTypeID);
+    aligntyp mal = monsterAlignment(pmid);
     aligntyp ual = currentAlignmentType();
-    int msound = monsterSound(ptr->monsterTypeID);
+    int msound = monsterSound(pmid);
 
-    if (isAlwaysPeaceful(ptr->monsterTypeID))
+    if (isAlwaysPeaceful(pmid))
         return TRUE;
-    if (isAlwaysHostile(ptr->monsterTypeID))
+    if (isAlwaysHostile(pmid))
         return FALSE;
     if (msound == MS_LEADER || msound == MS_GUARDIAN)
         return TRUE;
     if (msound == MS_NEMESIS)
         return FALSE;
 
-    if (racialFriendship(ptr->monsterTypeID, urace.lovemask))
+    if (racialFriendship(pmid, urace.lovemask))
         return TRUE;
-    if (racialHostility(ptr->monsterTypeID, urace.hatemask))
+    if (racialHostility(pmid, urace.hatemask))
         return FALSE;
 
     /* the monster is hostile if its alignment is different from the
@@ -1903,7 +1984,7 @@ register struct permonst *ptr;
         return FALSE;
 
     /* minions are hostile to players that have strayed at all */
-    if (isMinion(ptr->monsterTypeID))
+    if (isMinion(pmid))
         return (boolean) (currentAlignmentRecord() >= 0);
 
     /* Last case:  a chance of a co-aligned monster being

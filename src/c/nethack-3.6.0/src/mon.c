@@ -808,7 +808,7 @@ register struct monst *mtmp;
                         if (newcham(mtmp, (struct permonst *) 0, FALSE, FALSE))
                             ptr = mtmp->data;
                     } else if (grow) {
-                        ptr = grow_up(mtmp, (struct monst *) 0);
+                        ptr = grow_up_instantly(mtmp);
                     } else if (mstone) {
                         if (poly_when_stoned(ptr)) {
                             mon_to_stone(mtmp);
@@ -934,7 +934,7 @@ struct monst *mtmp;
                 if (newcham(mtmp, (struct permonst *) 0, FALSE, FALSE))
                     ptr = mtmp->data;
             } else if (grow) {
-                ptr = grow_up(mtmp, (struct monst *) 0);
+                ptr = grow_up_instantly(mtmp);
             } else if (heal) {
                 mtmp->mhp = mtmp->mhpmax;
             }
@@ -3263,7 +3263,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
                             : x_monnam(mtmp, ARTICLE_A, (char *) 0,
                                        SUPPRESS_SADDLE, FALSE));
         if (!strcmpi(oldname, "it") && !strcmpi(newname, "it"))
-            (void) usmellmon(mdat);
+            (void) usmellmon(mdat->monsterTypeID);
         else
             pline("%s turns into %s!", oldname, newname);
         if (save_mname)
@@ -3564,18 +3564,16 @@ short otyp;
 }
 
 boolean
-usmellmon(mdat)
-struct permonst *mdat;
+usmellmon(pmid)
+int pmid;
 {
     int mndx;
     boolean nonspecific = FALSE;
     boolean msg_given = FALSE;
 
-    if (mdat) {
         if (!olfaction(youmonst.data->monsterTypeID))
             return FALSE;
-        mndx = mdat->monsterTypeID;
-        switch (mndx) {
+        switch (pmid) {
         case PM_ROTHE:
         case PM_MINOTAUR:
             You("notice a bovine smell.");
@@ -3641,7 +3639,7 @@ struct permonst *mdat;
         }
 
         if (nonspecific)
-            switch (monsterClass(mdat->monsterTypeID)) {
+            switch (monsterClass(pmid)) {
             case S_DOG:
                 You("notice a dog smell.");
                 msg_given = TRUE;
@@ -3677,7 +3675,7 @@ struct permonst *mdat;
             default:
                 break;
             }
-    }
+    
     return msg_given ? TRUE : FALSE;
 }
 

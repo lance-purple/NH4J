@@ -1774,10 +1774,11 @@ E void FDECL(reset_rndmonst, (int));
 E struct permonst *FDECL(mkclass, (CHAR_P, int));
 E int FDECL(mkclass_poly, (int));
 E int FDECL(adj_lev, (int));
-E struct permonst *FDECL(grow_up, (struct monst *, struct monst *));
+E struct permonst *FDECL(grow_up_from_exp, (struct monst *, struct monst *));
+E struct permonst *FDECL(grow_up_instantly, (struct monst *));
 E int FDECL(mongets, (struct monst *, int));
 E int FDECL(golemhp, (int));
-E boolean FDECL(peace_minded, (struct permonst *));
+E boolean FDECL(peace_minded, (int));
 E void FDECL(set_malign, (struct monst *));
 E void FDECL(newmcorpsenm, (struct monst *));
 E void FDECL(freemcorpsenm, (struct monst *));
@@ -1787,7 +1788,7 @@ E void FDECL(mimic_hit_msg, (struct monst *, SHORT_P));
 E void FDECL(mkmonmoney, (struct monst *, long));
 E int FDECL(bagotricks, (struct obj *, BOOLEAN_P, int *));
 E boolean FDECL(propagate, (int, BOOLEAN_P, BOOLEAN_P));
-E boolean FDECL(usmellmon, (struct permonst *));
+E boolean FDECL(usmellmon, (int));
 
 /* ### mapglyph.c ### */
 

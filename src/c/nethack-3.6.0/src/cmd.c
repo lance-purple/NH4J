@@ -1100,7 +1100,7 @@ wiz_smell(VOID_ARGS)
             mndx = 0;
         /* Is it a monster? */
         if (mndx) {
-            if (!usmellmon(&mons[mndx]))
+            if (!usmellmon(mons[mndx].monsterTypeID))
                 pline("That monster seems to give off no smell.");
         } else
             pline("That is not a monster.");

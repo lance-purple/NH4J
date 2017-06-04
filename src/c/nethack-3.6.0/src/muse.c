@@ -1794,7 +1794,7 @@ struct monst *mtmp;
         if (oseen)
             makeknown(POT_GAIN_LEVEL);
         m_useup(mtmp, otmp);
-        if (!grow_up(mtmp, (struct monst *) 0))
+        if (!grow_up_instantly(mtmp))
             return 1;
         /* grew into genocided monster */
         return 2;
