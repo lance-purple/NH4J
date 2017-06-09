@@ -810,7 +810,7 @@ register struct monst *mtmp;
                     } else if (grow) {
                         ptr = grow_up_instantly(mtmp);
                     } else if (mstone) {
-                        if (poly_when_stoned(ptr)) {
+                        if (poly_when_stoned(ptr->monsterTypeID)) {
                             mon_to_stone(mtmp);
                             ptr = mtmp->data;
                         } else if (!resists_ston(mtmp)) {
@@ -1710,8 +1710,8 @@ struct monst *mtmp;
             makeknown(AMULET_OF_LIFE_SAVING);
             /* amulet is visible, but monster might not be */
             if (canseemon(mtmp)) {
-                if (attacktype(mtmp->data, AT_EXPL)
-                    || attacktype(mtmp->data, AT_BOOM))
+                if (attacktype(mtmp->data->monsterTypeID, AT_EXPL)
+                    || attacktype(mtmp->data->monsterTypeID, AT_BOOM))
                     pline("%s reconstitutes!", Monnam(mtmp));
                 else
                     pline("%s looks much better!", Monnam(mtmp));
@@ -3217,7 +3217,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
         (void) hideunder(mtmp);
     if (u.ustuck == mtmp) {
         if (swallowed()) {
-            if (!attacktype(mdat, AT_ENGL)) {
+            if (!attacktype(mdat->monsterTypeID, AT_ENGL)) {
                 /* Does mdat care? */
                 if (!isNoncorporeal(mdat->monsterTypeID) && !isAmorphous(mdat->monsterTypeID)
                     && !isWhirly(mdat->monsterTypeID) && (mdat != &mons[PM_YELLOW_LIGHT])) {

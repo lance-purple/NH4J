@@ -2514,8 +2514,8 @@ register struct monst *mtmp;
         case ANTI_MAGIC:
             /* similar to hero's case, more or less */
             if (!resists_magm(mtmp)) { /* lose spell energy */
-                if (!mtmp->mcan && (attacktype(mptr, AT_MAGC)
-                                    || attacktype(mptr, AT_BREA))) {
+                if (!mtmp->mcan && (attacktype(mptr->monsterTypeID, AT_MAGC)
+                                    || attacktype(mptr->monsterTypeID, AT_BREA))) {
                     mtmp->mspec_used += d(2, 2);
                     if (in_sight) {
                         seetrap(trap);
@@ -2655,7 +2655,7 @@ const char *str;
 {
     if (youResistStoning())
         return;
-    if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))
+    if (poly_when_stoned(youmonst.data->monsterTypeID) && polymon(PM_STONE_GOLEM))
         return;
     You("turn to stone...");
     killer.format = KILLED_BY;
@@ -2671,7 +2671,7 @@ boolean byplayer;
 {
     if (resists_ston(mon))
         return;
-    if (poly_when_stoned(mon->data)) {
+    if (poly_when_stoned(mon->data->monsterTypeID)) {
         mon_to_stone(mon);
         return;
     }
@@ -4110,7 +4110,7 @@ struct trap *ttmp;
             makeplural(body_part(HAND)));
 	releaseJavaString(monsterName);
 
-        if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM)) {
+        if (poly_when_stoned(youmonst.data->monsterTypeID) && polymon(PM_STONE_GOLEM)) {
             display_nhwindow(WIN_MESSAGE, FALSE);
         } else {
             char kbuf[BUFSZ];

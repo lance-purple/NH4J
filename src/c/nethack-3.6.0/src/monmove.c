@@ -109,7 +109,7 @@ register struct monst *mtmp;
             || distanceSquaredToYou(x, y) > (BOLT_LIM + 1) * (BOLT_LIM + 1))
         /* can see it now, or sense it and would normally see it */
         && (canseemon(mtmp) || (sensemon(mtmp) && couldsee(x, y)))
-        && mtmp->mcanmove && !monsterDoesNotAttack(mtmp->data)
+        && mtmp->mcanmove && !monsterDoesNotAttack(mtmp->data->monsterTypeID)
         && !onscary(currentX(), currentY(), mtmp))
         stop_occupation();
 
@@ -516,7 +516,7 @@ toofar:
      */
     if ((!mtmp->mpeaceful || youCauseConflict()) && inrange
         && dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) <= 8
-        && attacktype(mdat, AT_WEAP)) {
+        && attacktype(mdat->monsterTypeID, AT_WEAP)) {
         struct obj *mw_tmp;
 
         /* The scared check is necessary.  Otherwise a monster that is
@@ -592,7 +592,7 @@ toofar:
                 return 0;
             /* Monsters can move and then shoot on same turn;
                our hero can't.  Is that fair? */
-            if (!nearby && (ranged_attk(mdat) || find_offensive(mtmp)))
+            if (!nearby && (ranged_attk(mdat->monsterTypeID) || find_offensive(mtmp)))
                 break;
             /* engulfer/grabber checks */
             if (mtmp == u.ustuck) {
@@ -615,7 +615,7 @@ toofar:
      */
 
     if (!mtmp->mpeaceful || (youCauseConflict() && !resist(mtmp, RING_CLASS, 0, 0))) {
-        if (inrange && !monsterDoesNotAttack(mdat) && currentHitPoints() > 0 && !scared && tmp != 3)
+        if (inrange && !monsterDoesNotAttack(mdat->monsterTypeID) && currentHitPoints() > 0 && !scared && tmp != 3)
             if (mattacku(mtmp))
                 return 1; /* monster died (e.g. exploded) */
 

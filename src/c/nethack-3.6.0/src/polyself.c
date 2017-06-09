@@ -677,7 +677,7 @@ int mntmp;
     }
     releaseJavaString(monsterName);
 
-    if (youAreTurningToStone() && poly_when_stoned(&mons[mntmp])) {
+    if (youAreTurningToStone() && poly_when_stoned(mons[mntmp].monsterTypeID)) {
         /* poly_when_stoned already checked stone golem genocide */
         mntmp = PM_STONE_GOLEM;
         make_stoned(0L, "You turn to stone!", 0, (char *) 0);
@@ -789,11 +789,11 @@ int mntmp;
 
         if (can_breathe(youmonst.data))
             pline(use_thec, monsterc, "use your breath weapon");
-        if (attacktype(youmonst.data, AT_SPIT))
+        if (attacktype(youmonst.data->monsterTypeID, AT_SPIT))
             pline(use_thec, monsterc, "spit venom");
         if (monsterClass(youmonst.data->monsterTypeID) == S_NYMPH)
             pline(use_thec, monsterc, "remove an iron ball");
-        if (attacktype(youmonst.data, AT_GAZE))
+        if (attacktype(youmonst.data->monsterTypeID, AT_GAZE))
             pline(use_thec, monsterc, "gaze at monsters");
         if (isHider(youmonst.data->monsterTypeID))
             pline(use_thec, monsterc, "hide");
@@ -1091,7 +1091,7 @@ dobreathe()
     if (!getdir((char *) 0))
         return 0;
 
-    struct Attack mattk = monsterAttackWithDamageType(youmonst.data, AT_BREA, AD_ANY);
+    struct Attack mattk = monsterAttackWithDamageType(youmonst.data->monsterTypeID, AT_BREA, AD_ANY);
 
     if (!validAttack(mattk)) {
         impossible("bad breath attack?"); /* mouthwash needed... */
@@ -1114,7 +1114,7 @@ dospit()
     if (!getdir((char *) 0))
         return 0;
 
-    struct Attack mattk = monsterAttackWithDamageType(youmonst.data, AT_SPIT, AD_ANY);
+    struct Attack mattk = monsterAttackWithDamageType(youmonst.data->monsterTypeID, AT_SPIT, AD_ANY);
 
     if (!validAttack(mattk)) {
         impossible("bad spit attack?");
@@ -1684,7 +1684,7 @@ int part;
         return humanoid_parts[part]; /* yeti/sasquatch, monkey/ape */
     }
     if ((part == HAND || part == HANDED)
-        && (isHumanoid(mptr->monsterTypeID) && attacktype(mptr, AT_CLAW)
+        && (isHumanoid(mptr->monsterTypeID) && attacktype(mptr->monsterTypeID, AT_CLAW)
             && !index(not_claws, mc) && mptr != &mons[PM_STONE_GOLEM]
             && mptr != &mons[PM_INCUBUS] && mptr != &mons[PM_SUCCUBUS]))
         return (part == HAND) ? "claw" : "clawed";

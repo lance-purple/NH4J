@@ -584,7 +584,7 @@ boolean polyspot;
         mon->weapon_check = NEED_WEAPON;
         return;
     }
-    if (!attacktype(mon->data, AT_WEAP)) {
+    if (!attacktype(mon->data->monsterTypeID, AT_WEAP)) {
         setmnotwielded(mon, mw_tmp);
         mon->weapon_check = NO_WEAPON_WANTED;
         obj_extract_self(obj);

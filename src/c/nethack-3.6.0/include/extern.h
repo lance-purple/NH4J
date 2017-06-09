@@ -1925,14 +1925,12 @@ E struct obj *FDECL(mksobj, (int, BOOLEAN_P, BOOLEAN_P));
 E int FDECL(bcsign, (struct obj *));
 E int FDECL(weight, (struct obj *));
 E struct obj *FDECL(mkgold, (long, int, int));
-E struct obj *FDECL(mkcorpstat, (int, struct monst *, struct permonst *, int,
-                                 int, unsigned));
+E struct obj *FDECL(mkcorpstat, (int, struct monst *, struct permonst *, int, int, unsigned));
 E int FDECL(corpse_revive_type, (struct obj *));
 E struct obj *FDECL(obj_attach_mid, (struct obj *, unsigned));
 E struct monst *FDECL(get_mtraits, (struct obj *, BOOLEAN_P));
 E struct obj *FDECL(mk_tt_object, (int, int, int));
-E struct obj *FDECL(mk_named_object,
-                    (int, struct permonst *, int, int, const char *));
+E struct obj *FDECL(mk_named_object, (int, struct permonst *, int, int, const char *));
 E struct obj *FDECL(rnd_treefruit_at, (int, int));
 E void FDECL(set_corpsenm, (struct obj *, int));
 E void FDECL(start_corpse_timeout, (struct obj *));
@@ -2032,8 +2030,7 @@ E void FDECL(hide_monst, (struct monst *));
 E void FDECL(mon_animal_list, (BOOLEAN_P));
 E int FDECL(select_newcham_form, (struct monst *));
 E void FDECL(mgender_from_permonst, (struct monst *, struct permonst *));
-E int FDECL(newcham,
-            (struct monst *, struct permonst *, BOOLEAN_P, BOOLEAN_P));
+E int FDECL(newcham, (struct monst *, struct permonst *, BOOLEAN_P, BOOLEAN_P));
 E int FDECL(can_be_hatched, (int));
 E int FDECL(egg_type_from_parent, (int, BOOLEAN_P));
 E boolean FDECL(dead_species, (int, BOOLEAN_P));
@@ -2046,17 +2043,16 @@ E void FDECL(decide_to_shapeshift, (struct monst *, int));
 /* ### mondata.c ### */
 
 E void FDECL(set_mon_data, (struct monst *, struct permonst *, int));
-E boolean FDECL(monsterHasAttackWithDamageType, (struct permonst *, const int, const int));
-E const struct Attack FDECL(monsterAttackWithDamageType, (struct permonst *, const int, const int));
-E boolean FDECL(attacktype, (struct permonst *, int));
-E boolean FDECL(monsterDoesNotAttack, (const struct permonst *));
-E boolean FDECL(poly_when_stoned, (struct permonst *));
+E boolean FDECL(monsterHasAttackWithDamageType, (int, const int, const int));
+E const struct Attack FDECL(monsterAttackWithDamageType, (int, const int, const int));
+E boolean FDECL(attacktype, (int, int));
+E boolean FDECL(monsterDoesNotAttack, (int));
+E boolean FDECL(poly_when_stoned, (int));
 E boolean FDECL(resists_drli, (struct monst *));
 E boolean FDECL(resists_magm, (struct monst *));
 E boolean FDECL(resists_blnd, (struct monst *));
-E boolean
-FDECL(can_blnd, (struct monst *, struct monst *, UCHAR_P, struct obj *));
-E boolean FDECL(ranged_attk, (struct permonst *));
+E boolean FDECL(can_blnd, (struct monst *, struct monst *, UCHAR_P, struct obj *));
+E boolean FDECL(ranged_attk, (int));
 E boolean FDECL(hates_silver, (struct permonst *));
 E boolean FDECL(mon_hates_silver, (struct monst *));
 E boolean FDECL(passes_bars, (struct permonst *));
@@ -2218,8 +2214,7 @@ E void NDECL(monstr_init);
 
 /* ### mplayer.c ### */
 
-E struct monst *FDECL(mk_mplayer,
-                      (struct permonst *, XCHAR_P, XCHAR_P, BOOLEAN_P));
+E struct monst *FDECL(mk_mplayer, (struct permonst *, XCHAR_P, XCHAR_P, BOOLEAN_P));
 E void FDECL(create_mplayers, (int, BOOLEAN_P));
 E void FDECL(mplayer_talk, (struct monst *));
 

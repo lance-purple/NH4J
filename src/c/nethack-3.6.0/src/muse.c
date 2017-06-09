@@ -1001,7 +1001,7 @@ struct monst *mtmp;
     int trycnt = 0;
     int mc = monsterClass(pm->monsterTypeID);
 
-    if (isAnimal(pm->monsterTypeID) || attacktype(pm, AT_EXPL) || isMindless(pm->monsterTypeID)
+    if (isAnimal(pm->monsterTypeID) || attacktype(pm->monsterTypeID, AT_EXPL) || isMindless(pm->monsterTypeID)
         || mc == S_GHOST || mc == S_KOP)
         return 0;
 try_again:
@@ -1142,7 +1142,7 @@ struct monst *mtmp;
             m.has_offense = MUSE_POT_PARALYSIS;
         }
         nomore(MUSE_POT_BLINDNESS);
-        if (obj->otyp == POT_BLINDNESS && !attacktype(mtmp->data, AT_GAZE)) {
+        if (obj->otyp == POT_BLINDNESS && !attacktype(mtmp->data->monsterTypeID, AT_GAZE)) {
             m.offensive = obj;
             m.has_offense = MUSE_POT_BLINDNESS;
         }
@@ -1543,7 +1543,7 @@ struct monst *mtmp;
     int difficulty = monstr[pm->monsterTypeID];
     int mc = monsterClass(pm->monsterTypeID);
 
-    if (isAnimal(pm->monsterTypeID) || attacktype(pm, AT_EXPL) || isMindless(pm->monsterTypeID)
+    if (isAnimal(pm->monsterTypeID) || attacktype(pm->monsterTypeID, AT_EXPL) || isMindless(pm->monsterTypeID)
         || mc == S_GHOST || mc == S_KOP)
         return 0;
     if (difficulty > 7 && !rn2(35))
@@ -1683,14 +1683,14 @@ struct monst *mtmp;
         nomore(MUSE_WAN_MAKE_INVISIBLE);
         if (obj->otyp == WAN_MAKE_INVISIBLE && obj->spe > 0 && !mtmp->minvis
             && !mtmp->invis_blkd && (!mtmp->mpeaceful || youCanSeeInvisible())
-            && (!attacktype(mtmp->data, AT_GAZE) || mtmp->mcan)) {
+            && (!attacktype(mtmp->data->monsterTypeID, AT_GAZE) || mtmp->mcan)) {
             m.misc = obj;
             m.has_misc = MUSE_WAN_MAKE_INVISIBLE;
         }
         nomore(MUSE_POT_INVISIBILITY);
         if (obj->otyp == POT_INVISIBILITY && !mtmp->minvis
             && !mtmp->invis_blkd && (!mtmp->mpeaceful || youCanSeeInvisible())
-            && (!attacktype(mtmp->data, AT_GAZE) || mtmp->mcan)) {
+            && (!attacktype(mtmp->data->monsterTypeID, AT_GAZE) || mtmp->mcan)) {
             m.misc = obj;
             m.has_misc = MUSE_POT_INVISIBILITY;
         }
@@ -1979,7 +1979,7 @@ struct monst *mtmp;
     int difficulty = monstr[pm->monsterTypeID];
     int mc = monsterClass(pm->monsterTypeID);
 
-    if (isAnimal(pm->monsterTypeID) || attacktype(pm, AT_EXPL) || isMindless(pm->monsterTypeID)
+    if (isAnimal(pm->monsterTypeID) || attacktype(pm->monsterTypeID, AT_EXPL) || isMindless(pm->monsterTypeID)
         || mc == S_GHOST || mc == S_KOP)
         return 0;
     /* Unlike other rnd_item functions, we only allow _weak_ monsters
@@ -2021,7 +2021,7 @@ struct obj *obj;
 
     if (typ == WAN_MAKE_INVISIBLE || typ == POT_INVISIBILITY)
         return (boolean) (!mon->minvis && !mon->invis_blkd
-                          && !attacktype(mon->data, AT_GAZE));
+                          && !attacktype(mon->data->monsterTypeID, AT_GAZE));
     if (typ == WAN_SPEED_MONSTER || typ == POT_SPEED)
         return (boolean) (mon->mspeed != MFAST);
 
@@ -2043,7 +2043,7 @@ struct obj *obj;
             || typ == POT_GAIN_LEVEL || typ == POT_PARALYSIS
             || typ == POT_SLEEPING || typ == POT_ACID || typ == POT_CONFUSION)
             return TRUE;
-        if (typ == POT_BLINDNESS && !attacktype(mon->data, AT_GAZE))
+        if (typ == POT_BLINDNESS && !attacktype(mon->data->monsterTypeID, AT_GAZE))
             return TRUE;
         break;
     case SCROLL_CLASS:
@@ -2336,7 +2336,7 @@ boolean by_you;
        [possible extension: monst capable of casting high level clerical
        spells could toss pillar of fire at self--probably too suicidal] */
     if (!mon->mcan && !mon->mspec_used
-        && monsterHasAttackWithDamageType(mon->data, AT_BREA, AD_FIRE)) {
+        && monsterHasAttackWithDamageType(mon->data->monsterTypeID, AT_BREA, AD_FIRE)) {
         odummy = zeroobj; /* otyp == STRANGE_OBJECT */
         return muse_unslime(mon, &odummy, by_you);
     }

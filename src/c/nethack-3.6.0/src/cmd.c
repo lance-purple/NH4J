@@ -490,11 +490,11 @@ domonability(VOID_ARGS)
     int upmid = youmonst.data->monsterTypeID;
     if (can_breathe(youmonst.data))
         return dobreathe();
-    else if (attacktype(youmonst.data, AT_SPIT))
+    else if (attacktype(youmonst.data->monsterTypeID, AT_SPIT))
         return dospit();
     else if (monsterClass(upmid) == S_NYMPH)
         return doremove();
-    else if (attacktype(youmonst.data, AT_GAZE))
+    else if (attacktype(youmonst.data->monsterTypeID, AT_GAZE))
         return dogaze();
     else if (isWere(youmonst.data->monsterTypeID))
         return dosummon();

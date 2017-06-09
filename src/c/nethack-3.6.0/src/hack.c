@@ -1442,7 +1442,7 @@ domove()
         /* remembered an 'I' && didn't use a move command */
         || (glyph_is_invisible(levl[x][y].glyph) && !context.nopick)) {
         struct obj *boulder = 0;
-        boolean explo = (areYouPolymorphed() && attacktype(youmonst.data, AT_EXPL)),
+        boolean explo = (areYouPolymorphed() && attacktype(youmonst.data->monsterTypeID, AT_EXPL)),
                 solid = !accessible(x, y);
         int glyph = glyph_at(x, y); /* might be monster */
         char buf[BUFSZ];
@@ -2667,7 +2667,7 @@ monster_nearby()
                 && mtmp->m_ap_type != M_AP_OBJECT
                 && (!mtmp->mpeaceful || youAreHallucinating())
                 && (!isHider(mtmp->data->monsterTypeID) || !mtmp->mundetected)
-                && !monsterDoesNotAttack(mtmp->data) && mtmp->mcanmove
+                && !monsterDoesNotAttack(mtmp->data->monsterTypeID) && mtmp->mcanmove
                 && !mtmp->msleeping  /* aplvax!jcn */
                 && !onscary(currentX(), currentY(), mtmp) && canspotmon(mtmp))
                 return 1;

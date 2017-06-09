@@ -190,7 +190,7 @@ xchar x, y;
      * normally, getting all your attacks _including_ all your kicks.
      * If you have >1 kick attack, you get all of them.
      */
-    if (areYouPolymorphed() && attacktype(youmonst.data, AT_KICK)) {
+    if (areYouPolymorphed() && attacktype(youmonst.data->monsterTypeID, AT_KICK)) {
         int sum, kickdieroll, armorpenalty,
             attknum = 0,
             tmp = find_roll_to_hit(mon, AT_KICK, (struct obj *) 0, &attknum,
@@ -520,7 +520,7 @@ xchar x, y;
         You("kick %s with your bare %s.",
             corpse_xname(kickedobj, (const char *) 0, CXN_PFX_THE),
             makeplural(body_part(FOOT)));
-        if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM)) {
+        if (poly_when_stoned(youmonst.data->monsterTypeID) && polymon(PM_STONE_GOLEM)) {
             ; /* hero has been transformed but kick continues */
         } else {
             /* normalize body shape here; foot, not body_part(FOOT) */

@@ -1194,7 +1194,7 @@ register const struct Attack mattk;
                     || (flags.moonphase == NEW_MOON && !have_lizard())) {
                 do_stone:
                     if (!youAreTurningToStone() && !youResistStoning()
-                        && !(poly_when_stoned(youmonst.data)
+                        && !(poly_when_stoned(youmonst.data->monsterTypeID)
                              && polymon(PM_STONE_GOLEM))) {
                         javaString kname = monsterTypeName(mtmp->data->monsterTypeID);
 
@@ -1661,7 +1661,7 @@ boolean
 gulp_blnd_check()
 {
     if (!youAreTemporarilyBlinded() && swallowed()) {
-        struct Attack mattk = monsterAttackWithDamageType(u.ustuck->data, AT_ENGL, AD_BLND);
+        struct Attack mattk = monsterAttackWithDamageType(u.ustuck->data->monsterTypeID, AT_ENGL, AD_BLND);
 
 	if (validAttack(mattk) && can_blnd(u.ustuck, &youmonst, mattk.type, (struct obj *) 0)) {
             increaseTimeSinceBeingSwallowed(1); /* compensate for gulpmu change */
@@ -2084,7 +2084,7 @@ register const struct Attack mattk;
             && !youResistStoning()) {
             You("meet %s gaze.", s_suffix(mon_nam(mtmp)));
             stop_occupation();
-            if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))
+            if (poly_when_stoned(youmonst.data->monsterTypeID) && polymon(PM_STONE_GOLEM))
                 break;
             You("turn to stone...");
             killer.format = KILLED_BY;
@@ -2652,7 +2652,7 @@ register const struct Attack mattk;
             && (protector == 0L
                 || (protector != ~0L
                     && (wornitems & protector) != protector))) {
-            if (poly_when_stoned(mtmp->data)) {
+            if (poly_when_stoned(mtmp->data->monsterTypeID)) {
                 mon_to_stone(mtmp);
                 return 1;
             }

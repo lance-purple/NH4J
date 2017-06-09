@@ -234,7 +234,7 @@ boolean quietly;
 
     if (touch_petrifies(pd) && !resists_ston(magr)) {
         if (which_armor(magr, W_ARMG) != 0) {
-            if (poly_when_stoned(pa)) {
+            if (poly_when_stoned(pa->monsterTypeID)) {
                 mon_to_stone(magr);
                 return MM_HIT; /* no damage during the polymorph */
             }
@@ -750,7 +750,7 @@ register const struct Attack mattk;
 
         if (protector == 0L
             || (protector != ~0L && (wornitems & protector) != protector)) {
-            if (poly_when_stoned(pa)) {
+            if (poly_when_stoned(pa->monsterTypeID)) {
                 mon_to_stone(magr);
                 return MM_HIT; /* no damage during the polymorph */
             }
@@ -995,7 +995,7 @@ register const struct Attack mattk;
         /* may die from the acid if it eats a stone-curing corpse */
         if (munstone(mdef, FALSE))
             goto post_stone;
-        if (poly_when_stoned(pd)) {
+        if (poly_when_stoned(pd->monsterTypeID)) {
             mon_to_stone(mdef);
             tmp = 0;
             break;
@@ -1582,8 +1582,8 @@ struct monst *mon;
 boolean givemsg;
 {
     if (mon->mspec_used < 20 /* limit draining */
-        && (attacktype(mon->data, AT_MAGC)
-            || attacktype(mon->data, AT_BREA))) {
+        && (attacktype(mon->data->monsterTypeID, AT_MAGC)
+            || attacktype(mon->data->monsterTypeID, AT_BREA))) {
         mon->mspec_used += d(2, 2);
         if (givemsg)
             pline("%s seems lethargic.", Monnam(mon));

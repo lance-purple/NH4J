@@ -861,7 +861,7 @@ boolean hitsroof;
         switch (otyp) {
         case EGG:
             if (petrifier && !youResistStoning()
-                && !(poly_when_stoned(youmonst.data)
+                && !(poly_when_stoned(youmonst.data->monsterTypeID)
                      && polymon(PM_STONE_GOLEM))) {
                 /* egg ends up "all over your face"; perhaps
                    visored helmet should still save you here */
@@ -923,7 +923,7 @@ boolean hitsroof;
                     Your("%s does not protect you.", helm_simple_name(uarmh));
             }
         } else if (petrifier && !youResistStoning()
-                   && !(poly_when_stoned(youmonst.data)
+                   && !(poly_when_stoned(youmonst.data->monsterTypeID)
                         && polymon(PM_STONE_GOLEM))) {
         petrify:
             killer.format = KILLED_BY;

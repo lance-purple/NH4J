@@ -1691,7 +1691,7 @@ struct obj *obj;
 
 	int monsterTypeID = mons[corpse->corpsenm].monsterTypeID;
 	javaString monsterName = monsterTypeName(monsterTypeID);
-        if (poly_when_stoned(youmonst.data)) {
+        if (poly_when_stoned(youmonst.data->monsterTypeID)) {
             You("tin %s without wearing gloves.",
                 an(monsterName.c_str));
 	}
@@ -1809,7 +1809,7 @@ struct obj *obj;
         prop_trouble(SICK);
     if (TimedTrouble(yourIntrinsic(BLINDED)) > (long) creamed()
         && !(swallowed()
-             && monsterHasAttackWithDamageType(u.ustuck->data, AT_ENGL, AD_BLND)))
+             && monsterHasAttackWithDamageType(u.ustuck->data->monsterTypeID, AT_ENGL, AD_BLND)))
         prop_trouble(BLINDED);
     if (TimedTrouble(yourIntrinsic(HALLUC)))
         prop_trouble(HALLUC);
@@ -2675,7 +2675,7 @@ struct obj *obj;
                     if (otmp->otyp == CORPSE
                         && touch_petrifies(&mons[otmp->corpsenm]) && !uarmg
                         && !youResistStoning()
-                        && !(poly_when_stoned(youmonst.data)
+                        && !(poly_when_stoned(youmonst.data->monsterTypeID)
                              && polymon(PM_STONE_GOLEM))) {
                         char kbuf[BUFSZ];
 

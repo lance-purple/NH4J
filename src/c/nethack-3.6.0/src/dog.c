@@ -139,7 +139,7 @@ boolean quietly;
     newsym(mtmp->mx, mtmp->my);
 
     /* must wield weapon immediately since pets will otherwise drop it */
-    if (mtmp->mtame && attacktype(mtmp->data, AT_WEAP)) {
+    if (mtmp->mtame && attacktype(mtmp->data->monsterTypeID, AT_WEAP)) {
         mtmp->weapon_check = NEED_HTH_WEAPON;
         (void) mon_wield_item(mtmp);
     }
@@ -946,7 +946,7 @@ register struct obj *obj;
     }
 
     newsym(mtmp->mx, mtmp->my);
-    if (attacktype(mtmp->data, AT_WEAP)) {
+    if (attacktype(mtmp->data->monsterTypeID, AT_WEAP)) {
         mtmp->weapon_check = NEED_HTH_WEAPON;
         (void) mon_wield_item(mtmp);
     }

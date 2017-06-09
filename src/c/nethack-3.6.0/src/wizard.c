@@ -477,7 +477,7 @@ struct monst *mcast;
                  */
                 do {
                     makeindex = pick_nasty();
-                } while (mcast && attacktype(&mons[makeindex], AT_MAGC)
+                } while (mcast && attacktype(mons[makeindex].monsterTypeID, AT_MAGC)
                          && monstr[makeindex] >= monstr[mcast->mnum]);
                 /* do this after picking the monster to place */
                 if (mcast

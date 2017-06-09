@@ -642,7 +642,7 @@ register int pm;
     (void) maybe_cannibal(pm, TRUE);
     if (flesh_petrifies(&mons[pm])) {
         if (!youResistStoning()
-            && !(poly_when_stoned(youmonst.data)
+            && !(poly_when_stoned(youmonst.data->monsterTypeID)
                  && polymon(PM_STONE_GOLEM))) {
 	    javaString monsterName = monsterTypeName(mons[pm].monsterTypeID);
             Sprintf(killer.name, "tasting %s meat", monsterName.c_str);
@@ -1556,7 +1556,7 @@ struct obj *otmp;
     long rotted = 0L;
     int retcode = 0;
     boolean stoneable = (flesh_petrifies(&mons[mnum]) && !youResistStoning()
-                         && !poly_when_stoned(youmonst.data));
+                         && !poly_when_stoned(youmonst.data->monsterTypeID));
 
     /* KMH, conduct */
     if (!isVeganOption(mons[mnum].monsterTypeID))
@@ -2108,7 +2108,7 @@ struct obj *otmp;
         break;
     case CARROT:
         if (!swallowed()
-            || !monsterHasAttackWithDamageType(u.ustuck->data, AT_ENGL, AD_BLND))
+            || !monsterHasAttackWithDamageType(u.ustuck->data->monsterTypeID, AT_ENGL, AD_BLND))
             make_blinded((long) creamed(), TRUE);
         break;
     case FORTUNE_COOKIE:
@@ -2147,7 +2147,7 @@ struct obj *otmp;
     case EGG:
         if (flesh_petrifies(&mons[otmp->corpsenm])) {
             if (!youResistStoning()
-                && !(poly_when_stoned(youmonst.data)
+                && !(poly_when_stoned(youmonst.data->monsterTypeID)
                      && polymon(PM_STONE_GOLEM))) {
                 if (!youAreTurningToStone()) {
                     int corpseTypeID = mons[otmp->corpsenm].monsterTypeID;
@@ -2231,7 +2231,7 @@ struct obj *otmp;
     if (cadaver || otmp->otyp == EGG || otmp->otyp == TIN) {
         /* These checks must match those in eatcorpse() */
         stoneorslime = (flesh_petrifies(&mons[mnum]) && !youResistStoning()
-                        && !poly_when_stoned(youmonst.data));
+                        && !poly_when_stoned(youmonst.data->monsterTypeID));
 
         if (mnum == PM_GREEN_SLIME || otmp->otyp == GLOB_OF_GREEN_SLIME)
             stoneorslime = (!youAreUnchanging() && !isSlimeproof(youmonst.data->monsterTypeID));

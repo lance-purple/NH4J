@@ -391,7 +391,7 @@ register struct monst *mtmp;
     if (attack_checks(mtmp, uwep))
         return TRUE;
 
-    if (areYouPolymorphed() && monsterDoesNotAttack(youmonst.data)) {
+    if (areYouPolymorphed() && monsterDoesNotAttack(youmonst.data->monsterTypeID)) {
         /* certain "pacifist" monsters don't attack */
         You("have no way to attack monsters physically.");
         mtmp->mstrategy &= ~STRAT_WAITMASK;
@@ -1321,7 +1321,7 @@ struct obj *otmp;
         return FALSE;
 
 #if 0   /* no poly_when_stoned() critter has theft capability */
-    if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM)) {
+    if (poly_when_stoned(youmonst.data->monsterTypeID) && polymon(PM_STONE_GOLEM)) {
         display_nhwindow(WIN_MESSAGE, FALSE);   /* --More-- */
         return TRUE;
     }
@@ -2392,7 +2392,7 @@ boolean wep_was_destroyed;
                 || (protector == W_ARMH && !uarmh)
                 || (protector == (W_ARMC | W_ARMG) && (!uarmc || !uarmg))) {
                 if (!youResistStoning()
-                    && !(poly_when_stoned(youmonst.data)
+                    && !(poly_when_stoned(youmonst.data->monsterTypeID)
                          && polymon(PM_STONE_GOLEM))) {
                     done_in_by(mon, STONING); /* "You turn to stone..." */
                     return 2;
