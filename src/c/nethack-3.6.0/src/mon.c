@@ -221,7 +221,7 @@ static boolean KEEPTRAITS(register struct monst* mon)
         /* but he or she might have been polymorphed  */
      || (mon)->m_id == quest_status.leader_m_id
         /* special cancellation handling for these */
-     || (dmgtype((mon)->data, AD_SEDU) || dmgtype((mon)->data, AD_SSEX)));
+     || (dmgtype((mon)->data->monsterTypeID, AD_SEDU) || dmgtype((mon)->data->monsterTypeID, AD_SSEX)));
 }
 
 /* Creates a monster corpse, a "special" corpse, or nothing if it doesn't
@@ -1095,6 +1095,7 @@ struct obj *otmp;
 {
     int iquan, otyp = otmp->otyp, newload = otmp->owt;
     struct permonst *mdat = mtmp->data;
+    int pmid = mdat->monsterTypeID; 
     short nattk = 0;
 
     if (doesNotTakeStuff(mdat->monsterTypeID))
@@ -1779,7 +1780,7 @@ register struct monst *mtmp;
             mtmp->mhp = mtmp->mhpmax;
             /* this can happen if previously a fog cloud */
             if (swallowed() && (mtmp == u.ustuck))
-                expels(mtmp, mtmp->data, FALSE);
+                expels(mtmp, mtmp->data->monsterTypeID, FALSE);
             if (in_door) {
                 coord new_xy;
 
@@ -3090,17 +3091,17 @@ int mndx;
 }
 
 void
-mgender_from_permonst(mtmp, mdat)
+mgender_from_pmid(mtmp, pmid)
 struct monst *mtmp;
-struct permonst *mdat;
+int pmid;
 {
-    if (isMale(mdat->monsterTypeID)) {
+    if (isMale(pmid)) {
         if (mtmp->female)
             mtmp->female = FALSE;
-    } else if (isFemale(mdat->monsterTypeID)) {
+    } else if (isFemale(pmid)) {
         if (!mtmp->female)
             mtmp->female = TRUE;
-    } else if (!isNeuter(mdat->monsterTypeID)) {
+    } else if (!isNeuter(pmid)) {
         if (!rn2(10))
             mtmp->female = !mtmp->female;
     }
@@ -3153,7 +3154,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
     } else if (mvitals[mdat->monsterTypeID].mvflags & G_GENOD)
         return 0; /* passed in mdat is genocided */
 
-    mgender_from_permonst(mtmp, mdat);
+    mgender_from_pmid(mtmp, mdat->monsterTypeID);
 
     if (areYouInEndgame() && is_mplayer(olddata) && has_mname(mtmp)) {
         /* mplayers start out as "Foo the Bar", but some of the
@@ -3225,12 +3226,12 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
                         (isAnimal(mdat->monsterTypeID) ? "'s stomach" : ""));
                     mtmp->mhp = 1; /* almost dead */
                 }
-                expels(mtmp, olddata, FALSE);
+                expels(mtmp, olddata->monsterTypeID, FALSE);
             } else {
                 /* update swallow glyphs for new monster */
                 showHeroBeingSwallowed(0);
             }
-        } else if (!sticks(mdat) && !sticks(youmonst.data))
+        } else if (!sticks(mdat->monsterTypeID) && !sticks(youmonst.data->monsterTypeID))
             unstuck(mtmp);
     }
 

@@ -681,12 +681,12 @@ int mode;
         if (youCanPassThroughWalls() && may_passwall(x, y)) {
             ; /* do nothing */
         } else if (tmpr->typ == IRONBARS) {
-            if ((dmgtype(youmonst.data, AD_RUST)
-                 || dmgtype(youmonst.data, AD_CORR)) && mode == DO_MOVE
+            if ((dmgtype(youmonst.data->monsterTypeID, AD_RUST)
+                 || dmgtype(youmonst.data->monsterTypeID, AD_CORR)) && mode == DO_MOVE
                 && still_chewing(x, y)) {
                 return FALSE;
             }
-            if (!(youCanPassThroughWalls() || passes_bars(youmonst.data))) {
+            if (!(youCanPassThroughWalls() || passes_bars(youmonst.data->monsterTypeID))) {
                 if (iflags.mention_walls)
                     You("cannot pass through the bars.");
                 return FALSE;
@@ -1335,7 +1335,7 @@ domove()
             if (distanceSquaredToYou(u.ustuck->mx, u.ustuck->my) > 2) {
                 /* perhaps it fled (or was teleported or ... ) */
                 u.ustuck = 0;
-            } else if (sticks(youmonst.data)) {
+            } else if (sticks(youmonst.data->monsterTypeID)) {
                 /* When polymorphed into a sticking monster,
                  * u.ustuck means it's stuck to you, not you to it.
                  */

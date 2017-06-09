@@ -684,7 +684,7 @@ register int after; /* this is extra fast monster movement */
     allowflags = ALLOW_M | ALLOW_TRAPS | ALLOW_SSM | ALLOW_SANCT;
     if (passesThroughWalls(mtmp->data->monsterTypeID))
         allowflags |= (ALLOW_ROCK | ALLOW_WALL);
-    if (passes_bars(mtmp->data))
+    if (passes_bars(mtmp->data->monsterTypeID))
         allowflags |= ALLOW_BARS;
     if (throwsRocks(mtmp->data->monsterTypeID))
         allowflags |= ALLOW_ROCK;
@@ -702,7 +702,7 @@ register int after; /* this is extra fast monster movement */
     }
 #if 0 /* [this is now handled in dochug()] */
     if (!youCauseConflict() && !mtmp->mconf
-        && mtmp == u.ustuck && !sticks(youmonst.data)) {
+        && mtmp == u.ustuck && !sticks(youmonst.data->monsterTypeID)) {
         unstuck(mtmp); /* swallowed case handled above */
         You("get released!");
     }

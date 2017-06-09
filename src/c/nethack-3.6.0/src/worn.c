@@ -775,7 +775,7 @@ boolean polyspot;
     boolean handless_or_tiny = (hasNoHands(mdat->monsterTypeID) || isVerySmallMonster(mdat->monsterTypeID));
     const char *pronoun = mhim(mon), *ppronoun = mhis(mon);
 
-    if (breakarm(mdat)) {
+    if (breakarm(mdat->monsterTypeID)) {
         if ((otmp = which_armor(mon, W_ARM)) != 0) {
             if ((Is_dragon_scales(otmp) && mdat == Dragon_scales_to_pm(otmp))
                 || (Is_dragon_mail(otmp) && mdat == Dragon_mail_to_pm(otmp)))
@@ -812,7 +812,7 @@ boolean polyspot;
                 You_hear("a ripping sound.");
             m_useup(mon, otmp);
         }
-    } else if (sliparm(mdat)) {
+    } else if (sliparm(mdat->monsterTypeID)) {
         if ((otmp = which_armor(mon, W_ARM)) != 0) {
             if (vis)
                 pline("%s armor falls around %s!", s_suffix(Monnam(mon)),
@@ -838,7 +838,7 @@ boolean polyspot;
         }
         if ((otmp = which_armor(mon, W_ARMU)) != 0) {
             if (vis) {
-                if (sliparm(mon->data))
+                if (sliparm(mon->data->monsterTypeID))
                     pline("%s seeps right through %s shirt!", Monnam(mon),
                           ppronoun);
                 else

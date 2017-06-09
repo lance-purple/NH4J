@@ -212,20 +212,19 @@ register const struct Attack mattk;
 }
 
 void
-expels(mtmp, mdat, message)
+expels(mtmp, pmid, message)
 struct monst *mtmp;
-struct permonst *mdat; /* if mtmp is polymorphed, mdat != mtmp->data */
+int pmid; /* if mtmp is polymorphed, pmid != mtmp->data->monsterTypeID */
 boolean message;
 {
     if (message) {
-        if (isAnimal(mdat->monsterTypeID))
+        if (isAnimal(pmid))
             You("get regurgitated!");
         else {
             char blast[40];
             register int i;
 
             blast[0] = '\0';
-	    int pmid = mdat->monsterTypeID;
             for (i = 0; i < monsterAttacks(pmid); i++) {
                 if (monsterAttack(pmid, i).type == AT_ENGL) {
                     break;
@@ -261,11 +260,10 @@ boolean message;
 
 /* select a monster's next attack, possibly substituting for its usual one */
 const struct Attack 
-getMonsterAttack(mptr, indx, prev_result)
-struct permonst *mptr;
+getMonsterAttack(pmid, indx, prev_result)
+int pmid;
 int indx, prev_result[];
 {
-    int pmid = mptr->monsterTypeID;
     struct Attack attk = monsterAttack(pmid, indx);
 
     /* prevent a monster with two consecutive disease or hunger attacks
@@ -460,7 +458,7 @@ register struct monst *mtmp;
     /* hero might be a mimic, concealed via #monster */
     if (monsterClass(youmonst.data->monsterTypeID) == S_MIMIC && youmonst.m_ap_type && !range2
         && foundyou && !swallowed()) {
-        boolean sticky = sticks(youmonst.data);
+        boolean sticky = sticks(youmonst.data->monsterTypeID);
 
         if (!canspotmon(mtmp)) {
             map_invisible(mtmp->mx, mtmp->my);
@@ -609,7 +607,7 @@ register struct monst *mtmp;
 
     for (i = 0; i < NATTK; i++) {
         sum[i] = 0;
-        mattk = getMonsterAttack(mdat, i, sum);
+        mattk = getMonsterAttack(mdat->monsterTypeID, i, sum);
         if ((swallowed() && mattk.type != AT_ENGL)
             || (skipnonmagc && mattk.type != AT_MAGC))
             continue;
@@ -918,7 +916,7 @@ register const struct Attack mattk;
     /*  Now, adjust damages via resistances or specific attacks */
     switch (mattk.damageType) {
     case AD_PHYS:
-        if (mattk.type == AT_HUGS && !sticks(youmonst.data)) {
+        if (mattk.type == AT_HUGS && !sticks(youmonst.data->monsterTypeID)) {
             if (!u.ustuck && rn2(2)) {
                 if (u_slip_free(mtmp, mattk)) {
                     dmg = 0;
@@ -1217,11 +1215,11 @@ register const struct Attack mattk;
         break;
     case AD_STCK:
         hitmsg(mtmp, mattk);
-        if (uncancelled && !u.ustuck && !sticks(youmonst.data))
+        if (uncancelled && !u.ustuck && !sticks(youmonst.data->monsterTypeID))
             u.ustuck = mtmp;
         break;
     case AD_WRAP:
-        if ((!mtmp->mcan || u.ustuck == mtmp) && !sticks(youmonst.data)) {
+        if ((!mtmp->mcan || u.ustuck == mtmp) && !sticks(youmonst.data->monsterTypeID)) {
             if (!u.ustuck && !rn2(10)) {
                 if (u_slip_free(mtmp, mattk)) {
                     dmg = 0;
@@ -1288,8 +1286,8 @@ register const struct Attack mattk;
             if (mtmp->mcan)
                 break;
             /* Continue below */
-        } else if (dmgtype(youmonst.data, AD_SEDU)
-                   || (SYSOPT_SEDUCE && dmgtype(youmonst.data, AD_SSEX))) {
+        } else if (dmgtype(youmonst.data->monsterTypeID, AD_SEDU)
+                   || (SYSOPT_SEDUCE && dmgtype(youmonst.data->monsterTypeID, AD_SSEX))) {
             pline("%s %s.", Monnam(mtmp),
                   mtmp->minvent
                       ? "brags about the goods some dungeon explorer provided"
@@ -1903,14 +1901,14 @@ register const struct Attack mattk;
     if (touch_petrifies(youmonst.data) && !resists_ston(mtmp)) {
         pline("%s very hurriedly %s you!", Monnam(mtmp),
               isAnimal(mtmp->data->monsterTypeID) ? "regurgitates" : "expels");
-        expels(mtmp, mtmp->data, FALSE);
+        expels(mtmp, mtmp->data->monsterTypeID, FALSE);
     } else if (!timeSinceBeingSwallowed() || monsterSize(youmonst.data->monsterTypeID) >= MZ_HUGE) {
         You("get %s!", isAnimal(mtmp->data->monsterTypeID) ? "regurgitated" : "expelled");
         if (flags.verbose
             && (isAnimal(mtmp->data->monsterTypeID)
-                || (dmgtype(mtmp->data, AD_DGST) && youHaveSlowDigestion())))
+                || (dmgtype(mtmp->data->monsterTypeID, AD_DGST) && youHaveSlowDigestion())))
             pline("Obviously %s doesn't like your taste.", mon_nam(mtmp));
-        expels(mtmp, mtmp->data, FALSE);
+        expels(mtmp, mtmp->data->monsterTypeID, FALSE);
     }
     return 1;
 }
@@ -1985,7 +1983,7 @@ boolean ufound;
         case AD_HALU:
             not_affected |= youCannotSee() || (currentMonsterNumber() == PM_BLACK_LIGHT
                                       || currentMonsterNumber() == PM_VIOLET_FUNGUS
-                                      || dmgtype(youmonst.data, AD_STUN));
+                                      || dmgtype(youmonst.data->monsterTypeID, AD_STUN));
             if (!not_affected) {
                 boolean chg;
                 if (!youAreHallucinating())

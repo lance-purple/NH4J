@@ -154,7 +154,7 @@ stealarm(VOID_ARGS)
                 if (mtmp->m_id == stealmid) {
                     if (DEADMONSTER(mtmp))
                         impossible("stealarm(): dead monster stealing");
-                    if (!dmgtype(mtmp->data, AD_SITM)) /* polymorphed */
+                    if (!dmgtype(mtmp->data->monsterTypeID, AD_SITM)) /* polymorphed */
                         goto botm;
                     if (otmp->unpaid)
                         subfrombill(otmp, shop_keeper(mostRecentCurrentlyOccupiedShopID()));

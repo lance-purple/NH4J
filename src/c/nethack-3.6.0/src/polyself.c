@@ -71,13 +71,13 @@ set_uasmon()
     }
     /* resists_magm() takes wielded, worn, and carried equipment into
        into account; cheat and duplicate its monster-specific part */
-    PROPSET(ANTIMAGIC, (dmgtype(mdat, AD_MAGM)
+    PROPSET(ANTIMAGIC, (dmgtype(mdat->monsterTypeID, AD_MAGM)
                         || mdat == &mons[PM_BABY_GRAY_DRAGON]
-                        || dmgtype(mdat, AD_RBRE)));
+                        || dmgtype(mdat->monsterTypeID, AD_RBRE)));
     PROPSET(SICK_RES, (monsterClass(mdat->monsterTypeID) == S_FUNGUS || mdat == &mons[PM_GHOUL]));
 
     PROPSET(STUNNED, (mdat == &mons[PM_STALKER] || isBat(mdat->monsterTypeID)));
-    PROPSET(HALLUC_RES, dmgtype(mdat, AD_HALU));
+    PROPSET(HALLUC_RES, dmgtype(mdat->monsterTypeID, AD_HALU));
     PROPSET(SEE_INVIS, perceivesTheInvisible(mdat->monsterTypeID));
     PROPSET(TELEPAT, telepathic(mdat));
     PROPSET(INFRAVISION, hasInfravision(mdat->monsterTypeID));
@@ -146,7 +146,7 @@ STATIC_OVL void
 polyman(fmt, arg)
 const char *fmt, *arg;
 {
-    boolean sticky = (sticks(youmonst.data) && u.ustuck && !swallowed()),
+    boolean sticky = (sticks(youmonst.data->monsterTypeID) && u.ustuck && !swallowed()),
             was_mimicking = (youmonst.m_ap_type == M_AP_OBJECT);
     boolean was_blind = !!youCannotSee();
 
@@ -471,7 +471,7 @@ int psflags;
                     ++tryct;
                 }
                 javaString pm_name = monsterTypeName(mons[mntmp].monsterTypeID);
-                if (the_unique_pm(&mons[mntmp])) {
+                if (the_unique_pm(mons[mntmp].monsterTypeID)) {
                     You_cant("polymorph into %s.", the(pm_name.c_str));
 		}
                 else if (!typeIsProperName(mons[mntmp].monsterTypeID)) {
@@ -600,7 +600,7 @@ int
 polymon(mntmp)
 int mntmp;
 {
-    boolean sticky = sticks(youmonst.data) && u.ustuck && !swallowed(),
+    boolean sticky = sticks(youmonst.data->monsterTypeID) && u.ustuck && !swallowed(),
             was_blind = !!youCannotSee(), dochange = FALSE;
     int mlvl;
 
@@ -764,9 +764,9 @@ int mntmp;
     }
     newsym(currentX(), currentY()); /* Change symbol */
 
-    if (!sticky && !swallowed() && u.ustuck && sticks(youmonst.data))
+    if (!sticky && !swallowed() && u.ustuck && sticks(youmonst.data->monsterTypeID))
         u.ustuck = 0;
-    else if (sticky && !sticks(youmonst.data))
+    else if (sticky && !sticks(youmonst.data->monsterTypeID))
         uunstick();
     if (u.usteed) {
         if (touch_petrifies(u.usteed->data) && !youResistStoning() && rnl(3)) {
@@ -885,7 +885,7 @@ break_armor()
 {
     register struct obj *otmp;
 
-    if (breakarm(youmonst.data)) {
+    if (breakarm(youmonst.data->monsterTypeID)) {
         if ((otmp = uarm) != 0) {
             if (donning(otmp))
                 cancel_don();
@@ -909,7 +909,7 @@ break_armor()
             Your("shirt rips to shreds!");
             useup(uarmu);
         }
-    } else if (sliparm(youmonst.data)) {
+    } else if (sliparm(youmonst.data->monsterTypeID)) {
         if (((otmp = uarm) != 0) && (racial_exception(&youmonst, otmp) < 1)) {
             if (donning(otmp))
                 cancel_don();
@@ -940,7 +940,7 @@ break_armor()
                 char hornbuf[BUFSZ];
 
                 /* Future possibilities: This could damage/destroy helmet */
-                Sprintf(hornbuf, "horn%s", plur(num_horns(youmonst.data)));
+                Sprintf(hornbuf, "horn%s", plur(num_horns(youmonst.data->monsterTypeID)));
                 Your("%s %s through %s.", hornbuf, vtense(hornbuf, "pierce"),
                      yname(otmp));
             } else {
@@ -1166,7 +1166,7 @@ dospinweb()
     if (swallowed()) {
         You("release web fluid inside %s.", mon_nam(u.ustuck));
         if (isAnimal(u.ustuck->data->monsterTypeID)) {
-            expels(u.ustuck, u.ustuck->data, TRUE);
+            expels(u.ustuck, u.ustuck->data->monsterTypeID, TRUE);
             return 0;
         }
 	int ustuckpmid = u.ustuck->data->monsterTypeID;
@@ -1444,7 +1444,7 @@ dohide()
        (except for floor hiders [trapper or mimic] in pits) */
     if (u.ustuck || (currentlyTrapped() && (currentTrapType() != TT_PIT || on_ceiling))) {
         You_cant("hide while you're %s.",
-                 !u.ustuck ? "trapped" : !sticks(youmonst.data)
+                 !u.ustuck ? "trapped" : !sticks(youmonst.data->monsterTypeID)
                                              ? "being held"
                                              : isHumanoid(u.ustuck->data->monsterTypeID)
                                                    ? "holding someone"

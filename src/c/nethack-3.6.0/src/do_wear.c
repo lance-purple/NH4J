@@ -1620,7 +1620,7 @@ boolean noisy;
             if (noisy)
                 pline_The("%s won't fit over your horn%s.",
                           helm_simple_name(otmp),
-                          plur(num_horns(youmonst.data)));
+                          plur(num_horns(youmonst.data->monsterTypeID)));
             err++;
         } else
             *mask = W_ARMH;

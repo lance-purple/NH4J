@@ -2856,7 +2856,7 @@ long hmask, emask; /* might cancel timeout */
     /* check for falling into pool - added by GAN 10/20/86 */
     if (!youAreFlying()) {
         if (!swallowed() && u.ustuck) {
-            if (sticks(youmonst.data))
+            if (sticks(youmonst.data->monsterTypeID))
                 You("aren't able to maintain your hold on %s.",
                     mon_nam(u.ustuck));
             else
@@ -3726,7 +3726,7 @@ dountrap()
         || !monsterMovementSpeed(youmonst.data->monsterTypeID)) {
         pline("And just how do you expect to do that?");
         return 0;
-    } else if (u.ustuck && sticks(youmonst.data)) {
+    } else if (u.ustuck && sticks(youmonst.data->monsterTypeID)) {
         pline("You'll have to let go of %s first.", mon_nam(u.ustuck));
         return 0;
     }

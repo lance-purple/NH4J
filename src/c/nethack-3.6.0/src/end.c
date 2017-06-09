@@ -450,7 +450,7 @@ int how;
            but vampires don't take on any shapes which warrant that */
         if (alt || typeIsProperName(mptr->monsterTypeID)) /* no article */
             Strcpy(shape, fakeName.c_str);
-        else if (the_unique_pm(mptr)) /* "the"; don't use the() here */
+        else if (the_unique_pm(mptr->monsterTypeID)) /* "the"; don't use the() here */
             Sprintf(shape, "the %s", fakeName.c_str);
         else /* "a"/"an" */
             Strcpy(shape, an(fakeName.c_str));

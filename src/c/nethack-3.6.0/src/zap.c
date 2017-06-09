@@ -178,7 +178,7 @@ struct obj *otmp;
             if (swallowed() && (mtmp == u.ustuck) && isWhirly(mtmp->data->monsterTypeID)) {
                 You("disrupt %s!", mon_nam(mtmp));
                 pline("A huge hole opens up...");
-                expels(mtmp, mtmp->data, TRUE);
+                expels(mtmp, mtmp->data->monsterTypeID, TRUE);
             }
         }
         break;
@@ -280,7 +280,7 @@ struct obj *otmp;
                 else
                     pline("%s opens its mouth!", Monnam(mtmp));
             }
-            expels(mtmp, mtmp->data, TRUE);
+            expels(mtmp, mtmp->data->monsterTypeID, TRUE);
             /* zap which hits steed will only release saddle if it
                doesn't hit a holding or falling trap; playability
                here overrides the more logical target ordering */
@@ -580,8 +580,8 @@ coord *cc;
         mtmp2->mcanmove = 1;
         /* most cancelled monsters return to normal,
            but some need to stay cancelled */
-        if (!dmgtype(mtmp2->data, AD_SEDU)
-            && (!SYSOPT_SEDUCE || !dmgtype(mtmp2->data, AD_SSEX)))
+        if (!dmgtype(mtmp2->data->monsterTypeID, AD_SEDU)
+            && (!SYSOPT_SEDUCE || !dmgtype(mtmp2->data->monsterTypeID, AD_SSEX)))
             mtmp2->mcan = 0;
         mtmp2->mcansee = 1; /* set like in makemon */
         mtmp2->mblinded = 0;

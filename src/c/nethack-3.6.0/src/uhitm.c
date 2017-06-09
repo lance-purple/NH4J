@@ -140,7 +140,7 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
         if (mtmp->m_ap_type && !youHaveProtectionFromShapeChangers()
             /* applied pole-arm attack is too far to get stuck */
             && distanceSquaredToYou(mtmp->mx, mtmp->my) <= 2) {
-            if (!u.ustuck && !mtmp->mflee && dmgtype(mtmp->data, AD_STCK))
+            if (!u.ustuck && !mtmp->mflee && dmgtype(mtmp->data->monsterTypeID, AD_STCK))
                 u.ustuck = mtmp;
         }
         wakeup(mtmp); /* always necessary; also un-mimics mimics */
@@ -492,7 +492,7 @@ const struct Attack uattk;
                 /* maybe should regurgitate if swallowed? */
                 monflee(mon, !rn2(3) ? rnd(100) : 0, FALSE, TRUE);
 
-                if (u.ustuck == mon && !swallowed() && !sticks(youmonst.data))
+                if (u.ustuck == mon && !swallowed() && !sticks(youmonst.data->monsterTypeID))
                     u.ustuck = 0;
             }
             /* Vorpal Blade hit converted to miss */
@@ -1698,11 +1698,11 @@ register const struct Attack mattk;
         break;
     }
     case AD_STCK:
-        if (!negated && !sticks(pd))
+        if (!negated && !sticks(pd->monsterTypeID))
             u.ustuck = mdef; /* it's now stuck to you */
         break;
     case AD_WRAP:
-        if (!sticks(pd)) {
+        if (!sticks(pd->monsterTypeID)) {
             if (!u.ustuck && !rn2(10)) {
                 if (m_slips_free(mdef, mattk)) {
                     tmp = 0;
@@ -2114,7 +2114,7 @@ register struct monst *mon;
 
     for (i = 0; i < NATTK; i++) {
         sum[i] = 0;
-        mattk = getMonsterAttack(youmonst.data, i, sum);
+        mattk = getMonsterAttack(youmonst.data->monsterTypeID, i, sum);
 
         switch (mattk.type) {
         case AT_WEAP:
@@ -2218,7 +2218,7 @@ register struct monst *mon;
             wakeup(mon);
             if (mon->data == &mons[PM_SHADE])
                 Your("hug passes harmlessly through %s.", mon_nam(mon));
-            else if (!sticks(mon->data) && !swallowed()) {
+            else if (!sticks(mon->data->monsterTypeID) && !swallowed()) {
                 if (mon == u.ustuck) {
                     pline("%s is being %s.", Monnam(mon),
                           currentMonsterNumber() == PM_ROPE_GOLEM ? "choked" : "crushed");
@@ -2674,7 +2674,7 @@ struct monst *mtmp;
 {
     const char *fmt = "Wait!  That's %s!", *generic = "a monster", *what = 0;
 
-    if (!u.ustuck && !mtmp->mflee && dmgtype(mtmp->data, AD_STCK))
+    if (!u.ustuck && !mtmp->mflee && dmgtype(mtmp->data->monsterTypeID, AD_STCK))
         u.ustuck = mtmp;
 
     if (youCannotSee()) {

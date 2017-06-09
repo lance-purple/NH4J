@@ -225,8 +225,8 @@ struct monst *mon;
 {
     if (mon == u.ustuck) {
         if (swallowed()) {
-            expels(mon, mon->data, TRUE);
-        } else if (!sticks(youmonst.data)) {
+            expels(mon, mon->data->monsterTypeID, TRUE);
+        } else if (!sticks(youmonst.data->monsterTypeID)) {
             unstuck(mon); /* let go */
             You("get released!");
         }
@@ -646,7 +646,7 @@ boolean
 itsstuck(mtmp)
 register struct monst *mtmp;
 {
-    if (sticks(youmonst.data) && mtmp == u.ustuck && !swallowed()) {
+    if (sticks(youmonst.data->monsterTypeID) && mtmp == u.ustuck && !swallowed()) {
         pline("%s cannot escape from you!", Monnam(mtmp));
         return TRUE;
     }
@@ -867,7 +867,7 @@ not_special:
                     > ((ygold = findgold(invent)) ? ygold->quan : 0L))))
             appr = -1;
 
-        if (!should_see && can_track(ptr)) {
+        if (!should_see && can_track(ptr->monsterTypeID)) {
             register coord *cp;
 
             cp = gettrack(omx, omy);
@@ -1028,7 +1028,7 @@ not_special:
         flag |= NOTONL;
     if (passesThroughWalls(pmid))
         flag |= (ALLOW_WALL | ALLOW_ROCK);
-    if (passes_bars(ptr))
+    if (passes_bars(pmid))
         flag |= ALLOW_BARS;
     if (can_tunnel)
         flag |= ALLOW_DIG;
@@ -1308,7 +1308,7 @@ postmov:
                 }
             } else if (levl[mtmp->mx][mtmp->my].typ == IRONBARS) {
                 if (may_dig(mtmp->mx, mtmp->my)
-                    && (dmgtype(ptr, AD_RUST) || dmgtype(ptr, AD_CORR))) {
+                    && (dmgtype(ptr->monsterTypeID, AD_RUST) || dmgtype(ptr->monsterTypeID, AD_CORR))) {
                     if (canseemon(mtmp))
                         pline("%s eats through the iron bars.", Monnam(mtmp));
                     dissolve_bars(mtmp->mx, mtmp->my);

@@ -346,7 +346,7 @@ register struct monst *magr, *mdef;
     /* Now perform all attacks for the monster. */
     for (i = 0; i < NATTK; i++) {
         res[i] = MM_MISS;
-        mattk = getMonsterAttack(pa, i, res);
+        mattk = getMonsterAttack(pa->monsterTypeID, i, res);
 
         otmp = (struct obj *) 0;
         attk = 1;
@@ -1375,7 +1375,7 @@ slept_monst(mon)
 struct monst *mon;
 {
     if ((mon->msleeping || !mon->mcanmove) && mon == u.ustuck
-        && !sticks(youmonst.data) && !swallowed()) {
+        && !sticks(youmonst.data->monsterTypeID) && !swallowed()) {
         pline("%s grip relaxes.", s_suffix(Monnam(mon)));
         unstuck(mon);
     }
@@ -1391,11 +1391,11 @@ struct obj *obj;
     if (!mdef || !obj)
         return; /* just in case */
     /* AD_ACID is handled in passivemm */
-    if (dmgtype(mdef->data, AD_CORR))
+    if (dmgtype(mdef->data->monsterTypeID, AD_CORR))
         dmgtyp = ERODE_CORRODE;
-    else if (dmgtype(mdef->data, AD_RUST))
+    else if (dmgtype(mdef->data->monsterTypeID, AD_RUST))
         dmgtyp = ERODE_RUST;
-    else if (dmgtype(mdef->data, AD_FIRE))
+    else if (dmgtype(mdef->data->monsterTypeID, AD_FIRE))
         dmgtyp = ERODE_BURN;
     else
         return;

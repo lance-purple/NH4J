@@ -1403,7 +1403,7 @@ zap_dig()
                 You("pierce %s %s wall!", s_suffix(mon_nam(mtmp)),
                     mbodypart(mtmp, STOMACH));
             mtmp->mhp = 1; /* almost dead */
-            expels(mtmp, mtmp->data, !isAnimal(pmid));
+            expels(mtmp, mtmp->data->monsterTypeID, !isAnimal(pmid));
         }
         return;
     } /* swallowed */

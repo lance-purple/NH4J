@@ -1,1 +1,1 @@
-vi include/extern.h src/mondata.c src/monmove.c
+vi include/extern.h src/eat.c src/end.c src/objnam.c src/polyself.c

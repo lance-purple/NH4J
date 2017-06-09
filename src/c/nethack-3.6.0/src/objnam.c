@@ -426,7 +426,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
                     actualn,
                     typeIsProperName(mons[omndx].monsterTypeID)
                        ? ""
-                       : the_unique_pm(&mons[omndx])
+                       : the_unique_pm(mons[omndx].monsterTypeID)
                           ? "the "
                           : index(vowels, monsterName.c_str[0])
                              ? "an "
@@ -651,24 +651,24 @@ struct obj *obj;
 
 /* should monster type be prefixed with "the"? (mostly used for corpses) */
 boolean
-the_unique_pm(ptr)
-struct permonst *ptr;
+the_unique_pm(pmid)
+int pmid;
 {
     boolean uniq;
 
     /* even though monsters with personal names are unique, we want to
        describe them as "Name" rather than "the Name" */
-    if (typeIsProperName(ptr->monsterTypeID))
+    if (typeIsProperName(pmid))
         return FALSE;
 
-    uniq = (monsterGenerationMask(ptr->monsterTypeID) & G_UNIQ) ? TRUE : FALSE;
+    uniq = (monsterGenerationMask(pmid) & G_UNIQ) ? TRUE : FALSE;
     /* high priest is unique if it includes "of <deity>", otherwise not
        (caller needs to handle the 1st possibility; we assume the 2nd);
        worm tail should be irrelevant but is included for completeness */
-    if (ptr == &mons[PM_HIGH_PRIEST] || ptr == &mons[PM_LONG_WORM_TAIL])
+    if (pmid == PM_HIGH_PRIEST || pmid == PM_LONG_WORM_TAIL)
         uniq = FALSE;
     /* Wizard no longer needs this; he's flagged as unique these days */
-    if (ptr == &mons[PM_WIZARD_OF_YENDOR])
+    if (pmid == PM_WIZARD_OF_YENDOR)
         uniq = TRUE;
     return uniq;
 }
@@ -1123,7 +1123,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
         mname.c_str = "priest";
     } else {
         mname = monsterTypeName(mons[omndx].monsterTypeID);
-        if (the_unique_pm(&mons[omndx]) || typeIsProperName(mons[omndx].monsterTypeID)) {
+        if (the_unique_pm(mons[omndx].monsterTypeID) || typeIsProperName(mons[omndx].monsterTypeID)) {
 	    const char* ss = s_suffix(mname.c_str);
 	    releaseJavaString(mname);
             mname.j_str = NULL;
@@ -1134,7 +1134,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
                 no_prefix = TRUE;
             /* always precede non-personal unique monster name like
                "Oracle" with "the" unless explicitly overridden */
-            else if (the_unique_pm(&mons[omndx]) && !no_prefix)
+            else if (the_unique_pm(mons[omndx].monsterTypeID) && !no_prefix)
                 the_prefix = TRUE;
         }
     }

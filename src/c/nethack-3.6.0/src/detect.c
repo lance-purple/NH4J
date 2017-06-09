@@ -1283,7 +1283,7 @@ openit()
             else
                 pline("%s opens its mouth!", Monnam(u.ustuck));
         }
-        expels(u.ustuck, u.ustuck->data, TRUE);
+        expels(u.ustuck, u.ustuck->data->monsterTypeID, TRUE);
         return -1;
     }
 

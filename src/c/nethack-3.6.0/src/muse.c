@@ -1078,7 +1078,7 @@ struct monst *mtmp;
         return FALSE;
     if (in_your_sanctuary(mtmp, 0, 0))
         return FALSE;
-    if (dmgtype(mtmp->data, AD_HEAL)
+    if (dmgtype(mtmp->data->monsterTypeID, AD_HEAL)
         && !uwep && !uarmu && !uarm && !uarmh
         && !uarms && !uarmg && !uarmc && !uarmf)
         return FALSE;

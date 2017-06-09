@@ -1066,10 +1066,11 @@ register int pm;
     /*FALLTHRU*/
     default: {
         struct permonst *ptr = &mons[pm];
+        int pmid = mons[pm].monsterTypeID;
         boolean conveys_STR = isGiant(ptr->monsterTypeID);
         int i, count;
 
-        if (dmgtype(ptr, AD_STUN) || dmgtype(ptr, AD_HALU)
+        if (dmgtype(pmid, AD_STUN) || dmgtype(pmid, AD_HALU)
             || pm == PM_VIOLET_FUNGUS) {
             pline("Oh wow!  Great stuff!");
             (void) make_hallucinated(yourIntrinsicTimeout(HALLUC) + 200L, FALSE,
@@ -1300,7 +1301,7 @@ const char *mesg;
             what.c_str = rndmonnam(NULL);
         } else {
             what = monsterTypeName(mons[mnum].monsterTypeID);
-            if (the_unique_pm(&mons[mnum]))
+            if (the_unique_pm(mons[mnum].monsterTypeID))
                 which = 2;
             else if (typeIsProperName(mons[mnum].monsterTypeID))
                 which = 1;
@@ -1661,7 +1662,7 @@ struct obj *otmp;
 
         pline("%s%s %s!",
               typeIsProperName(mons[mnum].monsterTypeID)
-                 ? "" : the_unique_pm(&mons[mnum]) ? "The " : "This ",
+                 ? "" : the_unique_pm(mons[mnum].monsterTypeID) ? "The " : "This ",
               food_xname(otmp, FALSE),
               youAreHallucinating()
                   ? (yummy ? ((currentMonsterNumber() == PM_TIGER) ? "is gr-r-reat"
@@ -3029,7 +3030,7 @@ skipfloor:
 void
 vomit() /* A good idea from David Neves */
 {
-    if (cantvomit(youmonst.data))
+    if (cantvomit(youmonst.data->monsterTypeID))
         /* doesn't cure food poisoning; message assumes that we aren't
            dealing with some esoteric body_part() */
         Your("jaw gapes convulsively.");

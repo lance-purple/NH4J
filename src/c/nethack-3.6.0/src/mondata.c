@@ -6,7 +6,7 @@
 
 struct Attack NO_ATTACK = { 0, 0, 0, 0 };
 
-static boolean monsterCanCauseDamageTypeWithAttackType(const struct permonst *, const int, const int);
+static boolean monsterCanCauseDamageTypeWithAttackType(int, const int, const int);
 
 
 /*      These routines provide basic data for any type of monster. */
@@ -109,8 +109,8 @@ struct monst *mon;
     struct obj *o;
 
     /* as of 3.2.0:  gray dragons, Angels, Oracle, Yeenoghu */
-    if (dmgtype(ptr, AD_MAGM) || ptr == &mons[PM_BABY_GRAY_DRAGON]
-        || dmgtype(ptr, AD_RBRE)) /* Chromatic Dragon */
+    if (dmgtype(ptr->monsterTypeID, AD_MAGM) || ptr == &mons[PM_BABY_GRAY_DRAGON]
+        || dmgtype(ptr->monsterTypeID, AD_RBRE)) /* Chromatic Dragon */
         return TRUE;
     /* check for magic resistance granted by wielded weapon */
     o = is_you ? uwep : MON_WEP(mon);
@@ -149,8 +149,8 @@ struct monst *mon;
                   || mon->msleeping))
         return TRUE;
     /* yellow light, Archon; !dust vortex, !cobra, !raven */
-    if (monsterCanCauseDamageTypeWithAttackType(ptr, AD_BLND, AT_EXPL)
-        || monsterCanCauseDamageTypeWithAttackType(ptr, AD_BLND, AT_GAZE))
+    if (monsterCanCauseDamageTypeWithAttackType(ptr->monsterTypeID, AD_BLND, AT_EXPL)
+        || monsterCanCauseDamageTypeWithAttackType(ptr->monsterTypeID, AD_BLND, AT_GAZE))
         return TRUE;
     o = is_you ? uwep : MON_WEP(mon);
     if (o && o->oartifact && defends(AD_BLND, o))
@@ -286,32 +286,30 @@ int pmid;
 /* True if specific monster is especially affected by silver weapons */
 boolean
 mon_hates_silver(mon)
-struct monst *mon;
+struct monst* mon;
 {
-    return (boolean) (is_vampshifter(mon) || hates_silver(mon->data));
+    return (boolean) (is_vampshifter(mon) || hates_silver(mon->data->monsterTypeID));
 }
 
 /* True if monster-type is especially affected by silver weapons */
 boolean
-hates_silver(ptr)
-register struct permonst *ptr;
+hates_silver(pmid)
+int pmid;
 {
-    int pmid = ptr->monsterTypeID;
     int mc = monsterClass(pmid);
     return (boolean) (isWere(pmid) || mc == S_VAMPIRE || isDemon(pmid)
-                      || ptr == &mons[PM_SHADE]
-                      || (mc == S_IMP && ptr != &mons[PM_TENGU]));
+                      || pmid == PM_SHADE
+                      || (mc == S_IMP && pmid != PM_TENGU));
 }
 
 /* True iff the type of monster pass through iron bars */
 boolean
-passes_bars(mptr)
-struct permonst *mptr;
+passes_bars(pmid)
+int pmid;
 {
-    int pmid = mptr->monsterTypeID;
     return (boolean) (passesThroughWalls(pmid) || isAmorphous(pmid) || isUnsolid(pmid)
                       || isWhirly(pmid) || isVerySmallMonster(pmid)
-                      || dmgtype(mptr, AD_CORR) || dmgtype(mptr, AD_RUST)
+                      || dmgtype(pmid, AD_CORR) || dmgtype(pmid, AD_RUST)
                       || (isSlithy(pmid) && !isBigMonster(pmid)));
 }
 
@@ -365,67 +363,67 @@ struct monst *mon;
 
 /* returns True if monster can track well */
 boolean
-can_track(ptr)
-register struct permonst *ptr;
+can_track(pmid)
+int pmid;
 {
     if (uwep && uwep->oartifact == ART_EXCALIBUR)
         return TRUE;
     else
-        return (boolean) hasEyes(ptr->monsterTypeID);
+        return (boolean) hasEyes(pmid);
 }
 
 /* creature will slide out of armor */
 boolean
-sliparm(ptr)
-register struct permonst *ptr;
+sliparm(pmid)
+int pmid;
 {
-    return (boolean) (isWhirly(ptr->monsterTypeID) || monsterSize(ptr->monsterTypeID) <= MZ_SMALL
-                      || isNoncorporeal(ptr->monsterTypeID));
+    return (boolean) (isWhirly(pmid) || monsterSize(pmid) <= MZ_SMALL
+                      || isNoncorporeal(pmid));
 }
 
 /* creature will break out of armor */
 boolean
-breakarm(ptr)
-register struct permonst *ptr;
+breakarm(pmid)
+int pmid;
 {
-    if (sliparm(ptr))
+    if (sliparm(pmid))
         return FALSE;
 
-    return (boolean) (isBigMonster(ptr->monsterTypeID)
-                      || (monsterSize(ptr->monsterTypeID) > MZ_SMALL && !isHumanoid(ptr->monsterTypeID))
+    return (boolean) (isBigMonster(pmid)
+                      || (monsterSize(pmid) > MZ_SMALL && !isHumanoid(pmid))
                       /* special cases of humanoids that cannot wear suits */
-                      || ptr == &mons[PM_MARILITH]
-                      || ptr == &mons[PM_WINGED_GARGOYLE]);
+                      || pmid == PM_MARILITH
+                      || pmid == PM_WINGED_GARGOYLE);
 }
 
 /* creature sticks other creatures it hits */
 boolean
-sticks(ptr)
-register struct permonst *ptr;
+sticks(pmid)
+int pmid;
 {
-    return (boolean) (dmgtype(ptr, AD_STCK) || dmgtype(ptr, AD_WRAP)
-                      || attacktype(ptr->monsterTypeID, AT_HUGS));
+    return (boolean) (dmgtype(pmid, AD_STCK) || dmgtype(pmid, AD_WRAP)
+                      || attacktype(pmid, AT_HUGS));
 }
 
 /* some monster-types can't vomit */
 boolean
-cantvomit(ptr)
-struct permonst *ptr;
+cantvomit(pmid)
+int pmid;
 {
     /* rats and mice are incapable of vomiting;
        which other creatures have the same limitation? */
-    if (monsterClass(ptr->monsterTypeID) == S_RODENT && ptr != &mons[PM_ROCK_MOLE]
-        && ptr != &mons[PM_WOODCHUCK])
+    if (monsterClass(pmid) == S_RODENT && pmid != PM_ROCK_MOLE
+        && pmid != PM_WOODCHUCK)
         return TRUE;
     return FALSE;
 }
 
 /* number of horns this type of monster has on its head */
 int
-num_horns(ptr)
-struct permonst *ptr;
+num_horns(pmid)
+int pmid;
 {
-    switch (ptr->monsterTypeID) {
+    switch (pmid) {
     case PM_HORNED_DEVIL: /* ? "more than one" */
     case PM_MINOTAUR:
     case PM_ASMODEUS:
@@ -444,12 +442,11 @@ struct permonst *ptr;
 
 /* does monster-type deal out a particular type of damage from a particular
    type of attack? */
-boolean monsterCanCauseDamageTypeWithAttackType(ptr, dtyp, atyp)
-const struct permonst *ptr;
+boolean monsterCanCauseDamageTypeWithAttackType(pmid, dtyp, atyp)
+int pmid;
 const int dtyp;
 const int atyp;
 {
-    int pmid = ptr->monsterTypeID;
     int nAttacks = monsterAttacks(pmid);
 
     for (int i = 0; i < nAttacks; i++)
@@ -464,11 +461,11 @@ const int atyp;
 
 /* does monster-type deal out a particular type of damage from any attack */
 boolean
-dmgtype(ptr, dtyp)
-struct permonst *ptr;
+dmgtype(pmid, dtyp)
+int pmid;
 int dtyp;
 {
-    return monsterCanCauseDamageTypeWithAttackType(ptr, dtyp, AT_ANY);
+    return monsterCanCauseDamageTypeWithAttackType(pmid, dtyp, AT_ANY);
 }
 
 /* returns the maximum damage a defender can do to the attacker via

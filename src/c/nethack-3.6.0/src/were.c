@@ -210,7 +210,7 @@ boolean purify;
 }
 
 boolean youHateSilver() {
-    return (lycanthropeType() >= LOW_PM || hates_silver(youmonst.data));
+    return (lycanthropeType() >= LOW_PM || hates_silver(youmonst.data->monsterTypeID));
 }
 
 /*were.c*/

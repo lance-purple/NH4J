@@ -52,7 +52,7 @@ dosit()
         else
             You("are sitting on air.");
         return 0;
-    } else if (u.ustuck && !sticks(youmonst.data)) {
+    } else if (u.ustuck && !sticks(youmonst.data->monsterTypeID)) {
         /* holding monster is next to hero rather than beneath, but
            hero is in no condition to actually sit at has/her own spot */
         if (isHumanoid(u.ustuck->data->monsterTypeID))
