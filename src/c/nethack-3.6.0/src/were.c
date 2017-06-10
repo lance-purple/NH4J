@@ -123,15 +123,13 @@ register struct monst *mon;
     possibly_unwield(mon, FALSE);
 }
 
-int were_summon(ptr, yours, visible,
-                genbuf) /* were-creature (even you) summons a horde */
-register struct permonst *ptr;
+int were_summon(pmid, yours, visible, genbuf) /* were-creature (even you) summons a horde */
+int pmid;
 register boolean yours;
 int *visible; /* number of visible helpers created */
 char *genbuf;
 {
     register int i, typ;
-    int pm = ptr->monsterTypeID;
     register struct monst *mtmp;
     int total = 0;
 
@@ -139,7 +137,7 @@ char *genbuf;
     if (youHaveProtectionFromShapeChangers() && !yours)
         return 0;
     for (i = rnd(5); i > 0; i--) {
-        switch (pm) {
+        switch (pmid) {
         case PM_WERERAT:
         case PM_HUMAN_WERERAT:
             typ =

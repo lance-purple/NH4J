@@ -1288,7 +1288,7 @@ dosummon()
 
     You("call upon your brethren for help!");
     exercise(A_WIS, TRUE);
-    if (!were_summon(youmonst.data, TRUE, &placeholder, (char *) 0))
+    if (!were_summon(youmonst.data->monsterTypeID, TRUE, &placeholder, (char *) 0))
         pline("But none arrive.");
     return 1;
 }
