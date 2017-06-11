@@ -25,7 +25,7 @@
 #define telepathic(ptr)                                                \
     ((ptr) == &mons[PM_FLOATING_EYE] || (ptr) == &mons[PM_MIND_FLAYER] \
      || (ptr) == &mons[PM_MASTER_MIND_FLAYER])
-#define is_armed(ptr) attacktype(ptr->monsterTypeID, AT_WEAP)
+#define is_armed(pmid) attacktype(pmid, AT_WEAP)
 
 #define can_breathe(ptr) attacktype(ptr->monsterTypeID, AT_BREA)
 

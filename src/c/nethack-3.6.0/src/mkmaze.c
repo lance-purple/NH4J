@@ -439,7 +439,7 @@ fixup_special()
         for (tryct = rnd(4); tryct; tryct--) {
             x = somex(croom);
             y = somey(croom);
-            if (goodpos(x, y, (struct monst *) 0, 0)) {
+            if (goodPositionForObject(x, y, 0)) {
                 otmp = mk_tt_object(STATUE, x, y);
                 while (otmp && (poly_when_stoned(mons[otmp->corpsenm].monsterTypeID)
                                 || monsterTypeResistsStoning(mons[otmp->corpsenm].monsterTypeID))) {

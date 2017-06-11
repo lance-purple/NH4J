@@ -2628,7 +2628,7 @@ crawl_destination(x, y)
 int x, y;
 {
     /* is location ok in general? */
-    if (!goodpos(x, y, &youmonst, 0))
+    if (!goodPositionForYou(x, y, 0))
         return FALSE;
 
     /* orthogonal movement is unrestricted when destination is ok */

@@ -95,6 +95,107 @@ unsigned gpflags;
     return TRUE;
 }
 
+
+/*
+ * Is (x,y) a good position for an object?
+ */
+boolean
+goodPositionForObject(x, y, gpflags)
+int x, y;
+unsigned gpflags;
+{
+    boolean ignorewater = ((gpflags & MM_IGNOREWATER) != 0);
+
+    if (!isok(x, y)) {
+        return FALSE;
+    }
+
+    /* in many cases, we're trying to create a new monster, which
+     * can't go on top of the player or any existing monster.
+     * however, occasionally we are relocating engravings or objects,
+     * which could be co-located and thus get restricted a bit too much.
+     * oh well.
+     */
+    if (x == currentX() && y == currentY()) {
+        return FALSE;
+    }
+
+    if (!accessible(x, y)) {
+        if (!(is_pool(x, y) && ignorewater)) {
+            return FALSE;
+	}
+    }
+
+    if (sobj_at(BOULDER, x, y)) {
+        return FALSE;
+    }
+
+    return TRUE;
+}
+
+/*
+ * Is (x,y) a good position of youmonst?
+ */
+boolean
+goodPositionForYou(x, y, gpflags)
+int x, y;
+unsigned gpflags;
+{
+    struct monst *mtmp = &youmonst;
+    struct permonst *mdat = (struct permonst *) 0;
+    boolean ignorewater = ((gpflags & MM_IGNOREWATER) != 0);
+
+    if (!isok(x, y)) {
+        return FALSE;
+    }
+
+    struct monst *mtmp2 = m_at(x, y);
+
+    /* Be careful with long worms.  A monster may be placed back in
+     * its own location.  Normally, if m_at() returns the same monster
+     * that we're trying to place, the monster is being placed in its
+     * own location.  However, that is not correct for worm segments,
+     * because all the segments of the worm return the same m_at().
+     * Actually we overdo the check a little bit--a worm can't be placed
+     * in its own location, period.  If we just checked for mtmp->mx
+     * != x || mtmp->my != y, we'd miss the case where we're called
+     * to place the worm segment and the worm's head is at x,y.
+     */
+    if (mtmp2 && (mtmp2 != mtmp || mtmp->wormno)) {
+        return FALSE;
+    }
+
+    mdat = mtmp->data;
+    int pmid = mdat->monsterTypeID;
+    if (is_pool(x, y) && !ignorewater) {
+        return (youAreLevitating() || youAreFlying() || canYouWalkOnWater() || youCanSwim()
+                      || youAreAmphibious());
+    } else if (monsterClass(pmid) == S_EEL && rn2(13) && !ignorewater) {
+        return FALSE;
+    } else if (is_lava(x, y)) {
+        return (youAreLevitating() || youAreFlying()
+                        || (youResistFire() && canYouWalkOnWater() && uarmf
+                            && uarmf->oerodeproof)
+                        || (areYouPolymorphed() && likes_lava(youmonst.data)));
+    }
+    if (passesThroughWalls(mdat->monsterTypeID) && may_passwall(x, y)) {
+        return TRUE;
+    }
+    if (isAmorphous(mdat->monsterTypeID) && closed_door(x, y)) {
+        return TRUE;
+    }
+    if (!accessible(x, y)) {
+        if (!(is_pool(x, y) && ignorewater)) {
+            return FALSE;
+	}
+    }
+
+    if (sobj_at(BOULDER, x, y) && (!mdat || !throwsRocks(mdat->monsterTypeID))) {
+        return FALSE;
+    }
+    return TRUE;
+}
+
 /*
  * "entity next to"
  *
@@ -234,7 +335,7 @@ boolean trapok;
 {
     if (!trapok && t_at(x, y))
         return FALSE;
-    if (!goodpos(x, y, &youmonst, 0))
+    if (!goodPositionForYou(x, y, 0))
         return FALSE;
     if (!tele_jump_ok(currentX(), currentY(), x, y))
         return FALSE;
@@ -1215,7 +1316,7 @@ register struct obj *obj;
         ty = rn2(ROWNO);
         if (!--try_limit)
             break;
-    } while (!goodpos(tx, ty, (struct monst *) 0, 0)
+    } while (!goodPositionForObject(tx, ty, 0)
              || (restricted_fall
                  && (!within_bounded_area(tx, ty, dndest.lx, dndest.ly,
                                           dndest.hx, dndest.hy)

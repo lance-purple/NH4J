@@ -1275,7 +1275,7 @@ int mmflags;
     set_malign(mtmp); /* having finished peaceful changes */
 
     if (allow_minvent) {
-        if (is_armed(ptr))
+        if (is_armed(ptr->monsterTypeID))
             m_initweap(mtmp); /* equip with weapons / armor */
         m_initinv(mtmp); /* add on a few special items incl. more armor */
         m_dowear(mtmp, TRUE);
@@ -1577,7 +1577,7 @@ int mmflags;
     }
 
     if (allow_minvent) {
-        if (is_armed(ptr))
+        if (is_armed(ptr->monsterTypeID))
             m_initweap(mtmp); /* equip with weapons / armor */
         m_initinv(mtmp); /* add on a few special items incl. more armor */
         m_dowear(mtmp, TRUE);

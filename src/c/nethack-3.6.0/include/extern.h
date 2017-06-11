@@ -3024,6 +3024,8 @@ E boolean FDECL(stucksteed, (BOOLEAN_P));
 /* ### teleport.c ### */
 
 E boolean FDECL(goodpos, (int, int, struct monst *, unsigned));
+E boolean FDECL(goodPositionForObject, (int, int, unsigned));
+E boolean FDECL(goodPositionForYou, (int, int, unsigned));
 E boolean FDECL(enexto, (coord *, XCHAR_P, XCHAR_P, struct permonst *));
 E boolean
 FDECL(enexto_core, (coord *, XCHAR_P, XCHAR_P, struct permonst *, unsigned));
