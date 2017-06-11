@@ -489,8 +489,7 @@ struct monst *mcast;
                     mtmp->msleeping = mtmp->mpeaceful = mtmp->mtame = 0;
                     set_malign(mtmp);
                 } else /* GENOD? */
-                    mtmp = makemon((struct permonst *) 0, bypos.x, bypos.y,
-                                   NO_MM_FLAGS);
+                    mtmp = makeanymon(bypos.x, bypos.y, NO_MM_FLAGS);
                 if (mtmp) {
                     count++;
 		    int maligntyp = monsterAlignment(mtmp->data->monsterTypeID);

@@ -1248,7 +1248,11 @@ int okind;
     if (!(mvitals[pm_index].mvflags & G_GENOD))
         mdat = &mons[pm_index];
 
-    mtmp = makemon(mdat, obj->ox, obj->oy, NO_MM_FLAGS);
+    if (mdat) {
+        mtmp = makemon(mdat, obj->ox, obj->oy, NO_MM_FLAGS);
+    } else {
+        mtmp = makeanymon(obj->ox, obj->oy, NO_MM_FLAGS);
+    }
     polyuse(obj, okind, monsterCorpseWeight(mons[pm_index].monsterTypeID));
 
     if (mtmp && cansee(mtmp->mx, mtmp->my)) {
@@ -1624,7 +1628,11 @@ struct obj *obj;
             } else { /* (obj->otyp == FIGURINE) */
                 if (golem_xform)
                     ptr = &mons[PM_FLESH_GOLEM];
-                mon = makemon(ptr, oox, ooy, NO_MINVENT);
+                if (ptr) {
+                    mon = makemon(ptr, oox, ooy, NO_MINVENT);
+                } else {
+                    mon = makeanymon(oox, ooy, NO_MINVENT);
+                }
                 if (mon) {
                     if (costly_spot(oox, ooy) && !obj->no_charge) {
                         if (costly_spot(currentX(), currentY()))

@@ -1567,12 +1567,15 @@ struct mkroom *croom;
     if (MON_AT(x, y) && enexto(&cc, x, y, pm))
         x = cc.x, y = cc.y;
 
-    if (m->align != -(MAX_REGISTERS + 2))
+    if (m->align != -(MAX_REGISTERS + 2)) {
         mtmp = mk_roamer(pm, Amask2align(amask), x, y, m->peaceful);
-    else if (PM_ARCHEOLOGIST <= m->id && m->id <= PM_WIZARD)
+    } else if (PM_ARCHEOLOGIST <= m->id && m->id <= PM_WIZARD) {
         mtmp = mk_mplayer(pm, x, y, FALSE);
-    else
+    } else if (pm) {
         mtmp = makemon(pm, x, y, NO_MM_FLAGS);
+    } else {
+        mtmp = makeanymon(x, y, NO_MM_FLAGS);
+    }
 
     if (mtmp) {
         x = mtmp->mx, y = mtmp->my; /* sanity precaution */
@@ -2536,7 +2539,7 @@ fill_empty_maze()
         }
         for (x = rnd((int) (12 * mapfact) / 100); x; x--) {
             maze1xy(&mm, DRY);
-            (void) makemon((struct permonst *) 0, mm.x, mm.y, NO_MM_FLAGS);
+            (void) makeanymon(mm.x, mm.y, NO_MM_FLAGS);
         }
         for (x = rn2((int) (15 * mapfact) / 100); x; x--) {
             maze1xy(&mm, DRY);

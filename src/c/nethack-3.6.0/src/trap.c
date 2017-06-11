@@ -615,10 +615,15 @@ int *fail_reason;
                be NON_PM; otherwise, set form to match the statue */
             if (mon && mon->cham >= LOW_PM)
                 (void) newcham(mon, mptr, FALSE, FALSE);
-        } else
+        } else if (mptr) {
             mon = makemon(mptr, x, y, (cause == ANIMATE_SPELL)
                                           ? (NO_MINVENT | MM_ADJACENTOK)
                                           : NO_MINVENT);
+        } else {
+            mon = makeanymon(x, y, (cause == ANIMATE_SPELL)
+                                          ? (NO_MINVENT | MM_ADJACENTOK)
+                                          : NO_MINVENT);
+        }
     }
 
     if (!mon) {
@@ -3082,7 +3087,7 @@ domagictrap()
             You_hear("a deafening roar!");
         incrementYourIntrinsicTimeout(DEAF, rn1(20, 30));
         while (cnt--)
-            (void) makemon((struct permonst *) 0, currentX(), currentY(), NO_MM_FLAGS);
+            (void) makeanymon(currentX(), currentY(), NO_MM_FLAGS);
     } else
         switch (fate) {
         case 10:

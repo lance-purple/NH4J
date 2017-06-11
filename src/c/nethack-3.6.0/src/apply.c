@@ -3250,7 +3250,7 @@ struct obj *obj;
             continue;
         } else if (obj->otyp == WAN_CREATE_MONSTER) {
             /* u.ux,u.uy creates it near you--x,y might create it in rock */
-            (void) makemon((struct permonst *) 0, currentX(), currentY(), NO_MM_FLAGS);
+            (void) makeanymon(currentX(), currentY(), NO_MM_FLAGS);
             continue;
         } else if (x != currentX() || y != currentY()) {
             /*

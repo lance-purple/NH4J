@@ -133,7 +133,13 @@ register boolean special;
     if (!areYouInEndgame())
         special = FALSE;
 
-    if ((mtmp = makemon(ptr, x, y, NO_MM_FLAGS)) != 0) {
+    if (ptr) {
+        mtmp = makemon(ptr, x, y, NO_MM_FLAGS);
+    } else {
+        mtmp = makeanymon(x, y, NO_MM_FLAGS);
+    }
+
+    if (mtmp != 0) {
         short weapon = rn2(2) ? LONG_SWORD : rnd_class(SPEAR, BULLWHIP);
         short armor =
             rnd_class(GRAY_DRAGON_SCALE_MAIL, YELLOW_DRAGON_SCALE_MAIL);

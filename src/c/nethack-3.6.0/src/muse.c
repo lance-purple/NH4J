@@ -765,7 +765,7 @@ struct monst *mtmp;
             return 0;
         mzapmsg(mtmp, otmp, FALSE);
         otmp->spe--;
-        mon = makemon((struct permonst *) 0, cc.x, cc.y, NO_MM_FLAGS);
+        mon = makeanymon(cc.x, cc.y, NO_MM_FLAGS);
         if (mon && canspotmon(mon) && oseen)
             makeknown(WAN_CREATE_MONSTER);
         return 2;
@@ -791,7 +791,11 @@ struct monst *mtmp;
                `pm' is what to actually create (0 => random) */
             if (!enexto(&cc, mtmp->mx, mtmp->my, fish))
                 break;
-            mon = makemon(pm, cc.x, cc.y, NO_MM_FLAGS);
+            if (pm) {
+                mon = makemon(pm, cc.x, cc.y, NO_MM_FLAGS);
+            } else {
+                mon = makeanymon(cc.x, cc.y, NO_MM_FLAGS);
+            }
             if (mon && canspotmon(mon))
                 known = TRUE;
         }

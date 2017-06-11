@@ -303,7 +303,9 @@ struct mkroom *sroom;
             /* don't place monster on explicitly placed throne */
             if (type == COURT && IS_THRONE(levl[sx][sy].typ))
                 continue;
-            mon = makemon((type == COURT)
+
+            struct permonst* pm =
+                        (type == COURT)
                            ? courtmon()
                            : (type == BARRACKS)
                               ? squadmon()
@@ -319,8 +321,12 @@ struct mkroom *sroom;
                                              ? &mons[PM_COCKATRICE]
                                              : (type == ANTHOLE)
                                                  ? antholemon()
-                                                 : (struct permonst *) 0,
-                          sx, sy, NO_MM_FLAGS);
+                                                 : (struct permonst *) 0;
+            if (pm) {
+                mon = makemon(pm, sx, sy, NO_MM_FLAGS);
+            } else {
+                mon = makeanymon(sx, sy, NO_MM_FLAGS);
+            }
             if (mon) {
                 mon->msleeping = 1;
                 if (type == COURT && mon->mpeaceful) {

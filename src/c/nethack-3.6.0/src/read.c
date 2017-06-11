@@ -2249,8 +2249,16 @@ int how;
         if (!(monsterGenerationMask(mons[mndx].monsterTypeID) & G_UNIQ)
             && !(mvitals[mndx].mvflags & (G_GENOD | G_EXTINCT)))
             for (i = rn1(3, 4); i > 0; i--) {
-                if (!makemon(ptr, currentX(), currentY(), NO_MINVENT))
+                struct monst* mm;
+
+                if (ptr) {
+                  mm = makemon(ptr, currentX(), currentY(), NO_MINVENT);
+                } else {
+                  mm = makeanymon(currentX(), currentY(), NO_MINVENT);
+                }
+                if (!mm) {
                     break; /* couldn't make one */
+                }
                 ++cnt;
                 if (mvitals[mndx].mvflags & G_EXTINCT)
                     break; /* just made last one */
@@ -2438,7 +2446,11 @@ create_particular()
                 whichpm = mkclass(monclass, 0);
             else if (randmonst)
                 whichpm = rndmonst();
-            mtmp = makemon(whichpm, currentX(), currentY(), NO_MM_FLAGS);
+            if (whichpm) {
+               mtmp = makemon(whichpm, currentX(), currentY(), NO_MM_FLAGS);
+            } else {
+               mtmp = makeanymon(currentX(), currentY(), NO_MM_FLAGS);
+            }
             if (!mtmp) {
                 /* quit trying if creation failed and is going to repeat */
                 if (monclass == MAXMCLASSES && !randmonst)
