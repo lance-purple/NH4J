@@ -1296,12 +1296,19 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
     }
     case SCR_CREATE_MONSTER:
     case SPE_CREATE_MONSTER:
-        if (create_critters(1 + ((confused || scursed) ? 12 : 0)
-                                + ((sblessed || rn2(73)) ? 0 : rnd(4)),
-                            confused ? &mons[PM_ACID_BLOB]
-                                     : (struct permonst *) 0,
-                            FALSE))
-            known = TRUE;
+        if (confused) {
+            if (create_critters(13 + ((sblessed || rn2(73)) ? 0 : rnd(4)),
+                                &mons[PM_ACID_BLOB], TRUE)) {
+                known = TRUE;
+	    }
+	}
+        if (!confused) {
+            if (create_rnd_critters(1 + (scursed ? 12 : 0)
+                                        + ((sblessed || rn2(73)) ? 0 : rnd(4)),
+                                    FALSE)) {
+                known = TRUE;
+	    }
+	}
         /* no need to flush monsters; we ask for identification only if the
          * monsters are not visible
          */

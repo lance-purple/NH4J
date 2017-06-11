@@ -1048,8 +1048,7 @@ int mmflags;
 
         cc.x = cc.y = 0; /* lint suppression */
         fakemon.data = ptr; /* set up for goodpos */
-        if (!makemon_rnd_goodpos(ptr ? &fakemon : (struct monst *)0,
-                                 gpflags, &cc))
+        if (!makemon_rnd_goodpos(&fakemon, gpflags, &cc))
             return (struct monst *) 0;
         x = cc.x;
         y = cc.y;
@@ -1619,7 +1618,38 @@ int mndx;
 boolean
 create_critters(cnt, mptr, neverask)
 int cnt;
-struct permonst *mptr; /* usually null; used for confused reading */
+struct permonst *mptr;
+boolean neverask;
+{
+    coord c;
+    int x, y;
+    struct monst *mon;
+    boolean known = FALSE;
+    boolean ask = (wizard && !neverask);
+
+    while (cnt--) {
+        if (ask) {
+            if (create_particular()) {
+                known = TRUE;
+                continue;
+            } else
+                ask = FALSE; /* ESC will shut off prompting */
+        }
+        x = currentX(), y = currentY();
+
+        mon = makemon(mptr, x, y, NO_MM_FLAGS);
+        if (mon && canspotmon(mon))
+            known = TRUE;
+    }
+    return known;
+}
+
+
+/* used for wand/scroll/spell of create monster */
+/* returns TRUE iff you know monsters have been created */
+boolean
+create_rnd_critters(cnt, neverask)
+int cnt;
 boolean neverask;
 {
     coord c;
@@ -1639,14 +1669,11 @@ boolean neverask;
         x = currentX(), y = currentY();
         /* if in water, try to encourage an aquatic monster
            by finding and then specifying another wet location */
-        if (!mptr && inWater() && enexto(&c, x, y, &mons[PM_GIANT_EEL]))
+        if (inWater() && enexto(&c, x, y, &mons[PM_GIANT_EEL]))
             x = c.x, y = c.y;
 
-	if (mptr) {
-            mon = makemon(mptr, x, y, NO_MM_FLAGS);
-	} else {
-            mon = makeanymon(x, y, NO_MM_FLAGS);
-	}
+        mon = makeanymon(x, y, NO_MM_FLAGS);
+
         if (mon && canspotmon(mon))
             known = TRUE;
     }
