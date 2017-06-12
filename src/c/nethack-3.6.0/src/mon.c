@@ -1372,7 +1372,7 @@ nexttry: /* eels prefer the water, but if there is no water nearby,
                         && (ttmp->ttyp != FIRE_TRAP || !resists_fire(mon))
                         && (ttmp->ttyp != SQKY_BOARD || !isFlyer(pmid))
                         && (ttmp->ttyp != WEB
-                            || (!isAmorphous(pmid) && !webmaker(mdat)))
+                            || (!isAmorphous(pmid) && !makesWebs(mdat->monsterTypeID)))
                         && (ttmp->ttyp != ANTI_MAGIC || !resists_magm(mon))) {
                         if (!(flag & ALLOW_TRAPS)) {
                             if (mon->mtrapseen & (1L << (ttmp->ttyp - 1)))
@@ -1940,7 +1940,7 @@ boolean was_swallowed; /* digestion */
         return FALSE;
 
     if (((isBigMonster(mdat->monsterTypeID) || mdat == &mons[PM_LIZARD]) && !mon->mcloned)
-        || isGolem(mdat->monsterTypeID) || is_mplayer(mdat) || is_rider(mdat))
+        || isGolem(mdat->monsterTypeID) || isMonsterPlayer(mdat->monsterTypeID) || is_rider(mdat))
         return TRUE;
     tmp = 2 + ((monsterGenerationMask(mdat->monsterTypeID) & G_FREQ) < 2) + isVerySmallMonster(mdat->monsterTypeID);
     return (boolean) !rn2(tmp);
@@ -3084,7 +3084,7 @@ int mndx;
     /* select_newcham_form() might deliberately pick a player
        character type (random selection never does) which
        okToPolymorphInto() rejects, so we need a special case here */
-    if (is_mplayer(mdat))
+    if (isMonsterPlayer(mdat->monsterTypeID))
         return mdat;
     /* okToPolymorphInto() rules out M2_PNAME, M2_WERE, and all humans except Kops */
     return okToPolymorphInto(mdat->monsterTypeID) ? mdat : 0;
@@ -3156,7 +3156,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
 
     mgender_from_pmid(mtmp, mdat->monsterTypeID);
 
-    if (areYouInEndgame() && is_mplayer(olddata) && has_mname(mtmp)) {
+    if (areYouInEndgame() && isMonsterPlayer(olddata->monsterTypeID) && has_mname(mtmp)) {
         /* mplayers start out as "Foo the Bar", but some of the
          * titles are inappropriate when polymorphed, particularly
          * into the opposite sex.  players don't use ranks when
@@ -3494,7 +3494,7 @@ boolean silent;
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
         if (DEADMONSTER(mtmp))
             continue;
-        if (is_watch(mtmp->data) && mtmp->mpeaceful) {
+        if (isMemberOfWatch(mtmp->data->monsterTypeID) && mtmp->mpeaceful) {
             ct++;
             if (cansee(mtmp->mx, mtmp->my) && mtmp->mcanmove) {
                 if (distanceSquaredToYou(mtmp->mx, mtmp->my) == 2)
@@ -3537,7 +3537,7 @@ pacify_guards()
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
         if (DEADMONSTER(mtmp))
             continue;
-        if (is_watch(mtmp->data))
+        if (isMemberOfWatch(mtmp->data->monsterTypeID))
             mtmp->mpeaceful = 1;
     }
 }

@@ -311,7 +311,7 @@ boolean with_you;
         set_residency(mtmp, FALSE);
 
     num_segs = mtmp->wormno;
-    /* baby long worms have no tail so don't use is_longworm() */
+    /* baby long worms have no tail so don't use isLongWorm() */
     if (mtmp->data == &mons[PM_LONG_WORM]) {
         mtmp->wormno = get_wormno();
         if (mtmp->wormno)

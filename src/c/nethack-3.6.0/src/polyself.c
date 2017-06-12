@@ -79,7 +79,7 @@ set_uasmon()
     PROPSET(STUNNED, (mdat == &mons[PM_STALKER] || isBat(mdat->monsterTypeID)));
     PROPSET(HALLUC_RES, dmgtype(mdat->monsterTypeID, AD_HALU));
     PROPSET(SEE_INVIS, perceivesTheInvisible(mdat->monsterTypeID));
-    PROPSET(TELEPAT, telepathic(mdat));
+    PROPSET(TELEPAT, isTelepathic(mdat->monsterTypeID));
     PROPSET(INFRAVISION, hasInfravision(mdat->monsterTypeID));
     PROPSET(INVIS, pm_invisible(mdat));
     PROPSET(TELEPORT, canTeleport(mdat->monsterTypeID));
@@ -704,7 +704,7 @@ int mntmp;
         You("no longer feel sick.");
     }
     if (youAreTurningToSlime()) {
-        if (flaming(youmonst.data)) {
+        if (isFlaming(youmonst.data->monsterTypeID)) {
             make_slimed(0L, "The slime burns away!");
         } else if (mntmp == PM_GREEN_SLIME) {
             /* do it silently */
@@ -787,7 +787,7 @@ int mntmp;
         static const char use_thec[] = "Use the command #%s to %s.";
         static const char monsterc[] = "monster";
 
-        if (can_breathe(youmonst.data))
+        if (hasBreathWeapon(youmonst.data->monsterTypeID))
             pline(use_thec, monsterc, "use your breath weapon");
         if (attacktype(youmonst.data->monsterTypeID, AT_SPIT))
             pline(use_thec, monsterc, "spit venom");
@@ -799,7 +799,7 @@ int mntmp;
             pline(use_thec, monsterc, "hide");
         if (isWere(youmonst.data->monsterTypeID))
             pline(use_thec, monsterc, "summon help");
-        if (webmaker(youmonst.data))
+        if (makesWebs(youmonst.data->monsterTypeID))
             pline(use_thec, monsterc, "spin a web");
         if (currentMonsterNumber() == PM_GREMLIN)
             pline(use_thec, monsterc, "multiply in a fountain");
@@ -859,7 +859,7 @@ int mntmp;
         /* probably should burn webs too if PM_FIRE_ELEMENTAL */
         setCurrentTrapTimeout(0);
     }
-    if (webmaker(youmonst.data) && currentlyTrapped() && currentTrapType() == TT_WEB) {
+    if (makesWebs(youmonst.data->monsterTypeID) && currentlyTrapped() && currentTrapType() == TT_WEB) {
         You("orient yourself on the web.");
         setCurrentTrapTimeout(0);
     }
@@ -885,7 +885,7 @@ break_armor()
 {
     register struct obj *otmp;
 
-    if (breakarm(youmonst.data->monsterTypeID)) {
+    if (breaksOutOfArmor(youmonst.data->monsterTypeID)) {
         if ((otmp = uarm) != 0) {
             if (donning(otmp))
                 cancel_don();
@@ -909,7 +909,7 @@ break_armor()
             Your("shirt rips to shreds!");
             useup(uarmu);
         }
-    } else if (sliparm(youmonst.data->monsterTypeID)) {
+    } else if (slidesOutOfArmor(youmonst.data->monsterTypeID)) {
         if (((otmp = uarm) != 0) && (racial_exception(&youmonst, otmp) < 1)) {
             if (donning(otmp))
                 cancel_don();
@@ -934,13 +934,13 @@ break_armor()
             dropx(otmp);
         }
     }
-    if (has_horns(youmonst.data)) {
+    if (hasHorns(youmonst.data->monsterTypeID)) {
         if ((otmp = uarmh) != 0) {
             if (is_flimsy(otmp) && !donning(otmp)) {
                 char hornbuf[BUFSZ];
 
                 /* Future possibilities: This could damage/destroy helmet */
-                Sprintf(hornbuf, "horn%s", plur(num_horns(youmonst.data->monsterTypeID)));
+                Sprintf(hornbuf, "horn%s", plur(numberOfHorns(youmonst.data->monsterTypeID)));
                 Your("%s %s through %s.", hornbuf, vtense(hornbuf, "pierce"),
                      yname(otmp));
             } else {
@@ -1545,11 +1545,11 @@ domindblast()
             continue;
         if (mtmp->mpeaceful)
             continue;
-        u_sen = telepathic(mtmp->data) && !mtmp->mcansee;
-        if (u_sen || (telepathic(mtmp->data) && rn2(2)) || !rn2(10)) {
+        u_sen = isTelepathic(mtmp->data->monsterTypeID) && !mtmp->mcansee;
+        if (u_sen || (isTelepathic(mtmp->data->monsterTypeID) && rn2(2)) || !rn2(10)) {
             You("lock in on %s %s.", s_suffix(mon_nam(mtmp)),
                 u_sen ? "telepathy"
-                      : telepathic(mtmp->data) ? "latent telepathy" : "mind");
+                      : isTelepathic(mtmp->data->monsterTypeID) ? "latent telepathy" : "mind");
             mtmp->mhp -= rnd(15);
             if (mtmp->mhp <= 0)
                 killed(mtmp);

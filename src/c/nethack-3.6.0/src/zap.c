@@ -4848,7 +4848,7 @@ int damage, tell;
     if (dlev > 50)
         dlev = 50;
     else if (dlev < 1)
-        dlev = is_mplayer(mtmp->data) ? currentExperienceLevel() : 1;
+        dlev = isMonsterPlayer(mtmp->data->monsterTypeID) ? currentExperienceLevel() : 1;
 
     resisted = rn2(100 + alev - dlev) < monsterBaseMagicResistance(mtmp->data->monsterTypeID);
     if (resisted) {

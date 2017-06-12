@@ -979,7 +979,7 @@ boolean called;
         } else if (called) {
             Sprintf(eos(buf), "%s called %s", monsterName.c_str, name);
             name_at_start = typeIsProperName(mdat->monsterTypeID);
-        } else if (is_mplayer(mdat) && (bp = strstri(name, " the ")) != 0) {
+        } else if (isMonsterPlayer(mdat->monsterTypeID) && (bp = strstri(name, " the ")) != 0) {
             /* <name> the <adjective> <invisible> <saddled> <rank> */
             char pbuf[BUFSZ];
 
@@ -995,7 +995,7 @@ boolean called;
             Strcat(buf, name);
             name_at_start = TRUE;
         }
-    } else if (is_mplayer(mdat) && !areYouInEndgame()) {
+    } else if (isMonsterPlayer(mdat->monsterTypeID) && !areYouInEndgame()) {
         char pbuf[BUFSZ];
 
         Strcpy(pbuf, rank_of((int) mtmp->m_lev, mdat->monsterTypeID,

@@ -14,33 +14,6 @@
 #define resists_acid(mon) (((mon)->mintrinsics & MR_ACID) != 0)
 #define resists_ston(mon) (((mon)->mintrinsics & MR_STONE) != 0)
 
-#define has_horns(ptr) (num_horns(ptr->monsterTypeID) > 0)
-
-#define flaming(ptr)                                                     \
-    ((ptr) == &mons[PM_FIRE_VORTEX] || (ptr) == &mons[PM_FLAMING_SPHERE] \
-     || (ptr) == &mons[PM_FIRE_ELEMENTAL] || (ptr) == &mons[PM_SALAMANDER])
-
-#define is_wooden(ptr) ((ptr) == &mons[PM_WOOD_GOLEM])
-
-#define telepathic(ptr)                                                \
-    ((ptr) == &mons[PM_FLOATING_EYE] || (ptr) == &mons[PM_MIND_FLAYER] \
-     || (ptr) == &mons[PM_MASTER_MIND_FLAYER])
-#define is_armed(pmid) attacktype(pmid, AT_WEAP)
-
-#define can_breathe(ptr) attacktype(ptr->monsterTypeID, AT_BREA)
-
-#define cantweararm(ptr) (breakarm(ptr->monsterTypeID) || sliparm(ptr->monsterTypeID))
-
-#define webmaker(ptr) \
-    ((ptr) == &mons[PM_CAVE_SPIDER] || (ptr) == &mons[PM_GIANT_SPIDER])
-
-#define is_longworm(ptr)                                                   \
-    (((ptr) == &mons[PM_BABY_LONG_WORM]) || ((ptr) == &mons[PM_LONG_WORM]) \
-     || ((ptr) == &mons[PM_LONG_WORM_TAIL]))
-#define is_mplayer(ptr) \
-    (((ptr) >= &mons[PM_ARCHEOLOGIST]) && ((ptr) <= &mons[PM_WIZARD]))
-#define is_watch(ptr) \
-    ((ptr) == &mons[PM_WATCHMAN] || (ptr) == &mons[PM_WATCH_CAPTAIN])
 #define is_rider(ptr)                                      \
     ((ptr) == &mons[PM_DEATH] || (ptr) == &mons[PM_FAMINE] \
      || (ptr) == &mons[PM_PESTILENCE])

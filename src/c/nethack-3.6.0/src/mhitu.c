@@ -1550,7 +1550,7 @@ register const struct Attack mattk;
         hitmsg(mtmp, mattk);
         if (!uncancelled)
             break;
-        if (flaming(youmonst.data)) {
+        if (isFlaming(youmonst.data->monsterTypeID)) {
             pline_The("slime burns away!");
             dmg = 0;
         } else if (youAreUnchanging() || isNoncorporeal(youmonst.data->monsterTypeID)
@@ -1797,14 +1797,14 @@ register const struct Attack mattk;
         physical_damage = TRUE;
         if (mtmp->data == &mons[PM_FOG_CLOUD]) {
             You("are laden with moisture and %s",
-                flaming(youmonst.data)
+                isFlaming(youmonst.data->monsterTypeID)
                     ? "are smoldering out!"
                     : youNeedNotBreathe() ? "find it mildly uncomfortable."
                                  : isAmphibious(youmonst.data->monsterTypeID)
                                        ? "feel comforted."
                                        : "can barely breathe!");
             /* NB: Amphibious includes Breathless */
-            if (youAreAmphibious() && !flaming(youmonst.data))
+            if (youAreAmphibious() && !isFlaming(youmonst.data->monsterTypeID))
                 tmp = 0;
         } else {
             You("are pummeled with debris!");

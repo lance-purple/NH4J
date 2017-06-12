@@ -1227,7 +1227,7 @@ unsigned trflags;
                 You("flow through %s spider web.", a_your[trap->madeby_u]);
             break;
         }
-        if (webmaker(youmonst.data)) {
+        if (makesWebs(youmonst.data->monsterTypeID)) {
             if (webmsgok)
                 pline(trap->madeby_u ? "You take a walk on your web."
                                      : "There is a spider web here.");
@@ -2433,7 +2433,7 @@ register struct monst *mtmp;
             break;
         case WEB:
             /* Monster in a web. */
-            if (webmaker(mptr))
+            if (makesWebs(mptr->monsterTypeID))
                 break;
             if (isAmorphous(mptr->monsterTypeID) || isWhirly(mptr->monsterTypeID) || isUnsolid(mptr->monsterTypeID)) {
                 if (isAcidic(mptr->monsterTypeID) || mptr == &mons[PM_GELATINOUS_CUBE]
@@ -3727,7 +3727,7 @@ dountrap()
         pline("You're too strained to do that.");
         return 0;
     }
-    if ((hasNoHands(youmonst.data->monsterTypeID) && !webmaker(youmonst.data))
+    if ((hasNoHands(youmonst.data->monsterTypeID) && !makesWebs(youmonst.data->monsterTypeID))
         || !monsterMovementSpeed(youmonst.data->monsterTypeID)) {
         pline("And just how do you expect to do that?");
         return 0;
@@ -3750,7 +3750,7 @@ struct trap *ttmp;
     int chance = 3;
 
     /* Only spiders know how to deal with webs reliably */
-    if (ttmp->ttyp == WEB && !webmaker(youmonst.data))
+    if (ttmp->ttyp == WEB && !makesWebs(youmonst.data->monsterTypeID))
         chance = 30;
     if (youAreConfused() || youAreHallucinating())
         chance++;
@@ -3895,7 +3895,7 @@ boolean force_failure;
                     if ((mtmp->mhp -= rnd(4)) <= 0)
                         killed(mtmp);
                 } else if (ttype == WEB) {
-                    if (!webmaker(youmonst.data)) {
+                    if (!makesWebs(youmonst.data->monsterTypeID)) {
                         struct trap *ttmp2 = maketrap(currentX(), currentY(), WEB);
 
                         if (ttmp2) {

@@ -465,11 +465,11 @@ boolean creation;
 
     m_dowear_type(mon, W_AMUL, creation, FALSE);
     /* can't put on shirt if already wearing suit */
-    if (!cantweararm(mon->data) && !(mon->misc_worn_check & W_ARM))
+    if (!cannotWearArmor(mon->data->monsterTypeID) && !(mon->misc_worn_check & W_ARM))
         m_dowear_type(mon, W_ARMU, creation, FALSE);
     /* treating small as a special case allows
        hobbits, gnomes, and kobolds to wear cloaks */
-    if (!cantweararm(mon->data) || monsterSize(mon->data->monsterTypeID) == MZ_SMALL)
+    if (!cannotWearArmor(mon->data->monsterTypeID) || monsterSize(mon->data->monsterTypeID) == MZ_SMALL)
         m_dowear_type(mon, W_ARMC, creation, FALSE);
     m_dowear_type(mon, W_ARMH, creation, FALSE);
     if (!MON_WEP(mon) || !bimanual(MON_WEP(mon)))
@@ -477,7 +477,7 @@ boolean creation;
     m_dowear_type(mon, W_ARMG, creation, FALSE);
     if (!isSlithy(mon->data->monsterTypeID) && monsterClass(mon->data->monsterTypeID) != S_CENTAUR)
         m_dowear_type(mon, W_ARMF, creation, FALSE);
-    if (!cantweararm(mon->data))
+    if (!cannotWearArmor(mon->data->monsterTypeID))
         m_dowear_type(mon, W_ARM, creation, FALSE);
     else
         m_dowear_type(mon, W_ARM, creation, RACE_EXCEPTION);
@@ -536,7 +536,7 @@ boolean racialexception;
                 && (mon->ispriest || mon->isminion))
                 continue;
             /* (flimsy exception matches polyself handling) */
-            if (has_horns(mon->data) && !is_flimsy(obj))
+            if (hasHorns(mon->data->monsterTypeID) && !is_flimsy(obj))
                 continue;
             break;
         case W_ARMS:
@@ -775,7 +775,7 @@ boolean polyspot;
     boolean handless_or_tiny = (hasNoHands(mdat->monsterTypeID) || isVerySmallMonster(mdat->monsterTypeID));
     const char *pronoun = mhim(mon), *ppronoun = mhis(mon);
 
-    if (breakarm(mdat->monsterTypeID)) {
+    if (breaksOutOfArmor(mdat->monsterTypeID)) {
         if ((otmp = which_armor(mon, W_ARM)) != 0) {
             if ((Is_dragon_scales(otmp) && mdat == Dragon_scales_to_pm(otmp))
                 || (Is_dragon_mail(otmp) && mdat == Dragon_mail_to_pm(otmp)))
@@ -812,7 +812,7 @@ boolean polyspot;
                 You_hear("a ripping sound.");
             m_useup(mon, otmp);
         }
-    } else if (sliparm(mdat->monsterTypeID)) {
+    } else if (slidesOutOfArmor(mdat->monsterTypeID)) {
         if ((otmp = which_armor(mon, W_ARM)) != 0) {
             if (vis)
                 pline("%s armor falls around %s!", s_suffix(Monnam(mon)),
@@ -838,7 +838,7 @@ boolean polyspot;
         }
         if ((otmp = which_armor(mon, W_ARMU)) != 0) {
             if (vis) {
-                if (sliparm(mon->data->monsterTypeID))
+                if (slidesOutOfArmor(mon->data->monsterTypeID))
                     pline("%s seeps right through %s shirt!", Monnam(mon),
                           ppronoun);
                 else
@@ -871,7 +871,7 @@ boolean polyspot;
             m_lose_armor(mon, otmp);
         }
     }
-    if (handless_or_tiny || has_horns(mdat)) {
+    if (handless_or_tiny || hasHorns(mdat->monsterTypeID)) {
         if ((otmp = which_armor(mon, W_ARMH)) != 0
             /* flimsy test for horns matches polyself handling */
             && (handless_or_tiny || !is_flimsy(otmp))) {

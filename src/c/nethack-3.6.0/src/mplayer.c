@@ -50,7 +50,7 @@ dev_name()
         match = FALSE;
         i = rn2(n);
         for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
-            if (!is_mplayer(mtmp->data))
+            if (!isMonsterPlayer(mtmp->data->monsterTypeID))
                 continue;
             if (!strncmp(developers[i], (has_mname(mtmp)) ? MNAME(mtmp) : "",
                          strlen(developers[i]))) {
@@ -124,7 +124,7 @@ register boolean special;
     register struct monst *mtmp;
     char nam[PL_NSIZ];
 
-    if (!is_mplayer(ptr))
+    if (!isMonsterPlayer(ptr->monsterTypeID))
         return ((struct monst *) 0);
 
     if (MON_AT(x, y))

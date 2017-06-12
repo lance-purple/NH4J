@@ -783,7 +783,7 @@ register struct permonst *ptr;
         ifdebugresist("can get teleport control");
         break;
     case TELEPAT:
-        res = telepathic(ptr);
+        res = isTelepathic(ptr->monsterTypeID);
         ifdebugresist("can get telepathy");
         break;
     default:

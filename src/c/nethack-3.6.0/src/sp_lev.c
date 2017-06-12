@@ -1551,7 +1551,7 @@ struct mkroom *croom;
             loc |= (HOT | WET);
         if (passesThroughWalls(pmid) || isNoncorporeal(pmid))
             loc |= SOLID;
-        if (flaming(pm))
+        if (isFlaming(pm->monsterTypeID))
             loc |= HOT;
         /* If water-liking monster, first try is without DRY */
         get_location_coord(&x, &y, loc | NO_LOC_WARN, croom, m->coord);

@@ -457,7 +457,7 @@ register struct monst *mtmp;
     }
 
     /* the watch will look around and see if you are up to no good :-) */
-    if (is_watch(mdat)) {
+    if (isMemberOfWatch(mdat->monsterTypeID)) {
         watch_on_duty(mtmp);
 
     } else if (is_mind_flayer(mdat) && !rn2(20)) {
@@ -497,7 +497,7 @@ register struct monst *mtmp;
                 continue;
             if (m2 == mtmp)
                 continue;
-            if ((telepathic(m2->data) && (rn2(2) || m2->mblinded))
+            if ((isTelepathic(m2->data->monsterTypeID) && (rn2(2) || m2->mblinded))
                 || !rn2(10)) {
                 if (cansee(m2->mx, m2->my))
                     pline("It locks on to %s.", mon_nam(m2));

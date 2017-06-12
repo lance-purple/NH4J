@@ -353,7 +353,7 @@ register struct monst *mtmp;
              * there's also a chance of displacing a "frozen" monster.
              * sleeping monsters might magically walk in their sleep.
              */
-            boolean foo = (youAreBeingPunished() || !rn2(7) || is_longworm(mtmp->data)),
+            boolean foo = (youAreBeingPunished() || !rn2(7) || isLongWorm(mtmp->data->monsterTypeID)),
                     inshop = FALSE;
             char *p;
 
@@ -550,7 +550,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
     boolean result, anger_guards;
 
     anger_guards = (mon->mpeaceful
-                    && (mon->ispriest || mon->isshk || is_watch(mon->data)));
+                    && (mon->ispriest || mon->isshk || isMemberOfWatch(mon->data->monsterTypeID)));
     result = hmon_hitmon(mon, obj, thrown);
     if (mon->ispriest && !rn2(2))
         ghod_hitsu(mon);
@@ -1999,7 +1999,7 @@ register const struct Attack mattk;
             case AD_PHYS:
                 if (youmonst.data == &mons[PM_FOG_CLOUD]) {
                     pline("%s is laden with your moisture.", Monnam(mdef));
-                    if (isAmphibious(pd->monsterTypeID) && !flaming(pd)) {
+                    if (isAmphibious(pd->monsterTypeID) && !isFlaming(pd->monsterTypeID)) {
                         dam = 0;
                         pline("%s seems unharmed.", Monnam(mdef));
                     }

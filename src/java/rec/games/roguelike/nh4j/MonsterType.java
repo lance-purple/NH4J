@@ -3092,7 +3092,11 @@ public class MonsterType {
 	public static boolean monsterHasWeaponAttack(int pmid) {
 		return (monsterWeaponAttackIndex(pmid) >= 0);
 	}	
-	
+
+	public static boolean monsterHasBreathWeaponAttack(int pmid) {
+		return (monsterAttackTypeIndex(pmid, AT.BREA) >= 0);
+	}	
+
 	public static long monsterHasResistances(int pmid) {
 		return getMonsterType(pmid).hasResistances;
 	}

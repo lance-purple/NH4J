@@ -178,7 +178,7 @@ boolean isyou;
             for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
                 if (DEADMONSTER(mtmp))
                     continue;
-                if (is_watch(mtmp->data) && couldsee(mtmp->mx, mtmp->my)
+                if (isMemberOfWatch(mtmp->data->monsterTypeID) && couldsee(mtmp->mx, mtmp->my)
                     && mtmp->mpeaceful) {
                     pline("%s yells:", Amonnam(mtmp));
                     verbalize("Hey, stop using that fountain!");

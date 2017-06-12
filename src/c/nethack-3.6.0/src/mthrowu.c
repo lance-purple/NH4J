@@ -593,7 +593,7 @@ struct monst *mtmp;
         else if (isLord(mtmp->data->monsterTypeID))
             multishot++;
         /* fake players treated as skilled (regardless of role limits) */
-        else if (is_mplayer(mtmp->data))
+        else if (isMonsterPlayer(mtmp->data->monsterTypeID))
             multishot++;
 
         /* class bonus */

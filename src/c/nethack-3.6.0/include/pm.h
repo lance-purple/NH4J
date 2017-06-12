@@ -2,6 +2,8 @@
 #ifndef PM_H
 #define PM_H
 
+#define PM_NULL (-9)
+
 #define	PM_PLAYERMON	(-1)
 #define	PM_GIANT_ANT	0
 #define	PM_KILLER_BEE	1

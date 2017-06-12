@@ -1590,7 +1590,7 @@ boolean noisy;
                     : is_suit(otmp)
                         ? c_suit
                         : 0;
-    if (which && cantweararm(youmonst.data)
+    if (which && cannotWearArmor(youmonst.data->monsterTypeID)
         /* same exception for cloaks as used in m_dowear() */
         && (which != c_cloak || monsterSize(youmonst.data->monsterTypeID) != MZ_SMALL)
         && (racial_exception(&youmonst, otmp) < 1)) {
@@ -1615,12 +1615,12 @@ boolean noisy;
             if (noisy)
                 already_wearing(an(helm_simple_name(uarmh)));
             err++;
-        } else if (areYouPolymorphed() && has_horns(youmonst.data) && !is_flimsy(otmp)) {
+        } else if (areYouPolymorphed() && hasHorns(youmonst.data->monsterTypeID) && !is_flimsy(otmp)) {
             /* (flimsy exception matches polyself handling) */
             if (noisy)
                 pline_The("%s won't fit over your horn%s.",
                           helm_simple_name(otmp),
-                          plur(num_horns(youmonst.data->monsterTypeID)));
+                          plur(numberOfHorns(youmonst.data->monsterTypeID)));
             err++;
         } else
             *mask = W_ARMH;
@@ -1929,7 +1929,7 @@ dowear()
 {
     struct obj *otmp;
 
-    /* cantweararm() checks for suits of armor, not what we want here;
+    /* cannotWearArmor() checks for suits of armor, not what we want here;
        verysmall() or hasNoHands() checks for shields, gloves, etc... */
     if ((isVerySmallMonster(youmonst.data->monsterTypeID) || hasNoHands(youmonst.data->monsterTypeID))) {
         pline("Don't even bother.");

@@ -1275,7 +1275,7 @@ int mmflags;
     set_malign(mtmp); /* having finished peaceful changes */
 
     if (allow_minvent) {
-        if (is_armed(ptr->monsterTypeID))
+        if (isArmed(ptr->monsterTypeID))
             m_initweap(mtmp); /* equip with weapons / armor */
         m_initinv(mtmp); /* add on a few special items incl. more armor */
         m_dowear(mtmp, TRUE);
@@ -1577,7 +1577,7 @@ int mmflags;
     }
 
     if (allow_minvent) {
-        if (is_armed(ptr->monsterTypeID))
+        if (isArmed(ptr->monsterTypeID))
             m_initweap(mtmp); /* equip with weapons / armor */
         m_initinv(mtmp); /* add on a few special items incl. more armor */
         m_dowear(mtmp, TRUE);
@@ -2042,7 +2042,7 @@ struct monst *mtmp, *victim;
     if (mtmp->mhpmax <= hp_threshold)
         return ptr; /* doesn't gain a level */
 
-    if (is_mplayer(ptr))
+    if (isMonsterPlayer(ptr->monsterTypeID))
         lev_limit = 30; /* same as player */
     else if (lev_limit < 5)
         lev_limit = 5; /* arbitrary */
@@ -2122,7 +2122,7 @@ struct monst *mtmp;
     if (mtmp->mhpmax <= hp_threshold)
         return ptr; /* doesn't gain a level */
 
-    if (is_mplayer(ptr))
+    if (isMonsterPlayer(ptr->monsterTypeID))
         lev_limit = 30; /* same as player */
     else if (lev_limit < 5)
         lev_limit = 5; /* arbitrary */
@@ -2190,7 +2190,7 @@ int otyp;
             if (otmp->spe < 0)
                 otmp->spe = 0;
             otmp->oerodeproof = TRUE;
-        } else if (is_mplayer(mtmp->data) && is_sword(otmp)) {
+        } else if (isMonsterPlayer(mtmp->data->monsterTypeID) && is_sword(otmp)) {
             otmp->spe = (3 + rn2(4));
         }
 

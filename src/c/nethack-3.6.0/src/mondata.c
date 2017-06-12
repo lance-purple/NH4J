@@ -372,30 +372,6 @@ int pmid;
         return (boolean) hasEyes(pmid);
 }
 
-/* creature will slide out of armor */
-boolean
-sliparm(pmid)
-int pmid;
-{
-    return (boolean) (isWhirly(pmid) || monsterSize(pmid) <= MZ_SMALL
-                      || isNoncorporeal(pmid));
-}
-
-/* creature will break out of armor */
-boolean
-breakarm(pmid)
-int pmid;
-{
-    if (sliparm(pmid))
-        return FALSE;
-
-    return (boolean) (isBigMonster(pmid)
-                      || (monsterSize(pmid) > MZ_SMALL && !isHumanoid(pmid))
-                      /* special cases of humanoids that cannot wear suits */
-                      || pmid == PM_MARILITH
-                      || pmid == PM_WINGED_GARGOYLE);
-}
-
 /* creature sticks other creatures it hits */
 boolean
 sticks(pmid)
@@ -418,27 +394,6 @@ int pmid;
     return FALSE;
 }
 
-/* number of horns this type of monster has on its head */
-int
-num_horns(pmid)
-int pmid;
-{
-    switch (pmid) {
-    case PM_HORNED_DEVIL: /* ? "more than one" */
-    case PM_MINOTAUR:
-    case PM_ASMODEUS:
-    case PM_BALROG:
-        return 2;
-    case PM_WHITE_UNICORN:
-    case PM_GRAY_UNICORN:
-    case PM_BLACK_UNICORN:
-    case PM_KI_RIN:
-        return 1;
-    default:
-        break;
-    }
-    return 0;
-}
 
 /* does monster-type deal out a particular type of damage from a particular
    type of attack? */
@@ -627,8 +582,8 @@ struct permonst *pm1, *pm2;
     if (pm1 == &mons[PM_KILLER_BEE] || pm1 == &mons[PM_QUEEN_BEE])
         return (pm2 == &mons[PM_KILLER_BEE] || pm2 == &mons[PM_QUEEN_BEE]);
 
-    if (is_longworm(pm1))
-        return is_longworm(pm2); /* handles tail */
+    if (isLongWorm(pmid1))
+        return isLongWorm(pmid2); /* handles tail */
     /* [currently there's no reason to bother matching up
         assorted bugs and blobs with their closest variants] */
     /* didn't match */
@@ -1519,6 +1474,63 @@ boolean isDisplacer(int pmid) {
 
 boolean allowsCloseApproach(int pmid) {
     return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "allowsCloseApproach", pmid);
+}
+
+/* number of horns this type of monster has on its head */
+int numberOfHorns(int pmid) {
+    return javaGetIntFromInt(MONSTER_DATA_CLASS, "numberOfHorns", pmid);
+}
+
+boolean hasHorns(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "hasHorns", pmid);
+}
+
+boolean isFlaming(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isFlaming", pmid);
+}
+
+boolean isWooden(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isWooden", pmid);
+}
+
+boolean isTelepathic(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isTelepathic", pmid);
+}
+
+boolean isArmed(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isArmed", pmid);
+}
+
+boolean hasBreathWeapon(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "hasBreathWeapon", pmid);
+}
+
+boolean slidesOutOfArmor(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "slidesOutOfArmor", pmid);
+}
+
+boolean breaksOutOfArmor(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "breaksOutOfArmor", pmid);
+}
+
+boolean cannotWearArmor(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "cannotWearArmor", pmid);
+}
+
+boolean makesWebs(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "makesWebs", pmid);
+}
+
+boolean isLongWorm(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isLongWorm", pmid);
+}
+
+boolean isMonsterPlayer(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isMonsterPlayer", pmid);
+}
+
+boolean isMemberOfWatch(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isMemberOfWatch", pmid);
 }
 
 /*mondata.c*/
