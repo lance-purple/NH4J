@@ -915,7 +915,7 @@ int mndx;
     mon->m_lev = adj_lev(ptr->monsterTypeID);
     if (isGolem(ptr->monsterTypeID)) {
         mon->mhpmax = mon->mhp = golemhp(mndx);
-    } else if (is_rider(ptr)) {
+    } else if (isRiderOfApocalypse(ptr->monsterTypeID)) {
         /* we want low HP, but a high monsterLevel so they can attack well */
         mon->mhpmax = mon->mhp = d(10, 8);
     } else if (monsterLevel(ptr->monsterTypeID) > 49) {
@@ -1847,7 +1847,7 @@ int mndx, mvflagsmask, genomask;
         return FALSE;
     if (monsterGenerationMask(ptr->monsterTypeID) & genomask)
         return FALSE;
-    if (is_placeholder(ptr))
+    if (isPlaceholder(ptr->monsterTypeID))
         return FALSE;
 #ifdef MAIL
     /* special levels might ask for random demon type; reject this one */

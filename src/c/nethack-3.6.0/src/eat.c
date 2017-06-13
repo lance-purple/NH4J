@@ -43,12 +43,14 @@ char msgbuf[BUFSZ];
 #define CANNIBAL_ALLOWED() (Role_if(PM_CAVEMAN) || Race_if(PM_ORC))
 
 /* monster types that cause hero to be turned into stone if eaten */
-#define flesh_petrifies(pm) (touch_petrifies(pm) || (pm) == &mons[PM_MEDUSA])
+static boolean flesh_petrifies(int pmid) {
+    return (touchPetrifies(pmid) || (pmid == PM_MEDUSA));
+}
 
 /* Rider corpses are treated as non-rotting so that attempting to eat one
    will be sure to reach the stage of eating where that meal is fatal */
 #define nonrotting_corpse(mnum) \
-    ((mnum) == PM_LIZARD || (mnum) == PM_LICHEN || is_rider(&mons[mnum]))
+    ((mnum) == PM_LIZARD || (mnum) == PM_LICHEN || isRiderOfApocalypse(mons[mnum].monsterTypeID))
 
 /* non-rotting non-corpses; unlike lizard corpses, these items will behave
    as if rotten if they are cursed (fortune cookies handled elsewhere) */
@@ -475,7 +477,7 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
             pline("%s brain is eaten!", s_suffix(Monnam(mdef)));
     }
 
-    if (flesh_petrifies(pd)) {
+    if (flesh_petrifies(pd->monsterTypeID)) {
         /* mind flayer has attempted to eat the brains of a petrification
            inducing critter (most likely Medusa; attacking a cockatrice via
            tentacle-touch should have been caught before reaching this far) */
@@ -512,7 +514,7 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
             pline("%s doesn't notice.", Monnam(mdef));
             /* all done; no extra harm inflicted upon target */
             return MM_MISS;
-        } else if (is_rider(pd)) {
+        } else if (isRiderOfApocalypse(pd->monsterTypeID)) {
             pline("Ingesting that is fatal.");
 	    javaString monsterName = monsterTypeName(pd->monsterTypeID);
             Sprintf(killer.name, "unwisely ate the brain of %s", monsterName.c_str);
@@ -578,7 +580,7 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
             if (visflag)
                 pline("%s doesn't notice.", Monnam(mdef));
             return MM_MISS;
-        } else if (is_rider(pd)) {
+        } else if (isRiderOfApocalypse(pd->monsterTypeID)) {
             mondied(magr);
             if (magr->mhp <= 0)
                 result = MM_AGR_DIED;
@@ -640,7 +642,7 @@ cprefx(pm)
 register int pm;
 {
     (void) maybe_cannibal(pm, TRUE);
-    if (flesh_petrifies(&mons[pm])) {
+    if (flesh_petrifies(mons[pm].monsterTypeID)) {
         if (!youResistStoning()
             && !(poly_when_stoned(youmonst.data->monsterTypeID)
                  && polymon(PM_STONE_GOLEM))) {
@@ -1556,7 +1558,7 @@ struct obj *otmp;
     int tp = 0, mnum = otmp->corpsenm;
     long rotted = 0L;
     int retcode = 0;
-    boolean stoneable = (flesh_petrifies(&mons[mnum]) && !youResistStoning()
+    boolean stoneable = (flesh_petrifies(mons[mnum].monsterTypeID) && !youResistStoning()
                          && !poly_when_stoned(youmonst.data->monsterTypeID));
 
     /* KMH, conduct */
@@ -2146,7 +2148,7 @@ struct obj *otmp;
             heal_legs();
         break;
     case EGG:
-        if (flesh_petrifies(&mons[otmp->corpsenm])) {
+        if (flesh_petrifies(mons[otmp->corpsenm].monsterTypeID)) {
             if (!youResistStoning()
                 && !(poly_when_stoned(youmonst.data->monsterTypeID)
                      && polymon(PM_STONE_GOLEM))) {
@@ -2231,7 +2233,7 @@ struct obj *otmp;
 
     if (cadaver || otmp->otyp == EGG || otmp->otyp == TIN) {
         /* These checks must match those in eatcorpse() */
-        stoneorslime = (flesh_petrifies(&mons[mnum]) && !youResistStoning()
+        stoneorslime = (flesh_petrifies(mons[mnum].monsterTypeID) && !youResistStoning()
                         && !poly_when_stoned(youmonst.data->monsterTypeID));
 
         if (mnum == PM_GREEN_SLIME || otmp->otyp == GLOB_OF_GREEN_SLIME)

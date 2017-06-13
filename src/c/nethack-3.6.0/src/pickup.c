@@ -250,7 +250,7 @@ struct obj *obj;
 boolean remotely;
 {
     if (uarmg || remotely || obj->otyp != CORPSE
-        || !touch_petrifies(&mons[obj->corpsenm]) || youResistStoning())
+        || !touchPetrifies(mons[obj->corpsenm].monsterTypeID) || youResistStoning())
         return FALSE;
 
     if (poly_when_stoned(youmonst.data->monsterTypeID) && polymon(PM_STONE_GOLEM)) {
@@ -270,7 +270,7 @@ rider_corpse_revival(obj, remotely)
 struct obj *obj;
 boolean remotely;
 {
-    if (!obj || obj->otyp != CORPSE || !is_rider(&mons[obj->corpsenm]))
+    if (!obj || obj->otyp != CORPSE || !isRiderOfApocalypse(mons[obj->corpsenm].monsterTypeID))
         return FALSE;
 
     pline("At your %s, the corpse suddenly moves...",

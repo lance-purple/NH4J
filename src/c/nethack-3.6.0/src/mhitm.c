@@ -232,7 +232,7 @@ boolean quietly;
      */
     vis = (canspotmon(magr) && canspotmon(mdef));
 
-    if (touch_petrifies(pd) && !resists_ston(magr)) {
+    if (touchPetrifies(pd->monsterTypeID) && !resists_ston(magr)) {
         if (which_armor(magr, W_ARMG) != 0) {
             if (poly_when_stoned(pa->monsterTypeID)) {
                 mon_to_stone(magr);
@@ -255,7 +255,7 @@ boolean quietly;
     place_monster(mdef, fx, fy);
     if (vis && !quietly)
         pline("%s moves %s out of %s way!", Monnam(magr), mon_nam(mdef),
-              is_rider(pa) ? "the" : mhis(magr));
+              isRiderOfApocalypse(pa->monsterTypeID) ? "the" : mhis(magr));
     newsym(fx, fy);  /* see it */
     newsym(tx, ty);  /*   all happen */
     flush_screen(0); /* make sure it shows up */
@@ -381,7 +381,7 @@ register struct monst *magr, *mdef;
              * players, or under conflict or confusion.
              */
             if (!magr->mconf && !youCauseConflict() && otmp && mattk.type != AT_WEAP
-                && touch_petrifies(mdef->data)) {
+                && touchPetrifies(mdef->data->monsterTypeID)) {
                 strike = 0;
                 break;
             }
@@ -738,7 +738,7 @@ register const struct Attack mattk;
                      res = MM_MISS;
     boolean cancelled;
 
-    if ((touch_petrifies(pd) /* or flesh_petrifies() */
+    if ((touchPetrifies(pd->monsterTypeID) /* or flesh_petrifies() */
          || (mattk.damageType == AD_DGST && pd == &mons[PM_MEDUSA]))
         && !resists_ston(magr)) {
         long protector = attk_protection((int) mattk.type),
@@ -772,7 +772,7 @@ register const struct Attack mattk;
     switch (mattk.damageType) {
     case AD_DGST:
         /* eating a Rider or its corpse is fatal */
-        if (is_rider(pd)) {
+        if (isRiderOfApocalypse(pd->monsterTypeID)) {
             if (vis)
                 pline("%s %s!", Monnam(magr),
                       (pd == &mons[PM_FAMINE])
@@ -843,7 +843,7 @@ register const struct Attack mattk;
         } else if (mattk.type == AT_WEAP) {
             if (otmp) {
                 if (otmp->otyp == CORPSE
-                    && touch_petrifies(&mons[otmp->corpsenm]))
+                    && touchPetrifies(mons[otmp->corpsenm].monsterTypeID))
                     goto do_stone;
                 tmp += dmgval(otmp, mdef);
                 if (otmp->oartifact) {

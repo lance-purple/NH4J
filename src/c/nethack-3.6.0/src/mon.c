@@ -476,7 +476,7 @@ register struct monst *mtmp;
          * protect their stuff. Fire resistant monsters can only protect
          * themselves  --ALI
          */
-        if (!isClinger(mtmp->data->monsterTypeID) && !likes_lava(mtmp->data)) {
+        if (!isClinger(mtmp->data->monsterTypeID) && !likesLava(mtmp->data->monsterTypeID)) {
             if (!resists_fire(mtmp)) {
                 if (cansee(mtmp->mx, mtmp->my))
                     pline("%s %s.", Monnam(mtmp),
@@ -735,7 +735,7 @@ movemon()
 }
 
 #define mstoning(obj)                                       \
-    (ofood(obj) && (touch_petrifies(&mons[(obj)->corpsenm]) \
+    (ofood(obj) && (touchPetrifies(mons[(obj)->corpsenm].monsterTypeID) \
                     || (obj)->corpsenm == PM_MEDUSA))
 
 /*
@@ -858,13 +858,13 @@ struct monst *mtmp;
         otmp2 = otmp->nexthere;
 
         /* touch sensitive items */
-        if (otmp->otyp == CORPSE && is_rider(&mons[otmp->corpsenm])) {
+        if (otmp->otyp == CORPSE && isRiderOfApocalypse(mons[otmp->corpsenm].monsterTypeID)) {
             /* Rider corpse isn't just inedible; can't engulf it either */
             (void) revive_corpse(otmp);
 
         /* untouchable (or inaccessible) items */
         } else if ((otmp->otyp == CORPSE
-                    && touch_petrifies(&mons[otmp->corpsenm])
+                    && touchPetrifies(mons[otmp->corpsenm].monsterTypeID)
                     && !resists_ston(mtmp))
                    /* don't engulf boulders and statues or ball&chain */
                    || otmp->oclass == ROCK_CLASS
@@ -880,9 +880,9 @@ struct monst *mtmp;
                    || (otmp->otyp == AMULET_OF_STRANGULATION
                        || otmp->otyp == RIN_SLOW_DIGESTION)
                    /* cockatrice corpses handled above; this
-                      touch_petrifies() check catches eggs */
+                      touchPetrifies() check catches eggs */
                    || ((otmp->otyp == CORPSE || otmp->otyp == EGG)
-                       && ((touch_petrifies(&mons[otmp->corpsenm])
+                       && ((touchPetrifies(mons[otmp->corpsenm].monsterTypeID)
                             && !resists_ston(mtmp))
                            || (otmp->corpsenm == PM_GREEN_SLIME
                                && !isSlimeproof(mtmp->data->monsterTypeID))))) {
@@ -997,7 +997,7 @@ register const char *str;
                  : !!(index(str, otmp->oclass))) {
             if (otmp->otyp == CORPSE && monsterClass(mtmp->data->monsterTypeID) != S_NYMPH
                 /* let a handful of corpse types thru to can_carry() */
-                && !touch_petrifies(&mons[otmp->corpsenm])
+                && !touchPetrifies(mons[otmp->corpsenm].monsterTypeID)
                 && otmp->corpsenm != PM_LIZARD
                 && !isAcidic(mons[otmp->corpsenm].monsterTypeID))
                 continue;
@@ -1101,10 +1101,10 @@ struct obj *otmp;
     if (doesNotTakeStuff(mdat->monsterTypeID))
         return 0; /* can't carry anything */
 
-    if (otyp == CORPSE && touch_petrifies(&mons[otmp->corpsenm])
+    if (otyp == CORPSE && touchPetrifies(mons[otmp->corpsenm].monsterTypeID)
         && !(mtmp->misc_worn_check & W_ARMG) && !resists_ston(mtmp))
         return 0;
-    if (otyp == CORPSE && is_rider(&mons[otmp->corpsenm]))
+    if (otyp == CORPSE && isRiderOfApocalypse(mons[otmp->corpsenm].monsterTypeID))
         return 0;
     if (objects[otyp].oc_material == SILVER && mon_hates_silver(mtmp)
         && (otyp != BELL_OF_OPENING || !isCovetous(mdat->monsterTypeID)))
@@ -1196,7 +1196,7 @@ long flag;
     wantpool = monsterClass(pmid) == S_EEL;
     poolok = (isFlyer(pmid) || isClinger(pmid)
               || (isSwimmer(pmid) && !wantpool));
-    lavaok = (isFlyer(pmid) || isClinger(pmid) || likes_lava(mdat));
+    lavaok = (isFlyer(pmid) || isClinger(pmid) || likesLava(mdat->monsterTypeID));
     thrudoor = ((flag & (ALLOW_WALL | BUSTDOOR)) != 0L);
     if (flag & ALLOW_DIG) {
         struct obj *mw_tmp;
@@ -1433,7 +1433,7 @@ struct monst *magr, /* monster that is currently deciding where to move */
         /* no displacing trapped monsters or multi-location longworms */
         && !mdef->mtrapped && (!mdef->wormno || !count_wsegs(mdef))
         /* riders can move anything; others, same size or smaller only */
-        && (is_rider(pa) || monsterSize(pa->monsterTypeID) >= monsterSize(pd->monsterTypeID)))
+        && (isRiderOfApocalypse(pa->monsterTypeID) || monsterSize(pa->monsterTypeID) >= monsterSize(pd->monsterTypeID)))
         return ALLOW_MDISP;
     return 0L;
 }
@@ -1940,7 +1940,7 @@ boolean was_swallowed; /* digestion */
         return FALSE;
 
     if (((isBigMonster(mdat->monsterTypeID) || mdat == &mons[PM_LIZARD]) && !mon->mcloned)
-        || isGolem(mdat->monsterTypeID) || isMonsterPlayer(mdat->monsterTypeID) || is_rider(mdat))
+        || isGolem(mdat->monsterTypeID) || isMonsterPlayer(mdat->monsterTypeID) || isRiderOfApocalypse(mdat->monsterTypeID))
         return TRUE;
     tmp = 2 + ((monsterGenerationMask(mdat->monsterTypeID) & G_FREQ) < 2) + isVerySmallMonster(mdat->monsterTypeID);
     return (boolean) !rn2(tmp);
@@ -2728,7 +2728,7 @@ struct monst *mtmp;
         /* most monsters won't hide under cockatrice corpse */
         if (otmp->nexthere || otmp->otyp != CORPSE
             || (mtmp == &youmonst ? youResistStoning() : resists_ston(mtmp))
-            || !touch_petrifies(&mons[otmp->corpsenm]))
+            || !touchPetrifies(mons[otmp->corpsenm].monsterTypeID))
             undetected = TRUE;
     }
 
@@ -3079,7 +3079,7 @@ int mndx;
     mdat = &mons[mndx];
     if ((mvitals[mndx].mvflags & G_GENOD) != 0)
         return 0;
-    if (is_placeholder(mdat))
+    if (isPlaceholder(mdat->monsterTypeID))
         return 0;
     /* select_newcham_form() might deliberately pick a player
        character type (random selection never does) which
@@ -3123,7 +3123,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
     char oldname[BUFSZ], newname[BUFSZ];
 
     /* Riders are immune to polymorph and green slime */
-    if (is_rider(mtmp->data))
+    if (isRiderOfApocalypse(mtmp->data->monsterTypeID))
         return 0;
 
     if (msg) {
@@ -3211,8 +3211,8 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
             new_light_source(mtmp->mx, mtmp->my, emitsLightWithRange(mtmp->data->monsterTypeID),
                              LS_MONSTER, monst_to_any(mtmp));
     }
-    if (!mtmp->perminvis || pm_invisible(olddata))
-        mtmp->perminvis = pm_invisible(mdat);
+    if (!mtmp->perminvis || isInvisible(olddata->monsterTypeID))
+        mtmp->perminvis = isInvisible(mdat->monsterTypeID);
     mtmp->minvis = mtmp->invis_blkd ? 0 : mtmp->perminvis;
     if (mtmp->mundetected)
         (void) hideunder(mtmp);

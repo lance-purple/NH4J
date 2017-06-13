@@ -2093,6 +2093,13 @@ E boolean FDECL(makesWebs, (int));
 E boolean FDECL(isLongWorm, (int));
 E boolean FDECL(isMonsterPlayer, (int));
 E boolean FDECL(isMemberOfWatch, (int));
+E boolean FDECL(isRiderOfApocalypse, (int));
+E boolean FDECL(isPlaceholder, (int));
+E boolean FDECL(likesLava, (int));
+E boolean FDECL(isInvisible, (int));
+E boolean FDECL(likesFire, (int));
+E boolean FDECL(isMindFlayer, (int));
+E boolean FDECL(touchPetrifies, (int));
 
 E int FDECL(emitsLightWithRange, (int));
 E boolean FDECL(isFloater, (int));

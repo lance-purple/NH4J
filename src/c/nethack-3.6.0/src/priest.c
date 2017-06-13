@@ -735,7 +735,7 @@ xchar x, y;
     register struct monst *priest;
 
     if (mon) {
-        if (isMinion(mon->data->monsterTypeID) || is_rider(mon->data))
+        if (isMinion(mon->data->monsterTypeID) || isRiderOfApocalypse(mon->data->monsterTypeID))
             return FALSE;
         x = mon->mx, y = mon->my;
     }

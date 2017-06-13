@@ -368,7 +368,7 @@ int x;
         if (otmp->otyp == x
             /* never select non-cockatrice corpses */
             && !((x == CORPSE || x == EGG)
-                 && !touch_petrifies(&mons[otmp->corpsenm]))
+                 && !touchPetrifies(mons[otmp->corpsenm].monsterTypeID))
             && (!otmp->oartifact || touch_artifact(otmp, mtmp)))
             return otmp;
     }

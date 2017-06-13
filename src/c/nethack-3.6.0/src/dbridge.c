@@ -421,7 +421,7 @@ int x, y;
     /* must force call to lava_effects in e_died if is_u */
     if (is_lava(x, y)) {
         return (boolean) ((is_u(etmp) && (youAreLevitating() || youAreFlying()))
-                          || likes_lava(etmp->edata)
+                          || likesLava(etmp->edata->monsterTypeID)
                           || isFlyer(epmid));
     }
     if (is_db_wall(x, y)) {

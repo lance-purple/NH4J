@@ -84,7 +84,7 @@ int shotlimit;
         return 0;
     }
     u_wipe_engr(2);
-    if (!uarmg && obj->otyp == CORPSE && touch_petrifies(&mons[obj->corpsenm])
+    if (!uarmg && obj->otyp == CORPSE && touchPetrifies(mons[obj->corpsenm].monsterTypeID)
         && !youResistStoning()) {
         You("throw %s with your bare %s.",
             corpse_xname(obj, (const char *) 0, CXN_PFX_THE),
@@ -822,7 +822,7 @@ boolean hitsroof;
 {
     const char *action;
     boolean petrifier = ((obj->otyp == EGG || obj->otyp == CORPSE)
-                         && touch_petrifies(&mons[obj->corpsenm]));
+                         && touchPetrifies(mons[obj->corpsenm].monsterTypeID));
     /* note: obj->quan == 1 */
 
     if (!currentLevelHasCeiling()) {
@@ -1580,7 +1580,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
         potionhit(mon, obj, TRUE);
         return 1;
 
-    } else if (befriend_with_obj(mon->data, obj)
+    } else if (befriend_with_obj(mon->data->monsterTypeID, obj)
                || (mon->mtame && dogfood(mon, obj) <= ACCFOOD)) {
         if (tamedog(mon, obj)) {
             return 1; /* obj is gone */
@@ -1592,7 +1592,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
     } else if (guaranteed_hit) {
         /* this assumes that guaranteed_hit is due to swallowing */
         wakeup(mon);
-        if (obj->otyp == CORPSE && touch_petrifies(&mons[obj->corpsenm])) {
+        if (obj->otyp == CORPSE && touchPetrifies(mons[obj->corpsenm].monsterTypeID)) {
             if (isAnimal(u.ustuck->data->monsterTypeID)) {
                 minstapetrify(u.ustuck, TRUE);
                 /* Don't leave a cockatrice corpse available in a statue */

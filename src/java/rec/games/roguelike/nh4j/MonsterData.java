@@ -458,18 +458,17 @@ public class MonsterData {
     	return PM.matchesOneOf(pmid, PM.WATCHMAN, PM.WATCH_CAPTAIN);
     }
 
-    public static boolean isRider(int pmid) {
+    public static boolean isRiderOfApocalypse(int pmid) {
     	return PM.matchesOneOf(pmid, PM.DEATH, PM.FAMINE, PM.PESTILENCE);
     }
 
-    //#define is_placeholder(ptr)                             \
-    //    ((ptr) == &mons[PM_ORC] || (ptr) == &mons[PM_GIANT] \
-    //     || (ptr) == &mons[PM_ELF] || (ptr) == &mons[PM_HUMAN])
-    ///* return TRUE if the monster tends to revive */
+    public static boolean isPlaceholder(int pmid) {
+    	return PM.matchesOneOf(pmid,PM.ORC, PM.GIANT, PM.ELF, PM.HUMAN);
+    }
     
     public static final boolean isReviver(int pmid) {
 	    MC mc = MonsterType.getMonsterType(pmid).monsterClass();
-    	return (isRider(pmid) || MC.TROLL.equals(mc));
+    	return (isRiderOfApocalypse(pmid) || MC.TROLL.equals(mc));
     }
     
     /* monsters whose corpses and statues need special handling;
@@ -480,9 +479,6 @@ public class MonsterData {
 	return ((geno & MonsterType.ONLY_GENERATED_ONCE) != 0);
     }
 
-    //
-    
-    
     public static int emitsLightWithRange(int pmid) {
         MC mc = MonsterType.getMonsterType(pmid).monsterClass();
         if (MC.LIGHT.equals(mc)) {
@@ -494,23 +490,27 @@ public class MonsterData {
             return 0;
         }
     }
+
+    public static boolean likesLava(int pmid) {
+    	return PM.matchesOneOf(pmid, PM.FIRE_ELEMENTAL, PM.SALAMANDER);
+    }
     
-    //#define likes_lava(ptr) \
-    //    (ptr == &mons[PM_FIRE_ELEMENTAL] || ptr == &mons[PM_SALAMANDER])
-    //#define pm_invisible(ptr) \
-    //    ((ptr) == &mons[PM_STALKER] || (ptr) == &mons[PM_BLACK_LIGHT])
-    //
-    ///* could probably add more */
-    //#define likes_fire(ptr)                                                  \
-    //    ((ptr) == &mons[PM_FIRE_VORTEX] || (ptr) == &mons[PM_FLAMING_SPHERE] \
-    //     || likes_lava(ptr))
-    //
-    //#define touch_petrifies(ptr) \
-    //    ((ptr) == &mons[PM_COCKATRICE] || (ptr) == &mons[PM_CHICKATRICE])
-    //
-    //#define is_mind_flayer(ptr) \
-    //    ((ptr) == &mons[PM_MIND_FLAYER] || (ptr) == &mons[PM_MASTER_MIND_FLAYER])
-    
+    public static boolean isInvisible(int pmid) {
+    	return PM.matchesOneOf(pmid, PM.STALKER, PM.BLACK_LIGHT);
+    }
+
+	public static boolean likesFire(int pmid) {
+		return PM.matchesOneOf(pmid, PM.FIRE_VORTEX, PM.FLAMING_SPHERE) || likesLava(pmid);
+	}
+
+	public static boolean touchPetrifies(int pmid) {
+    	return PM.matchesOneOf(pmid, PM.COCKATRICE, PM.CHICKATRICE);
+    }
+
+	public static boolean isMindFlayer(int pmid) {
+    	return PM.matchesOneOf(pmid, PM.MIND_FLAYER, PM.MASTER_MIND_FLAYER);
+	}
+	
 	public static boolean isVampire(int pmid) {
 		MC mc = MonsterType.getMonsterType(pmid).monsterClass();
 		return MC.VAMPIRE.equals(mc);

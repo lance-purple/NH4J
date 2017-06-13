@@ -81,7 +81,7 @@ set_uasmon()
     PROPSET(SEE_INVIS, perceivesTheInvisible(mdat->monsterTypeID));
     PROPSET(TELEPAT, isTelepathic(mdat->monsterTypeID));
     PROPSET(INFRAVISION, hasInfravision(mdat->monsterTypeID));
-    PROPSET(INVIS, pm_invisible(mdat));
+    PROPSET(INVIS, isInvisible(mdat->monsterTypeID));
     PROPSET(TELEPORT, canTeleport(mdat->monsterTypeID));
     PROPSET(TELEPORT_CONTROL, canControlTeleport(mdat->monsterTypeID));
     PROPSET(LEVITATION, isFloater(mdat->monsterTypeID));
@@ -564,7 +564,7 @@ int psflags;
         do {
             /* randomly pick an "ordinary" monster */
             mntmp = rn1(SPECIAL_PM - LOW_PM, LOW_PM);
-            if (okToPolymorphInto(mons[mntmp].monsterTypeID) && !is_placeholder(&mons[mntmp]))
+            if (okToPolymorphInto(mons[mntmp].monsterTypeID) && !isPlaceholder(mons[mntmp].monsterTypeID))
                 break;
         } while (--tryct > 0);
     }
@@ -769,7 +769,7 @@ int mntmp;
     else if (sticky && !sticks(youmonst.data->monsterTypeID))
         uunstick();
     if (u.usteed) {
-        if (touch_petrifies(u.usteed->data) && !youResistStoning() && rnl(3)) {
+        if (touchPetrifies(u.usteed->data->monsterTypeID) && !youResistStoning() && rnl(3)) {
             char buf[BUFSZ];
 
             pline("%s touch %s.", no_longer_petrify_resistant,
@@ -805,7 +805,7 @@ int mntmp;
             pline(use_thec, monsterc, "multiply in a fountain");
         if (isUnicorn(youmonst.data->monsterTypeID))
             pline(use_thec, monsterc, "use your horn");
-        if (is_mind_flayer(youmonst.data))
+        if (isMindFlayer(youmonst.data->monsterTypeID))
             pline(use_thec, monsterc, "emit a mental blast");
         if (monsterSound(youmonst.data->monsterTypeID) == MS_SHRIEK) /* worthless, actually */
             pline(use_thec, monsterc, "shriek");
@@ -835,7 +835,7 @@ int mntmp;
             pline_The("buried ball is no longer bound to you.");
             buried_ball_to_freedom();
         }
-    } else if (likes_lava(youmonst.data) && currentlyTrapped()
+    } else if (likesLava(youmonst.data->monsterTypeID) && currentlyTrapped()
                && currentTrapType() == TT_LAVA) {
         setCurrentTrapTimeout(0);
         pline_The("lava now feels soothing.");

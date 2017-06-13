@@ -1132,7 +1132,7 @@ struct obj *body;
         when = ROT_AGE - corpse_age;
     when += (long) (rnz(rot_adjust) - rot_adjust);
 
-    if (is_rider(&mons[body->corpsenm])) {
+    if (isRiderOfApocalypse(mons[body->corpsenm].monsterTypeID)) {
         /*
          * Riders always revive.  They have a 1/3 chance per turn
          * of reviving after 12 turns.  Always revive by 500.
@@ -1411,7 +1411,7 @@ int x, y;
 
 /* return TRUE if the corpse has special timing */
 static boolean special_corpse(int num) {
-  return (((num) == PM_LIZARD) || ((num) == PM_LICHEN) || (is_rider(&mons[num]))
+  return (((num) == PM_LIZARD) || ((num) == PM_LICHEN) || (isRiderOfApocalypse(mons[num].monsterTypeID))
      || (monsterClass(mons[num].monsterTypeID) == S_TROLL));
 }
 

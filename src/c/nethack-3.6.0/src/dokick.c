@@ -516,7 +516,7 @@ xchar x, y;
     }
 
     if (!uarmf && kickedobj->otyp == CORPSE
-        && touch_petrifies(&mons[kickedobj->corpsenm]) && !youResistStoning()) {
+        && touchPetrifies(mons[kickedobj->corpsenm].monsterTypeID) && !youResistStoning()) {
         You("kick %s with your bare %s.",
             corpse_xname(kickedobj, (const char *) 0, CXN_PFX_THE),
             makeplural(body_part(FOOT)));

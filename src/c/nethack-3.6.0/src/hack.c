@@ -70,7 +70,7 @@ const char *msg;
     for (otmp = level.objects[x][y]; otmp; otmp = otmp2) {
         otmp2 = otmp->nexthere;
         if (otmp->otyp == CORPSE
-            && (is_rider(&mons[otmp->corpsenm])
+            && (isRiderOfApocalypse(mons[otmp->corpsenm].monsterTypeID)
                 || otmp->corpsenm == PM_WIZARD_OF_YENDOR)) {
             /* move any living monster already at that location */
             if ((mtmp = m_at(x, y)) && enexto(&cc, x, y, mtmp->data))
@@ -2429,7 +2429,7 @@ dopickup()
             || (youAreFlying() && !youNeedNotBreathe())) {
             You_cant("reach the bottom to pick things up.");
             return 0;
-        } else if (!likes_lava(youmonst.data)) {
+        } else if (!likesLava(youmonst.data->monsterTypeID)) {
             You("would burn to a crisp trying to pick things up.");
             return 0;
         }

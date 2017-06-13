@@ -127,7 +127,7 @@ struct monst *mtmp;
     /* creatures who are directly resistant to magical scaring:
      * Rodney, lawful minions, angels, the Riders */
     if (mtmp->iswiz || isLawfulMinion(mtmp->data->monsterTypeID) || mtmp->data == &mons[PM_ANGEL]
-        || is_rider(mtmp->data))
+        || isRiderOfApocalypse(mtmp->data->monsterTypeID))
         return FALSE;
 
     /* should this still be true for defiled/molochian altars? */
@@ -460,7 +460,7 @@ register struct monst *mtmp;
     if (isMemberOfWatch(mdat->monsterTypeID)) {
         watch_on_duty(mtmp);
 
-    } else if (is_mind_flayer(mdat) && !rn2(20)) {
+    } else if (isMindFlayer(mdat->monsterTypeID) && !rn2(20)) {
         struct monst *m2, *nmon = (struct monst *) 0;
 
         if (canseemon(mtmp))
@@ -755,7 +755,7 @@ register int after;
         can_tunnel = isTunneler(ptr->monsterTypeID);
     can_open = !(cannotWieldThings(ptr->monsterTypeID));
     can_unlock =
-        ((can_open && monhaskey(mtmp, TRUE)) || mtmp->iswiz || is_rider(ptr));
+        ((can_open && monhaskey(mtmp, TRUE)) || mtmp->iswiz || isRiderOfApocalypse(ptr->monsterTypeID));
     doorbuster = isGiant(ptr->monsterTypeID);
     if (mtmp->wormno)
         goto not_special;
@@ -957,7 +957,7 @@ not_special:
                          || (likeobjs && index(practical, otmp->oclass)
                              && (otmp->otyp != CORPSE
                                  || (monsterClass(ptr->monsterTypeID) == S_NYMPH
-                                     && !is_rider(&mons[otmp->corpsenm]))))
+                                     && !isRiderOfApocalypse(mons[otmp->corpsenm].monsterTypeID))))
                          || (likemagic && index(magical, otmp->oclass))
                          || (uses_items && searches_for_item(mtmp, otmp))
                          || (likerock && otmp->otyp == BOULDER)
@@ -967,7 +967,7 @@ not_special:
                          || (ptr == &mons[PM_GELATINOUS_CUBE]
                              && !index(indigestion, otmp->oclass)
                              && !(otmp->otyp == CORPSE
-                                  && touch_petrifies(&mons[otmp->corpsenm]))))
+                                  && touchPetrifies(mons[otmp->corpsenm].monsterTypeID))))
                         && touch_artifact(otmp, mtmp)) {
                         if (can_carry(mtmp, otmp) > 0
                             && (throwsRocks(ptr->monsterTypeID) || !sobj_at(BOULDER, xx, yy))
@@ -1021,7 +1021,7 @@ not_special:
         flag |= (ALLOW_SANCT | ALLOW_SSM);
     else
         flag |= ALLOW_U;
-    if (isMinion(pmid) || is_rider(ptr))
+    if (isMinion(pmid) || isRiderOfApocalypse(ptr->monsterTypeID))
         flag |= ALLOW_SANCT;
     /* unicorn may not be able to avoid hero on a noteleport level */
     if (isUnicorn(pmid) && !level.flags.noteleport)

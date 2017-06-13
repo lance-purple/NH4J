@@ -770,7 +770,7 @@ register int after; /* this is extra fast monster movement */
                      || m2sound == MS_GUARDIAN
                      || m2sound == MS_LEADER) && mtmp2->mpeaceful
                     && !youCauseConflict())
-                || (touch_petrifies(mtmp2->data) && !resists_ston(mtmp)))
+                || (touchPetrifies(mtmp2->data->monsterTypeID) && !resists_ston(mtmp)))
                 continue;
 
             if (after)
@@ -968,7 +968,7 @@ struct monst *mon;
 xchar nx, ny;
 {
     if ((!is_pool(nx, ny) || isSwimmer(mon->data->monsterTypeID))
-        && (!is_lava(nx, ny) || likes_lava(mon->data))
+        && (!is_lava(nx, ny) || likesLava(mon->data->monsterTypeID))
         && (!sobj_at(BOULDER, nx, ny) || throwsRocks(mon->data->monsterTypeID)))
         return TRUE;
     return FALSE;

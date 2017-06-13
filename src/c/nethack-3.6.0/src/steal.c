@@ -458,7 +458,7 @@ gotobj:
     freeinv(otmp);
     pline("%s stole %s.", named ? "She" : Monnam(mtmp), doname(otmp));
     could_petrify =
-        (otmp->otyp == CORPSE && touch_petrifies(&mons[otmp->corpsenm]));
+        (otmp->otyp == CORPSE && touchPetrifies(mons[otmp->corpsenm].monsterTypeID));
     (void) mpickobj(mtmp, otmp); /* may free otmp */
     if (could_petrify && !(mtmp->misc_worn_check & W_ARMG)) {
         minstapetrify(mtmp, TRUE);

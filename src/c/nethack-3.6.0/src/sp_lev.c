@@ -1669,8 +1669,8 @@ struct mkroom *croom;
                                              emitsLightWithRange(mtmp->data->monsterTypeID),
                                              LS_MONSTER, (genericptr_t) mtmp);
                     }
-                    if (!mtmp->perminvis || pm_invisible(olddata))
-                        mtmp->perminvis = pm_invisible(mdat);
+                    if (!mtmp->perminvis || isInvisible(olddata->monsterTypeID))
+                        mtmp->perminvis = isInvisible(mdat->monsterTypeID);
                 }
                 break;
             }

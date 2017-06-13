@@ -144,7 +144,7 @@ dosit()
         /* must be WWalking */
         You(sit_message, "lava");
         burn_away_slime();
-        if (likes_lava(youmonst.data)) {
+        if (likesLava(youmonst.data->monsterTypeID)) {
             pline_The("lava feels warm.");
             return 1;
         }
