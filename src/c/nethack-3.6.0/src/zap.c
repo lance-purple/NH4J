@@ -49,8 +49,7 @@ STATIC_DCL int FDECL(spell_hit_bonus, (int));
 
 #define is_hero_spell(type) ((type) >= 10 && (type) < 20)
 
-static boolean M_IN_WATER(struct permonst* ptr) {
-    int pmid = ptr->monsterTypeID;
+static boolean M_IN_WATER(int pmid) {
     return (monsterClass(pmid) == S_EEL || isAmphibious(pmid) || isSwimmer(pmid));
 }
 
@@ -3150,14 +3149,14 @@ struct obj **pobj; /* object tossed/used, set to NULL
                 in_skip = FALSE;
                 if (range > 3) /* another bounce? */
                     skiprange(range, &skiprange_start, &skiprange_end);
-            } else if (mtmp && M_IN_WATER(mtmp->data)) {
+            } else if (mtmp && M_IN_WATER(mtmp->data->monsterTypeID)) {
                 if ((youCanSee() && canseemon(mtmp)) || sensemon(mtmp))
                     pline("%s %s over %s.", Yname2(obj), otense(obj, "pass"),
                           mon_nam(mtmp));
             }
         }
 
-        if (mtmp && !(in_skip && M_IN_WATER(mtmp->data))) {
+        if (mtmp && !(in_skip && M_IN_WATER(mtmp->data->monsterTypeID))) {
             notonhead = (bhitpos.x != mtmp->mx || bhitpos.y != mtmp->my);
             if (weapon == FLASHED_LIGHT) {
                 /* FLASHED_LIGHT hitting invisible monster should
