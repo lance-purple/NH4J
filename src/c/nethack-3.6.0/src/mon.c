@@ -1784,7 +1784,7 @@ register struct monst *mtmp;
             if (in_door) {
                 coord new_xy;
 
-                if (enexto(&new_xy, mtmp->mx, mtmp->my, &mons[mndx])) {
+                if (placeEntityNextToPosition(&new_xy, mtmp->mx, mtmp->my, mndx, 0)) {
                     rloc_to(mtmp, new_xy.x, new_xy.y);
                 }
             }
@@ -2356,7 +2356,7 @@ struct monst *mtmp;
         return;
     }
 
-    if (!enexto(&mm, currentX(), currentY(), mtmp->data))
+    if (!placeEntityNextToPosition(&mm, currentX(), currentY(), mtmp->data->monsterTypeID, 0))
         return;
     rloc_to(mtmp, mm.x, mm.y);
     if (!in_mklev && (mtmp->mstrategy & STRAT_APPEARMSG)) {
@@ -2379,7 +2379,7 @@ struct monst *mtmp;
     int tryct = 20;
 
     do {
-        if (!enexto(&mm, currentX(), currentY(), ptr))
+        if (!placeEntityNextToPosition(&mm, currentX(), currentY(), ptr->monsterTypeID, 0))
             return;
         if (couldsee(mm.x, mm.y)
             /* don't move grid bugs diagonally */
@@ -2419,11 +2419,11 @@ boolean move_other; /* make sure mtmp gets to x, y! so move m_at(x, y) */
     newx = x;
     newy = y;
     if (!goodPosition(newx, newy, mtmp->m_id, mtmp->data->monsterTypeID, mtmp->wormno, 0)) {
-        /* Actually we have real problems if enexto ever fails.
+        /* Actually we have real problems if placeEntityNextToPosition ever fails.
          * Migrating_mons that need to be placed will cause
          * no end of trouble.
          */
-        if (!enexto(&mm, newx, newy, mtmp->data))
+        if (!placeEntityNextToPosition(&mm, newx, newy, mtmp->data->monsterTypeID, 0))
             return FALSE;
         newx = mm.x;
         newy = mm.y;

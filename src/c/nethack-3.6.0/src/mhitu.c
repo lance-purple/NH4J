@@ -357,7 +357,7 @@ register struct monst *mtmp;
                is eligible for placing hero; we assume that a
                removed monster remembers its old spot <mx,my> */
             remove_monster(mtmp->mx, mtmp->my);
-            if (!enexto(&cc, currentX(), currentY(), youmonst.data)
+            if (!placeEntityNextToPosition(&cc, currentX(), currentY(), youmonst.data->monsterTypeID, 0)
                 /* a fish won't voluntarily swap positions
                    when it's in water and hero is over land */
                 || (monsterClass(mtmp->data->monsterTypeID) == S_EEL
@@ -382,7 +382,7 @@ register struct monst *mtmp;
                 /* tail hasn't grown, so if it now occupies <cc.x,.y>
                    then one of its original spots must be free */
                 if (m_at(cc.x, cc.y))
-                    (void) enexto(&cc, currentX(), currentY(), youmonst.data);
+                    (void) placeEntityNextToPosition(&cc, currentX(), currentY(), youmonst.data->monsterTypeID, 0);
             }
             teleds(cc.x, cc.y, TRUE); /* move hero */
             set_apparxy(mtmp);

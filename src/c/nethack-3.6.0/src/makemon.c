@@ -136,7 +136,7 @@ register int x, y, n;
          * are peaceful and some are not, the result will just be a
          * smaller group.
          */
-        if (enexto(&mm, mm.x, mm.y, mtmp->data)) {
+        if (placeEntityNextToPosition(&mm, mm.x, mm.y, mtmp->data->monsterTypeID, 0)) {
             if (mtmp->data) {
                 mon = makemon(mtmp->data, mm.x, mm.y, NO_MM_FLAGS);
 	    } else {
@@ -751,7 +751,7 @@ xchar x, y; /* clone's preferred location or 0 (near mon) */
     if (x == 0) {
         mm.x = mon->mx;
         mm.y = mon->my;
-        if (!enexto(&mm, mm.x, mm.y, mon->data) || MON_AT(mm.x, mm.y))
+        if (!placeEntityNextToPosition(&mm, mm.x, mm.y, mon->data->monsterTypeID, 0) || MON_AT(mm.x, mm.y))
             return (struct monst *) 0;
     } else if (!isok(x, y)) {
         return (struct monst *) 0; /* paranoia */
@@ -759,7 +759,7 @@ xchar x, y; /* clone's preferred location or 0 (near mon) */
         mm.x = x;
         mm.y = y;
         if (MON_AT(mm.x, mm.y)) {
-            if (!enexto(&mm, mm.x, mm.y, mon->data) || MON_AT(mm.x, mm.y))
+            if (!placeEntityNextToPosition(&mm, mm.x, mm.y, mon->data->monsterTypeID, 0) || MON_AT(mm.x, mm.y))
                 return (struct monst *) 0;
         }
     }
@@ -1109,12 +1109,11 @@ int mmflags;
     boolean allow_minvent = ((mmflags & NO_MINVENT) == 0);
     boolean countbirth = ((mmflags & MM_NOCOUNTBIRTH) == 0);
     unsigned gpflags = (mmflags & MM_IGNOREWATER) ? MM_IGNOREWATER : 0;
+    int pmid = (ptr) ? ptr->monsterTypeID : -1;
 
     /* if caller wants random location, do it here */
     if (x == 0 && y == 0) {
         coord cc;
-
-	int pmid = (ptr) ? ptr->monsterTypeID : -1;
 
         cc.x = cc.y = 0; /* lint suppression */
         if (!makemon_rnd_goodpos(0, pmid, 0, gpflags, &cc))
@@ -1124,7 +1123,7 @@ int mmflags;
     } else if (byyou && !in_mklev) {
         coord bypos;
 
-        if (enexto_core(&bypos, currentX(), currentY(), ptr, gpflags)) {
+        if (placeEntityNextToPosition(&bypos, currentX(), currentY(), pmid, gpflags)) {
             x = bypos.x;
             y = bypos.y;
         } else
@@ -1135,7 +1134,7 @@ int mmflags;
     if (MON_AT(x, y)) {
         if ((mmflags & MM_ADJACENTOK) != 0) {
             coord bypos;
-            if (enexto_core(&bypos, x, y, ptr, gpflags)) {
+            if (placeEntityNextToPosition(&bypos, x, y, pmid, gpflags)) {
                 x = bypos.x;
                 y = bypos.y;
             } else
@@ -1402,7 +1401,7 @@ int mmflags;
     } else if (byyou && !in_mklev) {
         coord bypos;
 
-        if (enexto_core(&bypos, currentX(), currentY(), (struct permonst*) 0, gpflags)) {
+        if (placeEntityNextToPosition(&bypos, currentX(), currentY(), -1, gpflags)) {
             x = bypos.x;
             y = bypos.y;
         } else
@@ -1413,7 +1412,7 @@ int mmflags;
     if (MON_AT(x, y)) {
         if ((mmflags & MM_ADJACENTOK) != 0) {
             coord bypos;
-            if (enexto_core(&bypos, x, y, (struct permonst*) 0, gpflags)) {
+            if (placeEntityNextToPosition(&bypos, x, y, -1, gpflags)) {
                 x = bypos.x;
                 y = bypos.y;
             } else
@@ -1736,7 +1735,7 @@ boolean neverask;
         x = currentX(), y = currentY();
         /* if in water, try to encourage an aquatic monster
            by finding and then specifying another wet location */
-        if (inWater() && enexto(&c, x, y, &mons[PM_GIANT_EEL]))
+        if (inWater() && placeEntityNextToPosition(&c, x, y, PM_GIANT_EEL, 0))
             x = c.x, y = c.y;
 
         mon = makeanymon(x, y, NO_MM_FLAGS);

@@ -80,7 +80,7 @@ struct obj *obj;
         if (potion_descr && !strcmp(potion_descr, "milky")) {
             if (!(mvitals[PM_GHOST].mvflags & G_GONE)
                 && !rn2(POTION_OCCUPANT_CHANCE(mvitals[PM_GHOST].born))) {
-                if (!enexto(&cc, mon->mx, mon->my, &mons[PM_GHOST]))
+                if (!placeEntityNextToPosition(&cc, mon->mx, mon->my, PM_GHOST, 0))
                     return 0;
                 mquaffmsg(mon, obj);
                 m_useup(mon, obj);
@@ -106,7 +106,7 @@ struct obj *obj;
         if (potion_descr && !strcmp(potion_descr, "smoky")
             && !(mvitals[PM_DJINNI].mvflags & G_GONE)
             && !rn2(POTION_OCCUPANT_CHANCE(mvitals[PM_DJINNI].born))) {
-            if (!enexto(&cc, mon->mx, mon->my, &mons[PM_DJINNI]))
+            if (!placeEntityNextToPosition(&cc, mon->mx, mon->my, PM_DJINNI, 0))
                 return 0;
             mquaffmsg(mon, obj);
             m_useup(mon, obj);
@@ -761,7 +761,7 @@ struct monst *mtmp;
                 : &mons[inWater() ? PM_GIANT_EEL : PM_CROCODILE];
         struct monst *mon;
 
-        if (!enexto(&cc, mtmp->mx, mtmp->my, pm))
+        if (!placeEntityNextToPosition(&cc, mtmp->mx, mtmp->my, pm->monsterTypeID, 0))
             return 0;
         mzapmsg(mtmp, otmp, FALSE);
         otmp->spe--;
@@ -789,7 +789,7 @@ struct monst *mtmp;
         while (cnt--) {
             /* `fish' potentially gives bias towards water locations;
                `pm' is what to actually create (0 => random) */
-            if (!enexto(&cc, mtmp->mx, mtmp->my, fish))
+            if (!placeEntityNextToPosition(&cc, mtmp->mx, mtmp->my, fish->monsterTypeID, 0))
                 break;
             if (pm) {
                 mon = makemon(pm, cc.x, cc.y, NO_MM_FLAGS);

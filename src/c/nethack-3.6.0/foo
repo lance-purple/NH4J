@@ -1,1 +1,1 @@
-vi include/extern.h src/eat.c src/end.c src/objnam.c src/polyself.c
+vi src/apply.c src/bones.c src/dbridge.c src/do.c src/dokick.c src/hack.c src/mail.c src/makemon.c src/mcastu.c src/mhitu.c src/minion.c src/mkroom.c src/mon.c src/muse.c src/shk.c src/sp_lev.c src/steed.c src/teleport.c src/timeout.c src/wizard.c src/worm.c src/zap.c

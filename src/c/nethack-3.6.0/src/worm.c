@@ -660,7 +660,7 @@ xchar x, y;
  * return in *nx, *ny, the coordinates of one of the <= 8 squares adjoining.
  *
  * This function, and the loop it serves, could be eliminated by coding
- * enexto() with a search radius.
+ * placeEntityNextToPosition() with a search radius.
  */
 STATIC_OVL
 void

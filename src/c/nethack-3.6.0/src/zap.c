@@ -701,7 +701,7 @@ boolean by_hero;
        ghost are at same location, revived creature shouldn't be bumped
        to an adjacent spot by ghost which joins with it] */
     if (MON_AT(x, y)) {
-        if (enexto(&xy, x, y, mptr))
+        if (placeEntityNextToPosition(&xy, x, y, mptr->monsterTypeID, 0))
             x = xy.x, y = xy.y;
     }
 
@@ -825,7 +825,7 @@ boolean by_hero;
         useup(corpse);
         break;
     case OBJ_FLOOR:
-        /* in case MON_AT+enexto for invisible mon */
+        /* in case MON_AT+placeEntityNextToPosition for invisible mon */
         x = corpse->ox, y = corpse->oy;
         /* not useupf(), which charges */
         if (corpse->quan > 1L)

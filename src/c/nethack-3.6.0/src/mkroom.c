@@ -428,7 +428,7 @@ int mm_flags;
 
     while (cnt--) {
         mdat = morguemon();
-        if (mdat && enexto(&cc, mm->x, mm->y, mdat)
+        if (mdat && placeEntityNextToPosition(&cc, mm->x, mm->y, mdat->monsterTypeID, 0)
             && (!revive_corpses
                 || !(otmp = sobj_at(CORPSE, cc.x, cc.y))
                 || !revive(otmp, FALSE)))

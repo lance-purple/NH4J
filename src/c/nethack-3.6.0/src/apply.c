@@ -1955,7 +1955,7 @@ long timeout;
     silent = (timeout != monstermoves); /* happened while away */
     okay_spot = get_obj_location(figurine, &cc.x, &cc.y, 0);
     if (figurine->where == OBJ_INVENT || figurine->where == OBJ_MINVENT)
-        okay_spot = enexto(&cc, cc.x, cc.y, &mons[figurine->corpsenm]);
+        okay_spot = placeEntityNextToPosition(&cc, cc.x, cc.y, figurine->corpsenm, 0);
     if (!okay_spot || !figurine_location_checks(figurine, &cc, TRUE)) {
         /* reset the timer to try again later */
         (void) start_timer((long) rnd(5000), TIMER_OBJECT, FIG_TRANSFORM,
@@ -2595,7 +2595,7 @@ struct obj *obj;
             cc.y = ry;
             You("wrap your bullwhip around %s.", wrapped_what);
             if (proficient && rn2(proficient + 2)) {
-                if (!mtmp || enexto(&cc, rx, ry, youmonst.data)) {
+                if (!mtmp || placeEntityNextToPosition(&cc, rx, ry, youmonst.data->monsterTypeID, 0)) {
                     You("yank yourself out of the pit!");
                     teleds(cc.x, cc.y, TRUE);
                     setCurrentTrapTimeout(0);
@@ -3052,7 +3052,7 @@ struct obj *obj;
         notonhead = (bhitpos.x != mtmp->mx || bhitpos.y != mtmp->my);
         save_confirm = flags.confirm;
         if (isVerySmallMonster(mtmp->data->monsterTypeID) && !rn2(4)
-            && enexto(&cc, currentX(), currentY(), (struct permonst *) 0)) {
+            && placeEntityNextToPosition(&cc, currentX(), currentY(), -1, 0)) {
             flags.confirm = FALSE;
             (void) attack_checks(mtmp, uwep);
             flags.confirm = save_confirm;
