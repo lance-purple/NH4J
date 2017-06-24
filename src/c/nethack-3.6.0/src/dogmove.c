@@ -934,18 +934,18 @@ newdogpos:
         ny = sgn(omy - currentY());
         cc.x = currentX() + nx;
         cc.y = currentY() + ny;
-        if (goodpos(cc.x, cc.y, mtmp, 0))
+        if (goodPosition(cc.x, cc.y, mtmp->m_id, mtmp->data->monsterTypeID, mtmp->wormno, 0))
             goto dognext;
 
         i = xytod(nx, ny);
         for (j = (i + 7) % 8; j < (i + 1) % 8; j++) {
             dtoxy(&cc, j);
-            if (goodpos(cc.x, cc.y, mtmp, 0))
+            if (goodPosition(cc.x, cc.y, mtmp->m_id, mtmp->data->monsterTypeID, mtmp->wormno, 0))
                 goto dognext;
         }
         for (j = (i + 6) % 8; j < (i + 2) % 8; j++) {
             dtoxy(&cc, j);
-            if (goodpos(cc.x, cc.y, mtmp, 0))
+            if (goodPosition(cc.x, cc.y, mtmp->m_id, mtmp->data->monsterTypeID, mtmp->wormno, 0))
                 goto dognext;
         }
         cc.x = mtmp->mx;

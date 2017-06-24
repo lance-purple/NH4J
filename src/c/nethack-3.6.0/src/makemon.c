@@ -27,7 +27,7 @@ STATIC_DCL void FDECL(m_initgrp, (struct monst *, int, int, int));
 STATIC_DCL void FDECL(m_initthrow, (struct monst *, int, int));
 STATIC_DCL void FDECL(m_initweap, (struct monst *));
 STATIC_DCL void FDECL(m_initinv, (struct monst *));
-STATIC_DCL boolean FDECL(makemon_rnd_goodpos, (struct monst *, unsigned, coord *));
+STATIC_DCL boolean FDECL(makemon_rnd_goodpos, (int, int, int, unsigned, coord *));
 
 STATIC_DCL boolean FDECL(randomGoodPositionForObject, (unsigned, coord *));
 
@@ -959,8 +959,10 @@ newmextra()
 }
 
 boolean
-makemon_rnd_goodpos(mon, gpflags, cc)
-struct monst *mon;
+makemon_rnd_goodpos(m_id, pmid, wormno, gpflags, cc)
+int m_id;
+int pmid;
+int wormno;
 unsigned gpflags;
 coord *cc;
 {
@@ -972,7 +974,7 @@ coord *cc;
         nx = rn1(COLNO - 3, 2);
         ny = rn2(ROWNO);
         good = (!in_mklev && cansee(nx,ny)) ? FALSE
-                                            : goodpos(nx, ny, mon, gpflags);
+                                            : goodPosition(nx, ny, m_id, pmid, wormno, gpflags);
     } while ((++tryct < 50) && !good);
 
     if (!good) {
@@ -991,10 +993,10 @@ coord *cc;
                     ny = ((dy + yofs) % (ROWNO - 1)) + 1;
                     if (bl == 0 && cansee(nx,ny))
                         continue;
-                    if (goodpos(nx, ny, mon, gpflags))
+                    if (goodPosition(nx, ny, m_id, pmid, wormno, gpflags))
                         goto gotgood;
                 }
-            if (bl == 0 && (!mon || monsterMovementSpeed(mon->data->monsterTypeID))) {
+            if (bl == 0 && (!m_id || monsterMovementSpeed(pmid))) {
                 /* all map positions are visible (or not good),
                    try to pick something logical */
                 if (dnstair.sx && !rn2(2)) {
@@ -1010,7 +1012,8 @@ coord *cc;
                     nx = upladder.sx;
                     ny = upladder.sy;
                 }
-                if (goodpos(nx, ny, mon, gpflags))
+
+                if (goodPosition(nx, ny, m_id, pmid, wormno, gpflags))
                     goto gotgood;
             }
         }
@@ -1110,11 +1113,11 @@ int mmflags;
     /* if caller wants random location, do it here */
     if (x == 0 && y == 0) {
         coord cc;
-        struct monst fakemon;
+
+	int pmid = (ptr) ? ptr->monsterTypeID : -1;
 
         cc.x = cc.y = 0; /* lint suppression */
-        fakemon.data = ptr; /* set up for goodpos */
-        if (!makemon_rnd_goodpos(&fakemon, gpflags, &cc))
+        if (!makemon_rnd_goodpos(0, pmid, 0, gpflags, &cc))
             return (struct monst *) 0;
         x = cc.x;
         y = cc.y;
@@ -1425,7 +1428,6 @@ int mmflags;
      * for instance.)
      */
     int tryct = 0; /* maybe there are no good choices */
-    struct monst fakemon;
     struct permonst* ptr;
 
     do {
@@ -1434,12 +1436,11 @@ int mmflags;
             debugpline0("Warning: no monster.");
             return (struct monst *) 0; /* no more monsters! */
         }
-        fakemon.data = ptr; /* set up for goodpos */
     } while (++tryct <= 50
                  /* in Sokoban, don't accept a giant on first try;
                     after that, boulder carriers are fair game */
                  && ((tryct == 1 && throwsRocks(ptr->monsterTypeID) && areYouOnASokobanLevel())
-                     || !goodpos(x, y, &fakemon, gpflags)));
+                     || !goodPosition(x, y, 0, ptr->monsterTypeID, 0, gpflags)));
 
     mndx = ptr->monsterTypeID;
 

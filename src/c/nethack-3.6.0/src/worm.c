@@ -633,11 +633,11 @@ xchar x, y;
         xchar nx, ny;
         char tryct = 0;
 
-        /* pick a random direction from x, y and search for goodpos() */
+        /* pick a random direction from x, y and search for goodPosition() */
 
         do {
             random_dir(ox, oy, &nx, &ny);
-        } while (!goodpos(nx, ny, worm, 0) && (tryct++ < 50));
+        } while (!goodPosition(nx, ny, worm->m_id, worm->data->monsterTypeID, wnum, 0) && (tryct++ < 50));
 
         if (tryct < 50) {
             place_worm_seg(worm, nx, ny);

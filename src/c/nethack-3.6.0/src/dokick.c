@@ -103,7 +103,7 @@ register boolean clumsy;
         /* see if the monster has a place to move into */
         mdx = mon->mx + directionX();
         mdy = mon->my + directionY();
-        if (goodpos(mdx, mdy, mon, 0)) {
+        if (goodPosition(mdx, mdy, mon->m_id, mon->data->monsterTypeID, mon->wormno, 0)) {
             pline("%s reels from the blow.", Monnam(mon));
             if (m_in_out_region(mon, mdx, mdy)) {
                 remove_monster(mon->mx, mon->my);

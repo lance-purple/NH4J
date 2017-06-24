@@ -669,7 +669,7 @@ int x, y;
     /* TODO: Treat walls, doors, iron bars, pools, lava, etc. specially
      * rather than just stopping before.
      */
-    if (goodpos(x, y, mon, 0) && m_in_out_region(mon, x, y)) {
+    if (goodPosition(x, y, mon->m_id, mon->data->monsterTypeID, mon->wormno, 0) && m_in_out_region(mon, x, y)) {
         remove_monster(mon->mx, mon->my);
         newsym(mon->mx, mon->my);
         place_monster(mon, x, y);
