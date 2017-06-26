@@ -13,19 +13,19 @@ static boolean monsterCanCauseDamageTypeWithAttackType(int, const int, const int
 
 /* set up an individual monster's base type (initial creation, shapechange) */
 void
-set_mon_data(mon, ptr, flag)
+setMonsterData(mon, pmid, flag)
 struct monst *mon;
-struct permonst *ptr;
+int pmid;
 int flag;
 {
-    mon->data = ptr;
+    mon->data = &mons[pmid];
     if (flag == -1)
         return; /* "don't care" */
 
     if (flag == 1)
-        mon->mintrinsics |= (monsterResistances(ptr->monsterTypeID) & 0x00FF);
+        mon->mintrinsics |= (monsterResistances(pmid) & 0x00FF);
     else
-        mon->mintrinsics = (monsterResistances(ptr->monsterTypeID) & 0x00FF);
+        mon->mintrinsics = (monsterResistances(pmid) & 0x00FF);
     return;
 }
 

@@ -1815,14 +1815,14 @@ register struct monst *mtmp;
     mptr = mtmp->data; /* save this for m_detach() */
     /* restore chameleon, lycanthropes to true form at death */
     if (mtmp->cham >= LOW_PM) {
-        set_mon_data(mtmp, &mons[mtmp->cham], -1);
+        setMonsterData(mtmp, mtmp->cham, -1);
         mtmp->cham = NON_PM;
     } else if (mtmp->data == &mons[PM_WEREJACKAL])
-        set_mon_data(mtmp, &mons[PM_HUMAN_WEREJACKAL], -1);
+        setMonsterData(mtmp, PM_HUMAN_WEREJACKAL, -1);
     else if (mtmp->data == &mons[PM_WEREWOLF])
-        set_mon_data(mtmp, &mons[PM_HUMAN_WEREWOLF], -1);
+        setMonsterData(mtmp, PM_HUMAN_WEREWOLF, -1);
     else if (mtmp->data == &mons[PM_WERERAT])
-        set_mon_data(mtmp, &mons[PM_HUMAN_WERERAT], -1);
+        setMonsterData(mtmp, PM_HUMAN_WERERAT, -1);
 
     /* if MAXMONNO monsters of a given type have died, and it
      * can be done, extinguish that monster.
@@ -3200,7 +3200,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
         mtmp->mhp = 1;
 
     /* take on the new form... */
-    set_mon_data(mtmp, mdat, 0);
+    setMonsterData(mtmp, mdat->monsterTypeID, 0);
 
     if (emitsLightWithRange(olddata->monsterTypeID) != emitsLightWithRange(mtmp->data->monsterTypeID)) {
         /* used to give light, now doesn't, or vice versa,

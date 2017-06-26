@@ -1175,7 +1175,7 @@ int mmflags;
 
     int msound = monsterSound(ptr->monsterTypeID);
 
-    set_mon_data(mtmp, ptr, 0);
+    setMonsterData(mtmp, ptr->monsterTypeID, 0);
     if (msound == MS_LEADER && quest_info(MS_LEADER) == mndx)
         quest_status.leader_m_id = mtmp->m_id;
     mtmp->mnum = mndx;
@@ -1464,7 +1464,7 @@ int mmflags;
 
     int msound = monsterSound(ptr->monsterTypeID);
 
-    set_mon_data(mtmp, ptr, 0);
+    setMonsterData(mtmp, ptr->monsterTypeID, 0);
     if (msound == MS_LEADER && quest_info(MS_LEADER) == mndx)
         quest_status.leader_m_id = mtmp->m_id;
     mtmp->mnum = mndx;
@@ -2125,7 +2125,7 @@ struct monst *mtmp, *victim;
                       isNonliving(ptr->monsterTypeID) ? "expires" : "dies");
 		releaseJavaString(monsterName);
 	    }
-            set_mon_data(mtmp, ptr, -1); /* keep mvitals[] accurate */
+            setMonsterData(mtmp, ptr->monsterTypeID, -1); /* keep mvitals[] accurate */
             mondied(mtmp);
             return (struct permonst *) 0;
         } else if (canspotmon(mtmp)) {
@@ -2135,7 +2135,7 @@ struct monst *mtmp, *victim;
                   an(monsterName.c_str));
 	    releaseJavaString(monsterName);
         }
-        set_mon_data(mtmp, ptr, 1);    /* preserve intrinsics */
+        setMonsterData(mtmp, ptr->monsterTypeID, 1);    /* preserve intrinsics */
         newsym(mtmp->mx, mtmp->my);    /* color may change */
         lev_limit = (int) mtmp->m_lev; /* never undo increment */
     }
@@ -2205,7 +2205,7 @@ struct monst *mtmp;
                       isNonliving(ptr->monsterTypeID) ? "expires" : "dies");
 		releaseJavaString(monsterName);
 	    }
-            set_mon_data(mtmp, ptr, -1); /* keep mvitals[] accurate */
+            setMonsterData(mtmp, ptr->monsterTypeID, -1); /* keep mvitals[] accurate */
             mondied(mtmp);
             return (struct permonst *) 0;
         } else if (canspotmon(mtmp)) {
@@ -2215,7 +2215,7 @@ struct monst *mtmp;
                   an(monsterName.c_str));
 	    releaseJavaString(monsterName);
         }
-        set_mon_data(mtmp, ptr, 1);    /* preserve intrinsics */
+        setMonsterData(mtmp, ptr->monsterTypeID, 1);    /* preserve intrinsics */
         newsym(mtmp->mx, mtmp->my);    /* color may change */
         lev_limit = (int) mtmp->m_lev; /* never undo increment */
     }

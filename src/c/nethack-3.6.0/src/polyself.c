@@ -49,9 +49,9 @@ static void PROPSET(int propertyIndex, boolean on) {
 void
 set_uasmon()
 {
-    struct permonst *mdat = &mons[currentMonsterNumber()];
+    int pmid = currentMonsterNumber();
 
-    set_mon_data(&youmonst, mdat, 0);
+    setMonsterData(&youmonst, pmid, 0);
 
     PROPSET(FIRE_RES, resists_fire(&youmonst));
     PROPSET(COLD_RES, resists_cold(&youmonst));
@@ -71,27 +71,27 @@ set_uasmon()
     }
     /* resists_magm() takes wielded, worn, and carried equipment into
        into account; cheat and duplicate its monster-specific part */
-    PROPSET(ANTIMAGIC, (dmgtype(mdat->monsterTypeID, AD_MAGM)
-                        || mdat == &mons[PM_BABY_GRAY_DRAGON]
-                        || dmgtype(mdat->monsterTypeID, AD_RBRE)));
-    PROPSET(SICK_RES, (monsterClass(mdat->monsterTypeID) == S_FUNGUS || mdat == &mons[PM_GHOUL]));
+    PROPSET(ANTIMAGIC, (dmgtype(pmid, AD_MAGM)
+                        || pmid == PM_BABY_GRAY_DRAGON
+                        || dmgtype(pmid, AD_RBRE)));
+    PROPSET(SICK_RES, (monsterClass(pmid) == S_FUNGUS || pmid == PM_GHOUL));
 
-    PROPSET(STUNNED, (mdat == &mons[PM_STALKER] || isBat(mdat->monsterTypeID)));
-    PROPSET(HALLUC_RES, dmgtype(mdat->monsterTypeID, AD_HALU));
-    PROPSET(SEE_INVIS, perceivesTheInvisible(mdat->monsterTypeID));
-    PROPSET(TELEPAT, isTelepathic(mdat->monsterTypeID));
-    PROPSET(INFRAVISION, hasInfravision(mdat->monsterTypeID));
-    PROPSET(INVIS, isInvisible(mdat->monsterTypeID));
-    PROPSET(TELEPORT, canTeleport(mdat->monsterTypeID));
-    PROPSET(TELEPORT_CONTROL, canControlTeleport(mdat->monsterTypeID));
-    PROPSET(LEVITATION, isFloater(mdat->monsterTypeID));
-    PROPSET(FLYING, isFlyer(mdat->monsterTypeID));
-    PROPSET(SWIMMING, isSwimmer(mdat->monsterTypeID));
+    PROPSET(STUNNED, (pmid == PM_STALKER || isBat(pmid)));
+    PROPSET(HALLUC_RES, dmgtype(pmid, AD_HALU));
+    PROPSET(SEE_INVIS, perceivesTheInvisible(pmid));
+    PROPSET(TELEPAT, isTelepathic(pmid));
+    PROPSET(INFRAVISION, hasInfravision(pmid));
+    PROPSET(INVIS, isInvisible(pmid));
+    PROPSET(TELEPORT, canTeleport(pmid));
+    PROPSET(TELEPORT_CONTROL, canControlTeleport(pmid));
+    PROPSET(LEVITATION, isFloater(pmid));
+    PROPSET(FLYING, isFlyer(pmid));
+    PROPSET(SWIMMING, isSwimmer(pmid));
     /* [don't touch MAGICAL_BREATHING here; both Amphibious and Breathless
        key off of it but include different monster forms...] */
-    PROPSET(PASSES_WALLS, passesThroughWalls(mdat->monsterTypeID));
-    PROPSET(REGENERATION, regenerates(mdat->monsterTypeID));
-    PROPSET(REFLECTING, (mdat == &mons[PM_SILVER_DRAGON]));
+    PROPSET(PASSES_WALLS, passesThroughWalls(pmid));
+    PROPSET(REGENERATION, regenerates(pmid));
+    PROPSET(REFLECTING, (pmid == PM_SILVER_DRAGON));
 
     float_vs_flight(); /* maybe toggle (BFlying & I_SPECIAL) */
 
