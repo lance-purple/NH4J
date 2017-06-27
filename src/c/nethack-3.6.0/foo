@@ -1,0 +1,1 @@
+vi include/extern.h src/allmain.c src/apply.c src/cmd.c src/dog.c src/makemon.c src/mklev.c src/mkmaze.c src/mkroom.c src/mon.c src/mplayer.c src/muse.c src/priest.c src/read.c src/sp_lev.c src/trap.c src/wizard.c src/zap.c

@@ -3127,7 +3127,7 @@ wiz_migrate_mons()
         if (ptr) {
             mtmp = makemon(ptr, 0, 0, NO_MM_FLAGS);
         } else {
-            mtmp = makeanymon(0, 0, NO_MM_FLAGS);
+            mtmp = makeMonsterOfAnyType(0, 0, NO_MM_FLAGS);
         }
         if (mtmp)
             migrate_to_level(mtmp, ledger_no(&tolevel), MIGR_RANDOM,

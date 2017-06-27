@@ -136,7 +136,7 @@ register boolean special;
     if (ptr) {
         mtmp = makemon(ptr, x, y, NO_MM_FLAGS);
     } else {
-        mtmp = makeanymon(x, y, NO_MM_FLAGS);
+        mtmp = makeMonsterOfAnyType(x, y, NO_MM_FLAGS);
     }
 
     if (mtmp != 0) {

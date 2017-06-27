@@ -765,7 +765,7 @@ struct monst *mtmp;
             return 0;
         mzapmsg(mtmp, otmp, FALSE);
         otmp->spe--;
-        mon = makeanymon(cc.x, cc.y, NO_MM_FLAGS);
+        mon = makeMonsterOfAnyType(cc.x, cc.y, NO_MM_FLAGS);
         if (mon && canspotmon(mon) && oseen)
             makeknown(WAN_CREATE_MONSTER);
         return 2;
@@ -794,7 +794,7 @@ struct monst *mtmp;
             if (pm) {
                 mon = makemon(pm, cc.x, cc.y, NO_MM_FLAGS);
             } else {
-                mon = makeanymon(cc.x, cc.y, NO_MM_FLAGS);
+                mon = makeMonsterOfAnyType(cc.x, cc.y, NO_MM_FLAGS);
             }
             if (mon && canspotmon(mon))
                 known = TRUE;

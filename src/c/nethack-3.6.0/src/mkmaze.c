@@ -656,7 +656,7 @@ register const char *s;
     }
     for (x = rn1(5, 7); x; x--) {
         mazexy(&mm);
-        (void) makeanymon(mm.x, mm.y, NO_MM_FLAGS);
+        (void) makeMonsterOfAnyType(mm.x, mm.y, NO_MM_FLAGS);
     }
     for (x = rn1(6, 7); x; x--) {
         mazexy(&mm);

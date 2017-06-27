@@ -325,7 +325,7 @@ struct mkroom *sroom;
             if (pm) {
                 mon = makemon(pm, sx, sy, NO_MM_FLAGS);
             } else {
-                mon = makeanymon(sx, sy, NO_MM_FLAGS);
+                mon = makeMonsterOfAnyType(sx, sy, NO_MM_FLAGS);
             }
             if (mon) {
                 mon->msleeping = 1;

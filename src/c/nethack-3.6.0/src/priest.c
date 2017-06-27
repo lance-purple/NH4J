@@ -689,7 +689,7 @@ boolean peaceful;
     if (ptr) {
         roamer = makemon(ptr, x, y, MM_ADJACENTOK | MM_EMIN);
     } else {
-        roamer = makeanymon(x, y, MM_ADJACENTOK | MM_EMIN);
+        roamer = makeMonsterOfAnyType(x, y, MM_ADJACENTOK | MM_EMIN);
     }
 
     if (!roamer) {

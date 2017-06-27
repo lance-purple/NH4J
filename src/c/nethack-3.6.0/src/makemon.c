@@ -140,7 +140,7 @@ register int x, y, n;
             if (mtmp->data) {
                 mon = makemon(mtmp->data, mm.x, mm.y, NO_MM_FLAGS);
 	    } else {
-                mon = makeanymon(mm.x, mm.y, NO_MM_FLAGS);
+                mon = makeMonsterOfAnyType(mm.x, mm.y, NO_MM_FLAGS);
 	    }
 
             if (mon) {
@@ -1379,7 +1379,7 @@ int mmflags;
  *      In case we make a monster group, only return the one at [x,y].
  */
 struct monst *
-makeanymon(x, y, mmflags)
+makeMonsterOfAnyType(x, y, mmflags)
 register int x, y;
 int mmflags;
 {
@@ -1738,7 +1738,7 @@ boolean neverask;
         if (inWater() && placeEntityNextToPosition(&c, x, y, PM_GIANT_EEL, 0))
             x = c.x, y = c.y;
 
-        mon = makeanymon(x, y, NO_MM_FLAGS);
+        mon = makeMonsterOfAnyType(x, y, NO_MM_FLAGS);
 
         if (mon && canspotmon(mon))
             known = TRUE;
@@ -2595,7 +2595,7 @@ int *seencount;  /* secondary output */
         if (!rn2(23))
             creatcnt += rnd(7);
         do {
-            mtmp = makeanymon(currentX(), currentY(), NO_MM_FLAGS);
+            mtmp = makeMonsterOfAnyType(currentX(), currentY(), NO_MM_FLAGS);
             if (mtmp) {
                 ++moncount;
                 if (canspotmon(mtmp))

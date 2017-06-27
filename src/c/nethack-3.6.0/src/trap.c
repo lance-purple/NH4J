@@ -620,7 +620,7 @@ int *fail_reason;
                                           ? (NO_MINVENT | MM_ADJACENTOK)
                                           : NO_MINVENT);
         } else {
-            mon = makeanymon(x, y, (cause == ANIMATE_SPELL)
+            mon = makeMonsterOfAnyType(x, y, (cause == ANIMATE_SPELL)
                                           ? (NO_MINVENT | MM_ADJACENTOK)
                                           : NO_MINVENT);
         }
@@ -3087,7 +3087,7 @@ domagictrap()
             You_hear("a deafening roar!");
         incrementYourIntrinsicTimeout(DEAF, rn1(20, 30));
         while (cnt--)
-            (void) makeanymon(currentX(), currentY(), NO_MM_FLAGS);
+            (void) makeMonsterOfAnyType(currentX(), currentY(), NO_MM_FLAGS);
     } else
         switch (fate) {
         case 10:

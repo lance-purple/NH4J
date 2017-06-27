@@ -2261,7 +2261,7 @@ int how;
                 if (ptr) {
                   mm = makemon(ptr, currentX(), currentY(), NO_MINVENT);
                 } else {
-                  mm = makeanymon(currentX(), currentY(), NO_MINVENT);
+                  mm = makeMonsterOfAnyType(currentX(), currentY(), NO_MINVENT);
                 }
                 if (!mm) {
                     break; /* couldn't make one */
@@ -2456,7 +2456,7 @@ create_particular()
             if (whichpm) {
                mtmp = makemon(whichpm, currentX(), currentY(), NO_MM_FLAGS);
             } else {
-               mtmp = makeanymon(currentX(), currentY(), NO_MM_FLAGS);
+               mtmp = makeMonsterOfAnyType(currentX(), currentY(), NO_MM_FLAGS);
             }
             if (!mtmp) {
                 /* quit trying if creation failed and is going to repeat */

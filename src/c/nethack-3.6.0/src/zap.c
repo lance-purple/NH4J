@@ -1250,7 +1250,7 @@ int okind;
     if (mdat) {
         mtmp = makemon(mdat, obj->ox, obj->oy, NO_MM_FLAGS);
     } else {
-        mtmp = makeanymon(obj->ox, obj->oy, NO_MM_FLAGS);
+        mtmp = makeMonsterOfAnyType(obj->ox, obj->oy, NO_MM_FLAGS);
     }
     polyuse(obj, okind, monsterCorpseWeight(mons[pm_index].monsterTypeID));
 
@@ -1630,7 +1630,7 @@ struct obj *obj;
                 if (ptr) {
                     mon = makemon(ptr, oox, ooy, NO_MINVENT);
                 } else {
-                    mon = makeanymon(oox, ooy, NO_MINVENT);
+                    mon = makeMonsterOfAnyType(oox, ooy, NO_MINVENT);
                 }
                 if (mon) {
                     if (costly_spot(oox, ooy) && !obj->no_charge) {

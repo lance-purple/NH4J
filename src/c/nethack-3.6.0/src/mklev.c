@@ -803,7 +803,7 @@ skip0:
         if (haveSpecialItem(SPECIAL_ITEM_AMULET) || !rn2(3)) {
             x = somex(croom);
             y = somey(croom);
-            tmonst = makeanymon(x, y, NO_MM_FLAGS);
+            tmonst = makeMonsterOfAnyType(x, y, NO_MM_FLAGS);
             if (tmonst && tmonst->data == &mons[PM_GIANT_SPIDER]
                 && !occupied(x, y))
                 (void) maketrap(x, y, WEB);

@@ -2464,7 +2464,7 @@ struct monst *mtmp;
             if (!rn2(13))
                 (void) makemon(&mons[PM_PURPLE_WORM], 0, 0, NO_MM_FLAGS);
             else
-                (void) makeanymon(0, 0, NO_MM_FLAGS);
+                (void) makeMonsterOfAnyType(0, 0, NO_MM_FLAGS);
         }
         aggravate();
     }

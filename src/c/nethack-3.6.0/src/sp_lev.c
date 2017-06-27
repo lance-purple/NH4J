@@ -1574,7 +1574,7 @@ struct mkroom *croom;
     } else if (pm) {
         mtmp = makemon(pm, x, y, NO_MM_FLAGS);
     } else {
-        mtmp = makeanymon(x, y, NO_MM_FLAGS);
+        mtmp = makeMonsterOfAnyType(x, y, NO_MM_FLAGS);
     }
 
     if (mtmp) {
@@ -2539,7 +2539,7 @@ fill_empty_maze()
         }
         for (x = rnd((int) (12 * mapfact) / 100); x; x--) {
             maze1xy(&mm, DRY);
-            (void) makeanymon(mm.x, mm.y, NO_MM_FLAGS);
+            (void) makeMonsterOfAnyType(mm.x, mm.y, NO_MM_FLAGS);
         }
         for (x = rn2((int) (15 * mapfact) / 100); x; x--) {
             maze1xy(&mm, DRY);

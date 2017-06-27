@@ -104,7 +104,7 @@ boolean quietly;
         if (pm) {
             mtmp = makemon(pm, x, y, MM_EDOG | MM_IGNOREWATER | NO_MINVENT);
         } else {
-            mtmp = makeanymon(x, y, MM_EDOG | MM_IGNOREWATER | NO_MINVENT);
+            mtmp = makeMonsterOfAnyType(x, y, MM_EDOG | MM_IGNOREWATER | NO_MINVENT);
         }
         if (otmp && !mtmp) { /* monster was genocided or square occupied */
             if (!quietly)
