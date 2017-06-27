@@ -1768,6 +1768,7 @@ E struct mextra *NDECL(newmextra);
 E void FDECL(copy_mextra, (struct monst *, struct monst *));
 E void FDECL(dealloc_mextra, (struct monst *));
 E struct monst *FDECL(makemon, (struct permonst *, int, int, int));
+E struct monst *FDECL(makeMonsterOfClass, (char, int, int, int));
 E struct monst *FDECL(makeMonsterOfAnyType, (int, int, int));
 E boolean FDECL(create_critters, (int, struct permonst *, BOOLEAN_P));
 E boolean FDECL(create_rnd_critters, (int, BOOLEAN_P));
