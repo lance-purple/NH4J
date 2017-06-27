@@ -27,7 +27,7 @@ STATIC_DCL void FDECL(m_initgrp, (struct monst *, int, int, int));
 STATIC_DCL void FDECL(m_initthrow, (struct monst *, int, int));
 STATIC_DCL void FDECL(m_initweap, (struct monst *));
 STATIC_DCL void FDECL(m_initinv, (struct monst *));
-STATIC_DCL boolean FDECL(makemon_rnd_goodpos, (int, int, int, unsigned, coord *));
+STATIC_DCL boolean FDECL(makeMonsterAtRandomGoodPosition, (int, int, int, unsigned, coord *));
 
 STATIC_DCL boolean FDECL(randomGoodPositionForObject, (unsigned, coord *));
 
@@ -959,7 +959,7 @@ newmextra()
 }
 
 boolean
-makemon_rnd_goodpos(m_id, pmid, wormno, gpflags, cc)
+makeMonsterAtRandomGoodPosition(m_id, pmid, wormno, gpflags, cc)
 int m_id;
 int pmid;
 int wormno;
@@ -1126,7 +1126,7 @@ int mmflags;
         coord cc;
 
         cc.x = cc.y = 0; /* lint suppression */
-        if (!makemon_rnd_goodpos(0, pmid, 0, gpflags, &cc))
+        if (!makeMonsterAtRandomGoodPosition(0, pmid, 0, gpflags, &cc))
             return (struct monst *) 0;
         x = cc.x;
         y = cc.y;
