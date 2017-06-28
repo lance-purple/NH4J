@@ -23,7 +23,7 @@ STATIC_DCL int FDECL(pickvampshape, (struct monst *));
 STATIC_DCL boolean FDECL(isspecmon, (struct monst *));
 STATIC_DCL boolean FDECL(validspecmon, (struct monst *, int));
 STATIC_DCL boolean FDECL(validvamp, (struct monst *, int *, int));
-STATIC_DCL struct permonst *FDECL(accept_newcham_form, (int));
+STATIC_DCL boolean FDECL(acceptNewFormForChameleon, (int));
 STATIC_DCL struct obj *FDECL(make_corpse, (struct monst *, unsigned));
 STATIC_DCL void FDECL(m_detach, (struct monst *, struct permonst *));
 STATIC_DCL void FDECL(lifesaved_monster, (struct monst *));
@@ -2893,7 +2893,7 @@ int mndx;
     if (mndx == NON_PM)
         return TRUE; /* caller wants random */
 
-    if (!accept_newcham_form(mndx))
+    if (!acceptNewFormForChameleon(mndx))
         return FALSE; /* geno'd or !okToPolymorphInto */
 
     if (isspecmon(mon)) {
@@ -3070,26 +3070,29 @@ struct monst *mon;
 }
 
 /* this used to be inline within newcham() but monpolycontrol needs it too */
-STATIC_OVL struct permonst *
-accept_newcham_form(mndx)
-int mndx;
+STATIC_OVL boolean
+acceptNewFormForChameleon(pmid)
+int pmid;
 {
-    struct permonst *mdat;
+    if (pmid == NON_PM) {
+        return FALSE;
+    }
+    if ((mvitals[pmid].mvflags & G_GENOD) != 0) {
+        return FALSE;
+    }
+    if (isPlaceholder(pmid)) {
+        return FALSE;
+    }
 
-    if (mndx == NON_PM)
-        return 0;
-    mdat = &mons[mndx];
-    if ((mvitals[mndx].mvflags & G_GENOD) != 0)
-        return 0;
-    if (isPlaceholder(mdat->monsterTypeID))
-        return 0;
     /* select_newcham_form() might deliberately pick a player
        character type (random selection never does) which
        okToPolymorphInto() rejects, so we need a special case here */
-    if (isMonsterPlayer(mdat->monsterTypeID))
-        return mdat;
+    if (isMonsterPlayer(pmid)) {
+        return TRUE;
+    }
+
     /* okToPolymorphInto() rules out M2_PNAME, M2_WERE, and all humans except Kops */
-    return okToPolymorphInto(mdat->monsterTypeID) ? mdat : 0;
+    return okToPolymorphInto(pmid);
 }
 
 void
@@ -3142,7 +3145,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
         tryct = 20;
         do {
             mndx = select_newcham_form(mtmp);
-            mdat = accept_newcham_form(mndx);
+            mdat = acceptNewFormForChameleon(mndx) ? &mons[mndx] : 0;
             /* for the first several tries we require upper-case on
                the rogue level (after that, we take whatever we get) */
             if (tryct > 15 && areYouOnRogueLevel()
