@@ -2668,8 +2668,7 @@ E struct monst *FDECL(findpriest, (CHAR_P));
 E void FDECL(intemple, (int));
 E void FDECL(forget_temple_entry, (struct monst *));
 E void FDECL(priest_talk, (struct monst *));
-E struct monst *FDECL(mk_roamer, (struct permonst *, ALIGNTYP_P, XCHAR_P,
-                                  XCHAR_P, BOOLEAN_P));
+E struct monst *FDECL(makeRoamingMonsterOfType, (int, ALIGNTYP_P, XCHAR_P, XCHAR_P, BOOLEAN_P));
 E void FDECL(reset_hostility, (struct monst *));
 E boolean FDECL(in_your_sanctuary, (struct monst *, XCHAR_P, XCHAR_P));
 E void FDECL(ghod_hitsu, (struct monst *));

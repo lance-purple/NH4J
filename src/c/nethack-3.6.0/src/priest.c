@@ -669,8 +669,8 @@ register struct monst *priest;
 }
 
 struct monst *
-mk_roamer(ptr, alignment, x, y, peaceful)
-register struct permonst *ptr;
+makeRoamingMonsterOfType(pmid, alignment, x, y, peaceful)
+int pmid;
 aligntyp alignment;
 xchar x, y;
 boolean peaceful;
@@ -678,16 +678,11 @@ boolean peaceful;
     register struct monst *roamer;
     register boolean coaligned = (currentAlignmentType() == alignment);
 
-#if 0 /* this was due to permonst's pxlth field which is now gone */
-    if (ptr != &mons[PM_ALIGNED_PRIEST] && ptr != &mons[PM_ANGEL])
-        return (struct monst *) 0;
-#endif
-
     if (MON_AT(x, y))
         (void) rloc(m_at(x, y), FALSE); /* insurance */
 
-    if (ptr) {
-        roamer = makeMonsterOfType(ptr->monsterTypeID, x, y, MM_ADJACENTOK | MM_EMIN);
+    if (pmid != -1) {
+        roamer = makeMonsterOfType(pmid, x, y, MM_ADJACENTOK | MM_EMIN);
     } else {
         roamer = makeMonsterOfAnyType(x, y, MM_ADJACENTOK | MM_EMIN);
     }

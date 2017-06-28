@@ -418,8 +418,7 @@ struct monst *mon; /* if null, angel hasn't been created yet */
         mm.x = currentX();
         mm.y = currentY();
         if (placeEntityNextToPosition(&mm, mm.x, mm.y, PM_ANGEL, 0))
-            (void) mk_roamer(&mons[PM_ANGEL], currentAlignmentType(), mm.x, mm.y,
-                             FALSE);
+            (void) makeRoamingMonsterOfType(PM_ANGEL, currentAlignmentType(), mm.x, mm.y, FALSE);
     }
 }
 
@@ -444,8 +443,7 @@ gain_guardian_angel()
         mm.x = currentX();
         mm.y = currentY();
         if (placeEntityNextToPosition(&mm, mm.x, mm.y, PM_ANGEL, 0)
-            && (mtmp = mk_roamer(&mons[PM_ANGEL], currentAlignmentType(), mm.x, mm.y,
-                                 TRUE)) != 0) {
+            && (mtmp = makeRoamingMonsterOfType(PM_ANGEL, currentAlignmentType(), mm.x, mm.y, TRUE)) != 0) {
             mtmp->mstrategy &= ~STRAT_APPEARMSG;
             if (youCanSee())
                 pline("An angel appears near you.");

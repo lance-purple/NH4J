@@ -1539,11 +1539,13 @@ struct mkroom *croom;
            class has been genocided, so settle for a random monster */
     }
     if (areYouInTheMines() && pm && isOfYourRace(pm->monsterTypeID, urace.selfmask)
-        && (Race_if(PM_DWARF) || Race_if(PM_GNOME)) && rn2(3))
+        && (Race_if(PM_DWARF) || Race_if(PM_GNOME)) && rn2(3)) {
         pm = (struct permonst *) 0;
+    }
 
-    if (pm) {
-        int pmid = pm->monsterTypeID;
+    int pmid = (pm) ? pm->monsterTypeID : -1;
+
+    if (-1 != pmid) {
         int loc = DRY;
         if (monsterClass(pmid) == S_EEL || isAmphibious(pmid) || isSwimmer(pmid))
             loc = WET;
@@ -1551,7 +1553,7 @@ struct mkroom *croom;
             loc |= (HOT | WET);
         if (passesThroughWalls(pmid) || isNoncorporeal(pmid))
             loc |= SOLID;
-        if (isFlaming(pm->monsterTypeID))
+        if (isFlaming(pmid))
             loc |= HOT;
         /* If water-liking monster, first try is without DRY */
         get_location_coord(&x, &y, loc | NO_LOC_WARN, croom, m->coord);
@@ -1564,15 +1566,15 @@ struct mkroom *croom;
     }
 
     /* try to find a close place if someone else is already there */
-    if (MON_AT(x, y) && placeEntityNextToPosition(&cc, x, y, pm->monsterTypeID, 0))
+    if (MON_AT(x, y) && placeEntityNextToPosition(&cc, x, y, pmid, 0))
         x = cc.x, y = cc.y;
 
     if (m->align != -(MAX_REGISTERS + 2)) {
-        mtmp = mk_roamer(pm, Amask2align(amask), x, y, m->peaceful);
+        mtmp = makeRoamingMonsterOfType(pmid, Amask2align(amask), x, y, m->peaceful);
     } else if (PM_ARCHEOLOGIST <= m->id && m->id <= PM_WIZARD) {
         mtmp = mk_mplayer(pm, x, y, FALSE);
-    } else if (pm) {
-        mtmp = makeMonsterOfType(pm->monsterTypeID, x, y, NO_MM_FLAGS);
+    } else if (-1 != pmid) {
+        mtmp = makeMonsterOfType(pmid, x, y, NO_MM_FLAGS);
     } else {
         mtmp = makeMonsterOfAnyType(x, y, NO_MM_FLAGS);
     }
