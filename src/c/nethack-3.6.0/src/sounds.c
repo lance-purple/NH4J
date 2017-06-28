@@ -519,8 +519,8 @@ register struct monst *mtmp;
         msound = monsterSound(mons[genus(ptr->monsterTypeID, 1)].monsterTypeID);
     /* some normally non-speaking types can/will speak if hero is similar */
     else if (msound == MS_ORC         /* note: MS_ORC is same as MS_GRUNT */
-             && (same_race(ptr, youmonst.data)           /* current form, */
-                 || same_race(ptr, &mons[Race_switch]))) /* unpoly'd form */
+             && (areSameRace(ptr->monsterTypeID, youmonst.data->monsterTypeID)           /* current form, */
+                 || areSameRace(ptr->monsterTypeID, Race_switch))) /* unpoly'd form */
         msound = MS_HUMANOID;
     /* silliness, with slight chance to interfere with shopping */
     else if (youAreHallucinating() && mon_is_gecko(mtmp))

@@ -2073,7 +2073,6 @@ E boolean FDECL(hasHorns, (int));
 /* E boolean FDECL(canseemon, (struct monst *)); */
 E boolean FDECL(dmgtype, (int, int));
 E int FDECL(max_passive_dmg, (struct monst *, struct monst *));
-E boolean FDECL(same_race, (struct permonst *, struct permonst *));
 E int FDECL(name_to_mon, (const char *));
 E int FDECL(name_to_monclass, (const char *, int *));
 E int FDECL(gender, (struct monst *));
@@ -2203,6 +2202,7 @@ E boolean FDECL(isInfravisible, (int));
 E boolean FDECL(isDisplacer, (int));
 
 E boolean FDECL(allowsCloseApproach, (int));
+E boolean FDECL(areSameRace, (int, int));
 
 /* ### monmove.c ### */
 

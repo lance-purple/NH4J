@@ -479,116 +479,6 @@ register struct monst *mdef, *magr;
     return 0;
 }
 
-/* determine whether two monster types are from the same species */
-boolean
-same_race(pm1, pm2)
-struct permonst *pm1, *pm2;
-{
-    int let1 = monsterClass(pm1->monsterTypeID);
-    int let2 = monsterClass(pm2->monsterTypeID);
-
-    int pmid1 = pm1->monsterTypeID;
-    int pmid2 = pm2->monsterTypeID;
-
-    if (pm1 == pm2)
-        return TRUE; /* exact match */
-    /* player races have their own predicates */
-    if (isHuman(pmid1))
-        return isHuman(pmid2);
-    if (isElf(pmid1))
-        return isElf(pmid2);
-    if (isDwarf(pmid1))
-        return isDwarf(pmid2);
-    if (isGnome(pmid1))
-        return isGnome(pmid2);
-    if (isOrc(pmid1))
-        return isOrc(pmid2);
-    /* other creatures are less precise */
-    if (isGiant(pmid1))
-        return isGiant(pmid2); /* open to quibbling here */
-    if (isGolem(pmid1))
-        return isGolem(pmid2); /* even moreso... */
-    if (isMindFlayer(pmid1))
-        return isMindFlayer(pmid2);
-    if (let1 == S_KOBOLD || pm1 == &mons[PM_KOBOLD_ZOMBIE]
-        || pm1 == &mons[PM_KOBOLD_MUMMY])
-        return (let2 == S_KOBOLD || pm2 == &mons[PM_KOBOLD_ZOMBIE]
-                || pm2 == &mons[PM_KOBOLD_MUMMY]);
-    if (let1 == S_OGRE)
-        return (let2 == S_OGRE);
-    if (let1 == S_NYMPH)
-        return (let2 == S_NYMPH);
-    if (let1 == S_CENTAUR)
-        return (let2 == S_CENTAUR);
-    if (isUnicorn(pm1->monsterTypeID))
-        return isUnicorn(pm2->monsterTypeID);
-    if (let1 == S_DRAGON)
-        return (let2 == S_DRAGON);
-    if (let1 == S_NAGA)
-        return (let2 == S_NAGA);
-    /* other critters get steadily messier */
-    if (isRiderOfApocalypse(pmid1))
-        return isRiderOfApocalypse(pmid2); /* debatable */
-    if (isMinion(pmid1))
-        return isMinion(pmid2); /* [needs work?] */
-    /* tengu don't match imps (first test handled case of both being tengu) */
-    if (pm1 == &mons[PM_TENGU] || pm2 == &mons[PM_TENGU])
-        return FALSE;
-    if (let1 == S_IMP)
-        return (let2 == S_IMP);
-    /* and minor demons (imps) don't match major demons */
-    else if (let2 == S_IMP)
-        return FALSE;
-    if (isDemon(pmid1))
-        return isDemon(pmid2);
-    if (isUndead(pm1->monsterTypeID)) {
-        if (let1 == S_ZOMBIE)
-            return (let2 == S_ZOMBIE);
-        if (let1 == S_MUMMY)
-            return (let2 == S_MUMMY);
-        if (let1 == S_VAMPIRE)
-            return (let2 == S_VAMPIRE);
-        if (let1 == S_LICH)
-            return (let2 == S_LICH);
-        if (let1 == S_WRAITH)
-            return (let2 == S_WRAITH);
-        if (let1 == S_GHOST)
-            return (let2 == S_GHOST);
-    } else if (isUndead(pm2->monsterTypeID))
-        return FALSE;
-
-    /* check for monsters which grow into more mature forms */
-    if (let1 == let2) {
-        int m1 = pm1->monsterTypeID;
-        int m2 = pm2->monsterTypeID;
-        int prv, nxt;
-
-        /* we know m1 != m2 (very first check above); test all smaller
-           forms of m1 against m2, then all larger ones; don't need to
-           make the corresponding tests for variants of m2 against m1 */
-        for (prv = m1, nxt = big_to_little(m1); nxt != prv;
-             prv = nxt, nxt = big_to_little(nxt))
-            if (nxt == m2)
-                return TRUE;
-        for (prv = m1, nxt = little_to_big(m1); nxt != prv;
-             prv = nxt, nxt = little_to_big(nxt))
-            if (nxt == m2)
-                return TRUE;
-    }
-    /* not caught by little/big handling */
-    if (pm1 == &mons[PM_GARGOYLE] || pm1 == &mons[PM_WINGED_GARGOYLE])
-        return (pm2 == &mons[PM_GARGOYLE]
-                || pm2 == &mons[PM_WINGED_GARGOYLE]);
-    if (pm1 == &mons[PM_KILLER_BEE] || pm1 == &mons[PM_QUEEN_BEE])
-        return (pm2 == &mons[PM_KILLER_BEE] || pm2 == &mons[PM_QUEEN_BEE]);
-
-    if (isLongWorm(pmid1))
-        return isLongWorm(pmid2); /* handles tail */
-    /* [currently there's no reason to bother matching up
-        assorted bugs and blobs with their closest variants] */
-    /* didn't match */
-    return FALSE;
-}
 
 /* for handling alternate spellings */
 struct alt_spl {
@@ -1105,6 +995,7 @@ boolean validAttack(const struct Attack attack)
 }
 
 extern boolean javaGetBooleanFromInt(const char* classname, const char* methodname, int i);
+extern boolean javaGetBooleanFromIntAndInt(const char* classname, const char* methodname, int i, int j);
 extern boolean javaGetBooleanFromIntAndLong(const char* classname, const char* methodname, int i, long j);
 extern boolean javaGetIntFromInt(const char* classname, const char* methodname, int i);
 
@@ -1559,6 +1450,10 @@ boolean isMindFlayer(int pmid) {
 
 boolean touchPetrifies(int pmid) {
     return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "touchPetrifies", pmid);
+}
+
+boolean areSameRace(int pmid1, int pmid2) {
+    return javaGetBooleanFromIntAndInt(MONSTER_DATA_CLASS, "areSameRace", pmid1, pmid2);
 }
 
 /*mondata.c*/
