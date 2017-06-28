@@ -1114,7 +1114,7 @@ register int x, y;
 int mmflags;
 {
     register struct monst *mtmp;
-    int mndx, mcham, ct, mitem;
+    int mcham, ct, mitem;
     boolean byyou = (x == currentX() && y == currentY());
     boolean allow_minvent = ((mmflags & NO_MINVENT) == 0);
     boolean countbirth = ((mmflags & MM_NOCOUNTBIRTH) == 0);
@@ -1153,18 +1153,17 @@ int mmflags;
             return (struct monst *) 0;
     }
 
-    mndx = ptr->monsterTypeID;
     /* if you are to make a specific monster and it has
        already been genocided, return */
-    if (mvitals[mndx].mvflags & G_GENOD) {
+    if (mvitals[pmid].mvflags & G_GENOD) {
         return (struct monst *) 0;
     }
-    if (wizard && (mvitals[mndx].mvflags & G_EXTINCT)) {
+    if (wizard && (mvitals[pmid].mvflags & G_EXTINCT)) {
         debugpline1("Explicitly creating extinct monster %s.",
-                    mons[mndx].mname);
+                    mons[pmid].mname);
     }
 
-    (void) propagate(mndx, countbirth, FALSE);
+    (void) propagate(pmid, countbirth, FALSE);
     mtmp = newmonst();
     *mtmp = zeromonst; /* clear all entries in structure */
 
@@ -1183,31 +1182,31 @@ int mmflags;
     fmon = mtmp;
     mtmp->m_id = nextIdentifier();
 
-    int msound = monsterSound(ptr->monsterTypeID);
+    int msound = monsterSound(pmid);
 
-    setMonsterData(mtmp, ptr->monsterTypeID, 0);
-    if (msound == MS_LEADER && quest_info(MS_LEADER) == mndx)
+    setMonsterData(mtmp, pmid, 0);
+    if (msound == MS_LEADER && quest_info(MS_LEADER) == pmid)
         quest_status.leader_m_id = mtmp->m_id;
-    mtmp->mnum = mndx;
+    mtmp->mnum = pmid;
 
     /* set up level and hit points */
-    newmonhp(mtmp, mndx);
+    newmonhp(mtmp, pmid);
 
-    if (isFemale(ptr->monsterTypeID))
+    if (isFemale(pmid))
         mtmp->female = TRUE;
-    else if (isMale(ptr->monsterTypeID))
+    else if (isMale(pmid))
         mtmp->female = FALSE;
     /* leader and nemesis gender is usually hardcoded in mons[],
        but for ones which can be random, it has already been chosen
        (in role_init(), for possible use by the quest pager code) */
-    else if (msound == MS_LEADER && quest_info(MS_LEADER) == mndx)
+    else if (msound == MS_LEADER && quest_info(MS_LEADER) == pmid)
         mtmp->female = quest_status.ldrgend;
-    else if (msound == MS_NEMESIS && quest_info(MS_NEMESIS) == mndx)
+    else if (msound == MS_NEMESIS && quest_info(MS_NEMESIS) == pmid)
         mtmp->female = quest_status.nemgend;
     else
         mtmp->female = rn2(2); /* ignored for neuters */
 
-    if (areYouOnASokobanLevel() && !isMindless(ptr->monsterTypeID)) /* know about traps here */
+    if (areYouOnASokobanLevel() && !isMindless(pmid)) /* know about traps here */
         mtmp->mtrapseen = (1L << (PIT - 1)) | (1L << (HOLE - 1));
     /* quest leader and nemesis both know about all trap types */
     if (msound == MS_LEADER || msound == MS_NEMESIS)
@@ -1215,9 +1214,9 @@ int mmflags;
 
     place_monster(mtmp, x, y);
     mtmp->mcansee = mtmp->mcanmove = TRUE;
-    mtmp->mpeaceful = (mmflags & MM_ANGRY) ? FALSE : peace_minded(ptr->monsterTypeID);
+    mtmp->mpeaceful = (mmflags & MM_ANGRY) ? FALSE : peace_minded(pmid);
 
-    switch (monsterClass(ptr->monsterTypeID)) {
+    switch (monsterClass(pmid)) {
     case S_MIMIC:
         set_mimic_sym(mtmp);
         break;
@@ -1230,7 +1229,7 @@ int mmflags;
         break;
     case S_LIGHT:
     case S_ELEMENTAL:
-        if (mndx == PM_STALKER || mndx == PM_BLACK_LIGHT) {
+        if (pmid == PM_STALKER || pmid == PM_BLACK_LIGHT) {
             mtmp->perminvis = TRUE;
             mtmp->minvis = TRUE;
         }
@@ -1251,12 +1250,12 @@ int mmflags;
             mtmp->mpeaceful = FALSE;
         break;
     case S_UNICORN:
-        if (isUnicorn(ptr->monsterTypeID) &&
-            sgn(currentAlignmentType()) == sgn(monsterAlignment(ptr->monsterTypeID)))
+        if (isUnicorn(pmid) &&
+            sgn(currentAlignmentType()) == sgn(monsterAlignment(pmid)))
             mtmp->mpeaceful = TRUE;
         break;
     case S_BAT:
-        if (areYouInHell() && isBat(ptr->monsterTypeID))
+        if (areYouInHell() && isBat(pmid))
             mon_adjust_speed(mtmp, 2, (struct obj *) 0);
         break;
     }
@@ -1265,13 +1264,13 @@ int mmflags;
                          monst_to_any(mtmp));
     mitem = 0; /* extra inventory item for this monster */
 
-    if (mndx == PM_VLAD_THE_IMPALER)
+    if (pmid == PM_VLAD_THE_IMPALER)
         mitem = CANDELABRUM_OF_INVOCATION;
     mtmp->cham = NON_PM; /* default is "not a shapechanger" */
-    if ((mcham = pm_to_cham(mndx)) != NON_PM) {
+    if ((mcham = pm_to_cham(pmid)) != NON_PM) {
         /* this is a shapechanger after all */
         if (youHaveProtectionFromShapeChangers()
-            || mndx == PM_VLAD_THE_IMPALER) {
+            || pmid == PM_VLAD_THE_IMPALER) {
             ; /* stuck in its natural form (NON_PM) */
         } else {
             mtmp->cham = mcham;
@@ -1284,26 +1283,26 @@ int mmflags;
             if (newcham(mtmp, (struct permonst *) 0, FALSE, FALSE))
                 allow_minvent = FALSE;
         }
-    } else if (mndx == PM_WIZARD_OF_YENDOR) {
+    } else if (pmid == PM_WIZARD_OF_YENDOR) {
         mtmp->iswiz = TRUE;
         increaseNumberOfWizards(1);
         if ((1 == numberOfWizards()) && areYouOnEarthLevel())
             mitem = SPE_DIG;
-    } else if (mndx == PM_GHOST && !(mmflags & MM_NONAME)) {
+    } else if (pmid == PM_GHOST && !(mmflags & MM_NONAME)) {
         mtmp = christen_monst(mtmp, rndghostname());
-    } else if (mndx == PM_CROESUS) {
+    } else if (pmid == PM_CROESUS) {
         mitem = TWO_HANDED_SWORD;
-    } else if (monsterSound(ptr->monsterTypeID) == MS_NEMESIS) {
+    } else if (monsterSound(pmid) == MS_NEMESIS) {
         mitem = BELL_OF_OPENING;
-    } else if (mndx == PM_PESTILENCE) {
+    } else if (pmid == PM_PESTILENCE) {
         mitem = POT_SICKNESS;
     }
     if (mitem && allow_minvent)
         (void) mongets(mtmp, mitem);
 
     if (in_mklev) {
-        if ((isNamelessMajorDemon(ptr->monsterTypeID) || mndx == PM_WUMPUS
-             || mndx == PM_LONG_WORM || mndx == PM_GIANT_EEL)
+        if ((isNamelessMajorDemon(pmid) || pmid == PM_WUMPUS
+             || pmid == PM_LONG_WORM || pmid == PM_GIANT_EEL)
             && !haveSpecialItem(SPECIAL_ITEM_AMULET) && rn2(5))
             mtmp->msleeping = TRUE;
     } else {
@@ -1312,18 +1311,18 @@ int mmflags;
             set_apparxy(mtmp);
         }
     }
-    if (isDemonPrince(ptr->monsterTypeID) && monsterSound(ptr->monsterTypeID) == MS_BRIBE) {
+    if (isDemonPrince(pmid) && monsterSound(pmid) == MS_BRIBE) {
         mtmp->mpeaceful = mtmp->minvis = mtmp->perminvis = 1;
         mtmp->mavenge = 0;
         if (uwep && uwep->oartifact == ART_EXCALIBUR)
             mtmp->mpeaceful = mtmp->mtame = FALSE;
     }
 #ifndef DCC30_BUG
-    if (mndx == PM_LONG_WORM && (mtmp->wormno = get_wormno()) != 0)
+    if (pmid == PM_LONG_WORM && (mtmp->wormno = get_wormno()) != 0)
 #else
     /* DICE 3.0 doesn't like assigning and comparing mtmp->wormno in the
        same expression. */
-    if (mndx == PM_LONG_WORM
+    if (pmid == PM_LONG_WORM
         && (mtmp->wormno = get_wormno(), mtmp->wormno != 0))
 #endif
     {
@@ -1336,9 +1335,9 @@ int mmflags;
        types; make sure their extended data is initialized to
        something sensible if caller hasn't specified MM_EPRI|MM_EMIN
        (when they're specified, caller intends to handle this itself) */
-    if ((mndx == PM_ALIGNED_PRIEST || mndx == PM_HIGH_PRIEST)
+    if ((pmid == PM_ALIGNED_PRIEST || pmid == PM_HIGH_PRIEST)
             ? !(mmflags & (MM_EPRI | MM_EMIN))
-            : (mndx == PM_ANGEL && !(mmflags & MM_EMIN) && !rn2(3))) {
+            : (pmid == PM_ANGEL && !(mmflags & MM_EMIN) && !rn2(3))) {
         struct emin *eminp;
         newemin(mtmp);
         eminp = EMIN(mtmp);
@@ -1353,7 +1352,7 @@ int mmflags;
     set_malign(mtmp); /* having finished peaceful changes */
 
     if (allow_minvent) {
-        if (isArmed(ptr->monsterTypeID))
+        if (isArmed(pmid))
             m_initweap(mtmp); /* equip with weapons / armor */
         m_initinv(mtmp); /* add on a few special items incl. more armor */
         m_dowear(mtmp, TRUE);
@@ -1363,14 +1362,14 @@ int mmflags;
             discard_minvent(mtmp);
         mtmp->minvent = (struct obj *) 0; /* caller expects this */
     }
-    if (monsterHasFlag3(ptr->monsterTypeID, !(mmflags & MM_NOWAIT))) {
-        if (monsterHasFlag3(ptr->monsterTypeID, M3_WAITFORU)) {
+    if (monsterHasFlag3(pmid, !(mmflags & MM_NOWAIT))) {
+        if (monsterHasFlag3(pmid, M3_WAITFORU)) {
             mtmp->mstrategy |= STRAT_WAITFORU;
 	}
-        if (allowsCloseApproach(ptr->monsterTypeID)) {
+        if (allowsCloseApproach(pmid)) {
             mtmp->mstrategy |= STRAT_CLOSE;
 	}
-        if (monsterHasFlag3(ptr->monsterTypeID, (M3_WAITMASK | M3_COVETOUS))) {
+        if (monsterHasFlag3(pmid, (M3_WAITMASK | M3_COVETOUS))) {
             mtmp->mstrategy |= STRAT_APPEARMSG;
 	}
     }
