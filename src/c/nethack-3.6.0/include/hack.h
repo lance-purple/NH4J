@@ -186,7 +186,7 @@ extern boolean MATCH_WARN_OF_MON(int pmid);
 #include "extern.h"
 #endif /* USE_TRAMPOLI */
 
-/* flags to control makemon() */
+/* flags to control makeMonsterOfType() */
 #define NO_MM_FLAGS 0x00000 /* use this rather than plain 0 */
 #define NO_MINVENT 0x00001  /* suppress minvent when creating mon */
 #define MM_NOWAIT 0x00002   /* don't set STRAT_WAITMASK flags */

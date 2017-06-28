@@ -1132,7 +1132,7 @@ dokick()
                 mm.y = y;
                 while (cnt--) {
                     if (placeEntityNextToPosition(&mm, mm.x, mm.y, PM_KILLER_BEE, 0)
-                        && makemon(&mons[PM_KILLER_BEE], mm.x, mm.y,
+                        && makeMonsterOfType(PM_KILLER_BEE, mm.x, mm.y,
                                    MM_ANGRY))
                         made++;
                 }
@@ -1167,7 +1167,7 @@ dokick()
                 else
                     pline("A %s ooze gushes up from the drain!",
                           hcolor(NH_BLACK));
-                (void) makemon(&mons[PM_BLACK_PUDDING], x, y, NO_MM_FLAGS);
+                (void) makeMonsterOfType(PM_BLACK_PUDDING, x, y, NO_MM_FLAGS);
                 exercise(A_DEX, TRUE);
                 newsym(x, y);
                 maploc->looted |= S_LPUDDING;
@@ -1176,7 +1176,7 @@ dokick()
                        && !(mvitals[washerndx].mvflags & G_GONE)) {
                 /* can't resist... */
                 pline("%s returns!", (youCannotSee() ? Something : "The dish washer"));
-                if (makemon(&mons[washerndx], x, y, NO_MM_FLAGS))
+                if (makeMonsterOfType(washerndx, x, y, NO_MM_FLAGS))
                     newsym(x, y);
                 maploc->looted |= S_LDWASHER;
                 exercise(A_DEX, TRUE);

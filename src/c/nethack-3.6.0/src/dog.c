@@ -102,7 +102,7 @@ boolean quietly;
         }
 
         if (pm) {
-            mtmp = makemon(pm, x, y, MM_EDOG | MM_IGNOREWATER | NO_MINVENT);
+            mtmp = makeMonsterOfType(pm->monsterTypeID, x, y, MM_EDOG | MM_IGNOREWATER | NO_MINVENT);
         } else {
             mtmp = makeMonsterOfAnyType(x, y, MM_EDOG | MM_IGNOREWATER | NO_MINVENT);
         }
@@ -183,7 +183,7 @@ makedog()
             petname = "Sirius"; /* Orion's dog */
     }
 
-    mtmp = makemon(&mons[pettype], currentX(), currentY(), MM_EDOG);
+    mtmp = makeMonsterOfType(pettype, currentX(), currentY(), MM_EDOG);
 
     if (!mtmp)
         return ((struct monst *) 0); /* pets were genocided */

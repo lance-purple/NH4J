@@ -445,11 +445,11 @@ dig(VOID_ARGS)
 
             switch (rn2(2)) {
             case 0:
-                mtmp = makemon(&mons[PM_EARTH_ELEMENTAL], dpx, dpy,
+                mtmp = makeMonsterOfType(PM_EARTH_ELEMENTAL, dpx, dpy,
                                NO_MM_FLAGS);
                 break;
             default:
-                mtmp = makemon(&mons[PM_XORN], dpx, dpy, NO_MM_FLAGS);
+                mtmp = makeMonsterOfType(PM_XORN, dpx, dpy, NO_MM_FLAGS);
                 break;
             }
             if (mtmp)

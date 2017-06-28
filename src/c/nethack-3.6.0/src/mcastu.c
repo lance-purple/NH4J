@@ -582,8 +582,8 @@ int spellnum;
         for (i = 0; i <= quan; i++) {
             if (!placeEntityNextToPosition(&bypos, mtmp->mux, mtmp->muy, mtmp->data->monsterTypeID, 0))
                 break;
-            if ((pm = mkclass(let, 0)) != 0
-                && (mtmp2 = makemon(pm, bypos.x, bypos.y, MM_ANGRY)) != 0) {
+            pm = mkclass(let, 0);
+            if ((pm != 0) && (mtmp2 = makeMonsterOfType(pm->monsterTypeID, bypos.x, bypos.y, MM_ANGRY)) != 0) {
                 success = TRUE;
                 mtmp2->msleeping = mtmp2->mpeaceful = mtmp2->mtame = 0;
                 set_malign(mtmp2);

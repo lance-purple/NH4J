@@ -84,7 +84,7 @@ struct obj *obj;
                     return 0;
                 mquaffmsg(mon, obj);
                 m_useup(mon, obj);
-                mtmp = makemon(&mons[PM_GHOST], cc.x, cc.y, NO_MM_FLAGS);
+                mtmp = makeMonsterOfType(PM_GHOST, cc.x, cc.y, NO_MM_FLAGS);
                 if (!mtmp) {
                     if (vis)
                         pline1(empty);
@@ -110,7 +110,7 @@ struct obj *obj;
                 return 0;
             mquaffmsg(mon, obj);
             m_useup(mon, obj);
-            mtmp = makemon(&mons[PM_DJINNI], cc.x, cc.y, NO_MM_FLAGS);
+            mtmp = makeMonsterOfType(PM_DJINNI, cc.x, cc.y, NO_MM_FLAGS);
             if (!mtmp) {
                 if (vis)
                     pline1(empty);
@@ -792,7 +792,7 @@ struct monst *mtmp;
             if (!placeEntityNextToPosition(&cc, mtmp->mx, mtmp->my, fish->monsterTypeID, 0))
                 break;
             if (pm) {
-                mon = makemon(pm, cc.x, cc.y, NO_MM_FLAGS);
+                mon = makeMonsterOfType(pm->monsterTypeID, cc.x, cc.y, NO_MM_FLAGS);
             } else {
                 mon = makeMonsterOfAnyType(cc.x, cc.y, NO_MM_FLAGS);
             }

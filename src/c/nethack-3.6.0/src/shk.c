@@ -3727,7 +3727,7 @@ coord *mm;
 
         while (cnt--)
             if (placeEntityNextToPosition(mm, mm->x, mm->y, mndx, 0))
-                (void) makemon(&mons[mndx], mm->x, mm->y, NO_MM_FLAGS);
+                (void) makeMonsterOfType(mndx, mm->x, mm->y, NO_MM_FLAGS);
     }
 }
 

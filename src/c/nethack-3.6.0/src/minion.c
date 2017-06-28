@@ -122,11 +122,11 @@ struct monst *mon;
     }
 
     /* some candidates can generate a group of monsters, so simple
-       count of non-null makemon() result is not sufficient */
+       count of non-null makeMonsterOfType() result is not sufficient */
     census = monster_census(FALSE);
 
     while (cnt > 0) {
-        mtmp = makemon(&mons[dtype], currentX(), currentY(), MM_EMIN);
+        mtmp = makeMonsterOfType(dtype, currentX(), currentY(), MM_EMIN);
         if (mtmp) {
             result++;
             /* an angel's alignment should match the summoner */
@@ -176,7 +176,7 @@ boolean talk;
     if (mnum == NON_PM) {
         mon = 0;
     } else if (mnum == PM_ANGEL) {
-        mon = makemon(&mons[mnum], currentX(), currentY(), MM_EMIN);
+        mon = makeMonsterOfType(mnum, currentX(), currentY(), MM_EMIN);
         if (mon) {
             mon->isminion = 1;
             EMIN(mon)->min_align = alignment;
@@ -186,14 +186,14 @@ boolean talk;
                && mnum != PM_ALIGNED_PRIEST && mnum != PM_HIGH_PRIEST) {
         /* This was mons[mnum].pxlth == 0 but is this restriction
            appropriate or necessary now that the structures are separate? */
-        mon = makemon(&mons[mnum], currentX(), currentY(), MM_EMIN);
+        mon = makeMonsterOfType(mnum, currentX(), currentY(), MM_EMIN);
         if (mon) {
             mon->isminion = 1;
             EMIN(mon)->min_align = alignment;
             EMIN(mon)->renegade = FALSE;
         }
     } else {
-        mon = makemon(&mons[mnum], currentX(), currentY(), NO_MM_FLAGS);
+        mon = makeMonsterOfType(mnum, currentX(), currentY(), NO_MM_FLAGS);
     }
     if (mon) {
         if (talk) {

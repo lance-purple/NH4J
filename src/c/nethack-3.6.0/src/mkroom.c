@@ -323,7 +323,7 @@ struct mkroom *sroom;
                                                  ? antholemon()
                                                  : (struct permonst *) 0;
             if (pm) {
-                mon = makemon(pm, sx, sy, NO_MM_FLAGS);
+                mon = makeMonsterOfType(pm->monsterTypeID, sx, sy, NO_MM_FLAGS);
             } else {
                 mon = makeMonsterOfAnyType(sx, sy, NO_MM_FLAGS);
             }
@@ -432,7 +432,7 @@ int mm_flags;
             && (!revive_corpses
                 || !(otmp = sobj_at(CORPSE, cc.x, cc.y))
                 || !revive(otmp, FALSE)))
-            (void) makemon(mdat, cc.x, cc.y, mm_flags);
+            (void) makeMonsterOfType(mdat->monsterTypeID, cc.x, cc.y, mm_flags);
     }
     level.flags.graveyard = TRUE; /* reduced chance for undead corpse */
 }
@@ -511,11 +511,11 @@ mkswamp() /* Michiel Huisjes & Fred de Wilde */
                         levl[sx][sy].typ = POOL;
                         if (!eelct || !rn2(4)) {
                             /* mkclass() won't do, as we might get kraken */
-                            (void) makemon(rn2(5)
-                                              ? &mons[PM_GIANT_EEL]
+                            (void) makeMonsterOfType((rn2(5)
+                                              ? PM_GIANT_EEL
                                               : rn2(2)
-                                                 ? &mons[PM_PIRANHA]
-                                                 : &mons[PM_ELECTRIC_EEL],
+                                                 ? PM_PIRANHA
+                                                 : PM_ELECTRIC_EEL),
                                            sx, sy, NO_MM_FLAGS);
                             eelct++;
                         }
@@ -711,6 +711,12 @@ schar type;
             || croom->rtype == type)
             return croom;
     return (struct mkroom *) 0;
+}
+
+int courtMonsterType()
+{
+    struct permonst *ptr = courtmon();
+    return (ptr) ? ptr->monsterTypeID : -1;
 }
 
 struct permonst *

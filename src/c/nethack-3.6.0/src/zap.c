@@ -529,9 +529,9 @@ coord *cc;
     if (mtmp2) {
         /* save_mtraits() validated mtmp2->mnum */
         mtmp2->data = &mons[mtmp2->mnum];
-        if (mtmp2->mhpmax <= 0 && !isRiderOfApocalypse(mtmp2->data->monsterTypeID))
+        if (mtmp2->mhpmax <= 0 && !isRiderOfApocalypse(mtmp2->mnum))
             return (struct monst *) 0;
-        mtmp = makemon(mtmp2->data, cc->x, cc->y,
+        mtmp = makeMonsterOfType(mtmp2->mnum, cc->x, cc->y,
                        NO_MINVENT | MM_NOWAIT | MM_NOCOUNTBIRTH);
         if (!mtmp)
             return mtmp;
@@ -582,7 +582,7 @@ coord *cc;
         if (!dmgtype(mtmp2->data->monsterTypeID, AD_SEDU)
             && (!SYSOPT_SEDUCE || !dmgtype(mtmp2->data->monsterTypeID, AD_SSEX)))
             mtmp2->mcan = 0;
-        mtmp2->mcansee = 1; /* set like in makemon */
+        mtmp2->mcansee = 1; /* set like in makeMonsterOfType */
         mtmp2->mblinded = 0;
         mtmp2->mstun = 0;
         mtmp2->mconf = 0;
@@ -715,7 +715,7 @@ boolean by_hero;
     if (cant_revive(&montype, TRUE, corpse)) {
         /* make a zombie or doppelganger instead */
         /* note: montype has changed; mptr keeps old value for newcham() */
-        mtmp = makemon(&mons[montype], x, y, NO_MINVENT | MM_NOWAIT);
+        mtmp = makeMonsterOfType(montype, x, y, NO_MINVENT | MM_NOWAIT);
         if (mtmp) {
             /* skip ghost handling */
             if (has_omid(corpse))
@@ -738,7 +738,8 @@ boolean by_hero;
             wary_dog(mtmp, TRUE);
     } else {
         /* make a new monster */
-        mtmp = makemon(mptr, x, y, NO_MINVENT | MM_NOWAIT | MM_NOCOUNTBIRTH);
+        int pmid = (mptr) ? mptr->monsterTypeID : -1;
+        mtmp = makeMonsterOfType(pmid, x, y, NO_MINVENT | MM_NOWAIT | MM_NOCOUNTBIRTH);
     }
     if (!mtmp)
         return (struct monst *) 0;
@@ -1248,7 +1249,7 @@ int okind;
         mdat = &mons[pm_index];
 
     if (mdat) {
-        mtmp = makemon(mdat, obj->ox, obj->oy, NO_MM_FLAGS);
+        mtmp = makeMonsterOfType(mdat->monsterTypeID, obj->ox, obj->oy, NO_MM_FLAGS);
     } else {
         mtmp = makeMonsterOfAnyType(obj->ox, obj->oy, NO_MM_FLAGS);
     }
@@ -1628,7 +1629,7 @@ struct obj *obj;
                 if (golem_xform)
                     ptr = &mons[PM_FLESH_GOLEM];
                 if (ptr) {
-                    mon = makemon(ptr, oox, ooy, NO_MINVENT);
+                    mon = makeMonsterOfType(ptr->monsterTypeID, oox, ooy, NO_MINVENT);
                 } else {
                     mon = makeMonsterOfAnyType(oox, ooy, NO_MINVENT);
                 }

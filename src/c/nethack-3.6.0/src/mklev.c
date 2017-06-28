@@ -1365,7 +1365,7 @@ coord *tm;
 
     (void) maketrap(m.x, m.y, kind);
     if (kind == WEB)
-        (void) makemon(&mons[PM_GIANT_SPIDER], m.x, m.y, NO_MM_FLAGS);
+        (void) makeMonsterOfType(PM_GIANT_SPIDER, m.x, m.y, NO_MM_FLAGS);
 }
 
 void

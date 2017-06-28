@@ -1849,14 +1849,16 @@ register struct monst *mtmp;
         mvitals[tmp].mvflags |= G_GENOD;
 #endif
 
-    if (monsterClass(mtmp->data->monsterTypeID) == S_KOP) {
+    int pmid = mtmp->data->monsterTypeID;
+
+    if (monsterClass(pmid) == S_KOP) {
         /* Dead Kops may come back. */
         switch (rnd(5)) {
         case 1: /* returns near the stairs */
-            (void) makemon(mtmp->data, xdnstair, ydnstair, NO_MM_FLAGS);
+            (void) makeMonsterOfType(pmid, xdnstair, ydnstair, NO_MM_FLAGS);
             break;
         case 2: /* randomly */
-            (void) makemon(mtmp->data, 0, 0, NO_MM_FLAGS);
+            (void) makeMonsterOfType(pmid, 0, 0, NO_MM_FLAGS);
             break;
         default:
             break;
@@ -1864,9 +1866,9 @@ register struct monst *mtmp;
     }
     if (mtmp->iswiz)
         wizdead();
-    if (monsterSound(mtmp->data->monsterTypeID) == MS_NEMESIS)
+    if (monsterSound(pmid) == MS_NEMESIS)
         nemdead();
-    if (mtmp->data == &mons[PM_MEDUSA])
+    if (pmid == PM_MEDUSA)
         setAchieved(ACHIEVEMENT_KILLED_MEDUSA, TRUE);
     if (glyph_is_invisible(levl[mtmp->mx][mtmp->my].glyph))
         unmap_object(mtmp->mx, mtmp->my);
@@ -2462,7 +2464,7 @@ struct monst *mtmp;
         }
         if (!rn2(10)) {
             if (!rn2(13))
-                (void) makemon(&mons[PM_PURPLE_WORM], 0, 0, NO_MM_FLAGS);
+                (void) makeMonsterOfType(PM_PURPLE_WORM, 0, 0, NO_MM_FLAGS);
             else
                 (void) makeMonsterOfAnyType(0, 0, NO_MM_FLAGS);
         }

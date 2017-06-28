@@ -129,16 +129,18 @@ register int x, y, n;
     mm.x = x;
     mm.y = y;
     while (cnt--) {
-        if (peace_minded(mtmp->data->monsterTypeID))
+        int pmid = (mtmp->data) ? (mtmp->data->monsterTypeID) : -1;
+
+        if (peace_minded(pmid))
             continue;
         /* Don't create groups of peaceful monsters since they'll get
          * in our way.  If the monster has a percentage chance so some
          * are peaceful and some are not, the result will just be a
          * smaller group.
          */
-        if (placeEntityNextToPosition(&mm, mm.x, mm.y, mtmp->data->monsterTypeID, 0)) {
-            if (mtmp->data) {
-                mon = makemon(mtmp->data, mm.x, mm.y, NO_MM_FLAGS);
+        if (placeEntityNextToPosition(&mm, mm.x, mm.y, pmid, 0)) {
+            if (-1 != pmid) {
+                mon = makeMonsterOfType(pmid, mm.x, mm.y, NO_MM_FLAGS);
 	    } else {
                 mon = makeMonsterOfAnyType(mm.x, mm.y, NO_MM_FLAGS);
 	    }
@@ -147,7 +149,7 @@ register int x, y, n;
                 mon->mpeaceful = FALSE;
                 mon->mavenge = 0;
                 set_malign(mon);
-                /* Undo the second peace_minded() check in makemon(); if the
+                /* Undo the second peace_minded() check in makeMonsterOfType(); if the
                  * monster turned out to be peaceful the first time we
                  * didn't create it at all; we don't want a second check.
                  */
@@ -906,7 +908,7 @@ struct monst *mon;
 }
 
 /* set up a new monster's initial level and hit points;
-   used by newcham() as well as by makemon() */
+   used by newcham() as well as by makeMonsterOfType() */
 void
 newmonhp(mon, mndx)
 struct monst *mon;
@@ -1097,7 +1099,8 @@ register int x, y;
 int mmflags;
 {
     struct permonst *ptr = mkclass(cls, 0);
-    return makemon(ptr, x, y, mmflags);
+    int pmid = (ptr) ? ptr->monsterTypeID : -1;
+    return makeMonsterOfType(pmid, x, y, mmflags);
 }
 
 /*
@@ -1108,8 +1111,8 @@ int mmflags;
  *      In case we make a monster group, only return the one at [x,y].
  */
 struct monst *
-makemon(ptr, x, y, mmflags)
-register struct permonst *ptr;
+makeMonsterOfType(pmid, x, y, mmflags)
+int pmid;
 register int x, y;
 int mmflags;
 {
@@ -1119,7 +1122,6 @@ int mmflags;
     boolean allow_minvent = ((mmflags & NO_MINVENT) == 0);
     boolean countbirth = ((mmflags & MM_NOCOUNTBIRTH) == 0);
     unsigned gpflags = (mmflags & MM_IGNOREWATER) ? MM_IGNOREWATER : 0;
-    int pmid = (ptr) ? ptr->monsterTypeID : -1;
 
     /* if caller wants random location, do it here */
     if (x == 0 && y == 0) {
@@ -1702,6 +1704,8 @@ boolean neverask;
     boolean known = FALSE;
     boolean ask = (wizard && !neverask);
 
+    int pmid = (mptr) ? (mptr->monsterTypeID) : -1;
+
     while (cnt--) {
         if (ask) {
             if (create_particular()) {
@@ -1712,7 +1716,7 @@ boolean neverask;
         }
         x = currentX(), y = currentY();
 
-        mon = makemon(mptr, x, y, NO_MM_FLAGS);
+        mon = makeMonsterOfType(pmid, x, y, NO_MM_FLAGS);
         if (mon && canspotmon(mon))
             known = TRUE;
     }

@@ -1829,7 +1829,7 @@ reverse_loot()
                 (void) boxlock(coffers, &boxdummy);
             }
         } else if (levl[x][y].looted != T_LOOTED &&
-                   (mon = makemon(courtmon(), x, y, NO_MM_FLAGS)) != 0) {
+                   (mon = makeMonsterOfType(courtMonsterType(), x, y, NO_MM_FLAGS)) != 0) {
             freeinv(goldob);
             add_to_minv(mon, goldob);
             pline("The exchequer accepts your contribution.");
@@ -2184,7 +2184,7 @@ struct obj *box;
        force the determination of alive vs dead state; but basing
        it just on opening the box is much simpler to cope with */
     livecat = rn2(2)
-                  ? makemon(&mons[PM_HOUSECAT], box->ox, box->oy, NO_MINVENT)
+                  ? makeMonsterOfType(PM_HOUSECAT, box->ox, box->oy, NO_MINVENT)
                   : 0;
     if (livecat) {
         livecat->mpeaceful = 1;

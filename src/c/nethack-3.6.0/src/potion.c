@@ -404,7 +404,7 @@ boolean talk;
 STATIC_OVL void
 ghost_from_bottle()
 {
-    struct monst *mtmp = makemon(&mons[PM_GHOST], currentX(), currentY(), NO_MM_FLAGS);
+    struct monst *mtmp = makeMonsterOfType(PM_GHOST, currentX(), currentY(), NO_MM_FLAGS);
 
     if (!mtmp) {
         pline("This bottle turns out to be empty.");
@@ -2157,7 +2157,7 @@ struct obj *obj;
     struct monst *mtmp;
     int chance;
 
-    if (!(mtmp = makemon(&mons[PM_DJINNI], currentX(), currentY(), NO_MM_FLAGS))) {
+    if (!(mtmp = makeMonsterOfType(PM_DJINNI, currentX(), currentY(), NO_MM_FLAGS))) {
         pline("It turns out to be empty.");
         return;
     }

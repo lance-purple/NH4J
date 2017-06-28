@@ -542,7 +542,7 @@ long timeout;
             && !(mvitals[mnum].mvflags & (G_GENOD | G_EXTINCT))) {
             for (i = hatchcount; i > 0; i--) {
                 if (!placeEntityNextToPosition(&cc, x, y, mnum, 0)
-                    || !(mon = makemon(&mons[mnum], cc.x, cc.y, NO_MINVENT)))
+                    || !(mon = makeMonsterOfType(mnum, cc.x, cc.y, NO_MINVENT)))
                     break;
                 /* tame if your own egg hatches while you're on the
                    same dungeon level, or any dragon egg which hatches
@@ -557,7 +557,7 @@ long timeout;
                 }
                 if (mvitals[mnum].mvflags & G_EXTINCT)
                     break;  /* just made last one */
-                mon2 = mon; /* in case makemon() fails on 2nd egg */
+                mon2 = mon; /* in case makeMonsterOfType() fails on 2nd egg */
             }
             if (!mon)
                 mon = mon2;
@@ -574,7 +574,7 @@ long timeout;
          * We can do several things.  The first ones that come to
          * mind are:
          * + Create the hatched monster then place it on the migrating
-         *   mons list.  This is tough because all makemon() is made
+         *   mons list.  This is tough because all makeMonsterOfType() is made
          *   to place the monster as well.  Makemon() also doesn't lend
          *   itself well to splitting off a "not yet placed" subroutine.
          * + Mark the egg as hatched, then place the monster when we

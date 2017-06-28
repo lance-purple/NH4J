@@ -410,7 +410,7 @@ clonewiz()
 {
     register struct monst *mtmp2;
 
-    if ((mtmp2 = makemon(&mons[PM_WIZARD_OF_YENDOR], currentX(), currentY(), NO_MM_FLAGS))
+    if ((mtmp2 = makeMonsterOfType(PM_WIZARD_OF_YENDOR, currentX(), currentY(), NO_MM_FLAGS))
         != 0) {
         mtmp2->msleeping = mtmp2->mtame = mtmp2->mpeaceful = 0;
         if (!haveSpecialItem(SPECIAL_ITEM_AMULET) && rn2(2)) { /* give clone a fake */
@@ -456,7 +456,7 @@ struct monst *mcast;
     int count, census;
 
     /* some candidates may be created in groups, so simple count
-       of non-null makemon() return is inadequate */
+       of non-null makeMonsterOfType() return is inadequate */
     census = monster_census(FALSE);
 
     if (!rn2(10) && areYouInHell()) {
@@ -484,7 +484,7 @@ struct monst *mcast;
                     && !placeEntityNextToPosition(&bypos, mcast->mux, mcast->muy,
                                makeindex, 0))
                     continue;
-                if ((mtmp = makemon(&mons[makeindex], bypos.x, bypos.y,
+                if ((mtmp = makeMonsterOfType(makeindex, bypos.x, bypos.y,
                                     NO_MM_FLAGS)) != 0) {
                     mtmp->msleeping = mtmp->mpeaceful = mtmp->mtame = 0;
                     set_malign(mtmp);
@@ -516,7 +516,7 @@ resurrect()
     if (0 == numberOfWizards()) {
         /* make a new Wizard */
         verb = "kill";
-        mtmp = makemon(&mons[PM_WIZARD_OF_YENDOR], currentX(), currentY(), MM_NOWAIT);
+        mtmp = makeMonsterOfType(PM_WIZARD_OF_YENDOR, currentX(), currentY(), MM_NOWAIT);
         /* affects experience; he's not coming back from a corpse
            but is subject to repeated killing like a revived corpse */
         if (mtmp) mtmp->mrevived = 1;

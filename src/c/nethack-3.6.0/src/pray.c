@@ -1349,7 +1349,7 @@ dosacrifice()
                     demonless_msg = "blood coagulates";
                 }
                 if ((pm = dlord(altaralign)) != NON_PM
-                    && (dmon = makemon(&mons[pm], currentX(), currentY(), NO_MM_FLAGS))
+                    && (dmon = makeMonsterOfType(pm, currentX(), currentY(), NO_MM_FLAGS))
                            != 0) {
                     char dbuf[BUFSZ];
 

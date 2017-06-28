@@ -124,7 +124,9 @@ register boolean special;
     register struct monst *mtmp;
     char nam[PL_NSIZ];
 
-    if (!isMonsterPlayer(ptr->monsterTypeID))
+    int pmid = (ptr) ? (ptr->monsterTypeID) : -1;
+
+    if (!isMonsterPlayer(pmid))
         return ((struct monst *) 0);
 
     if (MON_AT(x, y))
@@ -133,8 +135,8 @@ register boolean special;
     if (!areYouInEndgame())
         special = FALSE;
 
-    if (ptr) {
-        mtmp = makemon(ptr, x, y, NO_MM_FLAGS);
+    if (-1 != pmid) {
+        mtmp = makeMonsterOfType(pmid, x, y, NO_MM_FLAGS);
     } else {
         mtmp = makeMonsterOfAnyType(x, y, NO_MM_FLAGS);
     }

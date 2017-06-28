@@ -43,7 +43,7 @@ static boolean wouldConflictWithYourPosition(unsigned m_id, int x, int y) {
  * Is (x,y) a good position of mtmp?  If mtmp is NULL, then is (x,y) good
  * for an object?
  *
- * This function will only look at mtmp->mdat, so makemon, mplayer, etc can
+ * This function will only look at mtmp->mdat, so makeMonsterOfType, mplayer, etc can
  * call it to generate new monster positions with fake monster structures.
  */
 boolean

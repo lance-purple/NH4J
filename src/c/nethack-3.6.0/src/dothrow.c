@@ -1759,7 +1759,7 @@ xchar x, y;
 {
     struct monst *mtmp;
     if (!rn2(3)
-        && (mtmp = makemon(&mons[rn2(3) ? PM_HOMUNCULUS : PM_IMP], x, y,
+        && (mtmp = makeMonsterOfType((rn2(3) ? PM_HOMUNCULUS : PM_IMP), x, y,
                            NO_MM_FLAGS)) != 0) {
         if (canspotmon(mtmp))
             pline("%s is released!", youAreHallucinating()

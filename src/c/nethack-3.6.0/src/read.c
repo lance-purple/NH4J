@@ -2259,7 +2259,7 @@ int how;
                 struct monst* mm;
 
                 if (ptr) {
-                  mm = makemon(ptr, currentX(), currentY(), NO_MINVENT);
+                  mm = makeMonsterOfType(ptr->monsterTypeID, currentX(), currentY(), NO_MINVENT);
                 } else {
                   mm = makeMonsterOfAnyType(currentX(), currentY(), NO_MINVENT);
                 }
@@ -2454,7 +2454,7 @@ create_particular()
             else if (randmonst)
                 whichpm = rndmonst();
             if (whichpm) {
-               mtmp = makemon(whichpm, currentX(), currentY(), NO_MM_FLAGS);
+               mtmp = makeMonsterOfType(whichpm->monsterTypeID, currentX(), currentY(), NO_MM_FLAGS);
             } else {
                mtmp = makeMonsterOfAnyType(currentX(), currentY(), NO_MM_FLAGS);
             }

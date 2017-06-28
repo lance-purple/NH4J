@@ -386,7 +386,7 @@ register int x, y, typ;
                  && sgn(currentAlignmentType()) == sgn(monsterAlignment(mptr->monsterTypeID)));
         statue = mkcorpstat(STATUE, (struct monst *) 0, mptr, x, y,
                             CORPSTAT_NONE);
-        mtmp = makemon(&mons[statue->corpsenm], 0, 0, MM_NOCOUNTBIRTH);
+        mtmp = makeMonsterOfType(statue->corpsenm, 0, 0, MM_NOCOUNTBIRTH);
         if (!mtmp)
             break; /* should never happen */
         while (mtmp->minvent) {
@@ -609,14 +609,14 @@ int *fail_reason;
             /* block quest guards from other roles */
             || (monsterSound(mptr->monsterTypeID) == MS_GUARDIAN
                 && quest_info(MS_GUARDIAN) != mnum)) {
-            mon = makemon(&mons[PM_DOPPELGANGER], x, y,
+            mon = makeMonsterOfType(PM_DOPPELGANGER, x, y,
                           NO_MINVENT | MM_NOCOUNTBIRTH | MM_ADJACENTOK);
             /* if hero has protection from shape changers, cham field will
                be NON_PM; otherwise, set form to match the statue */
             if (mon && mon->cham >= LOW_PM)
                 (void) newcham(mon, mptr, FALSE, FALSE);
         } else if (mptr) {
-            mon = makemon(mptr, x, y, (cause == ANIMATE_SPELL)
+            mon = makeMonsterOfType(mptr->monsterTypeID, x, y, (cause == ANIMATE_SPELL)
                                           ? (NO_MINVENT | MM_ADJACENTOK)
                                           : NO_MINVENT);
         } else {

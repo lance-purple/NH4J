@@ -3125,7 +3125,7 @@ wiz_migrate_mons()
             get_level(&tolevel, currentDepth() + 1);
         ptr = rndmonst();
         if (ptr) {
-            mtmp = makemon(ptr, 0, 0, NO_MM_FLAGS);
+            mtmp = makeMonsterOfType(ptr->monsterTypeID, 0, 0, NO_MM_FLAGS);
         } else {
             mtmp = makeMonsterOfAnyType(0, 0, NO_MM_FLAGS);
         }

@@ -322,7 +322,7 @@ invault()
         }
 
         /* make something interesting happen */
-        if (!(guard = makemon(&mons[PM_GUARD], x, y, MM_EGD)))
+        if (!(guard = makeMonsterOfType(PM_GUARD, x, y, MM_EGD)))
             return;
         guard->isgd = 1;
         guard->mpeaceful = 1;

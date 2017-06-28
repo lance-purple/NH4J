@@ -813,7 +813,7 @@ static const char *const ghostnames[] = {
     "Stephan", "Lance Braccus", "Shadowhawk"
 };
 
-/* ghost names formerly set by x_monnam(), now by makemon() instead */
+/* ghost names formerly set by x_monnam(), now by makeMonsterOfType() instead */
 const char *
 rndghostname()
 {
