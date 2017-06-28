@@ -6,7 +6,7 @@
 
 STATIC_DCL const char *NDECL(dev_name);
 STATIC_DCL void FDECL(get_mplname, (struct monst *, char *));
-STATIC_DCL void FDECL(mk_mplayer_armor, (struct monst *, SHORT_P));
+STATIC_DCL void FDECL(makeArmorForMonsterPlayer, (struct monst *, SHORT_P));
 
 /* These are the names of those who
  * contributed to the development of NetHack 3.2/3.3/3.4/3.6.
@@ -92,7 +92,7 @@ char *nam;
 }
 
 STATIC_OVL void
-mk_mplayer_armor(mon, typ)
+makeArmorForMonsterPlayer(mon, typ)
 struct monst *mon;
 short typ;
 {
@@ -116,15 +116,13 @@ short typ;
 }
 
 struct monst *
-mk_mplayer(ptr, x, y, special)
-register struct permonst *ptr;
+makeMonsterPlayer(pmid, x, y, special)
+int pmid;
 xchar x, y;
 register boolean special;
 {
     register struct monst *mtmp;
     char nam[PL_NSIZ];
-
-    int pmid = (ptr) ? (ptr->monsterTypeID) : -1;
 
     if (!isMonsterPlayer(pmid))
         return ((struct monst *) 0);
@@ -168,7 +166,7 @@ register boolean special;
         mtmp->mpeaceful = 0;
         set_malign(mtmp); /* peaceful may have changed again */
 
-        switch (ptr->monsterTypeID) {
+        switch (pmid) {
         case PM_ARCHEOLOGIST:
             if (rn2(2))
                 weapon = BULLWHIP;
@@ -288,15 +286,15 @@ register boolean special;
         if (special) {
             if (!rn2(10))
                 (void) mongets(mtmp, rn2(3) ? LUCKSTONE : LOADSTONE);
-            mk_mplayer_armor(mtmp, armor);
-            mk_mplayer_armor(mtmp, cloak);
-            mk_mplayer_armor(mtmp, helm);
-            mk_mplayer_armor(mtmp, shield);
+            makeArmorForMonsterPlayer(mtmp, armor);
+            makeArmorForMonsterPlayer(mtmp, cloak);
+            makeArmorForMonsterPlayer(mtmp, helm);
+            makeArmorForMonsterPlayer(mtmp, shield);
             if (rn2(8))
-                mk_mplayer_armor(
+                makeArmorForMonsterPlayer(
                     mtmp, rnd_class(LEATHER_GLOVES, GAUNTLETS_OF_DEXTERITY));
             if (rn2(8))
-                mk_mplayer_armor(mtmp,
+                makeArmorForMonsterPlayer(mtmp,
                                  rnd_class(LOW_BOOTS, LEVITATION_BOOTS));
             m_dowear(mtmp, TRUE);
 
@@ -355,7 +353,7 @@ boolean special;
         if (tryct > 50)
             return;
 
-        (void) mk_mplayer(&mons[pm], (xchar) x, (xchar) y, special);
+        (void) makeMonsterPlayer(pm, (xchar) x, (xchar) y, special);
         num--;
     }
 }
