@@ -1297,13 +1297,13 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
     case SCR_CREATE_MONSTER:
     case SPE_CREATE_MONSTER:
         if (confused) {
-            if (create_critters(13 + ((sblessed || rn2(73)) ? 0 : rnd(4)),
-                                &mons[PM_ACID_BLOB], TRUE)) {
+            int nCritters = 13 + ((sblessed || rn2(73)) ? 0 : rnd(4));
+            if (createCritters(nCritters, PM_ACID_BLOB, TRUE)) {
                 known = TRUE;
 	    }
 	}
         if (!confused) {
-            if (create_rnd_critters(1 + (scursed ? 12 : 0)
+            if (createRandomCritters(1 + (scursed ? 12 : 0)
                                         + ((sblessed || rn2(73)) ? 0 : rnd(4)),
                                     FALSE)) {
                 known = TRUE;
@@ -1410,8 +1410,8 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             }
         } else {
             /* could be scroll of create monster, don't set known ...*/
-            (void) create_critters(1, !scursed ? &mons[PM_YELLOW_LIGHT]
-                                               : &mons[PM_BLACK_LIGHT],
+            (void) createCritters(1, !scursed ? PM_YELLOW_LIGHT
+                                              : PM_BLACK_LIGHT,
                                    TRUE);
             if (!objects[sobj->otyp].oc_uname)
                 docall(sobj);

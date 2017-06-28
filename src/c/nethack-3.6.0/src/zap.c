@@ -2032,7 +2032,7 @@ register struct obj *obj;
             known = TRUE;
         break;
     case WAN_CREATE_MONSTER:
-        known = create_rnd_critters(rn2(23) ? 1 : rn1(7, 2), FALSE);
+        known = createRandomCritters(rn2(23) ? 1 : rn1(7, 2), FALSE);
         break;
     case WAN_WISHING:
         known = TRUE;

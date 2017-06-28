@@ -1693,9 +1693,9 @@ int mndx;
 /* used for wand/scroll/spell of create monster */
 /* returns TRUE iff you know monsters have been created */
 boolean
-create_critters(cnt, mptr, neverask)
+createCritters(cnt, pmid, neverask)
 int cnt;
-struct permonst *mptr;
+int pmid;
 boolean neverask;
 {
     coord c;
@@ -1703,8 +1703,6 @@ boolean neverask;
     struct monst *mon;
     boolean known = FALSE;
     boolean ask = (wizard && !neverask);
-
-    int pmid = (mptr) ? (mptr->monsterTypeID) : -1;
 
     while (cnt--) {
         if (ask) {
@@ -1727,7 +1725,7 @@ boolean neverask;
 /* used for wand/scroll/spell of create monster */
 /* returns TRUE iff you know monsters have been created */
 boolean
-create_rnd_critters(cnt, neverask)
+createRandomCritters(cnt, neverask)
 int cnt;
 boolean neverask;
 {
