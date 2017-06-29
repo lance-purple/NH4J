@@ -2079,7 +2079,7 @@ E int FDECL(gender, (struct monst *));
 E int FDECL(pronoun_gender, (struct monst *));
 E boolean FDECL(levl_follower, (struct monst *));
 E int FDECL(nextLargerType, (int));
-E int FDECL(big_to_little, (int));
+E int FDECL(nextSmallerType, (int));
 E const char *FDECL(locomotion, (int, const char *));
 E const char *FDECL(stagger, (int, const char *));
 E const char *FDECL(on_fire, (int, const struct Attack));
