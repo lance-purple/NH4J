@@ -2196,7 +2196,7 @@ struct obj *box;
         (void) christen_monst(livecat, sc);
     } else {
         deadcat =
-            mk_named_object(CORPSE, &mons[PM_HOUSECAT], box->ox, box->oy, sc);
+            makeNamedCorpse(PM_HOUSECAT, box->ox, box->oy, sc);
         if (deadcat) {
             obj_extract_self(deadcat);
             (void) add_to_container(box, deadcat);
