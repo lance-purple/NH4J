@@ -8,7 +8,7 @@
  *      nexttodoor() -- return TRUE if adjacent to a door
  *      has_dnstairs() -- return TRUE if given room has a down staircase
  *      has_upstairs() -- return TRUE if given room has an up staircase
- *      courtmon() -- generate a court monster
+ *      courtMonsterType() -- generate a court monster
  *      save_rooms() -- save rooms into file fd
  *      rest_rooms() -- restore rooms from file fd
  *      cmap_to_type() -- convert S_xxx symbol to XXX topology code
@@ -308,7 +308,8 @@ struct mkroom *sroom;
             int pmid;
             switch (type) {
                 case COURT:
-                    pm = courtmon();
+                    pmid = courtMonsterType();
+                    pm = (NON_PM != pmid) ? &mons[pmid] : NULL;
                     break;
                 case BARRACKS:
                     pm = squadmon();
@@ -728,33 +729,34 @@ schar type;
 
 int courtMonsterType()
 {
-    struct permonst *ptr = courtmon();
-    return (ptr) ? ptr->monsterTypeID : NON_PM;
-}
-
-struct permonst *
-courtmon()
-{
     int i = rn2(60) + rn2(3 * level_difficulty());
+    struct permonst *ptr;
 
-    if (i > 100)
-        return mkclass(S_DRAGON, 0);
-    else if (i > 95)
-        return mkclass(S_GIANT, 0);
-    else if (i > 85)
-        return mkclass(S_TROLL, 0);
-    else if (i > 75)
-        return mkclass(S_CENTAUR, 0);
-    else if (i > 60)
-        return mkclass(S_ORC, 0);
-    else if (i > 45)
-        return &mons[PM_BUGBEAR];
-    else if (i > 30)
-        return &mons[PM_HOBGOBLIN];
-    else if (i > 15)
-        return mkclass(S_GNOME, 0);
-    else
-        return mkclass(S_KOBOLD, 0);
+    if (i > 100) {
+        ptr = mkclass(S_DRAGON, 0);
+    } else if (i > 95) {
+        ptr = mkclass(S_GIANT, 0);
+    } else if (i > 85) {
+        ptr = mkclass(S_TROLL, 0);
+    } else if (i > 75) {
+        ptr = mkclass(S_CENTAUR, 0);
+    } else if (i > 60) {
+        ptr = mkclass(S_ORC, 0);
+    } else if (i > 45) {
+        ptr = &mons[PM_BUGBEAR];
+    } else if (i > 30) {
+        ptr = &mons[PM_HOBGOBLIN];
+    } else if (i > 15) {
+        ptr = mkclass(S_GNOME, 0);
+    } else {
+        ptr = mkclass(S_KOBOLD, 0);
+    }
+
+    if (ptr) {
+        return ptr->monsterTypeID;
+    } else {
+        return NON_PM;
+    }
 }
 
 #define NSTYPES (PM_CAPTAIN - PM_SOLDIER + 1)
