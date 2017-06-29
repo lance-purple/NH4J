@@ -283,10 +283,10 @@ unsigned corpseflags;
         goto default_1;
     case PM_VAMPIRE:
     case PM_VAMPIRE_LORD:
-        /* include mtmp in the mkcorpstat() call */
+        /* include mtmp in the makeCorpseObject() call */
         num = undead_to_corpse(mndx);
         corpstatflags |= CORPSTAT_INIT;
-        obj = mkcorpstat(CORPSE, mtmp, &mons[num], x, y, corpstatflags);
+        obj = makeCorpseObject(mtmp, num, x, y, corpstatflags);
         obj->age -= 100; /* this is an *OLD* corpse */
         break;
     case PM_KOBOLD_MUMMY:
@@ -307,7 +307,7 @@ unsigned corpseflags;
     case PM_ETTIN_ZOMBIE:
         num = undead_to_corpse(mndx);
         corpstatflags |= CORPSTAT_INIT;
-        obj = mkcorpstat(CORPSE, mtmp, &mons[num], x, y, corpstatflags);
+        obj = makeCorpseObject(mtmp, num, x, y, corpstatflags);
         obj->age -= 100; /* this is an *OLD* corpse */
         break;
     case PM_IRON_GOLEM:
@@ -330,8 +330,7 @@ unsigned corpseflags;
         break;
     case PM_STONE_GOLEM:
         corpstatflags &= ~CORPSTAT_INIT;
-        obj =
-            mkcorpstat(STATUE, (struct monst *) 0, mdat, x, y, corpstatflags);
+        obj = makeStatueObject((struct monst *) 0, mndx, x, y, corpstatflags);
         break;
     case PM_WOOD_GOLEM:
         num = d(2, 4);
@@ -382,8 +381,8 @@ unsigned corpseflags;
         } else {
             corpstatflags |= CORPSTAT_INIT;
             /* preserve the unique traits of some creatures */
-            obj = mkcorpstat(CORPSE, KEEPTRAITS(mtmp) ? mtmp : 0,
-                             mdat, x, y, corpstatflags);
+            obj = makeCorpseObject(KEEPTRAITS(mtmp) ? mtmp : 0,
+                             mndx, x, y, corpstatflags);
             if (burythem) {
                 boolean dealloc;
 
@@ -2035,7 +2034,8 @@ struct monst *mdef;
         /* defer statue creation until after inventory removal
            so that saved monster traits won't retain any stale
            item-conferred attributes */
-        otmp = mkcorpstat(STATUE, mdef, mdef->data, x, y, CORPSTAT_NONE);
+        int pmid = (mdef->data) ? (mdef->data->monsterTypeID) : -1;
+        otmp = makeStatueObject(mdef, pmid, x, y, CORPSTAT_NONE);
         if (has_mname(mdef))
             otmp = oname(otmp, MNAME(mdef));
         while ((obj = oldminvent) != 0) {

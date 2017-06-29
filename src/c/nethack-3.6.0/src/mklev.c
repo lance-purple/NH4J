@@ -527,10 +527,11 @@ int trap_type;
                     /* inaccessible niches occasionally have iron bars */
                     if (!rn2(5) && IS_WALL(levl[xx][yy].typ)) {
                         levl[xx][yy].typ = IRONBARS;
-                        if (rn2(3))
-                            (void) mkcorpstat(CORPSE, (struct monst *) 0,
-                                              mkclass(S_HUMAN, 0), xx,
-                                              yy + dy, TRUE);
+                        if (rn2(3)) {
+                            struct permonst* ptr = mkclass(S_HUMAN, 0);
+                            int pmid = (ptr) ? ptr->monsterTypeID : -1;
+                            (void) makeCorpseObject((struct monst *) 0, pmid, xx, yy + dy, TRUE);
+                        }
                     }
                     if (!level.flags.noteleport)
                         (void) mksobj_at(SCR_TELEPORTATION, xx, yy + dy, TRUE,
@@ -832,9 +833,7 @@ skip0:
 
         /* put statues inside */
         if (!rn2(20))
-            (void) mkcorpstat(STATUE, (struct monst *) 0,
-                              (struct permonst *) 0, somex(croom),
-                              somey(croom), CORPSTAT_INIT);
+            (void) makeStatueObject((struct monst *) 0, -1, somex(croom), somey(croom), CORPSTAT_INIT);
         /* put box/chest inside;
          *  40% chance for at least 1 box, regardless of number
          *  of rooms; about 5 - 7.5% for 2 boxes, least likely

@@ -761,7 +761,7 @@ boolean artif;
             otmp->oeaten = 0;
             switch (otmp->otyp) {
             case CORPSE:
-                /* possibly overridden by mkcorpstat() */
+                /* possibly overridden by makeCorpseObject() */
                 tryct = 50;
                 do
                     otmp->corpsenm = undead_to_corpse(rndmonnum());
@@ -999,7 +999,7 @@ boolean artif;
         case ROCK_CLASS:
             switch (otmp->otyp) {
             case STATUE:
-                /* possibly overridden by mkcorpstat() */
+                /* possibly overridden by makeStatueObject() */
                 otmp->corpsenm = rndmonnum();
                 if (!isVerySmallMonster(mons[otmp->corpsenm].monsterTypeID)
                     && rn2(level_difficulty() / 2 + 10) > 10)
@@ -1425,18 +1425,16 @@ static boolean special_corpse(int num) {
  * resurrection.
  */
 struct obj *
-mkcorpstat(objtype, mtmp, ptr, x, y, corpstatflags)
-int objtype; /* CORPSE or STATUE */
+makeCorpseObject(mtmp, pmid, x, y, corpstatflags)
 struct monst *mtmp;
-struct permonst *ptr;
+int pmid;
 int x, y;
 unsigned corpstatflags;
 {
+    int objtype = CORPSE;
     register struct obj *otmp;
     boolean init = ((corpstatflags & CORPSTAT_INIT) != 0);
 
-    if (objtype != CORPSE && objtype != STATUE)
-        impossible("making corpstat type %d", objtype);
     if (x == 0 && y == 0) { /* special case - random placement */
         otmp = mksobj(objtype, init, FALSE);
         if (otmp)
@@ -1447,8 +1445,10 @@ unsigned corpstatflags;
         if (mtmp) {
             struct obj *otmp2;
 
-            if (!ptr)
-                ptr = mtmp->data;
+            if (-1 == pmid) {
+                pmid = mtmp->data->monsterTypeID;
+	    }
+
             /* save_mtraits frees original data pointed to by otmp */
             otmp2 = save_mtraits(otmp, mtmp);
             if (otmp2)
@@ -1456,10 +1456,66 @@ unsigned corpstatflags;
         }
         /* use the corpse or statue produced by mksobj() as-is
            unless `ptr' is non-null */
-        if (ptr) {
+        if (-1 != pmid) {
             int old_corpsenm = otmp->corpsenm;
 
-            otmp->corpsenm = ptr->monsterTypeID;
+            otmp->corpsenm = pmid;
+            otmp->owt = weight(otmp);
+            if (otmp->otyp == CORPSE && (special_corpse(old_corpsenm)
+                                         || special_corpse(otmp->corpsenm))) {
+                obj_stop_timers(otmp);
+                start_corpse_timeout(otmp);
+            }
+        }
+    }
+    return otmp;
+}
+
+/*
+ * OEXTRA note: Passing mtmp causes mtraits to be saved
+ * even if ptr passed as well, but ptr is always used for
+ * the corpse type (corpsenm). That allows the corpse type
+ * to be different from the original monster,
+ *      i.e.  vampire -> human corpse
+ * yet still allow restoration of the original monster upon
+ * resurrection.
+ */
+struct obj *
+makeStatueObject(mtmp, pmid, x, y, corpstatflags)
+struct monst *mtmp;
+int pmid;
+int x, y;
+unsigned corpstatflags;
+{
+    int objtype = STATUE;
+    register struct obj *otmp;
+    boolean init = ((corpstatflags & CORPSTAT_INIT) != 0);
+
+    if (x == 0 && y == 0) { /* special case - random placement */
+        otmp = mksobj(objtype, init, FALSE);
+        if (otmp)
+            (void) rloco(otmp);
+    } else
+        otmp = mksobj_at(objtype, x, y, init, FALSE);
+    if (otmp) {
+        if (mtmp) {
+            struct obj *otmp2;
+
+            if (-1 == pmid) {
+                pmid = mtmp->data->monsterTypeID;
+	    }
+
+            /* save_mtraits frees original data pointed to by otmp */
+            otmp2 = save_mtraits(otmp, mtmp);
+            if (otmp2)
+                otmp = otmp2;
+        }
+        /* use the corpse or statue produced by mksobj() as-is
+           unless `ptr' is non-null */
+        if (-1 != pmid) {
+            int old_corpsenm = otmp->corpsenm;
+
+            otmp->corpsenm = pmid;
             otmp->owt = weight(otmp);
             if (otmp->otyp == CORPSE && (special_corpse(old_corpsenm)
                                          || special_corpse(otmp->corpsenm))) {
@@ -1593,8 +1649,7 @@ int pmid;
 int x, y;
 const char *nm;
 {
-    struct permonst* ptr = &mons[pmid];
-    struct obj *otmp = mkcorpstat(CORPSE, (struct monst *) 0, ptr, x, y, CORPSTAT_INIT);
+    struct obj *otmp = makeCorpseObject((struct monst *) 0, pmid, x, y, CORPSTAT_INIT);
     if (nm) {
         otmp = oname(otmp, nm);
     }
@@ -1608,8 +1663,7 @@ int pmid;
 int x, y;
 const char *nm;
 {
-    struct permonst* ptr = &mons[pmid];
-    struct obj *otmp = mkcorpstat(STATUE, (struct monst *) 0, ptr, x, y, CORPSTAT_NONE);
+    struct obj *otmp = makeStatueObject((struct monst *) 0, pmid, x, y, CORPSTAT_NONE);
     if (nm) {
         otmp = oname(otmp, nm);
     }
