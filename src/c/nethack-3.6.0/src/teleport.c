@@ -244,8 +244,8 @@ unsigned entflags;
     int x, y, range, i;
     int xmin, xmax, ymin, ymax;
 
-    if (-1 == pmid) {
-        debugpline0("placeEntityNextToPosition() called with pmid -1");
+    if (NON_PM == pmid) {
+        debugpline0("placeEntityNextToPosition() called with NON_PM");
         /* default to player's original monster type */
         pmid = originalMonsterNumber();
     }
@@ -1026,7 +1026,7 @@ struct monst *mtmp;
     register int xx, yy;
 
     int m_id = mtmp ? mtmp->m_id : 0;
-    int pmid = (mtmp && mtmp->data) ? mtmp->data->monsterTypeID : -1;
+    int pmid = (mtmp && mtmp->data) ? mtmp->data->monsterTypeID : NON_PM;
     int wormno = mtmp ? mtmp->wormno : 0;
 
     if (!goodPosition(x, y, m_id, pmid, wormno, 0))
@@ -1149,7 +1149,7 @@ boolean suppress_impossible;
     }
 
     int m_id = mtmp ? mtmp->m_id : 0;
-    int pmid = (mtmp && mtmp->data) ? mtmp->data->monsterTypeID : -1;
+    int pmid = (mtmp && mtmp->data) ? mtmp->data->monsterTypeID : NON_PM;
     int wormno = mtmp ? mtmp->wormno : 0;
 
     if (mtmp->iswiz && mtmp->mx) { /* Wizard, not just arriving */
@@ -1199,7 +1199,7 @@ struct monst *mtmp;
     coord c;
 
     int m_id = (mtmp) ? mtmp->m_id : 0;
-    int pmid = (mtmp && mtmp->data) ? mtmp->data->monsterTypeID : -1;
+    int pmid = (mtmp && mtmp->data) ? mtmp->data->monsterTypeID : NON_PM;
     int wormno = (mtmp) ? mtmp->wormno : 0;
 
     if (croom && somexy(croom, &c) && goodPosition(c.x, c.y, m_id, pmid, wormno, 0)) {

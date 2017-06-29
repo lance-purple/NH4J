@@ -529,7 +529,7 @@ int trap_type;
                         levl[xx][yy].typ = IRONBARS;
                         if (rn2(3)) {
                             struct permonst* ptr = mkclass(S_HUMAN, 0);
-                            int pmid = (ptr) ? ptr->monsterTypeID : -1;
+                            int pmid = (ptr) ? ptr->monsterTypeID : NON_PM;
                             (void) makeCorpseObject((struct monst *) 0, pmid, xx, yy + dy, TRUE);
                         }
                     }

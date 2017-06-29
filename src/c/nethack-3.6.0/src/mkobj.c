@@ -1445,7 +1445,7 @@ unsigned corpstatflags;
         if (mtmp) {
             struct obj *otmp2;
 
-            if (-1 == pmid) {
+            if (NON_PM == pmid) {
                 pmid = mtmp->data->monsterTypeID;
 	    }
 
@@ -1456,7 +1456,7 @@ unsigned corpstatflags;
         }
         /* use the corpse or statue produced by mksobj() as-is
            unless `ptr' is non-null */
-        if (-1 != pmid) {
+        if (NON_PM != pmid) {
             int old_corpsenm = otmp->corpsenm;
 
             otmp->corpsenm = pmid;
@@ -1501,7 +1501,7 @@ unsigned corpstatflags;
         if (mtmp) {
             struct obj *otmp2;
 
-            if (-1 == pmid) {
+            if (NON_PM == pmid) {
                 pmid = mtmp->data->monsterTypeID;
 	    }
 
@@ -1512,7 +1512,7 @@ unsigned corpstatflags;
         }
         /* use the corpse or statue produced by mksobj() as-is
            unless `ptr' is non-null */
-        if (-1 != pmid) {
+        if (NON_PM != pmid) {
             int old_corpsenm = otmp->corpsenm;
 
             otmp->corpsenm = pmid;

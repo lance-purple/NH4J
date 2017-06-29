@@ -2034,7 +2034,7 @@ struct monst *mdef;
         /* defer statue creation until after inventory removal
            so that saved monster traits won't retain any stale
            item-conferred attributes */
-        int pmid = (mdef->data) ? (mdef->data->monsterTypeID) : -1;
+        int pmid = (mdef->data) ? (mdef->data->monsterTypeID) : NON_PM;
         otmp = makeStatueObject(mdef, pmid, x, y, CORPSTAT_NONE);
         if (has_mname(mdef))
             otmp = oname(otmp, MNAME(mdef));

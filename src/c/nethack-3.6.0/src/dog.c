@@ -463,7 +463,7 @@ boolean with_you;
                         impossible("Can't find relocated object.");
                 }
             }
-            int pmid = (mtmp->data) ? (mtmp->data->monsterTypeID) : -1;
+            int pmid = (mtmp->data) ? (mtmp->data->monsterTypeID) : NON_PM;
             (void) makeCorpseObject((struct monst *) 0, pmid, xlocale, ylocale, CORPSTAT_NONE);
             mongone(mtmp);
         }

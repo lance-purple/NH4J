@@ -769,7 +769,7 @@ struct monst *mtmp;
     if (mtmp == &youmonst && !areYouPolymorphed())
         return urace.malenum;
     else
-        return (mtmp->data) ? mtmp->data->monsterTypeID : -1;
+        return (mtmp->data) ? mtmp->data->monsterTypeID : NON_PM;
 }
 
 static const char *levitate[4] = { "float", "Float", "wobble", "Wobble" };

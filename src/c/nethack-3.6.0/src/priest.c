@@ -681,7 +681,7 @@ boolean peaceful;
     if (MON_AT(x, y))
         (void) rloc(m_at(x, y), FALSE); /* insurance */
 
-    if (pmid != -1) {
+    if (NON_PM != pmid) {
         roamer = makeMonsterOfType(pmid, x, y, MM_ADJACENTOK | MM_EMIN);
     } else {
         roamer = makeMonsterOfAnyType(x, y, MM_ADJACENTOK | MM_EMIN);

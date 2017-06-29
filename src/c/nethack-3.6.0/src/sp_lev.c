@@ -1543,9 +1543,9 @@ struct mkroom *croom;
         pm = (struct permonst *) 0;
     }
 
-    int pmid = (pm) ? pm->monsterTypeID : -1;
+    int pmid = (pm) ? pm->monsterTypeID : NON_PM;
 
-    if (-1 != pmid) {
+    if (NON_PM != pmid) {
         int loc = DRY;
         if (monsterClass(pmid) == S_EEL || isAmphibious(pmid) || isSwimmer(pmid))
             loc = WET;
@@ -1573,7 +1573,7 @@ struct mkroom *croom;
         mtmp = makeRoamingMonsterOfType(pmid, Amask2align(amask), x, y, m->peaceful);
     } else if (PM_ARCHEOLOGIST <= m->id && m->id <= PM_WIZARD) {
         mtmp = makeMonsterPlayer(pmid, x, y, FALSE);
-    } else if (-1 != pmid) {
+    } else if (NON_PM != pmid) {
         mtmp = makeMonsterOfType(pmid, x, y, NO_MM_FLAGS);
     } else {
         mtmp = makeMonsterOfAnyType(x, y, NO_MM_FLAGS);

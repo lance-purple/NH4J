@@ -716,7 +716,7 @@ schar type;
 int courtMonsterType()
 {
     struct permonst *ptr = courtmon();
-    return (ptr) ? ptr->monsterTypeID : -1;
+    return (ptr) ? ptr->monsterTypeID : NON_PM;
 }
 
 struct permonst *

@@ -133,7 +133,7 @@ register boolean special;
     if (!areYouInEndgame())
         special = FALSE;
 
-    if (-1 != pmid) {
+    if (NON_PM != pmid) {
         mtmp = makeMonsterOfType(pmid, x, y, NO_MM_FLAGS);
     } else {
         mtmp = makeMonsterOfAnyType(x, y, NO_MM_FLAGS);

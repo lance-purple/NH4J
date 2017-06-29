@@ -738,7 +738,7 @@ boolean by_hero;
             wary_dog(mtmp, TRUE);
     } else {
         /* make a new monster */
-        int pmid = (mptr) ? mptr->monsterTypeID : -1;
+        int pmid = (mptr) ? mptr->monsterTypeID : NON_PM;
         mtmp = makeMonsterOfType(pmid, x, y, NO_MINVENT | MM_NOWAIT | MM_NOCOUNTBIRTH);
     }
     if (!mtmp)

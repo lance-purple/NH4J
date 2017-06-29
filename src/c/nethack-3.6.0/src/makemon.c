@@ -129,7 +129,7 @@ register int x, y, n;
     mm.x = x;
     mm.y = y;
     while (cnt--) {
-        int pmid = (mtmp->data) ? (mtmp->data->monsterTypeID) : -1;
+        int pmid = (mtmp->data) ? (mtmp->data->monsterTypeID) : NON_PM;
 
         if (peace_minded(pmid))
             continue;
@@ -139,7 +139,7 @@ register int x, y, n;
          * smaller group.
          */
         if (placeEntityNextToPosition(&mm, mm.x, mm.y, pmid, 0)) {
-            if (-1 != pmid) {
+            if (NON_PM != pmid) {
                 mon = makeMonsterOfType(pmid, mm.x, mm.y, NO_MM_FLAGS);
 	    } else {
                 mon = makeMonsterOfAnyType(mm.x, mm.y, NO_MM_FLAGS);
@@ -1099,7 +1099,7 @@ register int x, y;
 int mmflags;
 {
     struct permonst *ptr = mkclass(cls, 0);
-    int pmid = (ptr) ? ptr->monsterTypeID : -1;
+    int pmid = (ptr) ? ptr->monsterTypeID : NON_PM;
     return makeMonsterOfType(pmid, x, y, mmflags);
 }
 
@@ -1412,7 +1412,7 @@ int mmflags;
     } else if (byyou && !in_mklev) {
         coord bypos;
 
-        if (placeEntityNextToPosition(&bypos, currentX(), currentY(), -1, gpflags)) {
+        if (placeEntityNextToPosition(&bypos, currentX(), currentY(), NON_PM, gpflags)) {
             x = bypos.x;
             y = bypos.y;
         } else
@@ -1423,7 +1423,7 @@ int mmflags;
     if (MON_AT(x, y)) {
         if ((mmflags & MM_ADJACENTOK) != 0) {
             coord bypos;
-            if (placeEntityNextToPosition(&bypos, x, y, -1, gpflags)) {
+            if (placeEntityNextToPosition(&bypos, x, y, NON_PM, gpflags)) {
                 x = bypos.x;
                 y = bypos.y;
             } else
