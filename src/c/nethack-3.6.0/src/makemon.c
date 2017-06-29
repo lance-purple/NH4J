@@ -2075,7 +2075,7 @@ struct monst *mtmp, *victim;
     /* note:  none of the monsters with special hit point calculations
        have both little and big forms */
     oldtype = ptr->monsterTypeID;
-    newtype = little_to_big(oldtype);
+    newtype = nextLargerType(oldtype);
     if (newtype == PM_PRIEST && mtmp->female)
         newtype = PM_PRIESTESS;
 
@@ -2182,7 +2182,7 @@ struct monst *mtmp;
     /* note:  none of the monsters with special hit point calculations
        have both little and big forms */
     oldtype = ptr->monsterTypeID;
-    newtype = little_to_big(oldtype);
+    newtype = nextLargerType(oldtype);
     if (newtype == PM_PRIEST && mtmp->female)
         newtype = PM_PRIESTESS;
 

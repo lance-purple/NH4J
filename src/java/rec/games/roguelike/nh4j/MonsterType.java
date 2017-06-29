@@ -3207,28 +3207,32 @@ public class MonsterType {
 	}
 
 	public static boolean growsInto(int pmid1, int pmid2) {
-		while (pmid1 != PM.UNKNOWN.id()) {
-			pmid1 = nextLarger(pmid1);
-			if (pmid1 == pmid2) {
+		boolean maybeMore = true;
+		while (maybeMore) {
+			if (pmid2 == nextLargerType(pmid1)) {
 				return true;
+			} else if (pmid1 == nextLargerType(pmid1)) {
+				maybeMore = false;
+			} else {
+				pmid1 = nextLargerType(pmid1);
 			}
 		}
 		return false;
 	}
 	
-	public static int nextLarger(int pmid) {
+	public static int nextLargerType(int pmid) {
 		if (smallerToLarger.containsKey(pmid)) {
 			return smallerToLarger.get(pmid).intValue();
 		} else {
-			return PM.UNKNOWN.id();
+			return pmid;
 		}
 	}
 
-	public static int nextSmaller(int pmid) {
+	public static int nextSmallerType(int pmid) {
 		if (largerToSmaller.containsKey(pmid)) {
 			return largerToSmaller.get(pmid).intValue();
 		} else {
-			return PM.UNKNOWN.id();
+			return pmid;
 		}
 	}
 }

@@ -833,20 +833,6 @@ static const short grownups[][2] = {
 };
 
 int
-little_to_big(montype)
-int montype;
-{
-    register int i;
-
-    for (i = 0; grownups[i][0] >= LOW_PM; i++)
-        if (montype == grownups[i][0]) {
-            montype = grownups[i][1];
-            break;
-        }
-    return montype;
-}
-
-int
 big_to_little(montype)
 int montype;
 {
@@ -1454,6 +1440,10 @@ boolean touchPetrifies(int pmid) {
 
 boolean areSameRace(int pmid1, int pmid2) {
     return javaGetBooleanFromIntAndInt(MONSTER_DATA_CLASS, "areSameRace", pmid1, pmid2);
+}
+
+int nextLargerType(int pmid) {
+    return javaGetIntFromInt(MONSTER_TYPE_CLASS, "nextLargerType", pmid);
 }
 
 /*mondata.c*/
