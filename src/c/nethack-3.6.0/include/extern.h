@@ -2083,7 +2083,7 @@ E int FDECL(nextSmallerType, (int));
 E const char *FDECL(locomotion, (int, const char *));
 E const char *FDECL(stagger, (int, const char *));
 E const char *FDECL(on_fire, (int, const struct Attack));
-E const struct permonst *FDECL(raceptr, (struct monst *));
+E int FDECL(monsterRaceType, (struct monst *));
 E boolean FDECL(olfaction, (int));
 E boolean FDECL(isFlaming, (int));
 E boolean FDECL(isWooden, (int));

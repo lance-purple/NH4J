@@ -760,18 +760,16 @@ struct monst *mtmp;
 }
 
 /*
- * Return the permonst ptr for the race of the monster.
- * Returns correct pointer for non-polymorphed and polymorphed
- * player.  It does not return a pointer to player role character.
+ * Return the pmid for the race of the monster.
+ * Returns correct type for non-polymorphed and polymorphed player.
  */
-const struct permonst *
-raceptr(mtmp)
+int monsterRaceType(mtmp)
 struct monst *mtmp;
 {
     if (mtmp == &youmonst && !areYouPolymorphed())
-        return &mons[urace.malenum];
+        return urace.malenum;
     else
-        return mtmp->data;
+        return (mtmp->data) ? mtmp->data->monsterTypeID : -1;
 }
 
 static const char *levitate[4] = { "float", "Float", "wobble", "Wobble" };

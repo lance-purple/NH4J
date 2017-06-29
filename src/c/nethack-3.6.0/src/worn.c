@@ -955,11 +955,11 @@ racial_exception(mon, obj)
 struct monst *mon;
 struct obj *obj;
 {
-    const struct permonst *ptr = raceptr(mon);
+    int pmid = monsterRaceType(mon);
 
     /* Acceptable Exceptions: */
     /* Allow hobbits to wear elven armor - LoTR */
-    if (ptr == &mons[PM_HOBBIT] && is_elven_armor(obj))
+    if (pmid == PM_HOBBIT && is_elven_armor(obj))
         return 1;
     /* Unacceptable Exceptions: */
     /* Checks for object that certain races should never use go here */
