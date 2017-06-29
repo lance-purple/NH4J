@@ -774,7 +774,7 @@ makelevel()
             mkroom(BEEHIVE);
         else if (u_depth > 11 && !rn2(6))
             mkroom(MORGUE);
-        else if (u_depth > 12 && !rn2(8) && antholemon())
+        else if (u_depth > 12 && !rn2(8) && (NON_PM != antHoleMonsterType()))
             mkroom(ANTHOLE);
         else if (u_depth > 14 && !rn2(4)
                  && !(mvitals[PM_SOLDIER].mvflags & G_GONE))
@@ -833,7 +833,7 @@ skip0:
 
         /* put statues inside */
         if (!rn2(20))
-            (void) makeStatueObject((struct monst *) 0, -1, somex(croom), somey(croom), CORPSTAT_INIT);
+            (void) makeStatueObject(NULL, NON_PM, somex(croom), somey(croom), CORPSTAT_INIT);
         /* put box/chest inside;
          *  40% chance for at least 1 box, regardless of number
          *  of rooms; about 5 - 7.5% for 2 boxes, least likely

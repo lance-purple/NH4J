@@ -304,24 +304,39 @@ struct mkroom *sroom;
             if (type == COURT && IS_THRONE(levl[sx][sy].typ))
                 continue;
 
-            struct permonst* pm =
-                        (type == COURT)
-                           ? courtmon()
-                           : (type == BARRACKS)
-                              ? squadmon()
-                              : (type == MORGUE)
-                                 ? morguemon()
-                                 : (type == BEEHIVE)
-                                     ? (sx == tx && sy == ty
-                                         ? &mons[PM_QUEEN_BEE]
-                                         : &mons[PM_KILLER_BEE])
-                                     : (type == LEPREHALL)
-                                         ? &mons[PM_LEPRECHAUN]
-                                         : (type == COCKNEST)
-                                             ? &mons[PM_COCKATRICE]
-                                             : (type == ANTHOLE)
-                                                 ? antholemon()
-                                                 : (struct permonst *) 0;
+            struct permonst* pm = NULL;
+            int pmid;
+            switch (type) {
+                case COURT:
+                    pm = courtmon();
+                    break;
+                case BARRACKS:
+                    pm = squadmon();
+                    break;
+                case MORGUE:
+                    pm = morguemon();
+                    break;
+                case BEEHIVE:
+                    if ((sx == tx) && (sy == ty)) {
+                        pm = &mons[PM_QUEEN_BEE];
+                    } else {
+                        pm = &mons[PM_KILLER_BEE];
+                    }
+                    break;
+                case LEPREHALL:
+                    pm = &mons[PM_LEPRECHAUN];
+                    break;
+                case COCKNEST:
+                    pm = &mons[PM_COCKATRICE];
+                    break;
+                case ANTHOLE:
+                    pmid = antHoleMonsterType();
+                    pm = (NON_PM != pmid) ? &mons[pmid] : NULL;
+                    break;
+                default:
+                    pm = NULL;
+            }
+
             if (pm) {
                 mon = makeMonsterOfType(pm->monsterTypeID, sx, sy, NO_MM_FLAGS);
             } else {
@@ -461,8 +476,7 @@ morguemon()
                                 : mkclass(S_ZOMBIE, 0));
 }
 
-struct permonst *
-antholemon()
+int antHoleMonsterType()
 {
     int mtyp, indx, trycnt = 0;
 
@@ -485,8 +499,7 @@ antholemon()
         /* try again if chosen type has been genocided or used up */
     } while (++trycnt < 3 && (mvitals[mtyp].mvflags & G_GONE));
 
-    return ((mvitals[mtyp].mvflags & G_GONE) ? (struct permonst *) 0
-                                             : &mons[mtyp]);
+    return ((mvitals[mtyp].mvflags & G_GONE) ? NON_PM : mtyp);
 }
 
 STATIC_OVL void
