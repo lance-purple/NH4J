@@ -1014,6 +1014,13 @@ coord *cc;
     return FALSE;
 }
 
+
+struct monst* makeMonsterOfClass(char mclass, int x, int y, int mmflags) {
+    struct permonst* ptr = mkclass(mclass, 0);
+    return makemon(ptr, x, y, mmflags);
+}
+
+
 /*
  * called with [x,y] = coordinates;
  *      [0,0] means anyplace
