@@ -803,7 +803,7 @@ register struct obj *obj;
                 return herbi ? CADAVER : MANFOOD;
             /* most humanoids will avoid cannibalism unless starving;
                arbitrary: elves won't eat other elves even then */
-            else if (isHumanoid(mptr->monsterTypeID) && same_race(mptr, fptr)
+            else if (isHumanoid(mptr->monsterTypeID) && areSameRace(mptr->monsterTypeID, fptr->monsterTypeID)
                      && (!isUndead(mptr->monsterTypeID)
 			 && monsterClass(fptr->monsterTypeID) != S_KOBOLD
                          && monsterClass(fptr->monsterTypeID) != S_ORC 

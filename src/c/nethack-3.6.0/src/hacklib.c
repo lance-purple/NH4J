@@ -123,12 +123,17 @@ boolean javaGetBooleanFromInt(const char* classname, const char* methodname, int
     return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method, i);
 }
 
+boolean javaGetBooleanFromIntAndInt(const char* classname, const char* methodname, int i, int j) {
+    jclass you_class = getJavaClass(classname);
+    jmethodID method = getStaticMethod(you_class, methodname, "(II)Z");
+    return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method, i, j);
+}
+
 boolean javaGetBooleanFromIntAndLong(const char* classname, const char* methodname, int i, long j) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "(IJ)Z");
     return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method, i, j);
 }
-
 
 jstring javaGetStringFromInt(const char* classname, const char* methodname, int i) {
     jclass you_class = getJavaClass(classname);
