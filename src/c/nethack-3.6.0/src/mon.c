@@ -3323,7 +3323,7 @@ int mnum;
     if (mnum == PM_SCORPIUS)
         mnum = PM_SCORPION;
 
-    mnum = little_to_big(mnum);
+    mnum = nextLargerType(mnum);
     /*
      * Queen bees lay killer bee eggs (usually), but killer bees don't
      * grow into queen bees.  Ditto for [winged-]gargoyles.

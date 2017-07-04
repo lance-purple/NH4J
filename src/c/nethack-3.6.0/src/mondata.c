@@ -618,8 +618,8 @@ struct permonst *pm1, *pm2;
              prv = nxt, nxt = big_to_little(nxt))
             if (nxt == m2)
                 return TRUE;
-        for (prv = m1, nxt = little_to_big(m1); nxt != prv;
-             prv = nxt, nxt = little_to_big(nxt))
+        for (prv = m1, nxt = nextLargerType(m1); nxt != prv;
+             prv = nxt, nxt = nextLargerType(nxt))
             if (nxt == m2)
                 return TRUE;
     }
@@ -1005,20 +1005,6 @@ static const short grownups[][2] = {
     { PM_KOP_LIEUTENANT, PM_KOP_KAPTAIN },
     { NON_PM, NON_PM }
 };
-
-int
-little_to_big(montype)
-int montype;
-{
-    register int i;
-
-    for (i = 0; grownups[i][0] >= LOW_PM; i++)
-        if (montype == grownups[i][0]) {
-            montype = grownups[i][1];
-            break;
-        }
-    return montype;
-}
 
 int
 big_to_little(montype)
@@ -1542,6 +1528,10 @@ boolean isDisplacer(int pmid) {
 
 boolean allowsCloseApproach(int pmid) {
     return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "allowsCloseApproach", pmid);
+}
+
+int nextLargerType(int pmid) {
+    return javaGetIntFromInt(MONSTER_TYPE_CLASS, "nextLargerType", pmid);
 }
 
 /*mondata.c*/
