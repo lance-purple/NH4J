@@ -3370,7 +3370,7 @@ boolean egg;
      * fortunately, none of them have eggs.  Species extinction due to
      * overpopulation does not kill eggs.
      */
-    alt_idx = egg ? big_to_little(m_idx) : m_idx;
+    alt_idx = egg ? nextSmallerType(m_idx) : m_idx;
     return (boolean) ((mvitals[m_idx].mvflags & G_GENOD) != 0
                       || (mvitals[alt_idx].mvflags & G_GENOD) != 0);
 }

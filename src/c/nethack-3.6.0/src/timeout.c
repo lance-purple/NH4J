@@ -529,7 +529,7 @@ long timeout;
         return;
 
     mon = mon2 = (struct monst *) 0;
-    mnum = big_to_little(egg->corpsenm);
+    mnum = nextSmallerType(egg->corpsenm);
     /* The identity of one's father is learned, not innate */
     yours = (egg->spe || (!flags.female && carried(egg) && !rn2(2)));
     silent = (timeout != monstermoves); /* hatched while away */

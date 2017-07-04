@@ -614,8 +614,8 @@ struct permonst *pm1, *pm2;
         /* we know m1 != m2 (very first check above); test all smaller
            forms of m1 against m2, then all larger ones; don't need to
            make the corresponding tests for variants of m2 against m1 */
-        for (prv = m1, nxt = big_to_little(m1); nxt != prv;
-             prv = nxt, nxt = big_to_little(nxt))
+        for (prv = m1, nxt = nextSmallerType(m1); nxt != prv;
+             prv = nxt, nxt = nextSmallerType(nxt))
             if (nxt == m2)
                 return TRUE;
         for (prv = m1, nxt = nextLargerType(m1); nxt != prv;
@@ -931,93 +931,6 @@ struct monst *mtmp;
        the Amulet */
     return (boolean) (monsterHasFlag2(mtmp->data->monsterTypeID, M2_STALK)
                       && (!mtmp->mflee || haveSpecialItem(SPECIAL_ITEM_AMULET)));
-}
-
-static const short grownups[][2] = {
-    { PM_CHICKATRICE, PM_COCKATRICE },
-    { PM_LITTLE_DOG, PM_DOG },
-    { PM_DOG, PM_LARGE_DOG },
-    { PM_HELL_HOUND_PUP, PM_HELL_HOUND },
-    { PM_WINTER_WOLF_CUB, PM_WINTER_WOLF },
-    { PM_KITTEN, PM_HOUSECAT },
-    { PM_HOUSECAT, PM_LARGE_CAT },
-    { PM_PONY, PM_HORSE },
-    { PM_HORSE, PM_WARHORSE },
-    { PM_KOBOLD, PM_LARGE_KOBOLD },
-    { PM_LARGE_KOBOLD, PM_KOBOLD_LORD },
-    { PM_GNOME, PM_GNOME_LORD },
-    { PM_GNOME_LORD, PM_GNOME_KING },
-    { PM_DWARF, PM_DWARF_LORD },
-    { PM_DWARF_LORD, PM_DWARF_KING },
-    { PM_MIND_FLAYER, PM_MASTER_MIND_FLAYER },
-    { PM_ORC, PM_ORC_CAPTAIN },
-    { PM_HILL_ORC, PM_ORC_CAPTAIN },
-    { PM_MORDOR_ORC, PM_ORC_CAPTAIN },
-    { PM_URUK_HAI, PM_ORC_CAPTAIN },
-    { PM_SEWER_RAT, PM_GIANT_RAT },
-    { PM_CAVE_SPIDER, PM_GIANT_SPIDER },
-    { PM_OGRE, PM_OGRE_LORD },
-    { PM_OGRE_LORD, PM_OGRE_KING },
-    { PM_ELF, PM_ELF_LORD },
-    { PM_WOODLAND_ELF, PM_ELF_LORD },
-    { PM_GREEN_ELF, PM_ELF_LORD },
-    { PM_GREY_ELF, PM_ELF_LORD },
-    { PM_ELF_LORD, PM_ELVENKING },
-    { PM_LICH, PM_DEMILICH },
-    { PM_DEMILICH, PM_MASTER_LICH },
-    { PM_MASTER_LICH, PM_ARCH_LICH },
-    { PM_VAMPIRE, PM_VAMPIRE_LORD },
-    { PM_BAT, PM_GIANT_BAT },
-    { PM_BABY_GRAY_DRAGON, PM_GRAY_DRAGON },
-    { PM_BABY_SILVER_DRAGON, PM_SILVER_DRAGON },
-#if 0 /* DEFERRED */
-    {PM_BABY_SHIMMERING_DRAGON, PM_SHIMMERING_DRAGON},
-#endif
-    { PM_BABY_RED_DRAGON, PM_RED_DRAGON },
-    { PM_BABY_WHITE_DRAGON, PM_WHITE_DRAGON },
-    { PM_BABY_ORANGE_DRAGON, PM_ORANGE_DRAGON },
-    { PM_BABY_BLACK_DRAGON, PM_BLACK_DRAGON },
-    { PM_BABY_BLUE_DRAGON, PM_BLUE_DRAGON },
-    { PM_BABY_GREEN_DRAGON, PM_GREEN_DRAGON },
-    { PM_BABY_YELLOW_DRAGON, PM_YELLOW_DRAGON },
-    { PM_RED_NAGA_HATCHLING, PM_RED_NAGA },
-    { PM_BLACK_NAGA_HATCHLING, PM_BLACK_NAGA },
-    { PM_GOLDEN_NAGA_HATCHLING, PM_GOLDEN_NAGA },
-    { PM_GUARDIAN_NAGA_HATCHLING, PM_GUARDIAN_NAGA },
-    { PM_SMALL_MIMIC, PM_LARGE_MIMIC },
-    { PM_LARGE_MIMIC, PM_GIANT_MIMIC },
-    { PM_BABY_LONG_WORM, PM_LONG_WORM },
-    { PM_BABY_PURPLE_WORM, PM_PURPLE_WORM },
-    { PM_BABY_CROCODILE, PM_CROCODILE },
-    { PM_SOLDIER, PM_SERGEANT },
-    { PM_SERGEANT, PM_LIEUTENANT },
-    { PM_LIEUTENANT, PM_CAPTAIN },
-    { PM_WATCHMAN, PM_WATCH_CAPTAIN },
-    { PM_ALIGNED_PRIEST, PM_HIGH_PRIEST },
-    { PM_STUDENT, PM_ARCHEOLOGIST },
-    { PM_ATTENDANT, PM_HEALER },
-    { PM_PAGE, PM_KNIGHT },
-    { PM_ACOLYTE, PM_PRIEST },
-    { PM_APPRENTICE, PM_WIZARD },
-    { PM_MANES, PM_LEMURE },
-    { PM_KEYSTONE_KOP, PM_KOP_SERGEANT },
-    { PM_KOP_SERGEANT, PM_KOP_LIEUTENANT },
-    { PM_KOP_LIEUTENANT, PM_KOP_KAPTAIN },
-    { NON_PM, NON_PM }
-};
-
-int
-big_to_little(montype)
-int montype;
-{
-    register int i;
-
-    for (i = 0; grownups[i][0] >= LOW_PM; i++)
-        if (montype == grownups[i][1]) {
-            montype = grownups[i][0];
-            break;
-        }
-    return montype;
 }
 
 /*
@@ -1532,6 +1445,10 @@ boolean allowsCloseApproach(int pmid) {
 
 int nextLargerType(int pmid) {
     return javaGetIntFromInt(MONSTER_TYPE_CLASS, "nextLargerType", pmid);
+}
+
+int nextSmallerType(int pmid) {
+    return javaGetIntFromInt(MONSTER_TYPE_CLASS, "nextSmallerType", pmid);
 }
 
 /*mondata.c*/
