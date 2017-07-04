@@ -465,11 +465,11 @@ boolean creation;
 
     m_dowear_type(mon, W_AMUL, creation, FALSE);
     /* can't put on shirt if already wearing suit */
-    if (!cannotWearArmor(mon->data->monsterTypeID) && !(mon->misc_worn_check & W_ARM))
+    if (!cantweararm(mon->data) && !(mon->misc_worn_check & W_ARM))
         m_dowear_type(mon, W_ARMU, creation, FALSE);
     /* treating small as a special case allows
        hobbits, gnomes, and kobolds to wear cloaks */
-    if (!cannotWearArmor(mon->data->monsterTypeID) || monsterSize(mon->data->monsterTypeID) == MZ_SMALL)
+    if (!cantweararm(mon->data) || monsterSize(mon->data->monsterTypeID) == MZ_SMALL)
         m_dowear_type(mon, W_ARMC, creation, FALSE);
     m_dowear_type(mon, W_ARMH, creation, FALSE);
     if (!MON_WEP(mon) || !bimanual(MON_WEP(mon)))
@@ -477,7 +477,7 @@ boolean creation;
     m_dowear_type(mon, W_ARMG, creation, FALSE);
     if (!isSlithy(mon->data->monsterTypeID) && monsterClass(mon->data->monsterTypeID) != S_CENTAUR)
         m_dowear_type(mon, W_ARMF, creation, FALSE);
-    if (!cannotWearArmor(mon->data->monsterTypeID))
+    if (!cantweararm(mon->data))
         m_dowear_type(mon, W_ARM, creation, FALSE);
     else
         m_dowear_type(mon, W_ARM, creation, RACE_EXCEPTION);
@@ -536,7 +536,7 @@ boolean racialexception;
                 && (mon->ispriest || mon->isminion))
                 continue;
             /* (flimsy exception matches polyself handling) */
-            if (hasHorns(mon->data->monsterTypeID) && !is_flimsy(obj))
+            if (has_horns(mon->data) && !is_flimsy(obj))
                 continue;
             break;
         case W_ARMS:
@@ -775,7 +775,7 @@ boolean polyspot;
     boolean handless_or_tiny = (hasNoHands(mdat->monsterTypeID) || isVerySmallMonster(mdat->monsterTypeID));
     const char *pronoun = mhim(mon), *ppronoun = mhis(mon);
 
-    if (breaksOutOfArmor(mdat->monsterTypeID)) {
+    if (breakarm(mdat)) {
         if ((otmp = which_armor(mon, W_ARM)) != 0) {
             if ((Is_dragon_scales(otmp) && mdat == Dragon_scales_to_pm(otmp))
                 || (Is_dragon_mail(otmp) && mdat == Dragon_mail_to_pm(otmp)))
@@ -812,7 +812,7 @@ boolean polyspot;
                 You_hear("a ripping sound.");
             m_useup(mon, otmp);
         }
-    } else if (slidesOutOfArmor(mdat->monsterTypeID)) {
+    } else if (sliparm(mdat)) {
         if ((otmp = which_armor(mon, W_ARM)) != 0) {
             if (vis)
                 pline("%s armor falls around %s!", s_suffix(Monnam(mon)),
@@ -838,7 +838,7 @@ boolean polyspot;
         }
         if ((otmp = which_armor(mon, W_ARMU)) != 0) {
             if (vis) {
-                if (slidesOutOfArmor(mon->data->monsterTypeID))
+                if (sliparm(mon->data))
                     pline("%s seeps right through %s shirt!", Monnam(mon),
                           ppronoun);
                 else
@@ -871,7 +871,7 @@ boolean polyspot;
             m_lose_armor(mon, otmp);
         }
     }
-    if (handless_or_tiny || hasHorns(mdat->monsterTypeID)) {
+    if (handless_or_tiny || has_horns(mdat)) {
         if ((otmp = which_armor(mon, W_ARMH)) != 0
             /* flimsy test for horns matches polyself handling */
             && (handless_or_tiny || !is_flimsy(otmp))) {
@@ -912,7 +912,7 @@ boolean polyspot;
     } else if (mon == u.usteed && !can_ride(mon)) {
     noride:
         You("can no longer ride %s.", mon_nam(mon));
-        if (touchPetrifies(u.usteed->data->monsterTypeID) && !youResistStoning() && rnl(3)) {
+        if (touch_petrifies(u.usteed->data) && !youResistStoning() && rnl(3)) {
             char buf[BUFSZ];
 
             You("touch %s.", mon_nam(u.usteed));
@@ -955,11 +955,11 @@ racial_exception(mon, obj)
 struct monst *mon;
 struct obj *obj;
 {
-    int pmid = monsterRaceType(mon);
+    const struct permonst *ptr = raceptr(mon);
 
     /* Acceptable Exceptions: */
     /* Allow hobbits to wear elven armor - LoTR */
-    if (pmid == PM_HOBBIT && is_elven_armor(obj))
+    if (ptr == &mons[PM_HOBBIT] && is_elven_armor(obj))
         return 1;
     /* Unacceptable Exceptions: */
     /* Checks for object that certain races should never use go here */

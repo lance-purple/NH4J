@@ -666,7 +666,7 @@ struct monst *mon;
         badalign =
             (oart->spfx & SPFX_RESTR) && oart->alignment != A_NONE
             && (oart->alignment != currentAlignmentType() || currentAlignmentRecord() < 0);
-    } else if (!isCovetous(mon->data->monsterTypeID) && !isMonsterPlayer(mon->data->monsterTypeID)) {
+    } else if (!isCovetous(mon->data->monsterTypeID) && !is_mplayer(mon->data)) {
         badclass = self_willed && oart->role != NON_PM
                    && oart != &artilist[ART_EXCALIBUR];
         badalign = (oart->spfx & SPFX_RESTR) && oart->alignment != A_NONE
@@ -1041,7 +1041,7 @@ char *hittee;              /* target's name: "you" or mon_nam(mdef) */
             } else {
                 if (mdef->data == &mons[PM_CLAY_GOLEM])
                     mdef->mhp = 1; /* cancelled clay golems will die */
-                if (youattack && attacktype(mdef->data->monsterTypeID, AT_MAGC)) {
+                if (youattack && attacktype(mdef->data, AT_MAGC)) {
                     You("absorb magical energy!");
                     increaseMaximumMagicalEnergy(1);
                     increaseCurrentMagicalEnergy(1);
@@ -1059,7 +1059,7 @@ char *hittee;              /* target's name: "you" or mon_nam(mdef) */
                 nomul(-3);
                 multi_reason = "being scared stiff";
                 nomovemsg = "";
-                if (magr && magr == u.ustuck && sticks(youmonst.data->monsterTypeID)) {
+                if (magr && magr == u.ustuck && sticks(youmonst.data)) {
                     u.ustuck = (struct monst *) 0;
                     You("release %s!", mon_nam(magr));
                 }

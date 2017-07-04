@@ -322,7 +322,7 @@ invault()
         }
 
         /* make something interesting happen */
-        if (!(guard = makeMonsterOfType(PM_GUARD, x, y, MM_EGD)))
+        if (!(guard = makemon(&mons[PM_GUARD], x, y, MM_EGD)))
             return;
         guard->isgd = 1;
         guard->mpeaceful = 1;
@@ -716,7 +716,7 @@ register struct monst *grd;
     }
     if (um_dist(grd->mx, grd->my, 1) || egrd->gddone) {
         if (!egrd->gddone && !rn2(10) && !youAreDeaf() && !swallowed()
-            && !(u.ustuck && !sticks(youmonst.data->monsterTypeID)))
+            && !(u.ustuck && !sticks(youmonst.data)))
             verbalize("Move along!");
         restfakecorr(grd);
         return 0; /* didn't move */

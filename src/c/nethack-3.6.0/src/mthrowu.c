@@ -369,7 +369,7 @@ struct obj *obj;         /* missile (or stack providing it) */
             switch (singleobj->otyp) {
                 int dam, hitv;
             case EGG:
-                if (!touchPetrifies(mons[singleobj->corpsenm].monsterTypeID)) {
+                if (!touch_petrifies(&mons[singleobj->corpsenm])) {
                     impossible("monster throwing egg type %d",
                                singleobj->corpsenm);
                     hitu = 0;
@@ -436,7 +436,7 @@ struct obj *obj;         /* missile (or stack providing it) */
             }
             if (hitu && singleobj->otyp == EGG) {
                 if (!youAreTurningToStone() && !youResistStoning()
-                    && !(poly_when_stoned(youmonst.data->monsterTypeID)
+                    && !(poly_when_stoned(youmonst.data)
                          && polymon(PM_STONE_GOLEM))) {
                     make_stoned(5L, (char *) 0, KILLED_BY, "");
                 }
@@ -593,11 +593,11 @@ struct monst *mtmp;
         else if (isLord(mtmp->data->monsterTypeID))
             multishot++;
         /* fake players treated as skilled (regardless of role limits) */
-        else if (isMonsterPlayer(mtmp->data->monsterTypeID))
+        else if (is_mplayer(mtmp->data))
             multishot++;
 
         /* class bonus */
-        switch (mtmp->data->monsterTypeID) {
+        switch (monsndx(mtmp->data)) {
         case PM_MONK:
             if (skill == -P_SHURIKEN)
                 multishot++;

@@ -140,7 +140,7 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
         if (mtmp->m_ap_type && !youHaveProtectionFromShapeChangers()
             /* applied pole-arm attack is too far to get stuck */
             && distanceSquaredToYou(mtmp->mx, mtmp->my) <= 2) {
-            if (!u.ustuck && !mtmp->mflee && dmgtype(mtmp->data->monsterTypeID, AD_STCK))
+            if (!u.ustuck && !mtmp->mflee && dmgtype(mtmp->data, AD_STCK))
                 u.ustuck = mtmp;
         }
         wakeup(mtmp); /* always necessary; also un-mimics mimics */
@@ -353,7 +353,7 @@ register struct monst *mtmp;
              * there's also a chance of displacing a "frozen" monster.
              * sleeping monsters might magically walk in their sleep.
              */
-            boolean foo = (youAreBeingPunished() || !rn2(7) || isLongWorm(mtmp->data->monsterTypeID)),
+            boolean foo = (youAreBeingPunished() || !rn2(7) || is_longworm(mtmp->data)),
                     inshop = FALSE;
             char *p;
 
@@ -391,7 +391,7 @@ register struct monst *mtmp;
     if (attack_checks(mtmp, uwep))
         return TRUE;
 
-    if (areYouPolymorphed() && monsterDoesNotAttack(youmonst.data->monsterTypeID)) {
+    if (areYouPolymorphed() && monsterDoesNotAttack(youmonst.data)) {
         /* certain "pacifist" monsters don't attack */
         You("have no way to attack monsters physically.");
         mtmp->mstrategy &= ~STRAT_WAITMASK;
@@ -492,7 +492,7 @@ const struct Attack uattk;
                 /* maybe should regurgitate if swallowed? */
                 monflee(mon, !rn2(3) ? rnd(100) : 0, FALSE, TRUE);
 
-                if (u.ustuck == mon && !swallowed() && !sticks(youmonst.data->monsterTypeID))
+                if (u.ustuck == mon && !swallowed() && !sticks(youmonst.data))
                     u.ustuck = 0;
             }
             /* Vorpal Blade hit converted to miss */
@@ -550,7 +550,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
     boolean result, anger_guards;
 
     anger_guards = (mon->mpeaceful
-                    && (mon->ispriest || mon->isshk || isMemberOfWatch(mon->data->monsterTypeID)));
+                    && (mon->ispriest || mon->isshk || is_watch(mon->data)));
     result = hmon_hitmon(mon, obj, thrown);
     if (mon->ispriest && !rn2(2))
         ghod_hitsu(mon);
@@ -785,7 +785,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                     useup(obj);
                     return TRUE;
                 case CORPSE: /* fixed by polder@cs.vu.nl */
-                    if (touchPetrifies(mons[obj->corpsenm].monsterTypeID)) {
+                    if (touch_petrifies(&mons[obj->corpsenm])) {
                         tmp = 1;
                         hittxt = TRUE;
                         You("hit %s with %s.", mon_nam(mon),
@@ -800,7 +800,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                         /* note: hp may be <= 0 even if munstoned==TRUE */
                         return (boolean) (mon->mhp > 0);
 #if 0
-                    } else if (touchPetrifies(mdat->monsterTypeID)) {
+                    } else if (touch_petrifies(mdat)) {
                         ; /* maybe turn the corpse into a statue? */
 #endif
                     }
@@ -833,7 +833,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                             change_luck(-5);
                     }
 
-                    if (touchPetrifies(mons[obj->corpsenm].monsterTypeID)) {
+                    if (touch_petrifies(&mons[obj->corpsenm])) {
                         /*learn_egg_type(obj->corpsenm);*/
 			javaString corpseName = monsterTypeName(mons[obj->corpsenm].monsterTypeID);
                         pline("Splat! You hit %s with %s %s egg%s!",
@@ -859,7 +859,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
 			releaseJavaString(corpseName);
                         You("hit %s with %s egg%s.", mon_nam(mon), eggp,
                             plur(cnt));
-                        if (touchPetrifies(mdat->monsterTypeID) && !stale_egg(obj)) {
+                        if (touch_petrifies(mdat) && !stale_egg(obj)) {
                             pline_The("egg%s %s alive any more...", plur(cnt),
                                       (cnt == 1L) ? "isn't" : "aren't");
                             if (obj->timed)
@@ -1076,7 +1076,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
             && !isThickSkinned(mdat->monsterTypeID)) {
             if (canspotmon(mon))
                 pline("%s %s from your powerful strike!", Monnam(mon),
-                      makeplural(stagger(mon->data->monsterTypeID, "stagger")));
+                      makeplural(stagger(mon->data, "stagger")));
             /* avoid migrating a dead monster */
             if (mon->mhp > tmp) {
                 mhurtle(mon, directionX(), directionY(), 1);
@@ -1307,8 +1307,7 @@ demonpet()
     pline("Some hell-p has arrived!");
     i = !rn2(6) ? ndemon(currentAlignmentType()) : NON_PM;
     pm = i != NON_PM ? &mons[i] : youmonst.data;
-    int pmid = pm->monsterTypeID;
-    if ((dtmp = makeMonsterOfType(pmid, currentX(), currentY(), NO_MM_FLAGS)) != 0)
+    if ((dtmp = makemon(pm, currentX(), currentY(), NO_MM_FLAGS)) != 0)
         (void) tamedog(dtmp, (struct obj *) 0);
     exercise(A_WIS, TRUE);
 }
@@ -1318,11 +1317,11 @@ theft_petrifies(otmp)
 struct obj *otmp;
 {
     if (uarmg || otmp->otyp != CORPSE
-        || !touchPetrifies(mons[otmp->corpsenm].monsterTypeID) || youResistStoning())
+        || !touch_petrifies(&mons[otmp->corpsenm]) || youResistStoning())
         return FALSE;
 
 #if 0   /* no poly_when_stoned() critter has theft capability */
-    if (poly_when_stoned(youmonst.data->monsterTypeID) && polymon(PM_STONE_GOLEM)) {
+    if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM)) {
         display_nhwindow(WIN_MESSAGE, FALSE);   /* --More-- */
         return TRUE;
     }
@@ -1438,7 +1437,7 @@ register const struct Attack mattk;
     case AD_STUN:
         if (youCanSee())
             pline("%s %s for a moment.", Monnam(mdef),
-                  makeplural(stagger(pd->monsterTypeID, "stagger")));
+                  makeplural(stagger(pd, "stagger")));
         mdef->mstun = 1;
         goto physical;
     case AD_LEGS:
@@ -1485,7 +1484,7 @@ register const struct Attack mattk;
             break;
         }
         if (youCanSee()) {
-            pline("%s is %s!", Monnam(mdef), on_fire(pd->monsterTypeID, mattk));
+            pline("%s is %s!", Monnam(mdef), on_fire(pd, mattk));
 	}
         if (pd == &mons[PM_STRAW_GOLEM] || pd == &mons[PM_PAPER_GOLEM]) {
             if (youCanSee())
@@ -1699,11 +1698,11 @@ register const struct Attack mattk;
         break;
     }
     case AD_STCK:
-        if (!negated && !sticks(pd->monsterTypeID))
+        if (!negated && !sticks(pd))
             u.ustuck = mdef; /* it's now stuck to you */
         break;
     case AD_WRAP:
-        if (!sticks(pd->monsterTypeID)) {
+        if (!sticks(pd)) {
             if (!u.ustuck && !rn2(10)) {
                 if (m_slips_free(mdef, mattk)) {
                     tmp = 0;
@@ -1910,15 +1909,15 @@ register const struct Attack mattk;
             (void) snuff_lit(otmp);
 
         /* engulfing a cockatrice or digesting a Rider or Medusa */
-        fatal_gulp = (touchPetrifies(pd->monsterTypeID) && !youResistStoning())
+        fatal_gulp = (touch_petrifies(pd) && !youResistStoning())
                      || (mattk.damageType == AD_DGST
-                         && (isRiderOfApocalypse(pd->monsterTypeID) || (pd == &mons[PM_MEDUSA]
+                         && (is_rider(pd) || (pd == &mons[PM_MEDUSA]
                                               && !youResistStoning())));
 
         if ((mattk.damageType == AD_DGST && !youHaveSlowDigestion()) || fatal_gulp)
-            eating_conducts(pd->monsterTypeID);
+            eating_conducts(pd);
 
-        if (fatal_gulp && !isRiderOfApocalypse(pd->monsterTypeID)) { /* petrification */
+        if (fatal_gulp && !is_rider(pd)) { /* petrification */
             char kbuf[BUFSZ];
             You("englut %s.", mon_nam(mdef));
 
@@ -1935,7 +1934,7 @@ register const struct Attack mattk;
             switch (mattk.damageType) {
             case AD_DGST:
                 /* eating a Rider or its corpse is fatal */
-                if (isRiderOfApocalypse(pd->monsterTypeID)) {
+                if (is_rider(pd)) {
                     pline("Unfortunately, digesting any of it is fatal.");
                     end_engulf();
                     javaString monsterName = monsterTypeName(pd->monsterTypeID);
@@ -1964,7 +1963,7 @@ register const struct Attack mattk;
                 } else {
                     tmp = 1 + (monsterCorpseWeight(pd->monsterTypeID) >> 8);
                     if (corpse_chance(mdef, &youmonst, TRUE)
-                        && !(mvitals[pd->monsterTypeID].mvflags & G_NOCORPSE)) {
+                        && !(mvitals[monsndx(pd)].mvflags & G_NOCORPSE)) {
                         /* nutrition only if there can be a corpse */
                         increaseCurrentNutrition((monsterCorpseNutrition(pd->monsterTypeID) + 1) / 2);
                     } else
@@ -2000,7 +1999,7 @@ register const struct Attack mattk;
             case AD_PHYS:
                 if (youmonst.data == &mons[PM_FOG_CLOUD]) {
                     pline("%s is laden with your moisture.", Monnam(mdef));
-                    if (isAmphibious(pd->monsterTypeID) && !isFlaming(pd->monsterTypeID)) {
+                    if (isAmphibious(pd->monsterTypeID) && !flaming(pd)) {
                         dam = 0;
                         pline("%s seems unharmed.", Monnam(mdef));
                     }
@@ -2115,7 +2114,7 @@ register struct monst *mon;
 
     for (i = 0; i < NATTK; i++) {
         sum[i] = 0;
-        mattk = getMonsterAttack(youmonst.data->monsterTypeID, i, sum);
+        mattk = getMonsterAttack(youmonst.data, i, sum);
 
         switch (mattk.type) {
         case AT_WEAP:
@@ -2219,7 +2218,7 @@ register struct monst *mon;
             wakeup(mon);
             if (mon->data == &mons[PM_SHADE])
                 Your("hug passes harmlessly through %s.", mon_nam(mon));
-            else if (!sticks(mon->data->monsterTypeID) && !swallowed()) {
+            else if (!sticks(mon->data) && !swallowed()) {
                 if (mon == u.ustuck) {
                     pline("%s is being %s.", Monnam(mon),
                           currentMonsterNumber() == PM_ROPE_GOLEM ? "choked" : "crushed");
@@ -2393,7 +2392,7 @@ boolean wep_was_destroyed;
                 || (protector == W_ARMH && !uarmh)
                 || (protector == (W_ARMC | W_ARMG) && (!uarmc || !uarmg))) {
                 if (!youResistStoning()
-                    && !(poly_when_stoned(youmonst.data->monsterTypeID)
+                    && !(poly_when_stoned(youmonst.data)
                          && polymon(PM_STONE_GOLEM))) {
                     done_in_by(mon, STONING); /* "You turn to stone..." */
                     return 2;
@@ -2675,7 +2674,7 @@ struct monst *mtmp;
 {
     const char *fmt = "Wait!  That's %s!", *generic = "a monster", *what = 0;
 
-    if (!u.ustuck && !mtmp->mflee && dmgtype(mtmp->data->monsterTypeID, AD_STCK))
+    if (!u.ustuck && !mtmp->mflee && dmgtype(mtmp->data, AD_STCK))
         u.ustuck = mtmp;
 
     if (youCannotSee()) {

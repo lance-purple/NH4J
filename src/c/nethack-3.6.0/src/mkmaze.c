@@ -439,9 +439,9 @@ fixup_special()
         for (tryct = rnd(4); tryct; tryct--) {
             x = somex(croom);
             y = somey(croom);
-            if (goodPositionForObject(x, y, 0)) {
+            if (goodpos(x, y, (struct monst *) 0, 0)) {
                 otmp = mk_tt_object(STATUE, x, y);
-                while (otmp && (poly_when_stoned(mons[otmp->corpsenm].monsterTypeID)
+                while (otmp && (poly_when_stoned(&mons[otmp->corpsenm])
                                 || monsterTypeResistsStoning(mons[otmp->corpsenm].monsterTypeID))) {
                     /* set_corpsenm() handles weight too */
                     set_corpsenm(otmp, rndmonnum());
@@ -453,10 +453,11 @@ fixup_special()
             otmp = mk_tt_object(STATUE, somex(croom), somey(croom));
         else /* Medusa statues don't contain books */
             otmp =
-                makeStatueObject(NULL, NON_PM, somex(croom), somey(croom), CORPSTAT_NONE);
+                mkcorpstat(STATUE, (struct monst *) 0, (struct permonst *) 0,
+                           somex(croom), somey(croom), CORPSTAT_NONE);
         if (otmp) {
             while (monsterTypeResistsStoning(mons[otmp->corpsenm].monsterTypeID)
-                   || poly_when_stoned(mons[otmp->corpsenm].monsterTypeID)) {
+                   || poly_when_stoned(&mons[otmp->corpsenm])) {
                 /* set_corpsenm() handles weight too */
                 set_corpsenm(otmp, rndmonnum());
             }
@@ -651,11 +652,11 @@ register const char *s;
     }
     for (x = rn2(3); x; x--) {
         mazexy(&mm);
-        (void) makeMonsterOfType(PM_MINOTAUR, mm.x, mm.y, NO_MM_FLAGS);
+        (void) makemon(&mons[PM_MINOTAUR], mm.x, mm.y, NO_MM_FLAGS);
     }
     for (x = rn1(5, 7); x; x--) {
         mazexy(&mm);
-        (void) makeMonsterOfAnyType(mm.x, mm.y, NO_MM_FLAGS);
+        (void) makemon((struct permonst *) 0, mm.x, mm.y, NO_MM_FLAGS);
     }
     for (x = rn1(6, 7); x; x--) {
         mazexy(&mm);

@@ -116,7 +116,7 @@ struct obj *obj;
 {
     char kbuf[BUFSZ];
 
-    if (uarmg || obj->otyp != CORPSE || !touchPetrifies(mons[obj->corpsenm].monsterTypeID)
+    if (uarmg || obj->otyp != CORPSE || !touch_petrifies(&mons[obj->corpsenm])
         || youResistStoning())
         return FALSE;
 
@@ -344,7 +344,7 @@ dowieldquiver()
             : ready_objs;
 
     /* Since the quiver isn't in your hands, don't check cannotWieldThings(), */
-    /* will_weld(), touchPetrifies(), etc. */
+    /* will_weld(), touch_petrifies(), etc. */
     multi = 0;
 
     /* Prompt for a new quiver */
@@ -477,7 +477,7 @@ can_twoweapon()
     struct obj *otmp;
 
 #define NOT_WEAPON(obj) (!is_weptool(obj) && obj->oclass != WEAPON_CLASS)
-    if (cannotUseTwoWeapons(youmonst.data->monsterTypeID)) {
+    if (cannotUseTwoWeapons(youmonst.data)) {
         if (areYouPolymorphed())
             You_cant("use two weapons in your current form.");
         else

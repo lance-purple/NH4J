@@ -979,7 +979,7 @@ struct obj **optr;
             && !(mvitals[PM_WOOD_NYMPH].mvflags & G_GONE)
             && !(mvitals[PM_WATER_NYMPH].mvflags & G_GONE)
             && !(mvitals[PM_MOUNTAIN_NYMPH].mvflags & G_GONE)
-            && (mtmp = makeMonsterOfClass(S_NYMPH, currentX(), currentY(), NO_MINVENT))
+            && (mtmp = makemon(mkclass(S_NYMPH, 0), currentX(), currentY(), NO_MINVENT))
                    != 0) {
             You("summon %s!", a_monnam(mtmp));
             if (!obj_resists(obj, 93, 100)) {
@@ -1685,13 +1685,13 @@ struct obj *obj;
         You("cannot tin %s which is partly eaten.", something);
         return;
     }
-    if (touchPetrifies(mons[corpse->corpsenm].monsterTypeID) && !youResistStoning()
+    if (touch_petrifies(&mons[corpse->corpsenm]) && !youResistStoning()
         && !uarmg) {
         char kbuf[BUFSZ];
 
 	int monsterTypeID = mons[corpse->corpsenm].monsterTypeID;
 	javaString monsterName = monsterTypeName(monsterTypeID);
-        if (poly_when_stoned(youmonst.data->monsterTypeID)) {
+        if (poly_when_stoned(youmonst.data)) {
             You("tin %s without wearing gloves.",
                 an(monsterName.c_str));
 	}
@@ -1705,7 +1705,7 @@ struct obj *obj;
 
         instapetrify(kbuf);
     }
-    if (isRiderOfApocalypse(mons[corpse->corpsenm].monsterTypeID)) {
+    if (is_rider(&mons[corpse->corpsenm])) {
         if (revive_corpse(corpse))
             verbalize("Yes...  But War does not preserve its enemies...");
         else
@@ -1809,7 +1809,7 @@ struct obj *obj;
         prop_trouble(SICK);
     if (TimedTrouble(yourIntrinsic(BLINDED)) > (long) creamed()
         && !(swallowed()
-             && monsterHasAttackWithDamageType(u.ustuck->data->monsterTypeID, AT_ENGL, AD_BLND)))
+             && monsterHasAttackWithDamageType(u.ustuck->data, AT_ENGL, AD_BLND)))
         prop_trouble(BLINDED);
     if (TimedTrouble(yourIntrinsic(HALLUC)))
         prop_trouble(HALLUC);
@@ -1955,7 +1955,7 @@ long timeout;
     silent = (timeout != monstermoves); /* happened while away */
     okay_spot = get_obj_location(figurine, &cc.x, &cc.y, 0);
     if (figurine->where == OBJ_INVENT || figurine->where == OBJ_MINVENT)
-        okay_spot = placeEntityNextToPosition(&cc, cc.x, cc.y, figurine->corpsenm, 0);
+        okay_spot = enexto(&cc, cc.x, cc.y, &mons[figurine->corpsenm]);
     if (!okay_spot || !figurine_location_checks(figurine, &cc, TRUE)) {
         /* reset the timer to try again later */
         (void) start_timer((long) rnd(5000), TIMER_OBJECT, FIG_TRANSFORM,
@@ -1980,7 +1980,7 @@ long timeout;
         if (mtmp->mundetected) {
             if (hidesUnderStuff(pmid) && mshelter) {
                 Sprintf(and_vanish, " and %s under %s",
-                        locomotion(mtmp->data->monsterTypeID, "crawl"), doname(mshelter));
+                        locomotion(mtmp->data, "crawl"), doname(mshelter));
             } else if (monsterClass(pmid) == S_MIMIC
                        || monsterClass(pmid) == S_EEL) {
                 suppress_see = TRUE;
@@ -1992,10 +1992,10 @@ long timeout;
         case OBJ_INVENT:
             if (youCannotSee() || suppress_see)
                 You_feel("%s %s from your pack!", something,
-                         locomotion(mtmp->data->monsterTypeID, "drop"));
+                         locomotion(mtmp->data, "drop"));
             else
                 You_see("%s %s out of your pack%s!", monnambuf,
-                        locomotion(mtmp->data->monsterTypeID, "drop"), and_vanish);
+                        locomotion(mtmp->data, "drop"), and_vanish);
             break;
 
         case OBJ_FLOOR:
@@ -2021,7 +2021,7 @@ long timeout;
                 else
                     Strcpy(carriedby, "thin air");
                 You_see("%s %s out of %s%s!", monnambuf,
-                        locomotion(mtmp->data->monsterTypeID, "drop"), carriedby,
+                        locomotion(mtmp->data, "drop"), carriedby,
                         and_vanish);
             }
             break;
@@ -2595,7 +2595,7 @@ struct obj *obj;
             cc.y = ry;
             You("wrap your bullwhip around %s.", wrapped_what);
             if (proficient && rn2(proficient + 2)) {
-                if (!mtmp || placeEntityNextToPosition(&cc, rx, ry, youmonst.data->monsterTypeID, 0)) {
+                if (!mtmp || enexto(&cc, rx, ry, youmonst.data)) {
                     You("yank yourself out of the pit!");
                     teleds(cc.x, cc.y, TRUE);
                     setCurrentTrapTimeout(0);
@@ -2673,9 +2673,9 @@ struct obj *obj;
                     /* right into your inventory */
                     You("snatch %s!", yname(otmp));
                     if (otmp->otyp == CORPSE
-                        && touchPetrifies(mons[otmp->corpsenm].monsterTypeID) && !uarmg
+                        && touch_petrifies(&mons[otmp->corpsenm]) && !uarmg
                         && !youResistStoning()
-                        && !(poly_when_stoned(youmonst.data->monsterTypeID)
+                        && !(poly_when_stoned(youmonst.data)
                              && polymon(PM_STONE_GOLEM))) {
                         char kbuf[BUFSZ];
 
@@ -3052,7 +3052,7 @@ struct obj *obj;
         notonhead = (bhitpos.x != mtmp->mx || bhitpos.y != mtmp->my);
         save_confirm = flags.confirm;
         if (isVerySmallMonster(mtmp->data->monsterTypeID) && !rn2(4)
-            && placeEntityNextToPosition(&cc, currentX(), currentY(), -1, 0)) {
+            && enexto(&cc, currentX(), currentY(), (struct permonst *) 0)) {
             flags.confirm = FALSE;
             (void) attack_checks(mtmp, uwep);
             flags.confirm = save_confirm;
@@ -3250,7 +3250,7 @@ struct obj *obj;
             continue;
         } else if (obj->otyp == WAN_CREATE_MONSTER) {
             /* u.ux,u.uy creates it near you--x,y might create it in rock */
-            (void) makeMonsterOfAnyType(currentX(), currentY(), NO_MM_FLAGS);
+            (void) makemon((struct permonst *) 0, currentX(), currentY(), NO_MM_FLAGS);
             continue;
         } else if (x != currentX() || y != currentY()) {
             /*

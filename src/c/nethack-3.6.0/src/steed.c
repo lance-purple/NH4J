@@ -66,11 +66,11 @@ struct obj *otmp;
         return 1;
     }
     ptr = mtmp->data;
-    if (touchPetrifies(ptr->monsterTypeID) && !uarmg && !youResistStoning()) {
+    if (touch_petrifies(ptr) && !uarmg && !youResistStoning()) {
         char kbuf[BUFSZ];
 
         You("touch %s.", mon_nam(mtmp));
-        if (!(poly_when_stoned(youmonst.data->monsterTypeID) && polymon(PM_STONE_GOLEM))) {
+        if (!(poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))) {
             javaString monsterName = monsterTypeName(mtmp->data->monsterTypeID);
             Sprintf(kbuf, "attempting to saddle %s", an(monsterName.c_str));
             releaseJavaString(monsterName);
@@ -258,7 +258,7 @@ boolean force;      /* Quietly force this animal */
         return (FALSE);
     }
     ptr = mtmp->data;
-    if (touchPetrifies(ptr->monsterTypeID) && !youResistStoning()) {
+    if (touch_petrifies(ptr) && !youResistStoning()) {
         char kbuf[BUFSZ];
 
         You("touch %s.", mon_nam(mtmp));
@@ -414,9 +414,9 @@ kick_steed()
 
 /*
  * Try to find a dismount point adjacent to the steed's location.
- * If all else fails, try placeEntityNextToPosition().  Use that
- * as a last resort because it chooses its point randomly, maybe
- * even outside the room's walls, which is not what we want.
+ * If all else fails, try enexto().  Use enexto() as a last resort because
+ * enexto() chooses its point randomly, possibly even outside the
+ * room's walls, which is not what we want.
  * Adapted from mail daemon code.
  */
 STATIC_OVL boolean
@@ -455,9 +455,9 @@ int forceit;
             }
     }
 
-    /* If we didn't find a good spot and forceit is on, try placeEntityNextToPosition(). */
+    /* If we didn't find a good spot and forceit is on, try enexto(). */
     if (forceit && min_distance < 0
-        && !placeEntityNextToPosition(spot, currentX(), currentY(), youmonst.data->monsterTypeID, 0))
+        && !enexto(spot, currentX(), currentY(), youmonst.data))
         return FALSE;
 
     return found;
@@ -547,7 +547,7 @@ int reason; /* Player was thrown off etc. */
        unless we're in the midst of creating a bones file. */
     if (reason == DISMOUNT_BONES) {
         /* move the steed to an adjacent square */
-        if (placeEntityNextToPosition(&cc, currentX(), currentY(), mtmp->data->monsterTypeID, 0))
+        if (enexto(&cc, currentX(), currentY(), mtmp->data))
             rloc_to(mtmp, cc.x, cc.y);
         else /* evidently no room nearby; move steed elsewhere */
             (void) rloc(mtmp, FALSE);
@@ -571,7 +571,7 @@ int reason; /* Player was thrown off etc. */
                     }
                 } else if (is_lava(currentX(), currentY())) {
                     pline("%s is pulled into the lava!", Monnam(mtmp));
-                    if (!likesLava(mdat->monsterTypeID)) {
+                    if (!likes_lava(mdat)) {
                         killed(mtmp);
                         adjalign(-1);
                     }
@@ -609,7 +609,7 @@ int reason; /* Player was thrown off etc. */
                     (void) mintrap(mtmp);
             }
             /* Couldn't... try placing the steed */
-        } else if (placeEntityNextToPosition(&cc, currentX(), currentY(), mtmp->data->monsterTypeID, 0)) {
+        } else if (enexto(&cc, currentX(), currentY(), mtmp->data)) {
             /* Keep player here, move the steed to cc */
             rloc_to(mtmp, cc.x, cc.y);
             /* Player stays put */

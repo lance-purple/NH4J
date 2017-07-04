@@ -109,7 +109,7 @@ register struct monst *mtmp;
             || distanceSquaredToYou(x, y) > (BOLT_LIM + 1) * (BOLT_LIM + 1))
         /* can see it now, or sense it and would normally see it */
         && (canseemon(mtmp) || (sensemon(mtmp) && couldsee(x, y)))
-        && mtmp->mcanmove && !monsterDoesNotAttack(mtmp->data->monsterTypeID)
+        && mtmp->mcanmove && !monsterDoesNotAttack(mtmp->data)
         && !onscary(currentX(), currentY(), mtmp))
         stop_occupation();
 
@@ -127,7 +127,7 @@ struct monst *mtmp;
     /* creatures who are directly resistant to magical scaring:
      * Rodney, lawful minions, angels, the Riders */
     if (mtmp->iswiz || isLawfulMinion(mtmp->data->monsterTypeID) || mtmp->data == &mons[PM_ANGEL]
-        || isRiderOfApocalypse(mtmp->data->monsterTypeID))
+        || is_rider(mtmp->data))
         return FALSE;
 
     /* should this still be true for defiled/molochian altars? */
@@ -225,8 +225,8 @@ struct monst *mon;
 {
     if (mon == u.ustuck) {
         if (swallowed()) {
-            expels(mon, mon->data->monsterTypeID, TRUE);
-        } else if (!sticks(youmonst.data->monsterTypeID)) {
+            expels(mon, mon->data, TRUE);
+        } else if (!sticks(youmonst.data)) {
             unstuck(mon); /* let go */
             You("get released!");
         }
@@ -457,10 +457,10 @@ register struct monst *mtmp;
     }
 
     /* the watch will look around and see if you are up to no good :-) */
-    if (isMemberOfWatch(mdat->monsterTypeID)) {
+    if (is_watch(mdat)) {
         watch_on_duty(mtmp);
 
-    } else if (isMindFlayer(mdat->monsterTypeID) && !rn2(20)) {
+    } else if (is_mind_flayer(mdat) && !rn2(20)) {
         struct monst *m2, *nmon = (struct monst *) 0;
 
         if (canseemon(mtmp))
@@ -497,7 +497,7 @@ register struct monst *mtmp;
                 continue;
             if (m2 == mtmp)
                 continue;
-            if ((isTelepathic(m2->data->monsterTypeID) && (rn2(2) || m2->mblinded))
+            if ((telepathic(m2->data) && (rn2(2) || m2->mblinded))
                 || !rn2(10)) {
                 if (cansee(m2->mx, m2->my))
                     pline("It locks on to %s.", mon_nam(m2));
@@ -516,7 +516,7 @@ toofar:
      */
     if ((!mtmp->mpeaceful || youCauseConflict()) && inrange
         && dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) <= 8
-        && attacktype(mdat->monsterTypeID, AT_WEAP)) {
+        && attacktype(mdat, AT_WEAP)) {
         struct obj *mw_tmp;
 
         /* The scared check is necessary.  Otherwise a monster that is
@@ -592,7 +592,7 @@ toofar:
                 return 0;
             /* Monsters can move and then shoot on same turn;
                our hero can't.  Is that fair? */
-            if (!nearby && (ranged_attk(mdat->monsterTypeID) || find_offensive(mtmp)))
+            if (!nearby && (ranged_attk(mdat) || find_offensive(mtmp)))
                 break;
             /* engulfer/grabber checks */
             if (mtmp == u.ustuck) {
@@ -615,7 +615,7 @@ toofar:
      */
 
     if (!mtmp->mpeaceful || (youCauseConflict() && !resist(mtmp, RING_CLASS, 0, 0))) {
-        if (inrange && !monsterDoesNotAttack(mdat->monsterTypeID) && currentHitPoints() > 0 && !scared && tmp != 3)
+        if (inrange && !monsterDoesNotAttack(mdat) && currentHitPoints() > 0 && !scared && tmp != 3)
             if (mattacku(mtmp))
                 return 1; /* monster died (e.g. exploded) */
 
@@ -646,7 +646,7 @@ boolean
 itsstuck(mtmp)
 register struct monst *mtmp;
 {
-    if (sticks(youmonst.data->monsterTypeID) && mtmp == u.ustuck && !swallowed()) {
+    if (sticks(youmonst.data) && mtmp == u.ustuck && !swallowed()) {
         pline("%s cannot escape from you!", Monnam(mtmp));
         return TRUE;
     }
@@ -755,7 +755,7 @@ register int after;
         can_tunnel = isTunneler(ptr->monsterTypeID);
     can_open = !(cannotWieldThings(ptr->monsterTypeID));
     can_unlock =
-        ((can_open && monhaskey(mtmp, TRUE)) || mtmp->iswiz || isRiderOfApocalypse(ptr->monsterTypeID));
+        ((can_open && monhaskey(mtmp, TRUE)) || mtmp->iswiz || is_rider(ptr));
     doorbuster = isGiant(ptr->monsterTypeID);
     if (mtmp->wormno)
         goto not_special;
@@ -857,17 +857,17 @@ not_special:
             || is_obj_mappear(&youmonst,STRANGE_OBJECT) || lurking()
             || (is_obj_mappear(&youmonst,GOLD_PIECE) && !likesGold(pmid))
             || (mtmp->mpeaceful && !mtmp->isshk) /* allow shks to follow */
-            || ((ptr->monsterTypeID == PM_STALKER || mc == S_BAT
+            || ((monsndx(ptr) == PM_STALKER || mc == S_BAT
                  || mc == S_LIGHT) && !rn2(3)))
             appr = 0;
 
-        if (ptr->monsterTypeID == PM_LEPRECHAUN && (appr == 1)
+        if (monsndx(ptr) == PM_LEPRECHAUN && (appr == 1)
             && ((lepgold = findgold(mtmp->minvent))
                 && (lepgold->quan
                     > ((ygold = findgold(invent)) ? ygold->quan : 0L))))
             appr = -1;
 
-        if (!should_see && can_track(ptr->monsterTypeID)) {
+        if (!should_see && can_track(ptr)) {
             register coord *cp;
 
             cp = gettrack(omx, omy);
@@ -957,7 +957,7 @@ not_special:
                          || (likeobjs && index(practical, otmp->oclass)
                              && (otmp->otyp != CORPSE
                                  || (monsterClass(ptr->monsterTypeID) == S_NYMPH
-                                     && !isRiderOfApocalypse(mons[otmp->corpsenm].monsterTypeID))))
+                                     && !is_rider(&mons[otmp->corpsenm]))))
                          || (likemagic && index(magical, otmp->oclass))
                          || (uses_items && searches_for_item(mtmp, otmp))
                          || (likerock && otmp->otyp == BOULDER)
@@ -967,7 +967,7 @@ not_special:
                          || (ptr == &mons[PM_GELATINOUS_CUBE]
                              && !index(indigestion, otmp->oclass)
                              && !(otmp->otyp == CORPSE
-                                  && touchPetrifies(mons[otmp->corpsenm].monsterTypeID))))
+                                  && touch_petrifies(&mons[otmp->corpsenm]))))
                         && touch_artifact(otmp, mtmp)) {
                         if (can_carry(mtmp, otmp) > 0
                             && (throwsRocks(ptr->monsterTypeID) || !sobj_at(BOULDER, xx, yy))
@@ -1021,14 +1021,14 @@ not_special:
         flag |= (ALLOW_SANCT | ALLOW_SSM);
     else
         flag |= ALLOW_U;
-    if (isMinion(pmid) || isRiderOfApocalypse(ptr->monsterTypeID))
+    if (isMinion(pmid) || is_rider(ptr))
         flag |= ALLOW_SANCT;
     /* unicorn may not be able to avoid hero on a noteleport level */
     if (isUnicorn(pmid) && !level.flags.noteleport)
         flag |= NOTONL;
     if (passesThroughWalls(pmid))
         flag |= (ALLOW_WALL | ALLOW_ROCK);
-    if (passes_bars(pmid))
+    if (passes_bars(ptr))
         flag |= ALLOW_BARS;
     if (can_tunnel)
         flag |= ALLOW_DIG;
@@ -1308,7 +1308,7 @@ postmov:
                 }
             } else if (levl[mtmp->mx][mtmp->my].typ == IRONBARS) {
                 if (may_dig(mtmp->mx, mtmp->my)
-                    && (dmgtype(ptr->monsterTypeID, AD_RUST) || dmgtype(ptr->monsterTypeID, AD_CORR))) {
+                    && (dmgtype(ptr, AD_RUST) || dmgtype(ptr, AD_CORR))) {
                     if (canseemon(mtmp))
                         pline("%s eats through the iron bars.", Monnam(mtmp));
                     dissolve_bars(mtmp->mx, mtmp->my);
@@ -1316,7 +1316,7 @@ postmov:
                 } else if (flags.verbose && canseemon(mtmp))
                     Norep("%s %s %s the iron bars.", Monnam(mtmp),
                           /* pluralization fakes verb conjugation */
-                          makeplural(locomotion(ptr->monsterTypeID, "pass")),
+                          makeplural(locomotion(ptr, "pass")),
                           passesThroughWalls(ptr->monsterTypeID) ? "through" : "between");
             }
 
@@ -1611,7 +1611,7 @@ struct permonst *ptr;
             mon->cham = NON_PM;
         reslt = newcham(mon, ptr, FALSE, FALSE);
     } else if (mon->cham == NON_PM && ptr != mon->data) {
-        mon->cham = mon->data->monsterTypeID;
+        mon->cham = monsndx(mon->data);
         reslt = newcham(mon, ptr, FALSE, FALSE);
     }
     return reslt;

@@ -325,7 +325,7 @@ struct monst *mon;
         if (otmp->blessed
             && (isUndead(ptr->monsterTypeID) || isDemon(ptr->monsterTypeID) || is_vampshifter(mon)))
             bonus += rnd(4);
-        if (is_axe(otmp) && isWooden(ptr->monsterTypeID))
+        if (is_axe(otmp) && is_wooden(ptr))
             bonus += rnd(4);
         if (objects[otyp].oc_material == SILVER && mon_hates_silver(mon))
             bonus += rnd(20);
@@ -368,7 +368,7 @@ int x;
         if (otmp->otyp == x
             /* never select non-cockatrice corpses */
             && !((x == CORPSE || x == EGG)
-                 && !touchPetrifies(mons[otmp->corpsenm].monsterTypeID))
+                 && !touch_petrifies(&mons[otmp->corpsenm]))
             && (!otmp->oartifact || touch_artifact(otmp, mtmp)))
             return otmp;
     }
@@ -584,7 +584,7 @@ boolean polyspot;
         mon->weapon_check = NEED_WEAPON;
         return;
     }
-    if (!attacktype(mon->data->monsterTypeID, AT_WEAP)) {
+    if (!attacktype(mon->data, AT_WEAP)) {
         setmnotwielded(mon, mw_tmp);
         mon->weapon_check = NO_WEAPON_WANTED;
         obj_extract_self(obj);
@@ -750,7 +750,7 @@ abon()
     int str = ACURR(A_STR), dex = ACURR(A_DEX);
 
     if (areYouPolymorphed())
-        return (adj_lev(mons[currentMonsterNumber()].monsterTypeID) - 3);
+        return (adj_lev(&mons[currentMonsterNumber()]) - 3);
     if (str < 6)
         sbon = -2;
     else if (str < 8)

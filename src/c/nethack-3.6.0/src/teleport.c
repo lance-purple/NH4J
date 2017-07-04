@@ -13,47 +13,20 @@ STATIC_DCL void FDECL(mvault_tele, (struct monst *));
 /* non-null when teleporting via having read this scroll */
 STATIC_VAR struct obj *telescroll = 0;
 
-
-static boolean isYourself(unsigned m_id) {
-    return (m_id == youmonst.m_id);
-}
-
-static boolean isYourSteed(unsigned m_id) {
-    return (u.usteed) && (m_id == u.usteed->m_id);
-}
-
-static boolean wouldConflictWithYourPosition(unsigned m_id, int x, int y) {
-
-    if (isYourself(m_id)) {
-        return FALSE;
-    }
-
-    if (isYourSteed(m_id)) {
-        return FALSE;
-    }
-
-    if ((x != currentX()) || (y != currentY())) {
-        return FALSE;
-    }
-
-    return TRUE;
-}
-
 /*
  * Is (x,y) a good position of mtmp?  If mtmp is NULL, then is (x,y) good
  * for an object?
  *
- * This function will only look at mtmp->mdat, so makeMonsterOfType, mplayer, etc can
+ * This function will only look at mtmp->mdat, so makemon, mplayer, etc can
  * call it to generate new monster positions with fake monster structures.
  */
 boolean
-goodPosition(x, y, m_id, pmid, wormno, gpflags)
+goodpos(x, y, mtmp, gpflags)
 int x, y;
-int m_id;
-int pmid;
-int wormno;
+struct monst *mtmp;
 unsigned gpflags;
 {
+    struct permonst *mdat = (struct permonst *) 0;
     boolean ignorewater = ((gpflags & MM_IGNOREWATER) != 0);
 
     if (!isok(x, y))
@@ -65,11 +38,11 @@ unsigned gpflags;
      * which could be co-located and thus get restricted a bit too much.
      * oh well.
      */
-    if (wouldConflictWithYourPosition(m_id, x, y)) {
+    if (mtmp != &youmonst && x == currentX() && y == currentY()
+        && (!u.usteed || mtmp != u.usteed))
         return FALSE;
-    }
 
-    if (m_id != 0) {
+    if (mtmp) {
         struct monst *mtmp2 = m_at(x, y);
 
         /* Be careful with long worms.  A monster may be placed back in
@@ -82,11 +55,13 @@ unsigned gpflags;
          * != x || mtmp->my != y, we'd miss the case where we're called
          * to place the worm segment and the worm's head is at x,y.
          */
-        if (mtmp2 && (mtmp2->m_id != m_id || wormno))
+        if (mtmp2 && (mtmp2 != mtmp || mtmp->wormno))
             return FALSE;
 
+        mdat = mtmp->data;
+        int pmid = mdat->monsterTypeID;
         if (is_pool(x, y) && !ignorewater) {
-            if (isYourself(m_id)) {
+            if (mtmp == &youmonst) {
                 return (youAreLevitating() || youAreFlying() || canYouWalkOnWater() || youCanSwim()
                         || youAreAmphibious());
             } else {
@@ -96,160 +71,66 @@ unsigned gpflags;
         } else if (monsterClass(pmid) == S_EEL && rn2(13) && !ignorewater) {
             return FALSE;
         } else if (is_lava(x, y)) {
-            if (isYourself(m_id)) {
+            if (mtmp == &youmonst)
                 return (youAreLevitating() || youAreFlying()
                         || (youResistFire() && canYouWalkOnWater() && uarmf
                             && uarmf->oerodeproof)
-                        || (areYouPolymorphed() && likesLava(youmonst.data->monsterTypeID)));
-	    } else {
-                return (isFloater(pmid) || isFlyer(pmid)
-                        || likesLava(pmid));
-	    }
+                        || (areYouPolymorphed() && likes_lava(youmonst.data)));
+            else
+                return (isFloater(mdat->monsterTypeID) || isFlyer(pmid)
+                        || likes_lava(mdat));
         }
-        if (passesThroughWalls(pmid) && may_passwall(x, y)) {
+        if (passesThroughWalls(mdat->monsterTypeID) && may_passwall(x, y))
             return TRUE;
-	}
-        if (isAmorphous(pmid) && closed_door(x, y)) {
+        if (isAmorphous(mdat->monsterTypeID) && closed_door(x, y))
             return TRUE;
-	}
     }
     if (!accessible(x, y)) {
         if (!(is_pool(x, y) && ignorewater))
             return FALSE;
     }
 
-    if (sobj_at(BOULDER, x, y) && (!m_id || !throwsRocks(pmid))) {
+    if (sobj_at(BOULDER, x, y) && (!mdat || !throwsRocks(mdat->monsterTypeID)))
         return FALSE;
-    }
-
-    return TRUE;
-}
-
-
-/*
- * Is (x,y) a good position for an object?
- */
-boolean
-goodPositionForObject(x, y, gpflags)
-int x, y;
-unsigned gpflags;
-{
-    boolean ignorewater = ((gpflags & MM_IGNOREWATER) != 0);
-
-    if (!isok(x, y)) {
-        return FALSE;
-    }
-
-    /* in many cases, we're trying to create a new monster, which
-     * can't go on top of the player or any existing monster.
-     * however, occasionally we are relocating engravings or objects,
-     * which could be co-located and thus get restricted a bit too much.
-     * oh well.
-     */
-    if (x == currentX() && y == currentY()) {
-        return FALSE;
-    }
-
-    if (!accessible(x, y)) {
-        if (!(is_pool(x, y) && ignorewater)) {
-            return FALSE;
-	}
-    }
-
-    if (sobj_at(BOULDER, x, y)) {
-        return FALSE;
-    }
-
     return TRUE;
 }
 
 /*
- * Is (x,y) a good position of youmonst?
- */
-boolean
-goodPositionForYou(x, y, gpflags)
-int x, y;
-unsigned gpflags;
-{
-    struct monst *mtmp = &youmonst;
-    struct permonst *mdat = (struct permonst *) 0;
-    boolean ignorewater = ((gpflags & MM_IGNOREWATER) != 0);
-
-    if (!isok(x, y)) {
-        return FALSE;
-    }
-
-    struct monst *mtmp2 = m_at(x, y);
-
-    /* Be careful with long worms.  A monster may be placed back in
-     * its own location.  Normally, if m_at() returns the same monster
-     * that we're trying to place, the monster is being placed in its
-     * own location.  However, that is not correct for worm segments,
-     * because all the segments of the worm return the same m_at().
-     * Actually we overdo the check a little bit--a worm can't be placed
-     * in its own location, period.  If we just checked for mtmp->mx
-     * != x || mtmp->my != y, we'd miss the case where we're called
-     * to place the worm segment and the worm's head is at x,y.
-     */
-    if (mtmp2 && (mtmp2 != mtmp || mtmp->wormno)) {
-        return FALSE;
-    }
-
-    mdat = mtmp->data;
-    int pmid = mdat->monsterTypeID;
-    if (is_pool(x, y) && !ignorewater) {
-        return (youAreLevitating() || youAreFlying() || canYouWalkOnWater() || youCanSwim()
-                      || youAreAmphibious());
-    } else if (monsterClass(pmid) == S_EEL && rn2(13) && !ignorewater) {
-        return FALSE;
-    } else if (is_lava(x, y)) {
-        return (youAreLevitating() || youAreFlying()
-                        || (youResistFire() && canYouWalkOnWater() && uarmf
-                            && uarmf->oerodeproof)
-                        || (areYouPolymorphed() && likesLava(youmonst.data->monsterTypeID)));
-    }
-    if (passesThroughWalls(mdat->monsterTypeID) && may_passwall(x, y)) {
-        return TRUE;
-    }
-    if (isAmorphous(mdat->monsterTypeID) && closed_door(x, y)) {
-        return TRUE;
-    }
-    if (!accessible(x, y)) {
-        if (!(is_pool(x, y) && ignorewater)) {
-            return FALSE;
-	}
-    }
-
-    if (sobj_at(BOULDER, x, y) && (!mdat || !throwsRocks(mdat->monsterTypeID))) {
-        return FALSE;
-    }
-    return TRUE;
-}
-
-/*
+ * "entity next to"
+ *
  * Attempt to find a good place for the given monster type in the closest
  * position to (xx,yy).  Do so in successive square rings around (xx,yy).
  * If there is more than one valid position in the ring, choose one randomly.
  * Return TRUE and the position chosen when successful, FALSE otherwise.
  */
 boolean
-placeEntityNextToPosition(cc, xx, yy, pmid, entflags)
+enexto(cc, xx, yy, mdat)
 coord *cc;
 register xchar xx, yy;
-int pmid;
+struct permonst *mdat;
+{
+    return enexto_core(cc, xx, yy, mdat, 0);
+}
+
+boolean
+enexto_core(cc, xx, yy, mdat, entflags)
+coord *cc;
+register xchar xx, yy;
+struct permonst *mdat;
 unsigned entflags;
 {
 #define MAX_GOOD 15
     coord good[MAX_GOOD], *good_ptr;
     int x, y, range, i;
     int xmin, xmax, ymin, ymax;
+    struct monst fakemon; /* dummy monster */
 
-    if (NON_PM == pmid) {
-        debugpline0("placeEntityNextToPosition() called with NON_PM");
+    if (!mdat) {
+        debugpline0("enexto() called with null mdat");
         /* default to player's original monster type */
-        pmid = originalMonsterNumber();
+        mdat = &mons[originalMonsterNumber()];
     }
-
+    fakemon.data = mdat; /* set up for goodpos */
     good_ptr = good;
     range = 1;
     /*
@@ -263,7 +144,7 @@ unsigned entflags;
         ymax = min(ROWNO - 1, yy + range);
 
         for (x = xmin; x <= xmax; x++)
-            if (goodPosition(x, ymin, 0, pmid, 0, entflags)) {
+            if (goodpos(x, ymin, &fakemon, entflags)) {
                 good_ptr->x = x;
                 good_ptr->y = ymin;
                 /* beware of accessing beyond segment boundaries.. */
@@ -271,7 +152,7 @@ unsigned entflags;
                     goto full;
             }
         for (x = xmin; x <= xmax; x++)
-            if (goodPosition(x, ymax, 0, pmid, 0, entflags)) {
+            if (goodpos(x, ymax, &fakemon, entflags)) {
                 good_ptr->x = x;
                 good_ptr->y = ymax;
                 /* beware of accessing beyond segment boundaries.. */
@@ -279,7 +160,7 @@ unsigned entflags;
                     goto full;
             }
         for (y = ymin + 1; y < ymax; y++)
-            if (goodPosition(xmin, y, 0, pmid, 0, entflags)) {
+            if (goodpos(xmin, y, &fakemon, entflags)) {
                 good_ptr->x = xmin;
                 good_ptr->y = y;
                 /* beware of accessing beyond segment boundaries.. */
@@ -287,7 +168,7 @@ unsigned entflags;
                     goto full;
             }
         for (y = ymin + 1; y < ymax; y++)
-            if (goodPosition(xmax, y, 0, pmid, 0, entflags)) {
+            if (goodpos(xmax, y, &fakemon, entflags)) {
                 good_ptr->x = xmax;
                 good_ptr->y = y;
                 /* beware of accessing beyond segment boundaries.. */
@@ -353,7 +234,7 @@ boolean trapok;
 {
     if (!trapok && t_at(x, y))
         return FALSE;
-    if (!goodPositionForYou(x, y, 0))
+    if (!goodpos(x, y, &youmonst, 0))
         return FALSE;
     if (!tele_jump_ok(currentX(), currentY(), x, y))
         return FALSE;
@@ -631,7 +512,7 @@ dotele()
         }
         if (trap)
             You("%s onto the teleportation trap.",
-                locomotion(youmonst.data->monsterTypeID, "jump"));
+                locomotion(youmonst.data, "jump"));
     }
     if (!trap) {
         boolean castit = FALSE;
@@ -1000,7 +881,7 @@ struct trap *trap;
 {
     You("%s onto a level teleport trap!",
         youAreLevitating() ? (const char *) "float"
-                   : locomotion(youmonst.data->monsterTypeID, "step"));
+                   : locomotion(youmonst.data, "step"));
     if (youResistMagic()) {
         shieldeff(currentX(), currentY());
     }
@@ -1025,11 +906,7 @@ struct monst *mtmp;
 {
     register int xx, yy;
 
-    int m_id = mtmp ? mtmp->m_id : 0;
-    int pmid = (mtmp && mtmp->data) ? mtmp->data->monsterTypeID : NON_PM;
-    int wormno = mtmp ? mtmp->wormno : 0;
-
-    if (!goodPosition(x, y, m_id, pmid, wormno, 0))
+    if (!goodpos(x, y, mtmp, 0))
         return FALSE;
     /*
      * Check for restricted areas present in some special levels.
@@ -1061,7 +938,7 @@ struct monst *mtmp;
                                                 dndest.nhx, dndest.nhy)));
     } else {
         /* [try to] prevent a shopkeeper or temple priest from being
-           sent out of his room (caller might resort to goodPosition() if
+           sent out of his room (caller might resort to goodpos() if
            we report failure here, so this isn't full prevention) */
         if (mtmp->isshk && inhishop(mtmp)) {
             if (levl[x][y].roomno != ESHK(mtmp)->shoproom)
@@ -1148,10 +1025,6 @@ boolean suppress_impossible;
         return TRUE;
     }
 
-    int m_id = mtmp ? mtmp->m_id : 0;
-    int pmid = (mtmp && mtmp->data) ? mtmp->data->monsterTypeID : NON_PM;
-    int wormno = mtmp ? mtmp->wormno : 0;
-
     if (mtmp->iswiz && mtmp->mx) { /* Wizard, not just arriving */
         if (!areYouInsideWizardTower(currentX(), currentY()))
             x = xupstair, y = yupstair;
@@ -1161,8 +1034,8 @@ boolean suppress_impossible;
             x = xdnladder, y = ydnladder;
         /* if the wiz teleports away to heal, try the up staircase,
            to block the player's escaping before he's healed
-           (deliberately use `goodPosition' rather than `rloc_pos_ok' here) */
-        if (goodPosition(x, y, m_id, pmid, wormno, 0))
+           (deliberately use `goodpos' rather than `rloc_pos_ok' here) */
+        if (goodpos(x, y, mtmp, 0))
             goto found_xy;
     }
 
@@ -1171,14 +1044,14 @@ boolean suppress_impossible;
         x = rn1(COLNO - 3, 2);
         y = rn2(ROWNO);
         if ((trycount < 500) ? rloc_pos_ok(x, y, mtmp)
-                             : goodPosition(x, y, m_id, pmid, wormno, 0))
+                             : goodpos(x, y, mtmp, 0))
             goto found_xy;
     } while (++trycount < 1000);
 
     /* last ditch attempt to find a good place */
     for (x = 2; x < COLNO - 1; x++)
         for (y = 0; y < ROWNO; y++)
-            if (goodPosition(x, y, m_id, pmid, wormno, 0))
+            if (goodpos(x, y, mtmp, 0))
                 goto found_xy;
 
     /* level either full of monsters or somehow faulty */
@@ -1198,11 +1071,7 @@ struct monst *mtmp;
     register struct mkroom *croom = search_special(VAULT);
     coord c;
 
-    int m_id = (mtmp) ? mtmp->m_id : 0;
-    int pmid = (mtmp && mtmp->data) ? mtmp->data->monsterTypeID : NON_PM;
-    int wormno = (mtmp) ? mtmp->wormno : 0;
-
-    if (croom && somexy(croom, &c) && goodPosition(c.x, c.y, m_id, pmid, wormno, 0)) {
+    if (croom && somexy(croom, &c) && goodpos(c.x, c.y, mtmp, 0)) {
         rloc_to(mtmp, c.x, c.y);
         return;
     }
@@ -1285,7 +1154,7 @@ int in_sight;
             }
         } else if (tt == MAGIC_PORTAL) {
             if (areYouInEndgame()
-                && (mon_has_amulet(mtmp) || is_home_elemental(mptr->monsterTypeID))) {
+                && (mon_has_amulet(mtmp) || is_home_elemental(mptr))) {
                 if (in_sight && monsterClass(mptr->monsterTypeID) != S_ELEMENTAL) {
                     pline("%s seems to shimmer for a moment.", Monnam(mtmp));
                     seetrap(trap);
@@ -1332,7 +1201,7 @@ register struct obj *obj;
     boolean restricted_fall;
     int try_limit = 4000;
 
-    if (obj->otyp == CORPSE && isRiderOfApocalypse(mons[obj->corpsenm].monsterTypeID)) {
+    if (obj->otyp == CORPSE && is_rider(&mons[obj->corpsenm])) {
         if (revive_corpse(obj))
             return FALSE;
     }
@@ -1346,7 +1215,7 @@ register struct obj *obj;
         ty = rn2(ROWNO);
         if (!--try_limit)
             break;
-    } while (!goodPositionForObject(tx, ty, 0)
+    } while (!goodpos(tx, ty, (struct monst *) 0, 0)
              || (restricted_fall
                  && (!within_bounded_area(tx, ty, dndest.lx, dndest.ly,
                                           dndest.hx, dndest.hy)
@@ -1473,8 +1342,8 @@ boolean give_feedback;
             You("are no longer inside %s!", mon_nam(mtmp));
         unstuck(mtmp);
         (void) rloc(mtmp, TRUE);
-    } else if (isRiderOfApocalypse(mtmp->data->monsterTypeID) && rn2(13)
-               && placeEntityNextToPosition(&cc, currentX(), currentY(), mtmp->data->monsterTypeID, 0))
+    } else if (is_rider(mtmp->data) && rn2(13)
+               && enexto(&cc, currentX(), currentY(), mtmp->data))
         rloc_to(mtmp, cc.x, cc.y);
     else
         (void) rloc(mtmp, TRUE);

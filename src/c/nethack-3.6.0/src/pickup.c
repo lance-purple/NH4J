@@ -250,10 +250,10 @@ struct obj *obj;
 boolean remotely;
 {
     if (uarmg || remotely || obj->otyp != CORPSE
-        || !touchPetrifies(mons[obj->corpsenm].monsterTypeID) || youResistStoning())
+        || !touch_petrifies(&mons[obj->corpsenm]) || youResistStoning())
         return FALSE;
 
-    if (poly_when_stoned(youmonst.data->monsterTypeID) && polymon(PM_STONE_GOLEM)) {
+    if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM)) {
         display_nhwindow(WIN_MESSAGE, FALSE); /* --More-- */
         return FALSE;
     }
@@ -270,7 +270,7 @@ rider_corpse_revival(obj, remotely)
 struct obj *obj;
 boolean remotely;
 {
-    if (!obj || obj->otyp != CORPSE || !isRiderOfApocalypse(mons[obj->corpsenm].monsterTypeID))
+    if (!obj || obj->otyp != CORPSE || !is_rider(&mons[obj->corpsenm]))
         return FALSE;
 
     pline("At your %s, the corpse suddenly moves...",
@@ -1481,7 +1481,7 @@ encumber_msg()
             break;
         case 3:
             You("%s under your heavy load.  Movement is very hard.",
-                stagger(youmonst.data->monsterTypeID, "stagger"));
+                stagger(youmonst.data, "stagger"));
             break;
         default:
             You("%s move a handspan with this load!",
@@ -1502,7 +1502,7 @@ encumber_msg()
             break;
         case 3:
             You("%s under your load.  Movement is still very hard.",
-                stagger(youmonst.data->monsterTypeID, "stagger"));
+                stagger(youmonst.data, "stagger"));
             break;
         }
         context.botl = 1;
@@ -1829,7 +1829,7 @@ reverse_loot()
                 (void) boxlock(coffers, &boxdummy);
             }
         } else if (levl[x][y].looted != T_LOOTED &&
-                   (mon = makeMonsterOfType(courtMonsterType(), x, y, NO_MM_FLAGS)) != 0) {
+                   (mon = makemon(courtmon(), x, y, NO_MM_FLAGS)) != 0) {
             freeinv(goldob);
             add_to_minv(mon, goldob);
             pline("The exchequer accepts your contribution.");
@@ -2184,7 +2184,7 @@ struct obj *box;
        force the determination of alive vs dead state; but basing
        it just on opening the box is much simpler to cope with */
     livecat = rn2(2)
-                  ? makeMonsterOfType(PM_HOUSECAT, box->ox, box->oy, NO_MINVENT)
+                  ? makemon(&mons[PM_HOUSECAT], box->ox, box->oy, NO_MINVENT)
                   : 0;
     if (livecat) {
         livecat->mpeaceful = 1;
@@ -2196,7 +2196,7 @@ struct obj *box;
         (void) christen_monst(livecat, sc);
     } else {
         deadcat =
-            makeNamedCorpse(PM_HOUSECAT, box->ox, box->oy, sc);
+            mk_named_object(CORPSE, &mons[PM_HOUSECAT], box->ox, box->oy, sc);
         if (deadcat) {
             obj_extract_self(deadcat);
             (void) add_to_container(box, deadcat);

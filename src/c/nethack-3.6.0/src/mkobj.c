@@ -345,9 +345,8 @@ rndmonnum()
 
     /* Plan A: get a level-appropriate common monster */
     ptr = rndmonst();
-    if (ptr) {
-        return ptr->monsterTypeID;
-    }
+    if (ptr)
+        return monsndx(ptr);
 
     /* Plan B: get any common monster */
     excludeflags = G_UNIQ | G_NOGEN | (areYouInHell() ? G_NOHELL : G_HELL);
@@ -761,7 +760,7 @@ boolean artif;
             otmp->oeaten = 0;
             switch (otmp->otyp) {
             case CORPSE:
-                /* possibly overridden by makeCorpseObject() */
+                /* possibly overridden by mkcorpstat() */
                 tryct = 50;
                 do
                     otmp->corpsenm = undead_to_corpse(rndmonnum());
@@ -999,7 +998,7 @@ boolean artif;
         case ROCK_CLASS:
             switch (otmp->otyp) {
             case STATUE:
-                /* possibly overridden by makeStatueObject() */
+                /* possibly overridden by mkcorpstat() */
                 otmp->corpsenm = rndmonnum();
                 if (!isVerySmallMonster(mons[otmp->corpsenm].monsterTypeID)
                     && rn2(level_difficulty() / 2 + 10) > 10)
@@ -1132,7 +1131,7 @@ struct obj *body;
         when = ROT_AGE - corpse_age;
     when += (long) (rnz(rot_adjust) - rot_adjust);
 
-    if (isRiderOfApocalypse(mons[body->corpsenm].monsterTypeID)) {
+    if (is_rider(&mons[body->corpsenm])) {
         /*
          * Riders always revive.  They have a 1/3 chance per turn
          * of reviving after 12 turns.  Always revive by 500.
@@ -1411,7 +1410,7 @@ int x, y;
 
 /* return TRUE if the corpse has special timing */
 static boolean special_corpse(int num) {
-  return (((num) == PM_LIZARD) || ((num) == PM_LICHEN) || (isRiderOfApocalypse(mons[num].monsterTypeID))
+  return (((num) == PM_LIZARD) || ((num) == PM_LICHEN) || (is_rider(&mons[num]))
      || (monsterClass(mons[num].monsterTypeID) == S_TROLL));
 }
 
@@ -1425,16 +1424,18 @@ static boolean special_corpse(int num) {
  * resurrection.
  */
 struct obj *
-makeCorpseObject(mtmp, pmid, x, y, corpstatflags)
+mkcorpstat(objtype, mtmp, ptr, x, y, corpstatflags)
+int objtype; /* CORPSE or STATUE */
 struct monst *mtmp;
-int pmid;
+struct permonst *ptr;
 int x, y;
 unsigned corpstatflags;
 {
-    int objtype = CORPSE;
     register struct obj *otmp;
     boolean init = ((corpstatflags & CORPSTAT_INIT) != 0);
 
+    if (objtype != CORPSE && objtype != STATUE)
+        impossible("making corpstat type %d", objtype);
     if (x == 0 && y == 0) { /* special case - random placement */
         otmp = mksobj(objtype, init, FALSE);
         if (otmp)
@@ -1445,10 +1446,8 @@ unsigned corpstatflags;
         if (mtmp) {
             struct obj *otmp2;
 
-            if (NON_PM == pmid) {
-                pmid = mtmp->data->monsterTypeID;
-	    }
-
+            if (!ptr)
+                ptr = mtmp->data;
             /* save_mtraits frees original data pointed to by otmp */
             otmp2 = save_mtraits(otmp, mtmp);
             if (otmp2)
@@ -1456,66 +1455,10 @@ unsigned corpstatflags;
         }
         /* use the corpse or statue produced by mksobj() as-is
            unless `ptr' is non-null */
-        if (NON_PM != pmid) {
+        if (ptr) {
             int old_corpsenm = otmp->corpsenm;
 
-            otmp->corpsenm = pmid;
-            otmp->owt = weight(otmp);
-            if (otmp->otyp == CORPSE && (special_corpse(old_corpsenm)
-                                         || special_corpse(otmp->corpsenm))) {
-                obj_stop_timers(otmp);
-                start_corpse_timeout(otmp);
-            }
-        }
-    }
-    return otmp;
-}
-
-/*
- * OEXTRA note: Passing mtmp causes mtraits to be saved
- * even if ptr passed as well, but ptr is always used for
- * the corpse type (corpsenm). That allows the corpse type
- * to be different from the original monster,
- *      i.e.  vampire -> human corpse
- * yet still allow restoration of the original monster upon
- * resurrection.
- */
-struct obj *
-makeStatueObject(mtmp, pmid, x, y, corpstatflags)
-struct monst *mtmp;
-int pmid;
-int x, y;
-unsigned corpstatflags;
-{
-    int objtype = STATUE;
-    register struct obj *otmp;
-    boolean init = ((corpstatflags & CORPSTAT_INIT) != 0);
-
-    if (x == 0 && y == 0) { /* special case - random placement */
-        otmp = mksobj(objtype, init, FALSE);
-        if (otmp)
-            (void) rloco(otmp);
-    } else
-        otmp = mksobj_at(objtype, x, y, init, FALSE);
-    if (otmp) {
-        if (mtmp) {
-            struct obj *otmp2;
-
-            if (NON_PM == pmid) {
-                pmid = mtmp->data->monsterTypeID;
-	    }
-
-            /* save_mtraits frees original data pointed to by otmp */
-            otmp2 = save_mtraits(otmp, mtmp);
-            if (otmp2)
-                otmp = otmp2;
-        }
-        /* use the corpse or statue produced by mksobj() as-is
-           unless `ptr' is non-null */
-        if (NON_PM != pmid) {
-            int old_corpsenm = otmp->corpsenm;
-
-            otmp->corpsenm = pmid;
+            otmp->corpsenm = monsndx(ptr);
             otmp->owt = weight(otmp);
             if (otmp->otyp == CORPSE && (special_corpse(old_corpsenm)
                                          || special_corpse(otmp->corpsenm))) {
@@ -1582,7 +1525,7 @@ struct monst *mtmp;
         *mtmp2 = *mtmp;
         mtmp2->mextra = (struct mextra *) 0;
         if (mtmp->data)
-            mtmp2->mnum = mtmp->data->monsterTypeID;
+            mtmp2->mnum = monsndx(mtmp->data);
         /* invalidate pointers */
         /* m_id is needed to know if this is a revived quest leader */
         /* but m_id must be cleared when loading bones */
@@ -1642,31 +1585,21 @@ register int x, y;
     return otmp;
 }
 
-/* make a new corpse */
+/* make a new corpse or statue, uninitialized if a statue (i.e. no books) */
 struct obj *
-makeNamedCorpse(pmid, x, y, nm)
-int pmid;
+mk_named_object(objtype, ptr, x, y, nm)
+int objtype; /* CORPSE or STATUE */
+struct permonst *ptr;
 int x, y;
 const char *nm;
 {
-    struct obj *otmp = makeCorpseObject((struct monst *) 0, pmid, x, y, CORPSTAT_INIT);
-    if (nm) {
-        otmp = oname(otmp, nm);
-    }
-    return otmp;
-}
+    struct obj *otmp;
+    unsigned corpstatflags =
+        (objtype != STATUE) ? CORPSTAT_INIT : CORPSTAT_NONE;
 
-/* make a new statue, uninitialized (i.e. no books) */
-struct obj *
-makeNamedStatue(pmid, x, y, nm)
-int pmid;
-int x, y;
-const char *nm;
-{
-    struct obj *otmp = makeStatueObject((struct monst *) 0, pmid, x, y, CORPSTAT_NONE);
-    if (nm) {
+    otmp = mkcorpstat(objtype, (struct monst *) 0, ptr, x, y, corpstatflags);
+    if (nm)
         otmp = oname(otmp, nm);
-    }
     return otmp;
 }
 

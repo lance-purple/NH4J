@@ -450,7 +450,7 @@ int how;
            but vampires don't take on any shapes which warrant that */
         if (alt || typeIsProperName(mptr->monsterTypeID)) /* no article */
             Strcpy(shape, fakeName.c_str);
-        else if (the_unique_pm(mptr->monsterTypeID)) /* "the"; don't use the() here */
+        else if (the_unique_pm(mptr)) /* "the"; don't use the() here */
             Sprintf(shape, "the %s", fakeName.c_str);
         else /* "a"/"an" */
             Strcpy(shape, an(fakeName.c_str));
@@ -1041,7 +1041,7 @@ int how;
                        ? urace.femalenum
                        : urace.malenum;
         }
-        corpse = makeNamedCorpse(mnum, currentX(), currentY(), plname);
+        corpse = mk_named_object(CORPSE, &mons[mnum], currentX(), currentY(), plname);
         Sprintf(pbuf, "%s, ", plname);
         formatkiller(eos(pbuf), sizeof pbuf - strlen(pbuf), how);
         make_grave(currentX(), currentY(), pbuf);
@@ -1080,7 +1080,7 @@ int how;
     if (ariseFromGraveAsMonster() >= LOW_PM && ariseFromGraveAsMonster() != PM_GREEN_SLIME) {
         /* give this feedback even if bones aren't going to be created,
            so that its presence or absence doesn't tip off the player to
-           new bones or their lack; it might be a lie if makeMonsterOfType() fails */
+           new bones or their lack; it might be a lie if makemon fails */
         int graveMonsterType = mons[ariseFromGraveAsMonster()].monsterTypeID;
 	javaString graveMonster = monsterTypeName(graveMonsterType);
         Your("body rises from the dead as %s...",
@@ -1174,7 +1174,7 @@ int how;
         if (!Schroedingers_cat) /* check here in case disclosure was off */
             Schroedingers_cat = odds_and_ends(invent, CAT_CHECK);
         if (Schroedingers_cat) {
-            int mhp, m_lev = adj_lev(mons[PM_HOUSECAT].monsterTypeID);
+            int mhp, m_lev = adj_lev(&mons[PM_HOUSECAT]);
             mhp = d(m_lev, 8);
             increaseCurrentScore(mhp);
             if (!done_stopprint)

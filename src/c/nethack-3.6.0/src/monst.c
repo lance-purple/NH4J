@@ -284,7 +284,7 @@ NEARDATA struct permonst mons[] = {
         M1_ANIMAL | M1_NOHANDS | M1_CARNIVORE, M2_HOSTILE | M2_STRONG,
         M3_INFRAVISIBLE, CLR_RED),
 #ifdef CHARON
-    MON(XX_CERBERUS, "Cerberus", S_DOG, LVL(12, 10, 2, 20, -7),
+    MON(PM_CERBERUS, "Cerberus", S_DOG, LVL(12, 10, 2, 20, -7),
         (G_NOGEN | G_UNIQ | G_HELL),
         A(ATTK(AT_BITE, AD_PHYS, 3, 6), ATTK(AT_BITE, AD_PHYS, 3, 6),
           ATTK(AT_BITE, AD_PHYS, 3, 6), NO_ATTK, NO_ATTK, NO_ATTK),
@@ -331,7 +331,7 @@ NEARDATA struct permonst mons[] = {
             | M1_NOTAKE,
         M2_HOSTILE | M2_NEUTER, M3_INFRAVISIBLE, HI_ZAP),
 #if 0 /* not yet implemented */
-    MON(XX_BEHOLDER, "beholder", S_EYE,
+    MON(PM_BEHOLDER, "beholder", S_EYE,
 	LVL(6, 3, 4, 0, -10), (G_GENO | 2),
 	A(ATTK(AT_GAZE, AD_SLOW, 0, 0), ATTK(AT_GAZE, AD_SLEE, 2,25),
 	  ATTK(AT_GAZE, AD_DISN, 0, 0), ATTK(AT_GAZE, AD_STON, 0, 0),
@@ -1104,7 +1104,7 @@ NEARDATA struct permonst mons[] = {
         M1_FLY | M1_THICK_HIDE | M1_NOHANDS | M1_CARNIVORE,
         M2_HOSTILE | M2_STRONG | M2_GREEDY | M2_JEWELS, 0, DRAGON_SILVER),
 #if 0 /* DEFERRED */
-    MON(XX_BABY_SHIMMERING_DRAGON, "baby shimmering dragon", S_DRAGON,
+    MON(PM_BABY_SHIMMERING_DRAGON, "baby shimmering dragon", S_DRAGON,
 	LVL(12, 9, 2, 10, 0), G_GENO,
 	A(ATTK(AT_BITE, AD_PHYS, 2, 6),
 	  NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK),
@@ -1155,7 +1155,7 @@ NEARDATA struct permonst mons[] = {
         SIZ(1500, 500, MS_ROAR, MZ_HUGE), MR_ACID | MR_STONE, 0,
         M1_FLY | M1_THICK_HIDE | M1_NOHANDS | M1_CARNIVORE | M1_ACID,
         M2_HOSTILE | M2_STRONG | M2_GREEDY | M2_JEWELS, 0, CLR_YELLOW),
-    MON(PM_GRAY_DRAGON, "gray dragon", S_DRAGON, LVL(15, 9, -1, 20, 4), (G_GENO | 1),
+    MON(PM_BABY_GRAY_DRAGON, "gray dragon", S_DRAGON, LVL(15, 9, -1, 20, 4), (G_GENO | 1),
         A(ATTK(AT_BREA, AD_MAGM, 4, 6), ATTK(AT_BITE, AD_PHYS, 3, 8),
           ATTK(AT_CLAW, AD_PHYS, 1, 4), ATTK(AT_CLAW, AD_PHYS, 1, 4), NO_ATTK,
           NO_ATTK),
@@ -1164,7 +1164,7 @@ NEARDATA struct permonst mons[] = {
             | M1_CARNIVORE,
         M2_HOSTILE | M2_STRONG | M2_NASTY | M2_GREEDY | M2_JEWELS | M2_MAGIC,
         0, CLR_GRAY),
-    MON(PM_SILVER_DRAGON, "silver dragon", S_DRAGON, LVL(15, 9, -1, 20, 4), (G_GENO | 1),
+    MON(PM_BABY_SILVER_DRAGON, "silver dragon", S_DRAGON, LVL(15, 9, -1, 20, 4), (G_GENO | 1),
         A(ATTK(AT_BREA, AD_COLD, 4, 6), ATTK(AT_BITE, AD_PHYS, 3, 8),
           ATTK(AT_CLAW, AD_PHYS, 1, 4), ATTK(AT_CLAW, AD_PHYS, 1, 4), NO_ATTK,
           NO_ATTK),
@@ -1174,7 +1174,7 @@ NEARDATA struct permonst mons[] = {
         M2_HOSTILE | M2_STRONG | M2_NASTY | M2_GREEDY | M2_JEWELS | M2_MAGIC,
         0, DRAGON_SILVER),
 #if 0 /* DEFERRED */
-    MON(XX_SHIMMERING_DRAGON, "shimmering dragon", S_DRAGON,
+    MON(PM_SHIMMERING_DRAGON, "shimmering dragon", S_DRAGON,
 	LVL(15, 9, -1, 20, 4), (G_GENO | 1),
 	A(ATTK(AT_BREA, AD_MAGM, 4, 6), ATTK(AT_BITE, AD_PHYS, 3, 8),
 	  ATTK(AT_CLAW, AD_PHYS, 1, 4), ATTK(AT_CLAW, AD_PHYS, 1, 4),
@@ -1465,7 +1465,7 @@ struct permonst _mons2[] = {
         M2_HOSTILE | M2_STRONG | M2_NASTY | M2_COLLECT, M3_INFRAVISIBLE,
         CLR_ORANGE),
 #if 0 /* DEFERRED */
-    MON(XX_VORPAL_JABBERWOCK, "vorpal jabberwock", S_JABBERWOCK,
+    MON(PM_VORPAL_JABBERWOCK, "vorpal jabberwock", S_JABBERWOCK,
 	LVL(20, 12, -2, 50, 0), (G_GENO | 1),
 	A(ATTK(AT_BITE, AD_PHYS, 3, 10), ATTK(AT_BITE, AD_PHYS, 3, 10),
 	  ATTK(AT_CLAW, AD_PHYS, 3, 10), ATTK(AT_CLAW, AD_PHYS, 3, 10),
@@ -1857,7 +1857,7 @@ struct permonst _mons2[] = {
             | M2_MALE | M2_SHAPESHIFTER,
         M3_INFRAVISIBLE, CLR_BLUE),
 #if 0 /* DEFERRED */
-    MON(XX_VAMPIRE_MAGE, "vampire mage", S_VAMPIRE,
+    MON(PM_VAMPIRE_MAGE, "vampire mage", S_VAMPIRE,
 	LVL(20, 14, -4, 50, -9), (G_GENO | G_NOCORPSE | 1),
 	A(ATTK(AT_CLAW, AD_DRLI, 2, 8), ATTK(AT_BITE, AD_DRLI, 1, 8),
 	  ATTK(AT_MAGC, AD_SPEL, 2, 6), NO_ATTK, NO_ATTK, NO_ATTK),
@@ -2111,21 +2111,21 @@ struct permonst _mons2[] = {
         M1_HUMANOID | M1_OMNIVORE,
         M2_NOPOLY | M2_HUMAN | M2_STRONG | M2_COLLECT, M3_INFRAVISIBLE,
         HI_DOMESTIC),
-    MON(PM_HUMAN_WERERAT, "wererat", S_HUMAN, LVL(2, 12, 10, 10, -7), (1),
+    MON(PM_WERERAT, "wererat", S_HUMAN, LVL(2, 12, 10, 10, -7), (1),
         A(ATTK(AT_WEAP, AD_PHYS, 2, 4), NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK,
           NO_ATTK),
         SIZ(WT_HUMAN, 400, MS_WERE, MZ_HUMAN), MR_POISON, 0,
         M1_HUMANOID | M1_POIS | M1_REGEN | M1_OMNIVORE,
         M2_NOPOLY | M2_WERE | M2_HOSTILE | M2_HUMAN | M2_COLLECT,
         M3_INFRAVISIBLE, CLR_BROWN),
-    MON(PM_HUMAN_WEREJACKAL, "werejackal", S_HUMAN, LVL(2, 12, 10, 10, -7), (1),
+    MON(PM_WEREJACKAL, "werejackal", S_HUMAN, LVL(2, 12, 10, 10, -7), (1),
         A(ATTK(AT_WEAP, AD_PHYS, 2, 4), NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK,
           NO_ATTK),
         SIZ(WT_HUMAN, 400, MS_WERE, MZ_HUMAN), MR_POISON, 0,
         M1_HUMANOID | M1_POIS | M1_REGEN | M1_OMNIVORE,
         M2_NOPOLY | M2_WERE | M2_HOSTILE | M2_HUMAN | M2_COLLECT,
         M3_INFRAVISIBLE, CLR_RED),
-    MON(PM_HUMAN_WEREWOLF, "werewolf", S_HUMAN, LVL(5, 12, 10, 20, -7), (1),
+    MON(PM_WEREWOLF, "werewolf", S_HUMAN, LVL(5, 12, 10, 20, -7), (1),
         A(ATTK(AT_WEAP, AD_PHYS, 2, 4), NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK,
           NO_ATTK),
         SIZ(WT_HUMAN, 400, MS_WERE, MZ_HUMAN), MR_POISON, 0,
@@ -2314,7 +2314,7 @@ struct permonst _mons2[] = {
             | M2_COLLECT | M2_MAGIC,
         M3_INFRAVISIBLE, HI_LORD),
 #ifdef CHARON
-    MON(XX_CHARON, "Charon", S_HUMAN, LVL(76, 18, -5, 120, 0),
+    MON(PM_CHARON, "Charon", S_HUMAN, LVL(76, 18, -5, 120, 0),
         (G_HELL | G_NOCORPSE | G_NOGEN | G_UNIQ),
         A(ATTK(AT_WEAP, AD_PHYS, 1, 8), ATTK(AT_TUCH, AD_PLYS, 1, 8), NO_ATTK,
           NO_ATTK, NO_ATTK, NO_ATTK),
@@ -2583,7 +2583,7 @@ struct permonst _mons2[] = {
 /* other demons
  */
 #ifdef MAIL
-    MON(XX_MAIL_DAEMON, "mail daemon", S_DEMON, LVL(56, 24, 10, 127, 0),
+    MON(PM_MAIL_DAEMON, "mail daemon", S_DEMON, LVL(56, 24, 10, 127, 0),
         (G_NOGEN | G_NOCORPSE),
         A(NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK),
         SIZ(600, 300, MS_SILENT, MZ_HUMAN),
@@ -2851,7 +2851,7 @@ struct permonst _mons2[] = {
 #if 0 /* OBSOLETE */
 	/* Two for elves - one of each sex.
 	 */
-    MON(XX_EARENDIL, "Earendil", S_HUMAN,
+    MON(PM_EARENDIL, "Earendil", S_HUMAN,
 	LVL(20, 12, 0, 50, -20), (G_NOGEN | G_UNIQ),
 	A(ATTK(AT_WEAP, AD_PHYS, 1, 8),
 	  NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK),
@@ -2860,7 +2860,7 @@ struct permonst _mons2[] = {
 	M2_NOPOLY | M2_ELF | M2_HUMAN | M2_PNAME | M2_PEACEFUL | M2_STRONG
           | M2_MALE | M2_COLLECT | M2_MAGIC,
 	M3_CLOSE | M3_INFRAVISION | M3_INFRAVISIBLE, HI_LORD),
-    MON(XX_ELWING, "Elwing", S_HUMAN,
+    MON(PM_ELWING, "Elwing", S_HUMAN,
 	LVL(20, 12, 0, 50, -20), (G_NOGEN | G_UNIQ),
 	A(ATTK(AT_WEAP, AD_PHYS, 1, 8),
 	  NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK),
@@ -3000,7 +3000,7 @@ struct permonst _mons2[] = {
             | M2_GREEDY | M2_JEWELS | M2_MAGIC,
         M3_WANTSARTI | M3_WAITFORU | M3_INFRAVISIBLE, HI_LORD),
 #if 0 /* OBSOLETE */
-    MON(XX_GOBLIN_KING, "Goblin King", S_ORC,
+    MON(PM_GOBLIN_KING, "Goblin King", S_ORC,
 	LVL(15, 12, 10, 0, -15), (G_NOGEN | G_UNIQ),
 	A(ATTK(AT_WEAP, AD_PHYS, 2, 6), ATTK(AT_WEAP, AD_PHYS, 2, 6),
 	  ATTK(AT_CLAW, AD_SAMU, 1, 6), NO_ATTK, NO_ATTK, NO_ATTK),
@@ -3126,7 +3126,7 @@ struct permonst _mons2[] = {
         M2_NOPOLY | M2_HUMAN | M2_PEACEFUL | M2_STRONG | M2_COLLECT,
         M3_INFRAVISIBLE, HI_DOMESTIC),
 #if 0 /* OBSOLETE */
-    MON(XX_HIGH_ELF, "High-elf", S_HUMAN,
+    MON(PM_HIGH_ELF, "High-elf", S_HUMAN,
 	LVL(5, 12, 10, 10, -7), G_NOGEN,
 	A(ATTK(AT_WEAP, AD_PHYS, 2, 4), ATTK(AT_MAGC, AD_CLRC, 0, 0),
 	  NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK),

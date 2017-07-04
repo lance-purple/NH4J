@@ -231,7 +231,7 @@ in_trouble()
 
     if (yourIntrinsic(BLINDED) > 1 && hasEyes(youmonst.data->monsterTypeID)
         && (!swallowed()
-            || !monsterHasAttackWithDamageType(u.ustuck->data->monsterTypeID, AT_ENGL, AD_BLND)))
+            || !monsterHasAttackWithDamageType(u.ustuck->data, AT_ENGL, AD_BLND)))
         return TROUBLE_BLIND;
     for (i = 0; i < A_MAX; i++)
         if (yourCurrentAttr(i) < yourAttrMax(i))
@@ -1349,7 +1349,7 @@ dosacrifice()
                     demonless_msg = "blood coagulates";
                 }
                 if ((pm = dlord(altaralign)) != NON_PM
-                    && (dmon = makeMonsterOfType(pm, currentX(), currentY(), NO_MM_FLAGS))
+                    && (dmon = makemon(&mons[pm], currentX(), currentY(), NO_MM_FLAGS))
                            != 0) {
                     char dbuf[BUFSZ];
 

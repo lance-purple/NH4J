@@ -232,9 +232,9 @@ boolean quietly;
      */
     vis = (canspotmon(magr) && canspotmon(mdef));
 
-    if (touchPetrifies(pd->monsterTypeID) && !resists_ston(magr)) {
+    if (touch_petrifies(pd) && !resists_ston(magr)) {
         if (which_armor(magr, W_ARMG) != 0) {
-            if (poly_when_stoned(pa->monsterTypeID)) {
+            if (poly_when_stoned(pa)) {
                 mon_to_stone(magr);
                 return MM_HIT; /* no damage during the polymorph */
             }
@@ -255,7 +255,7 @@ boolean quietly;
     place_monster(mdef, fx, fy);
     if (vis && !quietly)
         pline("%s moves %s out of %s way!", Monnam(magr), mon_nam(mdef),
-              isRiderOfApocalypse(pa->monsterTypeID) ? "the" : mhis(magr));
+              is_rider(pa) ? "the" : mhis(magr));
     newsym(fx, fy);  /* see it */
     newsym(tx, ty);  /*   all happen */
     flush_screen(0); /* make sure it shows up */
@@ -346,7 +346,7 @@ register struct monst *magr, *mdef;
     /* Now perform all attacks for the monster. */
     for (i = 0; i < NATTK; i++) {
         res[i] = MM_MISS;
-        mattk = getMonsterAttack(pa->monsterTypeID, i, res);
+        mattk = getMonsterAttack(pa, i, res);
 
         otmp = (struct obj *) 0;
         attk = 1;
@@ -381,7 +381,7 @@ register struct monst *magr, *mdef;
              * players, or under conflict or confusion.
              */
             if (!magr->mconf && !youCauseConflict() && otmp && mattk.type != AT_WEAP
-                && touchPetrifies(mdef->data->monsterTypeID)) {
+                && touch_petrifies(mdef->data)) {
                 strike = 0;
                 break;
             }
@@ -738,7 +738,7 @@ register const struct Attack mattk;
                      res = MM_MISS;
     boolean cancelled;
 
-    if ((touchPetrifies(pd->monsterTypeID) /* or flesh_petrifies() */
+    if ((touch_petrifies(pd) /* or flesh_petrifies() */
          || (mattk.damageType == AD_DGST && pd == &mons[PM_MEDUSA]))
         && !resists_ston(magr)) {
         long protector = attk_protection((int) mattk.type),
@@ -750,7 +750,7 @@ register const struct Attack mattk;
 
         if (protector == 0L
             || (protector != ~0L && (wornitems & protector) != protector)) {
-            if (poly_when_stoned(pa->monsterTypeID)) {
+            if (poly_when_stoned(pa)) {
                 mon_to_stone(magr);
                 return MM_HIT; /* no damage during the polymorph */
             }
@@ -772,7 +772,7 @@ register const struct Attack mattk;
     switch (mattk.damageType) {
     case AD_DGST:
         /* eating a Rider or its corpse is fatal */
-        if (isRiderOfApocalypse(pd->monsterTypeID)) {
+        if (is_rider(pd)) {
             if (vis)
                 pline("%s %s!", Monnam(magr),
                       (pd == &mons[PM_FAMINE])
@@ -802,7 +802,7 @@ register const struct Attack mattk;
          * No nutrition from G_NOCORPSE monster, eg, undead.
          * DGST monsters don't die from undead corpses
          */
-        num = pd->monsterTypeID;
+        num = monsndx(pd);
         if (magr->mtame && !magr->isminion
             && !(mvitals[num].mvflags & G_NOCORPSE)) {
             struct obj *virtualcorpse = mksobj(CORPSE, FALSE, FALSE);
@@ -825,7 +825,7 @@ register const struct Attack mattk;
             break;
         if (canseemon(mdef))
             pline("%s %s for a moment.", Monnam(mdef),
-                  makeplural(stagger(pd->monsterTypeID, "stagger")));
+                  makeplural(stagger(pd, "stagger")));
         mdef->mstun = 1;
         goto physical;
     case AD_LEGS:
@@ -843,14 +843,14 @@ register const struct Attack mattk;
         } else if (mattk.type == AT_WEAP) {
             if (otmp) {
                 if (otmp->otyp == CORPSE
-                    && touchPetrifies(mons[otmp->corpsenm].monsterTypeID))
+                    && touch_petrifies(&mons[otmp->corpsenm]))
                     goto do_stone;
                 tmp += dmgval(otmp, mdef);
                 if (otmp->oartifact) {
                     (void) artifact_hit(magr, mdef, otmp, &tmp, dieroll);
                     if (mdef->mhp <= 0)
                         return (MM_DEF_DIED
-                                | (grow_up_from_exp(magr, mdef) ? 0 : MM_AGR_DIED));
+                                | (grow_up(magr, mdef) ? 0 : MM_AGR_DIED));
                 }
                 if (tmp)
                     rustm(mdef, otmp);
@@ -870,7 +870,7 @@ register const struct Attack mattk;
             break;
         }
         if (vis) {
-            pline("%s is %s!", Monnam(mdef), on_fire(pd->monsterTypeID, mattk));
+            pline("%s is %s!", Monnam(mdef), on_fire(pd, mattk));
 	}
         if (pd == &mons[PM_STRAW_GOLEM] || pd == &mons[PM_PAPER_GOLEM]) {
             if (vis)
@@ -880,7 +880,7 @@ register const struct Attack mattk;
                 return 0;
             else if (mdef->mtame && !vis)
                 pline("May %s roast in peace.", mon_nam(mdef));
-            return (MM_DEF_DIED | (grow_up_from_exp(magr, mdef) ? 0 : MM_AGR_DIED));
+            return (MM_DEF_DIED | (grow_up(magr, mdef) ? 0 : MM_AGR_DIED));
         }
         tmp += destroy_mitem(mdef, SCROLL_CLASS, AD_FIRE);
         tmp += destroy_mitem(mdef, SPBOOK_CLASS, AD_FIRE);
@@ -958,7 +958,7 @@ register const struct Attack mattk;
                 return 0;
             else if (mdef->mtame && !vis)
                 pline("May %s rust in peace.", mon_nam(mdef));
-            return (MM_DEF_DIED | (grow_up_from_exp(magr, mdef) ? 0 : MM_AGR_DIED));
+            return (MM_DEF_DIED | (grow_up(magr, mdef) ? 0 : MM_AGR_DIED));
         }
         erode_armor(mdef, ERODE_RUST);
         mdef->mstrategy &= ~STRAT_WAITFORU;
@@ -982,7 +982,7 @@ register const struct Attack mattk;
                 return 0;
             else if (mdef->mtame && !vis)
                 pline("May %s rot in peace.", mon_nam(mdef));
-            return (MM_DEF_DIED | (grow_up_from_exp(magr, mdef) ? 0 : MM_AGR_DIED));
+            return (MM_DEF_DIED | (grow_up(magr, mdef) ? 0 : MM_AGR_DIED));
         }
         erode_armor(mdef, ERODE_CORRODE);
         mdef->mstrategy &= ~STRAT_WAITFORU;
@@ -995,7 +995,7 @@ register const struct Attack mattk;
         /* may die from the acid if it eats a stone-curing corpse */
         if (munstone(mdef, FALSE))
             goto post_stone;
-        if (poly_when_stoned(pd->monsterTypeID)) {
+        if (poly_when_stoned(pd)) {
             mon_to_stone(mdef);
             tmp = 0;
             break;
@@ -1009,7 +1009,7 @@ register const struct Attack mattk;
                 return 0;
             else if (mdef->mtame && !vis)
                 You(brief_feeling, "peculiarly sad");
-            return (MM_DEF_DIED | (grow_up_from_exp(magr, mdef) ? 0 : MM_AGR_DIED));
+            return (MM_DEF_DIED | (grow_up(magr, mdef) ? 0 : MM_AGR_DIED));
         }
         tmp = (mattk.damageType == AD_STON ? 0 : 1);
         break;
@@ -1113,7 +1113,7 @@ register const struct Attack mattk;
                 else if (mdef->mtame && !vis)
                     You(brief_feeling, "strangely sad");
                 return (MM_DEF_DIED
-                        | (grow_up_from_exp(magr, mdef) ? 0 : MM_AGR_DIED));
+                        | (grow_up(magr, mdef) ? 0 : MM_AGR_DIED));
             }
             if (!youAreDeaf()) {
                 if (!vis)
@@ -1204,7 +1204,7 @@ register const struct Attack mattk;
             mselftouch(mdef, (const char *) 0, FALSE);
             if (mdef->mhp <= 0)
                 return (MM_DEF_DIED
-                        | (grow_up_from_exp(magr, mdef) ? 0 : MM_AGR_DIED));
+                        | (grow_up(magr, mdef) ? 0 : MM_AGR_DIED));
             if (monsterClass(pa->monsterTypeID) == S_NYMPH && !tele_restrict(magr)) {
                 (void) rloc(magr, TRUE);
                 if (vis && !canspotmon(magr))
@@ -1318,7 +1318,7 @@ register const struct Attack mattk;
             } else if (pd == &mons[PM_GREEN_SLIME] && !isSlimeproof(pa->monsterTypeID)) {
                 (void) newcham(magr, &mons[PM_GREEN_SLIME], FALSE, TRUE);
             } else if (pd == &mons[PM_WRAITH]) {
-                (void) grow_up_instantly(magr);
+                (void) grow_up(magr, (struct monst *) 0);
                 /* don't grow up twice */
                 return (MM_DEF_DIED | (magr->mhp > 0 ? 0 : MM_AGR_DIED));
             } else if (pd == &mons[PM_NURSE]) {
@@ -1327,7 +1327,7 @@ register const struct Attack mattk;
         }
         /* caveat: above digestion handling doesn't keep `pa' up to date */
 
-        return (MM_DEF_DIED | (grow_up_from_exp(magr, mdef) ? 0 : MM_AGR_DIED));
+        return (MM_DEF_DIED | (grow_up(magr, mdef) ? 0 : MM_AGR_DIED));
     }
     return (res == MM_AGR_DIED) ? MM_AGR_DIED : MM_HIT;
 }
@@ -1375,7 +1375,7 @@ slept_monst(mon)
 struct monst *mon;
 {
     if ((mon->msleeping || !mon->mcanmove) && mon == u.ustuck
-        && !sticks(youmonst.data->monsterTypeID) && !swallowed()) {
+        && !sticks(youmonst.data) && !swallowed()) {
         pline("%s grip relaxes.", s_suffix(Monnam(mon)));
         unstuck(mon);
     }
@@ -1391,11 +1391,11 @@ struct obj *obj;
     if (!mdef || !obj)
         return; /* just in case */
     /* AD_ACID is handled in passivemm */
-    if (dmgtype(mdef->data->monsterTypeID, AD_CORR))
+    if (dmgtype(mdef->data, AD_CORR))
         dmgtyp = ERODE_CORRODE;
-    else if (dmgtype(mdef->data->monsterTypeID, AD_RUST))
+    else if (dmgtype(mdef->data, AD_RUST))
         dmgtyp = ERODE_RUST;
-    else if (dmgtype(mdef->data->monsterTypeID, AD_FIRE))
+    else if (dmgtype(mdef->data, AD_FIRE))
         dmgtyp = ERODE_BURN;
     else
         return;
@@ -1532,7 +1532,7 @@ int mdead;
                 magr->mstun = 1;
                 if (canseemon(magr))
                     pline("%s %s...", Monnam(magr),
-                          makeplural(stagger(magr->data->monsterTypeID, "stagger")));
+                          makeplural(stagger(magr->data, "stagger")));
             }
             tmp = 0;
             break;
@@ -1582,8 +1582,8 @@ struct monst *mon;
 boolean givemsg;
 {
     if (mon->mspec_used < 20 /* limit draining */
-        && (attacktype(mon->data->monsterTypeID, AT_MAGC)
-            || attacktype(mon->data->monsterTypeID, AT_BREA))) {
+        && (attacktype(mon->data, AT_MAGC)
+            || attacktype(mon->data, AT_BREA))) {
         mon->mspec_used += d(2, 2);
         if (givemsg)
             pline("%s seems lethargic.", Monnam(mon));

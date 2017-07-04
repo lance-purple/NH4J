@@ -445,11 +445,11 @@ dig(VOID_ARGS)
 
             switch (rn2(2)) {
             case 0:
-                mtmp = makeMonsterOfType(PM_EARTH_ELEMENTAL, dpx, dpy,
+                mtmp = makemon(&mons[PM_EARTH_ELEMENTAL], dpx, dpy,
                                NO_MM_FLAGS);
                 break;
             default:
-                mtmp = makeMonsterOfType(PM_XORN, dpx, dpy, NO_MM_FLAGS);
+                mtmp = makemon(&mons[PM_XORN], dpx, dpy, NO_MM_FLAGS);
                 break;
             }
             if (mtmp)
@@ -931,13 +931,13 @@ coord *cc;
         if (youCanSee())
             pline(youAreHallucinating() ? "Dude!  The living dead!"
                                 : "The grave's owner is very upset!");
-        (void) makeMonsterOfClass(S_ZOMBIE, dig_x, dig_y, NO_MM_FLAGS);
+        (void) makemon(mkclass(S_ZOMBIE, 0), dig_x, dig_y, NO_MM_FLAGS);
         break;
     case 3:
         if (youCanSee())
             pline(youAreHallucinating() ? "I want my mummy!"
                                 : "You've disturbed a tomb!");
-        (void) makeMonsterOfClass(S_MUMMY, dig_x, dig_y, NO_MM_FLAGS);
+        (void) makemon(mkclass(S_MUMMY, 0), dig_x, dig_y, NO_MM_FLAGS);
         break;
     default:
         /* No corpse */
@@ -1215,7 +1215,7 @@ boolean zap;
             for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
                 if (DEADMONSTER(mtmp))
                     continue;
-                if (isMemberOfWatch(mtmp->data->monsterTypeID) && mtmp->mcansee && m_canseeu(mtmp)
+                if (is_watch(mtmp->data) && mtmp->mcansee && m_canseeu(mtmp)
                     && couldsee(mtmp->mx, mtmp->my) && mtmp->mpeaceful)
                     break;
             }
@@ -1403,7 +1403,7 @@ zap_dig()
                 You("pierce %s %s wall!", s_suffix(mon_nam(mtmp)),
                     mbodypart(mtmp, STOMACH));
             mtmp->mhp = 1; /* almost dead */
-            expels(mtmp, mtmp->data->monsterTypeID, !isAnimal(pmid));
+            expels(mtmp, mtmp->data, !isAnimal(pmid));
         }
         return;
     } /* swallowed */

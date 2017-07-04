@@ -133,7 +133,7 @@ coord *startp;
      * the hero is not going to see it anyway.  So pick a nearby position.
      */
     if (Blind && !Blind_telepat) {
-        if (!placeEntityNextToPosition(startp, currentX(), currentY(), -1, 0))
+        if (!enexto(startp, currentX(), currentY(), (struct permonst *) 0))
             return FALSE; /* no good positions */
         return TRUE;
     }
@@ -175,7 +175,8 @@ retry:
                     startp->y = row;
                     startp->x = viz_rmin[row];
 
-                } else if (placeEntityNextToPosition(&testcc, (xchar) viz_rmin[row], row, -1, 0)
+                } else if (enexto(&testcc, (xchar) viz_rmin[row], row,
+                                  (struct permonst *) 0)
                            && !cansee(testcc.x, testcc.y)
                            && couldsee(testcc.x, testcc.y)) {
                     max_distance = dd;
@@ -189,7 +190,8 @@ retry:
                     startp->y = row;
                     startp->x = viz_rmax[row];
 
-                } else if (placeEntityNextToPosition(&testcc, (xchar) viz_rmax[row], row, -1, 0)
+                } else if (enexto(&testcc, (xchar) viz_rmax[row], row,
+                                  (struct permonst *) 0)
                            && !cansee(testcc.x, testcc.y)
                            && couldsee(testcc.x, testcc.y)) {
                     max_distance = dd;
@@ -213,8 +215,8 @@ retry:
 /*
  * Try to choose a stopping point as near as possible to the starting
  * position while still adjacent to the hero.  If all else fails, try
- * placeEntityNextToPosition().  Do that only as a last resort because
- * it chooses its point randomly, which is not what we want.
+ * enexto().  Use enexto() as a last resort because enexto() chooses
+ * its point randomly, which is not what we want.
  */
 STATIC_OVL boolean
 md_stop(stopp, startp)
@@ -239,8 +241,8 @@ coord *startp; /* starting position (read only) */
             }
         }
 
-    /* If we didn't find a good spot, try placeEntityNextToPosition(). */
-    if (min_distance < 0 && !placeEntityNextToPosition(stopp, currentX(), currentY(), PM_MAIL_DAEMON, 0))
+    /* If we didn't find a good spot, try enexto(). */
+    if (min_distance < 0 && !enexto(stopp, currentX(), currentY(), &mons[PM_MAIL_DAEMON]))
         return FALSE;
 
     return TRUE;
@@ -369,7 +371,7 @@ struct mail_info *info;
         goto give_up;
 
     /* Make the daemon.  Have it rush towards the hero. */
-    if (!(md = makeMonsterOfType(PM_MAIL_DAEMON, start.x, start.y, NO_MM_FLAGS)))
+    if (!(md = makemon(&mons[PM_MAIL_DAEMON], start.x, start.y, NO_MM_FLAGS)))
         goto give_up;
     if (!md_rush(md, stop.x, stop.y))
         goto go_back;

@@ -68,9 +68,7 @@ struct monst *mon;
         atyp = (maligntype == A_NONE) ? A_NONE : sgn(maligntype);
     }
 
-    int pmid = ptr->monsterTypeID;
-
-    if (isDemonPrince(pmid) || (pmid == PM_WIZARD_OF_YENDOR)) {
+    if (isDemonPrince(ptr->monsterTypeID) || (ptr == &mons[PM_WIZARD_OF_YENDOR])) {
         dtype = (!rn2(20)) ? dprince(atyp) : (!rn2(4)) ? dlord(atyp)
                                                        : ndemon(atyp);
         cnt = (!rn2(4) && isNamelessMajorDemon(mons[dtype].monsterTypeID)) ? 2 : 1;
@@ -80,12 +78,12 @@ struct monst *mon;
         cnt = (!rn2(4) && isNamelessMajorDemon(mons[dtype].monsterTypeID)) ? 2 : 1;
     } else if (isNamelessMajorDemon(ptr->monsterTypeID)) {
         dtype = (!rn2(20)) ? dlord(atyp) : (!rn2(6)) ? ndemon(atyp)
-                                                     : pmid;
+                                                     : monsndx(ptr);
         cnt = 1;
     } else if (isLawfulMinion(mon->data->monsterTypeID)) {
         dtype = (isLord(ptr->monsterTypeID) && !rn2(20))
                     ? llord()
-                    : (isLord(ptr->monsterTypeID) || !rn2(6)) ? lminion() : pmid;
+                    : (isLord(ptr->monsterTypeID) || !rn2(6)) ? lminion() : monsndx(ptr);
         cnt = (!rn2(4) && !isLord(mons[dtype].monsterTypeID)) ? 2 : 1;
     } else if (ptr == &mons[PM_ANGEL]) {
         /* non-lawful angels can also summon */
@@ -122,11 +120,11 @@ struct monst *mon;
     }
 
     /* some candidates can generate a group of monsters, so simple
-       count of non-null makeMonsterOfType() result is not sufficient */
+       count of non-null makemon() result is not sufficient */
     census = monster_census(FALSE);
 
     while (cnt > 0) {
-        mtmp = makeMonsterOfType(dtype, currentX(), currentY(), MM_EMIN);
+        mtmp = makemon(&mons[dtype], currentX(), currentY(), MM_EMIN);
         if (mtmp) {
             result++;
             /* an angel's alignment should match the summoner */
@@ -176,7 +174,7 @@ boolean talk;
     if (mnum == NON_PM) {
         mon = 0;
     } else if (mnum == PM_ANGEL) {
-        mon = makeMonsterOfType(mnum, currentX(), currentY(), MM_EMIN);
+        mon = makemon(&mons[mnum], currentX(), currentY(), MM_EMIN);
         if (mon) {
             mon->isminion = 1;
             EMIN(mon)->min_align = alignment;
@@ -186,14 +184,14 @@ boolean talk;
                && mnum != PM_ALIGNED_PRIEST && mnum != PM_HIGH_PRIEST) {
         /* This was mons[mnum].pxlth == 0 but is this restriction
            appropriate or necessary now that the structures are separate? */
-        mon = makeMonsterOfType(mnum, currentX(), currentY(), MM_EMIN);
+        mon = makemon(&mons[mnum], currentX(), currentY(), MM_EMIN);
         if (mon) {
             mon->isminion = 1;
             EMIN(mon)->min_align = alignment;
             EMIN(mon)->renegade = FALSE;
         }
     } else {
-        mon = makeMonsterOfType(mnum, currentX(), currentY(), NO_MM_FLAGS);
+        mon = makemon(&mons[mnum], currentX(), currentY(), NO_MM_FLAGS);
     }
     if (mon) {
         if (talk) {
@@ -368,9 +366,8 @@ lminion()
 
     for (tryct = 0; tryct < 20; tryct++) {
         ptr = mkclass(S_ANGEL, 0);
-        if (ptr && !isLord(ptr->monsterTypeID)) {
-            return ptr->monsterTypeID;
-        }
+        if (ptr && !isLord(ptr->monsterTypeID))
+            return (monsndx(ptr));
     }
 
     return NON_PM;
@@ -386,9 +383,8 @@ aligntyp atyp;
     for (tryct = 0; tryct < 20; tryct++) {
         ptr = mkclass(S_DEMON, 0);
         if (ptr && isNamelessMajorDemon(ptr->monsterTypeID)
-            && (atyp == A_NONE || sgn(monsterAlignment(ptr->monsterTypeID)) == sgn(atyp))) {
-            return ptr->monsterTypeID;
-        }
+            && (atyp == A_NONE || sgn(monsterAlignment(ptr->monsterTypeID)) == sgn(atyp)))
+            return (monsndx(ptr));
     }
 
     return NON_PM;
@@ -417,8 +413,9 @@ struct monst *mon; /* if null, angel hasn't been created yet */
     for (i = rn1(3, 2); i > 0; --i) {
         mm.x = currentX();
         mm.y = currentY();
-        if (placeEntityNextToPosition(&mm, mm.x, mm.y, PM_ANGEL, 0))
-            (void) makeRoamingMonsterOfType(PM_ANGEL, currentAlignmentType(), mm.x, mm.y, FALSE);
+        if (enexto(&mm, mm.x, mm.y, &mons[PM_ANGEL]))
+            (void) mk_roamer(&mons[PM_ANGEL], currentAlignmentType(), mm.x, mm.y,
+                             FALSE);
     }
 }
 
@@ -442,8 +439,9 @@ gain_guardian_angel()
         verbalize("Thou hast been worthy of me!");
         mm.x = currentX();
         mm.y = currentY();
-        if (placeEntityNextToPosition(&mm, mm.x, mm.y, PM_ANGEL, 0)
-            && (mtmp = makeRoamingMonsterOfType(PM_ANGEL, currentAlignmentType(), mm.x, mm.y, TRUE)) != 0) {
+        if (enexto(&mm, mm.x, mm.y, &mons[PM_ANGEL])
+            && (mtmp = mk_roamer(&mons[PM_ANGEL], currentAlignmentType(), mm.x, mm.y,
+                                 TRUE)) != 0) {
             mtmp->mstrategy &= ~STRAT_APPEARMSG;
             if (youCanSee())
                 pline("An angel appears near you.");

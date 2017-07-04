@@ -19,7 +19,7 @@ register struct monst *mon;
             if (!youAreDeaf() && !canseemon(mon)) {
                 const char *howler;
 
-                switch (mon->data->monsterTypeID) {
+                switch (monsndx(mon->data)) {
                 case PM_WEREWOLF:
                     howler = "wolf";
                     break;
@@ -94,7 +94,7 @@ register struct monst *mon;
 {
     register int pm;
 
-    pm = counter_were(mon->data->monsterTypeID);
+    pm = counter_were(monsndx(mon->data));
     if (pm < LOW_PM) {
 	javaString wereName = monsterTypeName(mon->data->monsterTypeID);
         impossible("unknown lycanthrope %s.", wereName.c_str);
@@ -109,7 +109,7 @@ register struct monst *mon;
 	releaseJavaString(monsterName);
     }
 
-    setMonsterData(mon, pm, 0);
+    set_mon_data(mon, &mons[pm], 0);
     if (mon->msleeping || !mon->mcanmove) {
         /* transformation wakens and/or revitalizes */
         mon->msleeping = 0;
@@ -123,13 +123,14 @@ register struct monst *mon;
     possibly_unwield(mon, FALSE);
 }
 
-int were_summon(pmid, yours, visible, genbuf) /* were-creature (even you) summons a horde */
-int pmid;
+int were_summon(ptr, yours, visible,
+                genbuf) /* were-creature (even you) summons a horde */
+register struct permonst *ptr;
 register boolean yours;
 int *visible; /* number of visible helpers created */
 char *genbuf;
 {
-    register int i, typ;
+    register int i, typ, pm = monsndx(ptr);
     register struct monst *mtmp;
     int total = 0;
 
@@ -137,7 +138,7 @@ char *genbuf;
     if (youHaveProtectionFromShapeChangers() && !yours)
         return 0;
     for (i = rnd(5); i > 0; i--) {
-        switch (pmid) {
+        switch (pm) {
         case PM_WERERAT:
         case PM_HUMAN_WERERAT:
             typ =
@@ -160,7 +161,7 @@ char *genbuf;
         default:
             continue;
         }
-        mtmp = makeMonsterOfType(typ, currentX(), currentY(), NO_MM_FLAGS);
+        mtmp = makemon(&mons[typ], currentX(), currentY(), NO_MM_FLAGS);
         if (mtmp) {
             total++;
             if (canseemon(mtmp))
@@ -208,7 +209,7 @@ boolean purify;
 }
 
 boolean youHateSilver() {
-    return (lycanthropeType() >= LOW_PM || hates_silver(youmonst.data->monsterTypeID));
+    return (lycanthropeType() >= LOW_PM || hates_silver(youmonst.data));
 }
 
 /*were.c*/

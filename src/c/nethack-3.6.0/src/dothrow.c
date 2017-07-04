@@ -84,7 +84,7 @@ int shotlimit;
         return 0;
     }
     u_wipe_engr(2);
-    if (!uarmg && obj->otyp == CORPSE && touchPetrifies(mons[obj->corpsenm].monsterTypeID)
+    if (!uarmg && obj->otyp == CORPSE && touch_petrifies(&mons[obj->corpsenm])
         && !youResistStoning()) {
         You("throw %s with your bare %s.",
             corpse_xname(obj, (const char *) 0, CXN_PFX_THE),
@@ -584,8 +584,8 @@ int x, y;
             wake_nearto(x,y, 10);
             return FALSE;
         }
-        if ((currentX() - x) && (currentY() - y) && bad_rock(youmonst.data->monsterTypeID, currentX(), y)
-            && bad_rock(youmonst.data->monsterTypeID, x, currentY())) {
+        if ((currentX() - x) && (currentY() - y) && bad_rock(youmonst.data, currentX(), y)
+            && bad_rock(youmonst.data, x, currentY())) {
             boolean too_much =
                 (invent && (inv_weight() + weight_cap() > 600));
             /* Move at a diagonal. */
@@ -607,8 +607,8 @@ int x, y;
         wake_nearto(x,y, 10);
         return FALSE;
     }
-    if ((currentX() - x) && (currentY() - y) && bad_rock(youmonst.data->monsterTypeID, currentX(), y)
-        && bad_rock(youmonst.data->monsterTypeID, x, currentY())) {
+    if ((currentX() - x) && (currentY() - y) && bad_rock(youmonst.data, currentX(), y)
+        && bad_rock(youmonst.data, x, currentY())) {
         /* Move at a diagonal. */
         if (Sokoban) {
             You("come to an abrupt halt!");
@@ -669,7 +669,7 @@ int x, y;
     /* TODO: Treat walls, doors, iron bars, pools, lava, etc. specially
      * rather than just stopping before.
      */
-    if (goodPosition(x, y, mon->m_id, mon->data->monsterTypeID, mon->wormno, 0) && m_in_out_region(mon, x, y)) {
+    if (goodpos(x, y, mon, 0) && m_in_out_region(mon, x, y)) {
         remove_monster(mon->mx, mon->my);
         newsym(mon->mx, mon->my);
         place_monster(mon, x, y);
@@ -769,7 +769,7 @@ int dx, dy, range;
     if (!range || (!dx && !dy))
         return; /* paranoia */
     /* don't let grid bugs be hurtled diagonally */
-    if (dx && dy && NODIAG(mon->data->monsterTypeID))
+    if (dx && dy && NODIAG(monsndx(mon->data)))
         return;
 
     /* Send the monster along the path */
@@ -822,7 +822,7 @@ boolean hitsroof;
 {
     const char *action;
     boolean petrifier = ((obj->otyp == EGG || obj->otyp == CORPSE)
-                         && touchPetrifies(mons[obj->corpsenm].monsterTypeID));
+                         && touch_petrifies(&mons[obj->corpsenm]));
     /* note: obj->quan == 1 */
 
     if (!currentLevelHasCeiling()) {
@@ -861,7 +861,7 @@ boolean hitsroof;
         switch (otyp) {
         case EGG:
             if (petrifier && !youResistStoning()
-                && !(poly_when_stoned(youmonst.data->monsterTypeID)
+                && !(poly_when_stoned(youmonst.data)
                      && polymon(PM_STONE_GOLEM))) {
                 /* egg ends up "all over your face"; perhaps
                    visored helmet should still save you here */
@@ -923,7 +923,7 @@ boolean hitsroof;
                     Your("%s does not protect you.", helm_simple_name(uarmh));
             }
         } else if (petrifier && !youResistStoning()
-                   && !(poly_when_stoned(youmonst.data->monsterTypeID)
+                   && !(poly_when_stoned(youmonst.data)
                         && polymon(PM_STONE_GOLEM))) {
         petrify:
             killer.format = KILLED_BY;
@@ -1580,7 +1580,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
         potionhit(mon, obj, TRUE);
         return 1;
 
-    } else if (befriend_with_obj(mon->data->monsterTypeID, obj)
+    } else if (befriend_with_obj(mon->data, obj)
                || (mon->mtame && dogfood(mon, obj) <= ACCFOOD)) {
         if (tamedog(mon, obj)) {
             return 1; /* obj is gone */
@@ -1592,7 +1592,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
     } else if (guaranteed_hit) {
         /* this assumes that guaranteed_hit is due to swallowing */
         wakeup(mon);
-        if (obj->otyp == CORPSE && touchPetrifies(mons[obj->corpsenm].monsterTypeID)) {
+        if (obj->otyp == CORPSE && touch_petrifies(&mons[obj->corpsenm])) {
             if (isAnimal(u.ustuck->data->monsterTypeID)) {
                 minstapetrify(u.ustuck, TRUE);
                 /* Don't leave a cockatrice corpse available in a statue */
@@ -1759,7 +1759,7 @@ xchar x, y;
 {
     struct monst *mtmp;
     if (!rn2(3)
-        && (mtmp = makeMonsterOfType((rn2(3) ? PM_HOMUNCULUS : PM_IMP), x, y,
+        && (mtmp = makemon(&mons[rn2(3) ? PM_HOMUNCULUS : PM_IMP], x, y,
                            NO_MM_FLAGS)) != 0) {
         if (canspotmon(mtmp))
             pline("%s is released!", youAreHallucinating()

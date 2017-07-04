@@ -186,7 +186,7 @@ extern boolean MATCH_WARN_OF_MON(int pmid);
 #include "extern.h"
 #endif /* USE_TRAMPOLI */
 
-/* flags to control makeMonsterOfType() */
+/* flags to control makemon() */
 #define NO_MM_FLAGS 0x00000 /* use this rather than plain 0 */
 #define NO_MINVENT 0x00001  /* suppress minvent when creating mon */
 #define MM_NOWAIT 0x00002   /* don't set STRAT_WAITMASK flags */
@@ -203,9 +203,9 @@ extern boolean MATCH_WARN_OF_MON(int pmid);
 #define MM_EMIN 0x00800   /* add emin structure */
 #define MM_EDOG 0x01000   /* add edog structure */
 
-/* flags for make_corpse() and makeCorpseObject()/makeStatueObject() */
+/* flags for make_corpse() and mkcorpstat() */
 #define CORPSTAT_NONE 0x00
-#define CORPSTAT_INIT 0x01   /* pass init flag */
+#define CORPSTAT_INIT 0x01   /* pass init flag to mkcorpstat */
 #define CORPSTAT_BURIED 0x02 /* bury the corpse or statue */
 
 /* flags for decide_to_shift() */

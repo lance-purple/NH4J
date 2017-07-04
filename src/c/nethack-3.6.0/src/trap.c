@@ -384,9 +384,9 @@ register int x, y, typ;
             mptr = &mons[rndmonnum()];
         } while (--trycount > 0 && isUnicorn(mptr->monsterTypeID)
                  && sgn(currentAlignmentType()) == sgn(monsterAlignment(mptr->monsterTypeID)));
-        statue = makeStatueObject((struct monst *) 0, mptr->monsterTypeID, x, y,
+        statue = mkcorpstat(STATUE, (struct monst *) 0, mptr, x, y,
                             CORPSTAT_NONE);
-        mtmp = makeMonsterOfType(statue->corpsenm, 0, 0, MM_NOCOUNTBIRTH);
+        mtmp = makemon(&mons[statue->corpsenm], 0, 0, MM_NOCOUNTBIRTH);
         if (!mtmp)
             break; /* should never happen */
         while (mtmp->minvent) {
@@ -609,21 +609,16 @@ int *fail_reason;
             /* block quest guards from other roles */
             || (monsterSound(mptr->monsterTypeID) == MS_GUARDIAN
                 && quest_info(MS_GUARDIAN) != mnum)) {
-            mon = makeMonsterOfType(PM_DOPPELGANGER, x, y,
+            mon = makemon(&mons[PM_DOPPELGANGER], x, y,
                           NO_MINVENT | MM_NOCOUNTBIRTH | MM_ADJACENTOK);
             /* if hero has protection from shape changers, cham field will
                be NON_PM; otherwise, set form to match the statue */
             if (mon && mon->cham >= LOW_PM)
                 (void) newcham(mon, mptr, FALSE, FALSE);
-        } else if (mptr) {
-            mon = makeMonsterOfType(mptr->monsterTypeID, x, y, (cause == ANIMATE_SPELL)
+        } else
+            mon = makemon(mptr, x, y, (cause == ANIMATE_SPELL)
                                           ? (NO_MINVENT | MM_ADJACENTOK)
                                           : NO_MINVENT);
-        } else {
-            mon = makeMonsterOfAnyType(x, y, (cause == ANIMATE_SPELL)
-                                          ? (NO_MINVENT | MM_ADJACENTOK)
-                                          : NO_MINVENT);
-        }
     }
 
     if (!mon) {
@@ -1227,7 +1222,7 @@ unsigned trflags;
                 You("flow through %s spider web.", a_your[trap->madeby_u]);
             break;
         }
-        if (makesWebs(youmonst.data->monsterTypeID)) {
+        if (webmaker(youmonst.data)) {
             if (webmsgok)
                 pline(trap->madeby_u ? "You take a walk on your web."
                                      : "There is a spider web here.");
@@ -1245,7 +1240,7 @@ unsigned trflags;
             } else {
                 Sprintf(verbbuf, "%s into",
                         youAreLevitating() ? (const char *) "float"
-                                   : locomotion(youmonst.data->monsterTypeID, "stumble"));
+                                   : locomotion(youmonst.data, "stumble"));
             }
             You("%s %s spider web!", verbbuf, a_your[trap->madeby_u]);
         }
@@ -1381,7 +1376,7 @@ unsigned trflags;
         else
             Sprintf(verbbuf, "%s", youAreLevitating()
                                        ? (const char *) "float"
-                                       : locomotion(youmonst.data->monsterTypeID, "step"));
+                                       : locomotion(youmonst.data, "step"));
         You("%s onto a polymorph trap!", verbbuf);
         if (youResistMagic() || youAreUnchanging()) {
             shieldeff(currentX(), currentY());
@@ -2310,7 +2305,7 @@ register struct monst *mtmp;
 
                 /* paper burns very fast, assume straw is tightly
                  * packed and burns a bit slower */
-                switch (mptr->monsterTypeID) {
+                switch (monsndx(mptr)) {
                 case PM_PAPER_GOLEM:
                     immolate = TRUE;
                     alt = mtmp->mhpmax;
@@ -2433,7 +2428,7 @@ register struct monst *mtmp;
             break;
         case WEB:
             /* Monster in a web. */
-            if (makesWebs(mptr->monsterTypeID))
+            if (webmaker(mptr))
                 break;
             if (isAmorphous(mptr->monsterTypeID) || isWhirly(mptr->monsterTypeID) || isUnsolid(mptr->monsterTypeID)) {
                 if (isAcidic(mptr->monsterTypeID) || mptr == &mons[PM_GELATINOUS_CUBE]
@@ -2456,7 +2451,7 @@ register struct monst *mtmp;
                 break;
             }
             tear_web = FALSE;
-            switch (mptr->monsterTypeID) {
+            switch (monsndx(mptr)) {
             case PM_OWLBEAR: /* Eric Backus */
             case PM_BUGBEAR:
                 if (!in_sight) {
@@ -2519,8 +2514,8 @@ register struct monst *mtmp;
         case ANTI_MAGIC:
             /* similar to hero's case, more or less */
             if (!resists_magm(mtmp)) { /* lose spell energy */
-                if (!mtmp->mcan && (attacktype(mptr->monsterTypeID, AT_MAGC)
-                                    || attacktype(mptr->monsterTypeID, AT_BREA))) {
+                if (!mtmp->mcan && (attacktype(mptr, AT_MAGC)
+                                    || attacktype(mptr, AT_BREA))) {
                     mtmp->mspec_used += d(2, 2);
                     if (in_sight) {
                         seetrap(trap);
@@ -2660,7 +2655,7 @@ const char *str;
 {
     if (youResistStoning())
         return;
-    if (poly_when_stoned(youmonst.data->monsterTypeID) && polymon(PM_STONE_GOLEM))
+    if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))
         return;
     You("turn to stone...");
     killer.format = KILLED_BY;
@@ -2676,7 +2671,7 @@ boolean byplayer;
 {
     if (resists_ston(mon))
         return;
-    if (poly_when_stoned(mon->data->monsterTypeID)) {
+    if (poly_when_stoned(mon->data)) {
         mon_to_stone(mon);
         return;
     }
@@ -2700,7 +2695,7 @@ const char *arg;
 {
     char kbuf[BUFSZ];
 
-    if (uwep && uwep->otyp == CORPSE && touchPetrifies(mons[uwep->corpsenm].monsterTypeID)
+    if (uwep && uwep->otyp == CORPSE && touch_petrifies(&mons[uwep->corpsenm])
         && !youResistStoning()) {
 	javaString corpseName = monsterTypeName(mons[uwep->corpsenm].monsterTypeID);
         pline("%s touch the %s corpse.", arg, corpseName.c_str);
@@ -2714,7 +2709,7 @@ const char *arg;
     /* Or your secondary weapon, if wielded [hypothetical; we don't
        allow two-weapon combat when either weapon is a corpse] */
     if (usingTwoWeapons() && uswapwep && uswapwep->otyp == CORPSE
-        && touchPetrifies(mons[uswapwep->corpsenm].monsterTypeID) && !youResistStoning()) {
+        && touch_petrifies(&mons[uswapwep->corpsenm]) && !youResistStoning()) {
 	javaString corpseName = monsterTypeName(mons[uswapwep->corpsenm].monsterTypeID);
         pline("%s touch the %s corpse.", arg, corpseName.c_str);
         Sprintf(kbuf, "%s corpse", an(corpseName.c_str));
@@ -2734,7 +2729,7 @@ boolean byplayer;
 {
     struct obj *mwep = MON_WEP(mon);
 
-    if (mwep && mwep->otyp == CORPSE && touchPetrifies(mons[mwep->corpsenm].monsterTypeID)
+    if (mwep && mwep->otyp == CORPSE && touch_petrifies(&mons[mwep->corpsenm])
         && !resists_ston(mon)) {
         if (cansee(mon->mx, mon->my)) {
             pline("%s%s touches %s.", arg ? arg : "",
@@ -2861,7 +2856,7 @@ long hmask, emask; /* might cancel timeout */
     /* check for falling into pool - added by GAN 10/20/86 */
     if (!youAreFlying()) {
         if (!swallowed() && u.ustuck) {
-            if (sticks(youmonst.data->monsterTypeID))
+            if (sticks(youmonst.data))
                 You("aren't able to maintain your hold on %s.",
                     mon_nam(u.ustuck));
             else
@@ -3087,7 +3082,7 @@ domagictrap()
             You_hear("a deafening roar!");
         incrementYourIntrinsicTimeout(DEAF, rn1(20, 30));
         while (cnt--)
-            (void) makeMonsterOfAnyType(currentX(), currentY(), NO_MM_FLAGS);
+            (void) makemon((struct permonst *) 0, currentX(), currentY(), NO_MM_FLAGS);
     } else
         switch (fate) {
         case 10:
@@ -3727,11 +3722,11 @@ dountrap()
         pline("You're too strained to do that.");
         return 0;
     }
-    if ((hasNoHands(youmonst.data->monsterTypeID) && !makesWebs(youmonst.data->monsterTypeID))
+    if ((hasNoHands(youmonst.data->monsterTypeID) && !webmaker(youmonst.data))
         || !monsterMovementSpeed(youmonst.data->monsterTypeID)) {
         pline("And just how do you expect to do that?");
         return 0;
-    } else if (u.ustuck && sticks(youmonst.data->monsterTypeID)) {
+    } else if (u.ustuck && sticks(youmonst.data)) {
         pline("You'll have to let go of %s first.", mon_nam(u.ustuck));
         return 0;
     }
@@ -3750,7 +3745,7 @@ struct trap *ttmp;
     int chance = 3;
 
     /* Only spiders know how to deal with webs reliably */
-    if (ttmp->ttyp == WEB && !makesWebs(youmonst.data->monsterTypeID))
+    if (ttmp->ttyp == WEB && !webmaker(youmonst.data))
         chance = 30;
     if (youAreConfused() || youAreHallucinating())
         chance++;
@@ -3864,8 +3859,8 @@ boolean force_failure;
         return 0;
     }
     /* duplicate tight-space checks from test_move */
-    if (directionX() && directionY() && bad_rock(youmonst.data->monsterTypeID, currentX(), ttmp->ty)
-        && bad_rock(youmonst.data->monsterTypeID, ttmp->tx, currentY())) {
+    if (directionX() && directionY() && bad_rock(youmonst.data, currentX(), ttmp->ty)
+        && bad_rock(youmonst.data, ttmp->tx, currentY())) {
         if ((invent && (inv_weight() + weight_cap() > 600))
             || isBigMonster(youmonst.data->monsterTypeID)) {
             /* don't allow untrap if they can't get thru to it */
@@ -3895,7 +3890,7 @@ boolean force_failure;
                     if ((mtmp->mhp -= rnd(4)) <= 0)
                         killed(mtmp);
                 } else if (ttype == WEB) {
-                    if (!makesWebs(youmonst.data->monsterTypeID)) {
+                    if (!webmaker(youmonst.data)) {
                         struct trap *ttmp2 = maketrap(currentX(), currentY(), WEB);
 
                         if (ttmp2) {
@@ -4109,13 +4104,13 @@ struct trap *ttmp;
     }
 
     /* is it a cockatrice?... */
-    if (touchPetrifies(mtmp->data->monsterTypeID) && !uarmg && !youResistStoning()) {
+    if (touch_petrifies(mtmp->data) && !uarmg && !youResistStoning()) {
 	javaString monsterName = monsterTypeName(mtmp->data->monsterTypeID);
         You("grab the trapped %s using your bare %s.", monsterName.c_str,
             makeplural(body_part(HAND)));
 	releaseJavaString(monsterName);
 
-        if (poly_when_stoned(youmonst.data->monsterTypeID) && polymon(PM_STONE_GOLEM)) {
+        if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM)) {
             display_nhwindow(WIN_MESSAGE, FALSE);
         } else {
             char kbuf[BUFSZ];
@@ -4724,7 +4719,7 @@ boolean disarm;
                 if (youAreHallucinating())
                     pline("What a groovy feeling!");
                 else
-                    You("%s%s...", stagger(youmonst.data->monsterTypeID, "stagger"),
+                    You("%s%s...", stagger(youmonst.data, "stagger"),
                         youResistHallucination() ? ""
                                           : youCannotSee() ? " and get dizzy"
                                                   : " and your vision blurs");
@@ -5001,7 +4996,7 @@ lava_effects()
     boolean usurvive, boil_away;
 
     burn_away_slime();
-    if (likesLava(youmonst.data->monsterTypeID))
+    if (likes_lava(youmonst.data))
         return FALSE;
 
     usurvive = youResistFire() || (canYouWalkOnWater() && dmg < currentHitPoints());

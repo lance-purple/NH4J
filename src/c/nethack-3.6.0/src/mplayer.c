@@ -6,7 +6,7 @@
 
 STATIC_DCL const char *NDECL(dev_name);
 STATIC_DCL void FDECL(get_mplname, (struct monst *, char *));
-STATIC_DCL void FDECL(makeArmorForMonsterPlayer, (struct monst *, SHORT_P));
+STATIC_DCL void FDECL(mk_mplayer_armor, (struct monst *, SHORT_P));
 
 /* These are the names of those who
  * contributed to the development of NetHack 3.2/3.3/3.4/3.6.
@@ -50,7 +50,7 @@ dev_name()
         match = FALSE;
         i = rn2(n);
         for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
-            if (!isMonsterPlayer(mtmp->data->monsterTypeID))
+            if (!is_mplayer(mtmp->data))
                 continue;
             if (!strncmp(developers[i], (has_mname(mtmp)) ? MNAME(mtmp) : "",
                          strlen(developers[i]))) {
@@ -87,12 +87,12 @@ char *nam;
     else
         mtmp->female = 0;
     Strcat(nam, " the ");
-    Strcat(nam, rank_of((int) mtmp->m_lev, mtmp->data->monsterTypeID,
+    Strcat(nam, rank_of((int) mtmp->m_lev, monsndx(mtmp->data),
                         (boolean) mtmp->female));
 }
 
 STATIC_OVL void
-makeArmorForMonsterPlayer(mon, typ)
+mk_mplayer_armor(mon, typ)
 struct monst *mon;
 short typ;
 {
@@ -116,15 +116,15 @@ short typ;
 }
 
 struct monst *
-makeMonsterPlayer(pmid, x, y, special)
-int pmid;
+mk_mplayer(ptr, x, y, special)
+register struct permonst *ptr;
 xchar x, y;
 register boolean special;
 {
     register struct monst *mtmp;
     char nam[PL_NSIZ];
 
-    if (!isMonsterPlayer(pmid))
+    if (!is_mplayer(ptr))
         return ((struct monst *) 0);
 
     if (MON_AT(x, y))
@@ -133,13 +133,7 @@ register boolean special;
     if (!areYouInEndgame())
         special = FALSE;
 
-    if (NON_PM != pmid) {
-        mtmp = makeMonsterOfType(pmid, x, y, NO_MM_FLAGS);
-    } else {
-        mtmp = makeMonsterOfAnyType(x, y, NO_MM_FLAGS);
-    }
-
-    if (mtmp != 0) {
+    if ((mtmp = makemon(ptr, x, y, NO_MM_FLAGS)) != 0) {
         short weapon = rn2(2) ? LONG_SWORD : rnd_class(SPEAR, BULLWHIP);
         short armor =
             rnd_class(GRAY_DRAGON_SCALE_MAIL, YELLOW_DRAGON_SCALE_MAIL);
@@ -166,7 +160,7 @@ register boolean special;
         mtmp->mpeaceful = 0;
         set_malign(mtmp); /* peaceful may have changed again */
 
-        switch (pmid) {
+        switch (monsndx(ptr)) {
         case PM_ARCHEOLOGIST:
             if (rn2(2))
                 weapon = BULLWHIP;
@@ -286,15 +280,15 @@ register boolean special;
         if (special) {
             if (!rn2(10))
                 (void) mongets(mtmp, rn2(3) ? LUCKSTONE : LOADSTONE);
-            makeArmorForMonsterPlayer(mtmp, armor);
-            makeArmorForMonsterPlayer(mtmp, cloak);
-            makeArmorForMonsterPlayer(mtmp, helm);
-            makeArmorForMonsterPlayer(mtmp, shield);
+            mk_mplayer_armor(mtmp, armor);
+            mk_mplayer_armor(mtmp, cloak);
+            mk_mplayer_armor(mtmp, helm);
+            mk_mplayer_armor(mtmp, shield);
             if (rn2(8))
-                makeArmorForMonsterPlayer(
+                mk_mplayer_armor(
                     mtmp, rnd_class(LEATHER_GLOVES, GAUNTLETS_OF_DEXTERITY));
             if (rn2(8))
-                makeArmorForMonsterPlayer(mtmp,
+                mk_mplayer_armor(mtmp,
                                  rnd_class(LOW_BOOTS, LEVITATION_BOOTS));
             m_dowear(mtmp, TRUE);
 
@@ -342,18 +336,19 @@ boolean special;
 
         /* roll for character class */
         pm = PM_ARCHEOLOGIST + rn2(PM_WIZARD - PM_ARCHEOLOGIST + 1);
+        fakemon.data = &mons[pm];
 
         /* roll for an available location */
         do {
             x = rn1(COLNO - 4, 2);
             y = rnd(ROWNO - 2);
-        } while (!goodPosition(x, y, 0, pm, 0, 0) && tryct++ <= 50);
+        } while (!goodpos(x, y, &fakemon, 0) && tryct++ <= 50);
 
         /* if pos not found in 50 tries, don't bother to continue */
         if (tryct > 50)
             return;
 
-        (void) makeMonsterPlayer(pm, (xchar) x, (xchar) y, special);
+        (void) mk_mplayer(&mons[pm], (xchar) x, (xchar) y, special);
         num--;
     }
 }

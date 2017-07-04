@@ -488,21 +488,21 @@ STATIC_PTR int
 domonability(VOID_ARGS)
 {
     int upmid = youmonst.data->monsterTypeID;
-    if (hasBreathWeapon(youmonst.data->monsterTypeID))
+    if (can_breathe(youmonst.data))
         return dobreathe();
-    else if (attacktype(youmonst.data->monsterTypeID, AT_SPIT))
+    else if (attacktype(youmonst.data, AT_SPIT))
         return dospit();
     else if (monsterClass(upmid) == S_NYMPH)
         return doremove();
-    else if (attacktype(youmonst.data->monsterTypeID, AT_GAZE))
+    else if (attacktype(youmonst.data, AT_GAZE))
         return dogaze();
     else if (isWere(youmonst.data->monsterTypeID))
         return dosummon();
-    else if (makesWebs(youmonst.data->monsterTypeID))
+    else if (webmaker(youmonst.data))
         return dospinweb();
     else if (isHider(upmid))
         return dohide();
-    else if (isMindFlayer(youmonst.data->monsterTypeID))
+    else if (is_mind_flayer(youmonst.data))
         return domindblast();
     else if (currentMonsterNumber() == PM_GREMLIN) {
         if (IS_FOUNTAIN(levl[currentX()][currentY()].typ)) {
@@ -1080,7 +1080,7 @@ wiz_smell(VOID_ARGS)
     cc.x = currentX();
     cc.y = currentY();
     mndx = 0; /* gcc -Wall lint */
-    if (!olfaction(youmonst.data->monsterTypeID)) {
+    if (!olfaction(youmonst.data)) {
         You("are incapable of detecting odors in your present form.");
         return 0;
     }
@@ -1100,7 +1100,7 @@ wiz_smell(VOID_ARGS)
             mndx = 0;
         /* Is it a monster? */
         if (mndx) {
-            if (!usmellmon(mons[mndx].monsterTypeID))
+            if (!usmellmon(&mons[mndx]))
                 pline("That monster seems to give off no smell.");
         } else
             pline("That is not a monster.");
@@ -1762,7 +1762,7 @@ int final;
         you_are(buf, "");
     } else if (u.ustuck) {
         Sprintf(buf, "%s %s",
-                (areYouPolymorphed() && sticks(youmonst.data->monsterTypeID)) ? "holding" : "held by",
+                (areYouPolymorphed() && sticks(youmonst.data)) ? "holding" : "held by",
                 a_monnam(u.ustuck));
         you_are(buf, "");
     }
@@ -3124,11 +3124,7 @@ wiz_migrate_mons()
         else
             get_level(&tolevel, currentDepth() + 1);
         ptr = rndmonst();
-        if (ptr) {
-            mtmp = makeMonsterOfType(ptr->monsterTypeID, 0, 0, NO_MM_FLAGS);
-        } else {
-            mtmp = makeMonsterOfAnyType(0, 0, NO_MM_FLAGS);
-        }
+        mtmp = makemon(ptr, 0, 0, NO_MM_FLAGS);
         if (mtmp)
             migrate_to_level(mtmp, ledger_no(&tolevel), MIGR_RANDOM,
                              (coord *) 0);

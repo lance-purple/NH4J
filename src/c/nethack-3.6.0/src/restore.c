@@ -411,7 +411,7 @@ boolean ghostly;
         offset = mtmp->mnum;
         mtmp->data = &mons[offset];
         if (ghostly) {
-            int mndx = mtmp->data->monsterTypeID;
+            int mndx = monsndx(mtmp->data);
             if (propagate(mndx, TRUE, ghostly) == 0) {
                 /* cookie to trigger purge in getbones() */
                 mtmp->mhpmax = DEFUNCT_MONSTER;
@@ -1342,7 +1342,7 @@ boolean ghostly;
                     (isUnicorn(mtmp->data->monsterTypeID)
                      && sgn(currentAlignmentType()) == sgn(monsterAlignment(mtmp->data->monsterTypeID)))
                         ? TRUE
-                        : peace_minded(mtmp->data->monsterTypeID);
+                        : peace_minded(mtmp->data);
             set_malign(mtmp);
         } else if (elapsed > 0L) {
             mon_catchup_elapsed_time(mtmp, elapsed);

@@ -67,7 +67,7 @@ boolean talk;
             if (u.usteed)
                 You("wobble in the saddle.");
             else
-                You("%s...", stagger(youmonst.data->monsterTypeID, "stagger"));
+                You("%s...", stagger(youmonst.data, "stagger"));
         }
     }
     if ((!xtime && priorStunned) || (xtime && !priorStunned))
@@ -404,7 +404,7 @@ boolean talk;
 STATIC_OVL void
 ghost_from_bottle()
 {
-    struct monst *mtmp = makeMonsterOfType(PM_GHOST, currentX(), currentY(), NO_MM_FLAGS);
+    struct monst *mtmp = makemon(&mons[PM_GHOST], currentX(), currentY(), NO_MM_FLAGS);
 
     if (!mtmp) {
         pline("This bottle turns out to be empty.");
@@ -1024,7 +1024,7 @@ register struct obj *otmp;
         boolean good_for_you = FALSE;
 
         if (otmp->lamplit) {
-            if (likesFire(youmonst.data->monsterTypeID)) {
+            if (likes_fire(youmonst.data)) {
                 pline("Ahh, a refreshing drink.");
                 good_for_you = TRUE;
             } else {
@@ -1331,9 +1331,9 @@ boolean your_fault;
         case POT_SICKNESS:
             if (mon->data == &mons[PM_PESTILENCE])
                 goto do_healing;
-            if (dmgtype(mon->data->monsterTypeID, AD_DISE)
+            if (dmgtype(mon->data, AD_DISE)
                 /* won't happen, see prior goto */
-                || dmgtype(mon->data->monsterTypeID, AD_PEST)
+                || dmgtype(mon->data, AD_PEST)
                 /* most common case */
                 || resists_poison(mon)) {
                 if (canseemon(mon))
@@ -2157,7 +2157,7 @@ struct obj *obj;
     struct monst *mtmp;
     int chance;
 
-    if (!(mtmp = makeMonsterOfType(PM_DJINNI, currentX(), currentY(), NO_MM_FLAGS))) {
+    if (!(mtmp = makemon(&mons[PM_DJINNI], currentX(), currentY(), NO_MM_FLAGS))) {
         pline("It turns out to be empty.");
         return;
     }

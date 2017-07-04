@@ -421,7 +421,7 @@ int x, y;
     /* must force call to lava_effects in e_died if is_u */
     if (is_lava(x, y)) {
         return (boolean) ((is_u(etmp) && (youAreLevitating() || youAreFlying()))
-                          || likesLava(etmp->edata->monsterTypeID)
+                          || likes_lava(etmp->edata)
                           || isFlyer(epmid));
     }
     if (is_db_wall(x, y)) {
@@ -454,7 +454,7 @@ int dest, how;
             done(how);
             /* So, you didn't die */
             if (!e_survives_at(etmp, etmp->ex, etmp->ey)) {
-                if (placeEntityNextToPosition(&xy, etmp->ex, etmp->ey, etmp->edata->monsterTypeID, 0)) {
+                if (enexto(&xy, etmp->ex, etmp->ey, etmp->edata)) {
                     pline("A %s force teleports you away...",
                           youAreHallucinating() ? "normal" : "strange");
                     teleds(xy.x, xy.y, FALSE);

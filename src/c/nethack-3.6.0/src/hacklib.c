@@ -123,13 +123,6 @@ boolean javaGetBooleanFromInt(const char* classname, const char* methodname, int
     return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method, i);
 }
 
-boolean javaGetBooleanFromIntAndInt(const char* classname, const char* methodname, int i, int j) {
-    jclass you_class = getJavaClass(classname);
-    jmethodID method = getStaticMethod(you_class, methodname, "(II)Z");
-    return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method, i, j);
-}
-
-
 boolean javaGetBooleanFromIntAndLong(const char* classname, const char* methodname, int i, long j) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "(IJ)Z");
@@ -2754,8 +2747,9 @@ extern long monsterConveysResistances(int id) {
   return javaGetLongFromInt(MONSTER_TYPE_CLASS, "monsterConveysResistances", id);
 }
 
-extern boolean monsterDoesNotAttack(int pmid)
+extern boolean monsterDoesNotAttack(const struct permonst *ptr)
 {
+    int pmid = ptr->monsterTypeID;
     return javaGetBooleanFromInt(MONSTER_TYPE_CLASS, "monsterDoesNotAttack", pmid);
 }
 

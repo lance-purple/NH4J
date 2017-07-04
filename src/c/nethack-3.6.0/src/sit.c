@@ -52,7 +52,7 @@ dosit()
         else
             You("are sitting on air.");
         return 0;
-    } else if (u.ustuck && !sticks(youmonst.data->monsterTypeID)) {
+    } else if (u.ustuck && !sticks(youmonst.data)) {
         /* holding monster is next to hero rather than beneath, but
            hero is in no condition to actually sit at has/her own spot */
         if (isHumanoid(u.ustuck->data->monsterTypeID))
@@ -144,7 +144,7 @@ dosit()
         /* must be WWalking */
         You(sit_message, "lava");
         burn_away_slime();
-        if (likesLava(youmonst.data->monsterTypeID)) {
+        if (likes_lava(youmonst.data)) {
             pline_The("lava feels warm.");
             return 1;
         }
@@ -210,7 +210,7 @@ dosit()
                 verbalize("Thy audience hath been summoned, %s!",
                           flags.female ? "Dame" : "Sire");
                 while (cnt--)
-                    (void) makeMonsterOfType(courtMonsterType(), currentX(), currentY(), NO_MM_FLAGS);
+                    (void) makemon(courtmon(), currentX(), currentY(), NO_MM_FLAGS);
                 break;
               }
             case 8:

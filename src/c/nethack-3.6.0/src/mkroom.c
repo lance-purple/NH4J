@@ -8,7 +8,7 @@
  *      nexttodoor() -- return TRUE if adjacent to a door
  *      has_dnstairs() -- return TRUE if given room has a down staircase
  *      has_upstairs() -- return TRUE if given room has an up staircase
- *      courtMonsterType() -- generate a court monster
+ *      courtmon() -- generate a court monster
  *      save_rooms() -- save rooms into file fd
  *      rest_rooms() -- restore rooms from file fd
  *      cmap_to_type() -- convert S_xxx symbol to XXX topology code
@@ -303,46 +303,24 @@ struct mkroom *sroom;
             /* don't place monster on explicitly placed throne */
             if (type == COURT && IS_THRONE(levl[sx][sy].typ))
                 continue;
-
-            struct permonst* pm = NULL;
-            int pmid;
-            switch (type) {
-                case COURT:
-                    pmid = courtMonsterType();
-                    pm = (NON_PM != pmid) ? &mons[pmid] : NULL;
-                    break;
-                case BARRACKS:
-                    pm = squadmon();
-                    break;
-                case MORGUE:
-                    pm = morguemon();
-                    break;
-                case BEEHIVE:
-                    if ((sx == tx) && (sy == ty)) {
-                        pm = &mons[PM_QUEEN_BEE];
-                    } else {
-                        pm = &mons[PM_KILLER_BEE];
-                    }
-                    break;
-                case LEPREHALL:
-                    pm = &mons[PM_LEPRECHAUN];
-                    break;
-                case COCKNEST:
-                    pm = &mons[PM_COCKATRICE];
-                    break;
-                case ANTHOLE:
-                    pmid = antHoleMonsterType();
-                    pm = (NON_PM != pmid) ? &mons[pmid] : NULL;
-                    break;
-                default:
-                    pm = NULL;
-            }
-
-            if (pm) {
-                mon = makeMonsterOfType(pm->monsterTypeID, sx, sy, NO_MM_FLAGS);
-            } else {
-                mon = makeMonsterOfAnyType(sx, sy, NO_MM_FLAGS);
-            }
+            mon = makemon((type == COURT)
+                           ? courtmon()
+                           : (type == BARRACKS)
+                              ? squadmon()
+                              : (type == MORGUE)
+                                 ? morguemon()
+                                 : (type == BEEHIVE)
+                                     ? (sx == tx && sy == ty
+                                         ? &mons[PM_QUEEN_BEE]
+                                         : &mons[PM_KILLER_BEE])
+                                     : (type == LEPREHALL)
+                                         ? &mons[PM_LEPRECHAUN]
+                                         : (type == COCKNEST)
+                                             ? &mons[PM_COCKATRICE]
+                                             : (type == ANTHOLE)
+                                                 ? antholemon()
+                                                 : (struct permonst *) 0,
+                          sx, sy, NO_MM_FLAGS);
             if (mon) {
                 mon->msleeping = 1;
                 if (type == COURT && mon->mpeaceful) {
@@ -444,11 +422,11 @@ int mm_flags;
 
     while (cnt--) {
         mdat = morguemon();
-        if (mdat && placeEntityNextToPosition(&cc, mm->x, mm->y, mdat->monsterTypeID, 0)
+        if (mdat && enexto(&cc, mm->x, mm->y, mdat)
             && (!revive_corpses
                 || !(otmp = sobj_at(CORPSE, cc.x, cc.y))
                 || !revive(otmp, FALSE)))
-            (void) makeMonsterOfType(mdat->monsterTypeID, cc.x, cc.y, mm_flags);
+            (void) makemon(mdat, cc.x, cc.y, mm_flags);
     }
     level.flags.graveyard = TRUE; /* reduced chance for undead corpse */
 }
@@ -477,7 +455,8 @@ morguemon()
                                 : mkclass(S_ZOMBIE, 0));
 }
 
-int antHoleMonsterType()
+struct permonst *
+antholemon()
 {
     int mtyp, indx, trycnt = 0;
 
@@ -500,7 +479,8 @@ int antHoleMonsterType()
         /* try again if chosen type has been genocided or used up */
     } while (++trycnt < 3 && (mvitals[mtyp].mvflags & G_GONE));
 
-    return ((mvitals[mtyp].mvflags & G_GONE) ? NON_PM : mtyp);
+    return ((mvitals[mtyp].mvflags & G_GONE) ? (struct permonst *) 0
+                                             : &mons[mtyp]);
 }
 
 STATIC_OVL void
@@ -525,16 +505,16 @@ mkswamp() /* Michiel Huisjes & Fred de Wilde */
                         levl[sx][sy].typ = POOL;
                         if (!eelct || !rn2(4)) {
                             /* mkclass() won't do, as we might get kraken */
-                            (void) makeMonsterOfType((rn2(5)
-                                              ? PM_GIANT_EEL
+                            (void) makemon(rn2(5)
+                                              ? &mons[PM_GIANT_EEL]
                                               : rn2(2)
-                                                 ? PM_PIRANHA
-                                                 : PM_ELECTRIC_EEL),
+                                                 ? &mons[PM_PIRANHA]
+                                                 : &mons[PM_ELECTRIC_EEL],
                                            sx, sy, NO_MM_FLAGS);
                             eelct++;
                         }
                     } else if (!rn2(4)) /* swamps tend to be moldy */
-                        (void) makeMonsterOfClass(S_FUNGUS, sx, sy,
+                        (void) makemon(mkclass(S_FUNGUS, 0), sx, sy,
                                        NO_MM_FLAGS);
                 }
         level.flags.has_swamp = 1;
@@ -727,36 +707,29 @@ schar type;
     return (struct mkroom *) 0;
 }
 
-int courtMonsterType()
+struct permonst *
+courtmon()
 {
     int i = rn2(60) + rn2(3 * level_difficulty());
-    struct permonst *ptr;
 
-    if (i > 100) {
-        ptr = mkclass(S_DRAGON, 0);
-    } else if (i > 95) {
-        ptr = mkclass(S_GIANT, 0);
-    } else if (i > 85) {
-        ptr = mkclass(S_TROLL, 0);
-    } else if (i > 75) {
-        ptr = mkclass(S_CENTAUR, 0);
-    } else if (i > 60) {
-        ptr = mkclass(S_ORC, 0);
-    } else if (i > 45) {
-        ptr = &mons[PM_BUGBEAR];
-    } else if (i > 30) {
-        ptr = &mons[PM_HOBGOBLIN];
-    } else if (i > 15) {
-        ptr = mkclass(S_GNOME, 0);
-    } else {
-        ptr = mkclass(S_KOBOLD, 0);
-    }
-
-    if (ptr) {
-        return ptr->monsterTypeID;
-    } else {
-        return NON_PM;
-    }
+    if (i > 100)
+        return mkclass(S_DRAGON, 0);
+    else if (i > 95)
+        return mkclass(S_GIANT, 0);
+    else if (i > 85)
+        return mkclass(S_TROLL, 0);
+    else if (i > 75)
+        return mkclass(S_CENTAUR, 0);
+    else if (i > 60)
+        return mkclass(S_ORC, 0);
+    else if (i > 45)
+        return &mons[PM_BUGBEAR];
+    else if (i > 30)
+        return &mons[PM_HOBGOBLIN];
+    else if (i > 15)
+        return mkclass(S_GNOME, 0);
+    else
+        return mkclass(S_KOBOLD, 0);
 }
 
 #define NSTYPES (PM_CAPTAIN - PM_SOLDIER + 1)

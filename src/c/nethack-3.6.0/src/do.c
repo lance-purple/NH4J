@@ -636,7 +636,7 @@ boolean with_impact;
 
         if (obj != uball) { /* mon doesn't pick up ball */
             if (obj->otyp == CORPSE) {
-                could_petrify = touchPetrifies(mons[obj->corpsenm].monsterTypeID);
+                could_petrify = touch_petrifies(&mons[obj->corpsenm]);
                 could_poly = polyfodder(obj);
                 could_slime = (obj->corpsenm == PM_GREEN_SLIME);
                 could_grow = (obj->corpsenm == PM_WRAITH);
@@ -656,7 +656,7 @@ boolean with_impact;
                     if (!swallowed())
                         delobj(obj);
                 } else if (could_grow) {
-                    (void) grow_up_instantly(u.ustuck);
+                    (void) grow_up(u.ustuck, (struct monst *) 0);
                     delobj(obj); /* corpse is digested */
                 } else if (could_heal) {
                     u.ustuck->mhp = u.ustuck->mhpmax;
@@ -945,7 +945,7 @@ dodown()
     }
 
     if (trap)
-        You("%s %s.", youAreFlying() ? "fly" : locomotion(youmonst.data->monsterTypeID, "jump"),
+        You("%s %s.", youAreFlying() ? "fly" : locomotion(youmonst.data, "jump"),
             trap->ttyp == HOLE ? "down the hole" : "through the trap door");
 
     if (trap && areYouOnStrongholdLevel()) {
@@ -1373,7 +1373,7 @@ boolean at_stairs, falling, portal;
            the latter was done unconditionally. */
         coord cc;
 
-        if (!rn2(2) && placeEntityNextToPosition(&cc, currentX(), currentY(), youmonst.data->monsterTypeID, 0)
+        if (!rn2(2) && enexto(&cc, currentX(), currentY(), youmonst.data)
             && distanceSquaredToYou(cc.x, cc.y) <= 2)
             u_on_newpos(cc.x, cc.y); /*[maybe give message here?]*/
         else
@@ -1679,7 +1679,7 @@ struct obj *corpse;
                 Strcpy(sackname, an(xname(container)));
                 pline("%s %s out of %s in your pack!",
                       youCannotSee() ? Something : Amonnam(mtmp),
-                      locomotion(mtmp->data->monsterTypeID, "writhes"), sackname);
+                      locomotion(mtmp->data, "writhes"), sackname);
             } else if (container_where == OBJ_FLOOR && container
                        && cansee(mtmp->mx, mtmp->my)) {
                 Strcpy(sackname, an(xname(container)));
@@ -1731,13 +1731,13 @@ long timeout UNUSED;
         long when;
         int action;
 
-        if (isRiderOfApocalypse(mptr->monsterTypeID) && rn2(99)) { /* Rider usually tries again */
+        if (is_rider(mptr) && rn2(99)) { /* Rider usually tries again */
             action = REVIVE_MON;
             for (when = 3L; when < 67L; when++)
                 if (!rn2(3))
                     break;
         } else { /* rot this corpse away */
-            You_feel("%sless hassled.", isRiderOfApocalypse(mptr->monsterTypeID) ? "much " : "");
+            You_feel("%sless hassled.", is_rider(mptr) ? "much " : "");
             action = ROT_CORPSE;
             when = 250L - (monstermoves - body->age);
             if (when < 1L)

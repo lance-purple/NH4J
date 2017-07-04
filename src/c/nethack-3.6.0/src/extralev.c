@@ -310,7 +310,7 @@ makerogueghost()
     croom = &rooms[rn2(nroom)];
     x = somex(croom);
     y = somey(croom);
-    if (!(ghost = makeMonsterOfType(PM_GHOST, x, y, NO_MM_FLAGS)))
+    if (!(ghost = makemon(&mons[PM_GHOST], x, y, NO_MM_FLAGS)))
         return;
     ghost->msleeping = 1;
     ghost = christen_monst(ghost, roguename());

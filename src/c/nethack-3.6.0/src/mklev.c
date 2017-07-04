@@ -426,7 +426,7 @@ int type;
                      && (mvitals[PM_GIANT_MIMIC].mvflags & G_GONE))) {
                 /* make a mimic instead */
                 levl[x][y].doormask = D_NODOOR;
-                mtmp = makeMonsterOfClass(S_MIMIC, x, y, NO_MM_FLAGS);
+                mtmp = makemon(mkclass(S_MIMIC, 0), x, y, NO_MM_FLAGS);
                 if (mtmp)
                     set_mimic_sym(mtmp);
             }
@@ -527,11 +527,10 @@ int trap_type;
                     /* inaccessible niches occasionally have iron bars */
                     if (!rn2(5) && IS_WALL(levl[xx][yy].typ)) {
                         levl[xx][yy].typ = IRONBARS;
-                        if (rn2(3)) {
-                            struct permonst* ptr = mkclass(S_HUMAN, 0);
-                            int pmid = (ptr) ? ptr->monsterTypeID : NON_PM;
-                            (void) makeCorpseObject((struct monst *) 0, pmid, xx, yy + dy, TRUE);
-                        }
+                        if (rn2(3))
+                            (void) mkcorpstat(CORPSE, (struct monst *) 0,
+                                              mkclass(S_HUMAN, 0), xx,
+                                              yy + dy, TRUE);
                     }
                     if (!level.flags.noteleport)
                         (void) mksobj_at(SCR_TELEPORTATION, xx, yy + dy, TRUE,
@@ -774,7 +773,7 @@ makelevel()
             mkroom(BEEHIVE);
         else if (u_depth > 11 && !rn2(6))
             mkroom(MORGUE);
-        else if (u_depth > 12 && !rn2(8) && (NON_PM != antHoleMonsterType()))
+        else if (u_depth > 12 && !rn2(8) && antholemon())
             mkroom(ANTHOLE);
         else if (u_depth > 14 && !rn2(4)
                  && !(mvitals[PM_SOLDIER].mvflags & G_GONE))
@@ -804,7 +803,7 @@ skip0:
         if (haveSpecialItem(SPECIAL_ITEM_AMULET) || !rn2(3)) {
             x = somex(croom);
             y = somey(croom);
-            tmonst = makeMonsterOfAnyType(x, y, NO_MM_FLAGS);
+            tmonst = makemon((struct permonst *) 0, x, y, NO_MM_FLAGS);
             if (tmonst && tmonst->data == &mons[PM_GIANT_SPIDER]
                 && !occupied(x, y))
                 (void) maketrap(x, y, WEB);
@@ -833,7 +832,9 @@ skip0:
 
         /* put statues inside */
         if (!rn2(20))
-            (void) makeStatueObject(NULL, NON_PM, somex(croom), somey(croom), CORPSTAT_INIT);
+            (void) mkcorpstat(STATUE, (struct monst *) 0,
+                              (struct permonst *) 0, somex(croom),
+                              somey(croom), CORPSTAT_INIT);
         /* put box/chest inside;
          *  40% chance for at least 1 box, regardless of number
          *  of rooms; about 5 - 7.5% for 2 boxes, least likely
@@ -1364,7 +1365,7 @@ coord *tm;
 
     (void) maketrap(m.x, m.y, kind);
     if (kind == WEB)
-        (void) makeMonsterOfType(PM_GIANT_SPIDER, m.x, m.y, NO_MM_FLAGS);
+        (void) makemon(&mons[PM_GIANT_SPIDER], m.x, m.y, NO_MM_FLAGS);
 }
 
 void

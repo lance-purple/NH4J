@@ -80,11 +80,11 @@ struct obj *obj;
         if (potion_descr && !strcmp(potion_descr, "milky")) {
             if (!(mvitals[PM_GHOST].mvflags & G_GONE)
                 && !rn2(POTION_OCCUPANT_CHANCE(mvitals[PM_GHOST].born))) {
-                if (!placeEntityNextToPosition(&cc, mon->mx, mon->my, PM_GHOST, 0))
+                if (!enexto(&cc, mon->mx, mon->my, &mons[PM_GHOST]))
                     return 0;
                 mquaffmsg(mon, obj);
                 m_useup(mon, obj);
-                mtmp = makeMonsterOfType(PM_GHOST, cc.x, cc.y, NO_MM_FLAGS);
+                mtmp = makemon(&mons[PM_GHOST], cc.x, cc.y, NO_MM_FLAGS);
                 if (!mtmp) {
                     if (vis)
                         pline1(empty);
@@ -106,11 +106,11 @@ struct obj *obj;
         if (potion_descr && !strcmp(potion_descr, "smoky")
             && !(mvitals[PM_DJINNI].mvflags & G_GONE)
             && !rn2(POTION_OCCUPANT_CHANCE(mvitals[PM_DJINNI].born))) {
-            if (!placeEntityNextToPosition(&cc, mon->mx, mon->my, PM_DJINNI, 0))
+            if (!enexto(&cc, mon->mx, mon->my, &mons[PM_DJINNI]))
                 return 0;
             mquaffmsg(mon, obj);
             m_useup(mon, obj);
-            mtmp = makeMonsterOfType(PM_DJINNI, cc.x, cc.y, NO_MM_FLAGS);
+            mtmp = makemon(&mons[PM_DJINNI], cc.x, cc.y, NO_MM_FLAGS);
             if (!mtmp) {
                 if (vis)
                     pline1(empty);
@@ -405,7 +405,7 @@ struct monst *mtmp;
         boolean ignore_boulders = (isVerySmallMonster(mtmp->data->monsterTypeID)
                                    || throwsRocks(mtmp->data->monsterTypeID)
                                    || passesThroughWalls(mtmp->data->monsterTypeID)),
-            diag_ok = !NODIAG(mtmp->data->monsterTypeID);
+            diag_ok = !NODIAG(monsndx(mtmp->data));
 
         for (i = 0; i < 10; ++i) /* 10: 9 spots plus sentinel */
             locs[i][0] = locs[i][1] = 0;
@@ -761,11 +761,11 @@ struct monst *mtmp;
                 : &mons[inWater() ? PM_GIANT_EEL : PM_CROCODILE];
         struct monst *mon;
 
-        if (!placeEntityNextToPosition(&cc, mtmp->mx, mtmp->my, pm->monsterTypeID, 0))
+        if (!enexto(&cc, mtmp->mx, mtmp->my, pm))
             return 0;
         mzapmsg(mtmp, otmp, FALSE);
         otmp->spe--;
-        mon = makeMonsterOfAnyType(cc.x, cc.y, NO_MM_FLAGS);
+        mon = makemon((struct permonst *) 0, cc.x, cc.y, NO_MM_FLAGS);
         if (mon && canspotmon(mon) && oseen)
             makeknown(WAN_CREATE_MONSTER);
         return 2;
@@ -789,13 +789,9 @@ struct monst *mtmp;
         while (cnt--) {
             /* `fish' potentially gives bias towards water locations;
                `pm' is what to actually create (0 => random) */
-            if (!placeEntityNextToPosition(&cc, mtmp->mx, mtmp->my, fish->monsterTypeID, 0))
+            if (!enexto(&cc, mtmp->mx, mtmp->my, fish))
                 break;
-            if (pm) {
-                mon = makeMonsterOfType(pm->monsterTypeID, cc.x, cc.y, NO_MM_FLAGS);
-            } else {
-                mon = makeMonsterOfAnyType(cc.x, cc.y, NO_MM_FLAGS);
-            }
+            mon = makemon(pm, cc.x, cc.y, NO_MM_FLAGS);
             if (mon && canspotmon(mon))
                 known = TRUE;
         }
@@ -824,7 +820,7 @@ struct monst *mtmp;
             struct trap *t = t_at(trapx, trapy);
 
             pline("%s %s into a %s!", Monnam(mtmp),
-                  makeplural(locomotion(mtmp->data->monsterTypeID, "jump")),
+                  makeplural(locomotion(mtmp->data, "jump")),
                   t->ttyp == TRAPDOOR ? "trap door" : "hole");
             if (levl[trapx][trapy].typ == SCORR) {
                 levl[trapx][trapy].typ = CORR;
@@ -916,7 +912,7 @@ struct monst *mtmp;
         m_flee(mtmp);
         if (vis) {
             pline("%s %s onto a teleport trap!", Monnam(mtmp),
-                  makeplural(locomotion(mtmp->data->monsterTypeID, "jump")));
+                  makeplural(locomotion(mtmp->data, "jump")));
             seetrap(t_at(trapx, trapy));
         }
         /*  don't use rloc_to() because worm tails must "move" */
@@ -1001,11 +997,11 @@ rnd_defensive_item(mtmp)
 struct monst *mtmp;
 {
     struct permonst *pm = mtmp->data;
-    int difficulty = monstr[pm->monsterTypeID];
+    int difficulty = monstr[(monsndx(pm))];
     int trycnt = 0;
     int mc = monsterClass(pm->monsterTypeID);
 
-    if (isAnimal(pm->monsterTypeID) || attacktype(pm->monsterTypeID, AT_EXPL) || isMindless(pm->monsterTypeID)
+    if (isAnimal(pm->monsterTypeID) || attacktype(pm, AT_EXPL) || isMindless(pm->monsterTypeID)
         || mc == S_GHOST || mc == S_KOP)
         return 0;
 try_again:
@@ -1082,7 +1078,7 @@ struct monst *mtmp;
         return FALSE;
     if (in_your_sanctuary(mtmp, 0, 0))
         return FALSE;
-    if (dmgtype(mtmp->data->monsterTypeID, AD_HEAL)
+    if (dmgtype(mtmp->data, AD_HEAL)
         && !uwep && !uarmu && !uarm && !uarmh
         && !uarms && !uarmg && !uarmc && !uarmf)
         return FALSE;
@@ -1146,7 +1142,7 @@ struct monst *mtmp;
             m.has_offense = MUSE_POT_PARALYSIS;
         }
         nomore(MUSE_POT_BLINDNESS);
-        if (obj->otyp == POT_BLINDNESS && !attacktype(mtmp->data->monsterTypeID, AT_GAZE)) {
+        if (obj->otyp == POT_BLINDNESS && !attacktype(mtmp->data, AT_GAZE)) {
             m.offensive = obj;
             m.has_offense = MUSE_POT_BLINDNESS;
         }
@@ -1544,10 +1540,10 @@ rnd_offensive_item(mtmp)
 struct monst *mtmp;
 {
     struct permonst *pm = mtmp->data;
-    int difficulty = monstr[pm->monsterTypeID];
+    int difficulty = monstr[(monsndx(pm))];
     int mc = monsterClass(pm->monsterTypeID);
 
-    if (isAnimal(pm->monsterTypeID) || attacktype(pm->monsterTypeID, AT_EXPL) || isMindless(pm->monsterTypeID)
+    if (isAnimal(pm->monsterTypeID) || attacktype(pm, AT_EXPL) || isMindless(pm->monsterTypeID)
         || mc == S_GHOST || mc == S_KOP)
         return 0;
     if (difficulty > 7 && !rn2(35))
@@ -1625,7 +1621,7 @@ struct monst *mtmp;
         return FALSE;
 
     if (!stuck && !immobile && (mtmp->cham == NON_PM)
-        && monstr[pmidx = mdat->monsterTypeID] < 6) {
+        && monstr[(pmidx = monsndx(mdat))] < 6) {
         boolean ignore_boulders = (isVerySmallMonster(mdat->monsterTypeID) || throwsRocks(mdat->monsterTypeID)
                                    || passesThroughWalls(mdat->monsterTypeID)),
             diag_ok = !NODIAG(pmidx);
@@ -1687,14 +1683,14 @@ struct monst *mtmp;
         nomore(MUSE_WAN_MAKE_INVISIBLE);
         if (obj->otyp == WAN_MAKE_INVISIBLE && obj->spe > 0 && !mtmp->minvis
             && !mtmp->invis_blkd && (!mtmp->mpeaceful || youCanSeeInvisible())
-            && (!attacktype(mtmp->data->monsterTypeID, AT_GAZE) || mtmp->mcan)) {
+            && (!attacktype(mtmp->data, AT_GAZE) || mtmp->mcan)) {
             m.misc = obj;
             m.has_misc = MUSE_WAN_MAKE_INVISIBLE;
         }
         nomore(MUSE_POT_INVISIBILITY);
         if (obj->otyp == POT_INVISIBILITY && !mtmp->minvis
             && !mtmp->invis_blkd && (!mtmp->mpeaceful || youCanSeeInvisible())
-            && (!attacktype(mtmp->data->monsterTypeID, AT_GAZE) || mtmp->mcan)) {
+            && (!attacktype(mtmp->data, AT_GAZE) || mtmp->mcan)) {
             m.misc = obj;
             m.has_misc = MUSE_POT_INVISIBILITY;
         }
@@ -1711,13 +1707,13 @@ struct monst *mtmp;
         }
         nomore(MUSE_WAN_POLYMORPH);
         if (obj->otyp == WAN_POLYMORPH && obj->spe > 0
-            && (mtmp->cham == NON_PM) && monstr[mdat->monsterTypeID] < 6) {
+            && (mtmp->cham == NON_PM) && monstr[monsndx(mdat)] < 6) {
             m.misc = obj;
             m.has_misc = MUSE_WAN_POLYMORPH;
         }
         nomore(MUSE_POT_POLYMORPH);
         if (obj->otyp == POT_POLYMORPH && (mtmp->cham == NON_PM)
-            && monstr[mdat->monsterTypeID] < 6) {
+            && monstr[monsndx(mdat)] < 6) {
             m.misc = obj;
             m.has_misc = MUSE_POT_POLYMORPH;
         }
@@ -1798,7 +1794,7 @@ struct monst *mtmp;
         if (oseen)
             makeknown(POT_GAIN_LEVEL);
         m_useup(mtmp, otmp);
-        if (!grow_up_instantly(mtmp))
+        if (!grow_up(mtmp, (struct monst *) 0))
             return 1;
         /* grew into genocided monster */
         return 2;
@@ -1861,7 +1857,7 @@ struct monst *mtmp;
     case MUSE_POLY_TRAP:
         if (vismon)
             pline("%s deliberately %s onto a polymorph trap!", Monnam(mtmp),
-                  makeplural(locomotion(mtmp->data->monsterTypeID, "jump")));
+                  makeplural(locomotion(mtmp->data, "jump")));
         if (vis)
             seetrap(t_at(trapx, trapy));
 
@@ -1980,10 +1976,10 @@ rnd_misc_item(mtmp)
 struct monst *mtmp;
 {
     struct permonst *pm = mtmp->data;
-    int difficulty = monstr[pm->monsterTypeID];
+    int difficulty = monstr[(monsndx(pm))];
     int mc = monsterClass(pm->monsterTypeID);
 
-    if (isAnimal(pm->monsterTypeID) || attacktype(pm->monsterTypeID, AT_EXPL) || isMindless(pm->monsterTypeID)
+    if (isAnimal(pm->monsterTypeID) || attacktype(pm, AT_EXPL) || isMindless(pm->monsterTypeID)
         || mc == S_GHOST || mc == S_KOP)
         return 0;
     /* Unlike other rnd_item functions, we only allow _weak_ monsters
@@ -2025,7 +2021,7 @@ struct obj *obj;
 
     if (typ == WAN_MAKE_INVISIBLE || typ == POT_INVISIBILITY)
         return (boolean) (!mon->minvis && !mon->invis_blkd
-                          && !attacktype(mon->data->monsterTypeID, AT_GAZE));
+                          && !attacktype(mon->data, AT_GAZE));
     if (typ == WAN_SPEED_MONSTER || typ == POT_SPEED)
         return (boolean) (mon->mspeed != MFAST);
 
@@ -2036,7 +2032,7 @@ struct obj *obj;
         if (typ == WAN_DIGGING)
             return (boolean) !isFloater(mon->data->monsterTypeID);
         if (typ == WAN_POLYMORPH)
-            return (boolean) (monstr[mon->data->monsterTypeID] < 6);
+            return (boolean) (monstr[monsndx(mon->data)] < 6);
         if (objects[typ].oc_dir == RAY || typ == WAN_STRIKING
             || typ == WAN_TELEPORTATION || typ == WAN_CREATE_MONSTER)
             return TRUE;
@@ -2047,7 +2043,7 @@ struct obj *obj;
             || typ == POT_GAIN_LEVEL || typ == POT_PARALYSIS
             || typ == POT_SLEEPING || typ == POT_ACID || typ == POT_CONFUSION)
             return TRUE;
-        if (typ == POT_BLINDNESS && !attacktype(mon->data->monsterTypeID, AT_GAZE))
+        if (typ == POT_BLINDNESS && !attacktype(mon->data, AT_GAZE))
             return TRUE;
         break;
     case SCROLL_CLASS:
@@ -2072,7 +2068,7 @@ struct obj *obj;
     case FOOD_CLASS:
         if (typ == CORPSE)
             return (boolean) (((mon->misc_worn_check & W_ARMG) != 0L
-                               && touchPetrifies(mons[obj->corpsenm].monsterTypeID))
+                               && touch_petrifies(&mons[obj->corpsenm]))
                               || (!resists_ston(mon)
                                   && cures_stoning(mon, obj, FALSE)));
         if (typ == TIN)
@@ -2080,7 +2076,7 @@ struct obj *obj;
                               && (!resists_ston(mon)
                                   && cures_stoning(mon, obj, TRUE)));
         if (typ == EGG)
-            return (boolean) touchPetrifies(mons[obj->corpsenm].monsterTypeID);
+            return (boolean) touch_petrifies(&mons[obj->corpsenm]);
         break;
     default:
         break;
@@ -2340,7 +2336,7 @@ boolean by_you;
        [possible extension: monst capable of casting high level clerical
        spells could toss pillar of fire at self--probably too suicidal] */
     if (!mon->mcan && !mon->mspec_used
-        && monsterHasAttackWithDamageType(mon->data->monsterTypeID, AT_BREA, AD_FIRE)) {
+        && monsterHasAttackWithDamageType(mon->data, AT_BREA, AD_FIRE)) {
         odummy = zeroobj; /* otyp == STRANGE_OBJECT */
         return muse_unslime(mon, &odummy, by_you);
     }
@@ -2458,7 +2454,7 @@ struct monst *mon;
         return TRUE;
     } 
 
-    switch (ptr->monsterTypeID) {
+    switch (monsndx(ptr)) {
     case PM_FOREST_CENTAUR:
     case PM_GARTER_SNAKE:
     case PM_GECKO:

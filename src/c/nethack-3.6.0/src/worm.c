@@ -633,11 +633,11 @@ xchar x, y;
         xchar nx, ny;
         char tryct = 0;
 
-        /* pick a random direction from x, y and search for goodPosition() */
+        /* pick a random direction from x, y and search for goodpos() */
 
         do {
             random_dir(ox, oy, &nx, &ny);
-        } while (!goodPosition(nx, ny, worm->m_id, worm->data->monsterTypeID, wnum, 0) && (tryct++ < 50));
+        } while (!goodpos(nx, ny, worm, 0) && (tryct++ < 50));
 
         if (tryct < 50) {
             place_worm_seg(worm, nx, ny);
@@ -660,7 +660,7 @@ xchar x, y;
  * return in *nx, *ny, the coordinates of one of the <= 8 squares adjoining.
  *
  * This function, and the loop it serves, could be eliminated by coding
- * placeEntityNextToPosition() with a search radius.
+ * enexto() with a search radius.
  */
 STATIC_OVL
 void

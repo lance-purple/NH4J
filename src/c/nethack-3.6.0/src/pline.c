@@ -449,10 +449,10 @@ register struct monst *mtmp;
     if (mtmp->minvis)
         Strcat(info, ", invisible");
     if (mtmp == u.ustuck)
-        Strcat(info, sticks(youmonst.data->monsterTypeID)
+        Strcat(info, sticks(youmonst.data)
                          ? ", held by you"
                          : !swallowed() ? ", holding you"
-                                       : monsterHasAttackWithDamageType(u.ustuck->data->monsterTypeID,
+                                       : monsterHasAttackWithDamageType(u.ustuck->data,
                                                            AT_ENGL, AD_DGST)
                                              ? ", digesting you"
                                              : isAnimal(u.ustuck->data->monsterTypeID)
@@ -527,7 +527,7 @@ ustatusline()
     if (youAreInvisibleToOthers())
         Strcat(info, ", invisible");
     if (u.ustuck) {
-        if (sticks(youmonst.data->monsterTypeID))
+        if (sticks(youmonst.data))
             Strcat(info, ", holding ");
         else
             Strcat(info, ", held by ");

@@ -49,9 +49,9 @@ static void PROPSET(int propertyIndex, boolean on) {
 void
 set_uasmon()
 {
-    int pmid = currentMonsterNumber();
+    struct permonst *mdat = &mons[currentMonsterNumber()];
 
-    setMonsterData(&youmonst, pmid, 0);
+    set_mon_data(&youmonst, mdat, 0);
 
     PROPSET(FIRE_RES, resists_fire(&youmonst));
     PROPSET(COLD_RES, resists_cold(&youmonst));
@@ -71,27 +71,27 @@ set_uasmon()
     }
     /* resists_magm() takes wielded, worn, and carried equipment into
        into account; cheat and duplicate its monster-specific part */
-    PROPSET(ANTIMAGIC, (dmgtype(pmid, AD_MAGM)
-                        || pmid == PM_BABY_GRAY_DRAGON
-                        || dmgtype(pmid, AD_RBRE)));
-    PROPSET(SICK_RES, (monsterClass(pmid) == S_FUNGUS || pmid == PM_GHOUL));
+    PROPSET(ANTIMAGIC, (dmgtype(mdat, AD_MAGM)
+                        || mdat == &mons[PM_BABY_GRAY_DRAGON]
+                        || dmgtype(mdat, AD_RBRE)));
+    PROPSET(SICK_RES, (monsterClass(mdat->monsterTypeID) == S_FUNGUS || mdat == &mons[PM_GHOUL]));
 
-    PROPSET(STUNNED, (pmid == PM_STALKER || isBat(pmid)));
-    PROPSET(HALLUC_RES, dmgtype(pmid, AD_HALU));
-    PROPSET(SEE_INVIS, perceivesTheInvisible(pmid));
-    PROPSET(TELEPAT, isTelepathic(pmid));
-    PROPSET(INFRAVISION, hasInfravision(pmid));
-    PROPSET(INVIS, isInvisible(pmid));
-    PROPSET(TELEPORT, canTeleport(pmid));
-    PROPSET(TELEPORT_CONTROL, canControlTeleport(pmid));
-    PROPSET(LEVITATION, isFloater(pmid));
-    PROPSET(FLYING, isFlyer(pmid));
-    PROPSET(SWIMMING, isSwimmer(pmid));
+    PROPSET(STUNNED, (mdat == &mons[PM_STALKER] || isBat(mdat->monsterTypeID)));
+    PROPSET(HALLUC_RES, dmgtype(mdat, AD_HALU));
+    PROPSET(SEE_INVIS, perceivesTheInvisible(mdat->monsterTypeID));
+    PROPSET(TELEPAT, telepathic(mdat));
+    PROPSET(INFRAVISION, hasInfravision(mdat->monsterTypeID));
+    PROPSET(INVIS, pm_invisible(mdat));
+    PROPSET(TELEPORT, canTeleport(mdat->monsterTypeID));
+    PROPSET(TELEPORT_CONTROL, canControlTeleport(mdat->monsterTypeID));
+    PROPSET(LEVITATION, isFloater(mdat->monsterTypeID));
+    PROPSET(FLYING, isFlyer(mdat->monsterTypeID));
+    PROPSET(SWIMMING, isSwimmer(mdat->monsterTypeID));
     /* [don't touch MAGICAL_BREATHING here; both Amphibious and Breathless
        key off of it but include different monster forms...] */
-    PROPSET(PASSES_WALLS, passesThroughWalls(pmid));
-    PROPSET(REGENERATION, regenerates(pmid));
-    PROPSET(REFLECTING, (pmid == PM_SILVER_DRAGON));
+    PROPSET(PASSES_WALLS, passesThroughWalls(mdat->monsterTypeID));
+    PROPSET(REGENERATION, regenerates(mdat->monsterTypeID));
+    PROPSET(REFLECTING, (mdat == &mons[PM_SILVER_DRAGON]));
 
     float_vs_flight(); /* maybe toggle (BFlying & I_SPECIAL) */
 
@@ -146,7 +146,7 @@ STATIC_OVL void
 polyman(fmt, arg)
 const char *fmt, *arg;
 {
-    boolean sticky = (sticks(youmonst.data->monsterTypeID) && u.ustuck && !swallowed()),
+    boolean sticky = (sticks(youmonst.data) && u.ustuck && !swallowed()),
             was_mimicking = (youmonst.m_ap_type == M_AP_OBJECT);
     boolean was_blind = !!youCannotSee();
 
@@ -201,7 +201,7 @@ const char *fmt, *arg;
         done(GENOCIDED);
     }
 
-    if (usingTwoWeapons() && cannotUseTwoWeapons(youmonst.data->monsterTypeID))
+    if (usingTwoWeapons() && cannotUseTwoWeapons(youmonst.data))
         untwoweapon();
 
     if (currentlyTrapped() && currentTrapType() == TT_PIT) {
@@ -471,7 +471,7 @@ int psflags;
                     ++tryct;
                 }
                 javaString pm_name = monsterTypeName(mons[mntmp].monsterTypeID);
-                if (the_unique_pm(mons[mntmp].monsterTypeID)) {
+                if (the_unique_pm(&mons[mntmp])) {
                     You_cant("polymorph into %s.", the(pm_name.c_str));
 		}
                 else if (!typeIsProperName(mons[mntmp].monsterTypeID)) {
@@ -564,7 +564,7 @@ int psflags;
         do {
             /* randomly pick an "ordinary" monster */
             mntmp = rn1(SPECIAL_PM - LOW_PM, LOW_PM);
-            if (okToPolymorphInto(mons[mntmp].monsterTypeID) && !isPlaceholder(mons[mntmp].monsterTypeID))
+            if (okToPolymorphInto(mons[mntmp].monsterTypeID) && !is_placeholder(&mons[mntmp]))
                 break;
         } while (--tryct > 0);
     }
@@ -600,7 +600,7 @@ int
 polymon(mntmp)
 int mntmp;
 {
-    boolean sticky = sticks(youmonst.data->monsterTypeID) && u.ustuck && !swallowed(),
+    boolean sticky = sticks(youmonst.data) && u.ustuck && !swallowed(),
             was_blind = !!youCannotSee(), dochange = FALSE;
     int mlvl;
 
@@ -677,7 +677,7 @@ int mntmp;
     }
     releaseJavaString(monsterName);
 
-    if (youAreTurningToStone() && poly_when_stoned(mons[mntmp].monsterTypeID)) {
+    if (youAreTurningToStone() && poly_when_stoned(&mons[mntmp])) {
         /* poly_when_stoned already checked stone golem genocide */
         mntmp = PM_STONE_GOLEM;
         make_stoned(0L, "You turn to stone!", 0, (char *) 0);
@@ -704,7 +704,7 @@ int mntmp;
         You("no longer feel sick.");
     }
     if (youAreTurningToSlime()) {
-        if (isFlaming(youmonst.data->monsterTypeID)) {
+        if (flaming(youmonst.data)) {
             make_slimed(0L, "The slime burns away!");
         } else if (mntmp == PM_GREEN_SLIME) {
             /* do it silently */
@@ -716,7 +716,7 @@ int mntmp;
         setYourIntrinsic(SLIPPERY_FINGERS, 0);
 
     /*
-    mlvl = adj_lev(mons[mntmp].monsterTypeID);
+    mlvl = adj_lev(&mons[mntmp]);
      * We can't do the above, since there's no such thing as an
      * "experience level of you as a monster" for a polymorphed character.
      */
@@ -730,7 +730,7 @@ int mntmp;
             setMaximumHitPointsAsMonster(rnd(4));
         else
             setMaximumHitPointsAsMonster(d(mlvl, 8));
-        if (is_home_elemental(mons[mntmp].monsterTypeID))
+        if (is_home_elemental(&mons[mntmp]))
             multiplyMaximumHitPointsAsMonster(3);
     }
     setCurrentHitPointsAsMonster(maximumHitPointsAsMonster());
@@ -764,12 +764,12 @@ int mntmp;
     }
     newsym(currentX(), currentY()); /* Change symbol */
 
-    if (!sticky && !swallowed() && u.ustuck && sticks(youmonst.data->monsterTypeID))
+    if (!sticky && !swallowed() && u.ustuck && sticks(youmonst.data))
         u.ustuck = 0;
-    else if (sticky && !sticks(youmonst.data->monsterTypeID))
+    else if (sticky && !sticks(youmonst.data))
         uunstick();
     if (u.usteed) {
-        if (touchPetrifies(u.usteed->data->monsterTypeID) && !youResistStoning() && rnl(3)) {
+        if (touch_petrifies(u.usteed->data) && !youResistStoning() && rnl(3)) {
             char buf[BUFSZ];
 
             pline("%s touch %s.", no_longer_petrify_resistant,
@@ -787,25 +787,25 @@ int mntmp;
         static const char use_thec[] = "Use the command #%s to %s.";
         static const char monsterc[] = "monster";
 
-        if (hasBreathWeapon(youmonst.data->monsterTypeID))
+        if (can_breathe(youmonst.data))
             pline(use_thec, monsterc, "use your breath weapon");
-        if (attacktype(youmonst.data->monsterTypeID, AT_SPIT))
+        if (attacktype(youmonst.data, AT_SPIT))
             pline(use_thec, monsterc, "spit venom");
         if (monsterClass(youmonst.data->monsterTypeID) == S_NYMPH)
             pline(use_thec, monsterc, "remove an iron ball");
-        if (attacktype(youmonst.data->monsterTypeID, AT_GAZE))
+        if (attacktype(youmonst.data, AT_GAZE))
             pline(use_thec, monsterc, "gaze at monsters");
         if (isHider(youmonst.data->monsterTypeID))
             pline(use_thec, monsterc, "hide");
         if (isWere(youmonst.data->monsterTypeID))
             pline(use_thec, monsterc, "summon help");
-        if (makesWebs(youmonst.data->monsterTypeID))
+        if (webmaker(youmonst.data))
             pline(use_thec, monsterc, "spin a web");
         if (currentMonsterNumber() == PM_GREMLIN)
             pline(use_thec, monsterc, "multiply in a fountain");
         if (isUnicorn(youmonst.data->monsterTypeID))
             pline(use_thec, monsterc, "use your horn");
-        if (isMindFlayer(youmonst.data->monsterTypeID))
+        if (is_mind_flayer(youmonst.data))
             pline(use_thec, monsterc, "emit a mental blast");
         if (monsterSound(youmonst.data->monsterTypeID) == MS_SHRIEK) /* worthless, actually */
             pline(use_thec, monsterc, "shriek");
@@ -835,7 +835,7 @@ int mntmp;
             pline_The("buried ball is no longer bound to you.");
             buried_ball_to_freedom();
         }
-    } else if (likesLava(youmonst.data->monsterTypeID) && currentlyTrapped()
+    } else if (likes_lava(youmonst.data) && currentlyTrapped()
                && currentTrapType() == TT_LAVA) {
         setCurrentTrapTimeout(0);
         pline_The("lava now feels soothing.");
@@ -859,7 +859,7 @@ int mntmp;
         /* probably should burn webs too if PM_FIRE_ELEMENTAL */
         setCurrentTrapTimeout(0);
     }
-    if (makesWebs(youmonst.data->monsterTypeID) && currentlyTrapped() && currentTrapType() == TT_WEB) {
+    if (webmaker(youmonst.data) && currentlyTrapped() && currentTrapType() == TT_WEB) {
         You("orient yourself on the web.");
         setCurrentTrapTimeout(0);
     }
@@ -885,7 +885,7 @@ break_armor()
 {
     register struct obj *otmp;
 
-    if (breaksOutOfArmor(youmonst.data->monsterTypeID)) {
+    if (breakarm(youmonst.data)) {
         if ((otmp = uarm) != 0) {
             if (donning(otmp))
                 cancel_don();
@@ -909,7 +909,7 @@ break_armor()
             Your("shirt rips to shreds!");
             useup(uarmu);
         }
-    } else if (slidesOutOfArmor(youmonst.data->monsterTypeID)) {
+    } else if (sliparm(youmonst.data)) {
         if (((otmp = uarm) != 0) && (racial_exception(&youmonst, otmp) < 1)) {
             if (donning(otmp))
                 cancel_don();
@@ -934,13 +934,13 @@ break_armor()
             dropx(otmp);
         }
     }
-    if (hasHorns(youmonst.data->monsterTypeID)) {
+    if (has_horns(youmonst.data)) {
         if ((otmp = uarmh) != 0) {
             if (is_flimsy(otmp) && !donning(otmp)) {
                 char hornbuf[BUFSZ];
 
                 /* Future possibilities: This could damage/destroy helmet */
-                Sprintf(hornbuf, "horn%s", plur(numberOfHorns(youmonst.data->monsterTypeID)));
+                Sprintf(hornbuf, "horn%s", plur(num_horns(youmonst.data)));
                 Your("%s %s through %s.", hornbuf, vtense(hornbuf, "pierce"),
                      yname(otmp));
             } else {
@@ -1035,7 +1035,7 @@ int alone;
             if (candropwep)
                 dropx(otmp);
             update_inventory();
-        } else if (cannotUseTwoWeapons(youmonst.data->monsterTypeID)) {
+        } else if (cannotUseTwoWeapons(youmonst.data)) {
             untwoweapon();
         }
     }
@@ -1091,7 +1091,7 @@ dobreathe()
     if (!getdir((char *) 0))
         return 0;
 
-    struct Attack mattk = monsterAttackWithDamageType(youmonst.data->monsterTypeID, AT_BREA, AD_ANY);
+    struct Attack mattk = monsterAttackWithDamageType(youmonst.data, AT_BREA, AD_ANY);
 
     if (!validAttack(mattk)) {
         impossible("bad breath attack?"); /* mouthwash needed... */
@@ -1114,7 +1114,7 @@ dospit()
     if (!getdir((char *) 0))
         return 0;
 
-    struct Attack mattk = monsterAttackWithDamageType(youmonst.data->monsterTypeID, AT_SPIT, AD_ANY);
+    struct Attack mattk = monsterAttackWithDamageType(youmonst.data, AT_SPIT, AD_ANY);
 
     if (!validAttack(mattk)) {
         impossible("bad spit attack?");
@@ -1166,7 +1166,7 @@ dospinweb()
     if (swallowed()) {
         You("release web fluid inside %s.", mon_nam(u.ustuck));
         if (isAnimal(u.ustuck->data->monsterTypeID)) {
-            expels(u.ustuck, u.ustuck->data->monsterTypeID, TRUE);
+            expels(u.ustuck, u.ustuck->data, TRUE);
             return 0;
         }
 	int ustuckpmid = u.ustuck->data->monsterTypeID;
@@ -1288,7 +1288,7 @@ dosummon()
 
     You("call upon your brethren for help!");
     exercise(A_WIS, TRUE);
-    if (!were_summon(youmonst.data->monsterTypeID, TRUE, &placeholder, (char *) 0))
+    if (!were_summon(youmonst.data, TRUE, &placeholder, (char *) 0))
         pline("But none arrive.");
     return 1;
 }
@@ -1444,7 +1444,7 @@ dohide()
        (except for floor hiders [trapper or mimic] in pits) */
     if (u.ustuck || (currentlyTrapped() && (currentTrapType() != TT_PIT || on_ceiling))) {
         You_cant("hide while you're %s.",
-                 !u.ustuck ? "trapped" : !sticks(youmonst.data->monsterTypeID)
+                 !u.ustuck ? "trapped" : !sticks(youmonst.data)
                                              ? "being held"
                                              : isHumanoid(u.ustuck->data->monsterTypeID)
                                                    ? "holding someone"
@@ -1545,11 +1545,11 @@ domindblast()
             continue;
         if (mtmp->mpeaceful)
             continue;
-        u_sen = isTelepathic(mtmp->data->monsterTypeID) && !mtmp->mcansee;
-        if (u_sen || (isTelepathic(mtmp->data->monsterTypeID) && rn2(2)) || !rn2(10)) {
+        u_sen = telepathic(mtmp->data) && !mtmp->mcansee;
+        if (u_sen || (telepathic(mtmp->data) && rn2(2)) || !rn2(10)) {
             You("lock in on %s %s.", s_suffix(mon_nam(mtmp)),
                 u_sen ? "telepathy"
-                      : isTelepathic(mtmp->data->monsterTypeID) ? "latent telepathy" : "mind");
+                      : telepathic(mtmp->data) ? "latent telepathy" : "mind");
             mtmp->mhp -= rnd(15);
             if (mtmp->mhp <= 0)
                 killed(mtmp);
@@ -1684,7 +1684,7 @@ int part;
         return humanoid_parts[part]; /* yeti/sasquatch, monkey/ape */
     }
     if ((part == HAND || part == HANDED)
-        && (isHumanoid(mptr->monsterTypeID) && attacktype(mptr->monsterTypeID, AT_CLAW)
+        && (isHumanoid(mptr->monsterTypeID) && attacktype(mptr, AT_CLAW)
             && !index(not_claws, mc) && mptr != &mons[PM_STONE_GOLEM]
             && mptr != &mons[PM_INCUBUS] && mptr != &mons[PM_SUCCUBUS]))
         return (part == HAND) ? "claw" : "clawed";
@@ -1843,7 +1843,7 @@ struct permonst *mptr;
     context.warntype.species = 0;
     context.warntype.polyd = 0;
 
-    switch (mptr->monsterTypeID) {
+    switch (monsndx(mptr)) {
     case PM_PURPLE_WORM:
         warnidx = PM_SHRIEKER;
         break;

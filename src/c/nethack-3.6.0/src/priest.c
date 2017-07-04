@@ -244,7 +244,7 @@ boolean sanctum; /* is it the seat of the high priest? */
     if (MON_AT(sx + 1, sy))
         (void) rloc(m_at(sx + 1, sy), FALSE); /* insurance */
 
-    priest = makeMonsterOfType((sanctum ? PM_HIGH_PRIEST : PM_ALIGNED_PRIEST),
+    priest = makemon(&mons[sanctum ? PM_HIGH_PRIEST : PM_ALIGNED_PRIEST],
                      sx + 1, sy, MM_EPRI);
     if (priest) {
         EPRI(priest)->shroom = (schar) ((sroom - rooms) + ROOMOFFSET);
@@ -268,7 +268,7 @@ boolean sanctum; /* is it the seat of the high priest? */
         for (cnt = rn1(3, 2); cnt > 0; --cnt) {
             (void) mpickobj(priest, mkobj(SPBOOK_CLASS, FALSE));
         }
-        /* robe [via makeMonsterOfType()] */
+        /* robe [via makemon()] */
         if (rn2(2) && (otmp = which_armor(priest, W_ARMC)) != 0) {
             if (p_coaligned(priest))
                 uncurse(otmp);
@@ -518,7 +518,7 @@ int roomno;
                       make sure we give one the first time */
         }
         if (!rn2(5)
-            && (mtmp = makeMonsterOfType(PM_GHOST, currentX(), currentY(), NO_MM_FLAGS))
+            && (mtmp = makemon(&mons[PM_GHOST], currentX(), currentY(), NO_MM_FLAGS))
                    != 0) {
             /* [TODO: alter this (at a minimum, by switching from
                an exclamation to a simple declaration) if hero has
@@ -669,8 +669,8 @@ register struct monst *priest;
 }
 
 struct monst *
-makeRoamingMonsterOfType(pmid, alignment, x, y, peaceful)
-int pmid;
+mk_roamer(ptr, alignment, x, y, peaceful)
+register struct permonst *ptr;
 aligntyp alignment;
 xchar x, y;
 boolean peaceful;
@@ -678,18 +678,16 @@ boolean peaceful;
     register struct monst *roamer;
     register boolean coaligned = (currentAlignmentType() == alignment);
 
+#if 0 /* this was due to permonst's pxlth field which is now gone */
+    if (ptr != &mons[PM_ALIGNED_PRIEST] && ptr != &mons[PM_ANGEL])
+        return (struct monst *) 0;
+#endif
+
     if (MON_AT(x, y))
         (void) rloc(m_at(x, y), FALSE); /* insurance */
 
-    if (NON_PM != pmid) {
-        roamer = makeMonsterOfType(pmid, x, y, MM_ADJACENTOK | MM_EMIN);
-    } else {
-        roamer = makeMonsterOfAnyType(x, y, MM_ADJACENTOK | MM_EMIN);
-    }
-
-    if (!roamer) {
+    if (!(roamer = makemon(ptr, x, y, MM_ADJACENTOK | MM_EMIN)))
         return (struct monst *) 0;
-    }
 
     EMIN(roamer)->min_align = alignment;
     EMIN(roamer)->renegade = (coaligned && !peaceful);
@@ -730,7 +728,7 @@ xchar x, y;
     register struct monst *priest;
 
     if (mon) {
-        if (isMinion(mon->data->monsterTypeID) || isRiderOfApocalypse(mon->data->monsterTypeID))
+        if (isMinion(mon->data->monsterTypeID) || is_rider(mon->data))
             return FALSE;
         x = mon->mx, y = mon->my;
     }

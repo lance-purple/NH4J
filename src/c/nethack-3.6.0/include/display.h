@@ -255,13 +255,13 @@ extern void display_self();
 
 #define warning_to_glyph(mwarnlev) ((mwarnlev) + GLYPH_WARNING_OFF)
 #define mon_to_glyph(mon) \
-    ((int) what_mon((mon)->data->monsterTypeID) + GLYPH_MON_OFF)
+    ((int) what_mon(monsndx((mon)->data)) + GLYPH_MON_OFF)
 #define detected_mon_to_glyph(mon) \
-    ((int) what_mon((mon)->data->monsterTypeID) + GLYPH_DETECT_OFF)
+    ((int) what_mon(monsndx((mon)->data)) + GLYPH_DETECT_OFF)
 #define ridden_mon_to_glyph(mon) \
-    ((int) what_mon((mon)->data->monsterTypeID) + GLYPH_RIDDEN_OFF)
+    ((int) what_mon(monsndx((mon)->data)) + GLYPH_RIDDEN_OFF)
 #define pet_to_glyph(mon) \
-    ((int) what_mon((mon)->data->monsterTypeID) + GLYPH_PET_OFF)
+    ((int) what_mon(monsndx((mon)->data)) + GLYPH_PET_OFF)
 
 /* This has the unfortunate side effect of needing a global variable    */
 /* to store a result. 'otg_temp' is defined and declared in decl.{ch}.  */

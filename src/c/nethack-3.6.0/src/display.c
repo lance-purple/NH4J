@@ -1027,7 +1027,7 @@ int first;
                     show_glyph(x, y, cmap_to_glyph(S_stone));
     }
 
-    swallower = u.ustuck->data->monsterTypeID;
+    swallower = monsndx(u.ustuck->data);
     /* assume isok(currentX(),currentY()) */
     left_ok = isok(currentX() - 1, currentY());
     rght_ok = isok(currentX() + 1, currentY());

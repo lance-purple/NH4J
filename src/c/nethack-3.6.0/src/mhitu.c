@@ -212,19 +212,20 @@ register const struct Attack mattk;
 }
 
 void
-expels(mtmp, pmid, message)
+expels(mtmp, mdat, message)
 struct monst *mtmp;
-int pmid; /* if mtmp is polymorphed, pmid != mtmp->data->monsterTypeID */
+struct permonst *mdat; /* if mtmp is polymorphed, mdat != mtmp->data */
 boolean message;
 {
     if (message) {
-        if (isAnimal(pmid))
+        if (isAnimal(mdat->monsterTypeID))
             You("get regurgitated!");
         else {
             char blast[40];
             register int i;
 
             blast[0] = '\0';
+	    int pmid = mdat->monsterTypeID;
             for (i = 0; i < monsterAttacks(pmid); i++) {
                 if (monsterAttack(pmid, i).type == AT_ENGL) {
                     break;
@@ -260,10 +261,11 @@ boolean message;
 
 /* select a monster's next attack, possibly substituting for its usual one */
 const struct Attack 
-getMonsterAttack(pmid, indx, prev_result)
-int pmid;
+getMonsterAttack(mptr, indx, prev_result)
+struct permonst *mptr;
 int indx, prev_result[];
 {
+    int pmid = mptr->monsterTypeID;
     struct Attack attk = monsterAttack(pmid, indx);
 
     /* prevent a monster with two consecutive disease or hunger attacks
@@ -357,7 +359,7 @@ register struct monst *mtmp;
                is eligible for placing hero; we assume that a
                removed monster remembers its old spot <mx,my> */
             remove_monster(mtmp->mx, mtmp->my);
-            if (!placeEntityNextToPosition(&cc, currentX(), currentY(), youmonst.data->monsterTypeID, 0)
+            if (!enexto(&cc, currentX(), currentY(), youmonst.data)
                 /* a fish won't voluntarily swap positions
                    when it's in water and hero is over land */
                 || (monsterClass(mtmp->data->monsterTypeID) == S_EEL
@@ -382,7 +384,7 @@ register struct monst *mtmp;
                 /* tail hasn't grown, so if it now occupies <cc.x,.y>
                    then one of its original spots must be free */
                 if (m_at(cc.x, cc.y))
-                    (void) placeEntityNextToPosition(&cc, currentX(), currentY(), youmonst.data->monsterTypeID, 0);
+                    (void) enexto(&cc, currentX(), currentY(), youmonst.data);
             }
             teleds(cc.x, cc.y, TRUE); /* move hero */
             set_apparxy(mtmp);
@@ -458,7 +460,7 @@ register struct monst *mtmp;
     /* hero might be a mimic, concealed via #monster */
     if (monsterClass(youmonst.data->monsterTypeID) == S_MIMIC && youmonst.m_ap_type && !range2
         && foundyou && !swallowed()) {
-        boolean sticky = sticks(youmonst.data->monsterTypeID);
+        boolean sticky = sticks(youmonst.data);
 
         if (!canspotmon(mtmp)) {
             map_invisible(mtmp->mx, mtmp->my);
@@ -551,7 +553,7 @@ register struct monst *mtmp;
             char buf[BUFSZ], genericwere[BUFSZ];
 
             Strcpy(genericwere, "creature");
-            numhelp = were_summon(mdat->monsterTypeID, FALSE, &numseen, genericwere);
+            numhelp = were_summon(mdat, FALSE, &numseen, genericwere);
             if (youseeit) {
                 pline("%s summons help!", Monnam(mtmp));
                 if (numhelp > 0) {
@@ -607,7 +609,7 @@ register struct monst *mtmp;
 
     for (i = 0; i < NATTK; i++) {
         sum[i] = 0;
-        mattk = getMonsterAttack(mdat->monsterTypeID, i, sum);
+        mattk = getMonsterAttack(mdat, i, sum);
         if ((swallowed() && mattk.type != AT_ENGL)
             || (skipnonmagc && mattk.type != AT_MAGC))
             continue;
@@ -621,7 +623,7 @@ register struct monst *mtmp;
         case AT_BUTT:
         case AT_TENT:
             if (!range2 && (!MON_WEP(mtmp) || mtmp->mconf || youCauseConflict()
-                            || !touchPetrifies(youmonst.data->monsterTypeID))) {
+                            || !touch_petrifies(youmonst.data))) {
                 if (foundyou) {
                     if (tmp > (j = rnd(20 + i))) {
                         if (mattk.type != AT_KICK
@@ -916,7 +918,7 @@ register const struct Attack mattk;
     /*  Now, adjust damages via resistances or specific attacks */
     switch (mattk.damageType) {
     case AD_PHYS:
-        if (mattk.type == AT_HUGS && !sticks(youmonst.data->monsterTypeID)) {
+        if (mattk.type == AT_HUGS && !sticks(youmonst.data)) {
             if (!u.ustuck && rn2(2)) {
                 if (u_slip_free(mtmp, mattk)) {
                     dmg = 0;
@@ -935,7 +937,7 @@ register const struct Attack mattk;
                 int tmp;
 
                 if (otmp->otyp == CORPSE
-                    && touchPetrifies(mons[otmp->corpsenm].monsterTypeID)) {
+                    && touch_petrifies(&mons[otmp->corpsenm])) {
                     dmg = 1;
 		    javaString corpseName = monsterTypeName(
                           mons[otmp->corpsenm].monsterTypeID);
@@ -992,7 +994,7 @@ register const struct Attack mattk;
     case AD_FIRE:
         hitmsg(mtmp, mattk);
         if (uncancelled) {
-            pline("You're %s!", on_fire(youmonst.data->monsterTypeID, mattk));
+            pline("You're %s!", on_fire(youmonst.data, mattk));
             if (youmonst.data == &mons[PM_STRAW_GOLEM]
                 || youmonst.data == &mons[PM_PAPER_GOLEM]) {
                 You("roast!");
@@ -1192,7 +1194,7 @@ register const struct Attack mattk;
                     || (flags.moonphase == NEW_MOON && !have_lizard())) {
                 do_stone:
                     if (!youAreTurningToStone() && !youResistStoning()
-                        && !(poly_when_stoned(youmonst.data->monsterTypeID)
+                        && !(poly_when_stoned(youmonst.data)
                              && polymon(PM_STONE_GOLEM))) {
                         javaString kname = monsterTypeName(mtmp->data->monsterTypeID);
 
@@ -1215,11 +1217,11 @@ register const struct Attack mattk;
         break;
     case AD_STCK:
         hitmsg(mtmp, mattk);
-        if (uncancelled && !u.ustuck && !sticks(youmonst.data->monsterTypeID))
+        if (uncancelled && !u.ustuck && !sticks(youmonst.data))
             u.ustuck = mtmp;
         break;
     case AD_WRAP:
-        if ((!mtmp->mcan || u.ustuck == mtmp) && !sticks(youmonst.data->monsterTypeID)) {
+        if ((!mtmp->mcan || u.ustuck == mtmp) && !sticks(youmonst.data)) {
             if (!u.ustuck && !rn2(10)) {
                 if (u_slip_free(mtmp, mattk)) {
                     dmg = 0;
@@ -1259,7 +1261,7 @@ register const struct Attack mattk;
             && !youHaveProtectionFromShapeChangers() && !defends(AD_WERE, uwep)) {
             You_feel("feverish.");
             exercise(A_CON, FALSE);
-            setLycanthropeType(mdat->monsterTypeID);
+            setLycanthropeType(monsndx(mdat));
             retouch_equipment(2);
         }
         break;
@@ -1286,8 +1288,8 @@ register const struct Attack mattk;
             if (mtmp->mcan)
                 break;
             /* Continue below */
-        } else if (dmgtype(youmonst.data->monsterTypeID, AD_SEDU)
-                   || (SYSOPT_SEDUCE && dmgtype(youmonst.data->monsterTypeID, AD_SSEX))) {
+        } else if (dmgtype(youmonst.data, AD_SEDU)
+                   || (SYSOPT_SEDUCE && dmgtype(youmonst.data, AD_SSEX))) {
             pline("%s %s.", Monnam(mtmp),
                   mtmp->minvent
                       ? "brags about the goods some dungeon explorer provided"
@@ -1321,7 +1323,7 @@ register const struct Attack mattk;
             if (isAnimal(mtmp->data->monsterTypeID) && *buf) {
                 if (canseemon(mtmp))
                     pline("%s tries to %s away with %s.", Monnam(mtmp),
-                          locomotion(mtmp->data->monsterTypeID, "run"), buf);
+                          locomotion(mtmp->data, "run"), buf);
             }
             monflee(mtmp, 0, FALSE, FALSE);
             return 3;
@@ -1382,7 +1384,7 @@ register const struct Attack mattk;
     case AD_HEAL:
         /* a cancelled nurse is just an ordinary monster,
          * nurses don't heal those that cause petrification */
-        if (mtmp->mcan || (areYouPolymorphed() && touchPetrifies(youmonst.data->monsterTypeID))) {
+        if (mtmp->mcan || (areYouPolymorphed() && touch_petrifies(youmonst.data))) {
             hitmsg(mtmp, mattk);
             break;
         }
@@ -1550,7 +1552,7 @@ register const struct Attack mattk;
         hitmsg(mtmp, mattk);
         if (!uncancelled)
             break;
-        if (isFlaming(youmonst.data->monsterTypeID)) {
+        if (flaming(youmonst.data)) {
             pline_The("slime burns away!");
             dmg = 0;
         } else if (youAreUnchanging() || isNoncorporeal(youmonst.data->monsterTypeID)
@@ -1659,7 +1661,7 @@ boolean
 gulp_blnd_check()
 {
     if (!youAreTemporarilyBlinded() && swallowed()) {
-        struct Attack mattk = monsterAttackWithDamageType(u.ustuck->data->monsterTypeID, AT_ENGL, AD_BLND);
+        struct Attack mattk = monsterAttackWithDamageType(u.ustuck->data, AT_ENGL, AD_BLND);
 
 	if (validAttack(mattk) && can_blnd(u.ustuck, &youmonst, mattk.type, (struct obj *) 0)) {
             increaseTimeSinceBeingSwallowed(1); /* compensate for gulpmu change */
@@ -1728,7 +1730,7 @@ register const struct Attack mattk;
             unleash_all();
         }
 
-        if (touchPetrifies(youmonst.data->monsterTypeID) && !resists_ston(mtmp)) {
+        if (touch_petrifies(youmonst.data) && !resists_ston(mtmp)) {
             /* put the attacker back where it started;
                the resulting statue will end up there */
             remove_monster(mtmp->mx, mtmp->my); /* currentX(),currentY() */
@@ -1797,14 +1799,14 @@ register const struct Attack mattk;
         physical_damage = TRUE;
         if (mtmp->data == &mons[PM_FOG_CLOUD]) {
             You("are laden with moisture and %s",
-                isFlaming(youmonst.data->monsterTypeID)
+                flaming(youmonst.data)
                     ? "are smoldering out!"
                     : youNeedNotBreathe() ? "find it mildly uncomfortable."
                                  : isAmphibious(youmonst.data->monsterTypeID)
                                        ? "feel comforted."
                                        : "can barely breathe!");
             /* NB: Amphibious includes Breathless */
-            if (youAreAmphibious() && !isFlaming(youmonst.data->monsterTypeID))
+            if (youAreAmphibious() && !flaming(youmonst.data))
                 tmp = 0;
         } else {
             You("are pummeled with debris!");
@@ -1898,17 +1900,17 @@ register const struct Attack mattk;
     if (tmp)
         stop_occupation();
 
-    if (touchPetrifies(youmonst.data->monsterTypeID) && !resists_ston(mtmp)) {
+    if (touch_petrifies(youmonst.data) && !resists_ston(mtmp)) {
         pline("%s very hurriedly %s you!", Monnam(mtmp),
               isAnimal(mtmp->data->monsterTypeID) ? "regurgitates" : "expels");
-        expels(mtmp, mtmp->data->monsterTypeID, FALSE);
+        expels(mtmp, mtmp->data, FALSE);
     } else if (!timeSinceBeingSwallowed() || monsterSize(youmonst.data->monsterTypeID) >= MZ_HUGE) {
         You("get %s!", isAnimal(mtmp->data->monsterTypeID) ? "regurgitated" : "expelled");
         if (flags.verbose
             && (isAnimal(mtmp->data->monsterTypeID)
-                || (dmgtype(mtmp->data->monsterTypeID, AD_DGST) && youHaveSlowDigestion())))
+                || (dmgtype(mtmp->data, AD_DGST) && youHaveSlowDigestion())))
             pline("Obviously %s doesn't like your taste.", mon_nam(mtmp));
-        expels(mtmp, mtmp->data->monsterTypeID, FALSE);
+        expels(mtmp, mtmp->data, FALSE);
     }
     return 1;
 }
@@ -1983,7 +1985,7 @@ boolean ufound;
         case AD_HALU:
             not_affected |= youCannotSee() || (currentMonsterNumber() == PM_BLACK_LIGHT
                                       || currentMonsterNumber() == PM_VIOLET_FUNGUS
-                                      || dmgtype(youmonst.data->monsterTypeID, AD_STUN));
+                                      || dmgtype(youmonst.data, AD_STUN));
             if (!not_affected) {
                 boolean chg;
                 if (!youAreHallucinating())
@@ -2082,7 +2084,7 @@ register const struct Attack mattk;
             && !youResistStoning()) {
             You("meet %s gaze.", s_suffix(mon_nam(mtmp)));
             stop_occupation();
-            if (poly_when_stoned(youmonst.data->monsterTypeID) && polymon(PM_STONE_GOLEM))
+            if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))
                 break;
             You("turn to stone...");
             killer.format = KILLED_BY;
@@ -2650,7 +2652,7 @@ register const struct Attack mattk;
             && (protector == 0L
                 || (protector != ~0L
                     && (wornitems & protector) != protector))) {
-            if (poly_when_stoned(mtmp->data->monsterTypeID)) {
+            if (poly_when_stoned(mtmp->data)) {
                 mon_to_stone(mtmp);
                 return 1;
             }
@@ -2735,7 +2737,7 @@ register const struct Attack mattk;
             if (!mtmp->mstun) {
                 mtmp->mstun = 1;
                 pline("%s %s.", Monnam(mtmp),
-                      makeplural(stagger(mtmp->data->monsterTypeID, "stagger")));
+                      makeplural(stagger(mtmp->data, "stagger")));
             }
             tmp = 0;
             break;
@@ -2781,13 +2783,13 @@ struct monst *
 cloneu()
 {
     register struct monst *mon;
-    int mndx = youmonst.data->monsterTypeID;
+    int mndx = monsndx(youmonst.data);
 
     if (currentHitPointsAsMonster() <= 1)
         return (struct monst *) 0;
     if (mvitals[mndx].mvflags & G_EXTINCT)
         return (struct monst *) 0;
-    mon = makeMonsterOfType(youmonst.data->monsterTypeID, currentX(), currentY(), NO_MINVENT | MM_EDOG);
+    mon = makemon(youmonst.data, currentX(), currentY(), NO_MINVENT | MM_EDOG);
     if (!mon)
         return NULL;
     mon->mcloned = 1;

@@ -570,7 +570,7 @@ doengrave()
         } else if (!levl[currentX()][currentY()].disturbed) {
             You("disturb the undead!");
             levl[currentX()][currentY()].disturbed = 1;
-            (void) makeMonsterOfType(PM_GHOUL, currentX(), currentY(), NO_MM_FLAGS);
+            (void) makemon(&mons[PM_GHOUL], currentX(), currentY(), NO_MM_FLAGS);
             exercise(A_WIS, FALSE);
             return 1;
         }
@@ -1233,7 +1233,7 @@ struct engr *ep;
             return;
         tx = rn1(COLNO - 3, 2);
         ty = rn2(ROWNO);
-    } while (engr_at(tx, ty) || !goodPositionForObject(tx, ty, 0));
+    } while (engr_at(tx, ty) || !goodpos(tx, ty, (struct monst *) 0, 0));
 
     ep->engr_x = tx;
     ep->engr_y = ty;

@@ -276,9 +276,9 @@ struct obj *book2;
 
         You("raised the dead!");
         /* first maybe place a dangerous adversary */
-        if (!rn2(3) && ((mtmp = makeMonsterOfType(PM_MASTER_LICH, currentX(), currentY(),
+        if (!rn2(3) && ((mtmp = makemon(&mons[PM_MASTER_LICH], currentX(), currentY(),
                                         NO_MINVENT)) != 0
-                        || (mtmp = makeMonsterOfType(PM_NALFESHNEE, currentX(), currentY(),
+                        || (mtmp = makemon(&mons[PM_NALFESHNEE], currentX(), currentY(),
                                            NO_MINVENT)) != 0)) {
             mtmp->mpeaceful = 0;
             set_malign(mtmp);

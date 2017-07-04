@@ -154,7 +154,7 @@ stealarm(VOID_ARGS)
                 if (mtmp->m_id == stealmid) {
                     if (DEADMONSTER(mtmp))
                         impossible("stealarm(): dead monster stealing");
-                    if (!dmgtype(mtmp->data->monsterTypeID, AD_SITM)) /* polymorphed */
+                    if (!dmgtype(mtmp->data, AD_SITM)) /* polymorphed */
                         goto botm;
                     if (otmp->unpaid)
                         subfrombill(otmp, shop_keeper(mostRecentCurrentlyOccupiedShopID()));
@@ -458,7 +458,7 @@ gotobj:
     freeinv(otmp);
     pline("%s stole %s.", named ? "She" : Monnam(mtmp), doname(otmp));
     could_petrify =
-        (otmp->otyp == CORPSE && touchPetrifies(mons[otmp->corpsenm].monsterTypeID));
+        (otmp->otyp == CORPSE && touch_petrifies(&mons[otmp->corpsenm]));
     (void) mpickobj(mtmp, otmp); /* may free otmp */
     if (could_petrify && !(mtmp->misc_worn_check & W_ARMG)) {
         minstapetrify(mtmp, TRUE);
@@ -485,7 +485,7 @@ register struct obj *otmp;
     /* don't want hidden light source inside the monster; assumes that
        engulfers won't have external inventories; whirly monsters cause
        the light to be extinguished rather than letting it shine thru */
-    if (obj_sheds_light(otmp) && attacktype(mtmp->data->monsterTypeID, AT_ENGL)) {
+    if (obj_sheds_light(otmp) && attacktype(mtmp->data, AT_ENGL)) {
         /* this is probably a burning object that you dropped or threw */
         if (swallowed() && mtmp == u.ustuck && youCanSee())
             pline("%s out.", Tobjnam(otmp, "go"));

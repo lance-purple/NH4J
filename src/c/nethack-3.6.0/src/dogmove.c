@@ -335,9 +335,8 @@ boolean devour;
 
     /* limit "instant" growth to prevent potential abuse */
     if (grow && (int) mtmp->m_lev < (int) monsterLevel(mtmp->data->monsterTypeID) + 15) {
-        if (!grow_up_instantly(mtmp)) {
+        if (!grow_up(mtmp, (struct monst *) 0))
             return 2;
-	}
     }
     if (heal)
         mtmp->mhp = mtmp->mhpmax;
@@ -448,7 +447,7 @@ int udist;
                         obj_extract_self(otmp);
                         newsym(omx, omy);
                         (void) mpickobj(mtmp, otmp);
-                        if (attacktype(mtmp->data->monsterTypeID, AT_WEAP)
+                        if (attacktype(mtmp->data, AT_WEAP)
                             && mtmp->weapon_check == NEED_WEAPON) {
                             mtmp->weapon_check = NEED_HTH_WEAPON;
                             (void) mon_wield_item(mtmp);
@@ -684,7 +683,7 @@ register int after; /* this is extra fast monster movement */
     allowflags = ALLOW_M | ALLOW_TRAPS | ALLOW_SSM | ALLOW_SANCT;
     if (passesThroughWalls(mtmp->data->monsterTypeID))
         allowflags |= (ALLOW_ROCK | ALLOW_WALL);
-    if (passes_bars(mtmp->data->monsterTypeID))
+    if (passes_bars(mtmp->data))
         allowflags |= ALLOW_BARS;
     if (throwsRocks(mtmp->data->monsterTypeID))
         allowflags |= ALLOW_ROCK;
@@ -702,7 +701,7 @@ register int after; /* this is extra fast monster movement */
     }
 #if 0 /* [this is now handled in dochug()] */
     if (!youCauseConflict() && !mtmp->mconf
-        && mtmp == u.ustuck && !sticks(youmonst.data->monsterTypeID)) {
+        && mtmp == u.ustuck && !sticks(youmonst.data)) {
         unstuck(mtmp); /* swallowed case handled above */
         You("get released!");
     }
@@ -770,7 +769,7 @@ register int after; /* this is extra fast monster movement */
                      || m2sound == MS_GUARDIAN
                      || m2sound == MS_LEADER) && mtmp2->mpeaceful
                     && !youCauseConflict())
-                || (touchPetrifies(mtmp2->data->monsterTypeID) && !resists_ston(mtmp)))
+                || (touch_petrifies(mtmp2->data) && !resists_ston(mtmp)))
                 continue;
 
             if (after)
@@ -934,18 +933,18 @@ newdogpos:
         ny = sgn(omy - currentY());
         cc.x = currentX() + nx;
         cc.y = currentY() + ny;
-        if (goodPosition(cc.x, cc.y, mtmp->m_id, mtmp->data->monsterTypeID, mtmp->wormno, 0))
+        if (goodpos(cc.x, cc.y, mtmp, 0))
             goto dognext;
 
         i = xytod(nx, ny);
         for (j = (i + 7) % 8; j < (i + 1) % 8; j++) {
             dtoxy(&cc, j);
-            if (goodPosition(cc.x, cc.y, mtmp->m_id, mtmp->data->monsterTypeID, mtmp->wormno, 0))
+            if (goodpos(cc.x, cc.y, mtmp, 0))
                 goto dognext;
         }
         for (j = (i + 6) % 8; j < (i + 2) % 8; j++) {
             dtoxy(&cc, j);
-            if (goodPosition(cc.x, cc.y, mtmp->m_id, mtmp->data->monsterTypeID, mtmp->wormno, 0))
+            if (goodpos(cc.x, cc.y, mtmp, 0))
                 goto dognext;
         }
         cc.x = mtmp->mx;
@@ -968,7 +967,7 @@ struct monst *mon;
 xchar nx, ny;
 {
     if ((!is_pool(nx, ny) || isSwimmer(mon->data->monsterTypeID))
-        && (!is_lava(nx, ny) || likesLava(mon->data->monsterTypeID))
+        && (!is_lava(nx, ny) || likes_lava(mon->data))
         && (!sobj_at(BOULDER, nx, ny) || throwsRocks(mon->data->monsterTypeID)))
         return TRUE;
     return FALSE;
@@ -1075,7 +1074,7 @@ struct monst *mtmp;
 
     do {
         idx = rn2(SIZE(qm));
-        if (qm[idx].mndx != 0 && (mtmp->data->monsterTypeID == qm[idx].mndx))
+        if (qm[idx].mndx != 0 && monsndx(mtmp->data) == qm[idx].mndx)
             break;
         if (qm[idx].mlet != 0 && monsterClass(mtmp->data->monsterTypeID) == qm[idx].mlet)
             break;

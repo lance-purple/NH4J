@@ -2785,7 +2785,7 @@ boolean picked_some;
                               ? "They're"
                               : "It's",
                       corpse_xname(otmp, (const char *) 0, CXN_ARTICLE),
-                      poly_when_stoned(youmonst.data->monsterTypeID)
+                      poly_when_stoned(youmonst.data)
                           ? ""
                           : ", unfortunately");
                 feel_cockatrice(otmp, FALSE);
@@ -2844,7 +2844,7 @@ struct obj *otmp;
 boolean force_touch;
 {
     if ((youCannotSee() || force_touch) && !uarmg && !youResistStoning()
-        && (otmp->otyp == CORPSE && touchPetrifies(mons[otmp->corpsenm].monsterTypeID)))
+        && (otmp->otyp == CORPSE && touch_petrifies(&mons[otmp->corpsenm])))
         return TRUE;
     return FALSE;
 }
@@ -2860,7 +2860,7 @@ boolean force_touch;
         /* "the <cockatrice> corpse" */
         Strcpy(kbuf, corpse_xname(otmp, (const char *) 0, CXN_PFX_THE));
 
-        if (poly_when_stoned(youmonst.data->monsterTypeID))
+        if (poly_when_stoned(youmonst.data))
             You("touched %s with your bare %s.", kbuf,
                 makeplural(body_part(HAND)));
         else

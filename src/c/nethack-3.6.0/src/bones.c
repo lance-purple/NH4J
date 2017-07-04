@@ -277,7 +277,7 @@ struct monst *oracle;
         /* room found and she's not not in it, so try to move her there */
         cc.x = (rooms[ridx].lx + rooms[ridx].hx) / 2;
         cc.y = (rooms[ridx].ly + rooms[ridx].hy) / 2;
-        if (placeEntityNextToPosition(&cc, cc.x, cc.y, oracle->data->monsterTypeID, 0)) {
+        if (enexto(&cc, cc.x, cc.y, oracle->data)) {
             rloc_to(oracle, cc.x, cc.y);
             o_ridx = levl[oracle->mx][oracle->my].roomno - ROOMOFFSET;
         }
@@ -392,7 +392,7 @@ make_bones:
         struct obj *otmp;
 
         /* embed your possessions in your statue */
-        otmp = makeNamedStatue(currentMonsterNumber(), currentX(), currentY(), plname);
+        otmp = mk_named_object(STATUE, &mons[currentMonsterNumber()], currentX(), currentY(), plname);
 
         drop_upon_death((struct monst *) 0, otmp, currentX(), currentY());
         if (!otmp)
@@ -401,11 +401,11 @@ make_bones:
     } else if (ariseFromGraveAsMonster() < LOW_PM) {
         /* drop everything */
         drop_upon_death((struct monst *) 0, (struct obj *) 0, currentX(), currentY());
-        /* trick makeMonsterOfType() into allowing monster creation
+        /* trick makemon() into allowing monster creation
          * on your location
          */
         in_mklev = TRUE;
-        mtmp = makeMonsterOfType(PM_GHOST, currentX(), currentY(), MM_NONAME);
+        mtmp = makemon(&mons[PM_GHOST], currentX(), currentY(), MM_NONAME);
         in_mklev = FALSE;
         if (!mtmp)
             return;
@@ -415,7 +415,7 @@ make_bones:
     } else {
         /* give your possessions to the monster you become */
         in_mklev = TRUE; /* use <u.ux,u.uy> as-is */
-        mtmp = makeMonsterOfType(ariseFromGraveAsMonster(), currentX(), currentY(), NO_MINVENT);
+        mtmp = makemon(&mons[ariseFromGraveAsMonster()], currentX(), currentY(), NO_MINVENT);
         in_mklev = FALSE;
         if (!mtmp) {
             drop_upon_death((struct monst *) 0, (struct obj *) 0, currentX(), currentY());
@@ -601,7 +601,7 @@ getbones()
 
             /* Note that getlev() now keeps tabs on unique
              * monsters such as demon lords, and tracks the
-             * birth counts of all species just as makeMonsterOfType()
+             * birth counts of all species just as makemon()
              * does.  If a bones monster is extinct or has been
              * subject to genocide, their mhpmax will be
              * set to the magic DEFUNCT_MONSTER cookie value.

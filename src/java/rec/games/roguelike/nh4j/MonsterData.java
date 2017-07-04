@@ -6,10 +6,6 @@ public class MonsterData {
 		return MonsterType.monsterSize(pmid) < MZ.SMALL.id();
 	}
 
-	public static boolean isSmallMonster(int pmid) {
-		return MonsterType.monsterSize(pmid) <= MZ.SMALL.id();
-	}
-	
 	public static boolean isBigMonster(int pmid) {
 		return MonsterType.monsterSize(pmid) >= MZ.LARGE.id();
 	}
@@ -122,19 +118,7 @@ public class MonsterData {
     	return (! MonsterType.getMonsterType(pmid).hasFlag1(M1.NOHEAD));
     }
 
-	public static int numberOfHorns(int pmid) {
-		if (PM.matchesOneOf(pmid, PM.HORNED_DEVIL, PM.MINOTAUR, PM.ASMODEUS, PM.BALROG)) {
-			return 2;
-		} else if (PM.matchesOneOf(pmid, PM.WHITE_UNICORN, PM.GRAY_UNICORN, PM.BLACK_UNICORN, PM.KI_RIN)) {
-			return 1;
-		} else {
-			return 0;
-		}
-	}
-    
-    public static boolean hasHorns(int pmid) {
-    	return (numberOfHorns(pmid) > 0);
-    }
+    //#define has_horns(ptr) (num_horns(ptr) > 0)
     
     public static boolean isWhirly(int pmid) {
 	    MC mc = MonsterType.getMonsterType(pmid).monsterClass();
@@ -173,9 +157,7 @@ public class MonsterData {
     	return (MonsterType.getMonsterType(pmid).hasFlag1(M1.THICK_HIDE));
     }
 
-    public static boolean isWooden(int pmid) {
-        return (PM.WOOD_GOLEM.id() == pmid);
-    }
+    //#define is_wooden(ptr) ((ptr) == &mons[PM_WOOD_GOLEM])
     
     public static boolean isSlimeproof(int pmid) {
     	return (PM.GREEN_SLIME.id() == pmid) || isFlaming(pmid) || isNoncorporeal(pmid);
@@ -201,9 +183,9 @@ public class MonsterData {
     	return (MonsterType.getMonsterType(pmid).hasFlag1(M1.TPORT_CNTRL));
     }
 
-    public static boolean isTelepathic(int pmid) {
-    	return PM.matchesOneOf(pmid, PM.FLOATING_EYE, PM.MIND_FLAYER, PM.MASTER_MIND_FLAYER);
-    }
+    //#define telepathic(ptr)                                                \
+    //    ((ptr) == &mons[PM_FLOATING_EYE] || (ptr) == &mons[PM_MIND_FLAYER] \
+    //     || (ptr) == &mons[PM_MASTER_MIND_FLAYER])
 
     public static boolean isArmed(int pmid) {
     	return MonsterType.monsterHasWeaponAttack(pmid);
@@ -339,35 +321,14 @@ public class MonsterData {
     	return MonsterType.getMonsterType(pmid).hasFlag2(M2.STRONG);
 	}
 
-    public static boolean hasBreathWeapon(int pmid) {
-    	return MonsterType.monsterHasBreathWeaponAttack(pmid);
-    }
+    //#define can_breathe(ptr) attacktype(ptr, AT_BREA)
     
     public static boolean cannotWieldThings(int pmid) {
     	return hasNoHands(pmid) || isVerySmallMonster(pmid);
     }
     
     //#define could_twoweap(ptr) ((ptr)->mattk[1].aatyp == AT_WEAP)
-    
-    public static boolean slidesOutOfArmor(int pmid) {
-		return (isWhirly(pmid) || isSmallMonster(pmid) || isNoncorporeal(pmid));
-    }
-
-    /* creature will break out of armor */
-    public static boolean breaksOutOfArmor(int pmid) {
-        if (slidesOutOfArmor(pmid)) {
-            return false;
-        }
-
-        return (isBigMonster(pmid)
-                          || (! isSmallMonster(pmid) && !isHumanoid(pmid))
-                          /* special cases of humanoids that cannot wear suits */
-                          || PM.matchesOneOf(pmid, PM.MARILITH, PM.WINGED_GARGOYLE));
-    }
-    
-    public static boolean cannotWearArmor(int pmid) {
-        return breaksOutOfArmor(pmid) || slidesOutOfArmor(pmid);	
-    }
+    //#define cantweararm(ptr) (breakarm(ptr) || sliparm(ptr))
 
     public static boolean throwsRocks(int pmid) {
     	return MonsterType.getMonsterType(pmid).hasFlag2(M2.ROCKTHROW);
@@ -421,18 +382,17 @@ public class MonsterData {
     	return MonsterType.getMonsterType(pmid).hasFlag2(M2.MAGIC);
     }
 
-    public static boolean makesWebs(int pmid) {
-    	return PM.matchesOneOf(pmid, PM.CAVE_SPIDER, PM.GIANT_SPIDER);
-    }
+    //#define webmaker(ptr) \
+    //    ((ptr) == &mons[PM_CAVE_SPIDER] || (ptr) == &mons[PM_GIANT_SPIDER])
     
     public static boolean isUnicorn(int pmid) {
 	    MC mc = MonsterType.getMonsterType(pmid).monsterClass();
 	    return (MC.UNICORN.equals(mc) && likesGems(pmid));
     }
 
-    public static boolean isLongWorm(int pmid) {
-    	return PM.matchesOneOf(pmid, PM.BABY_LONG_WORM, PM.LONG_WORM, PM.LONG_WORM_TAIL);
-    }
+    //#define is_longworm(ptr)                                                   \
+    //    (((ptr) == &mons[PM_BABY_LONG_WORM]) || ((ptr) == &mons[PM_LONG_WORM]) \
+    //     || ((ptr) == &mons[PM_LONG_WORM_TAIL]))
     
     public static boolean isCovetous(int pmid) {
     	return MonsterType.getMonsterType(pmid).hasFlag3(M3.COVETOUS);
@@ -450,25 +410,23 @@ public class MonsterData {
     	return MonsterType.getMonsterType(pmid).hasFlag3(M3.DISPLACES);
     }
 
-    public static boolean isMonsterPlayer(int pmid) {
-    	return (pmid >= PM.ARCHEOLOGIST.id()) && (pmid <= PM.WIZARD.id());
-    }
+    //#define is_mplayer(ptr) \
+    //    (((ptr) >= &mons[PM_ARCHEOLOGIST]) && ((ptr) <= &mons[PM_WIZARD]))
+    //#define is_watch(ptr) \
+    //    ((ptr) == &mons[PM_WATCHMAN] || (ptr) == &mons[PM_WATCH_CAPTAIN])
 
-    public static boolean isMemberOfWatch(int pmid) {
-    	return PM.matchesOneOf(pmid, PM.WATCHMAN, PM.WATCH_CAPTAIN);
-    }
-
-    public static boolean isRiderOfApocalypse(int pmid) {
+    public static boolean isRider(int pmid) {
     	return PM.matchesOneOf(pmid, PM.DEATH, PM.FAMINE, PM.PESTILENCE);
     }
 
-    public static boolean isPlaceholder(int pmid) {
-    	return PM.matchesOneOf(pmid,PM.ORC, PM.GIANT, PM.ELF, PM.HUMAN);
-    }
+    //#define is_placeholder(ptr)                             \
+    //    ((ptr) == &mons[PM_ORC] || (ptr) == &mons[PM_GIANT] \
+    //     || (ptr) == &mons[PM_ELF] || (ptr) == &mons[PM_HUMAN])
+    ///* return TRUE if the monster tends to revive */
     
     public static final boolean isReviver(int pmid) {
 	    MC mc = MonsterType.getMonsterType(pmid).monsterClass();
-    	return (isRiderOfApocalypse(pmid) || MC.TROLL.equals(mc));
+    	return (isRider(pmid) || MC.TROLL.equals(mc));
     }
     
     /* monsters whose corpses and statues need special handling;
@@ -479,6 +437,9 @@ public class MonsterData {
 	return ((geno & MonsterType.ONLY_GENERATED_ONCE) != 0);
     }
 
+    //
+    
+    
     public static int emitsLightWithRange(int pmid) {
         MC mc = MonsterType.getMonsterType(pmid).monsterClass();
         if (MC.LIGHT.equals(mc)) {
@@ -490,27 +451,23 @@ public class MonsterData {
             return 0;
         }
     }
-
-    public static boolean likesLava(int pmid) {
-    	return PM.matchesOneOf(pmid, PM.FIRE_ELEMENTAL, PM.SALAMANDER);
-    }
     
-    public static boolean isInvisible(int pmid) {
-    	return PM.matchesOneOf(pmid, PM.STALKER, PM.BLACK_LIGHT);
-    }
-
-	public static boolean likesFire(int pmid) {
-		return PM.matchesOneOf(pmid, PM.FIRE_VORTEX, PM.FLAMING_SPHERE) || likesLava(pmid);
-	}
-
-	public static boolean touchPetrifies(int pmid) {
-    	return PM.matchesOneOf(pmid, PM.COCKATRICE, PM.CHICKATRICE);
-    }
-
-	public static boolean isMindFlayer(int pmid) {
-    	return PM.matchesOneOf(pmid, PM.MIND_FLAYER, PM.MASTER_MIND_FLAYER);
-	}
-	
+    //#define likes_lava(ptr) \
+    //    (ptr == &mons[PM_FIRE_ELEMENTAL] || ptr == &mons[PM_SALAMANDER])
+    //#define pm_invisible(ptr) \
+    //    ((ptr) == &mons[PM_STALKER] || (ptr) == &mons[PM_BLACK_LIGHT])
+    //
+    ///* could probably add more */
+    //#define likes_fire(ptr)                                                  \
+    //    ((ptr) == &mons[PM_FIRE_VORTEX] || (ptr) == &mons[PM_FLAMING_SPHERE] \
+    //     || likes_lava(ptr))
+    //
+    //#define touch_petrifies(ptr) \
+    //    ((ptr) == &mons[PM_COCKATRICE] || (ptr) == &mons[PM_CHICKATRICE])
+    //
+    //#define is_mind_flayer(ptr) \
+    //    ((ptr) == &mons[PM_MIND_FLAYER] || (ptr) == &mons[PM_MASTER_MIND_FLAYER])
+    
 	public static boolean isVampire(int pmid) {
 		MC mc = MonsterType.getMonsterType(pmid).monsterClass();
 		return MC.VAMPIRE.equals(mc);
@@ -569,162 +526,5 @@ public class MonsterData {
     public static final boolean allowsCloseApproach(int pmid) {
     	return MonsterType.getMonsterType(pmid).hasFlag3(M3.CLOSE);
     }
-
-	public static boolean areSameRace(int pmid1, int pmid2) {
-
-	    if (pmid1 == pmid2) {
-	        return true; /* exact match */
-	    }
-
-	    /* player races have their own predicates */
-
-	    if (isHuman(pmid1)) {
-	        return isHuman(pmid2);
-	    }
-
-	    if (isElf(pmid1)) {
-	        return isElf(pmid2);
-	    }
-
-	    if (isDwarf(pmid1)) {
-	        return isDwarf(pmid2);
-	    }
-
-	    if (isGnome(pmid1)) {
-	        return isGnome(pmid2);
-	    }
-
-	    if (isOrc(pmid1)) {
-	        return isOrc(pmid2);
-	    }
-
-	    /* other creatures are less precise */
-
-	    if (isGiant(pmid1)) {
-	        return isGiant(pmid2); /* open to quibbling here */
-	    }
-
-	    if (isGolem(pmid1)) {
-	        return isGolem(pmid2); /* even moreso... */
-	    }
-
-	    if (isMindFlayer(pmid1)) {
-	        return isMindFlayer(pmid2);
-	    }
-	    
-	    int mc1 = MonsterType.monsterClass(pmid1);
-	    int mc2 = MonsterType.monsterClass(pmid2);
-
-	    if ((mc1 == MC.KOBOLD.id()) || PM.matchesOneOf(pmid1, PM.KOBOLD_ZOMBIE, PM.KOBOLD_MUMMY)) {
-	        return ((mc2 == MC.KOBOLD.id()) || PM.matchesOneOf(pmid2, PM.KOBOLD_ZOMBIE, PM.KOBOLD_MUMMY));
-	    }
-
-	    if (mc1 == MC.OGRE.id()) {
-	        return (mc2 == MC.OGRE.id());
-	    }
-
-	    if (mc1 == MC.NYMPH.id()) {
-	        return (mc2 == MC.NYMPH.id());
-	    }
-
-	    if (mc1 == MC.CENTAUR.id()) {
-	        return (mc2 == MC.CENTAUR.id());
-	    }
-
-	    if (isUnicorn(pmid1)) {
-	        return isUnicorn(pmid2);
-	    }
-
-	    if (mc1 == MC.DRAGON.id()) {
-	        return (mc2 == MC.DRAGON.id());
-	    }
-
-	    if (mc1 == MC.NAGA.id()) {
-	        return (mc2 == MC.NAGA.id());
-	    }
-
-	    /* other critters get steadily messier */
-	    if (isRiderOfApocalypse(pmid1)) {
-	        return isRiderOfApocalypse(pmid2); /* debatable */
-	    }
-
-	    if (isMinion(pmid1)) {
-	        return isMinion(pmid2); /* [needs work?] */
-	    }
-
-	    /* tengu don't match imps (first test handled case of both being tengu) */
-	    if ((pmid1 == PM.TENGU.id()) || (pmid2 == PM.TENGU.id())) {
-	        return false;
-	    }
-
-	    if (mc1 == MC.IMP.id()) {
-	        return (mc2 == MC.IMP.id());
-	    }
-	    /* and minor demons (imps) don't match major demons */
-	    else if (mc2 == MC.IMP.id()) {
-	        return false;
-	    }
-
-	    if (isDemon(pmid1)) {
-	        return isDemon(pmid2);
-	    }
-
-	    if (isUndead(pmid1)) {
-	        if (mc1 == MC.ZOMBIE.id()) {
-	            return (mc2 == MC.ZOMBIE.id());
-		}
-	        if (mc1 == MC.MUMMY.id()) {
-	            return (mc2 == MC.MUMMY.id());
-		}
-	        if (mc1 == MC.VAMPIRE.id()) {
-	            return (mc2 == MC.VAMPIRE.id());
-		}
-	        if (mc1 == MC.LICH.id()) {
-	            return (mc2 == MC.LICH.id());
-		}
-	        if (mc1 == MC.WRAITH.id()) {
-	            return (mc2 == MC.WRAITH.id());
-		}
-	        if (mc1 == MC.GHOST.id()) {
-	            return (mc2 == MC.GHOST.id());
-		}
-	    } else if (isUndead(pmid2)) {
-	        return false;
-	    }
-
-	    /* check for monsters which grow into more mature forms */
-
-		if (mc1 == mc2) {
-			
-			if (MonsterType.growsInto(pmid1, pmid2)) {
-				return true;
-			}
-			if (MonsterType.growsInto(pmid2, pmid1)) {
-				return true;
-			}
-		}
-
-	    /* not caught by little/big handling */
-
-	    if (PM.matchesOneOf(pmid1, PM.GARGOYLE, PM.WINGED_GARGOYLE)) {
-	        return (PM.matchesOneOf(pmid2, PM.GARGOYLE, PM.WINGED_GARGOYLE));
-	    }
-
-	    if (PM.matchesOneOf(pmid1, PM.KILLER_BEE, PM.QUEEN_BEE)) {
-	        return (PM.matchesOneOf(pmid2, PM.KILLER_BEE, PM.QUEEN_BEE));
-	    }
-
-	    if (isLongWorm(pmid1)) {
-	        return isLongWorm(pmid2); /* handles tail */
-	    }
-
-	    /* [currently there's no reason to bother matching up
-	        assorted bugs and blobs with their closest variants] */
-
-	    /* the types didn't match */
-
-	    return false;
-
-	}
 
 }

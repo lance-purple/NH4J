@@ -1296,19 +1296,12 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
     }
     case SCR_CREATE_MONSTER:
     case SPE_CREATE_MONSTER:
-        if (confused) {
-            int nCritters = 13 + ((sblessed || rn2(73)) ? 0 : rnd(4));
-            if (createCritters(nCritters, PM_ACID_BLOB, TRUE)) {
-                known = TRUE;
-	    }
-	}
-        if (!confused) {
-            if (createRandomCritters(1 + (scursed ? 12 : 0)
-                                        + ((sblessed || rn2(73)) ? 0 : rnd(4)),
-                                    FALSE)) {
-                known = TRUE;
-	    }
-	}
+        if (create_critters(1 + ((confused || scursed) ? 12 : 0)
+                                + ((sblessed || rn2(73)) ? 0 : rnd(4)),
+                            confused ? &mons[PM_ACID_BLOB]
+                                     : (struct permonst *) 0,
+                            FALSE))
+            known = TRUE;
         /* no need to flush monsters; we ask for identification only if the
          * monsters are not visible
          */
@@ -1410,8 +1403,8 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             }
         } else {
             /* could be scroll of create monster, don't set known ...*/
-            (void) createCritters(1, !scursed ? PM_YELLOW_LIGHT
-                                              : PM_BLACK_LIGHT,
+            (void) create_critters(1, !scursed ? &mons[PM_YELLOW_LIGHT]
+                                               : &mons[PM_BLACK_LIGHT],
                                    TRUE);
             if (!objects[sobj->otyp].oc_uname)
                 docall(sobj);
@@ -2144,7 +2137,7 @@ int how;
                     ptr = rndmonst();
                     if (!ptr)
                         return; /* no message, like normal case */
-                    mndx = ptr->monsterTypeID;
+                    mndx = monsndx(ptr);
                     break; /* remaining checks don't apply */
                 } else
                     return;
@@ -2256,16 +2249,8 @@ int how;
         if (!(monsterGenerationMask(mons[mndx].monsterTypeID) & G_UNIQ)
             && !(mvitals[mndx].mvflags & (G_GENOD | G_EXTINCT)))
             for (i = rn1(3, 4); i > 0; i--) {
-                struct monst* mm;
-
-                if (ptr) {
-                  mm = makeMonsterOfType(ptr->monsterTypeID, currentX(), currentY(), NO_MINVENT);
-                } else {
-                  mm = makeMonsterOfAnyType(currentX(), currentY(), NO_MINVENT);
-                }
-                if (!mm) {
+                if (!makemon(ptr, currentX(), currentY(), NO_MINVENT))
                     break; /* couldn't make one */
-                }
                 ++cnt;
                 if (mvitals[mndx].mvflags & G_EXTINCT)
                     break; /* just made last one */
@@ -2453,11 +2438,7 @@ create_particular()
                 whichpm = mkclass(monclass, 0);
             else if (randmonst)
                 whichpm = rndmonst();
-            if (whichpm) {
-               mtmp = makeMonsterOfType(whichpm->monsterTypeID, currentX(), currentY(), NO_MM_FLAGS);
-            } else {
-               mtmp = makeMonsterOfAnyType(currentX(), currentY(), NO_MM_FLAGS);
-            }
+            mtmp = makemon(whichpm, currentX(), currentY(), NO_MM_FLAGS);
             if (!mtmp) {
                 /* quit trying if creation failed and is going to repeat */
                 if (monclass == MAXMCLASSES && !randmonst)

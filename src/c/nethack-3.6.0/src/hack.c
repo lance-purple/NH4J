@@ -70,10 +70,10 @@ const char *msg;
     for (otmp = level.objects[x][y]; otmp; otmp = otmp2) {
         otmp2 = otmp->nexthere;
         if (otmp->otyp == CORPSE
-            && (isRiderOfApocalypse(mons[otmp->corpsenm].monsterTypeID)
+            && (is_rider(&mons[otmp->corpsenm])
                 || otmp->corpsenm == PM_WIZARD_OF_YENDOR)) {
             /* move any living monster already at that location */
-            if ((mtmp = m_at(x, y)) && placeEntityNextToPosition(&cc, x, y, mtmp->data->monsterTypeID, 0))
+            if ((mtmp = m_at(x, y)) && enexto(&cc, x, y, mtmp->data))
                 rloc_to(mtmp, cc.x, cc.y);
             if (msg)
                 Norep("%s", msg);
@@ -84,8 +84,8 @@ const char *msg;
     /* this location might not be safe, if not, move revived monster */
     if (revived) {
         mtmp = m_at(x, y);
-        if (mtmp && !goodPosition(x, y, mtmp->m_id, mtmp->data->monsterTypeID, mtmp->wormno, 0)
-            && placeEntityNextToPosition(&cc, x, y, mtmp->data->monsterTypeID, 0)) {
+        if (mtmp && !goodpos(x, y, mtmp, 0)
+            && enexto(&cc, x, y, mtmp->data)) {
             rloc_to(mtmp, cc.x, cc.y);
         }
         /* else impossible? */
@@ -609,15 +609,15 @@ register xchar x, y;
 }
 
 boolean
-bad_rock(pmid, x, y)
-int pmid;
+bad_rock(mdat, x, y)
+struct permonst *mdat;
 register xchar x, y;
 {
     return (boolean) ((Sokoban && sobj_at(BOULDER, x, y))
                       || (IS_ROCK(levl[x][y].typ)
-                          && (!isTunneler(pmid) || needsPickaxe(pmid)
+                          && (!isTunneler(mdat->monsterTypeID) || needsPickaxe(mdat->monsterTypeID)
                               || !may_dig(x, y))
-                          && !(passesThroughWalls(pmid) && may_passwall(x, y))));
+                          && !(passesThroughWalls(mdat->monsterTypeID) && may_passwall(x, y))));
 }
 
 /* caller has already decided that it's a tight diagonal; check whether a
@@ -681,12 +681,12 @@ int mode;
         if (youCanPassThroughWalls() && may_passwall(x, y)) {
             ; /* do nothing */
         } else if (tmpr->typ == IRONBARS) {
-            if ((dmgtype(youmonst.data->monsterTypeID, AD_RUST)
-                 || dmgtype(youmonst.data->monsterTypeID, AD_CORR)) && mode == DO_MOVE
+            if ((dmgtype(youmonst.data, AD_RUST)
+                 || dmgtype(youmonst.data, AD_CORR)) && mode == DO_MOVE
                 && still_chewing(x, y)) {
                 return FALSE;
             }
-            if (!(youCanPassThroughWalls() || passes_bars(youmonst.data->monsterTypeID))) {
+            if (!(youCanPassThroughWalls() || passes_bars(youmonst.data))) {
                 if (iflags.mention_walls)
                     You("cannot pass through the bars.");
                 return FALSE;
@@ -764,8 +764,8 @@ int mode;
             }
         }
     }
-    if (dx && dy && bad_rock(youmonst.data->monsterTypeID, ux, y)
-        && bad_rock(youmonst.data->monsterTypeID, x, uy)) {
+    if (dx && dy && bad_rock(youmonst.data, ux, y)
+        && bad_rock(youmonst.data, x, uy)) {
         /* Move at a diagonal. */
         switch (cant_squeeze_thru(&youmonst)) {
         case 3:
@@ -1304,7 +1304,7 @@ domove()
                 confdir();
                 x = currentX() + directionX();
                 y = currentY() + directionY();
-            } while (!isok(x, y) || bad_rock(youmonst.data->monsterTypeID, x, y));
+            } while (!isok(x, y) || bad_rock(youmonst.data, x, y));
         }
         /* turbulence might alter your actual destination */
         if (inWater()) {
@@ -1335,7 +1335,7 @@ domove()
             if (distanceSquaredToYou(u.ustuck->mx, u.ustuck->my) > 2) {
                 /* perhaps it fled (or was teleported or ... ) */
                 u.ustuck = 0;
-            } else if (sticks(youmonst.data->monsterTypeID)) {
+            } else if (sticks(youmonst.data)) {
                 /* When polymorphed into a sticking monster,
                  * u.ustuck means it's stuck to you, not you to it.
                  */
@@ -1442,7 +1442,7 @@ domove()
         /* remembered an 'I' && didn't use a move command */
         || (glyph_is_invisible(levl[x][y].glyph) && !context.nopick)) {
         struct obj *boulder = 0;
-        boolean explo = (areYouPolymorphed() && attacktype(youmonst.data->monsterTypeID, AT_EXPL)),
+        boolean explo = (areYouPolymorphed() && attacktype(youmonst.data, AT_EXPL)),
                 solid = !accessible(x, y);
         int glyph = glyph_at(x, y); /* might be monster */
         char buf[BUFSZ];
@@ -1601,8 +1601,8 @@ domove()
             setCurrentX(originalX());
             setCurrentY(originalY());
             You("stop.  %s can't move diagonally.", upstart(y_monnam(mtmp)));
-        } else if ((originalX() != x) && (originalY() != y) && bad_rock(mtmp->data->monsterTypeID, x, originalY())
-                   && bad_rock(mtmp->data->monsterTypeID, originalX(), y)
+        } else if ((originalX() != x) && (originalY() != y) && bad_rock(mtmp->data, x, originalY())
+                   && bad_rock(mtmp->data, originalX(), y)
                    && (isBigMonster(mtmp->data->monsterTypeID) || (curr_mon_load(mtmp) > 600))) {
             /* can't swap places when pet won't fit thru the opening */
             setCurrentX(originalX());
@@ -1645,7 +1645,7 @@ domove()
                     int tmp, mndx;
 
                     setPacifistConduct(FALSE);
-                    mndx = mtmp->data->monsterTypeID;
+                    mndx = monsndx(mtmp->data);
                     tmp = experience(mtmp, (int) mvitals[mndx].died);
                     more_experienced(tmp, 0);
                     newexplevel(); /* will decide if you go up */
@@ -2304,7 +2304,7 @@ register boolean newlev;
             break;
         case MORGUE:
             if (midnight()) {
-                const char *run = locomotion(youmonst.data->monsterTypeID, "Run");
+                const char *run = locomotion(youmonst.data, "Run");
                 pline("%s away!  %s away!", run, run);
             } else
                 You("have an uncanny feeling...");
@@ -2429,7 +2429,7 @@ dopickup()
             || (youAreFlying() && !youNeedNotBreathe())) {
             You_cant("reach the bottom to pick things up.");
             return 0;
-        } else if (!likesLava(youmonst.data->monsterTypeID)) {
+        } else if (!likes_lava(youmonst.data)) {
             You("would burn to a crisp trying to pick things up.");
             return 0;
         }
@@ -2628,7 +2628,7 @@ crawl_destination(x, y)
 int x, y;
 {
     /* is location ok in general? */
-    if (!goodPositionForYou(x, y, 0))
+    if (!goodpos(x, y, &youmonst, 0))
         return FALSE;
 
     /* orthogonal movement is unrestricted when destination is ok */
@@ -2644,8 +2644,8 @@ int x, y;
     if (IS_DOOR(levl[x][y].typ) && (!doorless_door(x, y) || block_door(x, y)))
         return FALSE;
     /* finally, are we trying to squeeze through a too-narrow gap? */
-    return !(bad_rock(youmonst.data->monsterTypeID, currentX(), y)
-             && bad_rock(youmonst.data->monsterTypeID, x, currentY()));
+    return !(bad_rock(youmonst.data, currentX(), y)
+             && bad_rock(youmonst.data, x, currentY()));
 }
 
 /* something like lookaround, but we are not running */
@@ -2667,7 +2667,7 @@ monster_nearby()
                 && mtmp->m_ap_type != M_AP_OBJECT
                 && (!mtmp->mpeaceful || youAreHallucinating())
                 && (!isHider(mtmp->data->monsterTypeID) || !mtmp->mundetected)
-                && !monsterDoesNotAttack(mtmp->data->monsterTypeID) && mtmp->mcanmove
+                && !monsterDoesNotAttack(mtmp->data) && mtmp->mcanmove
                 && !mtmp->msleeping  /* aplvax!jcn */
                 && !onscary(currentX(), currentY(), mtmp) && canspotmon(mtmp))
                 return 1;

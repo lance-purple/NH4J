@@ -1410,7 +1410,7 @@ register struct monst *mtmp;
     while (mtmp) {
         mtmp2 = mtmp->nmon;
         if (perform_bwrite(mode)) {
-            mtmp->mnum = mtmp->data->monsterTypeID;
+            mtmp->mnum = monsndx(mtmp->data);
             if (mtmp->ispriest)
                 forget_temple_entry(mtmp); /* EPRI() */
             savemon(fd, mtmp);

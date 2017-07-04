@@ -6,36 +6,37 @@
 
 struct Attack NO_ATTACK = { 0, 0, 0, 0 };
 
-static boolean monsterCanCauseDamageTypeWithAttackType(int, const int, const int);
+static boolean monsterCanCauseDamageTypeWithAttackType(const struct permonst *, const int, const int);
 
 
 /*      These routines provide basic data for any type of monster. */
 
 /* set up an individual monster's base type (initial creation, shapechange) */
 void
-setMonsterData(mon, pmid, flag)
+set_mon_data(mon, ptr, flag)
 struct monst *mon;
-int pmid;
+struct permonst *ptr;
 int flag;
 {
-    mon->data = &mons[pmid];
+    mon->data = ptr;
     if (flag == -1)
         return; /* "don't care" */
 
     if (flag == 1)
-        mon->mintrinsics |= (monsterResistances(pmid) & 0x00FF);
+        mon->mintrinsics |= (monsterResistances(ptr->monsterTypeID) & 0x00FF);
     else
-        mon->mintrinsics = (monsterResistances(pmid) & 0x00FF);
+        mon->mintrinsics = (monsterResistances(ptr->monsterTypeID) & 0x00FF);
     return;
 }
 
 
 const struct Attack
-monsterAttackWithDamageType(pmid, attackType, damageType)
-int pmid;
+monsterAttackWithDamageType(ptr, attackType, damageType)
+struct permonst *ptr;
 const int attackType;
 const int damageType;
 {
+    int pmid = ptr->monsterTypeID;
     int nAttacks = monsterAttacks(pmid);
     for (int i = 0; i < nAttacks; i++)
     {
@@ -52,30 +53,30 @@ const int damageType;
 }
 
 /* does monster-type have any attack for a specific type of damage? */
-boolean monsterHasAttackWithDamageType(pmid, attackType, damageType)
-int pmid;
+boolean monsterHasAttackWithDamageType(ptr, attackType, damageType)
+struct permonst *ptr;
 const int attackType;
 const int damageType;
 {
-    return validAttack(monsterAttackWithDamageType(pmid, attackType, damageType));
+    return validAttack(monsterAttackWithDamageType(ptr, attackType, damageType));
 }
 
 /* does monster-type have a particular type of attack */
 boolean
-attacktype(pmid, atyp)
-int pmid;
+attacktype(ptr, atyp)
+struct permonst *ptr;
 int atyp;
 {
-    return monsterHasAttackWithDamageType(pmid, atyp, AD_ANY);
+    return monsterHasAttackWithDamageType(ptr, atyp, AD_ANY);
 }
 
 /* does monster-type transform into something else when petrified? */
 boolean
-poly_when_stoned(pmid)
-int pmid;
+poly_when_stoned(ptr)
+struct permonst *ptr;
 {
     /* non-stone golems turn into stone golems unless latter is genocided */
-    return (boolean) (isGolem(pmid) && pmid != PM_STONE_GOLEM
+    return (boolean) (isGolem(ptr->monsterTypeID) && ptr != &mons[PM_STONE_GOLEM]
                       && !(mvitals[PM_STONE_GOLEM].mvflags & G_GENOD));
     /* allow G_EXTINCT */
 }
@@ -109,8 +110,8 @@ struct monst *mon;
     struct obj *o;
 
     /* as of 3.2.0:  gray dragons, Angels, Oracle, Yeenoghu */
-    if (dmgtype(ptr->monsterTypeID, AD_MAGM) || ptr == &mons[PM_BABY_GRAY_DRAGON]
-        || dmgtype(ptr->monsterTypeID, AD_RBRE)) /* Chromatic Dragon */
+    if (dmgtype(ptr, AD_MAGM) || ptr == &mons[PM_BABY_GRAY_DRAGON]
+        || dmgtype(ptr, AD_RBRE)) /* Chromatic Dragon */
         return TRUE;
     /* check for magic resistance granted by wielded weapon */
     o = is_you ? uwep : MON_WEP(mon);
@@ -149,8 +150,8 @@ struct monst *mon;
                   || mon->msleeping))
         return TRUE;
     /* yellow light, Archon; !dust vortex, !cobra, !raven */
-    if (monsterCanCauseDamageTypeWithAttackType(ptr->monsterTypeID, AD_BLND, AT_EXPL)
-        || monsterCanCauseDamageTypeWithAttackType(ptr->monsterTypeID, AD_BLND, AT_GAZE))
+    if (monsterCanCauseDamageTypeWithAttackType(ptr, AD_BLND, AT_EXPL)
+        || monsterCanCauseDamageTypeWithAttackType(ptr, AD_BLND, AT_GAZE))
         return TRUE;
     o = is_you ? uwep : MON_WEP(mon);
     if (o && o->oartifact && defends(AD_BLND, o))
@@ -261,16 +262,17 @@ struct obj *obj; /* type == AT_WEAP, AT_SPIT */
 
 /* returns True if monster can attack at range */
 boolean
-ranged_attk(pmid)
-int pmid;
+ranged_attk(ptr)
+struct permonst *ptr;
 {
     long atk_mask = (1L << AT_BREA) | (1L << AT_SPIT) | (1L << AT_GAZE);
 
-    /* was: (attacktype(pmid, AT_BREA) || attacktype(pmid, AT_WEAP)
-     *       || attacktype(pmid, AT_SPIT) || attacktype(pmid, AT_GAZE)
-     *       || attacktype(pmid, AT_MAGC));
+    /* was: (attacktype(ptr, AT_BREA) || attacktype(ptr, AT_WEAP)
+     *       || attacktype(ptr, AT_SPIT) || attacktype(ptr, AT_GAZE)
+     *       || attacktype(ptr, AT_MAGC));
      * but that's too slow -dlc
      */
+    int pmid = ptr->monsterTypeID;
     int nAttacks = monsterAttacks(pmid);
     for (int i = 0; i < nAttacks; i++) {
         int atyp = monsterAttack(pmid, i).type;
@@ -286,30 +288,32 @@ int pmid;
 /* True if specific monster is especially affected by silver weapons */
 boolean
 mon_hates_silver(mon)
-struct monst* mon;
+struct monst *mon;
 {
-    return (boolean) (is_vampshifter(mon) || hates_silver(mon->data->monsterTypeID));
+    return (boolean) (is_vampshifter(mon) || hates_silver(mon->data));
 }
 
 /* True if monster-type is especially affected by silver weapons */
 boolean
-hates_silver(pmid)
-int pmid;
+hates_silver(ptr)
+register struct permonst *ptr;
 {
+    int pmid = ptr->monsterTypeID;
     int mc = monsterClass(pmid);
     return (boolean) (isWere(pmid) || mc == S_VAMPIRE || isDemon(pmid)
-                      || pmid == PM_SHADE
-                      || (mc == S_IMP && pmid != PM_TENGU));
+                      || ptr == &mons[PM_SHADE]
+                      || (mc == S_IMP && ptr != &mons[PM_TENGU]));
 }
 
 /* True iff the type of monster pass through iron bars */
 boolean
-passes_bars(pmid)
-int pmid;
+passes_bars(mptr)
+struct permonst *mptr;
 {
+    int pmid = mptr->monsterTypeID;
     return (boolean) (passesThroughWalls(pmid) || isAmorphous(pmid) || isUnsolid(pmid)
                       || isWhirly(pmid) || isVerySmallMonster(pmid)
-                      || dmgtype(pmid, AD_CORR) || dmgtype(pmid, AD_RUST)
+                      || dmgtype(mptr, AD_CORR) || dmgtype(mptr, AD_RUST)
                       || (isSlithy(pmid) && !isBigMonster(pmid)));
 }
 
@@ -363,45 +367,91 @@ struct monst *mon;
 
 /* returns True if monster can track well */
 boolean
-can_track(pmid)
-int pmid;
+can_track(ptr)
+register struct permonst *ptr;
 {
     if (uwep && uwep->oartifact == ART_EXCALIBUR)
         return TRUE;
     else
-        return (boolean) hasEyes(pmid);
+        return (boolean) hasEyes(ptr->monsterTypeID);
+}
+
+/* creature will slide out of armor */
+boolean
+sliparm(ptr)
+register struct permonst *ptr;
+{
+    return (boolean) (isWhirly(ptr->monsterTypeID) || monsterSize(ptr->monsterTypeID) <= MZ_SMALL
+                      || isNoncorporeal(ptr->monsterTypeID));
+}
+
+/* creature will break out of armor */
+boolean
+breakarm(ptr)
+register struct permonst *ptr;
+{
+    if (sliparm(ptr))
+        return FALSE;
+
+    return (boolean) (isBigMonster(ptr->monsterTypeID)
+                      || (monsterSize(ptr->monsterTypeID) > MZ_SMALL && !isHumanoid(ptr->monsterTypeID))
+                      /* special cases of humanoids that cannot wear suits */
+                      || ptr == &mons[PM_MARILITH]
+                      || ptr == &mons[PM_WINGED_GARGOYLE]);
 }
 
 /* creature sticks other creatures it hits */
 boolean
-sticks(pmid)
-int pmid;
+sticks(ptr)
+register struct permonst *ptr;
 {
-    return (boolean) (dmgtype(pmid, AD_STCK) || dmgtype(pmid, AD_WRAP)
-                      || attacktype(pmid, AT_HUGS));
+    return (boolean) (dmgtype(ptr, AD_STCK) || dmgtype(ptr, AD_WRAP)
+                      || attacktype(ptr, AT_HUGS));
 }
 
 /* some monster-types can't vomit */
 boolean
-cantvomit(pmid)
-int pmid;
+cantvomit(ptr)
+struct permonst *ptr;
 {
     /* rats and mice are incapable of vomiting;
        which other creatures have the same limitation? */
-    if (monsterClass(pmid) == S_RODENT && pmid != PM_ROCK_MOLE
-        && pmid != PM_WOODCHUCK)
+    if (monsterClass(ptr->monsterTypeID) == S_RODENT && ptr != &mons[PM_ROCK_MOLE]
+        && ptr != &mons[PM_WOODCHUCK])
         return TRUE;
     return FALSE;
 }
 
+/* number of horns this type of monster has on its head */
+int
+num_horns(ptr)
+struct permonst *ptr;
+{
+    switch (monsndx(ptr)) {
+    case PM_HORNED_DEVIL: /* ? "more than one" */
+    case PM_MINOTAUR:
+    case PM_ASMODEUS:
+    case PM_BALROG:
+        return 2;
+    case PM_WHITE_UNICORN:
+    case PM_GRAY_UNICORN:
+    case PM_BLACK_UNICORN:
+    case PM_KI_RIN:
+        return 1;
+    default:
+        break;
+    }
+    return 0;
+}
 
 /* does monster-type deal out a particular type of damage from a particular
    type of attack? */
-boolean monsterCanCauseDamageTypeWithAttackType(pmid, dtyp, atyp)
-int pmid;
+boolean monsterCanCauseDamageTypeWithAttackType(ptr, dtyp, atyp)
+const struct permonst *ptr;
 const int dtyp;
 const int atyp;
 {
+    int pmid = ptr->monsterTypeID;
     int nAttacks = monsterAttacks(pmid);
 
     for (int i = 0; i < nAttacks; i++)
@@ -416,11 +466,11 @@ const int atyp;
 
 /* does monster-type deal out a particular type of damage from any attack */
 boolean
-dmgtype(pmid, dtyp)
-int pmid;
+dmgtype(ptr, dtyp)
+struct permonst *ptr;
 int dtyp;
 {
-    return monsterCanCauseDamageTypeWithAttackType(pmid, dtyp, AT_ANY);
+    return monsterCanCauseDamageTypeWithAttackType(ptr, dtyp, AT_ANY);
 }
 
 /* returns the maximum damage a defender can do to the attacker via
@@ -479,6 +529,130 @@ register struct monst *mdef, *magr;
     return 0;
 }
 
+/* determine whether two monster types are from the same species */
+boolean
+same_race(pm1, pm2)
+struct permonst *pm1, *pm2;
+{
+    int let1 = monsterClass(pm1->monsterTypeID);
+    int let2 = monsterClass(pm2->monsterTypeID);
+
+    int pmid1 = pm1->monsterTypeID;
+    int pmid2 = pm2->monsterTypeID;
+
+    if (pm1 == pm2)
+        return TRUE; /* exact match */
+    /* player races have their own predicates */
+    if (isHuman(pmid1))
+        return isHuman(pmid2);
+    if (isElf(pmid1))
+        return isElf(pmid2);
+    if (isDwarf(pmid1))
+        return isDwarf(pmid2);
+    if (isGnome(pmid1))
+        return isGnome(pmid2);
+    if (isOrc(pmid1))
+        return isOrc(pmid2);
+    /* other creatures are less precise */
+    if (isGiant(pmid1))
+        return isGiant(pmid2); /* open to quibbling here */
+    if (isGolem(pmid1))
+        return isGolem(pmid2); /* even moreso... */
+    if (is_mind_flayer(pm1))
+        return is_mind_flayer(pm2);
+    if (let1 == S_KOBOLD || pm1 == &mons[PM_KOBOLD_ZOMBIE]
+        || pm1 == &mons[PM_KOBOLD_MUMMY])
+        return (let2 == S_KOBOLD || pm2 == &mons[PM_KOBOLD_ZOMBIE]
+                || pm2 == &mons[PM_KOBOLD_MUMMY]);
+    if (let1 == S_OGRE)
+        return (let2 == S_OGRE);
+    if (let1 == S_NYMPH)
+        return (let2 == S_NYMPH);
+    if (let1 == S_CENTAUR)
+        return (let2 == S_CENTAUR);
+    if (isUnicorn(pm1->monsterTypeID))
+        return isUnicorn(pm2->monsterTypeID);
+    if (let1 == S_DRAGON)
+        return (let2 == S_DRAGON);
+    if (let1 == S_NAGA)
+        return (let2 == S_NAGA);
+    /* other critters get steadily messier */
+    if (is_rider(pm1))
+        return is_rider(pm2); /* debatable */
+    if (isMinion(pmid1))
+        return isMinion(pmid2); /* [needs work?] */
+    /* tengu don't match imps (first test handled case of both being tengu) */
+    if (pm1 == &mons[PM_TENGU] || pm2 == &mons[PM_TENGU])
+        return FALSE;
+    if (let1 == S_IMP)
+        return (let2 == S_IMP);
+    /* and minor demons (imps) don't match major demons */
+    else if (let2 == S_IMP)
+        return FALSE;
+    if (isDemon(pmid1))
+        return isDemon(pmid2);
+    if (isUndead(pm1->monsterTypeID)) {
+        if (let1 == S_ZOMBIE)
+            return (let2 == S_ZOMBIE);
+        if (let1 == S_MUMMY)
+            return (let2 == S_MUMMY);
+        if (let1 == S_VAMPIRE)
+            return (let2 == S_VAMPIRE);
+        if (let1 == S_LICH)
+            return (let2 == S_LICH);
+        if (let1 == S_WRAITH)
+            return (let2 == S_WRAITH);
+        if (let1 == S_GHOST)
+            return (let2 == S_GHOST);
+    } else if (isUndead(pm2->monsterTypeID))
+        return FALSE;
+
+    /* check for monsters which grow into more mature forms */
+    if (let1 == let2) {
+        int m1 = monsndx(pm1), m2 = monsndx(pm2), prv, nxt;
+
+        /* we know m1 != m2 (very first check above); test all smaller
+           forms of m1 against m2, then all larger ones; don't need to
+           make the corresponding tests for variants of m2 against m1 */
+        for (prv = m1, nxt = big_to_little(m1); nxt != prv;
+             prv = nxt, nxt = big_to_little(nxt))
+            if (nxt == m2)
+                return TRUE;
+        for (prv = m1, nxt = little_to_big(m1); nxt != prv;
+             prv = nxt, nxt = little_to_big(nxt))
+            if (nxt == m2)
+                return TRUE;
+    }
+    /* not caught by little/big handling */
+    if (pm1 == &mons[PM_GARGOYLE] || pm1 == &mons[PM_WINGED_GARGOYLE])
+        return (pm2 == &mons[PM_GARGOYLE]
+                || pm2 == &mons[PM_WINGED_GARGOYLE]);
+    if (pm1 == &mons[PM_KILLER_BEE] || pm1 == &mons[PM_QUEEN_BEE])
+        return (pm2 == &mons[PM_KILLER_BEE] || pm2 == &mons[PM_QUEEN_BEE]);
+
+    if (is_longworm(pm1))
+        return is_longworm(pm2); /* handles tail */
+    /* [currently there's no reason to bother matching up
+        assorted bugs and blobs with their closest variants] */
+    /* didn't match */
+    return FALSE;
+}
+
+/* return an index into the mons array */
+int
+monsndx(ptr)
+struct permonst *ptr;
+{
+    register int i;
+
+    i = (int) (ptr - &mons[0]);
+    if (i < LOW_PM || i >= NUMMONS) {
+        panic("monsndx - could not index monster (%s)",
+              fmt_ptr((genericptr_t) ptr));
+        return NON_PM; /* will not get here */
+    }
+    return i;
+}
 
 /* for handling alternate spellings */
 struct alt_spl {
@@ -759,17 +933,120 @@ struct monst *mtmp;
                       && (!mtmp->mflee || haveSpecialItem(SPECIAL_ITEM_AMULET)));
 }
 
+static const short grownups[][2] = {
+    { PM_CHICKATRICE, PM_COCKATRICE },
+    { PM_LITTLE_DOG, PM_DOG },
+    { PM_DOG, PM_LARGE_DOG },
+    { PM_HELL_HOUND_PUP, PM_HELL_HOUND },
+    { PM_WINTER_WOLF_CUB, PM_WINTER_WOLF },
+    { PM_KITTEN, PM_HOUSECAT },
+    { PM_HOUSECAT, PM_LARGE_CAT },
+    { PM_PONY, PM_HORSE },
+    { PM_HORSE, PM_WARHORSE },
+    { PM_KOBOLD, PM_LARGE_KOBOLD },
+    { PM_LARGE_KOBOLD, PM_KOBOLD_LORD },
+    { PM_GNOME, PM_GNOME_LORD },
+    { PM_GNOME_LORD, PM_GNOME_KING },
+    { PM_DWARF, PM_DWARF_LORD },
+    { PM_DWARF_LORD, PM_DWARF_KING },
+    { PM_MIND_FLAYER, PM_MASTER_MIND_FLAYER },
+    { PM_ORC, PM_ORC_CAPTAIN },
+    { PM_HILL_ORC, PM_ORC_CAPTAIN },
+    { PM_MORDOR_ORC, PM_ORC_CAPTAIN },
+    { PM_URUK_HAI, PM_ORC_CAPTAIN },
+    { PM_SEWER_RAT, PM_GIANT_RAT },
+    { PM_CAVE_SPIDER, PM_GIANT_SPIDER },
+    { PM_OGRE, PM_OGRE_LORD },
+    { PM_OGRE_LORD, PM_OGRE_KING },
+    { PM_ELF, PM_ELF_LORD },
+    { PM_WOODLAND_ELF, PM_ELF_LORD },
+    { PM_GREEN_ELF, PM_ELF_LORD },
+    { PM_GREY_ELF, PM_ELF_LORD },
+    { PM_ELF_LORD, PM_ELVENKING },
+    { PM_LICH, PM_DEMILICH },
+    { PM_DEMILICH, PM_MASTER_LICH },
+    { PM_MASTER_LICH, PM_ARCH_LICH },
+    { PM_VAMPIRE, PM_VAMPIRE_LORD },
+    { PM_BAT, PM_GIANT_BAT },
+    { PM_BABY_GRAY_DRAGON, PM_GRAY_DRAGON },
+    { PM_BABY_SILVER_DRAGON, PM_SILVER_DRAGON },
+#if 0 /* DEFERRED */
+    {PM_BABY_SHIMMERING_DRAGON, PM_SHIMMERING_DRAGON},
+#endif
+    { PM_BABY_RED_DRAGON, PM_RED_DRAGON },
+    { PM_BABY_WHITE_DRAGON, PM_WHITE_DRAGON },
+    { PM_BABY_ORANGE_DRAGON, PM_ORANGE_DRAGON },
+    { PM_BABY_BLACK_DRAGON, PM_BLACK_DRAGON },
+    { PM_BABY_BLUE_DRAGON, PM_BLUE_DRAGON },
+    { PM_BABY_GREEN_DRAGON, PM_GREEN_DRAGON },
+    { PM_BABY_YELLOW_DRAGON, PM_YELLOW_DRAGON },
+    { PM_RED_NAGA_HATCHLING, PM_RED_NAGA },
+    { PM_BLACK_NAGA_HATCHLING, PM_BLACK_NAGA },
+    { PM_GOLDEN_NAGA_HATCHLING, PM_GOLDEN_NAGA },
+    { PM_GUARDIAN_NAGA_HATCHLING, PM_GUARDIAN_NAGA },
+    { PM_SMALL_MIMIC, PM_LARGE_MIMIC },
+    { PM_LARGE_MIMIC, PM_GIANT_MIMIC },
+    { PM_BABY_LONG_WORM, PM_LONG_WORM },
+    { PM_BABY_PURPLE_WORM, PM_PURPLE_WORM },
+    { PM_BABY_CROCODILE, PM_CROCODILE },
+    { PM_SOLDIER, PM_SERGEANT },
+    { PM_SERGEANT, PM_LIEUTENANT },
+    { PM_LIEUTENANT, PM_CAPTAIN },
+    { PM_WATCHMAN, PM_WATCH_CAPTAIN },
+    { PM_ALIGNED_PRIEST, PM_HIGH_PRIEST },
+    { PM_STUDENT, PM_ARCHEOLOGIST },
+    { PM_ATTENDANT, PM_HEALER },
+    { PM_PAGE, PM_KNIGHT },
+    { PM_ACOLYTE, PM_PRIEST },
+    { PM_APPRENTICE, PM_WIZARD },
+    { PM_MANES, PM_LEMURE },
+    { PM_KEYSTONE_KOP, PM_KOP_SERGEANT },
+    { PM_KOP_SERGEANT, PM_KOP_LIEUTENANT },
+    { PM_KOP_LIEUTENANT, PM_KOP_KAPTAIN },
+    { NON_PM, NON_PM }
+};
+
+int
+little_to_big(montype)
+int montype;
+{
+    register int i;
+
+    for (i = 0; grownups[i][0] >= LOW_PM; i++)
+        if (montype == grownups[i][0]) {
+            montype = grownups[i][1];
+            break;
+        }
+    return montype;
+}
+
+int
+big_to_little(montype)
+int montype;
+{
+    register int i;
+
+    for (i = 0; grownups[i][0] >= LOW_PM; i++)
+        if (montype == grownups[i][1]) {
+            montype = grownups[i][0];
+            break;
+        }
+    return montype;
+}
+
 /*
- * Return the pmid for the race of the monster.
- * Returns correct type for non-polymorphed and polymorphed player.
+ * Return the permonst ptr for the race of the monster.
+ * Returns correct pointer for non-polymorphed and polymorphed
+ * player.  It does not return a pointer to player role character.
  */
-int monsterRaceType(mtmp)
+const struct permonst *
+raceptr(mtmp)
 struct monst *mtmp;
 {
     if (mtmp == &youmonst && !areYouPolymorphed())
-        return urace.malenum;
+        return &mons[urace.malenum];
     else
-        return (mtmp->data) ? mtmp->data->monsterTypeID : NON_PM;
+        return mtmp->data;
 }
 
 static const char *levitate[4] = { "float", "Float", "wobble", "Wobble" };
@@ -781,11 +1058,13 @@ static const char *immobile[4] = { "wiggle", "Wiggle", "pulsate", "Pulsate" };
 static const char *crawl[4] = { "crawl", "Crawl", "falter", "Falter" };
 
 const char *
-locomotion(pmid, def)
-const int pmid;
+locomotion(ptr, def)
+const struct permonst *ptr;
 const char *def;
 {
     int capitalize = (*def == highc(*def));
+
+    int pmid = ptr->monsterTypeID;
 
     int msize = monsterSize(pmid);
 
@@ -800,11 +1079,13 @@ const char *def;
 }
 
 const char *
-stagger(pmid, def)
-const int pmid;
+stagger(ptr, def)
+const struct permonst *ptr;
 const char *def;
 {
     int capitalize = 2 + (*def == highc(*def));
+
+    int pmid = ptr->monsterTypeID;
 
     int msize = monsterSize(pmid);
 
@@ -820,13 +1101,13 @@ const char *def;
 
 /* return phrase describing the effect of fire attack on a type of monster */
 const char *
-on_fire(pmid, mattk)
-int pmid;
+on_fire(mptr, mattk)
+struct permonst *mptr;
 const struct Attack mattk;
 {
     const char *what;
 
-    switch (pmid) {
+    switch (monsndx(mptr)) {
     case PM_FLAMING_SPHERE:
     case PM_FIRE_VORTEX:
     case PM_FIRE_ELEMENTAL:
@@ -868,11 +1149,11 @@ const struct Attack mattk;
  * We're assuming all insects can smell at a distance too.
  */
 boolean
-olfaction(pmid)
-int pmid;
+olfaction(mdat)
+struct permonst *mdat;
 {
-    int mc = monsterClass(pmid);
-    if (isGolem(pmid)
+    int mc = monsterClass(mdat->monsterTypeID);
+    if (isGolem(mdat->monsterTypeID)
         || mc == S_EYE /* spheres  */
         || mc == S_JELLY || mc == S_PUDDING
         || mc == S_BLOB  || mc == S_VORTEX
@@ -892,7 +1173,6 @@ boolean validAttack(const struct Attack attack)
 }
 
 extern boolean javaGetBooleanFromInt(const char* classname, const char* methodname, int i);
-extern boolean javaGetBooleanFromIntAndInt(const char* classname, const char* methodname, int i, int j);
 extern boolean javaGetBooleanFromIntAndLong(const char* classname, const char* methodname, int i, long j);
 extern boolean javaGetIntFromInt(const char* classname, const char* methodname, int i);
 
@@ -956,8 +1236,8 @@ boolean monsterTypeResistsStoning(int pmid) {
     return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "monsterTypeResistsStoning", pmid);
 }
 
-boolean cannotUseTwoWeapons(int pmid) {
-    return (monsterAttack(pmid, 1).type != AT_WEAP);
+boolean cannotUseTwoWeapons(struct permonst* ptr) {
+    return (monsterAttack(ptr->monsterTypeID, 1).type != AT_WEAP);
 }
 
 boolean isFlyer(int pmid) {
@@ -1262,103 +1542,6 @@ boolean isDisplacer(int pmid) {
 
 boolean allowsCloseApproach(int pmid) {
     return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "allowsCloseApproach", pmid);
-}
-
-/* number of horns this type of monster has on its head */
-int numberOfHorns(int pmid) {
-    return javaGetIntFromInt(MONSTER_DATA_CLASS, "numberOfHorns", pmid);
-}
-
-boolean hasHorns(int pmid) {
-    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "hasHorns", pmid);
-}
-
-boolean isFlaming(int pmid) {
-    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isFlaming", pmid);
-}
-
-boolean isWooden(int pmid) {
-    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isWooden", pmid);
-}
-
-boolean isTelepathic(int pmid) {
-    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isTelepathic", pmid);
-}
-
-boolean isArmed(int pmid) {
-    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isArmed", pmid);
-}
-
-boolean hasBreathWeapon(int pmid) {
-    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "hasBreathWeapon", pmid);
-}
-
-boolean slidesOutOfArmor(int pmid) {
-    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "slidesOutOfArmor", pmid);
-}
-
-boolean breaksOutOfArmor(int pmid) {
-    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "breaksOutOfArmor", pmid);
-}
-
-boolean cannotWearArmor(int pmid) {
-    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "cannotWearArmor", pmid);
-}
-
-boolean makesWebs(int pmid) {
-    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "makesWebs", pmid);
-}
-
-boolean isLongWorm(int pmid) {
-    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isLongWorm", pmid);
-}
-
-boolean isMonsterPlayer(int pmid) {
-    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isMonsterPlayer", pmid);
-}
-
-boolean isMemberOfWatch(int pmid) {
-    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isMemberOfWatch", pmid);
-}
-
-boolean isRiderOfApocalypse(int pmid) {
-    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isRiderOfApocalypse", pmid);
-}
-
-boolean isPlaceholder(int pmid) {
-    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isPlaceholder", pmid);
-}
-
-boolean likesLava(int pmid) {
-    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "likesLava", pmid);
-}
-
-boolean isInvisible(int pmid) {
-    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isInvisible", pmid);
-}
-
-boolean likesFire(int pmid) {
-    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "likesFire", pmid);
-}
-
-boolean isMindFlayer(int pmid) {
-    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isMindFlayer", pmid);
-}
-
-boolean touchPetrifies(int pmid) {
-    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "touchPetrifies", pmid);
-}
-
-boolean areSameRace(int pmid1, int pmid2) {
-    return javaGetBooleanFromIntAndInt(MONSTER_DATA_CLASS, "areSameRace", pmid1, pmid2);
-}
-
-int nextLargerType(int pmid) {
-    return javaGetIntFromInt(MONSTER_TYPE_CLASS, "nextLargerType", pmid);
-}
-
-int nextSmallerType(int pmid) {
-    return javaGetIntFromInt(MONSTER_TYPE_CLASS, "nextSmallerType", pmid);
 }
 
 /*mondata.c*/

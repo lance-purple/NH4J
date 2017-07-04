@@ -3685,7 +3685,7 @@ register int fall;
                 return;
             } else
                 pline("%s %s, and %s your backpack!", shkname(shkp),
-                      makeplural(locomotion(shkp->data->monsterTypeID, "leap")), grabs);
+                      makeplural(locomotion(shkp->data, "leap")), grabs);
         } else
             pline("%s %s your backpack!", shkname(shkp), grabs);
 
@@ -3726,8 +3726,8 @@ coord *mm;
             continue;
 
         while (cnt--)
-            if (placeEntityNextToPosition(mm, mm->x, mm->y, mndx, 0))
-                (void) makeMonsterOfType(mndx, mm->x, mm->y, NO_MM_FLAGS);
+            if (enexto(mm, mm->x, mm->y, &mons[mndx]))
+                (void) makemon(&mons[mndx], mm->x, mm->y, NO_MM_FLAGS);
     }
 }
 

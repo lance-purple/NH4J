@@ -49,7 +49,8 @@ STATIC_DCL int FDECL(spell_hit_bonus, (int));
 
 #define is_hero_spell(type) ((type) >= 10 && (type) < 20)
 
-static boolean M_IN_WATER(int pmid) {
+static boolean M_IN_WATER(struct permonst* ptr) {
+    int pmid = ptr->monsterTypeID;
     return (monsterClass(pmid) == S_EEL || isAmphibious(pmid) || isSwimmer(pmid));
 }
 
@@ -177,7 +178,7 @@ struct obj *otmp;
             if (swallowed() && (mtmp == u.ustuck) && isWhirly(mtmp->data->monsterTypeID)) {
                 You("disrupt %s!", mon_nam(mtmp));
                 pline("A huge hole opens up...");
-                expels(mtmp, mtmp->data->monsterTypeID, TRUE);
+                expels(mtmp, mtmp->data, TRUE);
             }
         }
         break;
@@ -279,7 +280,7 @@ struct obj *otmp;
                 else
                     pline("%s opens its mouth!", Monnam(mtmp));
             }
-            expels(mtmp, mtmp->data->monsterTypeID, TRUE);
+            expels(mtmp, mtmp->data, TRUE);
             /* zap which hits steed will only release saddle if it
                doesn't hit a holding or falling trap; playability
                here overrides the more logical target ordering */
@@ -354,7 +355,7 @@ struct obj *otmp;
             learn_it = TRUE;
         break;
     case SPE_STONE_TO_FLESH:
-        if (mtmp->data->monsterTypeID == PM_STONE_GOLEM) {
+        if (monsndx(mtmp->data) == PM_STONE_GOLEM) {
             char *name = Monnam(mtmp);
 
             /* turn into flesh golem */
@@ -529,15 +530,15 @@ coord *cc;
     if (mtmp2) {
         /* save_mtraits() validated mtmp2->mnum */
         mtmp2->data = &mons[mtmp2->mnum];
-        if (mtmp2->mhpmax <= 0 && !isRiderOfApocalypse(mtmp2->mnum))
+        if (mtmp2->mhpmax <= 0 && !is_rider(mtmp2->data))
             return (struct monst *) 0;
-        mtmp = makeMonsterOfType(mtmp2->mnum, cc->x, cc->y,
+        mtmp = makemon(mtmp2->data, cc->x, cc->y,
                        NO_MINVENT | MM_NOWAIT | MM_NOCOUNTBIRTH);
         if (!mtmp)
             return mtmp;
 
         /* heal the monster */
-        if (mtmp->mhpmax > mtmp2->mhpmax && isRiderOfApocalypse(mtmp2->data->monsterTypeID))
+        if (mtmp->mhpmax > mtmp2->mhpmax && is_rider(mtmp2->data))
             mtmp2->mhpmax = mtmp->mhpmax;
         mtmp2->mhp = mtmp2->mhpmax;
         /* Get these ones from mtmp */
@@ -579,10 +580,10 @@ coord *cc;
         mtmp2->mcanmove = 1;
         /* most cancelled monsters return to normal,
            but some need to stay cancelled */
-        if (!dmgtype(mtmp2->data->monsterTypeID, AD_SEDU)
-            && (!SYSOPT_SEDUCE || !dmgtype(mtmp2->data->monsterTypeID, AD_SSEX)))
+        if (!dmgtype(mtmp2->data, AD_SEDU)
+            && (!SYSOPT_SEDUCE || !dmgtype(mtmp2->data, AD_SSEX)))
             mtmp2->mcan = 0;
-        mtmp2->mcansee = 1; /* set like in makeMonsterOfType */
+        mtmp2->mcansee = 1; /* set like in makemon */
         mtmp2->mblinded = 0;
         mtmp2->mstun = 0;
         mtmp2->mconf = 0;
@@ -701,7 +702,7 @@ boolean by_hero;
        ghost are at same location, revived creature shouldn't be bumped
        to an adjacent spot by ghost which joins with it] */
     if (MON_AT(x, y)) {
-        if (placeEntityNextToPosition(&xy, x, y, mptr->monsterTypeID, 0))
+        if (enexto(&xy, x, y, mptr))
             x = xy.x, y = xy.y;
     }
 
@@ -715,7 +716,7 @@ boolean by_hero;
     if (cant_revive(&montype, TRUE, corpse)) {
         /* make a zombie or doppelganger instead */
         /* note: montype has changed; mptr keeps old value for newcham() */
-        mtmp = makeMonsterOfType(montype, x, y, NO_MINVENT | MM_NOWAIT);
+        mtmp = makemon(&mons[montype], x, y, NO_MINVENT | MM_NOWAIT);
         if (mtmp) {
             /* skip ghost handling */
             if (has_omid(corpse))
@@ -738,8 +739,7 @@ boolean by_hero;
             wary_dog(mtmp, TRUE);
     } else {
         /* make a new monster */
-        int pmid = (mptr) ? mptr->monsterTypeID : NON_PM;
-        mtmp = makeMonsterOfType(pmid, x, y, NO_MINVENT | MM_NOWAIT | MM_NOCOUNTBIRTH);
+        mtmp = makemon(mptr, x, y, NO_MINVENT | MM_NOWAIT | MM_NOCOUNTBIRTH);
     }
     if (!mtmp)
         return (struct monst *) 0;
@@ -826,7 +826,7 @@ boolean by_hero;
         useup(corpse);
         break;
     case OBJ_FLOOR:
-        /* in case MON_AT+placeEntityNextToPosition for invisible mon */
+        /* in case MON_AT+enexto for invisible mon */
         x = corpse->ox, y = corpse->oy;
         /* not useupf(), which charges */
         if (corpse->quan > 1L)
@@ -1083,7 +1083,7 @@ int ochance, achance; /* percent chance for ordinary objects, artifacts */
         || obj->otyp == SPE_BOOK_OF_THE_DEAD
         || obj->otyp == CANDELABRUM_OF_INVOCATION
         || obj->otyp == BELL_OF_OPENING
-        || (obj->otyp == CORPSE && isRiderOfApocalypse(mons[obj->corpsenm].monsterTypeID))) {
+        || (obj->otyp == CORPSE && is_rider(&mons[obj->corpsenm]))) {
         return TRUE;
     } else {
         int chance = rn2(100);
@@ -1248,11 +1248,7 @@ int okind;
     if (!(mvitals[pm_index].mvflags & G_GENOD))
         mdat = &mons[pm_index];
 
-    if (mdat) {
-        mtmp = makeMonsterOfType(mdat->monsterTypeID, obj->ox, obj->oy, NO_MM_FLAGS);
-    } else {
-        mtmp = makeMonsterOfAnyType(obj->ox, obj->oy, NO_MM_FLAGS);
-    }
+    mtmp = makemon(mdat, obj->ox, obj->oy, NO_MM_FLAGS);
     polyuse(obj, okind, monsterCorpseWeight(mons[pm_index].monsterTypeID));
 
     if (mtmp && cansee(mtmp->mx, mtmp->my)) {
@@ -1628,11 +1624,7 @@ struct obj *obj;
             } else { /* (obj->otyp == FIGURINE) */
                 if (golem_xform)
                     ptr = &mons[PM_FLESH_GOLEM];
-                if (ptr) {
-                    mon = makeMonsterOfType(ptr->monsterTypeID, oox, ooy, NO_MINVENT);
-                } else {
-                    mon = makeMonsterOfAnyType(oox, ooy, NO_MINVENT);
-                }
+                mon = makemon(ptr, oox, ooy, NO_MINVENT);
                 if (mon) {
                     if (costly_spot(oox, ooy) && !obj->no_charge) {
                         if (costly_spot(currentX(), currentY()))
@@ -2032,7 +2024,8 @@ register struct obj *obj;
             known = TRUE;
         break;
     case WAN_CREATE_MONSTER:
-        known = createRandomCritters(rn2(23) ? 1 : rn1(7, 2), FALSE);
+        known = create_critters(rn2(23) ? 1 : rn1(7, 2),
+                                (struct permonst *) 0, FALSE);
         break;
     case WAN_WISHING:
         known = TRUE;
@@ -3150,14 +3143,14 @@ struct obj **pobj; /* object tossed/used, set to NULL
                 in_skip = FALSE;
                 if (range > 3) /* another bounce? */
                     skiprange(range, &skiprange_start, &skiprange_end);
-            } else if (mtmp && M_IN_WATER(mtmp->data->monsterTypeID)) {
+            } else if (mtmp && M_IN_WATER(mtmp->data)) {
                 if ((youCanSee() && canseemon(mtmp)) || sensemon(mtmp))
                     pline("%s %s over %s.", Yname2(obj), otense(obj, "pass"),
                           mon_nam(mtmp));
             }
         }
 
-        if (mtmp && !(in_skip && M_IN_WATER(mtmp->data->monsterTypeID))) {
+        if (mtmp && !(in_skip && M_IN_WATER(mtmp->data))) {
             notonhead = (bhitpos.x != mtmp->mx || bhitpos.y != mtmp->my);
             if (weapon == FLASHED_LIGHT) {
                 /* FLASHED_LIGHT hitting invisible monster should
@@ -3908,7 +3901,7 @@ register int dx, dy;
                     boolean mon_could_move = mon->mcanmove;
                     int tmp = zhitm(mon, type, nd, &otmp);
 
-                    if (isRiderOfApocalypse(mon->data->monsterTypeID)
+                    if (is_rider(mon->data)
                         && abs(type) == ZT_BREATH(ZT_DEATH)) {
                         if (canseemon(mon)) {
                             hit(fltxt, mon, ".");
@@ -4848,7 +4841,7 @@ int damage, tell;
     if (dlev > 50)
         dlev = 50;
     else if (dlev < 1)
-        dlev = isMonsterPlayer(mtmp->data->monsterTypeID) ? currentExperienceLevel() : 1;
+        dlev = is_mplayer(mtmp->data) ? currentExperienceLevel() : 1;
 
     resisted = rn2(100 + alev - dlev) < monsterBaseMagicResistance(mtmp->data->monsterTypeID);
     if (resisted) {

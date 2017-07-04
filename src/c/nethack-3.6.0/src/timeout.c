@@ -104,12 +104,12 @@ vomiting_dialogue()
         break;
     case 2:
         txt = vomiting_texts[4];
-        if (cantvomit(youmonst.data->monsterTypeID))
+        if (cantvomit(youmonst.data))
             txt = "gag uncontrolably.";
         break;
     case 0:
         stop_occupation();
-        if (!cantvomit(youmonst.data->monsterTypeID))
+        if (!cantvomit(youmonst.data))
             morehungry(20);
         vomit();
         break;
@@ -529,7 +529,7 @@ long timeout;
         return;
 
     mon = mon2 = (struct monst *) 0;
-    mnum = nextSmallerType(egg->corpsenm);
+    mnum = big_to_little(egg->corpsenm);
     /* The identity of one's father is learned, not innate */
     yours = (egg->spe || (!flags.female && carried(egg) && !rn2(2)));
     silent = (timeout != monstermoves); /* hatched while away */
@@ -541,8 +541,8 @@ long timeout;
         if (!(monsterGenerationMask(mons[mnum].monsterTypeID) & G_UNIQ)
             && !(mvitals[mnum].mvflags & (G_GENOD | G_EXTINCT))) {
             for (i = hatchcount; i > 0; i--) {
-                if (!placeEntityNextToPosition(&cc, x, y, mnum, 0)
-                    || !(mon = makeMonsterOfType(mnum, cc.x, cc.y, NO_MINVENT)))
+                if (!enexto(&cc, x, y, &mons[mnum])
+                    || !(mon = makemon(&mons[mnum], cc.x, cc.y, NO_MINVENT)))
                     break;
                 /* tame if your own egg hatches while you're on the
                    same dungeon level, or any dragon egg which hatches
@@ -557,7 +557,7 @@ long timeout;
                 }
                 if (mvitals[mnum].mvflags & G_EXTINCT)
                     break;  /* just made last one */
-                mon2 = mon; /* in case makeMonsterOfType() fails on 2nd egg */
+                mon2 = mon; /* in case makemon() fails on 2nd egg */
             }
             if (!mon)
                 mon = mon2;
@@ -574,7 +574,7 @@ long timeout;
          * We can do several things.  The first ones that come to
          * mind are:
          * + Create the hatched monster then place it on the migrating
-         *   mons list.  This is tough because all makeMonsterOfType() is made
+         *   mons list.  This is tough because all makemon() is made
          *   to place the monster as well.  Makemon() also doesn't lend
          *   itself well to splitting off a "not yet placed" subroutine.
          * + Mark the egg as hatched, then place the monster when we
@@ -606,10 +606,10 @@ long timeout;
             knows_egg = TRUE; /* true even if you are blind */
             if (!cansee_hatchspot)
                 You_feel("%s %s from your pack!", something,
-                         locomotion(mon->data->monsterTypeID, "drop"));
+                         locomotion(mon->data, "drop"));
             else
                 You_see("%s %s out of your pack!", monnambuf,
-                        locomotion(mon->data->monsterTypeID, "drop"));
+                        locomotion(mon->data, "drop"));
             if (yours) {
                 pline("%s cries sound like \"%s%s\"",
                       siblings ? "Their" : "Its",
@@ -639,7 +639,7 @@ long timeout;
                 else
                     Strcpy(carriedby, "thin air");
                 You_see("%s %s out of %s!", monnambuf,
-                        locomotion(mon->data->monsterTypeID, "drop"), carriedby);
+                        locomotion(mon->data, "drop"), carriedby);
             }
             break;
 #if 0
@@ -676,7 +676,7 @@ learn_egg_type(mnum)
 int mnum;
 {
     /* baby monsters hatch from grown-up eggs */
-    mnum = nextLargerType(mnum);
+    mnum = little_to_big(mnum);
     mvitals[mnum].mvflags |= MV_KNOWS_EGG;
     /* we might have just learned about other eggs being carried */
     update_inventory();
@@ -740,7 +740,7 @@ slip_or_trip()
             You("trip over %s.", what);
         }
         if (!uarmf && otmp->otyp == CORPSE
-            && touchPetrifies(mons[otmp->corpsenm].monsterTypeID) && !youResistStoning()) {
+            && touch_petrifies(&mons[otmp->corpsenm]) && !youResistStoning()) {
 	    javaString corpseName = monsterTypeName(mons[otmp->corpsenm].monsterTypeID);
             Sprintf(killer.name, "tripping over %s corpse",
                     an(corpseName.c_str));

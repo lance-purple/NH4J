@@ -175,7 +175,7 @@ register struct obj *sobj;
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
         if (DEADMONSTER(mtmp))
             continue; /* probably not needed in this case but... */
-        if (findgold(mtmp->minvent) || (mtmp->data->monsterTypeID == PM_GOLD_GOLEM)) {
+        if (findgold(mtmp->minvent) || monsndx(mtmp->data) == PM_GOLD_GOLEM) {
             known = TRUE;
             goto outgoldmap; /* skip further searching */
         } else
@@ -250,7 +250,7 @@ outgoldmap:
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
         if (DEADMONSTER(mtmp))
             continue; /* probably overkill here */
-        if (findgold(mtmp->minvent) || (mtmp->data->monsterTypeID == PM_GOLD_GOLEM)) {
+        if (findgold(mtmp->minvent) || monsndx(mtmp->data) == PM_GOLD_GOLEM) {
             struct obj gold;
             gold = zeroobj; /* ensure oextra is cleared too */
             gold.otyp = GOLD_PIECE;
@@ -1283,7 +1283,7 @@ openit()
             else
                 pline("%s opens its mouth!", Monnam(u.ustuck));
         }
-        expels(u.ustuck, u.ustuck->data->monsterTypeID, TRUE);
+        expels(u.ustuck, u.ustuck->data, TRUE);
         return -1;
     }
 

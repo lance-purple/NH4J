@@ -43,14 +43,12 @@ char msgbuf[BUFSZ];
 #define CANNIBAL_ALLOWED() (Role_if(PM_CAVEMAN) || Race_if(PM_ORC))
 
 /* monster types that cause hero to be turned into stone if eaten */
-static boolean flesh_petrifies(int pmid) {
-    return (touchPetrifies(pmid) || (pmid == PM_MEDUSA));
-}
+#define flesh_petrifies(pm) (touch_petrifies(pm) || (pm) == &mons[PM_MEDUSA])
 
 /* Rider corpses are treated as non-rotting so that attempting to eat one
    will be sure to reach the stage of eating where that meal is fatal */
 #define nonrotting_corpse(mnum) \
-    ((mnum) == PM_LIZARD || (mnum) == PM_LICHEN || isRiderOfApocalypse(mons[mnum].monsterTypeID))
+    ((mnum) == PM_LIZARD || (mnum) == PM_LICHEN || is_rider(&mons[mnum]))
 
 /* non-rotting non-corpses; unlike lizard corpses, these items will behave
    as if rotten if they are cursed (fortune cookies handled elsewhere) */
@@ -442,13 +440,13 @@ boolean message;
 }
 
 void
-eating_conducts(pmid)
-int pmid;
+eating_conducts(pd)
+struct permonst *pd;
 {
     setFoodlessConduct(FALSE);
-    if (!isVeganOption(pmid))
+    if (!isVeganOption(pd->monsterTypeID))
         setVeganConduct(FALSE);
-    if (!isVegetarianOption(pmid))
+    if (!isVegetarianOption(pd->monsterTypeID))
         violated_vegetarian();
 }
 
@@ -477,7 +475,7 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
             pline("%s brain is eaten!", s_suffix(Monnam(mdef)));
     }
 
-    if (flesh_petrifies(pd->monsterTypeID)) {
+    if (flesh_petrifies(pd)) {
         /* mind flayer has attempted to eat the brains of a petrification
            inducing critter (most likely Medusa; attacking a cockatrice via
            tentacle-touch should have been caught before reaching this far) */
@@ -509,12 +507,12 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
         /*
          * player mind flayer is eating something's brain
          */
-        eating_conducts(pd->monsterTypeID);
+        eating_conducts(pd);
         if (isMindless(pd->monsterTypeID)) { /* (cannibalism not possible here) */
             pline("%s doesn't notice.", Monnam(mdef));
             /* all done; no extra harm inflicted upon target */
             return MM_MISS;
-        } else if (isRiderOfApocalypse(pd->monsterTypeID)) {
+        } else if (is_rider(pd)) {
             pline("Ingesting that is fatal.");
 	    javaString monsterName = monsterTypeName(pd->monsterTypeID);
             Sprintf(killer.name, "unwisely ate the brain of %s", monsterName.c_str);
@@ -538,7 +536,7 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
         }
         /* targetting another mind flayer or your own underlying species
            is cannibalism */
-        (void) maybe_cannibal(pd->monsterTypeID, TRUE);
+        (void) maybe_cannibal(monsndx(pd), TRUE);
 
     } else if (mdef == &youmonst) {
         /*
@@ -580,7 +578,7 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
             if (visflag)
                 pline("%s doesn't notice.", Monnam(mdef));
             return MM_MISS;
-        } else if (isRiderOfApocalypse(pd->monsterTypeID)) {
+        } else if (is_rider(pd)) {
             mondied(magr);
             if (magr->mhp <= 0)
                 result = MM_AGR_DIED;
@@ -624,7 +622,7 @@ boolean allowmsg;
            and also shouldn't eat current species when polymorphed
            (even if having the form of something which doesn't care
            about cannibalism--hero's innate traits aren't altered) */
-        && (isOfYourRace(fptr->monsterTypeID, urace.selfmask) || (areYouPolymorphed() && areSameRace(youmonst.data->monsterTypeID, fptr->monsterTypeID)))) {
+        && (isOfYourRace(fptr->monsterTypeID, urace.selfmask) || (areYouPolymorphed() && same_race(youmonst.data, fptr)))) {
         if (allowmsg) {
             if (areYouPolymorphed() && isOfYourRace(fptr->monsterTypeID, urace.selfmask))
                 You("have a bad feeling deep inside.");
@@ -642,9 +640,9 @@ cprefx(pm)
 register int pm;
 {
     (void) maybe_cannibal(pm, TRUE);
-    if (flesh_petrifies(mons[pm].monsterTypeID)) {
+    if (flesh_petrifies(&mons[pm])) {
         if (!youResistStoning()
-            && !(poly_when_stoned(youmonst.data->monsterTypeID)
+            && !(poly_when_stoned(youmonst.data)
                  && polymon(PM_STONE_GOLEM))) {
 	    javaString monsterName = monsterTypeName(mons[pm].monsterTypeID);
             Sprintf(killer.name, "tasting %s meat", monsterName.c_str);
@@ -785,7 +783,7 @@ register struct permonst *ptr;
         ifdebugresist("can get teleport control");
         break;
     case TELEPAT:
-        res = isTelepathic(ptr->monsterTypeID);
+        res = telepathic(ptr);
         ifdebugresist("can get telepathy");
         break;
     default:
@@ -1068,11 +1066,10 @@ register int pm;
     /*FALLTHRU*/
     default: {
         struct permonst *ptr = &mons[pm];
-        int pmid = mons[pm].monsterTypeID;
         boolean conveys_STR = isGiant(ptr->monsterTypeID);
         int i, count;
 
-        if (dmgtype(pmid, AD_STUN) || dmgtype(pmid, AD_HALU)
+        if (dmgtype(ptr, AD_STUN) || dmgtype(ptr, AD_HALU)
             || pm == PM_VIOLET_FUNGUS) {
             pline("Oh wow!  Great stuff!");
             (void) make_hallucinated(yourIntrinsicTimeout(HALLUC) + 200L, FALSE,
@@ -1303,7 +1300,7 @@ const char *mesg;
             what.c_str = rndmonnam(NULL);
         } else {
             what = monsterTypeName(mons[mnum].monsterTypeID);
-            if (the_unique_pm(mons[mnum].monsterTypeID))
+            if (the_unique_pm(&mons[mnum]))
                 which = 2;
             else if (typeIsProperName(mons[mnum].monsterTypeID))
                 which = 1;
@@ -1340,7 +1337,7 @@ const char *mesg;
         You("consume %s %s.", tintxts[r].txt, monsterName.c_str);
 	releaseJavaString(monsterName);
 
-        eating_conducts(mons[mnum].monsterTypeID);
+        eating_conducts(&mons[mnum]);
 
         tin->dknown = tin->known = 1;
         cprefx(mnum);
@@ -1558,8 +1555,8 @@ struct obj *otmp;
     int tp = 0, mnum = otmp->corpsenm;
     long rotted = 0L;
     int retcode = 0;
-    boolean stoneable = (flesh_petrifies(mons[mnum].monsterTypeID) && !youResistStoning()
-                         && !poly_when_stoned(youmonst.data->monsterTypeID));
+    boolean stoneable = (flesh_petrifies(&mons[mnum]) && !youResistStoning()
+                         && !poly_when_stoned(youmonst.data));
 
     /* KMH, conduct */
     if (!isVeganOption(mons[mnum].monsterTypeID))
@@ -1664,7 +1661,7 @@ struct obj *otmp;
 
         pline("%s%s %s!",
               typeIsProperName(mons[mnum].monsterTypeID)
-                 ? "" : the_unique_pm(mons[mnum].monsterTypeID) ? "The " : "This ",
+                 ? "" : the_unique_pm(&mons[mnum]) ? "The " : "This ",
               food_xname(otmp, FALSE),
               youAreHallucinating()
                   ? (yummy ? ((currentMonsterNumber() == PM_TIGER) ? "is gr-r-reat"
@@ -2111,7 +2108,7 @@ struct obj *otmp;
         break;
     case CARROT:
         if (!swallowed()
-            || !monsterHasAttackWithDamageType(u.ustuck->data->monsterTypeID, AT_ENGL, AD_BLND))
+            || !monsterHasAttackWithDamageType(u.ustuck->data, AT_ENGL, AD_BLND))
             make_blinded((long) creamed(), TRUE);
         break;
     case FORTUNE_COOKIE:
@@ -2148,9 +2145,9 @@ struct obj *otmp;
             heal_legs();
         break;
     case EGG:
-        if (flesh_petrifies(mons[otmp->corpsenm].monsterTypeID)) {
+        if (flesh_petrifies(&mons[otmp->corpsenm])) {
             if (!youResistStoning()
-                && !(poly_when_stoned(youmonst.data->monsterTypeID)
+                && !(poly_when_stoned(youmonst.data)
                      && polymon(PM_STONE_GOLEM))) {
                 if (!youAreTurningToStone()) {
                     int corpseTypeID = mons[otmp->corpsenm].monsterTypeID;
@@ -2233,8 +2230,8 @@ struct obj *otmp;
 
     if (cadaver || otmp->otyp == EGG || otmp->otyp == TIN) {
         /* These checks must match those in eatcorpse() */
-        stoneorslime = (flesh_petrifies(mons[mnum].monsterTypeID) && !youResistStoning()
-                        && !poly_when_stoned(youmonst.data->monsterTypeID));
+        stoneorslime = (flesh_petrifies(&mons[mnum]) && !youResistStoning()
+                        && !poly_when_stoned(youmonst.data));
 
         if (mnum == PM_GREEN_SLIME || otmp->otyp == GLOB_OF_GREEN_SLIME)
             stoneorslime = (!youAreUnchanging() && !isSlimeproof(youmonst.data->monsterTypeID));
@@ -3032,7 +3029,7 @@ skipfloor:
 void
 vomit() /* A good idea from David Neves */
 {
-    if (cantvomit(youmonst.data->monsterTypeID))
+    if (cantvomit(youmonst.data))
         /* doesn't cure food poisoning; message assumes that we aren't
            dealing with some esoteric body_part() */
         Your("jaw gapes convulsively.");

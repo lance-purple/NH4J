@@ -1528,7 +1528,7 @@ struct mkroom *croom;
         pm = (struct permonst *) 0;
     else if (m->id != NON_PM) {
         pm = &mons[m->id];
-        g_mvflags = (unsigned) mvitals[pm->monsterTypeID].mvflags;
+        g_mvflags = (unsigned) mvitals[monsndx(pm)].mvflags;
         if ((monsterGenerationMask(pm->monsterTypeID) & G_UNIQ) && (g_mvflags & G_EXTINCT))
             return;
         else if (g_mvflags & G_GONE)    /* genocided or extinct */
@@ -1539,13 +1539,11 @@ struct mkroom *croom;
            class has been genocided, so settle for a random monster */
     }
     if (areYouInTheMines() && pm && isOfYourRace(pm->monsterTypeID, urace.selfmask)
-        && (Race_if(PM_DWARF) || Race_if(PM_GNOME)) && rn2(3)) {
+        && (Race_if(PM_DWARF) || Race_if(PM_GNOME)) && rn2(3))
         pm = (struct permonst *) 0;
-    }
 
-    int pmid = (pm) ? pm->monsterTypeID : NON_PM;
-
-    if (NON_PM != pmid) {
+    if (pm) {
+        int pmid = pm->monsterTypeID;
         int loc = DRY;
         if (monsterClass(pmid) == S_EEL || isAmphibious(pmid) || isSwimmer(pmid))
             loc = WET;
@@ -1553,7 +1551,7 @@ struct mkroom *croom;
             loc |= (HOT | WET);
         if (passesThroughWalls(pmid) || isNoncorporeal(pmid))
             loc |= SOLID;
-        if (isFlaming(pmid))
+        if (flaming(pm))
             loc |= HOT;
         /* If water-liking monster, first try is without DRY */
         get_location_coord(&x, &y, loc | NO_LOC_WARN, croom, m->coord);
@@ -1566,18 +1564,15 @@ struct mkroom *croom;
     }
 
     /* try to find a close place if someone else is already there */
-    if (MON_AT(x, y) && placeEntityNextToPosition(&cc, x, y, pmid, 0))
+    if (MON_AT(x, y) && enexto(&cc, x, y, pm))
         x = cc.x, y = cc.y;
 
-    if (m->align != -(MAX_REGISTERS + 2)) {
-        mtmp = makeRoamingMonsterOfType(pmid, Amask2align(amask), x, y, m->peaceful);
-    } else if (PM_ARCHEOLOGIST <= m->id && m->id <= PM_WIZARD) {
-        mtmp = makeMonsterPlayer(pmid, x, y, FALSE);
-    } else if (NON_PM != pmid) {
-        mtmp = makeMonsterOfType(pmid, x, y, NO_MM_FLAGS);
-    } else {
-        mtmp = makeMonsterOfAnyType(x, y, NO_MM_FLAGS);
-    }
+    if (m->align != -(MAX_REGISTERS + 2))
+        mtmp = mk_roamer(pm, Amask2align(amask), x, y, m->peaceful);
+    else if (PM_ARCHEOLOGIST <= m->id && m->id <= PM_WIZARD)
+        mtmp = mk_mplayer(pm, x, y, FALSE);
+    else
+        mtmp = makemon(pm, x, y, NO_MM_FLAGS);
 
     if (mtmp) {
         x = mtmp->mx, y = mtmp->my; /* sanity precaution */
@@ -1635,7 +1630,7 @@ struct mkroom *croom;
                             x = m->x;
                             y = m->y;
                             get_location(&x, &y, DRY, croom);
-                            if (MON_AT(x, y) && placeEntityNextToPosition(&cc, x, y, pm->monsterTypeID, 0))
+                            if (MON_AT(x, y) && enexto(&cc, x, y, pm))
                                 x = cc.x, y = cc.y;
                         } while (m_bad_boulder_spot(x, y)
                                  && --retrylimit > 0);
@@ -1659,8 +1654,8 @@ struct mkroom *croom;
                     struct permonst *mdat = &mons[mndx];
                     struct permonst *olddata = mtmp->data;
 
-                    mgender_from_pmid(mtmp, mndx);
-                    setMonsterData(mtmp, mndx, 0);
+                    mgender_from_permonst(mtmp, mdat);
+                    set_mon_data(mtmp, mdat, 0);
                     if (emitsLightWithRange(olddata->monsterTypeID) != emitsLightWithRange(mtmp->data->monsterTypeID)) {
                         /* used to give light, now doesn't, or vice versa,
                            or light's range has changed */
@@ -1671,8 +1666,8 @@ struct mkroom *croom;
                                              emitsLightWithRange(mtmp->data->monsterTypeID),
                                              LS_MONSTER, (genericptr_t) mtmp);
                     }
-                    if (!mtmp->perminvis || isInvisible(olddata->monsterTypeID))
-                        mtmp->perminvis = isInvisible(mdat->monsterTypeID);
+                    if (!mtmp->perminvis || pm_invisible(olddata))
+                        mtmp->perminvis = pm_invisible(mdat);
                 }
                 break;
             }
@@ -1907,15 +1902,15 @@ struct mkroom *croom;
         struct monst *was;
         struct obj *obj;
         int wastyp;
-        int i = 0; /* prevent endless loop in case makeMonsterOfType() always fails */
+        int i = 0; /* prevent endless loop in case makemon always fails */
 
         /* Named random statues are of player types, and aren't stone-
          * resistant (if they were, we'd have to reset the name as well as
          * setting corpsenm).
          */
         for (wastyp = otmp->corpsenm; i < 1000; i++, wastyp = rndmonnum()) {
-            /* makeMonsterOfType() without rndmonst() might create a group */
-            was = makeMonsterOfType(wastyp, 0, 0, MM_NOCOUNTBIRTH);
+            /* makemon without rndmonst() might create a group */
+            was = makemon(&mons[wastyp], 0, 0, MM_NOCOUNTBIRTH);
             if (was) {
                 if (!resists_ston(was)) {
                     (void) propagate(wastyp, TRUE, FALSE);
@@ -2537,11 +2532,11 @@ fill_empty_maze()
         }
         for (x = rn2(2); x; x--) {
             maze1xy(&mm, DRY);
-            (void) makeMonsterOfType(PM_MINOTAUR, mm.x, mm.y, NO_MM_FLAGS);
+            (void) makemon(&mons[PM_MINOTAUR], mm.x, mm.y, NO_MM_FLAGS);
         }
         for (x = rnd((int) (12 * mapfact) / 100); x; x--) {
             maze1xy(&mm, DRY);
-            (void) makeMonsterOfAnyType(mm.x, mm.y, NO_MM_FLAGS);
+            (void) makemon((struct permonst *) 0, mm.x, mm.y, NO_MM_FLAGS);
         }
         for (x = rn2((int) (15 * mapfact) / 100); x; x--) {
             maze1xy(&mm, DRY);
@@ -3067,7 +3062,7 @@ struct sp_coder *coder;
                         pm = rndmonst();
                     }
                     if (pm)
-                        tmpobj.corpsenm = pm->monsterTypeID;
+                        tmpobj.corpsenm = monsndx(pm);
                 }
             }
             break;

@@ -101,11 +101,7 @@ boolean quietly;
             }
         }
 
-        if (pm) {
-            mtmp = makeMonsterOfType(pm->monsterTypeID, x, y, MM_EDOG | MM_IGNOREWATER | NO_MINVENT);
-        } else {
-            mtmp = makeMonsterOfAnyType(x, y, MM_EDOG | MM_IGNOREWATER | NO_MINVENT);
-        }
+        mtmp = makemon(pm, x, y, MM_EDOG | MM_IGNOREWATER | NO_MINVENT);
         if (otmp && !mtmp) { /* monster was genocided or square occupied */
             if (!quietly)
                 pline_The("figurine writhes and then shatters into pieces!");
@@ -143,7 +139,7 @@ boolean quietly;
     newsym(mtmp->mx, mtmp->my);
 
     /* must wield weapon immediately since pets will otherwise drop it */
-    if (mtmp->mtame && attacktype(mtmp->data->monsterTypeID, AT_WEAP)) {
+    if (mtmp->mtame && attacktype(mtmp->data, AT_WEAP)) {
         mtmp->weapon_check = NEED_HTH_WEAPON;
         (void) mon_wield_item(mtmp);
     }
@@ -183,7 +179,7 @@ makedog()
             petname = "Sirius"; /* Orion's dog */
     }
 
-    mtmp = makeMonsterOfType(pettype, currentX(), currentY(), MM_EDOG);
+    mtmp = makemon(&mons[pettype], currentX(), currentY(), MM_EDOG);
 
     if (!mtmp)
         return ((struct monst *) 0); /* pets were genocided */
@@ -311,7 +307,7 @@ boolean with_you;
         set_residency(mtmp, FALSE);
 
     num_segs = mtmp->wormno;
-    /* baby long worms have no tail so don't use isLongWorm() */
+    /* baby long worms have no tail so don't use is_longworm() */
     if (mtmp->data == &mons[PM_LONG_WORM]) {
         mtmp->wormno = get_wormno();
         if (mtmp->wormno)
@@ -463,8 +459,8 @@ boolean with_you;
                         impossible("Can't find relocated object.");
                 }
             }
-            int pmid = (mtmp->data) ? (mtmp->data->monsterTypeID) : NON_PM;
-            (void) makeCorpseObject((struct monst *) 0, pmid, xlocale, ylocale, CORPSTAT_NONE);
+            (void) mkcorpstat(CORPSE, (struct monst *) 0, mtmp->data, xlocale,
+                              ylocale, CORPSTAT_NONE);
             mongone(mtmp);
         }
     }
@@ -755,9 +751,9 @@ register struct obj *obj;
         if (obj->otyp == CORPSE || obj->otyp == TIN || obj->otyp == EGG)
             fptr = &mons[obj->corpsenm];
 
-        if (obj->otyp == CORPSE && isRiderOfApocalypse(fptr->monsterTypeID))
+        if (obj->otyp == CORPSE && is_rider(fptr))
             return TABU;
-        if ((obj->otyp == CORPSE || obj->otyp == EGG) && touchPetrifies(fptr->monsterTypeID)
+        if ((obj->otyp == CORPSE || obj->otyp == EGG) && touch_petrifies(fptr)
             && !resists_ston(mon))
             return POISON;
         if (!carni && !herbi)
@@ -807,7 +803,7 @@ register struct obj *obj;
                 return herbi ? CADAVER : MANFOOD;
             /* most humanoids will avoid cannibalism unless starving;
                arbitrary: elves won't eat other elves even then */
-            else if (isHumanoid(mptr->monsterTypeID) && areSameRace(mptr->monsterTypeID, fptr->monsterTypeID)
+            else if (isHumanoid(mptr->monsterTypeID) && same_race(mptr, fptr)
                      && (!isUndead(mptr->monsterTypeID)
 			 && monsterClass(fptr->monsterTypeID) != S_KOBOLD
                          && monsterClass(fptr->monsterTypeID) != S_ORC 
@@ -892,8 +888,8 @@ register struct obj *obj;
     /* make grabber let go now, whether it becomes tame or not */
     if (mtmp == u.ustuck) {
         if (swallowed())
-            expels(mtmp, mtmp->data->monsterTypeID, TRUE);
-        else if (!(areYouPolymorphed() && sticks(youmonst.data->monsterTypeID)))
+            expels(mtmp, mtmp->data, TRUE);
+        else if (!(areYouPolymorphed() && sticks(youmonst.data)))
             unstuck(mtmp);
     }
 
@@ -950,7 +946,7 @@ register struct obj *obj;
     }
 
     newsym(mtmp->mx, mtmp->my);
-    if (attacktype(mtmp->data->monsterTypeID, AT_WEAP)) {
+    if (attacktype(mtmp->data, AT_WEAP)) {
         mtmp->weapon_check = NEED_HTH_WEAPON;
         (void) mon_wield_item(mtmp);
     }

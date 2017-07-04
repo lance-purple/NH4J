@@ -813,7 +813,7 @@ static const char *const ghostnames[] = {
     "Stephan", "Lance Braccus", "Shadowhawk"
 };
 
-/* ghost names formerly set by x_monnam(), now by makeMonsterOfType() instead */
+/* ghost names formerly set by x_monnam(), now by makemon() instead */
 const char *
 rndghostname()
 {
@@ -979,7 +979,7 @@ boolean called;
         } else if (called) {
             Sprintf(eos(buf), "%s called %s", monsterName.c_str, name);
             name_at_start = typeIsProperName(mdat->monsterTypeID);
-        } else if (isMonsterPlayer(mdat->monsterTypeID) && (bp = strstri(name, " the ")) != 0) {
+        } else if (is_mplayer(mdat) && (bp = strstri(name, " the ")) != 0) {
             /* <name> the <adjective> <invisible> <saddled> <rank> */
             char pbuf[BUFSZ];
 
@@ -995,10 +995,10 @@ boolean called;
             Strcat(buf, name);
             name_at_start = TRUE;
         }
-    } else if (isMonsterPlayer(mdat->monsterTypeID) && !areYouInEndgame()) {
+    } else if (is_mplayer(mdat) && !areYouInEndgame()) {
         char pbuf[BUFSZ];
 
-        Strcpy(pbuf, rank_of((int) mtmp->m_lev, mdat->monsterTypeID,
+        Strcpy(pbuf, rank_of((int) mtmp->m_lev, monsndx(mdat),
                              (boolean) mtmp->female));
         Strcat(buf, lcase(pbuf));
         name_at_start = FALSE;

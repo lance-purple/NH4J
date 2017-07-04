@@ -513,7 +513,7 @@ boolean voluntary; /* taking gloves off on purpose? */
     if (obj != uwep && (obj != uswapwep || !usingTwoWeapons()))
         return;
 
-    if (touchPetrifies(mons[obj->corpsenm].monsterTypeID) && !youResistStoning()) {
+    if (touch_petrifies(&mons[obj->corpsenm]) && !youResistStoning()) {
         You("now wield %s in your bare %s.",
             corpse_xname(obj, (const char *) 0, CXN_ARTICLE),
             makeplural(body_part(HAND)));
@@ -1590,7 +1590,7 @@ boolean noisy;
                     : is_suit(otmp)
                         ? c_suit
                         : 0;
-    if (which && cannotWearArmor(youmonst.data->monsterTypeID)
+    if (which && cantweararm(youmonst.data)
         /* same exception for cloaks as used in m_dowear() */
         && (which != c_cloak || monsterSize(youmonst.data->monsterTypeID) != MZ_SMALL)
         && (racial_exception(&youmonst, otmp) < 1)) {
@@ -1615,12 +1615,12 @@ boolean noisy;
             if (noisy)
                 already_wearing(an(helm_simple_name(uarmh)));
             err++;
-        } else if (areYouPolymorphed() && hasHorns(youmonst.data->monsterTypeID) && !is_flimsy(otmp)) {
+        } else if (areYouPolymorphed() && has_horns(youmonst.data) && !is_flimsy(otmp)) {
             /* (flimsy exception matches polyself handling) */
             if (noisy)
                 pline_The("%s won't fit over your horn%s.",
                           helm_simple_name(otmp),
-                          plur(numberOfHorns(youmonst.data->monsterTypeID)));
+                          plur(num_horns(youmonst.data)));
             err++;
         } else
             *mask = W_ARMH;
@@ -1929,7 +1929,7 @@ dowear()
 {
     struct obj *otmp;
 
-    /* cannotWearArmor() checks for suits of armor, not what we want here;
+    /* cantweararm() checks for suits of armor, not what we want here;
        verysmall() or hasNoHands() checks for shields, gloves, etc... */
     if ((isVerySmallMonster(youmonst.data->monsterTypeID) || hasNoHands(youmonst.data->monsterTypeID))) {
         pline("Don't even bother.");

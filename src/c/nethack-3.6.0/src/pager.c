@@ -177,7 +177,7 @@ int x, y;
                     : "",
             name);
     if (u.ustuck == mtmp)
-        Strcat(buf, (areYouPolymorphed() && sticks(youmonst.data->monsterTypeID))
+        Strcat(buf, (areYouPolymorphed() && sticks(youmonst.data))
                      ? ", being held" : ", holding you");
     if (mtmp->mleashed)
         Strcat(buf, ", leashed to you");

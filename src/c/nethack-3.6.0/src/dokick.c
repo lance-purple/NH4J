@@ -103,7 +103,7 @@ register boolean clumsy;
         /* see if the monster has a place to move into */
         mdx = mon->mx + directionX();
         mdy = mon->my + directionY();
-        if (goodPosition(mdx, mdy, mon->m_id, mon->data->monsterTypeID, mon->wormno, 0)) {
+        if (goodpos(mdx, mdy, mon, 0)) {
             pline("%s reels from the blow.", Monnam(mon));
             if (m_in_out_region(mon, mdx, mdy)) {
                 remove_monster(mon->mx, mon->my);
@@ -190,7 +190,7 @@ xchar x, y;
      * normally, getting all your attacks _including_ all your kicks.
      * If you have >1 kick attack, you get all of them.
      */
-    if (areYouPolymorphed() && attacktype(youmonst.data->monsterTypeID, AT_KICK)) {
+    if (areYouPolymorphed() && attacktype(youmonst.data, AT_KICK)) {
         int sum, kickdieroll, armorpenalty,
             attknum = 0,
             tmp = find_roll_to_hit(mon, AT_KICK, (struct obj *) 0, &attknum,
@@ -516,11 +516,11 @@ xchar x, y;
     }
 
     if (!uarmf && kickedobj->otyp == CORPSE
-        && touchPetrifies(mons[kickedobj->corpsenm].monsterTypeID) && !youResistStoning()) {
+        && touch_petrifies(&mons[kickedobj->corpsenm]) && !youResistStoning()) {
         You("kick %s with your bare %s.",
             corpse_xname(kickedobj, (const char *) 0, CXN_PFX_THE),
             makeplural(body_part(FOOT)));
-        if (poly_when_stoned(youmonst.data->monsterTypeID) && polymon(PM_STONE_GOLEM)) {
+        if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM)) {
             ; /* hero has been transformed but kick continues */
         } else {
             /* normalize body shape here; foot, not body_part(FOOT) */
@@ -1131,8 +1131,8 @@ dokick()
                 mm.x = x;
                 mm.y = y;
                 while (cnt--) {
-                    if (placeEntityNextToPosition(&mm, mm.x, mm.y, PM_KILLER_BEE, 0)
-                        && makeMonsterOfType(PM_KILLER_BEE, mm.x, mm.y,
+                    if (enexto(&mm, mm.x, mm.y, &mons[PM_KILLER_BEE])
+                        && makemon(&mons[PM_KILLER_BEE], mm.x, mm.y,
                                    MM_ANGRY))
                         made++;
                 }
@@ -1167,7 +1167,7 @@ dokick()
                 else
                     pline("A %s ooze gushes up from the drain!",
                           hcolor(NH_BLACK));
-                (void) makeMonsterOfType(PM_BLACK_PUDDING, x, y, NO_MM_FLAGS);
+                (void) makemon(&mons[PM_BLACK_PUDDING], x, y, NO_MM_FLAGS);
                 exercise(A_DEX, TRUE);
                 newsym(x, y);
                 maploc->looted |= S_LPUDDING;
@@ -1176,7 +1176,7 @@ dokick()
                        && !(mvitals[washerndx].mvflags & G_GONE)) {
                 /* can't resist... */
                 pline("%s returns!", (youCannotSee() ? Something : "The dish washer"));
-                if (makeMonsterOfType(washerndx, x, y, NO_MM_FLAGS))
+                if (makemon(&mons[washerndx], x, y, NO_MM_FLAGS))
                     newsym(x, y);
                 maploc->looted |= S_LDWASHER;
                 exercise(A_DEX, TRUE);
@@ -1279,7 +1279,7 @@ dokick()
             for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
                 if (DEADMONSTER(mtmp))
                     continue;
-                if (isMemberOfWatch(mtmp->data->monsterTypeID) && couldsee(mtmp->mx, mtmp->my)
+                if (is_watch(mtmp->data) && couldsee(mtmp->mx, mtmp->my)
                     && mtmp->mpeaceful) {
                     mon_yells(mtmp, "Halt, thief!  You're under arrest!");
                     (void) angry_guards(FALSE);
@@ -1295,7 +1295,7 @@ dokick()
             for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
                 if (DEADMONSTER(mtmp))
                     continue;
-                if (isMemberOfWatch(mtmp->data->monsterTypeID) && mtmp->mpeaceful
+                if (is_watch(mtmp->data) && mtmp->mpeaceful
                     && couldsee(mtmp->mx, mtmp->my)) {
                     if (levl[x][y].looted & D_WARNED) {
                         mon_yells(mtmp,
