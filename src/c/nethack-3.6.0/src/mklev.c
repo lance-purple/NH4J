@@ -426,7 +426,7 @@ int type;
                      && (mvitals[PM_GIANT_MIMIC].mvflags & G_GONE))) {
                 /* make a mimic instead */
                 levl[x][y].doormask = D_NODOOR;
-                mtmp = makeMonsterOfClass(S_MIMIC, x, y, NO_MM_FLAGS);
+                mtmp = makemon(mkclass(S_MIMIC, 0), x, y, NO_MM_FLAGS);
                 if (mtmp)
                     set_mimic_sym(mtmp);
             }

@@ -503,7 +503,6 @@ register struct monst *mtmp;
         *verbl_msg = 0,                 /* verbalize() */
             *verbl_msg_mcan = 0;        /* verbalize() if cancelled */
     struct permonst *ptr = mtmp->data;
-    int pmid = (ptr) ? ptr->monsterTypeID : NON_PM;
     int msound = monsterSound(ptr->monsterTypeID);
 
     /* presumably nearness and sleep checks have already been made */
@@ -520,8 +519,8 @@ register struct monst *mtmp;
         msound = monsterSound(mons[genus(monsndx(ptr), 1)].monsterTypeID);
     /* some normally non-speaking types can/will speak if hero is similar */
     else if (msound == MS_ORC         /* note: MS_ORC is same as MS_GRUNT */
-             && (areSameRace(pmid, youmonst.data->monsterTypeID) /* current form, */
-                 || areSameRace(pmid, Race_switch))) /* unpoly'd form */
+             && (same_race(ptr, youmonst.data)           /* current form, */
+                 || same_race(ptr, &mons[Race_switch]))) /* unpoly'd form */
         msound = MS_HUMANOID;
     /* silliness, with slight chance to interfere with shopping */
     else if (youAreHallucinating() && mon_is_gecko(mtmp))

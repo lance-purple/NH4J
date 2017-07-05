@@ -514,7 +514,7 @@ mkswamp() /* Michiel Huisjes & Fred de Wilde */
                             eelct++;
                         }
                     } else if (!rn2(4)) /* swamps tend to be moldy */
-                        (void) makeMonsterOfClass(S_FUNGUS, sx, sy,
+                        (void) makemon(mkclass(S_FUNGUS, 0), sx, sy,
                                        NO_MM_FLAGS);
                 }
         level.flags.has_swamp = 1;

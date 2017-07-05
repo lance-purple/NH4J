@@ -6,9 +6,7 @@ import java.util.HashMap;
 
 public class MonsterType {
 
-	private static HashMap<Integer, MonsterType> monsterTypesByPMID = new HashMap<>();
-	private static HashMap<Integer, Integer> smallerToLarger = new HashMap<>();
-	private static HashMap<Integer, Integer> largerToSmaller = new HashMap<>();
+	private static HashMap<Integer, MonsterType> monsterTypesByPMID = new HashMap<>();;
 
 	static final int FREQUENCY_MASK = 0x7;
 	static final int LEAVES_NO_CORPSE = 0x10;
@@ -2002,19 +2000,19 @@ public class MonsterType {
 				.flags1(M1.CARNIVORE, M1.HERBIVORE, M1.HUMANOID, M1.OMNIVORE)
 				.flags2(M2.COLLECT, M2.HUMAN, M2.NOPOLY, M2.STRONG).flags3(M3.INFRAVISIBLE).color(CLR.WHITE).add();
 
-		MonsterType.of(MC.HUMAN, PM.HUMAN_WERERAT, "wererat").level(2).move(12).ac(10).mr(10).chaotic(7).freq(1)
+		MonsterType.of(MC.HUMAN, PM.WERERAT, "wererat").level(2).move(12).ac(10).mr(10).chaotic(7).freq(1)
 				.attack(AT.WEAP, AD.PHYS, 2, Dice.D4).weight(1450).nutrition(400).sound(MS.WERE).size(MZ.HUMAN)
 				.resists(MR.POISON).flags1(M1.CARNIVORE, M1.HERBIVORE, M1.HUMANOID, M1.OMNIVORE, M1.POIS, M1.REGEN)
 				.flags2(M2.COLLECT, M2.HOSTILE, M2.HUMAN, M2.NOPOLY, M2.WERE).flags3(M3.INFRAVISIBLE).color(CLR.BROWN)
 				.add();
 
-		MonsterType.of(MC.HUMAN, PM.HUMAN_WEREJACKAL, "werejackal").level(2).move(12).ac(10).mr(10).chaotic(7).freq(1)
+		MonsterType.of(MC.HUMAN, PM.WEREJACKAL, "werejackal").level(2).move(12).ac(10).mr(10).chaotic(7).freq(1)
 				.attack(AT.WEAP, AD.PHYS, 2, Dice.D4).weight(1450).nutrition(400).sound(MS.WERE).size(MZ.HUMAN)
 				.resists(MR.POISON).flags1(M1.CARNIVORE, M1.HERBIVORE, M1.HUMANOID, M1.OMNIVORE, M1.POIS, M1.REGEN)
 				.flags2(M2.COLLECT, M2.HOSTILE, M2.HUMAN, M2.NOPOLY, M2.WERE).flags3(M3.INFRAVISIBLE).color(CLR.RED)
 				.add();
 
-		MonsterType.of(MC.HUMAN, PM.HUMAN_WEREWOLF, "werewolf").level(5).move(12).ac(10).mr(20).chaotic(7).freq(1)
+		MonsterType.of(MC.HUMAN, PM.WEREWOLF, "werewolf").level(5).move(12).ac(10).mr(20).chaotic(7).freq(1)
 				.attack(AT.WEAP, AD.PHYS, 2, Dice.D4).weight(1450).nutrition(400).sound(MS.WERE).size(MZ.HUMAN)
 				.resists(MR.POISON).flags1(M1.CARNIVORE, M1.HERBIVORE, M1.HUMANOID, M1.OMNIVORE, M1.POIS, M1.REGEN)
 				.flags2(M2.COLLECT, M2.HOSTILE, M2.HUMAN, M2.NOPOLY, M2.WERE).flags3(M3.INFRAVISIBLE).color(CLR.ORANGE)
@@ -2890,84 +2888,6 @@ public class MonsterType {
 				.color(CLR.WHITE).add();
 	}
 
-
-	private static void growthStage(PM smaller, PM larger)
-	{
-		smallerToLarger.put(smaller.id(), larger.id());
-		largerToSmaller.put(larger.id(), smaller.id());
-	}
-
-
-	private static void initializeGrowthStages() {
-		growthStage(PM.CHICKATRICE, PM.COCKATRICE);
-		growthStage(PM.LITTLE_DOG, PM.DOG);
-		growthStage(PM.DOG, PM.LARGE_DOG);
-		growthStage(PM.HELL_HOUND_PUP, PM.HELL_HOUND);
-		growthStage(PM.WINTER_WOLF_CUB, PM.WINTER_WOLF);
-		growthStage(PM.KITTEN, PM.HOUSECAT);
-		growthStage(PM.HOUSECAT, PM.LARGE_CAT);
-		growthStage(PM.PONY, PM.HORSE);
-		growthStage(PM.HORSE, PM.WARHORSE);
-		growthStage(PM.KOBOLD, PM.LARGE_KOBOLD);
-		growthStage(PM.LARGE_KOBOLD, PM.KOBOLD_LORD);
-		growthStage(PM.GNOME, PM.GNOME_LORD);
-		growthStage(PM.GNOME_LORD, PM.GNOME_KING);
-		growthStage(PM.DWARF, PM.DWARF_LORD);
-		growthStage(PM.DWARF_LORD, PM.DWARF_KING);
-		growthStage(PM.MIND_FLAYER, PM.MASTER_MIND_FLAYER);
-		growthStage(PM.ORC, PM.ORC_CAPTAIN);
-		growthStage(PM.HILL_ORC, PM.ORC_CAPTAIN);
-		growthStage(PM.MORDOR_ORC, PM.ORC_CAPTAIN);
-		growthStage(PM.URUK_HAI, PM.ORC_CAPTAIN);
-		growthStage(PM.SEWER_RAT, PM.GIANT_RAT);
-		growthStage(PM.CAVE_SPIDER, PM.GIANT_SPIDER);
-		growthStage(PM.OGRE, PM.OGRE_LORD);
-		growthStage(PM.OGRE_LORD, PM.OGRE_KING);
-		growthStage(PM.ELF, PM.ELF_LORD);
-		growthStage(PM.WOODLAND_ELF, PM.ELF_LORD);
-		growthStage(PM.GREEN_ELF, PM.ELF_LORD);
-		growthStage(PM.GREY_ELF, PM.ELF_LORD);
-		growthStage(PM.ELF_LORD, PM.ELVENKING);
-		growthStage(PM.LICH, PM.DEMILICH);
-		growthStage(PM.DEMILICH, PM.MASTER_LICH);
-		growthStage(PM.MASTER_LICH, PM.ARCH_LICH);
-		growthStage(PM.VAMPIRE, PM.VAMPIRE_LORD);
-		growthStage(PM.BAT, PM.GIANT_BAT);
-		growthStage(PM.BABY_GRAY_DRAGON, PM.GRAY_DRAGON);
-		growthStage(PM.BABY_SILVER_DRAGON, PM.SILVER_DRAGON);
-		growthStage(PM.BABY_RED_DRAGON, PM.RED_DRAGON);
-		growthStage(PM.BABY_WHITE_DRAGON, PM.WHITE_DRAGON);
-		growthStage(PM.BABY_ORANGE_DRAGON, PM.ORANGE_DRAGON);
-		growthStage(PM.BABY_BLACK_DRAGON, PM.BLACK_DRAGON);
-		growthStage(PM.BABY_BLUE_DRAGON, PM.BLUE_DRAGON);
-		growthStage(PM.BABY_GREEN_DRAGON, PM.GREEN_DRAGON);
-		growthStage(PM.BABY_YELLOW_DRAGON, PM.YELLOW_DRAGON);
-		growthStage(PM.RED_NAGA_HATCHLING, PM.RED_NAGA);
-		growthStage(PM.BLACK_NAGA_HATCHLING, PM.BLACK_NAGA);
-		growthStage(PM.GOLDEN_NAGA_HATCHLING, PM.GOLDEN_NAGA);
-		growthStage(PM.GUARDIAN_NAGA_HATCHLING, PM.GUARDIAN_NAGA);
-		growthStage(PM.SMALL_MIMIC, PM.LARGE_MIMIC);
-		growthStage(PM.LARGE_MIMIC, PM.GIANT_MIMIC);
-		growthStage(PM.BABY_LONG_WORM, PM.LONG_WORM);
-		growthStage(PM.BABY_PURPLE_WORM, PM.PURPLE_WORM);
-		growthStage(PM.BABY_CROCODILE, PM.CROCODILE);
-		growthStage(PM.SOLDIER, PM.SERGEANT);
-		growthStage(PM.SERGEANT, PM.LIEUTENANT);
-		growthStage(PM.LIEUTENANT, PM.CAPTAIN);
-		growthStage(PM.WATCHMAN, PM.WATCH_CAPTAIN);
-		growthStage(PM.ALIGNED_PRIEST, PM.HIGH_PRIEST);
-		growthStage(PM.STUDENT, PM.ARCHEOLOGIST);
-		growthStage(PM.ATTENDANT, PM.HEALER);
-		growthStage(PM.PAGE, PM.KNIGHT);
-		growthStage(PM.ACOLYTE, PM.PRIEST);
-		growthStage(PM.APPRENTICE, PM.WIZARD);
-		growthStage(PM.MANES, PM.LEMURE);
-		growthStage(PM.KEYSTONE_KOP, PM.KOP_SERGEANT);
-		growthStage(PM.KOP_SERGEANT, PM.KOP_LIEUTENANT);
-		growthStage(PM.KOP_LIEUTENANT, PM.KOP_KAPTAIN);
-	};
-
-
 	private static void initialize() {
 
 		initializeAngel();
@@ -3032,8 +2952,6 @@ public class MonsterType {
 		initializeYetis();
 		initializeZombies();
 		initializeZruties();
-	
-		initializeGrowthStages();
 	}
 	
 	public static MonsterType getMonsterType(int pmid) {
@@ -3203,36 +3121,4 @@ public class MonsterType {
 		attacks.addAll(Arrays.asList(newAttacks));
 	}
 
-
-	public static boolean growsInto(int pmid1, int pmid2) {
-		boolean maybeGrow = true;
-		while (maybeGrow) {
-			if (pmid1 == nextLargerType(pmid1)) {
-				maybeGrow = false;
-			} else if (pmid2 == nextLargerType(pmid1)) {
-				return true;
-			} else {
-				pmid1 = nextLargerType(pmid1);
-			}
-		}
-		return false;
-	}
-
-
-	public static int nextLargerType(int pmid) {
-		if (smallerToLarger.containsKey(pmid)) {
-			return smallerToLarger.get(pmid).intValue();
-		} else {
-			return pmid;
-		}
-	}
-
-
-	public static int nextSmallerType(int pmid) {
-		if (largerToSmaller.containsKey(pmid)) {
-			return largerToSmaller.get(pmid).intValue();
-		} else {
-			return pmid;
-		}
-	}
 }

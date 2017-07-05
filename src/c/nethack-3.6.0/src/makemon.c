@@ -1014,13 +1014,6 @@ coord *cc;
     return FALSE;
 }
 
-
-struct monst* makeMonsterOfClass(char mclass, int x, int y, int mmflags) {
-    struct permonst* ptr = mkclass(mclass, 0);
-    return makemon(ptr, x, y, mmflags);
-}
-
-
 /*
  * called with [x,y] = coordinates;
  *      [0,0] means anyplace
@@ -1697,7 +1690,7 @@ struct monst *mtmp, *victim;
     /* note:  none of the monsters with special hit point calculations
        have both little and big forms */
     oldtype = monsndx(ptr);
-    newtype = nextLargerType(oldtype);
+    newtype = little_to_big(oldtype);
     if (newtype == PM_PRIEST && mtmp->female)
         newtype = PM_PRIESTESS;
 

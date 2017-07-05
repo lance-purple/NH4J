@@ -529,7 +529,7 @@ long timeout;
         return;
 
     mon = mon2 = (struct monst *) 0;
-    mnum = nextSmallerType(egg->corpsenm);
+    mnum = big_to_little(egg->corpsenm);
     /* The identity of one's father is learned, not innate */
     yours = (egg->spe || (!flags.female && carried(egg) && !rn2(2)));
     silent = (timeout != monstermoves); /* hatched while away */
@@ -676,7 +676,7 @@ learn_egg_type(mnum)
 int mnum;
 {
     /* baby monsters hatch from grown-up eggs */
-    mnum = nextLargerType(mnum);
+    mnum = little_to_big(mnum);
     mvitals[mnum].mvflags |= MV_KNOWS_EGG;
     /* we might have just learned about other eggs being carried */
     update_inventory();
