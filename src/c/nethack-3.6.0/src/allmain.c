@@ -131,7 +131,7 @@ boolean resuming;
                         /* your speed doesn't augment steed's speed */
                         moveamt = mcalcmove(u.usteed);
                     } else {
-                        moveamt = monsterMovementSpeed(youmonst.data->monsterTypeID);
+                        moveamt = monsterMovementSpeed(pmid4dat(youmonst.data));
 
                         if (youAreVeryFast()) { /* speed boots or potion */
                             /* average movement is 1.67 times normal */
@@ -198,7 +198,7 @@ boolean resuming;
                     if (invulnerableWhilePraying()) {
                         /* for the moment at least, you're in tiptop shape */
                         wtcap = UNENCUMBERED;
-                    } else if (areYouPolymorphed() && monsterClass(youmonst.data->monsterTypeID) == S_EEL
+                    } else if (areYouPolymorphed() && monsterClass(pmid4dat(youmonst.data)) == S_EEL
                                && !is_pool(currentX(), currentY())
                                && !areYouOnWaterLevel()) {
                         /* eel out of water loses hp, same as for monsters;
@@ -552,8 +552,9 @@ newgame()
     context.next_attrib_check = 600L; /* arbitrary first setting */
     setTributeNovelsEnabled(TRUE);   /* turn on 3.6 tribute novels */
 
-    for (i = 0; i < NUMMONS; i++)
-        mvitals[i].mvflags = monsterGenerationMask(mons[i].monsterTypeID) & G_NOCORPSE;
+    for (i = 0; i < NUMMONS; i++) {
+        mvitals[i].mvflags = monsterGenerationMask(i) & G_NOCORPSE;
+    }
 
     init_objects(); /* must be before u_init() */
 
