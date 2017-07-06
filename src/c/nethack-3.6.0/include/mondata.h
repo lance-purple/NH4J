@@ -58,9 +58,6 @@
     ((ptr) == &mons[PM_FIRE_VORTEX] || (ptr) == &mons[PM_FLAMING_SPHERE] \
      || likes_lava(ptr))
 
-#define touch_petrifies(ptr) \
-    ((ptr) == &mons[PM_COCKATRICE] || (ptr) == &mons[PM_CHICKATRICE])
-
 #define is_mind_flayer(ptr) \
     ((ptr) == &mons[PM_MIND_FLAYER] || (ptr) == &mons[PM_MASTER_MIND_FLAYER])
 

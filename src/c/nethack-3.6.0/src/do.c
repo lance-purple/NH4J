@@ -636,7 +636,7 @@ boolean with_impact;
 
         if (obj != uball) { /* mon doesn't pick up ball */
             if (obj->otyp == CORPSE) {
-                could_petrify = touch_petrifies(&mons[obj->corpsenm]);
+                could_petrify = touchPetrifies(obj->corpsenm);
                 could_poly = polyfodder(obj);
                 could_slime = (obj->corpsenm == PM_GREEN_SLIME);
                 could_grow = (obj->corpsenm == PM_WRAITH);

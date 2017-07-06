@@ -769,7 +769,7 @@ int mntmp;
     else if (sticky && !sticks(youmonst.data))
         uunstick();
     if (u.usteed) {
-        if (touch_petrifies(u.usteed->data) && !youResistStoning() && rnl(3)) {
+        if (touchPetrifies(u.usteed->data->monsterTypeID) && !youResistStoning() && rnl(3)) {
             char buf[BUFSZ];
 
             pline("%s touch %s.", no_longer_petrify_resistant,

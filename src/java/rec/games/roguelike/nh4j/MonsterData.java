@@ -504,7 +504,7 @@ public class MonsterData {
     }
     
     public static boolean isInvisibleMonsterType(int pmid) {
-    	return PM.matchesOneOf(pmod, PM.STALKER, PM.BLACK_LIGHT);
+    	return PM.matchesOneOf(pmid, PM.STALKER, PM.BLACK_LIGHT);
     }
     
     public static boolean likesFire(int pmid) {
@@ -513,6 +513,10 @@ public class MonsterData {
  
     public static boolean touchPetrifies(int pmid) {
     	return PM.matchesOneOf(pmid, PM.COCKATRICE, PM.CHICKATRICE);
+    }
+
+    public static boolean fleshPetrifies(int pmid) {
+    	return (touchPetrifies(pmid) || (PM.MEDUSA.id() == pmid));
     }
 
     public static boolean isMindFlayer(int pmid) {

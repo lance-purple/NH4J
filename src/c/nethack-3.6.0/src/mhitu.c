@@ -623,7 +623,7 @@ register struct monst *mtmp;
         case AT_BUTT:
         case AT_TENT:
             if (!range2 && (!MON_WEP(mtmp) || mtmp->mconf || youCauseConflict()
-                            || !touch_petrifies(youmonst.data))) {
+                            || !touchPetrifies(youmonst.data->monsterTypeID))) {
                 if (foundyou) {
                     if (tmp > (j = rnd(20 + i))) {
                         if (mattk.type != AT_KICK
@@ -937,7 +937,7 @@ register const struct Attack mattk;
                 int tmp;
 
                 if (otmp->otyp == CORPSE
-                    && touch_petrifies(&mons[otmp->corpsenm])) {
+                    && touchPetrifies(otmp->corpsenm)) {
                     dmg = 1;
 		    javaString corpseName = monsterTypeName(
                           mons[otmp->corpsenm].monsterTypeID);
@@ -1384,7 +1384,7 @@ register const struct Attack mattk;
     case AD_HEAL:
         /* a cancelled nurse is just an ordinary monster,
          * nurses don't heal those that cause petrification */
-        if (mtmp->mcan || (areYouPolymorphed() && touch_petrifies(youmonst.data))) {
+        if (mtmp->mcan || (areYouPolymorphed() && touchPetrifies(youmonst.data->monsterTypeID))) {
             hitmsg(mtmp, mattk);
             break;
         }
@@ -1730,7 +1730,7 @@ register const struct Attack mattk;
             unleash_all();
         }
 
-        if (touch_petrifies(youmonst.data) && !resists_ston(mtmp)) {
+        if (touchPetrifies(youmonst.data->monsterTypeID) && !resists_ston(mtmp)) {
             /* put the attacker back where it started;
                the resulting statue will end up there */
             remove_monster(mtmp->mx, mtmp->my); /* currentX(),currentY() */
@@ -1900,7 +1900,7 @@ register const struct Attack mattk;
     if (tmp)
         stop_occupation();
 
-    if (touch_petrifies(youmonst.data) && !resists_ston(mtmp)) {
+    if (touchPetrifies(youmonst.data->monsterTypeID) && !resists_ston(mtmp)) {
         pline("%s very hurriedly %s you!", Monnam(mtmp),
               isAnimal(mtmp->data->monsterTypeID) ? "regurgitates" : "expels");
         expels(mtmp, mtmp->data, FALSE);

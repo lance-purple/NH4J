@@ -250,7 +250,7 @@ struct obj *obj;
 boolean remotely;
 {
     if (uarmg || remotely || obj->otyp != CORPSE
-        || !touch_petrifies(&mons[obj->corpsenm]) || youResistStoning())
+        || !touchPetrifies(obj->corpsenm) || youResistStoning())
         return FALSE;
 
     if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM)) {

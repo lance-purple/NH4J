@@ -967,7 +967,7 @@ not_special:
                          || (ptr == &mons[PM_GELATINOUS_CUBE]
                              && !index(indigestion, otmp->oclass)
                              && !(otmp->otyp == CORPSE
-                                  && touch_petrifies(&mons[otmp->corpsenm]))))
+                                  && touchPetrifies(otmp->corpsenm))))
                         && touch_artifact(otmp, mtmp)) {
                         if (can_carry(mtmp, otmp) > 0
                             && (throwsRocks(ptr->monsterTypeID) || !sobj_at(BOULDER, xx, yy))

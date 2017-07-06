@@ -2844,7 +2844,7 @@ struct obj *otmp;
 boolean force_touch;
 {
     if ((youCannotSee() || force_touch) && !uarmg && !youResistStoning()
-        && (otmp->otyp == CORPSE && touch_petrifies(&mons[otmp->corpsenm])))
+        && (otmp->otyp == CORPSE && touchPetrifies(otmp->corpsenm)))
         return TRUE;
     return FALSE;
 }

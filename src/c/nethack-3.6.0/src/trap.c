@@ -2695,7 +2695,7 @@ const char *arg;
 {
     char kbuf[BUFSZ];
 
-    if (uwep && uwep->otyp == CORPSE && touch_petrifies(&mons[uwep->corpsenm])
+    if (uwep && uwep->otyp == CORPSE && touchPetrifies(uwep->corpsenm)
         && !youResistStoning()) {
 	javaString corpseName = monsterTypeName(mons[uwep->corpsenm].monsterTypeID);
         pline("%s touch the %s corpse.", arg, corpseName.c_str);
@@ -2709,7 +2709,7 @@ const char *arg;
     /* Or your secondary weapon, if wielded [hypothetical; we don't
        allow two-weapon combat when either weapon is a corpse] */
     if (usingTwoWeapons() && uswapwep && uswapwep->otyp == CORPSE
-        && touch_petrifies(&mons[uswapwep->corpsenm]) && !youResistStoning()) {
+        && touchPetrifies(uswapwep->corpsenm) && !youResistStoning()) {
 	javaString corpseName = monsterTypeName(mons[uswapwep->corpsenm].monsterTypeID);
         pline("%s touch the %s corpse.", arg, corpseName.c_str);
         Sprintf(kbuf, "%s corpse", an(corpseName.c_str));
@@ -2729,7 +2729,7 @@ boolean byplayer;
 {
     struct obj *mwep = MON_WEP(mon);
 
-    if (mwep && mwep->otyp == CORPSE && touch_petrifies(&mons[mwep->corpsenm])
+    if (mwep && mwep->otyp == CORPSE && touchPetrifies(mwep->corpsenm)
         && !resists_ston(mon)) {
         if (cansee(mon->mx, mon->my)) {
             pline("%s%s touches %s.", arg ? arg : "",
@@ -4104,7 +4104,7 @@ struct trap *ttmp;
     }
 
     /* is it a cockatrice?... */
-    if (touch_petrifies(mtmp->data) && !uarmg && !youResistStoning()) {
+    if (touchPetrifies(mtmp->data->monsterTypeID) && !uarmg && !youResistStoning()) {
 	javaString monsterName = monsterTypeName(mtmp->data->monsterTypeID);
         You("grab the trapped %s using your bare %s.", monsterName.c_str,
             makeplural(body_part(HAND)));

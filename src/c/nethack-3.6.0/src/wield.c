@@ -116,7 +116,7 @@ struct obj *obj;
 {
     char kbuf[BUFSZ];
 
-    if (uarmg || obj->otyp != CORPSE || !touch_petrifies(&mons[obj->corpsenm])
+    if (uarmg || obj->otyp != CORPSE || !touchPetrifies(obj->corpsenm)
         || youResistStoning())
         return FALSE;
 
@@ -344,7 +344,7 @@ dowieldquiver()
             : ready_objs;
 
     /* Since the quiver isn't in your hands, don't check cannotWieldThings(), */
-    /* will_weld(), touch_petrifies(), etc. */
+    /* will_weld(), touchPetrifies(), etc. */
     multi = 0;
 
     /* Prompt for a new quiver */

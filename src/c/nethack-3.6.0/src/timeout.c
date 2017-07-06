@@ -740,7 +740,7 @@ slip_or_trip()
             You("trip over %s.", what);
         }
         if (!uarmf && otmp->otyp == CORPSE
-            && touch_petrifies(&mons[otmp->corpsenm]) && !youResistStoning()) {
+            && touchPetrifies(otmp->corpsenm) && !youResistStoning()) {
 	    javaString corpseName = monsterTypeName(mons[otmp->corpsenm].monsterTypeID);
             Sprintf(killer.name, "tripping over %s corpse",
                     an(corpseName.c_str));

@@ -753,7 +753,7 @@ register struct obj *obj;
 
         if (obj->otyp == CORPSE && is_rider(fptr))
             return TABU;
-        if ((obj->otyp == CORPSE || obj->otyp == EGG) && touch_petrifies(fptr)
+        if ((obj->otyp == CORPSE || obj->otyp == EGG) && touchPetrifies(fptr->monsterTypeID)
             && !resists_ston(mon))
             return POISON;
         if (!carni && !herbi)

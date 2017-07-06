@@ -785,7 +785,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                     useup(obj);
                     return TRUE;
                 case CORPSE: /* fixed by polder@cs.vu.nl */
-                    if (touch_petrifies(&mons[obj->corpsenm])) {
+                    if (touchPetrifies(obj->corpsenm)) {
                         tmp = 1;
                         hittxt = TRUE;
                         You("hit %s with %s.", mon_nam(mon),
@@ -800,7 +800,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                         /* note: hp may be <= 0 even if munstoned==TRUE */
                         return (boolean) (mon->mhp > 0);
 #if 0
-                    } else if (touch_petrifies(mdat)) {
+                    } else if (touchPetrifies(mdat->monsterTypeID)) {
                         ; /* maybe turn the corpse into a statue? */
 #endif
                     }
@@ -833,7 +833,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                             change_luck(-5);
                     }
 
-                    if (touch_petrifies(&mons[obj->corpsenm])) {
+                    if (touchPetrifies(obj->corpsenm)) {
                         /*learn_egg_type(obj->corpsenm);*/
 			javaString corpseName = monsterTypeName(mons[obj->corpsenm].monsterTypeID);
                         pline("Splat! You hit %s with %s %s egg%s!",
@@ -859,7 +859,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
 			releaseJavaString(corpseName);
                         You("hit %s with %s egg%s.", mon_nam(mon), eggp,
                             plur(cnt));
-                        if (touch_petrifies(mdat) && !stale_egg(obj)) {
+                        if (touchPetrifies(mdat->monsterTypeID) && !stale_egg(obj)) {
                             pline_The("egg%s %s alive any more...", plur(cnt),
                                       (cnt == 1L) ? "isn't" : "aren't");
                             if (obj->timed)
@@ -1317,7 +1317,7 @@ theft_petrifies(otmp)
 struct obj *otmp;
 {
     if (uarmg || otmp->otyp != CORPSE
-        || !touch_petrifies(&mons[otmp->corpsenm]) || youResistStoning())
+        || !touchPetrifies(otmp->corpsenm) || youResistStoning())
         return FALSE;
 
 #if 0   /* no poly_when_stoned() critter has theft capability */
@@ -1909,7 +1909,7 @@ register const struct Attack mattk;
             (void) snuff_lit(otmp);
 
         /* engulfing a cockatrice or digesting a Rider or Medusa */
-        fatal_gulp = (touch_petrifies(pd) && !youResistStoning())
+        fatal_gulp = (touchPetrifies(pd->monsterTypeID) && !youResistStoning())
                      || (mattk.damageType == AD_DGST
                          && (is_rider(pd) || (pd == &mons[PM_MEDUSA]
                                               && !youResistStoning())));

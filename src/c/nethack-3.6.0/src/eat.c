@@ -42,9 +42,6 @@ char msgbuf[BUFSZ];
 /* also used to see if you're allowed to eat cats and dogs */
 #define CANNIBAL_ALLOWED() (Role_if(PM_CAVEMAN) || Race_if(PM_ORC))
 
-/* monster types that cause hero to be turned into stone if eaten */
-#define flesh_petrifies(pm) (touch_petrifies(pm) || (pm) == &mons[PM_MEDUSA])
-
 /* Rider corpses are treated as non-rotting so that attempting to eat one
    will be sure to reach the stage of eating where that meal is fatal */
 #define nonrotting_corpse(mnum) \
@@ -475,7 +472,7 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
             pline("%s brain is eaten!", s_suffix(Monnam(mdef)));
     }
 
-    if (flesh_petrifies(pd)) {
+    if (fleshPetrifies(pd->monsterTypeID)) {
         /* mind flayer has attempted to eat the brains of a petrification
            inducing critter (most likely Medusa; attacking a cockatrice via
            tentacle-touch should have been caught before reaching this far) */
@@ -640,7 +637,7 @@ cprefx(pm)
 register int pm;
 {
     (void) maybe_cannibal(pm, TRUE);
-    if (flesh_petrifies(&mons[pm])) {
+    if (fleshPetrifies(pm)) {
         if (!youResistStoning()
             && !(poly_when_stoned(youmonst.data)
                  && polymon(PM_STONE_GOLEM))) {
@@ -1555,7 +1552,7 @@ struct obj *otmp;
     int tp = 0, mnum = otmp->corpsenm;
     long rotted = 0L;
     int retcode = 0;
-    boolean stoneable = (flesh_petrifies(&mons[mnum]) && !youResistStoning()
+    boolean stoneable = (fleshPetrifies(mnum) && !youResistStoning()
                          && !poly_when_stoned(youmonst.data));
 
     /* KMH, conduct */
@@ -2145,7 +2142,7 @@ struct obj *otmp;
             heal_legs();
         break;
     case EGG:
-        if (flesh_petrifies(&mons[otmp->corpsenm])) {
+        if (fleshPetrifies(otmp->corpsenm)) {
             if (!youResistStoning()
                 && !(poly_when_stoned(youmonst.data)
                      && polymon(PM_STONE_GOLEM))) {
@@ -2230,7 +2227,7 @@ struct obj *otmp;
 
     if (cadaver || otmp->otyp == EGG || otmp->otyp == TIN) {
         /* These checks must match those in eatcorpse() */
-        stoneorslime = (flesh_petrifies(&mons[mnum]) && !youResistStoning()
+        stoneorslime = (fleshPetrifies(mnum) && !youResistStoning()
                         && !poly_when_stoned(youmonst.data));
 
         if (mnum == PM_GREEN_SLIME || otmp->otyp == GLOB_OF_GREEN_SLIME)

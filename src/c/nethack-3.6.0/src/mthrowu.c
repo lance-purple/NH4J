@@ -369,7 +369,7 @@ struct obj *obj;         /* missile (or stack providing it) */
             switch (singleobj->otyp) {
                 int dam, hitv;
             case EGG:
-                if (!touch_petrifies(&mons[singleobj->corpsenm])) {
+                if (!touchPetrifies(singleobj->corpsenm)) {
                     impossible("monster throwing egg type %d",
                                singleobj->corpsenm);
                     hitu = 0;

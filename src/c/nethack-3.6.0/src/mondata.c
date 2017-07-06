@@ -1544,4 +1544,12 @@ boolean allowsCloseApproach(int pmid) {
     return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "allowsCloseApproach", pmid);
 }
 
+boolean touchPetrifies(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "touchPetrifies", pmid);
+}
+
+boolean fleshPetrifies(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "fleshPetrifies", pmid);
+}
+
 /*mondata.c*/

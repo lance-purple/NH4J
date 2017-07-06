@@ -84,7 +84,7 @@ int shotlimit;
         return 0;
     }
     u_wipe_engr(2);
-    if (!uarmg && obj->otyp == CORPSE && touch_petrifies(&mons[obj->corpsenm])
+    if (!uarmg && obj->otyp == CORPSE && touchPetrifies(obj->corpsenm)
         && !youResistStoning()) {
         You("throw %s with your bare %s.",
             corpse_xname(obj, (const char *) 0, CXN_PFX_THE),
@@ -822,7 +822,7 @@ boolean hitsroof;
 {
     const char *action;
     boolean petrifier = ((obj->otyp == EGG || obj->otyp == CORPSE)
-                         && touch_petrifies(&mons[obj->corpsenm]));
+                         && touchPetrifies(obj->corpsenm));
     /* note: obj->quan == 1 */
 
     if (!currentLevelHasCeiling()) {
@@ -1592,7 +1592,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
     } else if (guaranteed_hit) {
         /* this assumes that guaranteed_hit is due to swallowing */
         wakeup(mon);
-        if (obj->otyp == CORPSE && touch_petrifies(&mons[obj->corpsenm])) {
+        if (obj->otyp == CORPSE && touchPetrifies(obj->corpsenm)) {
             if (isAnimal(u.ustuck->data->monsterTypeID)) {
                 minstapetrify(u.ustuck, TRUE);
                 /* Don't leave a cockatrice corpse available in a statue */

@@ -232,7 +232,7 @@ boolean quietly;
      */
     vis = (canspotmon(magr) && canspotmon(mdef));
 
-    if (touch_petrifies(pd) && !resists_ston(magr)) {
+    if (touchPetrifies(pd->monsterTypeID) && !resists_ston(magr)) {
         if (which_armor(magr, W_ARMG) != 0) {
             if (poly_when_stoned(pa)) {
                 mon_to_stone(magr);
@@ -381,7 +381,7 @@ register struct monst *magr, *mdef;
              * players, or under conflict or confusion.
              */
             if (!magr->mconf && !youCauseConflict() && otmp && mattk.type != AT_WEAP
-                && touch_petrifies(mdef->data)) {
+                && touchPetrifies(mdef->data->monsterTypeID)) {
                 strike = 0;
                 break;
             }
@@ -738,7 +738,7 @@ register const struct Attack mattk;
                      res = MM_MISS;
     boolean cancelled;
 
-    if ((touch_petrifies(pd) /* or flesh_petrifies() */
+    if ((touchPetrifies(pd->monsterTypeID) /* or fleshPetrifies() */
          || (mattk.damageType == AD_DGST && pd == &mons[PM_MEDUSA]))
         && !resists_ston(magr)) {
         long protector = attk_protection((int) mattk.type),
@@ -843,7 +843,7 @@ register const struct Attack mattk;
         } else if (mattk.type == AT_WEAP) {
             if (otmp) {
                 if (otmp->otyp == CORPSE
-                    && touch_petrifies(&mons[otmp->corpsenm]))
+                    && touchPetrifies(otmp->corpsenm))
                     goto do_stone;
                 tmp += dmgval(otmp, mdef);
                 if (otmp->oartifact) {

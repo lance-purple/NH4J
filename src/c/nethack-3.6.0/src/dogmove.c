@@ -769,7 +769,7 @@ register int after; /* this is extra fast monster movement */
                      || m2sound == MS_GUARDIAN
                      || m2sound == MS_LEADER) && mtmp2->mpeaceful
                     && !youCauseConflict())
-                || (touch_petrifies(mtmp2->data) && !resists_ston(mtmp)))
+                || (touchPetrifies(mtmp2->data->monsterTypeID) && !resists_ston(mtmp)))
                 continue;
 
             if (after)
