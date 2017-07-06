@@ -69,10 +69,7 @@ struct attribs {
     schar a[A_MAX];
 };
 
-#define ATTRMAX(x)                                        \
-    ((x == A_STR && areYouPolymorphed() && isStrongMonster(youmonst.data->monsterTypeID)) \
-         ? STR18(100)                                     \
-         : urace.attrmax[x])
-#define ATTRMIN(x) (urace.attrmin[x])
+extern int attributeMaximum(int index);
+extern int attributeMinimum(int index);
 
 #endif /* ATTRIB_H */

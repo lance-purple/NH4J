@@ -30,6 +30,9 @@ typedef struct {
 
 #define NO_JAVA_STRING { NULL, NULL }
 
+E int FDECL(pmid4dat, (struct permonst*));
+E int FDECL(pmid4mon, (struct monst*));
+
 E javaString FDECL(monsterTypeName, (int));
 E void FDECL(releaseJavaString, (javaString));
 E int FDECL(monsterClass, (int));

@@ -540,7 +540,7 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
          * monster mind flayer is eating hero's brain
          */
         /* no such thing as mindless players */
-        if (yourCurrentAttr(A_INT) <= ATTRMIN(A_INT)) {
+        if (yourCurrentAttr(A_INT) <= attributeMinimum(A_INT)) {
             static NEARDATA const char brainlessness[] = "brainlessness";
 
             if (yourLifeCanBeSaved()) {
@@ -560,7 +560,7 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
             done(DIED);
             /* can only get here when in wizard or explore mode and user has
                explicitly chosen not to die; arbitrarily boost intelligence */
-            setYourCurrentAttr(A_INT, (ATTRMIN(A_INT) + 2));
+            setYourCurrentAttr(A_INT, (attributeMinimum(A_INT) + 2));
             You_feel("like a scarecrow.");
         }
         give_nutrit = TRUE; /* in case a conflicted pet is doing this */
@@ -1051,7 +1051,7 @@ register int pm;
         break;
     case PM_MIND_FLAYER:
     case PM_MASTER_MIND_FLAYER:
-        if (yourCurrentAttr(A_INT) < ATTRMAX(A_INT)) {
+        if (yourCurrentAttr(A_INT) < attributeMaximum(A_INT)) {
             if (!rn2(2)) {
                 pline("Yum! That was real brain food!");
                 (void) adjattrib(A_INT, 1, FALSE);

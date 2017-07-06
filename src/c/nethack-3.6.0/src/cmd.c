@@ -1580,7 +1580,7 @@ int mode, final, attrindx;
            from abase (at end of game; this attribute wasn't maxed out) */
         abase = yourCurrentAttr(attrindx);
         apeak = yourAttrMax(attrindx);
-        alimit = ATTRMAX(attrindx);
+        alimit = attributeMaximum(attrindx);
         /* criterium for whether the limit is interesting varies */
         interesting_alimit =
             final ? TRUE /* was originally `(abase != alimit)' */

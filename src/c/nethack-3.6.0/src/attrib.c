@@ -118,20 +118,20 @@ int msgflg; /* positive => no message, zero => message, and */
         if (yourCurrentAttr(ndx) > yourAttrMax(ndx)) {
             incr = yourCurrentAttr(ndx) - yourAttrMax(ndx);
             increaseYourAttrMax(ndx, incr);
-            if (yourAttrMax(ndx) > ATTRMAX(ndx))
-                setYourAttrMax(ndx, ATTRMAX(ndx));
+            if (yourAttrMax(ndx) > attributeMaximum(ndx))
+                setYourAttrMax(ndx, attributeMaximum(ndx));
             setYourCurrentAttr(ndx, yourAttrMax(ndx));
         }
         attrstr = plusattr[ndx];
         abonflg = (yourAttrBonus(ndx) < 0);
     } else {
         increaseYourCurrentAttr(ndx, incr);
-        if (yourCurrentAttr(ndx) < ATTRMIN(ndx)) {
-            incr = yourCurrentAttr(ndx) - ATTRMIN(ndx);
-            setYourCurrentAttr(ndx, ATTRMIN(ndx));
+        if (yourCurrentAttr(ndx) < attributeMinimum(ndx)) {
+            incr = yourCurrentAttr(ndx) - attributeMinimum(ndx);
+            setYourCurrentAttr(ndx, attributeMinimum(ndx));
             increaseYourAttrMax(ndx, incr);
-            if (yourAttrMax(ndx) < ATTRMIN(ndx))
-                setYourAttrMax(ndx, ATTRMIN(ndx));
+            if (yourAttrMax(ndx) < attributeMinimum(ndx))
+                setYourAttrMax(ndx, attributeMinimum(ndx));
         }
         attrstr = minusattr[ndx];
         abonflg = (yourAttrBonus(ndx) > 0);
@@ -503,8 +503,8 @@ exerchk()
             mod_val = sgn(ax); /* +1 or -1; used below */
             /* no further effect for exercise if at max or abuse if at min;
                can't exceed 18 via exercise even if actual max is higher */
-            lolim = ATTRMIN(i); /* usually 3; might be higher */
-            hilim = ATTRMAX(i); /* usually 18; maybe lower or higher */
+            lolim = attributeMinimum(i); /* usually 3; might be higher */
+            hilim = attributeMaximum(i); /* usually 18; maybe lower or higher */
             if (hilim > 18)
                 hilim = 18;
             if ((ax < 0) ? (yourCurrentAttr(i) <= lolim) : (yourCurrentAttr(i) >= hilim))
@@ -582,7 +582,7 @@ register int np;
         if (i >= A_MAX)
             continue; /* impossible */
 
-        if (yourCurrentAttr(i) >= ATTRMAX(i)) {
+        if (yourCurrentAttr(i) >= attributeMaximum(i)) {
             tryct++;
             continue;
         }
@@ -601,7 +601,7 @@ register int np;
         if (i >= A_MAX)
             continue; /* impossible */
 
-        if (yourCurrentAttr(i) <= ATTRMIN(i)) {
+        if (yourCurrentAttr(i) <= attributeMinimum(i)) {
             tryct++;
             continue;
         }
@@ -623,14 +623,14 @@ redist_attr()
         /* Polymorphing doesn't change your mind */
         tmp = yourAttrMax(i);
         increaseYourAttrMax(i, (rn2(5) - 2));
-        if (yourAttrMax(i) > ATTRMAX(i))
-            setYourAttrMax(i, ATTRMAX(i));
-        if (yourAttrMax(i) < ATTRMIN(i))
-            setYourAttrMax(i, ATTRMIN(i));
+        if (yourAttrMax(i) > attributeMaximum(i))
+            setYourAttrMax(i, attributeMaximum(i));
+        if (yourAttrMax(i) < attributeMinimum(i))
+            setYourAttrMax(i, attributeMinimum(i));
         setYourCurrentAttr(i, (yourCurrentAttr(i) * yourAttrMax(i) / tmp));
-        /* yourCurrentAttr(i) > ATTRMAX(i) is impossible */
-        if (yourCurrentAttr(i) < ATTRMIN(i))
-            setYourCurrentAttr(i, ATTRMIN(i));
+        /* yourCurrentAttr(i) > attributeMaximum(i) is impossible */
+        if (yourCurrentAttr(i) < attributeMinimum(i))
+            setYourCurrentAttr(i, attributeMinimum(i));
     }
     (void) encumber_msg();
 }
@@ -1736,6 +1736,18 @@ extern boolean youHaveFixedAbilities() {
 
 extern boolean yourLifeCanBeSaved() {
   return youHaveExtrinsic(LIFESAVED);
+}
+
+extern int attributeMaximum(int index) {
+    if ((index == A_STR) && areYouPolymorphed() && isStrongMonster(pmid4dat(youmonst.data))) {
+        return STR18(100);
+    } else {
+        return urace.attrmax[index];
+    }
+}
+
+extern int attributeMinimum(int index) {
+    return urace.attrmin[index];
 }
 
 /*attrib.c*/
