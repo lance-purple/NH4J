@@ -3083,7 +3083,6 @@ public class MonsterType {
 	public static boolean monsterHasPassiveAttack(int pmid) {
 		return (monsterPassiveAttackIndex(pmid) >= 0);
 	}
-	
 
 	public static int monsterWeaponAttackIndex(int pmid) {
 		return monsterAttackTypeIndex(pmid, AT.WEAP);
@@ -3092,7 +3091,15 @@ public class MonsterType {
 	public static boolean monsterHasWeaponAttack(int pmid) {
 		return (monsterWeaponAttackIndex(pmid) >= 0);
 	}	
-	
+
+	public static int monsterBreathWeaponAttackIndex(int pmid) {
+		return monsterAttackTypeIndex(pmid, AT.BREA);
+	}
+
+	public static boolean monsterHasBreathWeaponAttack(int pmid) {
+		return (monsterBreathWeaponAttackIndex(pmid) >= 0);
+	}	
+
 	public static long monsterHasResistances(int pmid) {
 		return getMonsterType(pmid).hasResistances;
 	}

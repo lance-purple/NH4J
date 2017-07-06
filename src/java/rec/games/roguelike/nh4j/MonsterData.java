@@ -6,6 +6,14 @@ public class MonsterData {
 		return MonsterType.monsterSize(pmid) < MZ.SMALL.id();
 	}
 
+	public static boolean isSmallMonster(int pmid) {
+		return MonsterType.monsterSize(pmid) <= MZ.SMALL.id();
+	}
+
+	public static boolean isNotSmallMonster(int pmid) {
+		return MonsterType.monsterSize(pmid) > MZ.SMALL.id();
+	}
+
 	public static boolean isBigMonster(int pmid) {
 		return MonsterType.monsterSize(pmid) >= MZ.LARGE.id();
 	}
@@ -117,8 +125,20 @@ public class MonsterData {
     public static boolean hasAHead(int pmid) {
     	return (! MonsterType.getMonsterType(pmid).hasFlag1(M1.NOHEAD));
     }
+    
+    public static int numberOfHorns(int pmid) {
+    	if (PM.matchesOneOf(pmid, PM.HORNED_DEVIL, PM.MINOTAUR, PM.ASMODEUS, PM.BALROG)) {
+    		return 2;
+    	} else if (PM.matchesOneOf(pmid, PM.WHITE_UNICORN, PM.GRAY_UNICORN, PM.BLACK_UNICORN, PM.KI_RIN)) {
+    		return 1;
+    	} else {
+    		return 0;
+    	}
+    }
 
-    //#define has_horns(ptr) (num_horns(ptr) > 0)
+    public static boolean hasHorns(int pmid) {
+    	return (numberOfHorns(pmid) > 0);
+    }
     
     public static boolean isWhirly(int pmid) {
 	    MC mc = MonsterType.getMonsterType(pmid).monsterClass();
@@ -157,7 +177,9 @@ public class MonsterData {
     	return (MonsterType.getMonsterType(pmid).hasFlag1(M1.THICK_HIDE));
     }
 
-    //#define is_wooden(ptr) ((ptr) == &mons[PM_WOOD_GOLEM])
+    public static boolean isWooden(int pmid) {
+    	return (PM.WOOD_GOLEM.id() == pmid);
+    }
     
     public static boolean isSlimeproof(int pmid) {
     	return (PM.GREEN_SLIME.id() == pmid) || isFlaming(pmid) || isNoncorporeal(pmid);
@@ -183,9 +205,9 @@ public class MonsterData {
     	return (MonsterType.getMonsterType(pmid).hasFlag1(M1.TPORT_CNTRL));
     }
 
-    //#define telepathic(ptr)                                                \
-    //    ((ptr) == &mons[PM_FLOATING_EYE] || (ptr) == &mons[PM_MIND_FLAYER] \
-    //     || (ptr) == &mons[PM_MASTER_MIND_FLAYER])
+    public static boolean isTelepathic(int pmid) {
+    	return PM.matchesOneOf(pmid, PM.FLOATING_EYE, PM.MIND_FLAYER, PM.MASTER_MIND_FLAYER);
+    }
 
     public static boolean isArmed(int pmid) {
     	return MonsterType.monsterHasWeaponAttack(pmid);
@@ -321,15 +343,39 @@ public class MonsterData {
     	return MonsterType.getMonsterType(pmid).hasFlag2(M2.STRONG);
 	}
 
-    //#define can_breathe(ptr) attacktype(ptr, AT_BREA)
+	public static boolean hasBreathWeapon(int pmid) {
+    	return MonsterType.monsterHasBreathWeaponAttack(pmid);
+	}
     
     public static boolean cannotWieldThings(int pmid) {
     	return hasNoHands(pmid) || isVerySmallMonster(pmid);
     }
     
     //#define could_twoweap(ptr) ((ptr)->mattk[1].aatyp == AT_WEAP)
-    //#define cantweararm(ptr) (breakarm(ptr) || sliparm(ptr))
+    
 
+    /* creature will slide out of armor */
+    public static boolean slipsOutOfArmor(int pmid) {
+        return (boolean) (isWhirly(pmid) || isSmallMonster(pmid)
+                          || isNoncorporeal(pmid));
+    }
+
+    /* creature will break out of armor */
+    public static boolean breaksOutOfArmor(int pmid) {
+    	if (slipsOutOfArmor(pmid)) {
+    		return false;
+    	}
+
+        return isBigMonster(pmid)
+                  || (isNotSmallMonster(pmid) && !isHumanoid(pmid))
+                  /* winged humanoids cannot wear suits of armor */
+                  || PM.matchesOneOf(pmid, PM.MARILITH, PM.WINGED_GARGOYLE);
+    }
+
+    public static boolean cannotWearArmor(int pmid) {
+    	return breaksOutOfArmor(pmid) || slipsOutOfArmor(pmid);
+    }
+ 
     public static boolean throwsRocks(int pmid) {
     	return MonsterType.getMonsterType(pmid).hasFlag2(M2.ROCKTHROW);
 	}
@@ -382,17 +428,18 @@ public class MonsterData {
     	return MonsterType.getMonsterType(pmid).hasFlag2(M2.MAGIC);
     }
 
-    //#define webmaker(ptr) \
-    //    ((ptr) == &mons[PM_CAVE_SPIDER] || (ptr) == &mons[PM_GIANT_SPIDER])
+    public static boolean makesWebs(int pmid) {
+    	return PM.matchesOneOf(pmid, PM.CAVE_SPIDER, PM.GIANT_SPIDER);
+    }
     
     public static boolean isUnicorn(int pmid) {
 	    MC mc = MonsterType.getMonsterType(pmid).monsterClass();
 	    return (MC.UNICORN.equals(mc) && likesGems(pmid));
     }
 
-    //#define is_longworm(ptr)                                                   \
-    //    (((ptr) == &mons[PM_BABY_LONG_WORM]) || ((ptr) == &mons[PM_LONG_WORM]) \
-    //     || ((ptr) == &mons[PM_LONG_WORM_TAIL]))
+    public static boolean isLongWorm(int pmid) {
+    	return PM.matchesOneOf(pmid, PM.BABY_LONG_WORM, PM.LONG_WORM, PM.LONG_WORM_TAIL);
+    }
     
     public static boolean isCovetous(int pmid) {
     	return MonsterType.getMonsterType(pmid).hasFlag3(M3.COVETOUS);
@@ -410,23 +457,26 @@ public class MonsterData {
     	return MonsterType.getMonsterType(pmid).hasFlag3(M3.DISPLACES);
     }
 
-    //#define is_mplayer(ptr) \
-    //    (((ptr) >= &mons[PM_ARCHEOLOGIST]) && ((ptr) <= &mons[PM_WIZARD]))
-    //#define is_watch(ptr) \
-    //    ((ptr) == &mons[PM_WATCHMAN] || (ptr) == &mons[PM_WATCH_CAPTAIN])
+    public static boolean isMonsterPlayer(int pmid) {
+    	return (pmid >= PM.ARCHEOLOGIST.id()) && (pmid <= PM.WIZARD.id());
+    }
+    
+    public static boolean isWatchman(int pmid) {
+    	return PM.matchesOneOf(pmid, PM.WATCHMAN, PM.WATCH_CAPTAIN);
+    }
 
-    public static boolean isRider(int pmid) {
+    public static boolean isRiderOfTheApocalypse(int pmid) {
     	return PM.matchesOneOf(pmid, PM.DEATH, PM.FAMINE, PM.PESTILENCE);
     }
 
-    //#define is_placeholder(ptr)                             \
-    //    ((ptr) == &mons[PM_ORC] || (ptr) == &mons[PM_GIANT] \
-    //     || (ptr) == &mons[PM_ELF] || (ptr) == &mons[PM_HUMAN])
-    ///* return TRUE if the monster tends to revive */
+    public static boolean isPlaceholderMonster(int pmid) {
+    	return PM.matchesOneOf(pmid, PM.ORC, PM.GIANT, PM.ELF, PM.HUMAN);
+    }
     
+    /* monsters that tend to revive */
     public static final boolean isReviver(int pmid) {
 	    MC mc = MonsterType.getMonsterType(pmid).monsterClass();
-    	return (isRider(pmid) || MC.TROLL.equals(mc));
+    	return (isRiderOfTheApocalypse(pmid) || MC.TROLL.equals(mc));
     }
     
     /* monsters whose corpses and statues need special handling;
@@ -436,9 +486,6 @@ public class MonsterData {
         int geno = MonsterType.getMonsterType(pmid).generationMask();
 	return ((geno & MonsterType.ONLY_GENERATED_ONCE) != 0);
     }
-
-    //
-    
     
     public static int emitsLightWithRange(int pmid) {
         MC mc = MonsterType.getMonsterType(pmid).monsterClass();
@@ -452,21 +499,25 @@ public class MonsterData {
         }
     }
     
-    //#define likes_lava(ptr) \
-    //    (ptr == &mons[PM_FIRE_ELEMENTAL] || ptr == &mons[PM_SALAMANDER])
-    //#define pm_invisible(ptr) \
-    //    ((ptr) == &mons[PM_STALKER] || (ptr) == &mons[PM_BLACK_LIGHT])
-    //
-    ///* could probably add more */
-    //#define likes_fire(ptr)                                                  \
-    //    ((ptr) == &mons[PM_FIRE_VORTEX] || (ptr) == &mons[PM_FLAMING_SPHERE] \
-    //     || likes_lava(ptr))
-    //
-    //#define touch_petrifies(ptr) \
-    //    ((ptr) == &mons[PM_COCKATRICE] || (ptr) == &mons[PM_CHICKATRICE])
-    //
-    //#define is_mind_flayer(ptr) \
-    //    ((ptr) == &mons[PM_MIND_FLAYER] || (ptr) == &mons[PM_MASTER_MIND_FLAYER])
+    public static boolean likesLava(int pmid) {
+    	return PM.matchesOneOf(pmid, PM.FIRE_ELEMENTAL, PM.SALAMANDER);
+    }
+    
+    public static boolean isInvisibleMonsterType(int pmid) {
+    	return PM.matchesOneOf(pmod, PM.STALKER, PM.BLACK_LIGHT);
+    }
+    
+    public static boolean likesFire(int pmid) {
+    	return PM.matchesOneOf(pmid, PM.FIRE_VORTEX, PM.FLAMING_SPHERE) || likesLava(pmid);
+    }
+ 
+    public static boolean touchPetrifies(int pmid) {
+    	return PM.matchesOneOf(pmid, PM.COCKATRICE, PM.CHICKATRICE);
+    }
+
+    public static boolean isMindFlayer(int pmid) {
+    	return PM.matchesOneOf(pmid, PM.MIND_FLAYER, PM.MASTER_MIND_FLAYER);
+    }
     
 	public static boolean isVampire(int pmid) {
 		MC mc = MonsterType.getMonsterType(pmid).monsterClass();
