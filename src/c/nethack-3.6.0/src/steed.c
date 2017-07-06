@@ -571,7 +571,7 @@ int reason; /* Player was thrown off etc. */
                     }
                 } else if (is_lava(currentX(), currentY())) {
                     pline("%s is pulled into the lava!", Monnam(mtmp));
-                    if (!likes_lava(mdat)) {
+                    if (!likesLava(mdat->monsterTypeID)) {
                         killed(mtmp);
                         adjalign(-1);
                     }

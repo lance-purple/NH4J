@@ -1024,7 +1024,7 @@ register struct obj *otmp;
         boolean good_for_you = FALSE;
 
         if (otmp->lamplit) {
-            if (likes_fire(youmonst.data)) {
+            if (likesFire(youmonst.data->monsterTypeID)) {
                 pline("Ahh, a refreshing drink.");
                 good_for_you = TRUE;
             } else {

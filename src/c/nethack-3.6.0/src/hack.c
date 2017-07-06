@@ -2429,7 +2429,7 @@ dopickup()
             || (youAreFlying() && !youNeedNotBreathe())) {
             You_cant("reach the bottom to pick things up.");
             return 0;
-        } else if (!likes_lava(youmonst.data)) {
+        } else if (!likesLava(youmonst.data->monsterTypeID)) {
             You("would burn to a crisp trying to pick things up.");
             return 0;
         }

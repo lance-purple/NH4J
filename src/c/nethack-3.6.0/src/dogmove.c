@@ -967,7 +967,7 @@ struct monst *mon;
 xchar nx, ny;
 {
     if ((!is_pool(nx, ny) || isSwimmer(mon->data->monsterTypeID))
-        && (!is_lava(nx, ny) || likes_lava(mon->data))
+        && (!is_lava(nx, ny) || likesLava(mon->data->monsterTypeID))
         && (!sobj_at(BOULDER, nx, ny) || throwsRocks(mon->data->monsterTypeID)))
         return TRUE;
     return FALSE;

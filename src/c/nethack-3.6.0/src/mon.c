@@ -476,7 +476,7 @@ register struct monst *mtmp;
          * protect their stuff. Fire resistant monsters can only protect
          * themselves  --ALI
          */
-        if (!isClinger(mtmp->data->monsterTypeID) && !likes_lava(mtmp->data)) {
+        if (!isClinger(mtmp->data->monsterTypeID) && !likesLava(mtmp->data->monsterTypeID)) {
             if (!resists_fire(mtmp)) {
                 if (cansee(mtmp->mx, mtmp->my))
                     pline("%s %s.", Monnam(mtmp),
@@ -1196,7 +1196,7 @@ long flag;
     wantpool = monsterClass(pmid) == S_EEL;
     poolok = (isFlyer(pmid) || isClinger(pmid)
               || (isSwimmer(pmid) && !wantpool));
-    lavaok = (isFlyer(pmid) || isClinger(pmid) || likes_lava(mdat));
+    lavaok = (isFlyer(pmid) || isClinger(pmid) || likesLava(mdat->monsterTypeID));
     thrudoor = ((flag & (ALLOW_WALL | BUSTDOOR)) != 0L);
     if (flag & ALLOW_DIG) {
         struct obj *mw_tmp;

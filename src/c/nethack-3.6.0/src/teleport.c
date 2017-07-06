@@ -75,10 +75,10 @@ unsigned gpflags;
                 return (youAreLevitating() || youAreFlying()
                         || (youResistFire() && canYouWalkOnWater() && uarmf
                             && uarmf->oerodeproof)
-                        || (areYouPolymorphed() && likes_lava(youmonst.data)));
+                        || (areYouPolymorphed() && likesLava(youmonst.data->monsterTypeID)));
             else
                 return (isFloater(mdat->monsterTypeID) || isFlyer(pmid)
-                        || likes_lava(mdat));
+                        || likesLava(mdat->monsterTypeID));
         }
         if (passesThroughWalls(mdat->monsterTypeID) && may_passwall(x, y))
             return TRUE;

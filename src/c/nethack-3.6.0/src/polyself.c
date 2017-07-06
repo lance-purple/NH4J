@@ -837,7 +837,7 @@ int mntmp;
             pline_The("buried ball is no longer bound to you.");
             buried_ball_to_freedom();
         }
-    } else if (likes_lava(youmonst.data) && currentlyTrapped()
+    } else if (likesLava(youmonst.data->monsterTypeID) && currentlyTrapped()
                && currentTrapType() == TT_LAVA) {
         setCurrentTrapTimeout(0);
         pline_The("lava now feels soothing.");

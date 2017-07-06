@@ -1556,4 +1556,12 @@ boolean isMindFlayer(int pmid) {
     return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isMindFlayer", pmid);
 }
 
+boolean likesFire(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "likesFire", pmid);
+}
+
+boolean likesLava(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "likesLava", pmid);
+}
+
 /*mondata.c*/

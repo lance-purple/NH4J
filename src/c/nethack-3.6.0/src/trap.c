@@ -4996,7 +4996,7 @@ lava_effects()
     boolean usurvive, boil_away;
 
     burn_away_slime();
-    if (likes_lava(youmonst.data))
+    if (likesLava(youmonst.data->monsterTypeID))
         return FALSE;
 
     usurvive = youResistFire() || (canYouWalkOnWater() && dmg < currentHitPoints());

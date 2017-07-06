@@ -48,15 +48,8 @@
     ((ptr) == &mons[PM_ORC] || (ptr) == &mons[PM_GIANT] \
      || (ptr) == &mons[PM_ELF] || (ptr) == &mons[PM_HUMAN])
 
-#define likes_lava(ptr) \
-    (ptr == &mons[PM_FIRE_ELEMENTAL] || ptr == &mons[PM_SALAMANDER])
 #define pm_invisible(ptr) \
     ((ptr) == &mons[PM_STALKER] || (ptr) == &mons[PM_BLACK_LIGHT])
-
-/* could probably add more */
-#define likes_fire(ptr)                                                  \
-    ((ptr) == &mons[PM_FIRE_VORTEX] || (ptr) == &mons[PM_FLAMING_SPHERE] \
-     || likes_lava(ptr))
 
 #define befriend_with_obj(ptr, obj) \
     ((obj)->oclass == FOOD_CLASS && isDomestic(ptr->monsterTypeID))
