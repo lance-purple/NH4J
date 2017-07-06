@@ -444,7 +444,7 @@ do_mname()
 
     if (!mtmp
         || (!senseMonsters(mtmp)
-            && (!(cansee(cx, cy) || see_with_infrared(mtmp))
+            && (!(cansee(cx, cy) || seeWithInfrared(mtmp))
                 || mtmp->mundetected || mtmp->m_ap_type == M_AP_FURNITURE
                 || mtmp->m_ap_type == M_AP_OBJECT
                 || (mtmp->minvis && !youCanSeeInvisible())))) {

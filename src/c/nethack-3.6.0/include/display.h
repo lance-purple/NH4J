@@ -48,18 +48,6 @@ extern boolean senseMonsters(struct monst* mon);
      && !(mon->mburied || buried()))  /* AND 3. neither you nor it is buried */
 
 /*
- * see_with_infrared()
- *
- * This function is true if the player can see a monster using infravision.
- * The caller must check for invisibility (invisible monsters are also
- * invisible to infravision), because this is usually called from within
- * canseemon() or canspotmon() which already check that.
- */
-#define see_with_infrared(mon)                        \
-    (youCanSee() && youHaveInfravision() && mon && isInfravisible(mon->data->monsterTypeID) \
-     && couldsee(mon->mx, mon->my))
-
-/*
  * canseemon()
  *
  * This is the globally used canseemon().  It is not called within the display
@@ -68,7 +56,7 @@ extern boolean senseMonsters(struct monst* mon);
  */
 #define canseemon(mon)                                                    \
     ((mon->wormno ? worm_known(mon)                                       \
-                  : (cansee(mon->mx, mon->my) || see_with_infrared(mon))) \
+                  : (cansee(mon->mx, mon->my) || seeWithInfrared(mon))) \
      && mon_visible(mon))
 
 /*

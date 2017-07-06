@@ -520,6 +520,7 @@ E int FDECL(zapdir_to_glyph, (int, int, int));
 E int FDECL(glyph_at, (XCHAR_P, XCHAR_P));
 E void NDECL(set_wall_state);
 E void FDECL(unset_seenv, (struct rm *, int, int, int, int));
+E boolean FDECL(seeWithInfrared, (struct monst*));
 
 /* ### do.c ### */
 

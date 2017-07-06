@@ -789,7 +789,7 @@ register int x, y;
                 display_self();
         } else if ((mon = m_at(x, y))
                    && ((see_it = (telepathicallySenseMonsters(mon) || MATCH_WARN_OF_MON(mon->data->monsterTypeID)
-                                  || (see_with_infrared(mon)
+                                  || (seeWithInfrared(mon)
                                       && mon_visible(mon))))
                        || youCanDetectMonsters())) {
             /* Monsters are printed every time. */
@@ -2500,6 +2500,18 @@ boolean telepathicallySenseMonsters(struct monst* mon)
 boolean senseMonsters(struct monst* mon)
 {
     return (telepathicallySenseMonsters(mon) || youCanDetectMonsters() || MATCH_WARN_OF_MON(pmid4mon(mon)));
+}
+
+/*
+ * This function is true if the player can see a monster using infravision.
+ * The caller must check for invisibility (invisible monsters are also
+ * invisible to infravision), because this is usually called from within
+ * canseemon() or canspotmon() which already check that.
+ */
+boolean seeWithInfrared(struct monst* mon)
+{
+    return (youCanSee() && youHaveInfravision() && isInfravisible(pmid4mon(mon))
+            && mon && couldsee(mon->mx, mon->my));
 }
 
 /*display.c*/
