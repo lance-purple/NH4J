@@ -2187,6 +2187,7 @@ E boolean FDECL(isDisplacer, (int));
 E boolean FDECL(allowsCloseApproach, (int));
 E boolean FDECL(touchPetrifies, (int));
 E boolean FDECL(fleshPetrifies, (int));
+E boolean FDECL(isMindFlayer, (int));
 
 /* ### monmove.c ### */
 

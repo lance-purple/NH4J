@@ -58,9 +58,6 @@
     ((ptr) == &mons[PM_FIRE_VORTEX] || (ptr) == &mons[PM_FLAMING_SPHERE] \
      || likes_lava(ptr))
 
-#define is_mind_flayer(ptr) \
-    ((ptr) == &mons[PM_MIND_FLAYER] || (ptr) == &mons[PM_MASTER_MIND_FLAYER])
-
 #define befriend_with_obj(ptr, obj) \
     ((obj)->oclass == FOOD_CLASS && isDomestic(ptr->monsterTypeID))
 

@@ -502,7 +502,7 @@ domonability(VOID_ARGS)
         return dospinweb();
     else if (isHider(upmid))
         return dohide();
-    else if (is_mind_flayer(youmonst.data))
+    else if (isMindFlayer(upmid))
         return domindblast();
     else if (currentMonsterNumber() == PM_GREMLIN) {
         if (IS_FOUNTAIN(levl[currentX()][currentY()].typ)) {

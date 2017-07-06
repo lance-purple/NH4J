@@ -558,8 +558,8 @@ struct permonst *pm1, *pm2;
         return isGiant(pmid2); /* open to quibbling here */
     if (isGolem(pmid1))
         return isGolem(pmid2); /* even moreso... */
-    if (is_mind_flayer(pm1))
-        return is_mind_flayer(pm2);
+    if (isMindFlayer(pmid1))
+        return isMindFlayer(pmid2);
     if (let1 == S_KOBOLD || pm1 == &mons[PM_KOBOLD_ZOMBIE]
         || pm1 == &mons[PM_KOBOLD_MUMMY])
         return (let2 == S_KOBOLD || pm2 == &mons[PM_KOBOLD_ZOMBIE]
@@ -1550,6 +1550,10 @@ boolean touchPetrifies(int pmid) {
 
 boolean fleshPetrifies(int pmid) {
     return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "fleshPetrifies", pmid);
+}
+
+boolean isMindFlayer(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isMindFlayer", pmid);
 }
 
 /*mondata.c*/

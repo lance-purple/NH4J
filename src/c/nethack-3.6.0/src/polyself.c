@@ -787,15 +787,17 @@ int mntmp;
         static const char use_thec[] = "Use the command #%s to %s.";
         static const char monsterc[] = "monster";
 
+        int upmid = youmonst.data->monsterTypeID;
+
         if (can_breathe(youmonst.data))
             pline(use_thec, monsterc, "use your breath weapon");
         if (attacktype(youmonst.data, AT_SPIT))
             pline(use_thec, monsterc, "spit venom");
-        if (monsterClass(youmonst.data->monsterTypeID) == S_NYMPH)
+        if (monsterClass(upmid) == S_NYMPH)
             pline(use_thec, monsterc, "remove an iron ball");
         if (attacktype(youmonst.data, AT_GAZE))
             pline(use_thec, monsterc, "gaze at monsters");
-        if (isHider(youmonst.data->monsterTypeID))
+        if (isHider(upmid))
             pline(use_thec, monsterc, "hide");
         if (isWere(youmonst.data->monsterTypeID))
             pline(use_thec, monsterc, "summon help");
@@ -803,13 +805,13 @@ int mntmp;
             pline(use_thec, monsterc, "spin a web");
         if (currentMonsterNumber() == PM_GREMLIN)
             pline(use_thec, monsterc, "multiply in a fountain");
-        if (isUnicorn(youmonst.data->monsterTypeID))
+        if (isUnicorn(upmid))
             pline(use_thec, monsterc, "use your horn");
-        if (is_mind_flayer(youmonst.data))
+        if (isMindFlayer(upmid))
             pline(use_thec, monsterc, "emit a mental blast");
         if (monsterSound(youmonst.data->monsterTypeID) == MS_SHRIEK) /* worthless, actually */
             pline(use_thec, monsterc, "shriek");
-        if (isVampire(youmonst.data->monsterTypeID))
+        if (isVampire(upmid))
             pline(use_thec, monsterc, "change shape");
 
         if (laysEggs(youmonst.data->monsterTypeID) && flags.female)
