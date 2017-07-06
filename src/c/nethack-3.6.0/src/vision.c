@@ -2809,7 +2809,7 @@ struct monst *mon;
     if ((!mon->minvis || youCanSeeInvisible()) && see_with_infrared(mon))
         how_seen |= MONSEEN_INFRAVIS;
     /* telepathy */
-    if (tp_sensemon(mon))
+    if (telepathicallySenseMonsters(mon))
         how_seen |= MONSEEN_TELEPAT;
     /* xray */
     if (useemon && xraydist > 0 && distanceSquaredToYou(mon->mx, mon->my) <= xraydist)

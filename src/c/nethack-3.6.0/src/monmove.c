@@ -108,7 +108,7 @@ register struct monst *mtmp;
         && (!already_saw_mon || !couldsee(x, y)
             || distanceSquaredToYou(x, y) > (BOLT_LIM + 1) * (BOLT_LIM + 1))
         /* can see it now, or sense it and would normally see it */
-        && (canseemon(mtmp) || (sensemon(mtmp) && couldsee(x, y)))
+        && (canseemon(mtmp) || (senseMonsters(mtmp) && couldsee(x, y)))
         && mtmp->mcanmove && !monsterDoesNotAttack(mtmp->data)
         && !onscary(currentX(), currentY(), mtmp))
         stop_occupation();
@@ -474,7 +474,7 @@ register struct monst *mtmp;
             && (!youCauseConflict() || resist(mtmp, RING_CLASS, 0, 0))) {
             pline("It feels quite soothing.");
         } else if (!invulnerableWhilePraying()) {
-            register boolean m_sen = sensemon(mtmp);
+            register boolean m_sen = senseMonsters(mtmp);
 
             if (m_sen || (youHaveTelepathyWhenBlind() && rn2(2)) || !rn2(10)) {
                 int dmg;

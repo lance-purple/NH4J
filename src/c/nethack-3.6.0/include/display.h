@@ -21,10 +21,8 @@
  */
 #define vobj_at(x, y) (level.objects[x][y])
 
-extern boolean tp_sensemon(struct monst* mon);
-
-#define sensemon(mon) \
-    (tp_sensemon(mon) || youCanDetectMonsters() || MATCH_WARN_OF_MON(mon->data->monsterTypeID))
+extern boolean telepathicallySenseMonsters(struct monst* mon);
+extern boolean senseMonsters(struct monst* mon);
 
 /*
  * mon_warning() is used to warn of any dangerous monsters in your
@@ -80,7 +78,7 @@ extern boolean tp_sensemon(struct monst* mon);
  * telepathy, and is what you usually call for monsters about which nothing is
  * known.
  */
-#define canspotmon(mon) (canseemon(mon) || sensemon(mon))
+#define canspotmon(mon) (canseemon(mon) || senseMonsters(mon))
 
 /* knowninvisible(mon)
  * This one checks to see if you know a monster is both there and invisible.

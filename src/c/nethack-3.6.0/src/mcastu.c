@@ -593,7 +593,7 @@ int spellnum;
 
         /* not canspotmon(), which includes unseen things sensed via warning
          */
-        seecaster = canseemon(mtmp) || tp_sensemon(mtmp) || youCanDetectMonsters();
+        seecaster = canseemon(mtmp) || telepathicallySenseMonsters(mtmp) || youCanDetectMonsters();
 
         fmt = 0;
         if (!seecaster) {

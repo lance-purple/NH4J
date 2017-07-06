@@ -147,7 +147,7 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
         return TRUE;
     }
 
-    if (mtmp->m_ap_type && !youHaveProtectionFromShapeChangers() && !sensemon(mtmp)
+    if (mtmp->m_ap_type && !youHaveProtectionFromShapeChangers() && !senseMonsters(mtmp)
         && !glyph_is_warning(glyph_at(bhitpos.x, bhitpos.y))) {
         /* If a hidden mimic was in a square where a player remembers
          * some (probably different) unseen monster, the player is in
@@ -186,7 +186,7 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
      * make sure to wake up a monster from the above cases if the
      * hero can sense that the monster is there.
      */
-    if ((mtmp->mundetected || mtmp->m_ap_type) && sensemon(mtmp)) {
+    if ((mtmp->mundetected || mtmp->m_ap_type) && senseMonsters(mtmp)) {
         mtmp->mundetected = 0;
         wakeup(mtmp);
     }

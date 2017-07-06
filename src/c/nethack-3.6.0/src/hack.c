@@ -1384,7 +1384,7 @@ domove()
                                  && ((mtmp->m_ap_type != M_AP_FURNITURE
                                       && mtmp->m_ap_type != M_AP_OBJECT)
                                      || youHaveProtectionFromShapeChangers()))
-                                || sensemon(mtmp))) {
+                                || senseMonsters(mtmp))) {
                 nomul(0);
                 context.move = 0;
                 return;
@@ -1419,7 +1419,7 @@ domove()
         if (context.nopick
             && (canspotmon(mtmp) || glyph_is_invisible(levl[x][y].glyph))) {
             if (mtmp->m_ap_type && !youHaveProtectionFromShapeChangers()
-                && !sensemon(mtmp))
+                && !senseMonsters(mtmp))
                 stumble_onto_mimic(mtmp);
             else if (mtmp->mpeaceful && !youAreHallucinating())
                 pline("Pardon me, %s.", m_monnam(mtmp));
@@ -1427,7 +1427,7 @@ domove()
                 You("move right into %s.", mon_nam(mtmp));
             return;
         }
-        if (context.forcefight || !mtmp->mundetected || sensemon(mtmp)
+        if (context.forcefight || !mtmp->mundetected || senseMonsters(mtmp)
             || ((hidesUnderStuff(mtmp->data->monsterTypeID) || monsterClass(mtmp->data->monsterTypeID) == S_EEL)
                 && !is_safepet(mtmp))) {
             /* try to attack; note that it might evade */
@@ -2024,7 +2024,7 @@ boolean pick;
                       ceiling(currentX(), currentY()));
             else if (mtmp->mpeaceful) {
                 You("surprise %s!",
-                    youCannotSee() && !sensemon(mtmp) ? something : a_monnam(mtmp));
+                    youCannotSee() && !senseMonsters(mtmp) ? something : a_monnam(mtmp));
                 mtmp->mpeaceful = 0;
             } else
                 pline("%s attacks you by surprise!", Amonnam(mtmp));

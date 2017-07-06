@@ -3144,7 +3144,7 @@ struct obj **pobj; /* object tossed/used, set to NULL
                 if (range > 3) /* another bounce? */
                     skiprange(range, &skiprange_start, &skiprange_end);
             } else if (mtmp && M_IN_WATER(mtmp->data)) {
-                if ((youCanSee() && canseemon(mtmp)) || sensemon(mtmp))
+                if ((youCanSee() && canseemon(mtmp)) || senseMonsters(mtmp))
                     pline("%s %s over %s.", Yname2(obj), otense(obj, "pass"),
                           mon_nam(mtmp));
             }

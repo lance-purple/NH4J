@@ -2706,7 +2706,7 @@ struct obj *obj;
             wakeup(mtmp);
         } else {
             if (mtmp->m_ap_type && !youHaveProtectionFromShapeChangers()
-                && !sensemon(mtmp))
+                && !senseMonsters(mtmp))
                 stumble_onto_mimic(mtmp);
             else
                 You("flick your bullwhip towards %s.", mon_nam(mtmp));

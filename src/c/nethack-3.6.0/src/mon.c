@@ -414,7 +414,7 @@ unsigned corpseflags;
      *  The code in hitmu() substitutes the word "something"
      *  if the corpses obj->dknown is 0.
      */
-    if (youCannotSee() && !sensemon(mtmp))
+    if (youCannotSee() && !senseMonsters(mtmp))
         obj->dknown = 0;
 
     stackobj(obj);
@@ -2690,7 +2690,7 @@ register struct monst *mtmp;
         /* can't hide while trapped except in pits */
         || (mtmp->mtrapped && (t = t_at(mtmp->mx, mtmp->my)) != 0
             && !(t->ttyp == PIT || t->ttyp == SPIKED_PIT))
-        || (sensemon(mtmp) && distanceSquaredToYou(mtmp->mx, mtmp->my) <= 2))
+        || (senseMonsters(mtmp) && distanceSquaredToYou(mtmp->mx, mtmp->my) <= 2))
         return FALSE;
 
     if (mc == S_MIMIC) {
@@ -2821,7 +2821,7 @@ int shiftflags;
     boolean msg = FALSE;
 
     if ((shiftflags & SHIFT_MSG)
-        || ((shiftflags & SHIFT_SEENMSG) && sensemon(mon)))
+        || ((shiftflags & SHIFT_SEENMSG) && senseMonsters(mon)))
         msg = TRUE;
 
     if (is_vampshifter(mon)) {

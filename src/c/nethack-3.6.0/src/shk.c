@@ -493,7 +493,7 @@ STATIC_OVL void announceDesertedShop(char shopID)
                 continue;
             if ((mtmp = m_at(x, y)) != 0) {
                 ++n;
-                if (sensemon(mtmp) || ((mtmp->m_ap_type == M_AP_NOTHING
+                if (senseMonsters(mtmp) || ((mtmp->m_ap_type == M_AP_NOTHING
                                         || mtmp->m_ap_type == M_AP_MONSTER)
                                        && canseemon(mtmp)))
                     ++m;
@@ -1046,7 +1046,7 @@ register boolean silentkops;
                 vanished = FALSE;
         } else {
             /* if sensed, does disappear regardless whether seen */
-            if (sensemon(shkp))
+            if (senseMonsters(shkp))
                 vanished = TRUE;
             /* can't act as porter for the Amulet, even if shk
                happens to be going farther down rather than up */

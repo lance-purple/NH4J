@@ -365,7 +365,7 @@ xchar worm_tail;            /* mon is actually a worm tail */
 {
     boolean mon_mimic = (mon->m_ap_type != M_AP_NOTHING);
     int sensed = (mon_mimic && (youHaveProtectionFromShapeChangers()
-                                || sensemon(mon)));
+                                || senseMonsters(mon)));
     /*
      * We must do the mimic check first.  If the mimic is mimicing something,
      * and the location is in sight, we have to change the hero's memory
@@ -663,9 +663,9 @@ xchar x, y;
             show_glyph(x, y, lev->glyph = cmap_to_glyph(S_corr));
     }
     /* draw monster on top if we can sense it */
-    if ((x != currentX() || y != currentY()) && (mon = m_at(x, y)) && sensemon(mon))
+    if ((x != currentX() || y != currentY()) && (mon = m_at(x, y)) && senseMonsters(mon))
         display_monster(x, y, mon,
-                        (tp_sensemon(mon) || MATCH_WARN_OF_MON(mon->data->monsterTypeID))
+                        (telepathicallySenseMonsters(mon) || MATCH_WARN_OF_MON(mon->data->monsterTypeID))
                             ? PHYSICALLY_SEEN
                             : DETECTED,
                         is_worm_tail(mon));
@@ -753,7 +753,7 @@ register int x, y;
             worm_tail = is_worm_tail(mon);
             see_it =
                 mon && (worm_tail ? (!mon->minvis || youCanSeeInvisible())
-                                  : (mon_visible(mon)) || tp_sensemon(mon)
+                                  : (mon_visible(mon)) || telepathicallySenseMonsters(mon)
                                         || MATCH_WARN_OF_MON(mon->data->monsterTypeID));
             if (mon && (see_it || (!worm_tail && youCanDetectMonsters()))) {
                 if (mon->mtrapped) {
@@ -788,7 +788,7 @@ register int x, y;
             if (canspotself())
                 display_self();
         } else if ((mon = m_at(x, y))
-                   && ((see_it = (tp_sensemon(mon) || MATCH_WARN_OF_MON(mon->data->monsterTypeID)
+                   && ((see_it = (telepathicallySenseMonsters(mon) || MATCH_WARN_OF_MON(mon->data->monsterTypeID)
                                   || (see_with_infrared(mon)
                                       && mon_visible(mon))))
                        || youCanDetectMonsters())) {
@@ -2482,12 +2482,9 @@ void display_self()
 
 
 /*
- * sensemon()
- *
- * Returns true if the hero can sense the given monster.  This includes
- * monsters that are hiding or mimicing other monsters.
+ * Returns true if the hero can sense the given monster via telepathy.
  */
-boolean tp_sensemon(struct monst* mon)
+boolean telepathicallySenseMonsters(struct monst* mon)
 {
     /* The hero can always sense a monster IF:   */
     /* 1. the monster has a brain to sense       */ 
@@ -2498,6 +2495,11 @@ boolean tp_sensemon(struct monst* mon)
       && ((youCannotSee() && youHaveTelepathyWhenBlind())
           || (youHaveTelepathyWhenNotBlind()
               && (distanceSquaredToYou(mon->mx, mon->my) <= (BOLT_LIM * BOLT_LIM))));
+}
+
+boolean senseMonsters(struct monst* mon)
+{
+    return (telepathicallySenseMonsters(mon) || youCanDetectMonsters() || MATCH_WARN_OF_MON(pmid4mon(mon)));
 }
 
 /*display.c*/

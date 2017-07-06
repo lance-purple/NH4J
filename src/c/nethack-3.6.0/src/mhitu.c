@@ -590,7 +590,7 @@ register struct monst *mtmp;
         if (mtmp == u.ustuck)
             pline("%s loosens its grip slightly.", Monnam(mtmp));
         else if (!range2) {
-            if (youseeit || sensemon(mtmp))
+            if (youseeit || senseMonsters(mtmp))
                 pline("%s starts to attack you, but pulls back.",
                       Monnam(mtmp));
             else

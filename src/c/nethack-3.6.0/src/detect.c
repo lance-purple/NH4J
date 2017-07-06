@@ -1401,7 +1401,7 @@ register int aflag; /* intrinsic autosearch vs explicit searching */
                                     You_feel("an unseen monster!");
                                     map_invisible(x, y);
                                 }
-                            } else if (!sensemon(mtmp))
+                            } else if (!senseMonsters(mtmp))
                                 You("find %s.", mtmp->mtame
                                                    ? y_monnam(mtmp)
                                                    : a_monnam(mtmp));

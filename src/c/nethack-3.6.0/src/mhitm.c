@@ -318,7 +318,7 @@ register struct monst *magr, *mdef;
     if (mdef->mundetected) {
         mdef->mundetected = 0;
         newsym(mdef->mx, mdef->my);
-        if (canseemon(mdef) && !sensemon(mdef)) {
+        if (canseemon(mdef) && !senseMonsters(mdef)) {
             if (youAreUnaware())
                 You("dream of %s.", (monsterGenerationMask(mdef->data->monsterTypeID) & G_UNIQ)
                                         ? a_monnam(mdef)
