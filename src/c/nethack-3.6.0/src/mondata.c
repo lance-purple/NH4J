@@ -1564,4 +1564,9 @@ boolean likesLava(int pmid) {
     return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "likesLava", pmid);
 }
 
+extern boolean befriendWithObject(struct permonst* pm, struct obj* otmp) {
+    return (otmp && (otmp->oclass == FOOD_CLASS) && isDomestic(pmid4dat(pm)));
+}
+
+
 /*mondata.c*/

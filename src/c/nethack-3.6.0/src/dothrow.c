@@ -1580,7 +1580,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
         potionhit(mon, obj, TRUE);
         return 1;
 
-    } else if (befriend_with_obj(mon->data, obj)
+    } else if (befriendWithObject(mon->data, obj)
                || (mon->mtame && dogfood(mon, obj) <= ACCFOOD)) {
         if (tamedog(mon, obj)) {
             return 1; /* obj is gone */

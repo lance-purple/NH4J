@@ -2194,6 +2194,7 @@ E boolean FDECL(fleshPetrifies, (int));
 E boolean FDECL(isMindFlayer, (int));
 E boolean FDECL(likesFire, (int));
 E boolean FDECL(likesLava, (int));
+E boolean FDECL(befriendWithObject, (struct permonst*, struct obj*));
 
 /* ### monmove.c ### */
 

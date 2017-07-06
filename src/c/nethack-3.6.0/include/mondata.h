@@ -51,7 +51,4 @@
 #define pm_invisible(ptr) \
     ((ptr) == &mons[PM_STALKER] || (ptr) == &mons[PM_BLACK_LIGHT])
 
-#define befriend_with_obj(ptr, obj) \
-    ((obj)->oclass == FOOD_CLASS && isDomestic(ptr->monsterTypeID))
-
 #endif /* MONDATA_H */
