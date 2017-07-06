@@ -70,7 +70,7 @@ register struct monst *mtmp;
     int x, y;
 
     if (mtmp->mpeaceful && in_town(currentX() + directionX(), currentY() + directionY())
-        && mtmp->mcansee && m_canseeu(mtmp) && !rn2(3)) {
+        && mtmp->mcansee && monsterCanSeeYou(mtmp) && !rn2(3)) {
         if (picking_lock(&x, &y) && IS_DOOR(levl[x][y].typ)
             && (levl[x][y].doormask & D_LOCKED)) {
             if (couldsee(mtmp->mx, mtmp->my)) {
@@ -354,7 +354,7 @@ register struct monst *mtmp;
 
     /* check for waitmask status change */
     if ((mtmp->mstrategy & STRAT_WAITFORU)
-        && (m_canseeu(mtmp) || mtmp->mhp < mtmp->mhpmax))
+        && (monsterCanSeeYou(mtmp) || mtmp->mhp < mtmp->mhpmax))
         mtmp->mstrategy &= ~STRAT_WAITFORU;
 
     /* update quest status flags */

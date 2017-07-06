@@ -218,7 +218,7 @@ register struct monst *priest;
             return 0;
         } else if (oneOfCurrentlyOccupiedRoomsHasID(temple)) {
             /* chase player if inside temple & can see him */
-            if (priest->mcansee && m_canseeu(priest)) {
+            if (priest->mcansee && monsterCanSeeYou(priest)) {
                 gx = currentX();
                 gy = currentY();
             }

@@ -3545,7 +3545,7 @@ register struct monst *shkp;
         gy = currentY();
     } else if (ANGRY(shkp)) {
         /* Move towards the hero if the shopkeeper can see him. */
-        if (shkp->mcansee && m_canseeu(shkp)) {
+        if (shkp->mcansee && monsterCanSeeYou(shkp)) {
             gx = currentX();
             gy = currentY();
         }

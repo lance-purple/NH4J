@@ -1561,7 +1561,7 @@ int scol, srow, y2, x2;
  * Use vision tables to determine if there is a clear path from
  * (col1,row1) to (col2,row2).  This is used by:
  *      m_cansee()
- *      m_canseeu()
+ *      monsterCanSeeYou()
  *      do_light_sources()
  */
 boolean
@@ -2822,6 +2822,16 @@ struct monst *mon;
         how_seen |= MONSEEN_WARNMON;
 
     return how_seen;
+}
+
+extern int monsterCanSeeYou(struct monst* mon)
+{
+    if ((!youAreInvisibleToOthers() || perceivesTheInvisible(pmid4mon(mon)))
+             && !(underwater() || buried() || mon->mburied)) {
+        return couldsee(mon->mx, mon->my);
+    } else {
+        return 0;
+    }
 }
 
 /*vision.c*/

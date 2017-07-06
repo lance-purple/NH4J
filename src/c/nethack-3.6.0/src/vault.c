@@ -936,7 +936,7 @@ unsigned int activity;
 {
     struct monst *guard = findgd();
 
-    if (guard && guard->mcansee && m_canseeu(guard)) {
+    if (guard && guard->mcansee && monsterCanSeeYou(guard)) {
         if (activity == GD_EATGOLD || activity == GD_DESTROYGOLD)
             EGD(guard)->witness = activity;
     }

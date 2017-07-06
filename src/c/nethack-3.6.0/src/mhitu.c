@@ -2064,7 +2064,7 @@ register const struct Attack mattk;
                     mtmp, !useeit ? (char *) 0
                                   : "The gaze is reflected away by %s %s!"))
                 break;
-            if (!m_canseeu(mtmp)) { /* probably you're invisible */
+            if (!monsterCanSeeYou(mtmp)) { /* probably you're invisible */
                 if (useeit)
                     pline(
                       "%s doesn't seem to notice that %s gaze was reflected.",
