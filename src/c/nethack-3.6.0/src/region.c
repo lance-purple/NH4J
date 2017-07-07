@@ -944,13 +944,13 @@ genericptr_t p2;
         mtmp = (struct monst *) p2;
 
         /* Non living and non breathing monsters are not concerned */
-        if (!(isNonliving(mtmp->data->monsterTypeID) || is_vampshifter(mtmp))
-            && !doesNotBreathe(mtmp->data->monsterTypeID)) {
+        if (!(isNonliving(pmid4mon(mtmp)) || is_vampshifter(mtmp))
+            && !doesNotBreathe(pmid4mon(mtmp))) {
             if (cansee(mtmp->mx, mtmp->my))
                 pline("%s coughs!", Monnam(mtmp));
             if (heros_fault(reg))
                 setmangry(mtmp);
-            if (hasEyes(mtmp->data->monsterTypeID) && mtmp->mcansee) {
+            if (hasEyes(pmid4mon(mtmp)) && mtmp->mcansee) {
                 mtmp->mblinded = 1;
                 mtmp->mcansee = 0;
             }

@@ -272,10 +272,10 @@ struct monst *mtmp;
     struct trap *t;
     int x = mtmp->mx, y = mtmp->my;
     boolean stuck = (mtmp == u.ustuck);
-    boolean immobile = (monsterMovementSpeed(mtmp->data->monsterTypeID) == 0);
+    boolean immobile = (monsterMovementSpeed(pmid4mon(mtmp)) == 0);
     int fraction;
 
-    if (isAnimal(mtmp->data->monsterTypeID) || isMindless(mtmp->data->monsterTypeID))
+    if (isAnimal(pmid4mon(mtmp)) || isMindless(mtmp->data->monsterTypeID))
         return FALSE;
     if (dist2(x, y, mtmp->mux, mtmp->muy) > 25)
         return FALSE;
@@ -289,12 +289,12 @@ struct monst *mtmp;
      * silly trying to use the same cursed horn round after round
      */
     if (mtmp->mconf || mtmp->mstun || !mtmp->mcansee) {
-        if (!isUnicorn(mtmp->data->monsterTypeID) && !hasNoHands(mtmp->data->monsterTypeID)) {
+        if (!isUnicorn(pmid4mon(mtmp)) && !hasNoHands(mtmp->data->monsterTypeID)) {
             for (obj = mtmp->minvent; obj; obj = obj->nobj)
                 if (obj->otyp == UNICORN_HORN && !obj->cursed)
                     break;
         }
-        if (obj || isUnicorn(mtmp->data->monsterTypeID)) {
+        if (obj || isUnicorn(pmid4mon(mtmp))) {
             m.defensive = obj;
             m.has_defense = MUSE_UNICORN_HORN;
             return TRUE;
@@ -330,7 +330,7 @@ struct monst *mtmp;
      * These would be hard to combine because of the control flow.
      * Pestilence won't use healing even when blind.
      */
-    if (!mtmp->mcansee && !hasNoHands(mtmp->data->monsterTypeID)
+    if (!mtmp->mcansee && !hasNoHands(pmid4mon(mtmp))
         && mtmp->data != &mons[PM_PESTILENCE]) {
         if ((obj = m_carrying(mtmp, POT_FULL_HEALING)) != 0) {
             m.defensive = obj;
@@ -355,7 +355,7 @@ struct monst *mtmp;
         return FALSE;
 
     if (mtmp->mpeaceful) {
-        if (!hasNoHands(mtmp->data->monsterTypeID)) {
+        if (!hasNoHands(pmid4mon(mtmp))) {
             if ((obj = m_carrying(mtmp, POT_FULL_HEALING)) != 0) {
                 m.defensive = obj;
                 m.has_defense = MUSE_POT_FULL_HEALING;
@@ -379,32 +379,32 @@ struct monst *mtmp;
         ; /* fleeing by stairs or traps is not possible */
     } else if (levl[x][y].typ == STAIRS) {
         if (x == xdnstair && y == ydnstair) {
-            if (!isFloater(mtmp->data->monsterTypeID))
+            if (!isFloater(pmid4mon(mtmp)))
                 m.has_defense = MUSE_DOWNSTAIRS;
         } else if (x == xupstair && y == yupstair) {
             /* don't let monster leave the dungeon with the Amulet */
             if (currentLevelLedgerNum() != 1)
                 m.has_defense = MUSE_UPSTAIRS;
         } else if (sstairs.sx && x == sstairs.sx && y == sstairs.sy) {
-            if (sstairs.up || !isFloater(mtmp->data->monsterTypeID))
+            if (sstairs.up || !isFloater(pmid4mon(mtmp)))
                 m.has_defense = MUSE_SSTAIRS;
         }
     } else if (levl[x][y].typ == LADDER) {
         if (x == xupladder && y == yupladder) {
             m.has_defense = MUSE_UP_LADDER;
         } else if (x == xdnladder && y == ydnladder) {
-            if (!isFloater(mtmp->data->monsterTypeID))
+            if (!isFloater(pmid4mon(mtmp)))
                 m.has_defense = MUSE_DN_LADDER;
         } else if (sstairs.sx && x == sstairs.sx && y == sstairs.sy) {
-            if (sstairs.up || !isFloater(mtmp->data->monsterTypeID))
+            if (sstairs.up || !isFloater(pmid4mon(mtmp)))
                 m.has_defense = MUSE_SSTAIRS;
         }
     } else {
         /* Note: trap doors take precedence over teleport traps. */
         int xx, yy, i, locs[10][2];
-        boolean ignore_boulders = (isVerySmallMonster(mtmp->data->monsterTypeID)
-                                   || throwsRocks(mtmp->data->monsterTypeID)
-                                   || passesThroughWalls(mtmp->data->monsterTypeID)),
+        boolean ignore_boulders = (isVerySmallMonster(pmid4mon(mtmp))
+                                   || throwsRocks(pmid4mon(mtmp))
+                                   || passesThroughWalls(pmid4mon(mtmp))),
             diag_ok = !NODIAG(monsndx(mtmp->data));
 
         for (i = 0; i < 10; ++i) /* 10: 9 spots plus sentinel */
@@ -437,7 +437,7 @@ struct monst *mtmp;
                 continue;
             /* use trap if it's the correct type */
             if ((t->ttyp == TRAPDOOR || t->ttyp == HOLE)
-                && !isFloater(mtmp->data->monsterTypeID)
+                && !isFloater(pmid4mon(mtmp))
                 && !mtmp->isshk && !mtmp->isgd && !mtmp->ispriest
                 && canYouFallThroughCurrentLevel()) {
                 trapx = xx;
@@ -452,10 +452,10 @@ struct monst *mtmp;
         }
     }
 
-    if (hasNoHands(mtmp->data->monsterTypeID)) /* can't use objects */
+    if (hasNoHands(pmid4mon(mtmp))) /* can't use objects */
         goto botm;
 
-    if (isMercenary(mtmp->data->monsterTypeID) && (obj = m_carrying(mtmp, BUGLE)) != 0) {
+    if (isMercenary(pmid4mon(mtmp)) && (obj = m_carrying(mtmp, BUGLE)) != 0) {
         int xx, yy;
         struct monst *mon;
 
@@ -503,7 +503,7 @@ struct monst *mtmp;
             break;
         if (obj->otyp == WAN_DIGGING && obj->spe > 0 && !stuck && !t
             && !mtmp->isshk && !mtmp->isgd && !mtmp->ispriest
-            && !isFloater(mtmp->data->monsterTypeID)
+            && !isFloater(pmid4mon(mtmp))
             /* monsters digging in Sokoban can ruin things */
             && !Sokoban
             /* digging wouldn't be effective; assume they know that */
@@ -534,7 +534,7 @@ struct monst *mtmp;
         }
         nomore(MUSE_SCR_TELEPORTATION);
         if (obj->otyp == SCR_TELEPORTATION && mtmp->mcansee
-            && hasEyes(mtmp->data->monsterTypeID)
+            && hasEyes(pmid4mon(mtmp))
             && (!obj->cursed || (!(mtmp->isshk && inhishop(mtmp))
                                  && !mtmp->isgd && !mtmp->ispriest))) {
             /* see WAN_TELEPORTATION case above */
@@ -743,7 +743,7 @@ struct monst *mtmp;
             pline("%s has made a hole in the %s.", Monnam(mtmp),
                   surface(mtmp->mx, mtmp->my));
             pline("%s %s through...", Monnam(mtmp),
-                  isFlyer(mtmp->data->monsterTypeID) ? "dives" : "falls");
+                  isFlyer(pmid4mon(mtmp)) ? "dives" : "falls");
         } else if (!youAreDeaf())
             You_hear("%s crash through the %s.", something,
                      surface(mtmp->mx, mtmp->my));
@@ -1071,8 +1071,8 @@ struct monst *mtmp;
 
     m.offensive = (struct obj *) 0;
     m.has_offense = 0;
-    if (mtmp->mpeaceful || isAnimal(mtmp->data->monsterTypeID) || isMindless(mtmp->data->monsterTypeID)
-        || hasNoHands(mtmp->data->monsterTypeID))
+    if (mtmp->mpeaceful || isAnimal(pmid4mon(mtmp)) || isMindless(mtmp->data->monsterTypeID)
+        || hasNoHands(pmid4mon(mtmp)))
         return FALSE;
     if (swallowed())
         return FALSE;
@@ -1168,11 +1168,11 @@ struct monst *mtmp;
         nomore(MUSE_SCR_EARTH);
         if (obj->otyp == SCR_EARTH
             && ((helmet && is_metallic(helmet)) || mtmp->mconf
-                || isAmorphous(mtmp->data->monsterTypeID) || passesThroughWalls(mtmp->data->monsterTypeID)
-                || isNoncorporeal(mtmp->data->monsterTypeID) || isUnsolid(mtmp->data->monsterTypeID)
+                || isAmorphous(pmid4mon(mtmp)) || passesThroughWalls(mtmp->data->monsterTypeID)
+                || isNoncorporeal(pmid4mon(mtmp)) || isUnsolid(mtmp->data->monsterTypeID)
                 || !rn2(10))
             && dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) <= 2
-            && mtmp->mcansee && hasEyes(mtmp->data->monsterTypeID)
+            && mtmp->mcansee && hasEyes(pmid4mon(mtmp))
             && !areYouOnRogueLevel()
             && (!areYouInEndgame() || areYouOnEarthLevel())) {
             m.offensive = obj;

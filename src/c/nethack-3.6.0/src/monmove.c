@@ -122,11 +122,11 @@ int x, y;
 struct monst *mtmp;
 {
     boolean epresent = sengr_at("Elbereth", x, y, TRUE);
-    int mc = monsterClass(mtmp->data->monsterTypeID);
+    int mc = monsterClass(pmid4mon(mtmp));
 
     /* creatures who are directly resistant to magical scaring:
      * Rodney, lawful minions, angels, the Riders */
-    if (mtmp->iswiz || isLawfulMinion(mtmp->data->monsterTypeID) || mtmp->data == &mons[PM_ANGEL]
+    if (mtmp->iswiz || isLawfulMinion(pmid4mon(mtmp)) || mtmp->data == &mons[PM_ANGEL]
         || is_rider(mtmp->data))
         return FALSE;
 
@@ -198,7 +198,7 @@ register struct monst *mtmp;
      *  Aggravate or mon is (dog or human) or
      *      (1/7 and mon is not mimicing furniture or object)
      */
-    int mc = monsterClass(mtmp->data->monsterTypeID);
+    int mc = monsterClass(pmid4mon(mtmp));
 
     if (couldsee(mtmp->mx, mtmp->my) && distanceSquaredToYou(mtmp->mx, mtmp->my) <= 100
         && (!youAreStealthy() || (mtmp->data == &mons[PM_ETTIN] && rn2(10)))
@@ -267,7 +267,7 @@ boolean fleemsg;
             /* unfortunately we can't distinguish between temporary
                sleep and temporary paralysis, so both conditions
                receive the same alternate message */
-            if (!mtmp->mcanmove || !monsterMovementSpeed(mtmp->data->monsterTypeID))
+            if (!mtmp->mcanmove || !monsterMovementSpeed(pmid4mon(mtmp)))
                 pline("%s seems to flinch.", Adjmonnam(mtmp, "immobile"));
             else
                 pline("%s turns to flee.", Monnam(mtmp));
@@ -295,7 +295,7 @@ int *inrange, *nearby, *scared;
      * running into you by accident but possibly attacking the spot
      * where it guesses you are.
      */
-    if (!mtmp->mcansee || (youAreInvisibleToOthers() && !perceivesTheInvisible(mtmp->data->monsterTypeID))) {
+    if (!mtmp->mcansee || (youAreInvisibleToOthers() && !perceivesTheInvisible(pmid4mon(mtmp)))) {
         seescaryx = mtmp->mux;
         seescaryy = mtmp->muy;
     } else {
@@ -626,7 +626,7 @@ toofar:
     if (!mtmp->msleeping && mtmp->mcanmove && nearby)
         quest_talk(mtmp);
     /* extra emotional attack for vile monsters */
-    if (inrange && monsterSound(mtmp->data->monsterTypeID) == MS_CUSS && !mtmp->mpeaceful
+    if (inrange && monsterSound(pmid4mon(mtmp)) == MS_CUSS && !mtmp->mpeaceful
         && couldsee(mtmp->mx, mtmp->my) && !mtmp->minvis && !rn2(5))
         cuss(mtmp);
 
@@ -1460,7 +1460,7 @@ register struct monst *mtmp;
     if (mx == currentX() && my == currentY())
         goto found_you;
 
-    notseen = (!mtmp->mcansee || (youAreInvisibleToOthers() && !perceivesTheInvisible(mtmp->data->monsterTypeID)));
+    notseen = (!mtmp->mcansee || (youAreInvisibleToOthers() && !perceivesTheInvisible(pmid4mon(mtmp))));
     /* add cases as required.  eg. Displacement ... */
     if (notseen || underwater()) {
         /* Xorns can smell quantities of valuable metal
@@ -1489,7 +1489,7 @@ register struct monst *mtmp;
             my = currentY() - disp + rn2(2 * disp + 1);
         } while (!isok(mx, my)
                  || (disp != 2 && mx == mtmp->mx && my == mtmp->my)
-                 || ((mx != currentX() || my != currentY()) && !passesThroughWalls(mtmp->data->monsterTypeID)
+                 || ((mx != currentX() || my != currentY()) && !passesThroughWalls(pmid4mon(mtmp))
                      && !(accessible(mx, my)
                           || (closed_door(mx, my)
                               && (can_ooze(mtmp) || can_fog(mtmp)))))
@@ -1583,7 +1583,7 @@ boolean
 can_ooze(mtmp)
 struct monst *mtmp;
 {
-    if (!isAmorphous(mtmp->data->monsterTypeID) || stuff_prevents_passage(mtmp))
+    if (!isAmorphous(pmid4mon(mtmp)) || stuff_prevents_passage(mtmp))
         return FALSE;
     return TRUE;
 }
@@ -1593,7 +1593,7 @@ boolean
 can_fog(mtmp)
 struct monst *mtmp;
 {
-    if ((is_vampshifter(mtmp) || monsterClass(mtmp->data->monsterTypeID) == S_VAMPIRE)
+    if ((is_vampshifter(mtmp) || monsterClass(pmid4mon(mtmp)) == S_VAMPIRE)
         && !youHaveProtectionFromShapeChangers() && !stuff_prevents_passage(mtmp))
         return TRUE;
     return FALSE;

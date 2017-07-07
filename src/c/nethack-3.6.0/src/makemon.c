@@ -1198,7 +1198,7 @@ int mmflags;
             mon_adjust_speed(mtmp, 2, (struct obj *) 0);
         break;
     }
-    if ((ct = emitsLightWithRange(mtmp->data->monsterTypeID)) > 0)
+    if ((ct = emitsLightWithRange(pmid4mon(mtmp))) > 0)
         new_light_source(mtmp->mx, mtmp->my, ct, LS_MONSTER,
                          monst_to_any(mtmp));
     mitem = 0; /* extra inventory item for this monster */
@@ -1792,11 +1792,11 @@ int otyp;
         return 0;
     otmp = mksobj(otyp, TRUE, FALSE);
     if (otmp) {
-        if (monsterClass(mtmp->data->monsterTypeID) == S_DEMON) {
+        if (monsterClass(pmid4mon(mtmp)) == S_DEMON) {
             /* demons never get blessed objects */
             if (otmp->blessed)
                 curse(otmp);
-        } else if (isLawfulMinion(mtmp->data->monsterTypeID)) {
+        } else if (isLawfulMinion(pmid4mon(mtmp))) {
             /* lawful minions don't get cursed, bad, or rusting objects */
             otmp->cursed = FALSE;
             if (otmp->spe < 0)
@@ -1819,7 +1819,7 @@ int otyp;
         }
 
         /* leaders don't tolerate inferior quality battle gear */
-        if (isPrince(mtmp->data->monsterTypeID)) {
+        if (isPrince(pmid4mon(mtmp))) {
             if (otmp->oclass == WEAPON_CLASS && otmp->spe < 1)
                 otmp->spe = 1;
             else if (otmp->oclass == ARMOR_CLASS && otmp->spe < 0)
@@ -1927,7 +1927,7 @@ void
 set_malign(mtmp)
 struct monst *mtmp;
 {
-    schar mal = monsterAlignment(mtmp->data->monsterTypeID);
+    schar mal = monsterAlignment(pmid4mon(mtmp));
     boolean coaligned;
 
     if (mtmp->ispriest || mtmp->isminion) {
@@ -1943,20 +1943,20 @@ struct monst *mtmp;
     }
 
     coaligned = (sgn(mal) == sgn(currentAlignmentType()));
-    if (monsterSound(mtmp->data->monsterTypeID) == MS_LEADER) {
+    if (monsterSound(pmid4mon(mtmp)) == MS_LEADER) {
         mtmp->malign = -20;
     } else if (mal == A_NONE) {
         if (mtmp->mpeaceful)
             mtmp->malign = 0;
         else
             mtmp->malign = 20; /* really hostile */
-    } else if (isAlwaysPeaceful(mtmp->data->monsterTypeID)) {
+    } else if (isAlwaysPeaceful(pmid4mon(mtmp))) {
         int absmal = abs(mal);
         if (mtmp->mpeaceful)
             mtmp->malign = -3 * max(5, absmal);
         else
             mtmp->malign = 3 * max(5, absmal); /* renegade */
-    } else if (isAlwaysHostile(mtmp->data->monsterTypeID)) {
+    } else if (isAlwaysHostile(pmid4mon(mtmp))) {
         int absmal = abs(mal);
         if (coaligned)
             mtmp->malign = 0;

@@ -53,7 +53,7 @@ boolean undirected;
 
         if (undirected)
             point_msg = "all around, then curses";
-        else if ((youAreInvisibleToOthers() && !perceivesTheInvisible(mtmp->data->monsterTypeID)
+        else if ((youAreInvisibleToOthers() && !perceivesTheInvisible(pmid4mon(mtmp))
                   && (mtmp->mux != currentX() || mtmp->muy != currentY()))
                  || is_obj_mappear(&youmonst, STRANGE_OBJECT)
                  || lurking())
@@ -258,7 +258,7 @@ boolean foundyou;
               canspotmon(mtmp) ? Monnam(mtmp) : "Something",
               is_undirected_spell(mattk.damageType, spellnum)
                   ? ""
-                  : (youAreFullyInvisible() && !perceivesTheInvisible(mtmp->data->monsterTypeID)
+                  : (youAreFullyInvisible() && !perceivesTheInvisible(pmid4mon(mtmp))
                      && (mtmp->mux != currentX() || mtmp->muy != currentY()))
                         ? " at a spot near you"
                         : (youAppearDisplaced()
@@ -392,7 +392,7 @@ int spellnum;
 
             /* messages not quite right if plural monsters created but
                only a single monster is seen */
-            if (youAreFullyInvisible() && !perceivesTheInvisible(mtmp->data->monsterTypeID)
+            if (youAreFullyInvisible() && !perceivesTheInvisible(pmid4mon(mtmp))
                 && (mtmp->mux != currentX() || mtmp->muy != currentY()))
                 pline("%s around a spot near you!", mappear);
             else if (youAppearDisplaced() && (mtmp->mux != currentX() || mtmp->muy != currentY()))
@@ -623,7 +623,7 @@ int spellnum;
             fmt = "%s casts at a clump of sticks, but nothing happens.";
         else if (let == S_SNAKE)
             fmt = "%s transforms a clump of sticks into snakes!";
-        else if (youAreFullyInvisible() && !perceivesTheInvisible(mtmp->data->monsterTypeID)
+        else if (youAreFullyInvisible() && !perceivesTheInvisible(pmid4mon(mtmp))
                  && (mtmp->mux != currentX() || mtmp->muy != currentY()))
             fmt = "%s summons insects around a spot near you!";
         else if (youAppearDisplaced() && (mtmp->mux != currentX() || mtmp->muy != currentY()))

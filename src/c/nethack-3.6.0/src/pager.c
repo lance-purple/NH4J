@@ -240,7 +240,7 @@ int x, y;
                     Strcat(monbuf, "paranoid delusion");
 		}
                 else {
-		    javaString monsterName = monsterTypeName(mtmp->data->monsterTypeID);
+		    javaString monsterName = monsterTypeName(pmid4mon(mtmp));
                     Sprintf(eos(monbuf), "warned of %s",
                             makeplural(monsterName.c_str));
 		    releaseJavaString(monsterName);

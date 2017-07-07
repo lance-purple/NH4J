@@ -895,7 +895,7 @@ int
 gender(mtmp)
 register struct monst *mtmp;
 {
-    if (isNeuter(mtmp->data->monsterTypeID))
+    if (isNeuter(pmid4mon(mtmp)))
         return 2;
     return mtmp->female;
 }
@@ -929,7 +929,7 @@ struct monst *mtmp;
         return TRUE;
     /* stalking types follow, but won't when fleeing unless you hold
        the Amulet */
-    return (boolean) (monsterHasFlag2(mtmp->data->monsterTypeID, M2_STALK)
+    return (boolean) (monsterHasFlag2(pmid4mon(mtmp), M2_STALK)
                       && (!mtmp->mflee || haveSpecialItem(SPECIAL_ITEM_AMULET)));
 }
 

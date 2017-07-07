@@ -61,7 +61,7 @@ boolean waslit, rockit;
         if (t_at(x, y))
             return;                   /* don't cover the portal */
         if ((mtmp = m_at(x, y)) != 0) /* make sure crucial monsters survive */
-            if (!passesThroughWalls(mtmp->data->monsterTypeID))
+            if (!passesThroughWalls(pmid4mon(mtmp)))
                 (void) rloc(mtmp, TRUE);
     } else if (lev->typ == ROOM)
         return;
@@ -1993,7 +1993,7 @@ long timeout;
 
         /* a hiding monster may be exposed */
         if (mtmp && !OBJ_AT(x, y) && mtmp->mundetected
-            && hidesUnderStuff(mtmp->data->monsterTypeID)) {
+            && hidesUnderStuff(pmid4mon(mtmp))) {
             mtmp->mundetected = 0;
         } else if (x == currentX() && y == currentY() && lurking() && hidesUnderStuff(pmid4you()))
             (void) hideunder(&youmonst);

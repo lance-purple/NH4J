@@ -1765,7 +1765,7 @@ int style;
         t = t_at(bhitpos.x, bhitpos.y);
 
         if ((mtmp = m_at(bhitpos.x, bhitpos.y)) != 0) {
-            if (otyp == BOULDER && throwsRocks(mtmp->data->monsterTypeID)) {
+            if (otyp == BOULDER && throwsRocks(pmid4mon(mtmp))) {
                 if (rn2(3)) {
                     pline("%s snatches the boulder.", Monnam(mtmp));
                     singleobj->otrapped = 0;
@@ -3928,8 +3928,8 @@ struct monst *mtmp;
 {
     if (!ttmp->madeby_u) {
         if (rnl(10) < 8 && !mtmp->mpeaceful && !mtmp->msleeping
-            && !mtmp->mfrozen && !isMindless(mtmp->data->monsterTypeID)
-            && monsterClass(mtmp->data->monsterTypeID) != S_HUMAN) {
+            && !mtmp->mfrozen && !isMindless(pmid4mon(mtmp))
+            && monsterClass(pmid4mon(mtmp)) != S_HUMAN) {
             mtmp->mpeaceful = 1;
             set_malign(mtmp); /* reset alignment */
             pline("%s is grateful.", Monnam(mtmp));
@@ -4058,7 +4058,7 @@ boolean stuff;
         pline("%s is %s for you to lift.", Monnam(mtmp),
               stuff ? "carrying too much" : "too heavy");
         if (!ttmp->madeby_u && !mtmp->mpeaceful && mtmp->mcanmove
-            && !isMindless(mtmp->data->monsterTypeID) && monsterClass(mtmp->data->monsterTypeID) != S_HUMAN
+            && !isMindless(pmid4mon(mtmp)) && monsterClass(mtmp->data->monsterTypeID) != S_HUMAN
             && rnl(10) < 3) {
             mtmp->mpeaceful = 1;
             set_malign(mtmp); /* reset alignment */
@@ -4104,8 +4104,8 @@ struct trap *ttmp;
     }
 
     /* is it a cockatrice?... */
-    if (touchPetrifies(mtmp->data->monsterTypeID) && !uarmg && !youResistStoning()) {
-	javaString monsterName = monsterTypeName(mtmp->data->monsterTypeID);
+    if (touchPetrifies(pmid4mon(mtmp)) && !uarmg && !youResistStoning()) {
+	javaString monsterName = monsterTypeName(pmid4mon(mtmp));
         You("grab the trapped %s using your bare %s.", monsterName.c_str,
             makeplural(body_part(HAND)));
 	releaseJavaString(monsterName);
@@ -4115,7 +4115,7 @@ struct trap *ttmp;
         } else {
             char kbuf[BUFSZ];
 
-	    javaString monsterName = monsterTypeName(mtmp->data->monsterTypeID);
+	    javaString monsterName = monsterTypeName(pmid4mon(mtmp));
             Sprintf(kbuf, "trying to help %s out of a pit",
                     an(monsterName.c_str));
 	    releaseJavaString(monsterName);
@@ -4147,7 +4147,7 @@ struct trap *ttmp;
     }
 
     /* is the monster too heavy? */
-    wt = inv_weight() + monsterCorpseWeight(mtmp->data->monsterTypeID);
+    wt = inv_weight() + monsterCorpseWeight(pmid4mon(mtmp));
     if (!try_lift(mtmp, ttmp, wt, FALSE))
         return 1;
 

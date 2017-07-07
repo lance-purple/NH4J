@@ -301,8 +301,8 @@ register struct obj *gold;
 {
     boolean msg_given = FALSE;
 
-    if (!likesGold(mtmp->data->monsterTypeID) && !mtmp->isshk && !mtmp->ispriest
-        && !mtmp->isgd && !isMercenary(mtmp->data->monsterTypeID)) {
+    if (!likesGold(pmid4mon(mtmp)) && !mtmp->isshk && !mtmp->ispriest
+        && !mtmp->isgd && !isMercenary(pmid4mon(mtmp))) {
         wakeup(mtmp);
     } else if (!mtmp->mcanmove) {
         /* too light to do real damage */
@@ -363,7 +363,7 @@ register struct obj *gold;
                           : mtmp->mpeaceful
                                 ? "I'll take care of that; please move along."
                                 : "I'll take that; now get moving.");
-        } else if (isMercenary(mtmp->data->monsterTypeID)) {
+        } else if (isMercenary(pmid4mon(mtmp))) {
             long goldreqd = 0L;
 
             if (rn2(3)) {

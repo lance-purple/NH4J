@@ -131,7 +131,7 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
      */
     if (!canspotmon(mtmp) && !glyph_is_warning(glyph_at(bhitpos.x, bhitpos.y))
         && !glyph_is_invisible(levl[bhitpos.x][bhitpos.y].glyph)
-        && !(youCanSee() && mtmp->mundetected && hidesUnderStuff(mtmp->data->monsterTypeID))) {
+        && !(youCanSee() && mtmp->mundetected && hidesUnderStuff(pmid4mon(mtmp)))) {
         pline("Wait!  There's %s there you can't see!", something);
         map_invisible(bhitpos.x, bhitpos.y);
         /* if it was an invisible mimic, treat it as if we stumbled
@@ -163,7 +163,7 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
 
     if (mtmp->mundetected && !canseemon(mtmp)
         && !glyph_is_warning(glyph_at(bhitpos.x, bhitpos.y))
-        && (hidesUnderStuff(mtmp->data->monsterTypeID) || monsterClass(mtmp->data->monsterTypeID) == S_EEL)) {
+        && (hidesUnderStuff(pmid4mon(mtmp)) || monsterClass(mtmp->data->monsterTypeID) == S_EEL)) {
         mtmp->mundetected = mtmp->msleeping = 0;
         newsym(mtmp->mx, mtmp->my);
         if (glyph_is_invisible(levl[mtmp->mx][mtmp->my].glyph)) {
@@ -299,7 +299,7 @@ int *attk_count, *role_roll_penalty;
         else if (!uwep && !uarms)
             tmp += (currentExperienceLevel() / 3) + 2;
     }
-    if (isOrc(mtmp->data->monsterTypeID) && areYouElvish()) {
+    if (isOrc(pmid4mon(mtmp)) && areYouElvish()) {
         tmp++;
     }
 
@@ -364,7 +364,7 @@ register struct monst *mtmp;
                 }
 
             if (inshop || foo || (IS_ROCK(levl[currentX()][currentY()].typ)
-                                  && !passesThroughWalls(mtmp->data->monsterTypeID))) {
+                                  && !passesThroughWalls(pmid4mon(mtmp)))) {
                 char buf[BUFSZ];
 
                 monflee(mtmp, rnd(6), FALSE, FALSE);
@@ -373,7 +373,7 @@ register struct monst *mtmp;
                 You("stop.  %s is in the way!", buf);
                 return TRUE;
             } else if ((mtmp->mfrozen || (!mtmp->mcanmove)
-                        || (monsterMovementSpeed(mtmp->data->monsterTypeID) == 0)) && rn2(6)) {
+                        || (monsterMovementSpeed(pmid4mon(mtmp)) == 0)) && rn2(6)) {
                 pline("%s doesn't seem to move!", Monnam(mtmp));
                 return TRUE;
             } else
@@ -2746,7 +2746,7 @@ struct obj *otmp; /* source of flash */
             pline_The("flash awakens %s.", mon_nam(mtmp));
             res = 1;
         }
-    } else if (monsterClass(mtmp->data->monsterTypeID) != S_LIGHT) {
+    } else if (monsterClass(pmid4mon(mtmp)) != S_LIGHT) {
         if (!resists_blnd(mtmp)) {
             tmp = dist2(otmp->ox, otmp->oy, mtmp->mx, mtmp->my);
             if (useeit) {

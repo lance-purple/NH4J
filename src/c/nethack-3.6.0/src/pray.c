@@ -1929,8 +1929,8 @@ doturn()
             continue;
 
         if (!mtmp->mpeaceful
-            && (isUndead(mtmp->data->monsterTypeID) || is_vampshifter(mtmp)
-                || (isDemon(mtmp->data->monsterTypeID) && (currentExperienceLevel() > (MAXULEV / 2))))) {
+            && (isUndead(pmid4mon(mtmp)) || is_vampshifter(mtmp)
+                || (isDemon(pmid4mon(mtmp)) && (currentExperienceLevel() > (MAXULEV / 2))))) {
             mtmp->msleeping = 0;
             if (youAreConfused()) {
                 if (!once++)
@@ -1940,7 +1940,7 @@ doturn()
                 mtmp->mcanmove = 1;
             } else if (!resist(mtmp, '\0', 0, TELL)) {
                 xlev = 6;
-                switch (monsterClass(mtmp->data->monsterTypeID)) {
+                switch (monsterClass(pmid4mon(mtmp))) {
                 /* this is intentional, lichs are tougher
                    than zombies. */
                 case S_LICH:

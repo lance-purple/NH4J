@@ -33,7 +33,7 @@ void
 initedog(mtmp)
 register struct monst *mtmp;
 {
-    mtmp->mtame = isDomestic(mtmp->data->monsterTypeID) ? 10 : 5;
+    mtmp->mtame = isDomestic(pmid4mon(mtmp)) ? 10 : 5;
     mtmp->mpeaceful = 1;
     mtmp->mavenge = 0;
     set_malign(mtmp); /* recalc alignment now that it's tamed */
@@ -541,7 +541,7 @@ long nmv; /* number of moves */
      * of dying the next time we call dog_move()
      */
     if (mtmp->mtame && !mtmp->isminion
-        && (isCarnivorous(mtmp->data->monsterTypeID) || isHerbivorous(mtmp->data->monsterTypeID))) {
+        && (isCarnivorous(pmid4mon(mtmp)) || isHerbivorous(mtmp->data->monsterTypeID))) {
         struct edog *edog = EDOG(mtmp);
 
         if ((monstermoves > edog->hungrytime + 500 && mtmp->mhp < 3)
@@ -557,7 +557,7 @@ long nmv; /* number of moves */
     }
 
     /* recover lost hit points */
-    if (!regenerates(mtmp->data->monsterTypeID))
+    if (!regenerates(pmid4mon(mtmp)))
         imv /= 20;
     if (mtmp->mhp + imv >= mtmp->mhpmax)
         mtmp->mhp = mtmp->mhpmax;
@@ -625,7 +625,7 @@ boolean pets_only; /* true for ascension or final escape */
             if (stay_behind) {
                 if (mtmp->mleashed) {
                     pline("%s leash suddenly comes loose.",
-                          isHumanoid(mtmp->data->monsterTypeID)
+                          isHumanoid(pmid4mon(mtmp))
                               ? (mtmp->female ? "Her" : "His")
                               : "Its");
                     m_unleash(mtmp, FALSE);
@@ -870,7 +870,7 @@ register struct obj *obj;
 {
     /* The Wiz, Medusa and the quest nemeses aren't even made peaceful. */
     if (mtmp->iswiz || mtmp->data == &mons[PM_MEDUSA]
-        || monsterHasFlag3(mtmp->data->monsterTypeID, M3_WANTSARTI)) {
+        || monsterHasFlag3(pmid4mon(mtmp), M3_WANTSARTI)) {
         return FALSE;
     }
 
@@ -878,7 +878,7 @@ register struct obj *obj;
     mtmp->mpeaceful = 1;
     set_malign(mtmp);
     if (flags.moonphase == FULL_MOON && night() && rn2(6) && obj
-        && monsterClass(mtmp->data->monsterTypeID) == S_DOG)
+        && monsterClass(pmid4mon(mtmp)) == S_DOG)
         return FALSE;
 
     /* If we cannot tame it, at least it's no longer afraid. */
@@ -905,7 +905,7 @@ register struct obj *obj;
             if (canseemon(mtmp)) {
                 boolean big_corpse =
                     (obj->otyp == CORPSE && obj->corpsenm >= LOW_PM
-                     && monsterSize(mons[obj->corpsenm].monsterTypeID) > monsterSize(mtmp->data->monsterTypeID));
+                     && monsterSize(mons[obj->corpsenm].monsterTypeID) > monsterSize(pmid4mon(mtmp)));
                 pline("%s catches %s%s", Monnam(mtmp), the(xname(obj)),
                       !big_corpse ? "." : ", or vice versa!");
             } else if (cansee(mtmp->mx, mtmp->my))
@@ -924,8 +924,8 @@ register struct obj *obj;
     if (mtmp->mtame || !mtmp->mcanmove
         /* monsters with conflicting structures cannot be tamed */
         || mtmp->isshk || mtmp->isgd || mtmp->ispriest || mtmp->isminion
-        || isCovetous(mtmp->data->monsterTypeID) || isHuman(mtmp->data->monsterTypeID)
-        || (isDemon(mtmp->data->monsterTypeID) && !isDemon(pmid4you()))
+        || isCovetous(pmid4mon(mtmp)) || isHuman(mtmp->data->monsterTypeID)
+        || (isDemon(pmid4mon(mtmp)) && !isDemon(pmid4you()))
         || (obj && dogfood(mtmp, obj) >= MANFOOD))
         return FALSE;
 
@@ -988,7 +988,7 @@ boolean was_dead;
                 mtmp->mpeaceful = 1;
         if (!quietly && cansee(mtmp->mx, mtmp->my)) {
             if (hasEyes(pmid4you())) {
-                if (hasEyes(mtmp->data->monsterTypeID))
+                if (hasEyes(pmid4mon(mtmp)))
                     pline("%s %s to look you in the %s.", Monnam(mtmp),
                           mtmp->mpeaceful ? "seems unable" : "refuses",
                           body_part(EYE));

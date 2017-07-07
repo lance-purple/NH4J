@@ -463,11 +463,11 @@ do_mname()
     /* unique monsters have their own specific names or titles;
        shopkeepers, temple priests and other minions use alternate
        name formatting routines which ignore any user-supplied name */
-    if (monsterGenerationMask(mtmp->data->monsterTypeID) & G_UNIQ)
+    if (monsterGenerationMask(pmid4mon(mtmp)) & G_UNIQ)
         pline("%s doesn't like being called names!", upstart(monnambuf));
     else if (mtmp->isshk
              && !(youAreDeaf() || mtmp->msleeping || !mtmp->mcanmove
-                  || monsterSound(mtmp->data->monsterTypeID) <= MS_ANIMAL))
+                  || monsterSound(pmid4mon(mtmp)) <= MS_ANIMAL))
         verbalize("I'm %s, not %s.", shkname(mtmp), buf);
     else if (mtmp->ispriest || mtmp->isminion || mtmp->isshk)
         pline("%s will not accept the name %s.", upstart(monnambuf), buf);

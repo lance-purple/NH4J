@@ -476,7 +476,7 @@ register struct monst *mtmp;
          * protect their stuff. Fire resistant monsters can only protect
          * themselves  --ALI
          */
-        if (!isClinger(mtmp->data->monsterTypeID) && !likesLava(mtmp->data->monsterTypeID)) {
+        if (!isClinger(pmid4mon(mtmp)) && !likesLava(mtmp->data->monsterTypeID)) {
             if (!resists_fire(mtmp)) {
                 if (cansee(mtmp->mx, mtmp->my))
                     pline("%s %s.", Monnam(mtmp),
@@ -505,8 +505,8 @@ register struct monst *mtmp;
          * water damage to dead monsters' inventory, but survivors need to
          * be handled here.  Swimmers are able to protect their stuff...
          */
-        if (!isClinger(mtmp->data->monsterTypeID) && !isSwimmer(mtmp->data->monsterTypeID)
-            && !isAmphibious(mtmp->data->monsterTypeID)) {
+        if (!isClinger(pmid4mon(mtmp)) && !isSwimmer(mtmp->data->monsterTypeID)
+            && !isAmphibious(pmid4mon(mtmp))) {
             if (cansee(mtmp->mx, mtmp->my)) {
                 pline("%s drowns.", Monnam(mtmp));
             }
@@ -526,7 +526,7 @@ register struct monst *mtmp;
         }
     } else {
         /* but eels have a difficult time outside */
-        if (monsterClass(mtmp->data->monsterTypeID) == S_EEL && !areYouOnWaterLevel()) {
+        if (monsterClass(pmid4mon(mtmp)) == S_EEL && !areYouOnWaterLevel()) {
             /* as mhp gets lower, the rate of further loss slows down */
             if (mtmp->mhp > 1 && rn2(mtmp->mhp) > rn2(8))
                 mtmp->mhp--;
@@ -583,7 +583,7 @@ mcalcdistress()
 
         /* must check non-moving monsters once/turn in case
          * they managed to end up in liquid */
-        if (monsterMovementSpeed(mtmp->data->monsterTypeID) == 0) {
+        if (monsterMovementSpeed(pmid4mon(mtmp)) == 0) {
             if (vision_full_recalc)
                 vision_recalc(0);
             if (minliquid(mtmp))
@@ -595,7 +595,7 @@ mcalcdistress()
 
         /* possibly polymorph shapechangers and lycanthropes */
         if (mtmp->cham >= LOW_PM) {
-            if (is_vampshifter(mtmp) || monsterClass(mtmp->data->monsterTypeID) == S_VAMPIRE)
+            if (is_vampshifter(mtmp) || monsterClass(pmid4mon(mtmp)) == S_VAMPIRE)
                 decide_to_shapeshift(mtmp, 0);
             else if (!rn2(6))
                 (void) newcham(mtmp, (struct permonst *) 0, FALSE, FALSE);
@@ -676,7 +676,7 @@ movemon()
         if (minliquid(mtmp))
             continue;
 
-        if (isHider(mtmp->data->monsterTypeID)) {
+        if (isHider(pmid4mon(mtmp))) {
             /* unwatched mimics and piercers may hide again  [MRS] */
             if (restrap(mtmp))
                 continue;
@@ -685,7 +685,7 @@ movemon()
                 continue;
             if (mtmp->mundetected)
                 continue;
-        } else if (monsterClass(mtmp->data->monsterTypeID) == S_EEL && !mtmp->mundetected
+        } else if (monsterClass(pmid4mon(mtmp)) == S_EEL && !mtmp->mundetected
                    && (mtmp->mflee || distanceSquaredToYou(mtmp->mx, mtmp->my) > 2)
                    && !canseemon(mtmp) && !rn2(4)) {
             /* some eels end up stuck in isolated pools, where they
@@ -886,7 +886,7 @@ struct monst *mtmp;
                        && ((touchPetrifies(otmp->corpsenm)
                             && !resists_ston(mtmp))
                            || (otmp->corpsenm == PM_GREEN_SLIME
-                               && !isSlimeproof(mtmp->data->monsterTypeID))))) {
+                               && !isSlimeproof(pmid4mon(mtmp)))))) {
             /* engulf */
             ++ecount;
             if (ecount == 1)
@@ -996,7 +996,7 @@ register const char *str;
         /* Nymphs take everything.  Most monsters don't pick up corpses. */
         if (!str ? searches_for_item(mtmp, otmp)
                  : !!(index(str, otmp->oclass))) {
-            if (otmp->otyp == CORPSE && monsterClass(mtmp->data->monsterTypeID) != S_NYMPH
+            if (otmp->otyp == CORPSE && monsterClass(pmid4mon(mtmp)) != S_NYMPH
                 /* let a handful of corpse types thru to can_carry() */
                 && !touchPetrifies(otmp->corpsenm)
                 && otmp->corpsenm != PM_LIZARD
@@ -1037,7 +1037,7 @@ struct monst *mtmp;
     struct obj *obj;
 
     for (obj = mtmp->minvent; obj; obj = obj->nobj) {
-        if (obj->otyp != BOULDER || !throwsRocks(mtmp->data->monsterTypeID))
+        if (obj->otyp != BOULDER || !throwsRocks(pmid4mon(mtmp)))
             curload += obj->owt;
     }
 
@@ -1058,16 +1058,16 @@ struct monst *mtmp;
      * and human weights.  Corpseless monsters are given a capacity
      * proportional to their size instead of weight.
      */
-    int mcwt = monsterCorpseWeight(mtmp->data->monsterTypeID);
+    int mcwt = monsterCorpseWeight(pmid4mon(mtmp));
     if (!mcwt)
-        maxload = (MAX_CARR_CAP * (long) monsterSize(mtmp->data->monsterTypeID)) / MZ_HUMAN;
-    else if (!isStrongMonster(mtmp->data->monsterTypeID)
-             || (isStrongMonster(mtmp->data->monsterTypeID) && (mcwt > WT_HUMAN)))
+        maxload = (MAX_CARR_CAP * (long) monsterSize(pmid4mon(mtmp))) / MZ_HUMAN;
+    else if (!isStrongMonster(pmid4mon(mtmp))
+             || (isStrongMonster(pmid4mon(mtmp)) && (mcwt > WT_HUMAN)))
         maxload = (MAX_CARR_CAP * (long) mcwt) / WT_HUMAN;
     else
         maxload = MAX_CARR_CAP; /*strong monsters w/cwt <= WT_HUMAN*/
 
-    if (!isStrongMonster(mtmp->data->monsterTypeID))
+    if (!isStrongMonster(pmid4mon(mtmp)))
         maxload /= 2;
 
     if (maxload < 1)
@@ -1139,7 +1139,7 @@ struct obj *otmp;
                 }
 	    }
 	}
-        if (hasNoHands(mtmp->data->monsterTypeID) && !glomper) {
+        if (hasNoHands(pmid4mon(mtmp)) && !glomper) {
             return 1;
 	}
     }
@@ -1758,12 +1758,12 @@ register struct monst *mtmp;
         /* this only happens if shapeshifted */
         if (mndx >= LOW_PM && mndx != monsndx(mtmp->data)) {
             char buf[BUFSZ];
-            boolean in_door = (isAmorphous(mtmp->data->monsterTypeID)
+            boolean in_door = (isAmorphous(pmid4mon(mtmp))
                                && closed_door(mtmp->mx, mtmp->my)),
                 /* alternate message phrasing for some monster types */
-                spec_mon = (isNonliving(mtmp->data->monsterTypeID)
-                            || isNoncorporeal(mtmp->data->monsterTypeID)
-                            || isAmorphous(mtmp->data->monsterTypeID));
+                spec_mon = (isNonliving(pmid4mon(mtmp))
+                            || isNoncorporeal(pmid4mon(mtmp))
+                            || isAmorphous(pmid4mon(mtmp)));
 
             /* construct a format string before transformation */
             Sprintf(buf, "The %s%s suddenly %s and rises as %%s!",
@@ -1849,7 +1849,7 @@ register struct monst *mtmp;
         mvitals[tmp].mvflags |= G_GENOD;
 #endif
 
-    if (monsterClass(mtmp->data->monsterTypeID) == S_KOP) {
+    if (monsterClass(pmid4mon(mtmp)) == S_KOP) {
         /* Dead Kops may come back. */
         switch (rnd(5)) {
         case 1: /* returns near the stairs */
@@ -1864,7 +1864,7 @@ register struct monst *mtmp;
     }
     if (mtmp->iswiz)
         wizdead();
-    if (monsterSound(mtmp->data->monsterTypeID) == MS_NEMESIS)
+    if (monsterSound(pmid4mon(mtmp)) == MS_NEMESIS)
         nemdead();
     if (mtmp->data == &mons[PM_MEDUSA])
         setAchieved(ACHIEVEMENT_KILLED_MEDUSA, TRUE);
@@ -2137,7 +2137,7 @@ int dest; /* dest==1, normal; dest==0, don't print message; dest==2, don't
     setPacifistConduct(FALSE);
 
     if (dest & 1) {
-        const char *verb = isNonliving(mtmp->data->monsterTypeID) ? "destroy" : "kill";
+        const char *verb = isNonliving(pmid4mon(mtmp)) ? "destroy" : "kill";
 
         if (!wasinside && !canspotmon(mtmp))
             You("%s it!", verb);
@@ -2320,14 +2320,14 @@ void
 mon_to_stone(mtmp)
 struct monst *mtmp;
 {
-    if (monsterClass(mtmp->data->monsterTypeID) == S_GOLEM) {
+    if (monsterClass(pmid4mon(mtmp)) == S_GOLEM) {
         /* it's a golem, and not a stone golem */
         if (canseemon(mtmp)) {
             pline("%s solidifies...", Monnam(mtmp));
 	}
         if (newcham(mtmp, &mons[PM_STONE_GOLEM], FALSE, FALSE)) {
             if (canseemon(mtmp)) {
-		javaString monsterName = monsterTypeName(mtmp->data->monsterTypeID);
+		javaString monsterName = monsterTypeName(pmid4mon(mtmp));
                 pline("Now it's %s.", an(monsterName.c_str));
 		releaseJavaString(monsterName);
 	    }
@@ -2499,7 +2499,7 @@ struct monst *mtmp;
     } else
         adjalign(-1); /* attacking peaceful monsters is bad */
     if (couldsee(mtmp->mx, mtmp->my)) {
-        if (isHumanoid(mtmp->data->monsterTypeID) || mtmp->isshk || mtmp->isgd)
+        if (isHumanoid(pmid4mon(mtmp)) || mtmp->isshk || mtmp->isgd)
             pline("%s gets angry!", Monnam(mtmp));
         else if (flags.verbose && !youAreDeaf())
             growl(mtmp);
@@ -2561,7 +2561,7 @@ wake_nearby()
             continue;
         if (distanceSquaredToYou(mtmp->mx, mtmp->my) < currentExperienceLevel() * 20) {
             mtmp->msleeping = 0;
-            if (!corpseOrStatueIsUnique(mtmp->data->monsterTypeID))
+            if (!corpseOrStatueIsUnique(pmid4mon(mtmp)))
                 mtmp->mstrategy &= ~STRAT_WAITMASK;
             if (mtmp->mtame && !mtmp->isminion)
                 EDOG(mtmp)->whistletime = moves;
@@ -2581,7 +2581,7 @@ register int x, y, distance;
             continue;
         if (distance == 0 || dist2(mtmp->mx, mtmp->my, x, y) < distance) {
             mtmp->msleeping = 0;
-            if (!corpseOrStatueIsUnique(mtmp->data->monsterTypeID))
+            if (!corpseOrStatueIsUnique(pmid4mon(mtmp)))
                 mtmp->mstrategy &= ~STRAT_WAITMASK;
         }
     }
@@ -2626,7 +2626,7 @@ rescham()
             (void) newcham(mtmp, &mons[mcham], FALSE, FALSE);
             mtmp->cham = NON_PM;
         }
-        if (isWere(mtmp->data->monsterTypeID) && monsterClass(mtmp->data->monsterTypeID) != S_HUMAN)
+        if (isWere(pmid4mon(mtmp)) && monsterClass(mtmp->data->monsterTypeID) != S_HUMAN)
             new_were(mtmp);
         if (mtmp->m_ap_type && cansee(mtmp->mx, mtmp->my)) {
             seemimic(mtmp);
@@ -2647,7 +2647,7 @@ restartcham()
         if (DEADMONSTER(mtmp))
             continue;
         mtmp->cham = pm_to_cham(monsndx(mtmp->data));
-        if (monsterClass(mtmp->data->monsterTypeID) == S_MIMIC && mtmp->msleeping
+        if (monsterClass(pmid4mon(mtmp)) == S_MIMIC && mtmp->msleeping
             && cansee(mtmp->mx, mtmp->my)) {
             set_mimic_sym(mtmp);
             newsym(mtmp->mx, mtmp->my);
@@ -2683,7 +2683,7 @@ restrap(mtmp)
 register struct monst *mtmp;
 {
     struct trap *t;
-    int mc = monsterClass(mtmp->data->monsterTypeID);
+    int mc = monsterClass(pmid4mon(mtmp));
 
     if (mtmp->mcan || mtmp->m_ap_type || cansee(mtmp->mx, mtmp->my)
         || rn2(3) || mtmp == u.ustuck
@@ -2712,7 +2712,7 @@ struct monst *mtmp;
     struct trap *t;
     boolean undetected = FALSE, is_u = (mtmp == &youmonst);
     xchar x = is_u ? currentX() : mtmp->mx, y = is_u ? currentY() : mtmp->my;
-    int mc = monsterClass(mtmp->data->monsterTypeID);
+    int mc = monsterClass(pmid4mon(mtmp));
 
     if (mtmp == u.ustuck) {
         ; /* can't hide if holding you or held by you */
@@ -2722,7 +2722,7 @@ struct monst *mtmp;
         ; /* can't hide while stuck in a non-pit trap */
     } else if (mc == S_EEL) {
         undetected = (is_pool(x, y) && !areYouOnWaterLevel());
-    } else if (hidesUnderStuff(mtmp->data->monsterTypeID) && OBJ_AT(x, y)) {
+    } else if (hidesUnderStuff(pmid4mon(mtmp)) && OBJ_AT(x, y)) {
         struct obj *otmp = level.objects[x][y];
 
         /* most monsters won't hide under cockatrice corpse */
@@ -3202,13 +3202,13 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
     /* take on the new form... */
     set_mon_data(mtmp, mdat, 0);
 
-    if (emitsLightWithRange(olddata->monsterTypeID) != emitsLightWithRange(mtmp->data->monsterTypeID)) {
+    if (emitsLightWithRange(olddata->monsterTypeID) != emitsLightWithRange(pmid4mon(mtmp))) {
         /* used to give light, now doesn't, or vice versa,
            or light's range has changed */
         if (emitsLightWithRange(olddata->monsterTypeID))
             del_light_source(LS_MONSTER, monst_to_any(mtmp));
-        if (emitsLightWithRange(mtmp->data->monsterTypeID))
-            new_light_source(mtmp->mx, mtmp->my, emitsLightWithRange(mtmp->data->monsterTypeID),
+        if (emitsLightWithRange(pmid4mon(mtmp)))
+            new_light_source(mtmp->mx, mtmp->my, emitsLightWithRange(pmid4mon(mtmp)),
                              LS_MONSTER, monst_to_any(mtmp));
     }
     if (!mtmp->perminvis || pm_invisible(olddata))

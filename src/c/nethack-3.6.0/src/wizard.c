@@ -225,7 +225,7 @@ register struct monst *mtmp;
     register struct obj *otmp;
     register struct monst *mtmp2;
 
-    if (!monsterHasFlag3(mtmp->data->monsterTypeID, mask)) {
+    if (!monsterHasFlag3(pmid4mon(mtmp), mask)) {
         return (unsigned long) STRAT_NONE;
     }
 
@@ -251,7 +251,7 @@ register struct monst *mtmp;
 {
     unsigned long strat, dstrat;
 
-    if (!isCovetous(mtmp->data->monsterTypeID)
+    if (!isCovetous(pmid4mon(mtmp))
         /* perhaps a shopkeeper has been polymorphed into a master
            lich; we don't want it teleporting to the stairs to heal
            because that will leave its shop untended */
@@ -493,7 +493,7 @@ struct monst *mcast;
                                    NO_MM_FLAGS);
                 if (mtmp) {
                     count++;
-		    int maligntyp = monsterAlignment(mtmp->data->monsterTypeID);
+		    int maligntyp = monsterAlignment(pmid4mon(mtmp));
                     if (maligntyp == 0
                         || sgn(maligntyp) == castalign)
                         break;
@@ -642,7 +642,7 @@ register struct monst *mtmp;
             verbalize("%s %s!",
                       random_malediction[rn2(SIZE(random_malediction))],
                       random_insult[rn2(SIZE(random_insult))]);
-    } else if (isLawfulMinion(mtmp->data->monsterTypeID)) {
+    } else if (isLawfulMinion(pmid4mon(mtmp))) {
         com_pager(rn2(QTN_ANGELIC - 1 + (youAreHallucinating() ? 1 : 0))
                   + QT_ANGELIC);
     } else {

@@ -143,7 +143,7 @@ moverock()
             if (revive_nasty(rx, ry, "You sense movement on the other side."))
                 return -1;
 
-            if (mtmp && !isNoncorporeal(mtmp->data->monsterTypeID)
+            if (mtmp && !isNoncorporeal(pmid4mon(mtmp))
                 && (!mtmp->mtrapped
                     || !(ttmp && ((ttmp->ttyp == PIT)
                                   || (ttmp->ttyp == SPIKED_PIT))))) {
@@ -1428,7 +1428,7 @@ domove()
             return;
         }
         if (context.forcefight || !mtmp->mundetected || senseMonsters(mtmp)
-            || ((hidesUnderStuff(mtmp->data->monsterTypeID) || monsterClass(mtmp->data->monsterTypeID) == S_EEL)
+            || ((hidesUnderStuff(pmid4mon(mtmp)) || monsterClass(mtmp->data->monsterTypeID) == S_EEL)
                 && !is_safepet(mtmp))) {
             /* try to attack; note that it might evade */
             /* also, we don't attack tame when _safepet_ */
@@ -1572,7 +1572,7 @@ domove()
      * Ceiling-hiding pets are skipped by this section of code, to
      * be caught by the normal falling-monster code.
      */
-    if (is_safepet(mtmp) && !(isHider(mtmp->data->monsterTypeID) && mtmp->mundetected)) {
+    if (is_safepet(mtmp) && !(isHider(pmid4mon(mtmp)) && mtmp->mundetected)) {
         /* if trapped, there's a chance the pet goes wild */
         if (mtmp->mtrapped) {
             if (!rn2(mtmp->mtame)) {
@@ -1603,7 +1603,7 @@ domove()
             You("stop.  %s can't move diagonally.", upstart(y_monnam(mtmp)));
         } else if ((originalX() != x) && (originalY() != y) && bad_rock(mtmp->data, x, originalY())
                    && bad_rock(mtmp->data, originalX(), y)
-                   && (isBigMonster(mtmp->data->monsterTypeID) || (curr_mon_load(mtmp) > 600))) {
+                   && (isBigMonster(pmid4mon(mtmp)) || (curr_mon_load(mtmp) > 600))) {
             /* can't swap places when pet won't fit thru the opening */
             setCurrentX(originalX());
             setCurrentY(originalY()); /* didn't move after all */
@@ -1996,7 +1996,7 @@ boolean pick;
     }
     if ((mtmp = m_at(currentX(), currentY())) && !swallowed()) {
         mtmp->mundetected = mtmp->msleeping = 0;
-        switch (monsterClass(mtmp->data->monsterTypeID)) {
+        switch (monsterClass(pmid4mon(mtmp))) {
         case S_PIERCER:
             pline("%s suddenly drops from the %s!", Amonnam(mtmp),
                   ceiling(currentX(), currentY()));
@@ -2666,7 +2666,7 @@ monster_nearby()
             if ((mtmp = m_at(x, y)) && mtmp->m_ap_type != M_AP_FURNITURE
                 && mtmp->m_ap_type != M_AP_OBJECT
                 && (!mtmp->mpeaceful || youAreHallucinating())
-                && (!isHider(mtmp->data->monsterTypeID) || !mtmp->mundetected)
+                && (!isHider(pmid4mon(mtmp)) || !mtmp->mundetected)
                 && !monsterDoesNotAttack(mtmp->data) && mtmp->mcanmove
                 && !mtmp->msleeping  /* aplvax!jcn */
                 && !onscary(currentX(), currentY(), mtmp) && canspotmon(mtmp))

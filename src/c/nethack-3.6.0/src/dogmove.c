@@ -153,7 +153,7 @@ struct obj *obj;
             mtmp->meating = objects[obj->otyp].oc_delay;
             nutrit = objects[obj->otyp].oc_nutrition;
         }
-        switch (monsterSize(mtmp->data->monsterTypeID)) {
+        switch (monsterSize(pmid4mon(mtmp))) {
         case MZ_TINY:
             nutrit *= 8;
             break;
@@ -268,7 +268,7 @@ boolean devour;
            pet as "it".  However, we want "it" if invisible/unsensed
            pet eats visible food. */
         if (sawpet || (seeobj && canspotmon(mtmp))) {
-            if (isTunneler(mtmp->data->monsterTypeID))
+            if (isTunneler(pmid4mon(mtmp)))
                 pline("%s digs in.", noit_Monnam(mtmp));
             else
                 pline("%s %s %s.", noit_Monnam(mtmp),
@@ -334,7 +334,7 @@ boolean devour;
     }
 
     /* limit "instant" growth to prevent potential abuse */
-    if (grow && (int) mtmp->m_lev < (int) monsterLevel(mtmp->data->monsterTypeID) + 15) {
+    if (grow && (int) mtmp->m_lev < (int) monsterLevel(pmid4mon(mtmp)) + 15) {
         if (!grow_up(mtmp, (struct monst *) 0))
             return 2;
     }
@@ -681,13 +681,13 @@ register int after; /* this is extra fast monster movement */
         return 0;
 
     allowflags = ALLOW_M | ALLOW_TRAPS | ALLOW_SSM | ALLOW_SANCT;
-    if (passesThroughWalls(mtmp->data->monsterTypeID))
+    if (passesThroughWalls(pmid4mon(mtmp)))
         allowflags |= (ALLOW_ROCK | ALLOW_WALL);
     if (passes_bars(mtmp->data))
         allowflags |= ALLOW_BARS;
-    if (throwsRocks(mtmp->data->monsterTypeID))
+    if (throwsRocks(pmid4mon(mtmp)))
         allowflags |= ALLOW_ROCK;
-    if (isDisplacer(mtmp->data->monsterTypeID))
+    if (isDisplacer(pmid4mon(mtmp)))
         allowflags |= ALLOW_MDISP;
     if (youCauseConflict() && !resist(mtmp, RING_CLASS, 0, 0)) {
         allowflags |= ALLOW_U;
@@ -706,16 +706,16 @@ register int after; /* this is extra fast monster movement */
         You("get released!");
     }
 #endif
-    if (!hasNoHands(mtmp->data->monsterTypeID) && !isVerySmallMonster(mtmp->data->monsterTypeID)) {
+    if (!hasNoHands(pmid4mon(mtmp)) && !isVerySmallMonster(mtmp->data->monsterTypeID)) {
         allowflags |= OPENDOOR;
         if (monhaskey(mtmp, TRUE))
             allowflags |= UNLOCKDOOR;
         /* note:  the Wizard and Riders can unlock doors without a key;
            they won't use that ability if someone manages to tame them */
     }
-    if (isGiant(mtmp->data->monsterTypeID))
+    if (isGiant(pmid4mon(mtmp)))
         allowflags |= BUSTDOOR;
-    if (isTunneler(mtmp->data->monsterTypeID)
+    if (isTunneler(pmid4mon(mtmp))
         && !areYouOnRogueLevel()) /* same restriction as m_move() */
         allowflags |= ALLOW_DIG;
     cnt = mfndpos(mtmp, poss, info, allowflags);
@@ -761,8 +761,8 @@ register int after; /* this is extra fast monster movement */
 
             if ((int) mtmp2->m_lev >= (int) mtmp->m_lev + 2
                 || (mtmp2->data == &mons[PM_FLOATING_EYE] && rn2(10)
-                    && mtmp->mcansee && hasEyes(mtmp->data->monsterTypeID) && mtmp2->mcansee
-                    && (perceivesTheInvisible(mtmp->data->monsterTypeID) || !mtmp2->minvis))
+                    && mtmp->mcansee && hasEyes(pmid4mon(mtmp)) && mtmp2->mcansee
+                    && (perceivesTheInvisible(pmid4mon(mtmp)) || !mtmp2->minvis))
                 || (mtmp2->data == &mons[PM_GELATINOUS_CUBE] && rn2(10))
                 || (max_passive_dmg(mtmp2, mtmp) >= mtmp->mhp)
                 || ((mtmp->mhp * 4 < mtmp->mhpmax
@@ -891,7 +891,7 @@ newdogpos:
         if (((IS_ROCK(levl[nix][niy].typ) && may_dig(nix, niy))
              || closed_door(nix, niy))
             && mtmp->weapon_check != NO_WEAPON_WANTED
-            && isTunneler(mtmp->data->monsterTypeID) && needsPickaxe(mtmp->data->monsterTypeID)) {
+            && isTunneler(pmid4mon(mtmp)) && needsPickaxe(mtmp->data->monsterTypeID)) {
             if (closed_door(nix, niy)) {
                 if (!(mw_tmp = MON_WEP(mtmp)) || !is_pick(mw_tmp)
                     || !is_axe(mw_tmp))
@@ -1076,7 +1076,7 @@ struct monst *mtmp;
         idx = rn2(SIZE(qm));
         if (qm[idx].mndx != 0 && monsndx(mtmp->data) == qm[idx].mndx)
             break;
-        if (qm[idx].mlet != 0 && monsterClass(mtmp->data->monsterTypeID) == qm[idx].mlet)
+        if (qm[idx].mlet != 0 && monsterClass(pmid4mon(mtmp)) == qm[idx].mlet)
             break;
         if (qm[idx].mndx == 0 && qm[idx].mlet == 0)
             break;

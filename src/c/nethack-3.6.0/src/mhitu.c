@@ -152,14 +152,14 @@ register const struct Attack mattk;
     compat = ((mattk.damageType == AD_SEDU || mattk.damageType == AD_SSEX)
               && could_seduce(mtmp, &youmonst, NO_ATTACK));
 
-    if (!mtmp->mcansee || (youAreInvisibleToOthers() && !perceivesTheInvisible(mtmp->data->monsterTypeID))) {
+    if (!mtmp->mcansee || (youAreInvisibleToOthers() && !perceivesTheInvisible(pmid4mon(mtmp)))) {
         const char *swings =
             mattk.type == AT_BITE
                 ? "snaps"
                 : mattk.type == AT_KICK
                       ? "kicks"
                       : (mattk.type == AT_STNG || mattk.type == AT_BUTT
-                         || hasNoLimbs(mtmp->data->monsterTypeID))
+                         || hasNoLimbs(pmid4mon(mtmp)))
                             ? "lunges"
                             : "swings";
 
@@ -311,7 +311,7 @@ register struct monst *mtmp;
 
     if (!ranged)
         nomul(0);
-    if (mtmp->mhp <= 0 || (underwater() && !isSwimmer(mtmp->data->monsterTypeID)))
+    if (mtmp->mhp <= 0 || (underwater() && !isSwimmer(pmid4mon(mtmp))))
         return 0;
 
     /* If swallowed, can only be affected by u.ustuck */
@@ -330,7 +330,7 @@ register struct monst *mtmp;
             /* Your steed won't attack you */
             return 0;
         /* Orcs like to steal and eat horses and the like */
-        if (!rn2(isOrc(mtmp->data->monsterTypeID) ? 2 : 4)
+        if (!rn2(isOrc(pmid4mon(mtmp)) ? 2 : 4)
             && distanceSquaredToYou(mtmp->mx, mtmp->my) <= 2) {
             /* Attack your steed instead */
             i = mattackm(mtmp, u.usteed);
@@ -362,7 +362,7 @@ register struct monst *mtmp;
             if (!enexto(&cc, currentX(), currentY(), youmonst.data)
                 /* a fish won't voluntarily swap positions
                    when it's in water and hero is over land */
-                || (monsterClass(mtmp->data->monsterTypeID) == S_EEL
+                || (monsterClass(pmid4mon(mtmp)) == S_EEL
                     && is_pool(mtmp->mx, mtmp->my)
                     && !is_pool(currentX(), currentY()))) {
                 /* couldn't find any spot for hero; this used to
@@ -489,7 +489,7 @@ register struct monst *mtmp;
             map_invisible(mtmp->mx, mtmp->my);
 	}
         if (!youseeit) {
-            pline("%s %s!", Something, (likesGold(mtmp->data->monsterTypeID)
+            pline("%s %s!", Something, (likesGold(pmid4mon(mtmp))
                                         && youmonst.mappearance == GOLD_PIECE)
                                            ? "tries to pick you up"
                                            : "disturbs you");
@@ -670,14 +670,14 @@ register struct monst *mtmp;
                     } else {
                         missmu(mtmp, (tmp == j), mattk);
                     }
-                } else if (isAnimal(mtmp->data->monsterTypeID)) {
+                } else if (isAnimal(pmid4mon(mtmp))) {
                     pline("%s gulps some air!", Monnam(mtmp));
                 } else {
                     if (youseeit)
                         pline("%s lunges forward and recoils!", Monnam(mtmp));
                     else
                         You_hear("a %s nearby.",
-                                 isWhirly(mtmp->data->monsterTypeID) ? "rushing noise"
+                                 isWhirly(pmid4mon(mtmp)) ? "rushing noise"
                                                        : "splat");
                 }
             }
@@ -1196,10 +1196,10 @@ register const struct Attack mattk;
                     if (!youAreTurningToStone() && !youResistStoning()
                         && !(poly_when_stoned(youmonst.data)
                              && polymon(PM_STONE_GOLEM))) {
-                        javaString kname = monsterTypeName(mtmp->data->monsterTypeID);
+                        javaString kname = monsterTypeName(pmid4mon(mtmp));
 
-                        if (monsterGenerationMask(mtmp->data->monsterTypeID) & G_UNIQ) {
-                            if (!typeIsProperName(mtmp->data->monsterTypeID)) {
+                        if (monsterGenerationMask(pmid4mon(mtmp)) & G_UNIQ) {
+                            if (!typeIsProperName(pmid4mon(mtmp))) {
                                 make_stoned(5L, (char *) 0, KILLED_BY, the(kname.c_str));
 			    } else {
                                 make_stoned(5L, (char *) 0, KILLED_BY, kname.c_str);
@@ -1238,7 +1238,7 @@ register const struct Attack mattk;
 
                     pline("%s drowns you...", Monnam(mtmp));
                     killer.format = KILLED_BY_AN;
-		    javaString monsterName = monsterTypeName(mtmp->data->monsterTypeID);
+		    javaString monsterName = monsterTypeName(pmid4mon(mtmp));
                     Sprintf(killer.name, "%s by %s",
                             moat ? "moat" : "pool of water",
                             an(monsterName.c_str));
@@ -1283,7 +1283,7 @@ register const struct Attack mattk;
     /* else FALLTHRU */
     case AD_SITM: /* for now these are the same */
     case AD_SEDU:
-        if (isAnimal(mtmp->data->monsterTypeID)) {
+        if (isAnimal(pmid4mon(mtmp))) {
             hitmsg(mtmp, mattk);
             if (mtmp->mcan)
                 break;
@@ -1318,9 +1318,9 @@ register const struct Attack mattk;
         case 0:
             break;
         default:
-            if (!isAnimal(mtmp->data->monsterTypeID) && !tele_restrict(mtmp))
+            if (!isAnimal(pmid4mon(mtmp)) && !tele_restrict(mtmp))
                 (void) rloc(mtmp, TRUE);
-            if (isAnimal(mtmp->data->monsterTypeID) && *buf) {
+            if (isAnimal(pmid4mon(mtmp)) && *buf) {
                 if (canseemon(mtmp))
                     pline("%s tries to %s away with %s.", Monnam(mtmp),
                           locomotion(mtmp->data, "run"), buf);
@@ -1562,7 +1562,7 @@ register const struct Attack mattk;
         } else if (!youAreTurningToSlime()) {
             You("don't feel very well.");
             make_slimed(10L, (char *) 0);
-	    javaString monsterName = monsterTypeName(mtmp->data->monsterTypeID);
+	    javaString monsterName = monsterTypeName(pmid4mon(mtmp));
             delayed_killer(SLIMED, KILLED_BY_AN, monsterName.c_str);
 	    releaseJavaString(monsterName);
         } else
@@ -1600,7 +1600,7 @@ register const struct Attack mattk;
         if (youTakeHalfDamageFromPhysicalAttacks()
             /* Mitre of Holiness */
             || (Role_if(PM_PRIEST) && uarmh && is_quest_artifact(uarmh)
-                && (isUndead(mtmp->data->monsterTypeID) || isDemon(mtmp->data->monsterTypeID)
+                && (isUndead(pmid4mon(mtmp)) || isDemon(mtmp->data->monsterTypeID)
                     || is_vampshifter(mtmp))))
             dmg = (dmg + 1) / 2;
 
@@ -1702,7 +1702,7 @@ register const struct Attack mattk;
         place_monster(mtmp, currentX(), currentY());
         u.ustuck = mtmp;
         newsym(mtmp->mx, mtmp->my);
-        if (isAnimal(mtmp->data->monsterTypeID) && u.usteed) {
+        if (isAnimal(pmid4mon(mtmp)) && u.usteed) {
             char buf[BUFSZ];
             /* Too many quirks presently if hero and steed
              * are swallowed. Pretend purple worms don't
@@ -1902,12 +1902,12 @@ register const struct Attack mattk;
 
     if (touchPetrifies(pmid4you()) && !resists_ston(mtmp)) {
         pline("%s very hurriedly %s you!", Monnam(mtmp),
-              isAnimal(mtmp->data->monsterTypeID) ? "regurgitates" : "expels");
+              isAnimal(pmid4mon(mtmp)) ? "regurgitates" : "expels");
         expels(mtmp, mtmp->data, FALSE);
     } else if (!timeSinceBeingSwallowed() || monsterSize(pmid4you()) >= MZ_HUGE) {
-        You("get %s!", isAnimal(mtmp->data->monsterTypeID) ? "regurgitated" : "expelled");
+        You("get %s!", isAnimal(pmid4mon(mtmp)) ? "regurgitated" : "expelled");
         if (flags.verbose
-            && (isAnimal(mtmp->data->monsterTypeID)
+            && (isAnimal(pmid4mon(mtmp))
                 || (dmgtype(mtmp->data, AD_DGST) && youHaveSlowDigestion())))
             pline("Obviously %s doesn't like your taste.", mon_nam(mtmp));
         expels(mtmp, mtmp->data, FALSE);
@@ -2088,7 +2088,7 @@ register const struct Attack mattk;
                 break;
             You("turn to stone...");
             killer.format = KILLED_BY;
-	    javaString monsterName = monsterTypeName(mtmp->data->monsterTypeID);
+	    javaString monsterName = monsterTypeName(pmid4mon(mtmp));
             Strcpy(killer.name, monsterName.c_str);
 	    releaseJavaString(monsterName);
             done(STONING);
@@ -2695,8 +2695,8 @@ register const struct Attack mattk;
             if (currentMonsterNumber() == PM_FLOATING_EYE) {
                 if (!rn2(4))
                     tmp = 127;
-                if (mtmp->mcansee && hasEyes(mtmp->data->monsterTypeID) && rn2(3)
-                    && (perceivesTheInvisible(mtmp->data->monsterTypeID) || !youAreInvisibleToOthers())) {
+                if (mtmp->mcansee && hasEyes(pmid4mon(mtmp)) && rn2(3)
+                    && (perceivesTheInvisible(pmid4mon(mtmp)) || !youAreInvisibleToOthers())) {
                     if (youCannotSee()) {
 			javaString youMonsterName = monsterTypeName(upmid);
                         pline("As a blind %s, you cannot defend yourself.",

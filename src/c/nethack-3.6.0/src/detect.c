@@ -636,7 +636,7 @@ int mclass;                /* monster class, 0 for all */
         for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
             if (DEADMONSTER(mtmp))
                 continue;
-            if (!mclass || monsterClass(mtmp->data->monsterTypeID) == mclass
+            if (!mclass || monsterClass(pmid4mon(mtmp)) == mclass
                 || (mtmp->data == &mons[PM_LONG_WORM]
                     && mclass == S_WORM_TAIL))
                 if (mtmp->mx > 0) {
@@ -1182,7 +1182,7 @@ genericptr_t num;
             (*(int *) num)++;
         }
         if (mtmp->mundetected
-            && (isHider(mtmp->data->monsterTypeID) || monsterClass(mtmp->data->monsterTypeID) == S_EEL)) {
+            && (isHider(pmid4mon(mtmp)) || monsterClass(mtmp->data->monsterTypeID) == S_EEL)) {
             mtmp->mundetected = 0;
             newsym(zx, zy);
             (*(int *) num)++;
@@ -1409,8 +1409,8 @@ register int aflag; /* intrinsic autosearch vs explicit searching */
                         }
                         if (!canspotmon(mtmp)) {
                             if (mtmp->mundetected
-                                && (isHider(mtmp->data->monsterTypeID)
-                                    || monsterClass(mtmp->data->monsterTypeID) == S_EEL))
+                                && (isHider(pmid4mon(mtmp))
+                                    || monsterClass(pmid4mon(mtmp)) == S_EEL))
                                 mtmp->mundetected = 0;
                             newsym(x, y);
                             goto find;

@@ -401,13 +401,13 @@ register struct monst *mtmp;
     boolean mweponly;
     int i;
 
-    char mlet = monsterClass(mtmp->data->monsterTypeID);
+    char mlet = monsterClass(pmid4mon(mtmp));
 
     propellor = &zeroobj;
     Oselect(EGG);      /* cockatrice egg */
     if (mlet == S_KOP) /* pies are first choice for Kops */
         Oselect(CREAM_PIE);
-    if (throwsRocks(mtmp->data->monsterTypeID)) /* ...boulders for giants */
+    if (throwsRocks(pmid4mon(mtmp))) /* ...boulders for giants */
         Oselect(BOULDER);
 
     /* Select polearms first; they do more damage and aren't expendable.
@@ -428,7 +428,7 @@ register struct monst *mtmp;
              * Big weapon is basically the same as bimanual.
              * All monsters can wield the remaining weapons.
              */
-            if (((isStrongMonster(mtmp->data->monsterTypeID)
+            if (((isStrongMonster(pmid4mon(mtmp))
                   && (mtmp->misc_worn_check & W_ARMS) == 0)
                  || !objects[pwep[i]].oc_bimanual)
                 && (objects[pwep[i]].oc_material != SILVER
@@ -451,7 +451,7 @@ register struct monst *mtmp;
 
         /* shooting gems from slings; this goes just before the darts */
         /* (shooting rocks is already handled via the rwep[] ordering) */
-        if (rwep[i] == DART && !likesGems(mtmp->data->monsterTypeID)
+        if (rwep[i] == DART && !likesGems(pmid4mon(mtmp))
             && m_carrying(mtmp, SLING)) { /* propellor */
             for (otmp = mtmp->minvent; otmp; otmp = otmp->nobj)
                 if (otmp->oclass == GEM_CLASS
@@ -532,7 +532,7 @@ register struct monst *mtmp;
 {
     register struct obj *otmp;
     register int i;
-    boolean strong = isStrongMonster(mtmp->data->monsterTypeID);
+    boolean strong = isStrongMonster(pmid4mon(mtmp));
     boolean wearing_shield = (mtmp->misc_worn_check & W_ARMS) != 0;
 
     /* prefer artifacts to everything else */
@@ -544,7 +544,7 @@ register struct monst *mtmp;
             return otmp;
     }
 
-    if (isGiant(mtmp->data->monsterTypeID)) /* giants just love to use clubs */
+    if (isGiant(pmid4mon(mtmp))) /* giants just love to use clubs */
         Oselect(CLUB);
 
     /* only strong monsters can wield big (esp. long) weapons */

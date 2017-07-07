@@ -723,7 +723,7 @@ register xchar x, y;
             > dist2(x, y, mtmp->mx, mtmp->my)) {
             if (!um_dist(mtmp->mx, mtmp->my, 3)) {
                 ; /* still close enough */
-            } else if (otmp->cursed && !doesNotBreathe(mtmp->data->monsterTypeID)) {
+            } else if (otmp->cursed && !doesNotBreathe(pmid4mon(mtmp))) {
                 if (um_dist(mtmp->mx, mtmp->my, 5)
                     || (mtmp->mhp -= rnd(2)) <= 0) {
                     boolean save_pacifism = pacifistConduct();
@@ -749,7 +749,7 @@ register xchar x, y;
                     m_unleash(mtmp, FALSE);
                 } else {
                     You("pull on the leash.");
-                    if (monsterSound(mtmp->data->monsterTypeID) != MS_SILENT)
+                    if (monsterSound(pmid4mon(mtmp)) != MS_SILENT)
                         switch (rn2(3)) {
                         case 0:
                             growl(mtmp);
@@ -857,7 +857,7 @@ struct obj *obj;
     mtmp = bhit(directionX(), directionY(), COLNO, INVIS_BEAM,
                 (int FDECL((*), (MONST_P, OBJ_P))) 0,
                 (int FDECL((*), (OBJ_P, OBJ_P))) 0, &obj);
-    if (!mtmp || !hasEyes(mtmp->data->monsterTypeID) || notonhead)
+    if (!mtmp || !hasEyes(pmid4mon(mtmp)) || notonhead)
         return 1;
 
     int pmid = mtmp->data->monsterTypeID;
@@ -899,7 +899,7 @@ struct obj *obj;
         stoned = TRUE;
         killed(mtmp);
     } else if (monable && mtmp->data == &mons[PM_FLOATING_EYE]) {
-        int tmp = d((int) mtmp->m_lev, monsterAttack(mtmp->data->monsterTypeID, 0).diceSides);
+        int tmp = d((int) mtmp->m_lev, monsterAttack(pmid4mon(mtmp), 0).diceSides);
         if (!rn2(4))
             tmp = 120;
         if (vis)
@@ -2573,7 +2573,7 @@ struct obj *obj;
         const char *wrapped_what = (char *) 0;
 
         if (mtmp) {
-            if (isBigMonster(mtmp->data->monsterTypeID)) {
+            if (isBigMonster(pmid4mon(mtmp))) {
                 wrapped_what = strcpy(buf, mon_nam(mtmp));
             } else if (proficient) {
                 if (attack(mtmp))
@@ -3051,7 +3051,7 @@ struct obj *obj;
             break;
         notonhead = (bhitpos.x != mtmp->mx || bhitpos.y != mtmp->my);
         save_confirm = flags.confirm;
-        if (isVerySmallMonster(mtmp->data->monsterTypeID) && !rn2(4)
+        if (isVerySmallMonster(pmid4mon(mtmp)) && !rn2(4)
             && enexto(&cc, currentX(), currentY(), (struct permonst *) 0)) {
             flags.confirm = FALSE;
             (void) attack_checks(mtmp, uwep);
@@ -3061,7 +3061,7 @@ struct obj *obj;
             mtmp->mundetected = 0;
             rloc_to(mtmp, cc.x, cc.y);
             return 1;
-        } else if ((!isBigMonster(mtmp->data->monsterTypeID) && !isStrongMonster(mtmp->data->monsterTypeID))
+        } else if ((!isBigMonster(pmid4mon(mtmp)) && !isStrongMonster(mtmp->data->monsterTypeID))
                    || rn2(4)) {
             flags.confirm = FALSE;
             (void) attack_checks(mtmp, uwep);

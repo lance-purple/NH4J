@@ -3368,7 +3368,7 @@ boolean catchup; /* restoring a level */
                 return 0;
         if (x == shkp->mx && y == shkp->my)
             return 0;
-        if ((mtmp = m_at(x, y)) && (!passesThroughWalls(mtmp->data->monsterTypeID)))
+        if ((mtmp = m_at(x, y)) && (!passesThroughWalls(pmid4mon(mtmp))))
             return 0;
     }
     if ((ttmp = t_at(x, y)) != 0) {
@@ -4106,7 +4106,7 @@ boolean silent;
 
     for (mtmp = fmon; mtmp; mtmp = mtmp2) {
         mtmp2 = mtmp->nmon;
-        if (monsterClass(mtmp->data->monsterTypeID) == S_KOP) {
+        if (monsterClass(pmid4mon(mtmp)) == S_KOP) {
             if (canspotmon(mtmp))
                 cnt++;
             mongone(mtmp);

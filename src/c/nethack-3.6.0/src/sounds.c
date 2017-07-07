@@ -58,8 +58,8 @@ dosounds()
         for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
             if (DEADMONSTER(mtmp))
                 continue;
-            if ((mtmp->msleeping || isLord(mtmp->data->monsterTypeID)
-                 || isPrince(mtmp->data->monsterTypeID)) && !isAnimal(mtmp->data->monsterTypeID)
+            if ((mtmp->msleeping || isLord(pmid4mon(mtmp))
+                 || isPrince(pmid4mon(mtmp))) && !isAnimal(mtmp->data->monsterTypeID)
                 && mon_in_room(mtmp, COURT)) {
                 /* finding one is enough, at least for now */
                 int which = rn2(3) + hallu;
@@ -151,7 +151,7 @@ dosounds()
         for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
             if (DEADMONSTER(mtmp))
                 continue;
-            if ((isUndead(mtmp->data->monsterTypeID) || is_vampshifter(mtmp))
+            if ((isUndead(pmid4mon(mtmp)) || is_vampshifter(mtmp))
                 && mon_in_room(mtmp, MORGUE)) {
                 const char *hair = body_part(HAIR); /* hair/fur/scales */
 
@@ -182,7 +182,7 @@ dosounds()
         for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
             if (DEADMONSTER(mtmp))
                 continue;
-            if (isMercenary(mtmp->data->monsterTypeID)
+            if (isMercenary(pmid4mon(mtmp))
 #if 0 /* don't bother excluding these */
                 && !strstri(mtmp->data->mname, "watch")
                 && !strstri(mtmp->data->mname, "guard")
@@ -203,7 +203,7 @@ dosounds()
         for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
             if (DEADMONSTER(mtmp))
                 continue;
-            if ((mtmp->msleeping || isAnimal(mtmp->data->monsterTypeID))
+            if ((mtmp->msleeping || isAnimal(pmid4mon(mtmp)))
                 && mon_in_room(mtmp, ZOO)) {
                 You_hear1(zoo_msg[rn2(2) + hallu]);
                 return;
@@ -255,7 +255,7 @@ dosounds()
             const char *msg;
             int trycount = 0, ax = EPRI(mtmp)->shrpos.x,
                 ay = EPRI(mtmp)->shrpos.y;
-            boolean speechless = (monsterSound(mtmp->data->monsterTypeID) <= MS_ANIMAL),
+            boolean speechless = (monsterSound(pmid4mon(mtmp)) <= MS_ANIMAL),
                     in_sight = canseemon(mtmp) || cansee(ax, ay);
 
             do {
@@ -313,7 +313,7 @@ register struct monst *mtmp;
 {
     const char *ret;
 
-    switch (monsterSound(mtmp->data->monsterTypeID)) {
+    switch (monsterSound(pmid4mon(mtmp))) {
     case MS_MEW:
     case MS_HISS:
         ret = "hiss";
@@ -356,7 +356,7 @@ register struct monst *mtmp;
 {
     register const char *growl_verb = 0;
 
-    if (mtmp->msleeping || !mtmp->mcanmove || !monsterSound(mtmp->data->monsterTypeID))
+    if (mtmp->msleeping || !mtmp->mcanmove || !monsterSound(pmid4mon(mtmp)))
         return;
 
     /* presumably nearness and soundok checks have already been made */
@@ -368,7 +368,7 @@ register struct monst *mtmp;
         pline("%s %s!", Monnam(mtmp), vtense((char *) 0, growl_verb));
         if (running())
             nomul(0);
-        wake_nearto(mtmp->mx, mtmp->my, monsterLevel(mtmp->data->monsterTypeID) * 18);
+        wake_nearto(mtmp->mx, mtmp->my, monsterLevel(pmid4mon(mtmp)) * 18);
     }
 }
 
@@ -379,7 +379,7 @@ register struct monst *mtmp;
 {
     register const char *yelp_verb = 0;
 
-    int msound = monsterSound(mtmp->data->monsterTypeID);
+    int msound = monsterSound(pmid4mon(mtmp));
 
     if (mtmp->msleeping || !mtmp->mcanmove || !msound)
         return;
@@ -413,7 +413,7 @@ register struct monst *mtmp;
         pline("%s %s!", Monnam(mtmp), vtense((char *) 0, yelp_verb));
         if (running())
             nomul(0);
-        wake_nearto(mtmp->mx, mtmp->my, monsterLevel(mtmp->data->monsterTypeID) * 12);
+        wake_nearto(mtmp->mx, mtmp->my, monsterLevel(pmid4mon(mtmp)) * 12);
     }
 }
 
@@ -424,7 +424,7 @@ register struct monst *mtmp;
 {
     register const char *whimper_verb = 0;
 
-    int msound = monsterSound(mtmp->data->monsterTypeID);
+    int msound = monsterSound(pmid4mon(mtmp));
 
     if (mtmp->msleeping || !mtmp->mcanmove || !msound)
         return;
@@ -449,7 +449,7 @@ register struct monst *mtmp;
         pline("%s %s.", Monnam(mtmp), vtense((char *) 0, whimper_verb));
         if (running())
             nomul(0);
-        wake_nearto(mtmp->mx, mtmp->my, monsterLevel(mtmp->data->monsterTypeID) * 6);
+        wake_nearto(mtmp->mx, mtmp->my, monsterLevel(pmid4mon(mtmp)) * 6);
     }
 }
 
@@ -459,13 +459,13 @@ beg(mtmp)
 register struct monst *mtmp;
 {
     if (mtmp->msleeping || !mtmp->mcanmove
-        || !(isCarnivorous(mtmp->data->monsterTypeID) || isHerbivorous(mtmp->data->monsterTypeID)))
+        || !(isCarnivorous(pmid4mon(mtmp)) || isHerbivorous(mtmp->data->monsterTypeID)))
         return;
 
     /* presumably nearness and soundok checks have already been made */
-    int msound = monsterSound(mtmp->data->monsterTypeID);
+    int msound = monsterSound(pmid4mon(mtmp));
 
-    if (!isSilent(mtmp->data->monsterTypeID) && msound <= MS_ANIMAL)
+    if (!isSilent(pmid4mon(mtmp)) && msound <= MS_ANIMAL)
         (void) domonnoise(mtmp);
     else if (msound >= MS_HUMANOID) {
         if (!canspotmon(mtmp))
@@ -874,7 +874,7 @@ register struct monst *mtmp;
     case MS_CUSS:
         if (!mtmp->mpeaceful)
             cuss(mtmp);
-        else if (isLawfulMinion(mtmp->data->monsterTypeID))
+        else if (isLawfulMinion(pmid4mon(mtmp)))
             verbl_msg = "It's not too late.";
         else
             verbl_msg = "We're all doomed.";

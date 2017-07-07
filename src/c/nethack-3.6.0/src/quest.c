@@ -394,7 +394,7 @@ register struct monst *mtmp;
         chat_with_leader();
         return;
     }
-    switch (monsterSound(mtmp->data->monsterTypeID)) {
+    switch (monsterSound(pmid4mon(mtmp))) {
     case MS_NEMESIS:
         chat_with_nemesis();
         break;
@@ -414,7 +414,7 @@ struct monst *mtmp;
         leader_speaks(mtmp);
         return;
     }
-    switch (monsterSound(mtmp->data->monsterTypeID)) {
+    switch (monsterSound(pmid4mon(mtmp))) {
     case MS_NEMESIS:
         nemesis_speaks();
         break;
@@ -430,7 +430,7 @@ void
 quest_stat_check(mtmp)
 struct monst *mtmp;
 {
-    if (monsterSound(mtmp->data->monsterTypeID) == MS_NEMESIS)
+    if (monsterSound(pmid4mon(mtmp)) == MS_NEMESIS)
         Qstat(in_battle) = (mtmp->mcanmove && !mtmp->msleeping
                             && monnear(mtmp, currentX(), currentY()));
 }

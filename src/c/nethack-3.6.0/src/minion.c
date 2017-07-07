@@ -234,7 +234,7 @@ register struct monst *mtmp;
     }
 
     /* Slight advantage given. */
-    if (isDemonPrince(mtmp->data->monsterTypeID) && mtmp->minvis) {
+    if (isDemonPrince(pmid4mon(mtmp)) && mtmp->minvis) {
         boolean wasunseen = !canspotmon(mtmp);
 
         mtmp->minvis = mtmp->perminvis = 0;
@@ -254,7 +254,7 @@ register struct monst *mtmp;
     cash = money_cnt(invent);
     demand =
         (cash * (rnd(80) + 20 * Athome))
-        / (100 * (1 + (sgn(currentAlignmentType()) == sgn(monsterAlignment(mtmp->data->monsterTypeID)))));
+        / (100 * (1 + (sgn(currentAlignmentType()) == sgn(monsterAlignment(pmid4mon(mtmp))))));
 
     if (!demand || multi < 0) { /* you have no gold or can't move */
         mtmp->mpeaceful = 0;

@@ -1339,8 +1339,8 @@ boolean ghostly;
                shopkeepers will reset based on name */
             if (!mtmp->isshk)
                 mtmp->mpeaceful =
-                    (isUnicorn(mtmp->data->monsterTypeID)
-                     && sgn(currentAlignmentType()) == sgn(monsterAlignment(mtmp->data->monsterTypeID)))
+                    (isUnicorn(pmid4mon(mtmp))
+                     && sgn(currentAlignmentType()) == sgn(monsterAlignment(pmid4mon(mtmp))))
                         ? TRUE
                         : peace_minded(mtmp->data);
             set_malign(mtmp);

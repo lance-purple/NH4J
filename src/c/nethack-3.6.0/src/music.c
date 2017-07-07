@@ -72,7 +72,7 @@ int distance;
             mtmp->mcanmove = 1;
             mtmp->mfrozen = 0;
             /* may scare some monsters -- waiting monsters excluded */
-            if (!corpseOrStatueIsUnique(mtmp->data->monsterTypeID)
+            if (!corpseOrStatueIsUnique(pmid4mon(mtmp))
                 && (mtmp->mstrategy & STRAT_WAITMASK) != 0)
                 mtmp->mstrategy &= ~STRAT_WAITMASK;
             else if (distm < distance / 3
@@ -115,7 +115,7 @@ int distance;
     int could_see_mon, was_peaceful;
 
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
-	int mc = monsterClass(mtmp->data->monsterTypeID);
+	int mc = monsterClass(pmid4mon(mtmp));
         if (DEADMONSTER(mtmp))
             continue;
         if (mc == S_SNAKE && mtmp->mcanmove
@@ -150,7 +150,7 @@ int distance;
     register struct monst *mtmp;
 
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
-	int mc = monsterClass(mtmp->data->monsterTypeID);
+	int mc = monsterClass(pmid4mon(mtmp));
         if (DEADMONSTER(mtmp))
             continue;
         if (mc == S_NYMPH && mtmp->mcanmove
@@ -181,7 +181,7 @@ struct monst *bugler; /* monster that played instrument */
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
         if (DEADMONSTER(mtmp))
             continue;
-        if (isMercenary(mtmp->data->monsterTypeID) && mtmp->data != &mons[PM_GUARD]) {
+        if (isMercenary(pmid4mon(mtmp)) && mtmp->data != &mons[PM_GUARD]) {
             mtmp->mpeaceful = mtmp->msleeping = mtmp->mfrozen = 0;
             mtmp->mcanmove = 1;
             mtmp->mstrategy &= ~STRAT_WAITMASK;
@@ -197,7 +197,7 @@ struct monst *bugler; /* monster that played instrument */
             mtmp->mcanmove = 1;
             mtmp->mfrozen = 0;
             /* may scare some monsters -- waiting monsters excluded */
-            if (!corpseOrStatueIsUnique(mtmp->data->monsterTypeID)
+            if (!corpseOrStatueIsUnique(pmid4mon(mtmp))
                 && (mtmp->mstrategy & STRAT_WAITMASK) != 0)
                 mtmp->mstrategy &= ~STRAT_WAITMASK;
             else if (distm < distance / 3
@@ -266,7 +266,7 @@ int force;
         for (y = start_y; y <= end_y; y++) {
             if ((mtmp = m_at(x, y)) != 0) {
                 wakeup(mtmp); /* peaceful monster will become hostile */
-                if (mtmp->mundetected && isHider(mtmp->data->monsterTypeID)) {
+                if (mtmp->mundetected && isHider(pmid4mon(mtmp))) {
                     mtmp->mundetected = 0;
                     if (cansee(x, y))
                         pline("%s is shaken loose from the ceiling!",
@@ -340,15 +340,15 @@ int force;
                     /* We have to check whether monsters or player
                        falls in a chasm... */
                     if (mtmp) {
-                        if (!isFlyer(mtmp->data->monsterTypeID)
-                            && !isClinger(mtmp->data->monsterTypeID)) {
+                        if (!isFlyer(pmid4mon(mtmp))
+                            && !isClinger(pmid4mon(mtmp))) {
                             boolean m_already_trapped = mtmp->mtrapped;
                             mtmp->mtrapped = 1;
                             if (!m_already_trapped) { /* suppress messages */
                                 if (cansee(x, y))
                                     pline("%s falls into a chasm!",
                                           Monnam(mtmp));
-                                else if (isHumanoid(mtmp->data->monsterTypeID))
+                                else if (isHumanoid(pmid4mon(mtmp)))
                                     You_hear("a scream!");
                             }
                             /* Falling is okay for falling down

@@ -295,10 +295,10 @@ struct obj *book2;
             if (DEADMONSTER(mtmp))
                 continue;
 
-            if ((isUndead(mtmp->data->monsterTypeID) || is_vampshifter(mtmp))
+            if ((isUndead(pmid4mon(mtmp)) || is_vampshifter(mtmp))
                 && cansee(mtmp->mx, mtmp->my)) {
                 mtmp->mpeaceful = TRUE;
-                if (sgn(monsterAlignment(mtmp->data->monsterTypeID)) == sgn(currentAlignmentType())
+                if (sgn(monsterAlignment(pmid4mon(mtmp))) == sgn(currentAlignmentType())
                     && distanceSquaredToYou(mtmp->mx, mtmp->my) < 4)
                     if (mtmp->mtame) {
                         if (mtmp->mtame < 20)

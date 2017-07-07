@@ -219,7 +219,7 @@ boolean verbose;    /* give message(s) even when you can't see what happened */
         if (mtmp->mhp < 1) {
             if (vis || verbose)
                 pline("%s is %s!", Monnam(mtmp),
-                      (isNonliving(mtmp->data->monsterTypeID) || is_vampshifter(mtmp)
+                      (isNonliving(pmid4mon(mtmp)) || is_vampshifter(mtmp)
                        || !canspotmon(mtmp))
                           ? "destroyed"
                           : "killed");
@@ -588,9 +588,9 @@ struct monst *mtmp;
         int skill = (int) objects[otmp->otyp].oc_skill;
 
         /* Assumes lords are skilled, princes are expert */
-        if (isPrince(mtmp->data->monsterTypeID))
+        if (isPrince(pmid4mon(mtmp)))
             multishot += 2;
-        else if (isLord(mtmp->data->monsterTypeID))
+        else if (isLord(pmid4mon(mtmp)))
             multishot++;
         /* fake players treated as skilled (regardless of role limits) */
         else if (is_mplayer(mtmp->data))
@@ -621,9 +621,9 @@ struct monst *mtmp;
             break;
         }
         /* racial bonus */
-        if ((isElf(mtmp->data->monsterTypeID) && otmp->otyp == ELVEN_ARROW && mwep
+        if ((isElf(pmid4mon(mtmp)) && otmp->otyp == ELVEN_ARROW && mwep
              && mwep->otyp == ELVEN_BOW)
-            || (isOrc(mtmp->data->monsterTypeID) && otmp->otyp == ORCISH_ARROW && mwep
+            || (isOrc(pmid4mon(mtmp)) && otmp->otyp == ORCISH_ARROW && mwep
                 && mwep->otyp == ORCISH_BOW))
             multishot++;
 
@@ -812,7 +812,7 @@ register struct monst *mtmp;
                               && youmonst.m_ap_type != M_AP_MONSTER)))
         return FALSE;
 
-    ignore_boulders = (throwsRocks(mtmp->data->monsterTypeID)
+    ignore_boulders = (throwsRocks(pmid4mon(mtmp))
                        || m_carrying(mtmp, WAN_STRIKING));
     return linedup(mtmp->mux, mtmp->muy, mtmp->mx, mtmp->my,
                    ignore_boulders ? 1 : 2);

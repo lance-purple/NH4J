@@ -143,7 +143,7 @@ struct obj *otmp;
     const char *zap_type_text = "spell";
     struct obj *obj;
     boolean disguised_mimic =
-        (monsterClass(mtmp->data->monsterTypeID) == S_MIMIC && mtmp->m_ap_type != M_AP_NOTHING);
+        (monsterClass(pmid4mon(mtmp)) == S_MIMIC && mtmp->m_ap_type != M_AP_NOTHING);
 
     if (swallowed() && mtmp == u.ustuck)
         reveal_invis = FALSE;
@@ -175,7 +175,7 @@ struct obj *otmp;
         if (!resist(mtmp, otmp->oclass, 0, NOTELL)) {
             mon_adjust_speed(mtmp, -1, otmp);
             m_dowear(mtmp, FALSE); /* might want speed boots */
-            if (swallowed() && (mtmp == u.ustuck) && isWhirly(mtmp->data->monsterTypeID)) {
+            if (swallowed() && (mtmp == u.ustuck) && isWhirly(pmid4mon(mtmp))) {
                 You("disrupt %s!", mon_nam(mtmp));
                 pline("A huge hole opens up...");
                 expels(mtmp, mtmp->data, TRUE);
@@ -193,7 +193,7 @@ struct obj *otmp;
         wake = FALSE;
         if (unturn_dead(mtmp))
             wake = TRUE;
-        if (isUndead(mtmp->data->monsterTypeID) || is_vampshifter(mtmp)) {
+        if (isUndead(pmid4mon(mtmp)) || is_vampshifter(mtmp)) {
             reveal_invis = TRUE;
             wake = TRUE;
             dmg = rnd(8);
@@ -274,7 +274,7 @@ struct obj *otmp;
     case SPE_KNOCK:
         wake = FALSE; /* don't want immediate counterattack */
         if (swallowed() && mtmp == u.ustuck) {
-            if (isAnimal(mtmp->data->monsterTypeID)) {
+            if (isAnimal(pmid4mon(mtmp))) {
                 if (youCannotSee())
                     You_feel("a sudden rush of air!");
                 else
@@ -726,7 +726,7 @@ boolean by_hero;
             if (mtmp->cham == PM_DOPPELGANGER) {
                 /* change shape to match the corpse */
                 (void) newcham(mtmp, mptr, FALSE, FALSE);
-            } else if (monsterClass(mtmp->data->monsterTypeID) == S_ZOMBIE) {
+            } else if (monsterClass(pmid4mon(mtmp)) == S_ZOMBIE) {
                 mtmp->mhp = mtmp->mhpmax = 100;
                 mon_adjust_speed(mtmp, 2, (struct obj *) 0); /* MFAST */
             }
@@ -3173,7 +3173,7 @@ struct obj **pobj; /* object tossed/used, set to NULL
                    prepared for multiple hits so just get first one
                    that's either visible or could see its invisible
                    self.  [No tmp_at() cleanup is needed here.] */
-                if (!mtmp->minvis || perceivesTheInvisible(mtmp->data->monsterTypeID))
+                if (!mtmp->minvis || perceivesTheInvisible(pmid4mon(mtmp)))
                     return mtmp;
             } else if (weapon != ZAPPED_WAND) {
                 /* THROWN_WEAPON, KICKED_WEAPON */
@@ -4843,7 +4843,7 @@ int damage, tell;
     else if (dlev < 1)
         dlev = is_mplayer(mtmp->data) ? currentExperienceLevel() : 1;
 
-    resisted = rn2(100 + alev - dlev) < monsterBaseMagicResistance(mtmp->data->monsterTypeID);
+    resisted = rn2(100 + alev - dlev) < monsterBaseMagicResistance(pmid4mon(mtmp));
     if (resisted) {
         if (tell) {
             shieldeff(mtmp->mx, mtmp->my);

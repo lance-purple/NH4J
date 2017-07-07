@@ -1586,7 +1586,7 @@ struct mkroom *croom;
          * eventually be expanded.
          */
         if (m->appear_as.str
-            && ((monsterClass(mtmp->data->monsterTypeID) == S_MIMIC) || mtmp->cham)) {
+            && ((monsterClass(pmid4mon(mtmp)) == S_MIMIC) || mtmp->cham)) {
             int i;
 
             switch (m->appear) {
@@ -1656,14 +1656,14 @@ struct mkroom *croom;
 
                     mgender_from_permonst(mtmp, mdat);
                     set_mon_data(mtmp, mdat, 0);
-                    if (emitsLightWithRange(olddata->monsterTypeID) != emitsLightWithRange(mtmp->data->monsterTypeID)) {
+                    if (emitsLightWithRange(olddata->monsterTypeID) != emitsLightWithRange(pmid4mon(mtmp))) {
                         /* used to give light, now doesn't, or vice versa,
                            or light's range has changed */
                         if (emitsLightWithRange(olddata->monsterTypeID))
                             del_light_source(LS_MONSTER, (genericptr_t) mtmp);
-                        if (emitsLightWithRange(mtmp->data->monsterTypeID))
+                        if (emitsLightWithRange(pmid4mon(mtmp)))
                             new_light_source(mtmp->mx, mtmp->my,
-                                             emitsLightWithRange(mtmp->data->monsterTypeID),
+                                             emitsLightWithRange(pmid4mon(mtmp)),
                                              LS_MONSTER, (genericptr_t) mtmp);
                     }
                     if (!mtmp->perminvis || pm_invisible(olddata))

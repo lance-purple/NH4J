@@ -1338,7 +1338,7 @@ dogaze()
             continue;
         if (canseemon(mtmp) && couldsee(mtmp->mx, mtmp->my)) {
             looked++;
-            if (youAreInvisibleToOthers() && !perceivesTheInvisible(mtmp->data->monsterTypeID)) {
+            if (youAreInvisibleToOthers() && !perceivesTheInvisible(pmid4mon(mtmp))) {
                 pline("%s seems not to notice your gaze.", Monnam(mtmp));
             } else if (mtmp->minvis && !youCanSeeInvisible()) {
                 You_cant("see where to gaze at %s.", Monnam(mtmp));
@@ -1358,7 +1358,7 @@ dogaze()
                     setmangry(mtmp);
                 }
                 if (!mtmp->mcanmove || mtmp->mstun || mtmp->msleeping
-                    || !mtmp->mcansee || !hasEyes(mtmp->data->monsterTypeID)) {
+                    || !mtmp->mcansee || !hasEyes(pmid4mon(mtmp))) {
                     looked--;
                     continue;
                 }

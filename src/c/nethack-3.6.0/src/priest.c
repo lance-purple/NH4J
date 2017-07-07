@@ -68,18 +68,18 @@ register xchar omx, omy, gx, gy;
         allowflags = ALLOW_SSM;
     else
         allowflags = ALLOW_SSM | ALLOW_SANCT;
-    if (passesThroughWalls(mtmp->data->monsterTypeID))
+    if (passesThroughWalls(pmid4mon(mtmp)))
         allowflags |= (ALLOW_ROCK | ALLOW_WALL);
-    if (throwsRocks(mtmp->data->monsterTypeID))
+    if (throwsRocks(pmid4mon(mtmp)))
         allowflags |= ALLOW_ROCK;
-    if (isTunneler(mtmp->data->monsterTypeID))
+    if (isTunneler(pmid4mon(mtmp)))
         allowflags |= ALLOW_DIG;
-    if (!hasNoHands(mtmp->data->monsterTypeID) && !isVerySmallMonster(mtmp->data->monsterTypeID)) {
+    if (!hasNoHands(pmid4mon(mtmp)) && !isVerySmallMonster(mtmp->data->monsterTypeID)) {
         allowflags |= OPENDOOR;
         if (monhaskey(mtmp, TRUE))
             allowflags |= UNLOCKDOOR;
     }
-    if (isGiant(mtmp->data->monsterTypeID))
+    if (isGiant(pmid4mon(mtmp)))
         allowflags |= BUSTDOOR;
     cnt = mfndpos(mtmp, poss, info, allowflags);
 

@@ -273,7 +273,7 @@ char *objnambuf;
         return 1; /* let her flee */
     }
 
-    monkey_business = isAnimal(mtmp->data->monsterTypeID);
+    monkey_business = isAnimal(pmid4mon(mtmp));
     if (monkey_business || uarmg) {
         ; /* skip ring special cases */
     } else if (yourExtrinsic(ADORNED) & LEFT_RING) {
@@ -323,7 +323,7 @@ gotobj:
     if (otmp->o_id == stealoid)
         return 0;
 
-    if (otmp->otyp == BOULDER && !throwsRocks(mtmp->data->monsterTypeID)) {
+    if (otmp->otyp == BOULDER && !throwsRocks(pmid4mon(mtmp))) {
         if (!retrycnt++)
             goto retry;
         goto cant_take;
@@ -550,7 +550,7 @@ struct monst *mtmp;
            to steal are mergable */
         (void) mpickobj(mtmp, otmp); /* may merge and free otmp */
         pline("%s stole %s!", Monnam(mtmp), doname(otmp));
-        if (canTeleport(mtmp->data->monsterTypeID) && !tele_restrict(mtmp))
+        if (canTeleport(pmid4mon(mtmp)) && !tele_restrict(mtmp))
             (void) rloc(mtmp, TRUE);
     }
 }
