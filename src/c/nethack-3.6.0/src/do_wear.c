@@ -1615,12 +1615,12 @@ boolean noisy;
             if (noisy)
                 already_wearing(an(helm_simple_name(uarmh)));
             err++;
-        } else if (areYouPolymorphed() && has_horns(youmonst.data) && !is_flimsy(otmp)) {
+        } else if (areYouPolymorphed() && hasHorns(pmid4you()) && !is_flimsy(otmp)) {
             /* (flimsy exception matches polyself handling) */
             if (noisy)
                 pline_The("%s won't fit over your horn%s.",
                           helm_simple_name(otmp),
-                          plur(num_horns(youmonst.data)));
+                          plur(numberOfHorns(pmid4you())));
             err++;
         } else
             *mask = W_ARMH;

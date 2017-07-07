@@ -422,28 +422,6 @@ struct permonst *ptr;
     return FALSE;
 }
 
-/* number of horns this type of monster has on its head */
-int
-num_horns(ptr)
-struct permonst *ptr;
-{
-    switch (monsndx(ptr)) {
-    case PM_HORNED_DEVIL: /* ? "more than one" */
-    case PM_MINOTAUR:
-    case PM_ASMODEUS:
-    case PM_BALROG:
-        return 2;
-    case PM_WHITE_UNICORN:
-    case PM_GRAY_UNICORN:
-    case PM_BLACK_UNICORN:
-    case PM_KI_RIN:
-        return 1;
-    default:
-        break;
-    }
-    return 0;
-}
-
 /* does monster-type deal out a particular type of damage from a particular
    type of attack? */
 boolean monsterCanCauseDamageTypeWithAttackType(ptr, dtyp, atyp)
@@ -1563,6 +1541,14 @@ boolean likesFire(int pmid) {
 
 boolean likesLava(int pmid) {
     return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "likesLava", pmid);
+}
+
+boolean hasHorns(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "hasHorns", pmid);
+}
+
+int numberOfHorns(int pmid) {
+    return javaGetIntFromInt(MONSTER_DATA_CLASS, "numberOfHorns", pmid);
 }
 
 extern boolean befriendWithObject(struct permonst* pm, struct obj* otmp) {

@@ -14,8 +14,6 @@
 #define resists_acid(mon) (((mon)->mintrinsics & MR_ACID) != 0)
 #define resists_ston(mon) (((mon)->mintrinsics & MR_STONE) != 0)
 
-#define has_horns(ptr) (num_horns(ptr) > 0)
-
 #define flaming(ptr)                                                     \
     ((ptr) == &mons[PM_FIRE_VORTEX] || (ptr) == &mons[PM_FLAMING_SPHERE] \
      || (ptr) == &mons[PM_FIRE_ELEMENTAL] || (ptr) == &mons[PM_SALAMANDER])

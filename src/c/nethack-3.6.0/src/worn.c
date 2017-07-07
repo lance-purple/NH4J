@@ -536,7 +536,7 @@ boolean racialexception;
                 && (mon->ispriest || mon->isminion))
                 continue;
             /* (flimsy exception matches polyself handling) */
-            if (has_horns(mon->data) && !is_flimsy(obj))
+            if (hasHorns(pmid4mon(mon)) && !is_flimsy(obj))
                 continue;
             break;
         case W_ARMS:
@@ -871,7 +871,7 @@ boolean polyspot;
             m_lose_armor(mon, otmp);
         }
     }
-    if (handless_or_tiny || has_horns(mdat)) {
+    if (handless_or_tiny || hasHorns(pmid4(mdat))) {
         if ((otmp = which_armor(mon, W_ARMH)) != 0
             /* flimsy test for horns matches polyself handling */
             && (handless_or_tiny || !is_flimsy(otmp))) {

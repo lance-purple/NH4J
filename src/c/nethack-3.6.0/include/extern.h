@@ -2071,7 +2071,7 @@ E boolean FDECL(breakarm, (struct permonst *));
 E boolean FDECL(sliparm, (struct permonst *));
 E boolean FDECL(sticks, (struct permonst *));
 E boolean FDECL(cantvomit, (struct permonst *));
-E int FDECL(num_horns, (struct permonst *));
+E int FDECL(numberOfHorns, (int));
 /* E boolean FDECL(canseemon, (struct monst *)); */
 E boolean FDECL(dmgtype, (struct permonst *, int));
 E int FDECL(max_passive_dmg, (struct monst *, struct monst *));
@@ -2196,6 +2196,8 @@ E boolean FDECL(isMindFlayer, (int));
 E boolean FDECL(likesFire, (int));
 E boolean FDECL(likesLava, (int));
 E boolean FDECL(befriendWithObject, (struct permonst*, struct obj*));
+
+E boolean FDECL(hasHorns, (int));
 
 /* ### monmove.c ### */
 

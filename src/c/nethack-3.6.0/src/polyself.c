@@ -936,13 +936,13 @@ break_armor()
             dropx(otmp);
         }
     }
-    if (has_horns(youmonst.data)) {
+    if (hasHorns(pmid4you())) {
         if ((otmp = uarmh) != 0) {
             if (is_flimsy(otmp) && !donning(otmp)) {
                 char hornbuf[BUFSZ];
 
                 /* Future possibilities: This could damage/destroy helmet */
-                Sprintf(hornbuf, "horn%s", plur(num_horns(youmonst.data)));
+                Sprintf(hornbuf, "horn%s", plur(numberOfHorns(pmid4you())));
                 Your("%s %s through %s.", hornbuf, vtense(hornbuf, "pierce"),
                      yname(otmp));
             } else {
