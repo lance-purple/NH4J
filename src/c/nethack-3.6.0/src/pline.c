@@ -455,7 +455,7 @@ register struct monst *mtmp;
                                        : monsterHasAttackWithDamageType(u.ustuck->data,
                                                            AT_ENGL, AD_DGST)
                                              ? ", digesting you"
-                                             : isAnimal(u.ustuck->data->monsterTypeID)
+                                             : isAnimal(pmid4mon(u.ustuck))
                                                    ? ", swallowing you"
                                                    : ", engulfing you");
     if (mtmp == u.usteed)

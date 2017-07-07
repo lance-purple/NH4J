@@ -1704,7 +1704,7 @@ boolean confused, byu;
 
     /* Find the monster here (won't be player) */
     mtmp = m_at(x, y);
-    int mpmid = mtmp->data->monsterTypeID;
+    int mpmid = pmid4mon(mtmp);
     if (mtmp && !isAmorphous(mpmid) && !passesThroughWalls(mpmid)
         && !isNoncorporeal(mpmid) && !isUnsolid(mpmid)) {
         struct obj *helmet = which_armor(mtmp, W_ARMH);
@@ -1873,10 +1873,10 @@ struct obj *obj;
         if (swallowed()) {
             if (youCannotSee())
                 ; /* no feedback */
-            else if (isAnimal(u.ustuck->data->monsterTypeID))
+            else if (isAnimal(pmid4mon(u.ustuck)))
                 pline("%s %s is lit.", s_suffix(Monnam(u.ustuck)),
                       mbodypart(u.ustuck, STOMACH));
-            else if (isWhirly(u.ustuck->data->monsterTypeID))
+            else if (isWhirly(pmid4mon(u.ustuck)))
                 pline("%s shines briefly.", Monnam(u.ustuck));
             else
                 pline("%s glistens.", Monnam(u.ustuck));

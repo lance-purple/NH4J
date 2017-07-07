@@ -303,7 +303,7 @@ register struct obj *obj;
     struct monst *mtmp;
     struct rm *lev;
     int rx, ry, res;
-    boolean interference = (swallowed() && isWhirly(u.ustuck->data->monsterTypeID)
+    boolean interference = (swallowed() && isWhirly(pmid4mon(u.ustuck))
                             && !rn2(Role_if(PM_HEALER) ? 10 : 3));
 
     if (hasNoHands(pmid4you())) {
@@ -860,7 +860,7 @@ struct obj *obj;
     if (!mtmp || !hasEyes(pmid4mon(mtmp)) || notonhead)
         return 1;
 
-    int pmid = mtmp->data->monsterTypeID;
+    int pmid = pmid4mon(mtmp);
 
     /* couldsee(mtmp->mx, mtmp->my) is implied by the fact that bhit()
        targetted it, so we can ignore possibility of X-ray vision */
@@ -1966,7 +1966,7 @@ long timeout;
     cansee_spot = cansee(cc.x, cc.y);
     mtmp = make_familiar(figurine, cc.x, cc.y, TRUE);
     if (mtmp) {
-        int pmid = mtmp->data->monsterTypeID;
+        int pmid = pmid4mon(mtmp);
         char and_vanish[BUFSZ];
         struct obj *mshelter = level.objects[mtmp->mx][mtmp->my];
         Sprintf(monnambuf, "%s", an(m_monnam(mtmp)));
@@ -2332,7 +2332,7 @@ struct obj *otmp;
         what = "while stunned";
     else if (swallowed())
         what =
-            isAnimal(u.ustuck->data->monsterTypeID) ? "while swallowed" : "while engulfed";
+            isAnimal(pmid4mon(u.ustuck)) ? "while swallowed" : "while engulfed";
     else if (underwater())
         what = "underwater";
     else if (youAreLevitating())

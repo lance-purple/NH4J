@@ -1819,7 +1819,7 @@ register const struct Attack mattk;
         }
         break;
     case AD_HALU:
-        if (hasEyes(mdef->data->monsterTypeID) && mdef->mcansee) {
+        if (hasEyes(pmid4mon(mdef)) && mdef->mcansee) {
             pline("%s is affected by your flash of light!", Monnam(mdef));
             mdef->mconf = 1;
         }
@@ -1842,7 +1842,7 @@ register const struct Attack mattk;
             }
         } else {
             shieldeff(mdef->mx, mdef->my);
-            if (isGolem(mdef->data->monsterTypeID))
+            if (isGolem(pmid4mon(mdef)))
                 golemeffects(mdef, mattk.damageType, tmp);
             else
                 pline_The("blast doesn't seem to affect %s.", mon_nam(mdef));

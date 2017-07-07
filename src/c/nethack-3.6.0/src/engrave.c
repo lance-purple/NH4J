@@ -180,7 +180,7 @@ register int x, y;
 {
     register struct rm *lev = &levl[x][y];
 
-    if (x == currentX() && y == currentY() && swallowed() && isAnimal(u.ustuck->data->monsterTypeID))
+    if (x == currentX() && y == currentY() && swallowed() && isAnimal(pmid4mon(u.ustuck)))
         return "maw";
     else if (IS_AIR(lev->typ) && areYouOnAirLevel())
         return "air";
@@ -496,10 +496,10 @@ doengrave()
     /* Can the adventurer engrave at all? */
 
     if (swallowed()) {
-        if (isAnimal(u.ustuck->data->monsterTypeID)) {
+        if (isAnimal(pmid4mon(u.ustuck))) {
             pline("What would you write?  \"Jonah was here\"?");
             return 0;
-        } else if (isWhirly(u.ustuck->data->monsterTypeID)) {
+        } else if (isWhirly(pmid4mon(u.ustuck))) {
             cant_reach_floor(currentX(), currentY(), FALSE, FALSE);
             return 0;
         } else

@@ -38,7 +38,7 @@ register boolean clumsy;
     int kick_skill = P_NONE;
     int blessed_foot_damage = 0;
     boolean trapkilled = FALSE;
-    int pmid = mon->data->monsterTypeID;
+    int pmid = pmid4mon(mon);
 
     if (uarmf && uarmf->otyp == KICKING_BOOTS)
         dmg += 5;
@@ -159,7 +159,7 @@ xchar x, y;
     /* anger target even if wild miss will occur */
     setmangry(mon);
 
-    int pmid = mon->data->monsterTypeID;
+    int pmid = pmid4mon(mon);
 
     if (youAreLevitating() && !rn2(3) && isVerySmallMonster(pmid)
         && !isFlyer(pmid)) {
@@ -843,7 +843,7 @@ dokick()
             You_cant("move your %s!", body_part(LEG));
             break;
         case 1:
-            if (isAnimal(u.ustuck->data->monsterTypeID)) {
+            if (isAnimal(pmid4mon(u.ustuck))) {
                 pline("%s burps loudly.", Monnam(u.ustuck));
                 break;
             }

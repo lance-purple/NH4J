@@ -1862,8 +1862,8 @@ boolean newspot;             /* true if called by spoteffects */
     /* check for entering water or lava */
     if (!u.ustuck && !youAreLevitating() && !youAreFlying() && is_pool_or_lava(currentX(), currentY())) {
         if (u.usteed
-            && (isFlyer(u.usteed->data->monsterTypeID) || isFloater(u.usteed->data->monsterTypeID)
-                || isClinger(u.usteed->data->monsterTypeID))) {
+            && (isFlyer(pmid4mon(u.usteed)) || isFloater(pmid4mon(u.usteed))
+                || isClinger(pmid4mon(u.usteed)))) {
             /* floating or clinging steed keeps hero safe (isFlyer() test
                is redundant; it can't be true since Flying yielded false) */
             return FALSE;
@@ -2402,7 +2402,7 @@ dopickup()
     /* uswallow case added by GAN 01/29/87 */
     if (swallowed()) {
         if (!u.ustuck->minvent) {
-            if (isAnimal(u.ustuck->data->monsterTypeID)) {
+            if (isAnimal(pmid4mon(u.ustuck))) {
                 You("pick up %s tongue.", s_suffix(mon_nam(u.ustuck)));
                 pline("But it's kind of slimy, so you drop it.");
             } else
@@ -2797,7 +2797,7 @@ weight_cap()
     }
 
     if (youAreLevitating() || areYouOnAirLevel() /* pugh@cornell */
-        || (u.usteed && isStrongMonster(u.usteed->data->monsterTypeID)))
+        || (u.usteed && isStrongMonster(pmid4mon(u.usteed))))
         carrcap = MAX_CARR_CAP;
     else {
         if (carrcap > MAX_CARR_CAP)

@@ -320,7 +320,7 @@ register struct monst *magr, *mdef;
         newsym(mdef->mx, mdef->my);
         if (canseemon(mdef) && !senseMonsters(mdef)) {
             if (youAreUnaware())
-                You("dream of %s.", (monsterGenerationMask(mdef->data->monsterTypeID) & G_UNIQ)
+                You("dream of %s.", (monsterGenerationMask(pmid4mon(mdef)) & G_UNIQ)
                                         ? a_monnam(mdef)
                                         : makeplural(m_monnam(mdef)));
             else
@@ -381,7 +381,7 @@ register struct monst *magr, *mdef;
              * players, or under conflict or confusion.
              */
             if (!magr->mconf && !youCauseConflict() && otmp && mattk.type != AT_WEAP
-                && touchPetrifies(mdef->data->monsterTypeID)) {
+                && touchPetrifies(pmid4mon(mdef))) {
                 strike = 0;
                 break;
             }
@@ -550,7 +550,7 @@ const struct Attack mattk;
     }
 
     if (magr->mcan || !magr->mcansee
-        || (magr->minvis && !perceivesTheInvisible(mdef->data->monsterTypeID)) || !mdef->mcansee
+        || (magr->minvis && !perceivesTheInvisible(pmid4mon(mdef))) || !mdef->mcansee
         || mdef->msleeping) {
         if (vis)
             pline("but nothing happens.");
@@ -567,7 +567,7 @@ const struct Attack mattk;
                         magr, "The gaze is reflected away by %s %s.");
                 return MM_MISS;
             }
-            if (mdef->minvis && !perceivesTheInvisible(magr->data->monsterTypeID)) {
+            if (mdef->minvis && !perceivesTheInvisible(pmid4mon(magr))) {
                 if (canseemon(magr)) {
                     pline(
                       "%s doesn't seem to notice that %s gaze was reflected.",
@@ -596,12 +596,12 @@ struct monst *magr, *mdef;
     int dx, dy;
 
     /* can't swallow something that's too big */
-    if (monsterSize(mdef->data->monsterTypeID) >= MZ_HUGE)
+    if (monsterSize(pmid4mon(mdef)) >= MZ_HUGE)
         return FALSE;
 
     /* (hypothetical) engulfers who can pass through walls aren't
      limited by rock|trees|bars */
-    if ((magr == &youmonst) ? youCanPassThroughWalls() : passesThroughWalls(magr->data->monsterTypeID))
+    if ((magr == &youmonst) ? youCanPassThroughWalls() : passesThroughWalls(pmid4mon(magr)))
         return TRUE;
 
     /* don't swallow something in a spot where attacker wouldn't
@@ -613,7 +613,7 @@ struct monst *magr, *mdef;
     lev = &levl[dx][dy];
     if (IS_ROCK(lev->typ) || closed_door(dx, dy) || IS_TREE(lev->typ)
         /* not passes_bars(); engulfer isn't squeezing through */
-        || (lev->typ == IRONBARS && !isWhirly(magr->data->monsterTypeID)))
+        || (lev->typ == IRONBARS && !isWhirly(pmid4mon(magr))))
         return FALSE;
 
     return TRUE;

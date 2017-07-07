@@ -55,7 +55,7 @@ dosit()
     } else if (u.ustuck && !sticks(youmonst.data)) {
         /* holding monster is next to hero rather than beneath, but
            hero is in no condition to actually sit at has/her own spot */
-        if (isHumanoid(u.ustuck->data->monsterTypeID))
+        if (isHumanoid(pmid4mon(u.ustuck)))
             pline("%s won't offer %s lap.", Monnam(u.ustuck), mhis(u.ustuck));
         else
             pline("%s has no lap.", Monnam(u.ustuck));

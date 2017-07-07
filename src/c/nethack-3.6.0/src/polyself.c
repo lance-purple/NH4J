@@ -769,12 +769,12 @@ int mntmp;
     else if (sticky && !sticks(youmonst.data))
         uunstick();
     if (u.usteed) {
-        if (touchPetrifies(u.usteed->data->monsterTypeID) && !youResistStoning() && rnl(3)) {
+        if (touchPetrifies(pmid4mon(u.usteed)) && !youResistStoning() && rnl(3)) {
             char buf[BUFSZ];
 
             pline("%s touch %s.", no_longer_petrify_resistant,
                   mon_nam(u.usteed));
-	    javaString steedName = monsterTypeName(u.usteed->data->monsterTypeID);
+	    javaString steedName = monsterTypeName(pmid4mon(u.usteed));
             Sprintf(buf, "riding %s", an(steedName.c_str));
 	    releaseJavaString(steedName);
             instapetrify(buf);
@@ -1167,11 +1167,11 @@ dospinweb()
     }
     if (swallowed()) {
         You("release web fluid inside %s.", mon_nam(u.ustuck));
-        if (isAnimal(u.ustuck->data->monsterTypeID)) {
+        if (isAnimal(pmid4mon(u.ustuck))) {
             expels(u.ustuck, u.ustuck->data, TRUE);
             return 0;
         }
-	int ustuckpmid = u.ustuck->data->monsterTypeID;
+	int ustuckpmid = pmid4mon(u.ustuck);
         if (isWhirly(ustuckpmid)) {
             int i;
 	    int nAttacks = monsterAttacks(ustuckpmid);
@@ -1399,7 +1399,7 @@ dogaze()
 
                 if (mtmp->data == &mons[PM_FLOATING_EYE] && !mtmp->mcan) {
                     if (!youHaveFreeAction()) {
-			int pmid = mtmp->data->monsterTypeID;
+			int pmid = pmid4mon(mtmp);
                         You("are frozen by %s gaze!",
                             s_suffix(mon_nam(mtmp)));
                         nomul((currentExperienceLevel() > 6 || rn2(4))
@@ -1448,7 +1448,7 @@ dohide()
         You_cant("hide while you're %s.",
                  !u.ustuck ? "trapped" : !sticks(youmonst.data)
                                              ? "being held"
-                                             : isHumanoid(u.ustuck->data->monsterTypeID)
+                                             : isHumanoid(pmid4mon(u.ustuck))
                                                    ? "holding someone"
                                                    : "holding that creature");
         if (lurking()

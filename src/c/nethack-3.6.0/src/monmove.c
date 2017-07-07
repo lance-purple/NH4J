@@ -493,7 +493,7 @@ register struct monst *mtmp;
                 continue;
             if (m2->mpeaceful == mtmp->mpeaceful)
                 continue;
-            if (isMindless(m2->data->monsterTypeID))
+            if (isMindless(pmid4mon(m2)))
                 continue;
             if (m2 == mtmp)
                 continue;
@@ -950,7 +950,7 @@ not_special:
                     if ((mtoo = m_at(xx, yy)) != 0
                         && (mtoo->msleeping || mtoo->mundetected
                             || (mtoo->mappearance && !mtoo->iswiz)
-                            || !monsterMovementSpeed(mtoo->data->monsterTypeID)))
+                            || !monsterMovementSpeed(pmid4mon(mtoo))))
                         continue;
 
                     if (((likegold && otmp->oclass == COIN_CLASS)

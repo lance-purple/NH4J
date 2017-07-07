@@ -337,7 +337,7 @@ invault()
         reset_faint(); /* if fainted - wake up */
         gsensed = !canspotmon(guard);
         if (!gsensed) {
-            javaString guardName = monsterTypeName(guard->data->monsterTypeID);
+            javaString guardName = monsterTypeName(pmid4mon(guard));
             pline("Suddenly one of the Vault's %s enters!",
                   makeplural(guardName.c_str));
             releaseJavaString(guardName);

@@ -788,8 +788,8 @@ xchar x, y; /* clone's preferred location or 0 (near mon) */
     if (mon->ispriest)
         m2->ispriest = FALSE;
     place_monster(m2, m2->mx, m2->my);
-    if (emitsLightWithRange(m2->data->monsterTypeID))
-        new_light_source(m2->mx, m2->my, emitsLightWithRange(m2->data->monsterTypeID), LS_MONSTER,
+    if (emitsLightWithRange(pmid4mon(m2)))
+        new_light_source(m2->mx, m2->my, emitsLightWithRange(pmid4mon(m2)), LS_MONSTER,
                          monst_to_any(m2));
     if (has_mname(mon)) {
         m2 = christen_monst(m2, MNAME(mon));

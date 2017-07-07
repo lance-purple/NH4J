@@ -1359,7 +1359,7 @@ dosacrifice()
                     else
                         dmon->mstrategy &= ~STRAT_APPEARMSG;
                     You("have summoned %s!", dbuf);
-                    if (sgn(currentAlignmentType()) == sgn(monsterAlignment(dmon->data->monsterTypeID)))
+                    if (sgn(currentAlignmentType()) == sgn(monsterAlignment(pmid4mon(dmon))))
                         dmon->mpeaceful = TRUE;
                     You("are terrified, and unable to move.");
                     nomul(-3);

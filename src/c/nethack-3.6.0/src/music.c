@@ -176,7 +176,7 @@ struct monst *bugler; /* monster that played instrument */
     int distance, distm;
 
     /* distance of affected non-soldier monsters to bugler */
-    distance = ((bugler == &youmonst) ? currentExperienceLevel() : monsterLevel(bugler->data->monsterTypeID)) * 30;
+    distance = ((bugler == &youmonst) ? currentExperienceLevel() : monsterLevel(pmid4mon(bugler))) * 30;
 
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
         if (DEADMONSTER(mtmp))

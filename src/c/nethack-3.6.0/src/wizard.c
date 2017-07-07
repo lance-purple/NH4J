@@ -451,7 +451,7 @@ struct monst *mcast;
 {
     register struct monst *mtmp;
     register int i, j, tmp;
-    int castalign = (mcast ? sgn(monsterAlignment(mcast->data->monsterTypeID)) : -1);
+    int castalign = (mcast ? sgn(monsterAlignment(pmid4mon(mcast))) : -1);
     coord bypos;
     int count, census;
 

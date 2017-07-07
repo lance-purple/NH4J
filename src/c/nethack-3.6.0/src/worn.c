@@ -912,11 +912,11 @@ boolean polyspot;
     } else if (mon == u.usteed && !can_ride(mon)) {
     noride:
         You("can no longer ride %s.", mon_nam(mon));
-        if (touchPetrifies(u.usteed->data->monsterTypeID) && !youResistStoning() && rnl(3)) {
+        if (touchPetrifies(pmid4mon(u.usteed)) && !youResistStoning() && rnl(3)) {
             char buf[BUFSZ];
 
             You("touch %s.", mon_nam(u.usteed));
-	    javaString steedName = monsterTypeName(u.usteed->data->monsterTypeID);
+	    javaString steedName = monsterTypeName(pmid4mon(u.usteed));
             Sprintf(buf, "falling off %s", an(steedName.c_str));
 	    releaseJavaString(steedName);
             instapetrify(buf);

@@ -1267,7 +1267,7 @@ unsigned trflags;
                 /* mintrap currently does not return 2(died) for webs */
                 if (mintrap(u.usteed)) {
                     u.usteed->mtrapped = 0;
-                    if (isStrongMonster(u.usteed->data->monsterTypeID))
+                    if (isStrongMonster(pmid4mon(u.usteed)))
                         str = 17;
                 } else {
                     break;
@@ -1528,7 +1528,7 @@ struct obj *otmp;
         steedhit = TRUE;
         break;
     case SLP_GAS_TRAP:
-        if (!resists_sleep(steed) && !doesNotBreathe(steed->data->monsterTypeID)
+        if (!resists_sleep(steed) && !doesNotBreathe(pmid4mon(steed))
             && !steed->msleeping && steed->mcanmove) {
             if (sleep_monst(steed, rnd(25), -1))
                 /* no in_sight check here; you can feel it even if blind */
@@ -2766,9 +2766,9 @@ float_up()
     } else if (inWater()) {
         spoteffects(TRUE);
     } else if (swallowed()) {
-        You(isAnimal(u.ustuck->data->monsterTypeID) ? "float away from the %s."
+        You(isAnimal(pmid4mon(u.ustuck)) ? "float away from the %s."
                                       : "spiral up into %s.",
-            isAnimal(u.ustuck->data->monsterTypeID) ? surface(currentX(), currentY())
+            isAnimal(pmid4mon(u.ustuck)) ? surface(currentX(), currentY())
                                       : mon_nam(u.ustuck));
     } else if (youAreHallucinating()) {
         pline("Up, up, and awaaaay!  You're walking on air!");
@@ -2777,8 +2777,8 @@ float_up()
     } else {
         You("start to float in the air!");
     }
-    if (u.usteed && !isFloater(u.usteed->data->monsterTypeID)
-        && !isFlyer(u.usteed->data->monsterTypeID)) {
+    if (u.usteed && !isFloater(pmid4mon(u.usteed))
+        && !isFlyer(pmid4mon(u.usteed))) {
         if (youCanLevitateAtWill()) {
             pline("%s magically floats up!", Monnam(u.usteed));
         } else {
@@ -2836,7 +2836,7 @@ long hmask, emask; /* might cancel timeout */
     }
     if (swallowed()) {
         You("float down, but you are still %s.",
-            isAnimal(u.ustuck->data->monsterTypeID) ? "swallowed" : "engulfed");
+            isAnimal(pmid4mon(u.ustuck)) ? "swallowed" : "engulfed");
         return 1;
     }
 
@@ -2903,8 +2903,8 @@ long hmask, emask; /* might cancel timeout */
                     if (u.usteed)
                         dismount_steed(DISMOUNT_FELL);
                     selftouch("As you fall, you");
-                } else if (u.usteed && (isFloater(u.usteed->data->monsterTypeID)
-                                        || isFlyer(u.usteed->data->monsterTypeID))) {
+                } else if (u.usteed && (isFloater(pmid4mon(u.usteed))
+                                        || isFlyer(pmid4mon(u.usteed)))) {
                     You("settle more firmly in the saddle.");
                 } else if (youAreHallucinating()) {
                     pline("Bummer!  You've %s.",

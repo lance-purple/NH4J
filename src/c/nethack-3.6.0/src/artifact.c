@@ -1252,7 +1252,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                 if (notonhead)
                     return FALSE;
 
-                if (isBigMonster(mdef->data->monsterTypeID)) {
+                if (isBigMonster(pmid4mon(mdef))) {
                     if (youattack)
                         You("slice deeply into %s!", mon_nam(mdef));
                     else if (vis)
@@ -1292,7 +1292,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                 return FALSE;
             wepdesc = artilist[ART_VORPAL_BLADE].name;
             if (!youdefend) {
-		int pmid = mdef->data->monsterTypeID;
+		int pmid = pmid4mon(mdef);
                 if (!hasAHead(pmid) || notonhead || swallowed()) {
                     if (youattack)
                         pline("Somehow, you miss %s wildly.", mon_nam(mdef));
@@ -1337,7 +1337,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
     if (spec_ability(otmp, SPFX_DRLI)) {
         /* some non-living creatures (golems, vortices) are
            vulnerable to life drain effects */
-        const char *life = isNonliving(mdef->data->monsterTypeID) ? "animating force" : "life";
+        const char *life = isNonliving(pmid4mon(mdef)) ? "animating force" : "life";
 
         if (!youdefend) {
             if (vis) {

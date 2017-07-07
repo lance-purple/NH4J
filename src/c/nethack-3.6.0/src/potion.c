@@ -1788,7 +1788,7 @@ dodip()
         if (yn(upstart(qtoo)) == 'y') {
             if (youAreLevitating()) {
                 floating_above(pooltype);
-            } else if (u.usteed && !isSwimmer(u.usteed->data->monsterTypeID)
+            } else if (u.usteed && !isSwimmer(pmid4mon(u.usteed))
                        && weaponSkill(P_RIDING) < P_BASIC) {
                 rider_cant_reach(); /* not skilled enough to reach */
             } else {

@@ -20,7 +20,7 @@ STATIC_DCL void FDECL(kops_gone, (BOOLEAN_P));
 
 static boolean muteshk(struct monst *shkp) {
     return (shkp->msleeping || !shkp->mcanmove
-     || monsterSound(shkp->data->monsterTypeID) <= MS_ANIMAL);
+     || monsterSound(pmid4mon(shkp)) <= MS_ANIMAL);
 }
 
 extern const struct shclass shtypes[]; /* defined in shknam.c */
@@ -1686,7 +1686,7 @@ int croaked;
     if (numsk > 1) {
         if (cansee(shkp->mx, shkp->my) && croaked) {
             takes[0] = '\0';
-            if (hasAHead(shkp->data->monsterTypeID) && !rn2(2))
+            if (hasAHead(pmid4mon(shkp)) && !rn2(2))
                 Sprintf(takes, ", shakes %s %s,", mhis(shkp),
                         mbodypart(shkp, HEAD));
             pline("%s %slooks at your corpse%s and %s.", Monnam(shkp),
@@ -3623,9 +3623,9 @@ register int fall;
 
     /* 0 == can't speak, 1 == makes animal noises, 2 == speaks */
     lang = 0;
-    int msound = monsterSound(shkp->data->monsterTypeID);
+    int msound = monsterSound(pmid4mon(shkp));
 
-    if (shkp->msleeping || !shkp->mcanmove || isSilent(shkp->data->monsterTypeID))
+    if (shkp->msleeping || !shkp->mcanmove || isSilent(pmid4mon(shkp)))
         ; /* lang stays 0 */
     else if (msound <= MS_ANIMAL)
         lang = 1;
@@ -3659,7 +3659,7 @@ register int fall;
                && (ESHK(shkp)->billct || ESHK(shkp)->debit)) {
         register struct obj *obj, *obj2;
 
-        if (hasNoLimbs(shkp->data->monsterTypeID)) {
+        if (hasNoLimbs(pmid4mon(shkp))) {
             grabs = "knocks off";
 #if 0
             /* This is what should happen, but for balance
@@ -3796,7 +3796,7 @@ boolean cant_mollify;
     if (!cost_of_damage || !shkp)
         return;
 
-    animal = (monsterSound(shkp->data->monsterTypeID) <= MS_ANIMAL);
+    animal = (monsterSound(pmid4mon(shkp)) <= MS_ANIMAL);
     pursue = FALSE;
     x = appear_here->place.x;
     y = appear_here->place.y;

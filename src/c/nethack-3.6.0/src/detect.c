@@ -1277,7 +1277,7 @@ openit()
     int num = 0;
 
     if (swallowed()) {
-        if (isAnimal(u.ustuck->data->monsterTypeID)) {
+        if (isAnimal(pmid4mon(u.ustuck))) {
             if (youCannotSee())
                 pline("Its mouth opens!");
             else

@@ -28,7 +28,7 @@ struct monst *mon;
     dummy.oartifact = 1; /* so real artifact won't override "don't keep it" */
     pickaxe = unihorn = key = (struct obj *) 0;
     wep = MON_WEP(mon);
-    int pmid = mon->data->monsterTypeID;
+    int pmid = pmid4mon(mon);
 
     if (isAnimal(pmid) || isMindless(pmid)) {
         /* won't hang on to any objects of these types */
@@ -351,7 +351,7 @@ dog_hunger(mtmp, edog)
 register struct monst *mtmp;
 register struct edog *edog;
 {
-    int pmid = mtmp->data->monsterTypeID;
+    int pmid = pmid4mon(mtmp);
     if (monstermoves > edog->hungrytime + 500) {
         if (!isCarnivorous(pmid) && !isHerbivorous(pmid)) {
             edog->hungrytime = monstermoves + 500;
@@ -757,7 +757,7 @@ register int after; /* this is extra fast monster movement */
         if ((info[i] & ALLOW_M) && MON_AT(nx, ny)) {
             int mstatus;
             register struct monst *mtmp2 = m_at(nx, ny);
-	    int m2sound = monsterSound(mtmp2->data->monsterTypeID);
+	    int m2sound = monsterSound(pmid4mon(mtmp2));
 
             if ((int) mtmp2->m_lev >= (int) mtmp->m_lev + 2
                 || (mtmp2->data == &mons[PM_FLOATING_EYE] && rn2(10)
@@ -769,7 +769,7 @@ register int after; /* this is extra fast monster movement */
                      || m2sound == MS_GUARDIAN
                      || m2sound == MS_LEADER) && mtmp2->mpeaceful
                     && !youCauseConflict())
-                || (touchPetrifies(mtmp2->data->monsterTypeID) && !resists_ston(mtmp)))
+                || (touchPetrifies(pmid4mon(mtmp2)) && !resists_ston(mtmp)))
                 continue;
 
             if (after)

@@ -107,7 +107,7 @@ register struct monst *mtmp;
             what = makeplural(body_part(FOOT));
         }
         /* [ avoid "between your rear regions" :-] */
-        if (isSlithy(who->data->monsterTypeID))
+        if (isSlithy(pmid4mon(who)))
             what = "coils";
         /* reduce "rear hooves/claws" to "hooves/claws" */
         if (!strncmp(what, "rear ", 5))

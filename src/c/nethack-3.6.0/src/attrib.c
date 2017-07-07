@@ -1609,14 +1609,14 @@ extern boolean youCanLevitateAtWill() {
 
 /* May touch surface; does not override any others */
 extern boolean youAreFlying() {
-  return ((youHaveIntrinsic(FLYING) || youHaveExtrinsic(FLYING) || (u.usteed && isFlyer(u.usteed->data->monsterTypeID)))
+  return ((youHaveIntrinsic(FLYING) || youHaveExtrinsic(FLYING) || (u.usteed && isFlyer(pmid4mon(u.usteed))))
      && !youAreBlockedFrom(FLYING));
 }
 
 /* Get wet, don't go under water unless if amphibious */
 extern boolean youCanSwim() {
   return (youHaveIntrinsic(SWIMMING) || youHaveExtrinsic(SWIMMING) ||
-		   (u.usteed && isSwimmer(u.usteed->data->monsterTypeID)));
+		   (u.usteed && isSwimmer(pmid4mon(u.usteed))));
 }
 
 /* Get wet, may go under surface */

@@ -628,7 +628,7 @@ int ttyp;
             if (oldobjs != newobjs) /* something unearthed */
                 (void) pickup(1);   /* detects pit */
         } else if (mtmp) {
-            int pmid = mtmp->data->monsterTypeID;
+            int pmid = pmid4mon(mtmp);
             if (isFlyer(pmid) || isFloater(pmid)) {
                 if (canseemon(mtmp))
                     pline("%s %s over the pit.", Monnam(mtmp),
@@ -692,7 +692,7 @@ int ttyp;
             }
             if (mtmp) {
                 /*[don't we need special sokoban handling here?]*/
-                int pmid = mtmp->data->monsterTypeID;
+                int pmid = pmid4mon(mtmp);
                 if (isFlyer(pmid) || isFloater(pmid)
                     || mtmp->data == &mons[PM_WUMPUS]
                     || (mtmp->wormno && count_wsegs(mtmp) > 5)
@@ -1396,7 +1396,7 @@ zap_dig()
 
     if (swallowed()) {
         mtmp = u.ustuck;
-	int pmid = mtmp->data->monsterTypeID;
+	int pmid = pmid4mon(mtmp);
 
         if (!isWhirly(pmid)) {
             if (isAnimal(pmid))
@@ -2009,7 +2009,7 @@ struct monst *mtmp;
 {
     debugpline1("bury_monst: %s", mon_nam(mtmp));
     if (canseemon(mtmp)) {
-        int pmid = mtmp->data->monsterTypeID;
+        int pmid = pmid4mon(mtmp);
         if (isFlyer(pmid) || isFloater(pmid)) {
             pline_The("%s opens up, but %s is not swallowed!",
                       surface(mtmp->mx, mtmp->my), mon_nam(mtmp));

@@ -2257,7 +2257,7 @@ const struct Attack mattk;
     boolean agrinvis, defperc;
     xchar genagr, gendef;
 
-    if (isAnimal(magr->data->monsterTypeID))
+    if (isAnimal(pmid4mon(magr)))
         return 0;
     if (magr == &youmonst) {
         pagr = youmonst.data;
@@ -2272,7 +2272,7 @@ const struct Attack mattk;
         defperc = youCanSeeInvisible();
         gendef = poly_gender();
     } else {
-        defperc = perceivesTheInvisible(mdef->data->monsterTypeID);
+        defperc = perceivesTheInvisible(pmid4mon(mdef));
         gendef = gender(mdef);
     }
 

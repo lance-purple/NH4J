@@ -1593,7 +1593,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
         /* this assumes that guaranteed_hit is due to swallowing */
         wakeup(mon);
         if (obj->otyp == CORPSE && touchPetrifies(obj->corpsenm)) {
-            if (isAnimal(u.ustuck->data->monsterTypeID)) {
+            if (isAnimal(pmid4mon(u.ustuck))) {
                 minstapetrify(u.ustuck, TRUE);
                 /* Don't leave a cockatrice corpse available in a statue */
                 if (!swallowed()) {
@@ -1604,7 +1604,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
         }
         pline("%s into %s %s.", Tobjnam(obj, "vanish"),
               s_suffix(mon_nam(mon)),
-              isAnimal(u.ustuck->data->monsterTypeID) ? "entrails" : "currents");
+              isAnimal(pmid4mon(u.ustuck)) ? "entrails" : "currents");
     } else {
         tmiss(obj, mon, TRUE);
     }
@@ -1942,7 +1942,7 @@ struct obj *obj;
     }
     freeinv(obj);
     if (swallowed()) {
-        pline(isAnimal(u.ustuck->data->monsterTypeID) ? "%s in the %s's entrails."
+        pline(isAnimal(pmid4mon(u.ustuck)) ? "%s in the %s's entrails."
                                         : "%s into %s.",
               "The money disappears", mon_nam(u.ustuck));
         add_to_minv(u.ustuck, obj);

@@ -215,8 +215,8 @@ int mndx;
 /* for deciding whether corpse will carry along full monster data */
 static boolean KEEPTRAITS(register struct monst* mon)                                                 
 {
-    return ((mon)->isshk || (mon)->mtame || corpseOrStatueIsUnique((mon)->data->monsterTypeID)
-     || isReviver((mon)->data->monsterTypeID)
+    return ((mon)->isshk || (mon)->mtame || corpseOrStatueIsUnique(pmid4mon(mon))
+     || isReviver(pmid4mon(mon))
         /* normally quest leader will be unique, */
         /* but he or she might have been polymorphed  */
      || (mon)->m_id == quest_status.leader_m_id
@@ -430,7 +430,7 @@ register struct monst *mtmp;
     boolean inpool, inlava, infountain;
 
     /* [what about ceiling clingers?] */
-    int pmid = mtmp->data->monsterTypeID;
+    int pmid = pmid4mon(mtmp);
 
     inpool = (is_pool(mtmp->mx, mtmp->my)
               && !(isFlyer(pmid) || isFloater(pmid)));
@@ -1124,7 +1124,7 @@ struct obj *otmp;
     if (iquan > 1) {
         boolean glomper = FALSE;
 
-	int pmid = mtmp->data->monsterTypeID;
+	int pmid = pmid4mon(mtmp);
 
         if (monsterClass(pmid) == S_DRAGON
             && (otmp->oclass == COIN_CLASS
@@ -1498,9 +1498,9 @@ struct monst *mtmp, *mtmp2;
         place_monster(mtmp2, mtmp2->mx, mtmp2->my);
     if (mtmp2->wormno)      /* update level.monsters[wseg->wx][wseg->wy] */
         place_wsegs(mtmp2); /* locations to mtmp2 not mtmp. */
-    if (emitsLightWithRange(mtmp2->data->monsterTypeID)) {
+    if (emitsLightWithRange(pmid4mon(mtmp2))) {
         /* since this is so rare, we don't have any `mon_move_light_source' */
-        new_light_source(mtmp2->mx, mtmp2->my, emitsLightWithRange(mtmp2->data->monsterTypeID),
+        new_light_source(mtmp2->mx, mtmp2->my, emitsLightWithRange(pmid4mon(mtmp2)),
                          LS_MONSTER, monst_to_any(mtmp2));
         /* here we rely on fact that `mtmp' hasn't actually been deleted */
         del_light_source(LS_MONSTER, monst_to_any(mtmp));
@@ -2001,8 +2001,8 @@ struct monst *mdef;
 
     mdef->mtrapped = 0; /* (see m_detach) */
 
-    if ((int) monsterSize(mdef->data->monsterTypeID) > MZ_TINY
-        || !rn2(2 + ((int) (monsterGenerationMask(mdef->data->monsterTypeID) & G_FREQ) > 2))) {
+    if ((int) monsterSize(pmid4mon(mdef)) > MZ_TINY
+        || !rn2(2 + ((int) (monsterGenerationMask(pmid4mon(mdef)) & G_FREQ) > 2))) {
         oldminvent = 0;
         /* some objects may end up outside the statue */
         while ((obj = mdef->minvent) != 0) {
@@ -2016,7 +2016,7 @@ struct monst *mdef;
             if (obj->otyp == BOULDER
 #if 0 /* monsters don't carry statues */
                 ||  (obj->otyp == STATUE
-                     && monsterSize(mons[obj->corpsenm].monsterTypeID) >= monsterSize(mdef->data->monsterTypeID))
+                     && monsterSize(mons[obj->corpsenm].monsterTypeID) >= monsterSize(pmid4mon(mdef)))
 #endif
                 /* invocation tools resist even with 0% resistance */
                 || obj_resists(obj, 0, 0)) {
@@ -2041,7 +2041,7 @@ struct monst *mdef;
             (void) add_to_container(otmp, obj);
         }
         /* Archeologists should not break unique statues */
-        if (monsterGenerationMask(mdef->data->monsterTypeID) & G_UNIQ) {
+        if (monsterGenerationMask(pmid4mon(mdef)) & G_UNIQ) {
             otmp->spe = 1;
 	}
         otmp->owt = weight(otmp);
@@ -2060,7 +2060,7 @@ struct monst *mdef;
         wasinside = TRUE;
     mondead(mdef);
     if (wasinside) {
-        if (isAnimal(mdef->data->monsterTypeID))
+        if (isAnimal(pmid4mon(mdef)))
             You("%s through an opening in the new %s.",
                 locomotion(youmonst.data, "jump"), xname(otmp));
     }
@@ -2078,7 +2078,7 @@ int how;
     if ((mdef->wormno ? worm_known(mdef) : cansee(mdef->mx, mdef->my))
         && fltxt)
         pline("%s is %s%s%s!", Monnam(mdef),
-              isNonliving(mdef->data->monsterTypeID) ? "destroyed" : "killed",
+              isNonliving(pmid4mon(mdef)) ? "destroyed" : "killed",
               *fltxt ? " by the " : "", fltxt);
     else
         be_sad = (mdef->mtame != 0);
@@ -2454,7 +2454,7 @@ void
 m_respond(mtmp)
 struct monst *mtmp;
 {
-    int pmid = mtmp->data->monsterTypeID;
+    int pmid = pmid4mon(mtmp);
     if (monsterSound(pmid) == MS_SHRIEK) {
         if (!youAreDeaf()) {
             pline("%s shrieks.", Monnam(mtmp));

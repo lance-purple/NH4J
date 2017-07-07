@@ -643,7 +643,7 @@ boolean with_impact;
                 could_heal = (obj->corpsenm == PM_NURSE);
             }
             (void) mpickobj(u.ustuck, obj);
-            if (isAnimal(u.ustuck->data->monsterTypeID)) {
+            if (isAnimal(pmid4mon(u.ustuck))) {
                 if (could_poly || could_slime) {
                     (void) newcham(u.ustuck,
                                    could_poly ? (struct permonst *) 0
@@ -924,7 +924,7 @@ dodown()
     }
     if (u.ustuck) {
         You("are %s, and cannot go down.",
-            !swallowed() ? "being held" : isAnimal(u.ustuck->data->monsterTypeID)
+            !swallowed() ? "being held" : isAnimal(pmid4mon(u.ustuck))
                                              ? "swallowed"
                                              : "engulfed");
         return 1;
@@ -983,7 +983,7 @@ doup()
     }
     if (u.ustuck) {
         You("are %s, and cannot go up.",
-            !swallowed() ? "being held" : isAnimal(u.ustuck->data->monsterTypeID)
+            !swallowed() ? "being held" : isAnimal(pmid4mon(u.ustuck))
                                              ? "swallowed"
                                              : "engulfed");
         return 1;

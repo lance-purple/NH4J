@@ -2593,7 +2593,7 @@ boolean youattack, allow_cancel_kill, self_cancel;
     } else {
         mdef->mcan = TRUE;
 
-        if (isWere(mdef->data->monsterTypeID) && monsterClass(mdef->data->monsterTypeID) != S_HUMAN)
+        if (isWere(pmid4mon(mdef)) && monsterClass(pmid4mon(mdef)) != S_HUMAN)
             were_change(mdef);
 
         if (mdef->data == &mons[PM_CLAY_GOLEM]) {

@@ -186,7 +186,7 @@ struct obj *obj; /* type == AT_WEAP, AT_SPIT */
     const char *s;
 
     /* no eyes protect against all attacks for now */
-    if (!hasEyes(mdef->data->monsterTypeID))
+    if (!hasEyes(pmid4mon(mdef)))
         return FALSE;
 
     switch (type) {
@@ -322,7 +322,7 @@ boolean
 can_blow(mtmp)
 register struct monst *mtmp;
 {
-    int pmid = mtmp->data->monsterTypeID;
+    int pmid = pmid4mon(mtmp);
     if ((isSilent(pmid) || monsterSound(pmid) == MS_BUZZ)
         && (doesNotBreathe(pmid) || isVerySmallMonster(pmid)
             || !hasAHead(pmid) || monsterClass(pmid) == S_EEL))
@@ -482,7 +482,7 @@ register struct monst *mdef, *magr;
     int i, dmg = 0, multi2 = 0;
 
     /* each attack by magr can result in passive damage */
-    int magrpmid = magr->data->monsterTypeID;
+    int magrpmid = pmid4mon(magr);
     int nAgressorAttacks = monsterAttacks(magrpmid);
     for (i = 0; i < nAgressorAttacks; i++) {
         switch (monsterAttack(magrpmid, i).type) {
@@ -503,8 +503,8 @@ register struct monst *mdef, *magr;
         }
     }
 
-    int mdefpmid = mdef->data->monsterTypeID;
-    int nDefenderAttacks = monsterAttacks(magr->data->monsterTypeID);
+    int mdefpmid = pmid4mon(mdef);
+    int nDefenderAttacks = monsterAttacks(mdefpmid);
     for (i = 0; i < nDefenderAttacks; i++) {
 	struct Attack mattk = monsterAttack(mdefpmid, i);
         if (mattk.type == AT_NONE || mattk.type == AT_BOOM) {
@@ -906,7 +906,7 @@ int
 pronoun_gender(mtmp)
 register struct monst *mtmp;
 {
-    int pmid = mtmp->data->monsterTypeID;
+    int pmid = pmid4mon(mtmp);
     if (isNeuter(pmid) || !canspotmon(mtmp))
         return 2;
     return (isHumanoid(pmid) || (monsterGenerationMask(pmid) & G_UNIQ)
