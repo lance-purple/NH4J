@@ -1098,7 +1098,7 @@ struct obj *otmp;
     struct permonst *mdat = mtmp->data;
     short nattk = 0;
 
-    if (doesNotTakeStuff(mdat->monsterTypeID))
+    if (doesNotTakeStuff(pmid4(mdat)))
         return 0; /* can't carry anything */
 
     if (otyp == CORPSE && touchPetrifies(otmp->corpsenm)
@@ -1107,7 +1107,7 @@ struct obj *otmp;
     if (otyp == CORPSE && is_rider(&mons[otmp->corpsenm]))
         return 0;
     if (objects[otyp].oc_material == SILVER && mon_hates_silver(mtmp)
-        && (otyp != BELL_OF_OPENING || !isCovetous(mdat->monsterTypeID)))
+        && (otyp != BELL_OF_OPENING || !isCovetous(pmid4(mdat))))
         return 0;
 
     /* hostile monsters who like gold will pick up the whole stack;
@@ -1156,11 +1156,11 @@ struct obj *otmp;
      */
 
     /* special--boulder throwers carry unlimited amounts of boulders */
-    if (throwsRocks(mdat->monsterTypeID) && otyp == BOULDER)
+    if (throwsRocks(pmid4(mdat)) && otyp == BOULDER)
         return iquan;
 
     /* nymphs deal in stolen merchandise, but not boulders or statues */
-    if (monsterClass(mdat->monsterTypeID) == S_NYMPH)
+    if (monsterClass(pmid4(mdat)) == S_NYMPH)
         return (otmp->oclass == ROCK_CLASS) ? 0 : iquan;
 
     if (curr_mon_load(mtmp) + newload > max_mon_load(mtmp))
@@ -1178,7 +1178,7 @@ long *info;  /* long info[9] */
 long flag;
 {
     struct permonst *mdat = mon->data;
-    int pmid = mdat->monsterTypeID;
+    int pmid = pmid4(mdat);
     register struct trap *ttmp;
     xchar x, y, nx, ny;
     int cnt = 0;
@@ -1196,13 +1196,13 @@ long flag;
     wantpool = monsterClass(pmid) == S_EEL;
     poolok = (isFlyer(pmid) || isClinger(pmid)
               || (isSwimmer(pmid) && !wantpool));
-    lavaok = (isFlyer(pmid) || isClinger(pmid) || likesLava(mdat->monsterTypeID));
+    lavaok = (isFlyer(pmid) || isClinger(pmid) || likesLava(pmid));
     thrudoor = ((flag & (ALLOW_WALL | BUSTDOOR)) != 0L);
     if (flag & ALLOW_DIG) {
         struct obj *mw_tmp;
 
         /* need to be specific about what can currently be dug */
-        if (!needsPickaxe(mdat->monsterTypeID)) {
+        if (!needsPickaxe(pmid)) {
             rockok = treeok = TRUE;
         } else if ((mw_tmp = MON_WEP(mon)) && mw_tmp->cursed
                    && mon->weapon_check == NO_WEAPON_WANTED) {
@@ -1241,7 +1241,7 @@ nexttry: /* eels prefer the water, but if there is no water nearby,
             /* KMH -- Added iron bars */
             if (ntyp == IRONBARS && !(flag & ALLOW_BARS))
                 continue;
-            if (IS_DOOR(ntyp) && !(isAmorphous(mdat->monsterTypeID) || can_fog(mon))
+            if (IS_DOOR(ntyp) && !(isAmorphous(pmid4(mdat)) || can_fog(mon))
                 && (((levl[nx][ny].doormask & D_CLOSED) && !(flag & OPENDOOR))
                     || ((levl[nx][ny].doormask & D_LOCKED)
                         && !(flag & UNLOCKDOOR))) && !thrudoor)
@@ -1262,7 +1262,7 @@ nexttry: /* eels prefer the water, but if there is no water nearby,
                 && (lavaok || !is_lava(nx, ny))) {
                 int dispx, dispy;
                 boolean monseeu = (mon->mcansee
-                                   && (!youAreInvisibleToOthers() || perceivesTheInvisible(mdat->monsterTypeID)));
+                                   && (!youAreInvisibleToOthers() || perceivesTheInvisible(pmid4(mdat))));
                 boolean checkobj = OBJ_AT(nx, ny);
 
                 /* Displacement also displaces the Elbereth/scare monster,
@@ -1426,14 +1426,14 @@ struct monst *magr, /* monster that is currently deciding where to move */
        or if defender can barge through too, don't let attacker
        do so, otherwise they might just end up swapping places
        again when defender gets its chance to move */
-    if (isDisplacer(pa->monsterTypeID) && isDisplacer(pd->monsterTypeID)
+    if (isDisplacer(pmid4(pa)) && isDisplacer(pmid4(pd))
         /* no displacing grid bugs diagonally */
         && !(magr->mx != mdef->mx && magr->my != mdef->my
              && NODIAG(monsndx(pd)))
         /* no displacing trapped monsters or multi-location longworms */
         && !mdef->mtrapped && (!mdef->wormno || !count_wsegs(mdef))
         /* riders can move anything; others, same size or smaller only */
-        && (is_rider(pa) || monsterSize(pa->monsterTypeID) >= monsterSize(pd->monsterTypeID)))
+        && (is_rider(pa) || monsterSize(pmid4(pa)) >= monsterSize(pmid4(pd))))
         return ALLOW_MDISP;
     return 0L;
 }
@@ -1666,7 +1666,7 @@ struct permonst *mptr; /* reflects mtmp->data _prior_ to mtmp's death */
     mtmp->mhp = 0; /* simplify some tests: force mhp to 0 */
     relobj(mtmp, 0, FALSE);
     remove_monster(mtmp->mx, mtmp->my);
-    if (emitsLightWithRange(mptr->monsterTypeID))
+    if (emitsLightWithRange(pmid4(mptr)))
         del_light_source(LS_MONSTER, monst_to_any(mtmp));
     newsym(mtmp->mx, mtmp->my);
     unstuck(mtmp);
@@ -1883,28 +1883,28 @@ boolean was_swallowed; /* digestion */
     struct permonst *mdat = mon->data;
     int i, tmp;
 
-    if (mdat == &mons[PM_VLAD_THE_IMPALER] || monsterClass(mdat->monsterTypeID) == S_LICH) {
+    if (mdat == &mons[PM_VLAD_THE_IMPALER] || monsterClass(pmid4(mdat)) == S_LICH) {
         if (cansee(mon->mx, mon->my) && !was_swallowed)
             pline("%s body crumbles into dust.", s_suffix(Monnam(mon)));
         return FALSE;
     }
 
     /* Gas spores always explode upon death */
-    int pmid = mdat->monsterTypeID;
+    int pmid = pmid4(mdat);
     for (i = 0; i < monsterAttacks(pmid); i++) {
 	struct Attack mattk = monsterAttack(pmid, i);
         if (mattk.type == AT_BOOM) {
             if (mattk.dice) {
                 tmp = d(mattk.dice, mattk.diceSides);
 	    } else if (mattk.diceSides) {
-                tmp = d(monsterLevel(mdat->monsterTypeID) + 1, mattk.diceSides);
+                tmp = d(monsterLevel(pmid4(mdat)) + 1, mattk.diceSides);
 	    } else {
                 tmp = 0;
 	    }
             if (was_swallowed && magr) {
                 if (magr == &youmonst) {
                     There("is an explosion in your %s!", body_part(STOMACH));
-		    javaString monsterName = monsterTypeName(mdat->monsterTypeID);
+		    javaString monsterName = monsterTypeName(pmid4(mdat));
                     Sprintf(killer.name, "%s explosion",
                             s_suffix(monsterName.c_str));
 		    releaseJavaString(monsterName);
@@ -1924,7 +1924,7 @@ boolean was_swallowed; /* digestion */
                 return FALSE;
             }
 
-	    javaString monsterName = monsterTypeName(mdat->monsterTypeID);
+	    javaString monsterName = monsterTypeName(pmid4(mdat));
             Sprintf(killer.name, "%s explosion", s_suffix(monsterName.c_str));
 	    releaseJavaString(monsterName);
             killer.format = KILLED_BY_AN;
@@ -1936,13 +1936,13 @@ boolean was_swallowed; /* digestion */
     /* must duplicate this below check in xkilled() since it results in
      * creating no objects as well as no corpse
      */
-    if (LEVEL_SPECIFIC_NOCORPSE(mdat->monsterTypeID))
+    if (LEVEL_SPECIFIC_NOCORPSE(pmid4(mdat)))
         return FALSE;
 
-    if (((isBigMonster(mdat->monsterTypeID) || mdat == &mons[PM_LIZARD]) && !mon->mcloned)
-        || isGolem(mdat->monsterTypeID) || is_mplayer(mdat) || is_rider(mdat))
+    if (((isBigMonster(pmid4(mdat)) || mdat == &mons[PM_LIZARD]) && !mon->mcloned)
+        || isGolem(pmid4(mdat)) || is_mplayer(mdat) || is_rider(mdat))
         return TRUE;
-    tmp = 2 + ((monsterGenerationMask(mdat->monsterTypeID) & G_FREQ) < 2) + isVerySmallMonster(mdat->monsterTypeID);
+    tmp = 2 + ((monsterGenerationMask(pmid4(mdat)) & G_FREQ) < 2) + isVerySmallMonster(pmid4(mdat));
     return (boolean) !rn2(tmp);
 }
 
@@ -2208,7 +2208,7 @@ int dest; /* dest==1, normal; dest==0, don't print message; dest==2, don't
         goto cleanup;
     }
 
-    if ((dest & 2) || LEVEL_SPECIFIC_NOCORPSE(mdat->monsterTypeID))
+    if ((dest & 2) || LEVEL_SPECIFIC_NOCORPSE(pmid4(mdat)))
         goto cleanup;
 
 #ifdef MAIL
@@ -2225,13 +2225,13 @@ int dest; /* dest==1, normal; dest==0, don't print message; dest==2, don't
             /* no extra item from swallower or steed */
             && (x != currentX() || y != currentY())
             /* no extra item from kops--too easy to abuse */
-            && monsterClass(mdat->monsterTypeID) != S_KOP
+            && monsterClass(pmid4(mdat)) != S_KOP
             /* no items from cloned monsters */
             && !mtmp->mcloned) {
             otmp = mkobj(RANDOM_CLASS, TRUE);
             /* don't create large objects from small monsters */
             otyp = otmp->otyp;
-            if (monsterSize(mdat->monsterTypeID) < MZ_HUMAN && otyp != FIGURINE
+            if (monsterSize(pmid4(mdat)) < MZ_HUMAN && otyp != FIGURINE
                 /* oc_big is also oc_bimanual and oc_bulky */
                 && (otmp->owt > 30 || objects[otyp].oc_big)) {
                 delobj(otmp);
@@ -2257,7 +2257,7 @@ int dest; /* dest==1, normal; dest==0, don't print message; dest==2, don't
 
 cleanup:
     /* punish bad behaviour */
-    if (isHuman(mdat->monsterTypeID) && (!isAlwaysHostile(mdat->monsterTypeID) && mtmp->malign <= 0)
+    if (isHuman(pmid4(mdat)) && (!isAlwaysHostile(pmid4(mdat)) && mtmp->malign <= 0)
         && (mndx < PM_ARCHEOLOGIST || mndx > PM_WIZARD)
         && currentAlignmentType() != A_CHAOTIC) {
         unsetYourIntrinsicMask(TELEPAT, INTRINSIC);
@@ -2268,7 +2268,7 @@ cleanup:
     }
     if ((mtmp->mpeaceful && !rn2(2)) || mtmp->mtame)
         change_luck(-1);
-    if (isUnicorn(mdat->monsterTypeID) && sgn(currentAlignmentType()) == sgn(monsterAlignment(mdat->monsterTypeID))) {
+    if (isUnicorn(pmid4(mdat)) && sgn(currentAlignmentType()) == sgn(monsterAlignment(pmid4(mdat)))) {
         change_luck(-5);
         You_feel("guilty...");
     }
@@ -2278,7 +2278,7 @@ cleanup:
     more_experienced(tmp, 0);
     newexplevel(); /* will decide if you go up */
 
-    int msound = monsterSound(mdat->monsterTypeID);
+    int msound = monsterSound(pmid4(mdat));
 
     /* adjust alignment points */
     if (mtmp->m_id == quest_status.leader_m_id) { /* REAL BAD! */
@@ -2298,7 +2298,7 @@ cleanup:
         /* cancel divine protection for killing your priest */
         if (p_coaligned(mtmp))
             setBlessings(0);
-        if (monsterAlignment(mdat->monsterTypeID) == A_NONE)
+        if (monsterAlignment(pmid4(mdat)) == A_NONE)
             adjalign((int) (ALIGNLIM / 4)); /* BIG bonus */
     } else if (mtmp->mtame) {
         adjalign(-15); /* bad!! */
@@ -2523,7 +2523,7 @@ struct monst *mtmp;
             }
         }
         if (got_mad && !youAreHallucinating()) {
-	    javaString guardianName = monsterTypeName(q_guardian->monsterTypeID);
+	    javaString guardianName = monsterTypeName(pmid4(q_guardian));
             pline_The("%s appear%s to be angry too...",
                       got_mad == 1 ? guardianName.c_str
                                    : makeplural(guardianName.c_str),
@@ -2839,7 +2839,7 @@ int shiftflags;
     }
     /* override the 10% chance for sex change */
     ptr = mon->data;
-    if (!isMale(ptr->monsterTypeID) && !isFemale(ptr->monsterTypeID) && !isNeuter(ptr->monsterTypeID))
+    if (!isMale(pmid4(ptr)) && !isFemale(pmid4(ptr)) && !isNeuter(pmid4(ptr)))
         mon->female = was_female;
 }
 
@@ -2899,7 +2899,7 @@ int mndx;
 
         /* reject notake because object manipulation is expected
            and nohead because speech capability is expected */
-        if (doesNotTakeStuff(ptr->monsterTypeID) || !hasAHead(ptr->monsterTypeID))
+        if (doesNotTakeStuff(pmid4(ptr)) || !hasAHead(pmid4(ptr)))
             return FALSE;
         /* [should we check ptr->msound here too?] */
     }
@@ -3087,7 +3087,7 @@ int mndx;
     if (is_mplayer(mdat))
         return mdat;
     /* okToPolymorphInto() rules out M2_PNAME, M2_WERE, and all humans except Kops */
-    return okToPolymorphInto(mdat->monsterTypeID) ? mdat : 0;
+    return okToPolymorphInto(pmid4(mdat)) ? mdat : 0;
 }
 
 void
@@ -3095,13 +3095,13 @@ mgender_from_permonst(mtmp, mdat)
 struct monst *mtmp;
 struct permonst *mdat;
 {
-    if (isMale(mdat->monsterTypeID)) {
+    if (isMale(pmid4(mdat))) {
         if (mtmp->female)
             mtmp->female = FALSE;
-    } else if (isFemale(mdat->monsterTypeID)) {
+    } else if (isFemale(pmid4(mdat))) {
         if (!mtmp->female)
             mtmp->female = TRUE;
-    } else if (!isNeuter(mdat->monsterTypeID)) {
+    } else if (!isNeuter(pmid4(mdat))) {
         if (!rn2(10))
             mtmp->female = !mtmp->female;
     }
@@ -3144,7 +3144,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
             /* for the first several tries we require upper-case on
                the rogue level (after that, we take whatever we get) */
             if (tryct > 15 && areYouOnRogueLevel()
-                && mdat && !isupper((uchar) monsterClass(mdat->monsterTypeID)))
+                && mdat && !isupper((uchar) monsterClass(pmid4(mdat))))
                 mdat = 0;
             if (mdat)
                 break;
@@ -3176,7 +3176,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
         wormgone(mtmp);
         place_monster(mtmp, mtmp->mx, mtmp->my);
     }
-    if (mtmp->m_ap_type && monsterClass(mdat->monsterTypeID) != S_MIMIC)
+    if (mtmp->m_ap_type && monsterClass(pmid4(mdat)) != S_MIMIC)
         seemimic(mtmp); /* revert to normal monster */
 
     /* (this code used to try to adjust the monster's health based on
@@ -3202,10 +3202,10 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
     /* take on the new form... */
     set_mon_data(mtmp, mdat, 0);
 
-    if (emitsLightWithRange(olddata->monsterTypeID) != emitsLightWithRange(pmid4mon(mtmp))) {
+    if (emitsLightWithRange(pmid4(olddata)) != emitsLightWithRange(pmid4mon(mtmp))) {
         /* used to give light, now doesn't, or vice versa,
            or light's range has changed */
-        if (emitsLightWithRange(olddata->monsterTypeID))
+        if (emitsLightWithRange(pmid4(olddata)))
             del_light_source(LS_MONSTER, monst_to_any(mtmp));
         if (emitsLightWithRange(pmid4mon(mtmp)))
             new_light_source(mtmp->mx, mtmp->my, emitsLightWithRange(pmid4mon(mtmp)),
@@ -3220,10 +3220,10 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
         if (swallowed()) {
             if (!attacktype(mdat, AT_ENGL)) {
                 /* Does mdat care? */
-                if (!isNoncorporeal(mdat->monsterTypeID) && !isAmorphous(mdat->monsterTypeID)
-                    && !isWhirly(mdat->monsterTypeID) && (mdat != &mons[PM_YELLOW_LIGHT])) {
+                if (!isNoncorporeal(pmid4(mdat)) && !isAmorphous(pmid4(mdat))
+                    && !isWhirly(pmid4(mdat)) && (mdat != &mons[PM_YELLOW_LIGHT])) {
                     You("break out of %s%s!", mon_nam(mtmp),
-                        (isAnimal(mdat->monsterTypeID) ? "'s stomach" : ""));
+                        (isAnimal(pmid4(mdat)) ? "'s stomach" : ""));
                     mtmp->mhp = 1; /* almost dead */
                 }
                 expels(mtmp, olddata, FALSE);
@@ -3284,7 +3284,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
      * minvent should be sorted in order to drop heaviest items first.
      */
     /* former giants can't continue carrying boulders */
-    if (mtmp->minvent && !throwsRocks(mdat->monsterTypeID)) {
+    if (mtmp->minvent && !throwsRocks(pmid4(mdat))) {
         register struct obj *otmp, *otmp2;
 
         for (otmp = mtmp->minvent; otmp; otmp = otmp2) {
@@ -3642,7 +3642,7 @@ struct permonst *mdat;
         }
 
         if (nonspecific)
-            switch (monsterClass(mdat->monsterTypeID)) {
+            switch (monsterClass(pmid4(mdat))) {
             case S_DOG:
                 You("notice a dog smell.");
                 msg_given = TRUE;

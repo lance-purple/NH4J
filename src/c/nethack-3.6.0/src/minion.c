@@ -54,7 +54,7 @@ struct monst *mon;
     int dtype = NON_PM, cnt = 0, result = 0, census;
     aligntyp atyp;
     struct monst *mtmp;
-    int maligntype = monsterAlignment(ptr->monsterTypeID);
+    int maligntype = monsterAlignment(pmid4(ptr));
 
     if (mon) {
         ptr = mon->data;
@@ -68,22 +68,22 @@ struct monst *mon;
         atyp = (maligntype == A_NONE) ? A_NONE : sgn(maligntype);
     }
 
-    if (isDemonPrince(ptr->monsterTypeID) || (ptr == &mons[PM_WIZARD_OF_YENDOR])) {
+    if (isDemonPrince(pmid4(ptr)) || (ptr == &mons[PM_WIZARD_OF_YENDOR])) {
         dtype = (!rn2(20)) ? dprince(atyp) : (!rn2(4)) ? dlord(atyp)
                                                        : ndemon(atyp);
         cnt = (!rn2(4) && isNamelessMajorDemon(mons[dtype].monsterTypeID)) ? 2 : 1;
-    } else if (isDemonLord(ptr->monsterTypeID)) {
+    } else if (isDemonLord(pmid4(ptr))) {
         dtype = (!rn2(50)) ? dprince(atyp) : (!rn2(20)) ? dlord(atyp)
                                                         : ndemon(atyp);
         cnt = (!rn2(4) && isNamelessMajorDemon(mons[dtype].monsterTypeID)) ? 2 : 1;
-    } else if (isNamelessMajorDemon(ptr->monsterTypeID)) {
+    } else if (isNamelessMajorDemon(pmid4(ptr))) {
         dtype = (!rn2(20)) ? dlord(atyp) : (!rn2(6)) ? ndemon(atyp)
                                                      : monsndx(ptr);
         cnt = 1;
     } else if (isLawfulMinion(pmid4mon(mon))) {
-        dtype = (isLord(ptr->monsterTypeID) && !rn2(20))
+        dtype = (isLord(pmid4(ptr)) && !rn2(20))
                     ? llord()
-                    : (isLord(ptr->monsterTypeID) || !rn2(6)) ? lminion() : monsndx(ptr);
+                    : (isLord(pmid4(ptr)) || !rn2(6)) ? lminion() : monsndx(ptr);
         cnt = (!rn2(4) && !isLord(mons[dtype].monsterTypeID)) ? 2 : 1;
     } else if (ptr == &mons[PM_ANGEL]) {
         /* non-lawful angels can also summon */
@@ -366,7 +366,7 @@ lminion()
 
     for (tryct = 0; tryct < 20; tryct++) {
         ptr = mkclass(S_ANGEL, 0);
-        if (ptr && !isLord(ptr->monsterTypeID))
+        if (ptr && !isLord(pmid4(ptr)))
             return (monsndx(ptr));
     }
 
@@ -382,8 +382,8 @@ aligntyp atyp;
 
     for (tryct = 0; tryct < 20; tryct++) {
         ptr = mkclass(S_DEMON, 0);
-        if (ptr && isNamelessMajorDemon(ptr->monsterTypeID)
-            && (atyp == A_NONE || sgn(monsterAlignment(ptr->monsterTypeID)) == sgn(atyp)))
+        if (ptr && isNamelessMajorDemon(pmid4(ptr))
+            && (atyp == A_NONE || sgn(monsterAlignment(pmid4(ptr))) == sgn(atyp)))
             return (monsndx(ptr));
     }
 

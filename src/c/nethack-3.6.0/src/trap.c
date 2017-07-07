@@ -382,8 +382,8 @@ register int x, y, typ;
 
         do { /* avoid ultimately hostile co-aligned unicorn */
             mptr = &mons[rndmonnum()];
-        } while (--trycount > 0 && isUnicorn(mptr->monsterTypeID)
-                 && sgn(currentAlignmentType()) == sgn(monsterAlignment(mptr->monsterTypeID)));
+        } while (--trycount > 0 && isUnicorn(pmid4(mptr))
+                 && sgn(currentAlignmentType()) == sgn(monsterAlignment(pmid4(mptr))));
         statue = mkcorpstat(STATUE, (struct monst *) 0, mptr, x, y,
                             CORPSTAT_NONE);
         mtmp = makemon(&mons[statue->corpsenm], 0, 0, MM_NOCOUNTBIRTH);
@@ -585,7 +585,7 @@ int *fail_reason;
         if (mnum != PM_DOPPELGANGER)
             mptr = &mons[mnum];
         use_saved_traits = FALSE;
-    } else if (isGolem(mptr->monsterTypeID) && cause == ANIMATE_SPELL) {
+    } else if (isGolem(pmid4(mptr)) && cause == ANIMATE_SPELL) {
         /* statue of any golem hit by stone-to-flesh becomes flesh golem */
         golem_xform = (mptr != &mons[PM_FLESH_GOLEM]);
         mnum = PM_FLESH_GOLEM;
@@ -607,7 +607,7 @@ int *fail_reason;
            mptr reflects the original form for use by newcham()) */
         if ((mnum == PM_DOPPELGANGER && mptr != &mons[PM_DOPPELGANGER])
             /* block quest guards from other roles */
-            || (monsterSound(mptr->monsterTypeID) == MS_GUARDIAN
+            || (monsterSound(pmid4(mptr)) == MS_GUARDIAN
                 && quest_info(MS_GUARDIAN) != mnum)) {
             mon = makemon(&mons[PM_DOPPELGANGER], x, y,
                           NO_MINVENT | MM_NOCOUNTBIRTH | MM_ADJACENTOK);
@@ -2067,7 +2067,7 @@ register struct monst *mtmp;
             } else {
                 mtmp->mtrapped = 0;
             }
-        } else if (isMetallivorous(mptr->monsterTypeID)) {
+        } else if (isMetallivorous(pmid4(mptr))) {
             if (trap->ttyp == BEAR_TRAP) {
                 if (canseemon(mtmp))
                     pline("%s eats a bear trap!", Monnam(mtmp));
@@ -2092,7 +2092,7 @@ register struct monst *mtmp;
         if (mtmp == u.usteed)
             inescapable = TRUE;
         if (!inescapable && ((mtmp->mtrapseen & (1 << (tt - 1))) != 0
-                             || (tt == HOLE && !isMindless(mptr->monsterTypeID)))) {
+                             || (tt == HOLE && !isMindless(pmid4(mptr))))) {
             /* it has been in such a trap - perhaps it escapes */
             if (rn2(4))
                 return 0;
@@ -2111,7 +2111,7 @@ register struct monst *mtmp;
         if (mtmp == u.usteed)
         in_sight = TRUE;
 
-	int pmid = mptr->monsterTypeID;
+	int pmid = pmid4(mptr);
 
         switch (tt) {
         case ARROW_TRAP:
@@ -2173,7 +2173,7 @@ register struct monst *mtmp;
                 trapkilled = TRUE;
             break;
         case SQKY_BOARD:
-            if (isFlyer(mptr->monsterTypeID)) {
+            if (isFlyer(pmid4(mptr))) {
                 break;
 	    }
             /* stepped on a squeaky board */
@@ -2215,7 +2215,7 @@ register struct monst *mtmp;
                 trapkilled = thitm(0, mtmp, (struct obj *) 0, d(2, 4), FALSE);
             break;
         case SLP_GAS_TRAP:
-            if (!resists_sleep(mtmp) && !doesNotBreathe(mptr->monsterTypeID) && !mtmp->msleeping
+            if (!resists_sleep(mtmp) && !doesNotBreathe(pmid4(mptr)) && !mtmp->msleeping
                 && mtmp->mcanmove) {
                 if (sleep_monst(mtmp, rnd(25), -1) && in_sight) {
                     pline("%s suddenly falls asleep!", Monnam(mtmp));
@@ -2351,7 +2351,7 @@ register struct monst *mtmp;
             fallverb = "falls";
             if (isFlyer(pmid) || isFloater(pmid)
                 || (mtmp->wormno && count_wsegs(mtmp) > 5)
-                || isClinger(mptr->monsterTypeID)) {
+                || isClinger(pmid4(mptr))) {
                 if (force_mintrap && !Sokoban) {
                     /* openfallingtrap; not inescapable here */
                     if (in_sight) {
@@ -2364,7 +2364,7 @@ register struct monst *mtmp;
                     break;               /* avoids trap */
                 fallverb = "is dragged"; /* sokoban pit */
             }
-            if (!passesThroughWalls(mptr->monsterTypeID))
+            if (!passesThroughWalls(pmid4(mptr)))
                 mtmp->mtrapped = 1;
             if (in_sight) {
                 pline("%s %s into %s pit!", Monnam(mtmp), fallverb,
@@ -2430,8 +2430,8 @@ register struct monst *mtmp;
             /* Monster in a web. */
             if (webmaker(mptr))
                 break;
-            if (isAmorphous(mptr->monsterTypeID) || isWhirly(mptr->monsterTypeID) || isUnsolid(mptr->monsterTypeID)) {
-                if (isAcidic(mptr->monsterTypeID) || mptr == &mons[PM_GELATINOUS_CUBE]
+            if (isAmorphous(pmid4(mptr)) || isWhirly(pmid4(mptr)) || isUnsolid(pmid4(mptr))) {
+                if (isAcidic(pmid4(mptr)) || mptr == &mons[PM_GELATINOUS_CUBE]
                     || mptr == &mons[PM_FIRE_ELEMENTAL]) {
                     if (in_sight)
                         pline("%s %s %s spider web!", Monnam(mtmp),
@@ -2461,9 +2461,9 @@ register struct monst *mtmp;
                 }
             /* fall though */
             default:
-                if (monsterClass(mptr->monsterTypeID) == S_GIANT
+                if (monsterClass(pmid4(mptr)) == S_GIANT
                     /* exclude baby dragons and relatively short worms */
-                    || (monsterClass(mptr->monsterTypeID) == S_DRAGON && isExtraNasty(mptr->monsterTypeID))
+                    || (monsterClass(pmid4(mptr)) == S_DRAGON && isExtraNasty(pmid4(mptr)))
                     || (mtmp->wormno && count_wsegs(mtmp) > 5)) {
                     tear_web = TRUE;
                 } else if (in_sight) {
@@ -2534,7 +2534,7 @@ register struct monst *mtmp;
                         break;
                 if (otmp)
                     dmgval2 += rnd(4);
-                if (passesThroughWalls(mptr->monsterTypeID))
+                if (passesThroughWalls(pmid4(mptr)))
                     dmgval2 = (dmgval2 + 3) / 4;
 
                 if (in_sight)
@@ -2554,7 +2554,7 @@ register struct monst *mtmp;
         case LANDMINE:
             if (rn2(3))
                 break; /* monsters usually don't set it off */
-            if (isFlyer(mptr->monsterTypeID)) {
+            if (isFlyer(pmid4(mptr))) {
                 boolean already_seen = trap->tseen;
 
                 if (in_sight && !already_seen) {

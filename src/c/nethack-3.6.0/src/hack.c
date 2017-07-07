@@ -615,9 +615,9 @@ register xchar x, y;
 {
     return (boolean) ((Sokoban && sobj_at(BOULDER, x, y))
                       || (IS_ROCK(levl[x][y].typ)
-                          && (!isTunneler(mdat->monsterTypeID) || needsPickaxe(mdat->monsterTypeID)
+                          && (!isTunneler(pmid4(mdat)) || needsPickaxe(pmid4(mdat))
                               || !may_dig(x, y))
-                          && !(passesThroughWalls(mdat->monsterTypeID) && may_passwall(x, y))));
+                          && !(passesThroughWalls(pmid4(mdat)) && may_passwall(x, y))));
 }
 
 /* caller has already decided that it's a tight diagonal; check whether a
@@ -631,9 +631,9 @@ struct monst *mon;
     struct permonst *ptr = mon->data;
 
     /* too big? */
-    if (isBigMonster(ptr->monsterTypeID)
-        && !(isAmorphous(ptr->monsterTypeID) || isWhirly(ptr->monsterTypeID) || isNoncorporeal(ptr->monsterTypeID)
-             || isSlithy(ptr->monsterTypeID) || can_fog(mon)))
+    if (isBigMonster(pmid4(ptr))
+        && !(isAmorphous(pmid4(ptr)) || isWhirly(pmid4(ptr)) || isNoncorporeal(pmid4(ptr))
+             || isSlithy(pmid4(ptr)) || can_fog(mon)))
         return 1;
 
     /* lugging too much junk? */
@@ -2917,7 +2917,7 @@ extern boolean MATCH_WARN_OF_MON(int pmid) {
     return (youAreWarnedOfMonsters() &&
        ((context.warntype.obj && monsterHasFlag2(pmid, context.warntype.obj))
        || (context.warntype.polyd && monsterHasFlag2(pmid, context.warntype.polyd))
-       || (context.warntype.species && context.warntype.species->monsterTypeID == pmid)));
+       || (context.warntype.species && pmid4(context.warntype.species) == pmid)));
 }
 
 /*hack.c*/

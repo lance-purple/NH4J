@@ -938,7 +938,7 @@ boolean called;
             Strcat(buf, "invisible ");
 
 	if (NULL == monsterName.c_str) {
-            monsterName = monsterTypeName(mdat->monsterTypeID);
+            monsterName = monsterTypeName(pmid4(mdat));
 	}
         Strcat(buf, monsterName.c_str);
         releaseJavaString(monsterName);
@@ -961,7 +961,7 @@ boolean called;
     /* Put the actual monster name or type into the buffer now */
     /* Be sure to remember whether the buffer starts with a name */
     if (NULL == monsterName.c_str) {
-        monsterName = monsterTypeName(mdat->monsterTypeID);
+        monsterName = monsterTypeName(pmid4(mdat));
     }
 
     if (do_hallu) {
@@ -978,7 +978,7 @@ boolean called;
             name_at_start = TRUE;
         } else if (called) {
             Sprintf(eos(buf), "%s called %s", monsterName.c_str, name);
-            name_at_start = typeIsProperName(mdat->monsterTypeID);
+            name_at_start = typeIsProperName(pmid4(mdat));
         } else if (is_mplayer(mdat) && (bp = strstri(name, " the ")) != 0) {
             /* <name> the <adjective> <invisible> <saddled> <rank> */
             char pbuf[BUFSZ];
@@ -1004,7 +1004,7 @@ boolean called;
         name_at_start = FALSE;
     } else {
         Strcat(buf, monsterName.c_str);
-        name_at_start = typeIsProperName(mdat->monsterTypeID);
+        name_at_start = typeIsProperName(pmid4(mdat));
     }
 
     if (name_at_start && (article == ARTICLE_YOUR || !has_adjectives)) {
@@ -1012,7 +1012,7 @@ boolean called;
             article = ARTICLE_THE;
         else
             article = ARTICLE_NONE;
-    } else if ((monsterGenerationMask(mdat->monsterTypeID) & G_UNIQ) && article == ARTICLE_A) {
+    } else if ((monsterGenerationMask(pmid4(mdat)) & G_UNIQ) && article == ARTICLE_A) {
         article = ARTICLE_THE;
     }
 

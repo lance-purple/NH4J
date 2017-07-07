@@ -2157,12 +2157,12 @@ int how;
                 killplayer++;
                 break;
             }
-            if (isHuman(ptr->monsterTypeID))
+            if (isHuman(pmid4(ptr)))
                 adjalign(-sgn(currentAlignmentType()));
-            if (isDemon(ptr->monsterTypeID))
+            if (isDemon(pmid4(ptr)))
                 adjalign(sgn(currentAlignmentType()));
 
-            if (!(monsterGenerationMask(ptr->monsterTypeID) & G_GENO)) {
+            if (!(monsterGenerationMask(pmid4(ptr)) & G_GENO)) {
                 if (!youAreDeaf()) {
                     /* fixme: unconditional "caverns" will be silly in some
                      * circumstances */
@@ -2192,12 +2192,12 @@ int how;
             buf[0] = lowc(buf[0]);
         }
     } else {
-	javaString monsterName = monsterTypeName(ptr->monsterTypeID);
+	javaString monsterName = monsterTypeName(pmid4(ptr));
         Strcpy(buf, monsterName.c_str); /* make sure we have standard singular */
 	releaseJavaString(monsterName);
 
-        if ((monsterGenerationMask(ptr->monsterTypeID) & G_UNIQ) && ptr != &mons[PM_HIGH_PRIEST])
-            which = !typeIsProperName(ptr->monsterTypeID) ? "the " : "";
+        if ((monsterGenerationMask(pmid4(ptr)) & G_UNIQ) && ptr != &mons[PM_HIGH_PRIEST])
+            which = !typeIsProperName(pmid4(ptr)) ? "the " : "";
     }
     if (how & REALLY) {
         /* setting no-corpse affects wishing and random tin generation */

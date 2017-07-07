@@ -1405,15 +1405,14 @@ int final;
        (with countdown timer appended for wizard mode); we really want
        the player to know he's not a samurai at the moment... */
     if (areYouPolymorphed()) {
-        struct permonst *uasmon = youmonst.data;
 
         tmpbuf[0] = '\0';
         /* here we always use current gender, not saved role gender */
-        if (!isMale(uasmon->monsterTypeID) && !isFemale(uasmon->monsterTypeID) && !isNeuter(uasmon->monsterTypeID)) {
+        if (!isMale(pmid4you()) && !isFemale(pmid4you()) && !isNeuter(pmid4you())) {
             Sprintf(tmpbuf, "%s ", genders[flags.female ? 1 : 0].adj);
 	}
 	
-	javaString youAsMonsterName = monsterTypeName(uasmon->monsterTypeID);
+	javaString youAsMonsterName = monsterTypeName(pmid4you());
         Sprintf(buf, "%sin %s%s form", !final ? "currently " : "", tmpbuf,
                 youAsMonsterName.c_str);
 	releaseJavaString(youAsMonsterName);

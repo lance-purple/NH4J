@@ -28,9 +28,9 @@ struct monst *mtmp;
 {
     struct permonst *ptr = mtmp->data;
 
-    return (index(steeds, monsterClass(ptr->monsterTypeID)) && (monsterSize(ptr->monsterTypeID) >= MZ_MEDIUM)
-            && (!isHumanoid(ptr->monsterTypeID) || monsterClass(ptr->monsterTypeID) == S_CENTAUR) && !isAmorphous(ptr->monsterTypeID)
-            && !isNoncorporeal(ptr->monsterTypeID) && !isWhirly(ptr->monsterTypeID) && !isUnsolid(ptr->monsterTypeID));
+    return (index(steeds, monsterClass(pmid4(ptr))) && (monsterSize(pmid4(ptr)) >= MZ_MEDIUM)
+            && (!isHumanoid(pmid4(ptr)) || monsterClass(pmid4(ptr)) == S_CENTAUR) && !isAmorphous(pmid4(ptr))
+            && !isNoncorporeal(pmid4(ptr)) && !isWhirly(pmid4(ptr)) && !isUnsolid(pmid4(ptr)));
 }
 
 int
@@ -66,7 +66,7 @@ struct obj *otmp;
         return 1;
     }
     ptr = mtmp->data;
-    if (touchPetrifies(ptr->monsterTypeID) && !uarmg && !youResistStoning()) {
+    if (touchPetrifies(pmid4(ptr)) && !uarmg && !youResistStoning()) {
         char kbuf[BUFSZ];
 
         You("touch %s.", mon_nam(mtmp));
@@ -258,7 +258,7 @@ boolean force;      /* Quietly force this animal */
         return (FALSE);
     }
     ptr = mtmp->data;
-    if (touchPetrifies(ptr->monsterTypeID) && !youResistStoning()) {
+    if (touchPetrifies(pmid4(ptr)) && !youResistStoning()) {
         char kbuf[BUFSZ];
 
         You("touch %s.", mon_nam(mtmp));
@@ -288,7 +288,7 @@ boolean force;      /* Quietly force this animal */
             m_unleash(mtmp, FALSE);
         return (FALSE);
     }
-    if (!force && underwater() && !isSwimmer(ptr->monsterTypeID)) {
+    if (!force && underwater() && !isSwimmer(pmid4(ptr))) {
         You_cant("ride that creature while under water.");
         return (FALSE);
     }
@@ -298,7 +298,7 @@ boolean force;      /* Quietly force this animal */
     }
 
     /* Is the player impaired? */
-    int pmid = ptr->monsterTypeID;
+    int pmid = pmid4(ptr);
 
     if (!force && !isFloater(pmid) && !isFlyer(pmid) && youAreLevitating()
         && !youCanLevitateAtWill()) {
@@ -559,7 +559,7 @@ int reason; /* Player was thrown off etc. */
             struct permonst *mdat = mtmp->data;
 
             /* The steed may drop into water/lava */
-            int pmid = mdat->monsterTypeID;
+            int pmid = pmid4(mdat);
             if (!isFlyer(pmid) && !isFloater(pmid) && !isClinger(pmid)) {
                 if (is_pool(currentX(), currentY())) {
                     if (!underwater())
@@ -571,7 +571,7 @@ int reason; /* Player was thrown off etc. */
                     }
                 } else if (is_lava(currentX(), currentY())) {
                     pline("%s is pulled into the lava!", Monnam(mtmp));
-                    if (!likesLava(mdat->monsterTypeID)) {
+                    if (!likesLava(pmid4(mdat))) {
                         killed(mtmp);
                         adjalign(-1);
                     }

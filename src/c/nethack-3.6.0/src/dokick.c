@@ -936,7 +936,7 @@ dokick()
                 (monsterCorpseWeight(pmid4you()) + (weight_cap() + inv_weight()));
             if (range < 1)
                 range = 1; /* divide by zero avoidance */
-            range = (3 * monsterCorpseWeight(mdat->monsterTypeID)) / range;
+            range = (3 * monsterCorpseWeight(pmid4(mdat))) / range;
 
             if (range < 1)
                 range = 1;

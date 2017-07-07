@@ -59,7 +59,7 @@ unsigned gpflags;
             return FALSE;
 
         mdat = mtmp->data;
-        int pmid = mdat->monsterTypeID;
+        int pmid = pmid4(mdat);
         if (is_pool(x, y) && !ignorewater) {
             if (mtmp == &youmonst) {
                 return (youAreLevitating() || youAreFlying() || canYouWalkOnWater() || youCanSwim()
@@ -77,12 +77,12 @@ unsigned gpflags;
                             && uarmf->oerodeproof)
                         || (areYouPolymorphed() && likesLava(pmid4you())));
             else
-                return (isFloater(mdat->monsterTypeID) || isFlyer(pmid)
-                        || likesLava(mdat->monsterTypeID));
+                return (isFloater(pmid4(mdat)) || isFlyer(pmid)
+                        || likesLava(pmid4(mdat)));
         }
-        if (passesThroughWalls(mdat->monsterTypeID) && may_passwall(x, y))
+        if (passesThroughWalls(pmid4(mdat)) && may_passwall(x, y))
             return TRUE;
-        if (isAmorphous(mdat->monsterTypeID) && closed_door(x, y))
+        if (isAmorphous(pmid4(mdat)) && closed_door(x, y))
             return TRUE;
     }
     if (!accessible(x, y)) {
@@ -90,7 +90,7 @@ unsigned gpflags;
             return FALSE;
     }
 
-    if (sobj_at(BOULDER, x, y) && (!mdat || !throwsRocks(mdat->monsterTypeID)))
+    if (sobj_at(BOULDER, x, y) && (!mdat || !throwsRocks(pmid4(mdat))))
         return FALSE;
     return TRUE;
 }
@@ -1155,7 +1155,7 @@ int in_sight;
         } else if (tt == MAGIC_PORTAL) {
             if (areYouInEndgame()
                 && (mon_has_amulet(mtmp) || is_home_elemental(mptr))) {
-                if (in_sight && monsterClass(mptr->monsterTypeID) != S_ELEMENTAL) {
+                if (in_sight && monsterClass(pmid4(mptr)) != S_ELEMENTAL) {
                     pline("%s seems to shimmer for a moment.", Monnam(mtmp));
                     seetrap(trap);
                 }

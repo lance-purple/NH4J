@@ -232,7 +232,7 @@ boolean quietly;
      */
     vis = (canspotmon(magr) && canspotmon(mdef));
 
-    if (touchPetrifies(pd->monsterTypeID) && !resists_ston(magr)) {
+    if (touchPetrifies(pmid4(pd)) && !resists_ston(magr)) {
         if (which_armor(magr, W_ARMG) != 0) {
             if (poly_when_stoned(pa)) {
                 mon_to_stone(magr);
@@ -329,7 +329,7 @@ register struct monst *magr, *mdef;
     }
 
     /* Elves hate orcs. */
-    if (isElf(pa->monsterTypeID) && isOrc(pd->monsterTypeID))
+    if (isElf(pmid4(pa)) && isOrc(pmid4(pd)))
         tmp++;
 
     /* Set up the visibility of action */
@@ -738,7 +738,7 @@ register const struct Attack mattk;
                      res = MM_MISS;
     boolean cancelled;
 
-    if ((touchPetrifies(pd->monsterTypeID) /* or fleshPetrifies() */
+    if ((touchPetrifies(pmid4(pd)) /* or fleshPetrifies() */
          || (mattk.damageType == AD_DGST && pd == &mons[PM_MEDUSA]))
         && !resists_ston(magr)) {
         long protector = attk_protection((int) mattk.type),
@@ -838,7 +838,7 @@ register const struct Attack mattk;
     case AD_HEAL:
     case AD_PHYS:
     physical:
-        if (mattk.type == AT_KICK && isThickSkinned(pd->monsterTypeID)) {
+        if (mattk.type == AT_KICK && isThickSkinned(pmid4(pd))) {
             tmp = 0;
         } else if (mattk.type == AT_WEAP) {
             if (otmp) {
@@ -1084,7 +1084,7 @@ register const struct Attack mattk;
         tmp = 0;
         break;
     case AD_HALU:
-        if (!magr->mcan && hasEyes(pd->monsterTypeID) && mdef->mcansee) {
+        if (!magr->mcan && hasEyes(pmid4(pd)) && mdef->mcansee) {
             if (vis)
                 pline("%s looks %sconfused.", Monnam(mdef),
                       mdef->mconf ? "more " : "");
@@ -1099,7 +1099,7 @@ register const struct Attack mattk;
         if (!magr->mcan && !rn2(10)) {
             mdef->mcan = 1; /* cancelled regardless of lifesave */
             mdef->mstrategy &= ~STRAT_WAITFORU;
-            if (isWere(pd->monsterTypeID) && monsterClass(pd->monsterTypeID) != S_HUMAN)
+            if (isWere(pmid4(pd)) && monsterClass(pmid4(pd)) != S_HUMAN)
                 were_change(mdef);
             if (pd == &mons[PM_CLAY_GOLEM]) {
                 if (vis) {
@@ -1205,7 +1205,7 @@ register const struct Attack mattk;
             if (mdef->mhp <= 0)
                 return (MM_DEF_DIED
                         | (grow_up(magr, mdef) ? 0 : MM_AGR_DIED));
-            if (monsterClass(pa->monsterTypeID) == S_NYMPH && !tele_restrict(magr)) {
+            if (monsterClass(pmid4(pa)) == S_NYMPH && !tele_restrict(magr)) {
                 (void) rloc(magr, TRUE);
                 if (vis && !canspotmon(magr))
                     pline("%s suddenly disappears!", buf);
@@ -1242,7 +1242,7 @@ register const struct Attack mattk;
         }
         break;
     case AD_DRIN:
-        if (notonhead || !hasAHead(pd->monsterTypeID)) {
+        if (notonhead || !hasAHead(pmid4(pd))) {
             if (vis)
                 pline("%s doesn't seem harmed.", Monnam(mdef));
             /* Not clear what to do for green slimes */
@@ -1262,7 +1262,7 @@ register const struct Attack mattk;
     case AD_SLIM:
         if (cancelled)
             break; /* physical damage only */
-        if (!rn2(4) && !isSlimeproof(pd->monsterTypeID)) {
+        if (!rn2(4) && !isSlimeproof(pmid4(pd))) {
             if (!munslime(mdef, FALSE) && mdef->mhp > 0) {
                 if (newcham(mdef, &mons[PM_GREEN_SLIME], FALSE, vis))
                     pd = mdef->data;
@@ -1315,7 +1315,7 @@ register const struct Attack mattk;
              * after monkilled() to provide better message ordering */
             if (mdef->cham >= LOW_PM) {
                 (void) newcham(magr, (struct permonst *) 0, FALSE, TRUE);
-            } else if (pd == &mons[PM_GREEN_SLIME] && !isSlimeproof(pa->monsterTypeID)) {
+            } else if (pd == &mons[PM_GREEN_SLIME] && !isSlimeproof(pmid4(pa))) {
                 (void) newcham(magr, &mons[PM_GREEN_SLIME], FALSE, TRUE);
             } else if (pd == &mons[PM_WRAITH]) {
                 (void) grow_up(magr, (struct monst *) 0);
@@ -1430,7 +1430,7 @@ int mdead;
     char buf[BUFSZ];
     int i, tmp;
 
-    int dpmid = mddat->monsterTypeID;
+    int dpmid = pmid4(mddat);
 
     for (i = 0;; i++) {
         if (i >= monsterAttacks(dpmid))
@@ -1442,7 +1442,7 @@ int mdead;
     if (mdattk.dice) {
         tmp = d(mdattk.dice, mdattk.diceSides);
     } else if (mdattk.diceSides) {
-        tmp = d(monsterLevel(mddat->monsterTypeID) + 1, mdattk.diceSides);
+        tmp = d(monsterLevel(dpmid) + 1, mdattk.diceSides);
     } else {
         tmp = 0;
     }
@@ -1488,8 +1488,8 @@ int mdead;
             if (mddat == &mons[PM_FLOATING_EYE]) {
                 if (!rn2(4))
                     tmp = 127;
-                if (magr->mcansee && hasEyes(madat->monsterTypeID) && mdef->mcansee
-                    && (perceivesTheInvisible(madat->monsterTypeID) || !mdef->minvis)) {
+                if (magr->mcansee && hasEyes(pmid4(madat)) && mdef->mcansee
+                    && (perceivesTheInvisible(pmid4(madat)) || !mdef->minvis)) {
                     Sprintf(buf, "%s gaze is reflected by %%s %%s.",
                             s_suffix(Monnam(mdef)));
                     if (mon_reflects(magr,

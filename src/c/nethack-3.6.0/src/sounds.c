@@ -503,12 +503,12 @@ register struct monst *mtmp;
         *verbl_msg = 0,                 /* verbalize() */
             *verbl_msg_mcan = 0;        /* verbalize() if cancelled */
     struct permonst *ptr = mtmp->data;
-    int msound = monsterSound(ptr->monsterTypeID);
+    int msound = monsterSound(pmid4(ptr));
 
     /* presumably nearness and sleep checks have already been made */
     if (youAreDeaf())
         return 0;
-    if (isSilent(ptr->monsterTypeID))
+    if (isSilent(pmid4(ptr)))
         return 0;
 
     /* leader might be poly'd; if he can still speak, give leader speech */
@@ -804,13 +804,13 @@ register struct monst *mtmp;
                  && moves > EDOG(mtmp)->hungrytime)
             verbl_msg = "I'm hungry.";
         /* Specific monsters' interests */
-        else if (isElf(ptr->monsterTypeID))
+        else if (isElf(pmid4(ptr)))
             pline_msg = "curses orcs.";
-        else if (isDwarf(ptr->monsterTypeID))
+        else if (isDwarf(pmid4(ptr)))
             pline_msg = "talks about mining.";
-        else if (likesMagicItems(ptr->monsterTypeID))
+        else if (likesMagicItems(pmid4(ptr)))
             pline_msg = "talks about spellcraft.";
-        else if (monsterClass(ptr->monsterTypeID) == S_CENTAUR)
+        else if (monsterClass(pmid4(ptr)) == S_CENTAUR)
             pline_msg = "discusses hunting.";
         else
             switch (monsndx(ptr)) {
@@ -835,7 +835,7 @@ register struct monst *mtmp;
     case MS_SEDUCE: {
         int swval;
         if (SYSOPT_SEDUCE) {
-            if (monsterClass(ptr->monsterTypeID) != S_NYMPH
+            if (monsterClass(pmid4(ptr)) != S_NYMPH
                 && could_seduce(mtmp, &youmonst, NO_ATTACK) == 1) {
                 (void) doseduce(mtmp);
                 break;

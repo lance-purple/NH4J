@@ -772,7 +772,7 @@ boolean polyspot;
     register struct obj *otmp;
     struct permonst *mdat = mon->data;
     boolean vis = cansee(mon->mx, mon->my);
-    boolean handless_or_tiny = (hasNoHands(mdat->monsterTypeID) || isVerySmallMonster(mdat->monsterTypeID));
+    boolean handless_or_tiny = (hasNoHands(pmid4(mdat)) || isVerySmallMonster(pmid4(mdat)));
     const char *pronoun = mhim(mon), *ppronoun = mhis(mon);
 
     if (breakarm(mdat)) {
@@ -885,14 +885,14 @@ boolean polyspot;
             m_lose_armor(mon, otmp);
         }
     }
-    if (handless_or_tiny || isSlithy(mdat->monsterTypeID) || monsterClass(mdat->monsterTypeID) == S_CENTAUR) {
+    if (handless_or_tiny || isSlithy(pmid4(mdat)) || monsterClass(pmid4(mdat)) == S_CENTAUR) {
         if ((otmp = which_armor(mon, W_ARMF)) != 0) {
             if (vis) {
                 if (isWhirly(pmid4mon(mon)))
                     pline("%s boots fall away!", s_suffix(Monnam(mon)));
                 else
                     pline("%s boots %s off %s feet!", s_suffix(Monnam(mon)),
-                          isVerySmallMonster(mdat->monsterTypeID) ? "slide" : "are pushed", ppronoun);
+                          isVerySmallMonster(pmid4(mdat)) ? "slide" : "are pushed", ppronoun);
             }
             if (polyspot)
                 bypass_obj(otmp);

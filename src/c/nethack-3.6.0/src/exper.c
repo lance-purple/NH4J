@@ -85,11 +85,11 @@ register int nk;
         tmp += (7 - i) * ((i < 0) ? 2 : 1);
 
     /*  For very fast monsters, give extra experience */
-    int mmove = monsterMovementSpeed(ptr->monsterTypeID);
+    int mmove = monsterMovementSpeed(pmid4(ptr));
     if (mmove > NORMAL_SPEED)
         tmp += (mmove > (3 * NORMAL_SPEED / 2)) ? 5 : 3;
 
-    int pmid = ptr->monsterTypeID;
+    int pmid = pmid4(ptr);
     int nAttacks = monsterAttacks(pmid);
 
     /*  For each "special" attack type give extra experience */
@@ -123,7 +123,7 @@ register int nk;
     }
 
     /*  For certain "extra nasty" monsters, give even more */
-    if (isExtraNasty(ptr->monsterTypeID))
+    if (isExtraNasty(pmid4(ptr)))
         tmp += (7 * mtmp->m_lev);
 
     /*  For higher level monsters, an additional bonus is given */

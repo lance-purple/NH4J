@@ -1529,7 +1529,7 @@ struct mkroom *croom;
     else if (m->id != NON_PM) {
         pm = &mons[m->id];
         g_mvflags = (unsigned) mvitals[monsndx(pm)].mvflags;
-        if ((monsterGenerationMask(pm->monsterTypeID) & G_UNIQ) && (g_mvflags & G_EXTINCT))
+        if ((monsterGenerationMask(pmid4(pm)) & G_UNIQ) && (g_mvflags & G_EXTINCT))
             return;
         else if (g_mvflags & G_GONE)    /* genocided or extinct */
             pm = (struct permonst *) 0; /* make random monster */
@@ -1538,12 +1538,12 @@ struct mkroom *croom;
         /* if we can't get a specific monster type (pm == 0) then the
            class has been genocided, so settle for a random monster */
     }
-    if (areYouInTheMines() && pm && isOfYourRace(pm->monsterTypeID, urace.selfmask)
+    if (areYouInTheMines() && pm && isOfYourRace(pmid4(pm), urace.selfmask)
         && (Race_if(PM_DWARF) || Race_if(PM_GNOME)) && rn2(3))
         pm = (struct permonst *) 0;
 
     if (pm) {
-        int pmid = pm->monsterTypeID;
+        int pmid = pmid4(pm);
         int loc = DRY;
         if (monsterClass(pmid) == S_EEL || isAmphibious(pmid) || isSwimmer(pmid))
             loc = WET;
@@ -1656,10 +1656,10 @@ struct mkroom *croom;
 
                     mgender_from_permonst(mtmp, mdat);
                     set_mon_data(mtmp, mdat, 0);
-                    if (emitsLightWithRange(olddata->monsterTypeID) != emitsLightWithRange(pmid4mon(mtmp))) {
+                    if (emitsLightWithRange(pmid4(olddata)) != emitsLightWithRange(pmid4mon(mtmp))) {
                         /* used to give light, now doesn't, or vice versa,
                            or light's range has changed */
-                        if (emitsLightWithRange(olddata->monsterTypeID))
+                        if (emitsLightWithRange(pmid4(olddata)))
                             del_light_source(LS_MONSTER, (genericptr_t) mtmp);
                         if (emitsLightWithRange(pmid4mon(mtmp)))
                             new_light_source(mtmp->mx, mtmp->my,

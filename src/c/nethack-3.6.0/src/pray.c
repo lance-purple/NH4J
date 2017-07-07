@@ -1310,7 +1310,7 @@ dosacrifice()
                 value = eaten_stat(value, otmp);
         }
 
-        if (isOfYourRace(ptr->monsterTypeID, urace.selfmask)) {
+        if (isOfYourRace(pmid4(ptr), urace.selfmask)) {
             if (isDemon(pmid4you())) {
                 You("find the idea very satisfying.");
                 exercise(A_WIS, TRUE);
@@ -1392,11 +1392,11 @@ dosacrifice()
             adjalign(-3);
             value = -1;
             setYourIntrinsicMask(AGGRAVATE_MONSTER, FROMOUTSIDE);
-        } else if (isUndead(ptr->monsterTypeID)) { /* Not demons--no demon corpses */
+        } else if (isUndead(pmid4(ptr))) { /* Not demons--no demon corpses */
             if (currentAlignmentType() != A_CHAOTIC)
                 value += 1;
-        } else if (isUnicorn(ptr->monsterTypeID)) {
-            int unicalign = sgn(monsterAlignment(ptr->monsterTypeID));
+        } else if (isUnicorn(pmid4(ptr))) {
+            int unicalign = sgn(monsterAlignment(pmid4(ptr)));
 
             if (unicalign == altaralign) {
                 /* When same as altar, always a very bad action.

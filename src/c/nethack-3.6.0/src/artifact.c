@@ -765,16 +765,16 @@ struct monst *mtmp;
     if (weap->spfx & SPFX_DMONS) {
         return (ptr == &mons[(int) weap->mtype]);
     } else if (weap->spfx & SPFX_DCLAS) {
-        return (weap->mtype == (unsigned long) monsterClass(ptr->monsterTypeID));
+        return (weap->mtype == (unsigned long) monsterClass(pmid4(ptr)));
     } else if (weap->spfx & SPFX_DFLAG1) {
-        return isAffectedByWeaponFlag1(ptr->monsterTypeID, weap->mtype);
+        return isAffectedByWeaponFlag1(pmid4(ptr), weap->mtype);
     } else if (weap->spfx & SPFX_DFLAG2) {
-        return (isAffectedByWeaponFlag2(ptr->monsterTypeID, weap->mtype)
+        return (isAffectedByWeaponFlag2(pmid4(ptr), weap->mtype)
                 || (yours
                     && ((!areYouPolymorphed() && (urace.selfmask & weap->mtype))
                         || ((weap->mtype & M2_WERE) && lycanthropeType() >= LOW_PM))));
     } else if (weap->spfx & SPFX_DALIGN) {
-	int malign = monsterAlignment(ptr->monsterTypeID);
+	int malign = monsterAlignment(pmid4(ptr));
         return yours ? (currentAlignmentType() != weap->alignment)
                      : (malign == A_NONE
                         || sgn(malign) != weap->alignment);
@@ -793,7 +793,7 @@ struct monst *mtmp;
             return !(yours ? youResistShock() : resists_elec(mtmp));
         case AD_MAGM:
         case AD_STUN:
-            return !(yours ? youResistMagic() : (rn2(100) < monsterBaseMagicResistance(ptr->monsterTypeID)));
+            return !(yours ? youResistMagic() : (rn2(100) < monsterBaseMagicResistance(pmid4(ptr))));
         case AD_DRST:
             return !(yours ? youResistPoison() : resists_poison(mtmp));
         case AD_DRLI:

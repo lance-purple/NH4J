@@ -441,9 +441,9 @@ eating_conducts(pd)
 struct permonst *pd;
 {
     setFoodlessConduct(FALSE);
-    if (!isVeganOption(pd->monsterTypeID))
+    if (!isVeganOption(pmid4(pd)))
         setVeganConduct(FALSE);
-    if (!isVegetarianOption(pd->monsterTypeID))
+    if (!isVegetarianOption(pmid4(pd)))
         violated_vegetarian();
 }
 
@@ -458,7 +458,7 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
     boolean give_nutrit = FALSE;
     int result = MM_HIT, xtra_dmg = rnd(10);
 
-    if (isNoncorporeal(pd->monsterTypeID)) {
+    if (isNoncorporeal(pmid4(pd))) {
         if (visflag)
             pline("%s brain is unharmed.",
                   (mdef == &youmonst) ? "Your" : s_suffix(Monnam(mdef)));
@@ -472,13 +472,13 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
             pline("%s brain is eaten!", s_suffix(Monnam(mdef)));
     }
 
-    if (fleshPetrifies(pd->monsterTypeID)) {
+    if (fleshPetrifies(pmid4(pd))) {
         /* mind flayer has attempted to eat the brains of a petrification
            inducing critter (most likely Medusa; attacking a cockatrice via
            tentacle-touch should have been caught before reaching this far) */
         if (magr == &youmonst) {
             if (!youResistStoning() && !youAreTurningToStone()) {
-		javaString monsterName = monsterTypeName(pd->monsterTypeID);
+		javaString monsterName = monsterTypeName(pmid4(pd));
                 make_stoned(5L, (char *) 0, KILLED_BY_AN, monsterName.c_str);
 		releaseJavaString(monsterName);
 	    }
@@ -505,13 +505,13 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
          * player mind flayer is eating something's brain
          */
         eating_conducts(pd);
-        if (isMindless(pd->monsterTypeID)) { /* (cannibalism not possible here) */
+        if (isMindless(pmid4(pd))) { /* (cannibalism not possible here) */
             pline("%s doesn't notice.", Monnam(mdef));
             /* all done; no extra harm inflicted upon target */
             return MM_MISS;
         } else if (is_rider(pd)) {
             pline("Ingesting that is fatal.");
-	    javaString monsterName = monsterTypeName(pd->monsterTypeID);
+	    javaString monsterName = monsterTypeName(pmid4(pd));
             Sprintf(killer.name, "unwisely ate the brain of %s", monsterName.c_str);
 	    releaseJavaString(monsterName);
             killer.format = NO_KILLER_PREFIX;
@@ -571,7 +571,7 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
         /*
          * monster mind flayer is eating another monster's brain
          */
-        if (isMindless(pd->monsterTypeID)) {
+        if (isMindless(pmid4(pd))) {
             if (visflag)
                 pline("%s doesn't notice.", Monnam(mdef));
             return MM_MISS;
@@ -619,9 +619,9 @@ boolean allowmsg;
            and also shouldn't eat current species when polymorphed
            (even if having the form of something which doesn't care
            about cannibalism--hero's innate traits aren't altered) */
-        && (isOfYourRace(fptr->monsterTypeID, urace.selfmask) || (areYouPolymorphed() && same_race(youmonst.data, fptr)))) {
+        && (isOfYourRace(pmid4(fptr), urace.selfmask) || (areYouPolymorphed() && same_race(youmonst.data, fptr)))) {
         if (allowmsg) {
-            if (areYouPolymorphed() && isOfYourRace(fptr->monsterTypeID, urace.selfmask))
+            if (areYouPolymorphed() && isOfYourRace(pmid4(fptr), urace.selfmask))
                 You("have a bad feeling deep inside.");
             You("cannibal!  You will regret this!");
         }
@@ -745,7 +745,7 @@ register struct permonst *ptr;
 #else
 #define ifdebugresist(Msg) /*empty*/
 #endif
-    int mconveys = monsterConveysResistances(ptr->monsterTypeID);
+    int mconveys = monsterConveysResistances(pmid4(ptr));
     switch (type) {
     case FIRE_RES:
         res = (mconveys & MR_FIRE) != 0;
@@ -772,11 +772,11 @@ register struct permonst *ptr;
         ifdebugresist("can get poison resistance");
         break;
     case TELEPORT:
-        res = canTeleport(ptr->monsterTypeID);
+        res = canTeleport(pmid4(ptr));
         ifdebugresist("can get teleport");
         break;
     case TELEPORT_CONTROL:
-        res = canControlTeleport(ptr->monsterTypeID);
+        res = canControlTeleport(pmid4(ptr));
         ifdebugresist("can get teleport control");
         break;
     case TELEPAT:
@@ -825,7 +825,7 @@ register struct permonst *ptr;
         break;
     }
 
-    if (monsterLevel(ptr->monsterTypeID) <= rn2(chance))
+    if (monsterLevel(pmid4(ptr)) <= rn2(chance))
         return; /* failed die roll */
 
     switch (type) {
@@ -1063,7 +1063,7 @@ register int pm;
     /*FALLTHRU*/
     default: {
         struct permonst *ptr = &mons[pm];
-        boolean conveys_STR = isGiant(ptr->monsterTypeID);
+        boolean conveys_STR = isGiant(pmid4(ptr));
         int i, count;
 
         if (dmgtype(ptr, AD_STUN) || dmgtype(ptr, AD_HALU)

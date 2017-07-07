@@ -658,10 +658,10 @@ struct permonst *ptr;
 
     /* even though monsters with personal names are unique, we want to
        describe them as "Name" rather than "the Name" */
-    if (typeIsProperName(ptr->monsterTypeID))
+    if (typeIsProperName(pmid4(ptr)))
         return FALSE;
 
-    uniq = (monsterGenerationMask(ptr->monsterTypeID) & G_UNIQ) ? TRUE : FALSE;
+    uniq = (monsterGenerationMask(pmid4(ptr)) & G_UNIQ) ? TRUE : FALSE;
     /* high priest is unique if it includes "of <deity>", otherwise not
        (caller needs to handle the 1st possibility; we assume the 2nd);
        worm tail should be irrelevant but is included for completeness */

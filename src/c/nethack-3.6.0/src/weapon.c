@@ -157,15 +157,15 @@ struct monst *mon;
 
     /* Blessed weapons used against undead or demons */
     if (Is_weapon && otmp->blessed
-        && (isDemon(ptr->monsterTypeID) || isUndead(ptr->monsterTypeID) || is_vampshifter(mon)))
+        && (isDemon(pmid4(ptr)) || isUndead(pmid4(ptr)) || is_vampshifter(mon)))
         tmp += 2;
 
-    if (is_spear(otmp) && index(kebabable, monsterClass(ptr->monsterTypeID)))
+    if (is_spear(otmp) && index(kebabable, monsterClass(pmid4(ptr))))
         tmp += 2;
 
     /* trident is highly effective against swimmers */
-    if (otmp->otyp == TRIDENT && isSwimmer(ptr->monsterTypeID)) {
-	int mc = monsterClass(ptr->monsterTypeID);
+    if (otmp->otyp == TRIDENT && isSwimmer(pmid4(ptr))) {
+	int mc = monsterClass(pmid4(ptr));
         if (is_pool(mon->mx, mon->my))
             tmp += 4;
         else if (mc == S_EEL || mc == S_SNAKE)
@@ -173,7 +173,7 @@ struct monst *mon;
     }
 
     /* Picks used against xorns and earth elementals */
-    if (is_pick(otmp) && (passesThroughWalls(ptr->monsterTypeID) && isThickSkinned(ptr->monsterTypeID)))
+    if (is_pick(otmp) && (passesThroughWalls(pmid4(ptr)) && isThickSkinned(pmid4(ptr))))
         tmp += 2;
 
     /* Check specially named weapon "to hit" bonuses */
@@ -221,7 +221,7 @@ struct monst *mon;
     if (otyp == CREAM_PIE)
         return 0;
 
-    if (isBigMonster(ptr->monsterTypeID)) {
+    if (isBigMonster(pmid4(ptr))) {
         if (objects[otyp].oc_wldam)
             tmp = rnd(objects[otyp].oc_wldam);
         switch (otyp) {
@@ -299,7 +299,7 @@ struct monst *mon;
             tmp = 0;
     }
 
-    if (objects[otyp].oc_material <= LEATHER && isThickSkinned(ptr->monsterTypeID))
+    if (objects[otyp].oc_material <= LEATHER && isThickSkinned(pmid4(ptr)))
         /* thick skinned/scaled creatures don't feel it */
         tmp = 0;
     if (ptr == &mons[PM_SHADE] && !shade_glare(otmp))
@@ -323,7 +323,7 @@ struct monst *mon;
         int bonus = 0;
 
         if (otmp->blessed
-            && (isUndead(ptr->monsterTypeID) || isDemon(ptr->monsterTypeID) || is_vampshifter(mon)))
+            && (isUndead(pmid4(ptr)) || isDemon(pmid4(ptr)) || is_vampshifter(mon)))
             bonus += rnd(4);
         if (is_axe(otmp) && is_wooden(ptr))
             bonus += rnd(4);

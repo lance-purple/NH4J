@@ -214,7 +214,7 @@ int rx, ry, *resp;
                we're usually forced to use generic pronoun here) */
             if (mtmp) {
                 mptr = &mons[mtmp->mnum];
-		int pmid = mptr->monsterTypeID;
+		int pmid = pmid4(mptr);
                 /* can't use mhe() here; it calls pronoun_gender() which
                    expects monster to be on the map (visibility check) */
                 if ((isHumanoid(pmid) || (monsterGenerationMask(pmid) & G_UNIQ)
@@ -222,9 +222,9 @@ int rx, ry, *resp;
                     gndr = (int) mtmp->female;
             } else {
                 mptr = &mons[corpse->corpsenm];
-                if (isFemale(mptr->monsterTypeID))
+                if (isFemale(pmid4(mptr)))
                     gndr = 1;
-                else if (isMale(mptr->monsterTypeID))
+                else if (isMale(pmid4(mptr)))
                     gndr = 0;
             }
             Sprintf(buf, "%s's dead", genders[gndr].he); /* "he"/"she"/"it" */
@@ -260,16 +260,16 @@ int rx, ry, *resp;
 	javaString monsterName = NO_JAVA_STRING;
 
         mptr = &mons[statue->corpsenm];
-	int pmid = mptr->monsterTypeID;
+	int pmid = pmid4(mptr);
         if (youCannotSee()) { /* ignore statue->dknown; it'll always be set */
             Sprintf(buf, "%s %s",
                     (rx == currentX() && ry == currentY()) ? "This" : "That",
                     isHumanoid(pmid) ? "person" : "creature");
             what = buf;
         } else {
-	    monsterName = monsterTypeName(mptr->monsterTypeID);
+	    monsterName = monsterTypeName(pmid4(mptr));
 	    what = monsterName.c_str;
-            if (!typeIsProperName(mptr->monsterTypeID))
+            if (!typeIsProperName(pmid4(mptr)))
                 what = The(what);
         }
         how = "fine";
@@ -1689,8 +1689,8 @@ struct obj *obj;
         && !uarmg) {
         char kbuf[BUFSZ];
 
-	int monsterTypeID = mons[corpse->corpsenm].monsterTypeID;
-	javaString monsterName = monsterTypeName(monsterTypeID);
+	int pmid = mons[corpse->corpsenm].monsterTypeID;
+	javaString monsterName = monsterTypeName(pmid);
         if (poly_when_stoned(youmonst.data)) {
             You("tin %s without wearing gloves.",
                 an(monsterName.c_str));

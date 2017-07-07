@@ -218,14 +218,14 @@ struct permonst *mdat; /* if mtmp is polymorphed, mdat != mtmp->data */
 boolean message;
 {
     if (message) {
-        if (isAnimal(mdat->monsterTypeID))
+        if (isAnimal(pmid4(mdat)))
             You("get regurgitated!");
         else {
             char blast[40];
             register int i;
 
             blast[0] = '\0';
-	    int pmid = mdat->monsterTypeID;
+	    int pmid = pmid4(mdat);
             for (i = 0; i < monsterAttacks(pmid); i++) {
                 if (monsterAttack(pmid, i).type == AT_ENGL) {
                     break;
@@ -265,7 +265,7 @@ getMonsterAttack(mptr, indx, prev_result)
 struct permonst *mptr;
 int indx, prev_result[];
 {
-    int pmid = mptr->monsterTypeID;
+    int pmid = pmid4(mptr);
     struct Attack attk = monsterAttack(pmid, indx);
 
     /* prevent a monster with two consecutive disease or hunger attacks
@@ -519,7 +519,7 @@ register struct monst *mtmp;
     tmp += mtmp->m_lev;
     if (multi < 0)
         tmp += 4;
-    if ((youAreInvisibleToOthers() && !perceivesTheInvisible(mdat->monsterTypeID)) || !mtmp->mcansee)
+    if ((youAreInvisibleToOthers() && !perceivesTheInvisible(pmid4(mdat))) || !mtmp->mcansee)
         tmp -= 2;
     if (mtmp->mtrapped)
         tmp -= 2;
@@ -527,21 +527,21 @@ register struct monst *mtmp;
         tmp = 1;
 
     /* make eels visible the moment they hit/miss us */
-    if (monsterClass(mdat->monsterTypeID) == S_EEL && mtmp->minvis && cansee(mtmp->mx, mtmp->my)) {
+    if (monsterClass(pmid4(mdat)) == S_EEL && mtmp->minvis && cansee(mtmp->mx, mtmp->my)) {
         mtmp->minvis = 0;
         newsym(mtmp->mx, mtmp->my);
     }
 
     /*  Special demon handling code */
-    if ((mtmp->cham == NON_PM) && isDemon(mdat->monsterTypeID) && !range2
+    if ((mtmp->cham == NON_PM) && isDemon(pmid4(mdat)) && !range2
         && mtmp->data != &mons[PM_BALROG] && mtmp->data != &mons[PM_SUCCUBUS]
         && mtmp->data != &mons[PM_INCUBUS])
         if (!mtmp->mcan && !rn2(13))
             (void) msummon(mtmp);
 
     /*  Special lycanthrope handling code */
-    if ((mtmp->cham == NON_PM) && isWere(mdat->monsterTypeID) && !range2) {
-        if (isHuman(mdat->monsterTypeID)) {
+    if ((mtmp->cham == NON_PM) && isWere(pmid4(mdat)) && !range2) {
+        if (isHuman(pmid4(mdat))) {
             if (!rn2(5 - (night() * 2)) && !mtmp->mcan)
                 new_were(mtmp);
         } else if (!rn2(30) && !mtmp->mcan)
@@ -766,7 +766,7 @@ struct permonst *mdat;
         You_feel("a slight illness.");
         return FALSE;
     } else {
-	javaString monsterName = monsterTypeName(mdat->monsterTypeID);
+	javaString monsterName = monsterTypeName(pmid4(mdat));
         make_sick(youAreSick() ? yourIntrinsic(SICK) / 3L + 1L : (long) rn1(ACURR(A_CON), 20),
                   monsterName.c_str, TRUE, SICK_NONVOMITABLE);
 	releaseJavaString(monsterName);
@@ -882,7 +882,7 @@ register const struct Attack mattk;
     /*  If the monster is undetected & hits you, you should know where
      *  the attack came from.
      */
-    if (mtmp->mundetected && (hidesUnderStuff(mdat->monsterTypeID) || monsterClass(mdat->monsterTypeID) == S_EEL)) {
+    if (mtmp->mundetected && (hidesUnderStuff(pmid4(mdat)) || monsterClass(pmid4(mdat)) == S_EEL)) {
         mtmp->mundetected = 0;
         if (!(youCannotSee() ? youHaveTelepathyWhenBlind() : youHaveTelepathyWhenNotBlind())) {
             struct obj *obj;
@@ -904,7 +904,7 @@ register const struct Attack mattk;
 
     /*  First determine the base damage done */
     dmg = d(mattk.dice, mattk.diceSides);
-    if ((isUndead(mdat->monsterTypeID) || is_vampshifter(mtmp)) && midnight())
+    if ((isUndead(pmid4(mdat)) || is_vampshifter(mtmp)) && midnight())
         dmg += d(mattk.dice, mattk.diceSides); /* extra damage */
 
     /*  Next a cancellation factor.
@@ -1078,7 +1078,7 @@ register const struct Attack mattk;
         if (uncancelled && !rn2(8)) {
             Sprintf(buf, "%s %s", s_suffix(Monnam(mtmp)),
                     mpoisons_subj(mtmp, mattk));
-	    javaString monsterName = monsterTypeName(mdat->monsterTypeID);
+	    javaString monsterName = monsterTypeName(pmid4(mdat));
             poisoned(buf, ptmp, monsterName.c_str, 30, FALSE);
 	    releaseJavaString(monsterName);
         }
@@ -1267,7 +1267,7 @@ register const struct Attack mattk;
         break;
     case AD_SGLD:
         hitmsg(mtmp, mattk);
-        if (monsterClass(pmid4you()) == monsterClass(mdat->monsterTypeID))
+        if (monsterClass(pmid4you()) == monsterClass(pmid4(mdat)))
             break;
         if (!mtmp->mcan)
             stealgold(mtmp);
@@ -2280,7 +2280,7 @@ const struct Attack mattk;
         && (!SYSOPT_SEDUCE || ((validAttack(mattk)) && mattk.damageType != AD_SSEX)))
         return 0;
 
-    if (monsterClass(pagr->monsterTypeID) != S_NYMPH
+    if (monsterClass(pmid4(pagr)) != S_NYMPH
         && ((pagr != &mons[PM_INCUBUS] && pagr != &mons[PM_SUCCUBUS])
             || (SYSOPT_SEDUCE && (validAttack(mattk)) && mattk.damageType != AD_SSEX)))
         return 0;
@@ -2288,7 +2288,7 @@ const struct Attack mattk;
     if (genagr == 1 - gendef)
         return 1;
     else
-        return (monsterClass(pagr->monsterTypeID) == S_NYMPH) ? 2 : 0;
+        return (monsterClass(pmid4(pagr)) == S_NYMPH) ? 2 : 0;
 }
 
 /* Returns 1 if monster teleported */
@@ -2603,7 +2603,7 @@ register const struct Attack mattk;
     int i, tmp;
 
     int upmid = pmid4you();
-    int oldupmid = olduasmon->monsterTypeID;
+    int oldupmid = pmid4(olduasmon);
 
     for (i = 0;; i++) {
         if (i >= monsterAttacks(oldupmid)) {

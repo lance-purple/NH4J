@@ -74,23 +74,23 @@ set_uasmon()
     PROPSET(ANTIMAGIC, (dmgtype(mdat, AD_MAGM)
                         || mdat == &mons[PM_BABY_GRAY_DRAGON]
                         || dmgtype(mdat, AD_RBRE)));
-    PROPSET(SICK_RES, (monsterClass(mdat->monsterTypeID) == S_FUNGUS || mdat == &mons[PM_GHOUL]));
+    PROPSET(SICK_RES, (monsterClass(pmid4(mdat)) == S_FUNGUS || mdat == &mons[PM_GHOUL]));
 
-    PROPSET(STUNNED, (mdat == &mons[PM_STALKER] || isBat(mdat->monsterTypeID)));
+    PROPSET(STUNNED, (mdat == &mons[PM_STALKER] || isBat(pmid4(mdat))));
     PROPSET(HALLUC_RES, dmgtype(mdat, AD_HALU));
-    PROPSET(SEE_INVIS, perceivesTheInvisible(mdat->monsterTypeID));
+    PROPSET(SEE_INVIS, perceivesTheInvisible(pmid4(mdat)));
     PROPSET(TELEPAT, telepathic(mdat));
-    PROPSET(INFRAVISION, hasInfravision(mdat->monsterTypeID));
+    PROPSET(INFRAVISION, hasInfravision(pmid4(mdat)));
     PROPSET(INVIS, pm_invisible(mdat));
-    PROPSET(TELEPORT, canTeleport(mdat->monsterTypeID));
-    PROPSET(TELEPORT_CONTROL, canControlTeleport(mdat->monsterTypeID));
-    PROPSET(LEVITATION, isFloater(mdat->monsterTypeID));
-    PROPSET(FLYING, isFlyer(mdat->monsterTypeID));
-    PROPSET(SWIMMING, isSwimmer(mdat->monsterTypeID));
+    PROPSET(TELEPORT, canTeleport(pmid4(mdat)));
+    PROPSET(TELEPORT_CONTROL, canControlTeleport(pmid4(mdat)));
+    PROPSET(LEVITATION, isFloater(pmid4(mdat)));
+    PROPSET(FLYING, isFlyer(pmid4(mdat)));
+    PROPSET(SWIMMING, isSwimmer(pmid4(mdat)));
     /* [don't touch MAGICAL_BREATHING here; both Amphibious and Breathless
        key off of it but include different monster forms...] */
-    PROPSET(PASSES_WALLS, passesThroughWalls(mdat->monsterTypeID));
-    PROPSET(REGENERATION, regenerates(mdat->monsterTypeID));
+    PROPSET(PASSES_WALLS, passesThroughWalls(pmid4(mdat)));
+    PROPSET(REGENERATION, regenerates(pmid4(mdat)));
     PROPSET(REFLECTING, (mdat == &mons[PM_SILVER_DRAGON]));
 
     float_vs_flight(); /* maybe toggle (BFlying & I_SPECIAL) */
@@ -1665,7 +1665,7 @@ int part;
     struct permonst *mptr = mon->data;
 
     /* some special cases */
-    int mc = monsterClass(mptr->monsterTypeID);
+    int mc = monsterClass(pmid4(mptr));
     if (mc == S_DOG || mc == S_FELINE
         || mc == S_RODENT || mptr == &mons[PM_OWLBEAR]) {
         switch (part) {
@@ -1686,7 +1686,7 @@ int part;
         return humanoid_parts[part]; /* yeti/sasquatch, monkey/ape */
     }
     if ((part == HAND || part == HANDED)
-        && (isHumanoid(mptr->monsterTypeID) && attacktype(mptr, AT_CLAW)
+        && (isHumanoid(pmid4(mptr)) && attacktype(mptr, AT_CLAW)
             && !index(not_claws, mc) && mptr != &mons[PM_STONE_GOLEM]
             && mptr != &mons[PM_INCUBUS] && mptr != &mons[PM_SUCCUBUS]))
         return (part == HAND) ? "claw" : "clawed";
@@ -1701,7 +1701,7 @@ int part;
         return "tentacle";
     if (mptr == &mons[PM_FLOATING_EYE] && part == EYE)
         return "cornea";
-    if (isHumanoid(mptr->monsterTypeID) && (part == ARM || part == FINGER || part == FINGERTIP
+    if (isHumanoid(pmid4(mptr)) && (part == ARM || part == FINGER || part == FINGERTIP
                            || part == HAND || part == HANDED))
         return humanoid_parts[part];
     if (mptr == &mons[PM_RAVEN])
@@ -1724,7 +1724,7 @@ int part;
         return fish_parts[part];
     if (mc == S_WORM)
         return worm_parts[part];
-    if (isSlithy(mptr->monsterTypeID) || (mc == S_DRAGON && part == HAIR))
+    if (isSlithy(pmid4(mptr)) || (mc == S_DRAGON && part == HAIR))
         return snake_parts[part];
     if (mc == S_EYE)
         return sphere_parts[part];
@@ -1735,7 +1735,7 @@ int part;
         return vortex_parts[part];
     if (mc == S_FUNGUS)
         return fungus_parts[part];
-    if (isHumanoid(mptr->monsterTypeID))
+    if (isHumanoid(pmid4(mptr)))
         return humanoid_parts[part];
     return animal_parts[part];
 }

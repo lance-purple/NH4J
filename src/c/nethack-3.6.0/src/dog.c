@@ -740,7 +740,7 @@ struct monst *mon;
 register struct obj *obj;
 {
     struct permonst *mptr = mon->data, *fptr = 0;
-    int pmid = mptr->monsterTypeID;
+    int pmid = pmid4(mptr);
     boolean carni = isCarnivorous(pmid), herbi = isHerbivorous(pmid), starving;
 
     if (is_quest_artifact(obj) || obj_resists(obj, 0, 95))
@@ -753,7 +753,7 @@ register struct obj *obj;
 
         if (obj->otyp == CORPSE && is_rider(fptr))
             return TABU;
-        if ((obj->otyp == CORPSE || obj->otyp == EGG) && touchPetrifies(fptr->monsterTypeID)
+        if ((obj->otyp == CORPSE || obj->otyp == EGG) && touchPetrifies(pmid4(fptr))
             && !resists_ston(mon))
             return POISON;
         if (!carni && !herbi)
@@ -772,7 +772,7 @@ register struct obj *obj;
                         && fptr != &mons[PM_LIZARD]
                         && fptr != &mons[PM_LICHEN])
                            ? DOGFOOD
-                           : (starving && !isVeganOption(fptr->monsterTypeID))
+                           : (starving && !isVeganOption(pmid4(fptr)))
                               ? ACCFOOD
                               : POISON;
             if (obj->otyp == EGG)
@@ -792,38 +792,38 @@ register struct obj *obj;
         case CORPSE:
             if ((peek_at_iced_corpse_age(obj) + 50L <= monstermoves
                  && obj->corpsenm != PM_LIZARD && obj->corpsenm != PM_LICHEN
-                 && monsterClass(mptr->monsterTypeID) != S_FUNGUS)
-                || (isAcidic(fptr->monsterTypeID) && !resists_acid(mon))
-                || (isPoisonous(fptr->monsterTypeID) && !resists_poison(mon)))
+                 && monsterClass(pmid4(mptr)) != S_FUNGUS)
+                || (isAcidic(pmid4(fptr)) && !resists_acid(mon))
+                || (isPoisonous(pmid4(fptr)) && !resists_poison(mon)))
                 return POISON;
             /* turning into slime is preferable to starvation */
             else if (fptr == &mons[PM_GREEN_SLIME] && !isSlimeproof(pmid4mon(mon)))
                 return starving ? ACCFOOD : POISON;
-            else if (isVeganOption(fptr->monsterTypeID))
+            else if (isVeganOption(pmid4(fptr)))
                 return herbi ? CADAVER : MANFOOD;
             /* most humanoids will avoid cannibalism unless starving;
                arbitrary: elves won't eat other elves even then */
-            else if (isHumanoid(mptr->monsterTypeID) && same_race(mptr, fptr)
-                     && (!isUndead(mptr->monsterTypeID)
-			 && monsterClass(fptr->monsterTypeID) != S_KOBOLD
-                         && monsterClass(fptr->monsterTypeID) != S_ORC 
-			 && monsterClass(fptr->monsterTypeID) != S_OGRE))
-                return (starving && carni && !isElf(mptr->monsterTypeID)) ? ACCFOOD : TABU;
+            else if (isHumanoid(pmid4(mptr)) && same_race(mptr, fptr)
+                     && (!isUndead(pmid4(mptr))
+			 && monsterClass(pmid4(fptr)) != S_KOBOLD
+                         && monsterClass(pmid4(fptr)) != S_ORC 
+			 && monsterClass(pmid4(fptr)) != S_OGRE))
+                return (starving && carni && !isElf(pmid4(mptr))) ? ACCFOOD : TABU;
             else
                 return carni ? CADAVER : MANFOOD;
         case CLOVE_OF_GARLIC:
-            return (isUndead(mptr->monsterTypeID) || is_vampshifter(mon))
+            return (isUndead(pmid4(mptr)) || is_vampshifter(mon))
                       ? TABU
                       : (herbi || starving)
                          ? ACCFOOD
                          : MANFOOD;
         case TIN:
-            return isMetallivorous(mptr->monsterTypeID) ? ACCFOOD : MANFOOD;
+            return isMetallivorous(pmid4(mptr)) ? ACCFOOD : MANFOOD;
         case APPLE:
         case CARROT:
             return herbi ? DOGFOOD : starving ? ACCFOOD : MANFOOD;
         case BANANA:
-            return (monsterClass(mptr->monsterTypeID) == S_YETI)
+            return (monsterClass(pmid4(mptr)) == S_YETI)
                       ? DOGFOOD
                       : (herbi || starving)
                          ? ACCFOOD
@@ -842,7 +842,7 @@ register struct obj *obj;
             return TABU;
         if (mptr == &mons[PM_GELATINOUS_CUBE] && is_organic(obj))
             return ACCFOOD;
-        if (isMetallivorous(mptr->monsterTypeID) && is_metallic(obj)
+        if (isMetallivorous(pmid4(mptr)) && is_metallic(obj)
             && (is_rustprone(obj) || mptr != &mons[PM_RUST_MONSTER])) {
             /* Non-rustproofed ferrous based metals are preferred. */
             return (is_rustprone(obj) && !obj->oerodeproof) ? DOGFOOD

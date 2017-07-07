@@ -408,9 +408,9 @@ int how;
     killer.format = KILLED_BY_AN;
     /* "killed by the high priest of Crom" is okay,
        "killed by the high priest" alone isn't */
-    if ((monsterGenerationMask(mptr->monsterTypeID) & G_UNIQ) != 0 && !(imitator && !mimicker)
+    if ((monsterGenerationMask(pmid4(mptr)) & G_UNIQ) != 0 && !(imitator && !mimicker)
         && !(mptr == &mons[PM_HIGH_PRIEST] && !mtmp->ispriest)) {
-        if (!typeIsProperName(mptr->monsterTypeID))
+        if (!typeIsProperName(pmid4(mptr)))
             Strcat(buf, "the ");
         killer.format = KILLED_BY;
     }
@@ -426,8 +426,8 @@ int how;
 
     if (imitator) {
         char shape[BUFSZ];
-        javaString realName = monsterTypeName(champtr->monsterTypeID);
-        javaString fakeName = monsterTypeName(mptr->monsterTypeID);
+        javaString realName = monsterTypeName(pmid4(champtr));
+        javaString fakeName = monsterTypeName(pmid4(mptr));
 
         boolean alt = is_vampshifter(mtmp);
 
@@ -436,7 +436,7 @@ int how;
                set up fake mptr for typeIsProperName/the_unique_pm */
             mptr = &mons[mtmp->mappearance];
 	    releaseJavaString(fakeName);
-	    fakeName = monsterTypeName(mptr->monsterTypeID);
+	    fakeName = monsterTypeName(pmid4(mptr));
         } else if (alt && strstri(realName.c_str, "vampire")
                    && !strcmp(fakeName.c_str, "vampire bat")) {
             /* special case: use "vampire in bat form" in preference
@@ -448,7 +448,7 @@ int how;
         /* for the alternate format, always suppress any article;
            pname and the_unique should also have s_suffix() applied,
            but vampires don't take on any shapes which warrant that */
-        if (alt || typeIsProperName(mptr->monsterTypeID)) /* no article */
+        if (alt || typeIsProperName(pmid4(mptr))) /* no article */
             Strcpy(shape, fakeName.c_str);
         else if (the_unique_pm(mptr)) /* "the"; don't use the() here */
             Sprintf(shape, "the %s", fakeName.c_str);
@@ -479,7 +479,7 @@ int how;
            it overrides the effect of hallucination on priestname() */
         Strcat(buf, m_monnam(mtmp));
     } else {
-	javaString monsterName = monsterTypeName(mptr->monsterTypeID);
+	javaString monsterName = monsterTypeName(pmid4(mptr));
         Strcat(buf, monsterName.c_str);
 	releaseJavaString(monsterName);
         if (has_mname(mtmp))
@@ -487,11 +487,11 @@ int how;
     }
 
     Strcpy(killer.name, buf);
-    if (monsterClass(mptr->monsterTypeID) == S_WRAITH)
+    if (monsterClass(pmid4(mptr)) == S_WRAITH)
         setAriseFromGraveAsMonster(PM_WRAITH);
-    else if (monsterClass(mptr->monsterTypeID) == S_MUMMY && urace.mummynum != NON_PM)
+    else if (monsterClass(pmid4(mptr)) == S_MUMMY && urace.mummynum != NON_PM)
         setAriseFromGraveAsMonster(urace.mummynum);
-    else if (monsterClass(mptr->monsterTypeID) == S_VAMPIRE && Race_if(PM_HUMAN))
+    else if (monsterClass(pmid4(mptr)) == S_VAMPIRE && Race_if(PM_HUMAN))
         setAriseFromGraveAsMonster(PM_VAMPIRE);
     else if (mptr == &mons[PM_GHOUL])
         setAriseFromGraveAsMonster(PM_GHOUL);

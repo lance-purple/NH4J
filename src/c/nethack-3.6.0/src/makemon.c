@@ -12,8 +12,8 @@ STATIC_VAR NEARDATA struct monst zeromonst;
    of the corresponding role; that isn't so for some roles (tourist
    for instance) but is for the priests and monks we use it for... */
 static boolean quest_mon_represents_role(struct permonst* mptr, int role_pm) {
-    int msound = monsterSound(mptr->monsterTypeID);
-    return (monsterClass(mptr->monsterTypeID) == S_HUMAN && Role_if(role_pm)   
+    int msound = monsterSound(pmid4(mptr));
+    return (monsterClass(pmid4(mptr)) == S_HUMAN && Role_if(role_pm)   
      && (msound == MS_LEADER || msound == MS_NEMESIS));
 }
 
@@ -38,7 +38,7 @@ boolean
 is_home_elemental(ptr)
 struct permonst *ptr;
 {
-    if (monsterClass(ptr->monsterTypeID) == S_ELEMENTAL)
+    if (monsterClass(pmid4(ptr)) == S_ELEMENTAL)
         switch (monsndx(ptr)) {
         case PM_AIR_ELEMENTAL:
             return areYouOnAirLevel();
@@ -59,19 +59,19 @@ STATIC_OVL boolean
 wrong_elem_type(ptr)
 struct permonst *ptr;
 {
-    if (monsterClass(ptr->monsterTypeID) == S_ELEMENTAL) {
+    if (monsterClass(pmid4(ptr)) == S_ELEMENTAL) {
         return (boolean) !is_home_elemental(ptr);
     } else if (areYouOnEarthLevel()) {
         /* no restrictions? */
     } else if (areYouOnWaterLevel()) {
         /* just monsters that can swim */
-        if (!isSwimmer(ptr->monsterTypeID))
+        if (!isSwimmer(pmid4(ptr)))
             return TRUE;
     } else if (areYouOnFireLevel()) {
-        if (!monsterTypeResistsFire(ptr->monsterTypeID))
+        if (!monsterTypeResistsFire(pmid4(ptr)))
             return TRUE;
     } else if (areYouOnAirLevel()) {
-	int pmid = ptr->monsterTypeID;
+	int pmid = pmid4(ptr);
         if (!(isFlyer(pmid) && monsterClass(pmid) != S_TRAPPER) && !isFloater(pmid)
             && !isAmorphous(pmid) && !isNoncorporeal(pmid) && !isWhirly(pmid))
             return TRUE;
@@ -184,13 +184,13 @@ register struct monst *mtmp;
      *          soldiers get all sorts of things
      *          kops get clubs & cream pies.
      */
-    switch (monsterClass(ptr->monsterTypeID)) {
+    switch (monsterClass(pmid4(ptr))) {
     case S_GIANT:
         if (rn2(2))
             (void) mongets(mtmp, (mm != PM_ETTIN) ? BOULDER : CLUB);
         break;
     case S_HUMAN:
-        if (isMercenary(ptr->monsterTypeID)) {
+        if (isMercenary(pmid4(ptr))) {
             w1 = w2 = 0;
             switch (mm) {
             case PM_WATCHMAN:
@@ -224,7 +224,7 @@ register struct monst *mtmp;
                 w2 = KNIFE;
             if (w2)
                 (void) mongets(mtmp, w2);
-        } else if (isElf(ptr->monsterTypeID)) {
+        } else if (isElf(pmid4(ptr))) {
             if (rn2(2))
                 (void) mongets(mtmp,
                                rn2(2) ? ELVEN_MITHRIL_COAT : ELVEN_CLOAK);
@@ -261,7 +261,7 @@ register struct monst *mtmp;
                 if (!rn2(50))
                     (void) mongets(mtmp, CRYSTAL_BALL);
             }
-        } else if (monsterSound(ptr->monsterTypeID) == MS_PRIEST
+        } else if (monsterSound(pmid4(ptr)) == MS_PRIEST
                    || quest_mon_represents_role(ptr, PM_PRIEST)) {
             otmp = mksobj(MACE, FALSE, FALSE);
             if (otmp) {
@@ -277,12 +277,12 @@ register struct monst *mtmp;
         break;
 
     case S_ANGEL:
-        if (isHumanoid(ptr->monsterTypeID)) {
+        if (isHumanoid(pmid4(ptr))) {
             /* create minion stuff; can't use mongets */
             otmp = mksobj(LONG_SWORD, FALSE, FALSE);
 
             /* maybe make it special */
-            if (!rn2(20) || isLord(ptr->monsterTypeID))
+            if (!rn2(20) || isLord(pmid4(ptr)))
                 otmp = oname(otmp,
                              artiname(rn2(2) ? ART_DEMONBANE : ART_SUNSWORD));
             bless(otmp);
@@ -291,7 +291,7 @@ register struct monst *mtmp;
             otmp->spe = max(otmp->spe, spe2);
             (void) mpickobj(mtmp, otmp);
 
-            otmp = mksobj(!rn2(4) || isLord(ptr->monsterTypeID) ? SHIELD_OF_REFLECTION
+            otmp = mksobj(!rn2(4) || isLord(pmid4(ptr)) ? SHIELD_OF_REFLECTION
                                                   : LARGE_SHIELD,
                           FALSE, FALSE);
             otmp->cursed = FALSE;
@@ -318,7 +318,7 @@ register struct monst *mtmp;
                 (void) mongets(mtmp, ELVEN_MITHRIL_COAT);
             if (!rn2(10))
                 (void) mongets(mtmp, DWARVISH_CLOAK);
-        } else if (isDwarf(ptr->monsterTypeID)) {
+        } else if (isDwarf(pmid4(ptr))) {
             if (rn2(7))
                 (void) mongets(mtmp, DWARVISH_CLOAK);
             if (rn2(7))
@@ -460,7 +460,7 @@ register struct monst *mtmp;
         /* prevent djinn and mail daemons from leaving objects when
          * they vanish
          */
-        if (!isDemon(ptr->monsterTypeID))
+        if (!isDemon(pmid4(ptr)))
             break;
         /*FALLTHRU*/
     default:
@@ -469,16 +469,16 @@ register struct monst *mtmp;
          * of weapon for "normal" monsters.  Certain special types
          * of monsters will get a bonus chance or different selections.
          */
-        bias = isLord(ptr->monsterTypeID) + isPrince(ptr->monsterTypeID) * 2 + isExtraNasty(ptr->monsterTypeID);
+        bias = isLord(pmid4(ptr)) + isPrince(pmid4(ptr)) * 2 + isExtraNasty(pmid4(ptr));
         switch (rnd(14 - (2 * bias))) {
         case 1:
-            if (isStrongMonster(ptr->monsterTypeID))
+            if (isStrongMonster(pmid4(ptr)))
                 (void) mongets(mtmp, BATTLE_AXE);
             else
                 m_initthrow(mtmp, DART, 12);
             break;
         case 2:
-            if (isStrongMonster(ptr->monsterTypeID))
+            if (isStrongMonster(pmid4(ptr)))
                 (void) mongets(mtmp, TWO_HANDED_SWORD);
             else {
                 (void) mongets(mtmp, CROSSBOW);
@@ -490,13 +490,13 @@ register struct monst *mtmp;
             m_initthrow(mtmp, ARROW, 12);
             break;
         case 4:
-            if (isStrongMonster(ptr->monsterTypeID))
+            if (isStrongMonster(pmid4(ptr)))
                 (void) mongets(mtmp, LONG_SWORD);
             else
                 m_initthrow(mtmp, DAGGER, 3);
             break;
         case 5:
-            if (isStrongMonster(ptr->monsterTypeID))
+            if (isStrongMonster(pmid4(ptr)))
                 (void) mongets(mtmp, LUCERN_HAMMER);
             else
                 (void) mongets(mtmp, AKLYS);
@@ -540,9 +540,9 @@ register struct monst *mtmp;
      *  Soldiers get armour & rations - armour approximates their ac.
      *  Nymphs may get mirror or potion of object detection.
      */
-    switch (monsterClass(ptr->monsterTypeID)) {
+    switch (monsterClass(pmid4(ptr))) {
     case S_HUMAN:
-        if (isMercenary(ptr->monsterTypeID)) {
+        if (isMercenary(pmid4(ptr))) {
             register int mac;
 
             switch (monsndx(ptr)) {
@@ -625,7 +625,7 @@ register struct monst *mtmp;
             case 3:
                 (void) mongets(mtmp, WAN_STRIKING);
             }
-        } else if (monsterSound(ptr->monsterTypeID) == MS_PRIEST
+        } else if (monsterSound(pmid4(ptr)) == MS_PRIEST
                    || quest_mon_represents_role(ptr, PM_PRIEST)) {
             (void) mongets(mtmp, rn2(7) ? ROBE
                                         : rn2(3) ? CLOAK_OF_PROTECTION
@@ -646,7 +646,7 @@ register struct monst *mtmp;
         if (ptr == &mons[PM_MINOTAUR]) {
             if (!rn2(3) || (in_mklev && areYouOnEarthLevel()))
                 (void) mongets(mtmp, WAN_DIGGING);
-        } else if (isGiant(ptr->monsterTypeID)) {
+        } else if (isGiant(pmid4(ptr))) {
             for (cnt = rn2((int) (mtmp->m_lev / 2)); cnt; cnt--) {
                 otmp = mksobj(rnd_class(DILITHIUM_CRYSTAL, LUCKSTONE - 1),
                               FALSE, FALSE);
@@ -722,7 +722,7 @@ register struct monst *mtmp;
         (void) mongets(mtmp, rnd_defensive_item(mtmp));
     if ((int) mtmp->m_lev > rn2(100))
         (void) mongets(mtmp, rnd_misc_item(mtmp));
-    if (likesGold(ptr->monsterTypeID) && !findgold(mtmp->minvent) && !rn2(5))
+    if (likesGold(pmid4(ptr)) && !findgold(mtmp->minvent) && !rn2(5))
         mkmonmoney(mtmp,
                    (long) d(level_difficulty(), mtmp->minvent ? 5 : 10));
 }
@@ -879,13 +879,13 @@ struct monst *mon;
     int hp = rnd(8); /* default is d8 */
 
     /* like newmonhp, but home elementals are ignored, riders use normal d8 */
-    if (isGolem(ptr->monsterTypeID)) {
+    if (isGolem(pmid4(ptr))) {
         /* draining usually won't be applicable for these critters */
-        hp = golemhp(monsndx(ptr)) / monsterLevel(ptr->monsterTypeID);
-    } else if (monsterLevel(ptr->monsterTypeID) > 49) {
+        hp = golemhp(monsndx(ptr)) / monsterLevel(pmid4(ptr));
+    } else if (monsterLevel(pmid4(ptr)) > 49) {
         /* arbitrary; such monsters won't be involved in draining anyway */
         hp = 4 + rnd(4); /* 5..8 */
-    } else if (monsterClass(ptr->monsterTypeID) == S_DRAGON && monsndx(ptr) >= PM_GRAY_DRAGON) {
+    } else if (monsterClass(pmid4(ptr)) == S_DRAGON && monsndx(ptr) >= PM_GRAY_DRAGON) {
         /* adult dragons; newmonhp() uses areYouInEndgame() ? 8 : 4 + rnd(4)
          */
         hp = 4 + rn2(5); /* 4..8 */
@@ -906,19 +906,19 @@ int mndx;
     struct permonst *ptr = &mons[mndx];
 
     mon->m_lev = adj_lev(ptr);
-    if (isGolem(ptr->monsterTypeID)) {
+    if (isGolem(pmid4(ptr))) {
         mon->mhpmax = mon->mhp = golemhp(mndx);
     } else if (is_rider(ptr)) {
         /* we want low HP, but a high monsterLevel so they can attack well */
         mon->mhpmax = mon->mhp = d(10, 8);
-    } else if (monsterLevel(ptr->monsterTypeID) > 49) {
+    } else if (monsterLevel(pmid4(ptr)) > 49) {
         /* "special" fixed hp monster
          * the hit points are encoded in the monsterLevel in a somewhat strange
          * way to fit in the 50..127 positive range of a signed character
          * above the 1..49 that indicate "normal" monster levels */
-        mon->mhpmax = mon->mhp = 2 * (monsterLevel(ptr->monsterTypeID) - 6);
+        mon->mhpmax = mon->mhp = 2 * (monsterLevel(pmid4(ptr)) - 6);
         mon->m_lev = mon->mhp / 4; /* approximation */
-    } else if (monsterClass(ptr->monsterTypeID) == S_DRAGON && mndx >= PM_GRAY_DRAGON) {
+    } else if (monsterClass(pmid4(ptr)) == S_DRAGON && mndx >= PM_GRAY_DRAGON) {
         /* adult dragons */
         mon->mhpmax = mon->mhp =
             (int) (areYouInEndgame()
@@ -1098,7 +1098,7 @@ int mmflags;
         } while (++tryct <= 50
                  /* in Sokoban, don't accept a giant on first try;
                     after that, boulder carriers are fair game */
-                 && ((tryct == 1 && throwsRocks(ptr->monsterTypeID) && areYouOnASokobanLevel())
+                 && ((tryct == 1 && throwsRocks(pmid4(ptr)) && areYouOnASokobanLevel())
                      || !goodpos(x, y, &fakemon, gpflags)));
         mndx = monsndx(ptr);
     }
@@ -1121,7 +1121,7 @@ int mmflags;
     fmon = mtmp;
     mtmp->m_id = nextIdentifier();
 
-    int msound = monsterSound(ptr->monsterTypeID);
+    int msound = monsterSound(pmid4(ptr));
 
     set_mon_data(mtmp, ptr, 0);
     if (msound == MS_LEADER && quest_info(MS_LEADER) == mndx)
@@ -1131,9 +1131,9 @@ int mmflags;
     /* set up level and hit points */
     newmonhp(mtmp, mndx);
 
-    if (isFemale(ptr->monsterTypeID))
+    if (isFemale(pmid4(ptr)))
         mtmp->female = TRUE;
-    else if (isMale(ptr->monsterTypeID))
+    else if (isMale(pmid4(ptr)))
         mtmp->female = FALSE;
     /* leader and nemesis gender is usually hardcoded in mons[],
        but for ones which can be random, it has already been chosen
@@ -1145,7 +1145,7 @@ int mmflags;
     else
         mtmp->female = rn2(2); /* ignored for neuters */
 
-    if (areYouOnASokobanLevel() && !isMindless(ptr->monsterTypeID)) /* know about traps here */
+    if (areYouOnASokobanLevel() && !isMindless(pmid4(ptr))) /* know about traps here */
         mtmp->mtrapseen = (1L << (PIT - 1)) | (1L << (HOLE - 1));
     /* quest leader and nemesis both know about all trap types */
     if (msound == MS_LEADER || msound == MS_NEMESIS)
@@ -1155,7 +1155,7 @@ int mmflags;
     mtmp->mcansee = mtmp->mcanmove = TRUE;
     mtmp->mpeaceful = (mmflags & MM_ANGRY) ? FALSE : peace_minded(ptr);
 
-    switch (monsterClass(ptr->monsterTypeID)) {
+    switch (monsterClass(pmid4(ptr))) {
     case S_MIMIC:
         set_mimic_sym(mtmp);
         break;
@@ -1189,12 +1189,12 @@ int mmflags;
             mtmp->mpeaceful = FALSE;
         break;
     case S_UNICORN:
-        if (isUnicorn(ptr->monsterTypeID) &&
-            sgn(currentAlignmentType()) == sgn(monsterAlignment(ptr->monsterTypeID)))
+        if (isUnicorn(pmid4(ptr)) &&
+            sgn(currentAlignmentType()) == sgn(monsterAlignment(pmid4(ptr))))
             mtmp->mpeaceful = TRUE;
         break;
     case S_BAT:
-        if (areYouInHell() && isBat(ptr->monsterTypeID))
+        if (areYouInHell() && isBat(pmid4(ptr)))
             mon_adjust_speed(mtmp, 2, (struct obj *) 0);
         break;
     }
@@ -1231,7 +1231,7 @@ int mmflags;
         mtmp = christen_monst(mtmp, rndghostname());
     } else if (mndx == PM_CROESUS) {
         mitem = TWO_HANDED_SWORD;
-    } else if (monsterSound(ptr->monsterTypeID) == MS_NEMESIS) {
+    } else if (monsterSound(pmid4(ptr)) == MS_NEMESIS) {
         mitem = BELL_OF_OPENING;
     } else if (mndx == PM_PESTILENCE) {
         mitem = POT_SICKNESS;
@@ -1240,7 +1240,7 @@ int mmflags;
         (void) mongets(mtmp, mitem);
 
     if (in_mklev) {
-        if ((isNamelessMajorDemon(ptr->monsterTypeID) || mndx == PM_WUMPUS
+        if ((isNamelessMajorDemon(pmid4(ptr)) || mndx == PM_WUMPUS
              || mndx == PM_LONG_WORM || mndx == PM_GIANT_EEL)
             && !haveSpecialItem(SPECIAL_ITEM_AMULET) && rn2(5))
             mtmp->msleeping = TRUE;
@@ -1250,7 +1250,7 @@ int mmflags;
             set_apparxy(mtmp);
         }
     }
-    if (isDemonPrince(ptr->monsterTypeID) && monsterSound(ptr->monsterTypeID) == MS_BRIBE) {
+    if (isDemonPrince(pmid4(ptr)) && monsterSound(pmid4(ptr)) == MS_BRIBE) {
         mtmp->mpeaceful = mtmp->minvis = mtmp->perminvis = 1;
         mtmp->mavenge = 0;
         if (uwep && uwep->oartifact == ART_EXCALIBUR)
@@ -1290,7 +1290,7 @@ int mmflags;
     }
     set_malign(mtmp); /* having finished peaceful changes */
     if (anymon) {
-	int geno = monsterGenerationMask(ptr->monsterTypeID);
+	int geno = monsterGenerationMask(pmid4(ptr));
         if ((geno & G_SGROUP) && rn2(2)) {
             m_initsgrp(mtmp, mtmp->mx, mtmp->my);
         } else if (geno & G_LGROUP) {
@@ -1312,14 +1312,14 @@ int mmflags;
             discard_minvent(mtmp);
         mtmp->minvent = (struct obj *) 0; /* caller expects this */
     }
-    if (monsterHasFlag3(ptr->monsterTypeID, !(mmflags & MM_NOWAIT))) {
-        if (monsterHasFlag3(ptr->monsterTypeID, M3_WAITFORU)) {
+    if (monsterHasFlag3(pmid4(ptr), !(mmflags & MM_NOWAIT))) {
+        if (monsterHasFlag3(pmid4(ptr), M3_WAITFORU)) {
             mtmp->mstrategy |= STRAT_WAITFORU;
 	}
-        if (allowsCloseApproach(ptr->monsterTypeID)) {
+        if (allowsCloseApproach(pmid4(ptr))) {
             mtmp->mstrategy |= STRAT_CLOSE;
 	}
-        if (monsterHasFlag3(ptr->monsterTypeID, (M3_WAITMASK | M3_COVETOUS))) {
+        if (monsterHasFlag3(pmid4(ptr), (M3_WAITMASK | M3_COVETOUS))) {
             mtmp->mstrategy |= STRAT_APPEARMSG;
 	}
     }
@@ -1405,7 +1405,7 @@ register struct permonst *ptr;
         lev = areYouOnASpecialLevel();
         oldmoves = moves;
     }
-    int malign = monsterAlignment(ptr->monsterTypeID);
+    int malign = monsterAlignment(pmid4(ptr));
     switch ((lev) ? lev->flags.align : dungeons[currentDungeonNumber()].flags.align) {
     default: /* just in case */
     case AM_NONE:
@@ -1470,10 +1470,10 @@ rndmonst()
         for ( ; mndx < SPECIAL_PM; mndx++) { /* (`mndx' initialized above) */
             ptr = &mons[mndx];
             rndmonst_state.mchoices[mndx] = 0;
-	    int geno = monsterGenerationMask(ptr->monsterTypeID);
+	    int geno = monsterGenerationMask(pmid4(ptr));
             if (tooweak(mndx, minmlev) || toostrong(mndx, maxmlev))
                 continue;
-            if (upper && !isupper(def_monsyms[monsterClass(ptr->monsterTypeID)].sym))
+            if (upper && !isupper(def_monsyms[monsterClass(pmid4(ptr))].sym))
                 continue;
             if (elemlevel && wrong_elem_type(ptr))
                 continue;
@@ -1538,7 +1538,7 @@ int mndx, mvflagsmask, genomask;
 
     if (mvitals[mndx].mvflags & mvflagsmask)
         return FALSE;
-    if (monsterGenerationMask(ptr->monsterTypeID) & genomask)
+    if (monsterGenerationMask(pmid4(ptr)) & genomask)
         return FALSE;
     if (is_placeholder(ptr))
         return FALSE;
@@ -1643,7 +1643,7 @@ adj_lev(ptr)
 register struct permonst *ptr;
 {
     int tmp, tmp2;
-    int mlevel = monsterLevel(ptr->monsterTypeID);
+    int mlevel = monsterLevel(pmid4(ptr));
 
     if (ptr == &mons[PM_WIZARD_OF_YENDOR]) {
         /* does not depend on other strengths, but does get stronger
@@ -1705,11 +1705,11 @@ struct monst *mtmp, *victim;
         hp_threshold = mtmp->m_lev * 8; /* normal limit */
         if (!mtmp->m_lev)
             hp_threshold = 4;
-        else if (isGolem(ptr->monsterTypeID)) /* strange creatures */
+        else if (isGolem(pmid4(ptr))) /* strange creatures */
             hp_threshold = ((mtmp->mhpmax / 10) + 1) * 10 - 1;
         else if (is_home_elemental(ptr))
             hp_threshold *= 3;
-        lev_limit = 3 * monsterLevel(ptr->monsterTypeID) / 2; /* same as adj_lev() */
+        lev_limit = 3 * monsterLevel(pmid4(ptr)) / 2; /* same as adj_lev() */
         /* If they can grow up, be sure the level is high enough for that */
 	int newmlevel = monsterLevel(mons[newtype].monsterTypeID);
         if (oldtype != newtype && newmlevel > lev_limit)
@@ -1739,25 +1739,25 @@ struct monst *mtmp, *victim;
     else if (lev_limit < 5)
         lev_limit = 5; /* arbitrary */
     else if (lev_limit > 49)
-        lev_limit = (monsterLevel(ptr->monsterTypeID) > 49 ? 50 : 49);
+        lev_limit = (monsterLevel(pmid4(ptr)) > 49 ? 50 : 49);
 
     if ((int) ++mtmp->m_lev >= monsterLevel(mons[newtype].monsterTypeID) && newtype != oldtype) {
         ptr = &mons[newtype];
         if (mvitals[newtype].mvflags & G_GENOD) { /* allow G_EXTINCT */
             if (canspotmon(mtmp)) {
-		javaString monsterName = monsterTypeName(ptr->monsterTypeID);
+		javaString monsterName = monsterTypeName(pmid4(ptr));
                 pline("As %s grows up into %s, %s %s!", mon_nam(mtmp),
                       an(monsterName.c_str), mhe(mtmp),
-                      isNonliving(ptr->monsterTypeID) ? "expires" : "dies");
+                      isNonliving(pmid4(ptr)) ? "expires" : "dies");
 		releaseJavaString(monsterName);
 	    }
             set_mon_data(mtmp, ptr, -1); /* keep mvitals[] accurate */
             mondied(mtmp);
             return (struct permonst *) 0;
         } else if (canspotmon(mtmp)) {
-	    javaString monsterName = monsterTypeName(ptr->monsterTypeID);
+	    javaString monsterName = monsterTypeName(pmid4(ptr));
             pline("%s %s %s.", Monnam(mtmp),
-                  isHumanoid(ptr->monsterTypeID) ? "becomes" : "grows up into",
+                  isHumanoid(pmid4(ptr)) ? "becomes" : "grows up into",
                   an(monsterName.c_str));
 	    releaseJavaString(monsterName);
         }
@@ -1873,22 +1873,22 @@ boolean
 peace_minded(ptr)
 register struct permonst *ptr;
 {
-    aligntyp mal = monsterAlignment(ptr->monsterTypeID);
+    aligntyp mal = monsterAlignment(pmid4(ptr));
     aligntyp ual = currentAlignmentType();
-    int msound = monsterSound(ptr->monsterTypeID);
+    int msound = monsterSound(pmid4(ptr));
 
-    if (isAlwaysPeaceful(ptr->monsterTypeID))
+    if (isAlwaysPeaceful(pmid4(ptr)))
         return TRUE;
-    if (isAlwaysHostile(ptr->monsterTypeID))
+    if (isAlwaysHostile(pmid4(ptr)))
         return FALSE;
     if (msound == MS_LEADER || msound == MS_GUARDIAN)
         return TRUE;
     if (msound == MS_NEMESIS)
         return FALSE;
 
-    if (racialFriendship(ptr->monsterTypeID, urace.lovemask))
+    if (racialFriendship(pmid4(ptr), urace.lovemask))
         return TRUE;
-    if (racialHostility(ptr->monsterTypeID, urace.hatemask))
+    if (racialHostility(pmid4(ptr), urace.hatemask))
         return FALSE;
 
     /* the monster is hostile if its alignment is different from the
@@ -1901,7 +1901,7 @@ register struct permonst *ptr;
         return FALSE;
 
     /* minions are hostile to players that have strayed at all */
-    if (isMinion(ptr->monsterTypeID))
+    if (isMinion(pmid4(ptr)))
         return (boolean) (currentAlignmentRecord() >= 0);
 
     /* Last case:  a chance of a co-aligned monster being

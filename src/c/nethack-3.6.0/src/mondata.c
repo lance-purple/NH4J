@@ -23,9 +23,9 @@ int flag;
         return; /* "don't care" */
 
     if (flag == 1)
-        mon->mintrinsics |= (monsterResistances(ptr->monsterTypeID) & 0x00FF);
+        mon->mintrinsics |= (monsterResistances(pmid4(ptr)) & 0x00FF);
     else
-        mon->mintrinsics = (monsterResistances(ptr->monsterTypeID) & 0x00FF);
+        mon->mintrinsics = (monsterResistances(pmid4(ptr)) & 0x00FF);
     return;
 }
 
@@ -36,7 +36,7 @@ struct permonst *ptr;
 const int attackType;
 const int damageType;
 {
-    int pmid = ptr->monsterTypeID;
+    int pmid = pmid4(ptr);
     int nAttacks = monsterAttacks(pmid);
     for (int i = 0; i < nAttacks; i++)
     {
@@ -76,7 +76,7 @@ poly_when_stoned(ptr)
 struct permonst *ptr;
 {
     /* non-stone golems turn into stone golems unless latter is genocided */
-    return (boolean) (isGolem(ptr->monsterTypeID) && ptr != &mons[PM_STONE_GOLEM]
+    return (boolean) (isGolem(pmid4(ptr)) && ptr != &mons[PM_STONE_GOLEM]
                       && !(mvitals[PM_STONE_GOLEM].mvflags & G_GENOD));
     /* allow G_EXTINCT */
 }
@@ -87,7 +87,7 @@ resists_drli(mon)
 struct monst *mon;
 {
     struct permonst *ptr = mon->data;
-    int pmid = ptr->monsterTypeID;
+    int pmid = pmid4(ptr);
     struct obj *wep;
 
     if (isUndead(pmid) || isDemon(pmid) || isWere(pmid)
@@ -144,7 +144,7 @@ struct monst *mon;
     struct obj *o;
 
     if (is_you ? (youCannotSee() || youAreUnaware())
-               : (mon->mblinded || !mon->mcansee || !hasEyes(ptr->monsterTypeID)
+               : (mon->mblinded || !mon->mcansee || !hasEyes(pmid4(ptr))
                   /* BUG: temporary sleep sets mfrozen, but since
                           paralysis does too, we can't check it */
                   || mon->msleeping))
@@ -272,7 +272,7 @@ struct permonst *ptr;
      *       || attacktype(ptr, AT_MAGC));
      * but that's too slow -dlc
      */
-    int pmid = ptr->monsterTypeID;
+    int pmid = pmid4(ptr);
     int nAttacks = monsterAttacks(pmid);
     for (int i = 0; i < nAttacks; i++) {
         int atyp = monsterAttack(pmid, i).type;
@@ -298,7 +298,7 @@ boolean
 hates_silver(ptr)
 register struct permonst *ptr;
 {
-    int pmid = ptr->monsterTypeID;
+    int pmid = pmid4(ptr);
     int mc = monsterClass(pmid);
     return (boolean) (isWere(pmid) || mc == S_VAMPIRE || isDemon(pmid)
                       || ptr == &mons[PM_SHADE]
@@ -310,7 +310,7 @@ boolean
 passes_bars(mptr)
 struct permonst *mptr;
 {
-    int pmid = mptr->monsterTypeID;
+    int pmid = pmid4(mptr);
     return (boolean) (passesThroughWalls(pmid) || isAmorphous(pmid) || isUnsolid(pmid)
                       || isWhirly(pmid) || isVerySmallMonster(pmid)
                       || dmgtype(mptr, AD_CORR) || dmgtype(mptr, AD_RUST)
@@ -373,7 +373,7 @@ register struct permonst *ptr;
     if (uwep && uwep->oartifact == ART_EXCALIBUR)
         return TRUE;
     else
-        return (boolean) hasEyes(ptr->monsterTypeID);
+        return (boolean) hasEyes(pmid4(ptr));
 }
 
 /* creature will slide out of armor */
@@ -381,8 +381,8 @@ boolean
 sliparm(ptr)
 register struct permonst *ptr;
 {
-    return (boolean) (isWhirly(ptr->monsterTypeID) || monsterSize(ptr->monsterTypeID) <= MZ_SMALL
-                      || isNoncorporeal(ptr->monsterTypeID));
+    return (boolean) (isWhirly(pmid4(ptr)) || monsterSize(pmid4(ptr)) <= MZ_SMALL
+                      || isNoncorporeal(pmid4(ptr)));
 }
 
 /* creature will break out of armor */
@@ -393,8 +393,8 @@ register struct permonst *ptr;
     if (sliparm(ptr))
         return FALSE;
 
-    return (boolean) (isBigMonster(ptr->monsterTypeID)
-                      || (monsterSize(ptr->monsterTypeID) > MZ_SMALL && !isHumanoid(ptr->monsterTypeID))
+    return (boolean) (isBigMonster(pmid4(ptr))
+                      || (monsterSize(pmid4(ptr)) > MZ_SMALL && !isHumanoid(pmid4(ptr)))
                       /* special cases of humanoids that cannot wear suits */
                       || ptr == &mons[PM_MARILITH]
                       || ptr == &mons[PM_WINGED_GARGOYLE]);
@@ -416,7 +416,7 @@ struct permonst *ptr;
 {
     /* rats and mice are incapable of vomiting;
        which other creatures have the same limitation? */
-    if (monsterClass(ptr->monsterTypeID) == S_RODENT && ptr != &mons[PM_ROCK_MOLE]
+    if (monsterClass(pmid4(ptr)) == S_RODENT && ptr != &mons[PM_ROCK_MOLE]
         && ptr != &mons[PM_WOODCHUCK])
         return TRUE;
     return FALSE;
@@ -451,7 +451,7 @@ const struct permonst *ptr;
 const int dtyp;
 const int atyp;
 {
-    int pmid = ptr->monsterTypeID;
+    int pmid = pmid4(ptr);
     int nAttacks = monsterAttacks(pmid);
 
     for (int i = 0; i < nAttacks; i++)
@@ -534,11 +534,12 @@ boolean
 same_race(pm1, pm2)
 struct permonst *pm1, *pm2;
 {
-    int let1 = monsterClass(pm1->monsterTypeID);
-    int let2 = monsterClass(pm2->monsterTypeID);
+    int pmid1 = pmid4(pm1);
+    int pmid2 = pmid4(pm2);
 
-    int pmid1 = pm1->monsterTypeID;
-    int pmid2 = pm2->monsterTypeID;
+    int let1 = monsterClass(pmid1);
+    int let2 = monsterClass(pmid2);
+
 
     if (pm1 == pm2)
         return TRUE; /* exact match */
@@ -570,8 +571,8 @@ struct permonst *pm1, *pm2;
         return (let2 == S_NYMPH);
     if (let1 == S_CENTAUR)
         return (let2 == S_CENTAUR);
-    if (isUnicorn(pm1->monsterTypeID))
-        return isUnicorn(pm2->monsterTypeID);
+    if (isUnicorn(pmid1))
+        return isUnicorn(pmid2);
     if (let1 == S_DRAGON)
         return (let2 == S_DRAGON);
     if (let1 == S_NAGA)
@@ -591,7 +592,7 @@ struct permonst *pm1, *pm2;
         return FALSE;
     if (isDemon(pmid1))
         return isDemon(pmid2);
-    if (isUndead(pm1->monsterTypeID)) {
+    if (isUndead(pmid1)) {
         if (let1 == S_ZOMBIE)
             return (let2 == S_ZOMBIE);
         if (let1 == S_MUMMY)
@@ -604,7 +605,7 @@ struct permonst *pm1, *pm2;
             return (let2 == S_WRAITH);
         if (let1 == S_GHOST)
             return (let2 == S_GHOST);
-    } else if (isUndead(pm2->monsterTypeID))
+    } else if (isUndead(pmid2))
         return FALSE;
 
     /* check for monsters which grow into more mature forms */
@@ -1064,7 +1065,7 @@ const char *def;
 {
     int capitalize = (*def == highc(*def));
 
-    int pmid = ptr->monsterTypeID;
+    int pmid = pmid4(ptr);
 
     int msize = monsterSize(pmid);
 
@@ -1085,7 +1086,7 @@ const char *def;
 {
     int capitalize = 2 + (*def == highc(*def));
 
-    int pmid = ptr->monsterTypeID;
+    int pmid = pmid4(ptr);
 
     int msize = monsterSize(pmid);
 
@@ -1152,8 +1153,8 @@ boolean
 olfaction(mdat)
 struct permonst *mdat;
 {
-    int mc = monsterClass(mdat->monsterTypeID);
-    if (isGolem(mdat->monsterTypeID)
+    int mc = monsterClass(pmid4(mdat));
+    if (isGolem(pmid4(mdat))
         || mc == S_EYE /* spheres  */
         || mc == S_JELLY || mc == S_PUDDING
         || mc == S_BLOB  || mc == S_VORTEX
@@ -1237,7 +1238,7 @@ boolean monsterTypeResistsStoning(int pmid) {
 }
 
 boolean cannotUseTwoWeapons(struct permonst* ptr) {
-    return (monsterAttack(ptr->monsterTypeID, 1).type != AT_WEAP);
+    return (monsterAttack(pmid4(ptr), 1).type != AT_WEAP);
 }
 
 boolean isFlyer(int pmid) {
@@ -1565,7 +1566,7 @@ boolean likesLava(int pmid) {
 }
 
 extern boolean befriendWithObject(struct permonst* pm, struct obj* otmp) {
-    return (otmp && (otmp->oclass == FOOD_CLASS) && isDomestic(pmid4dat(pm)));
+    return (otmp && (otmp->oclass == FOOD_CLASS) && isDomestic(pmid4(pm)));
 }
 
 

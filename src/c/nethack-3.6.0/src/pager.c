@@ -415,7 +415,7 @@ boolean user_typed_name, without_asking;
      * user_typed_name and picked name.
      */
     if (pm != (struct permonst *) 0 && !user_typed_name) {
-	javaString monsterName =  monsterTypeName(pm->monsterTypeID);
+	javaString monsterName =  monsterTypeName(pmid4(pm));
         dbase_str = strcpy(newstr, monsterName.c_str);
 	releaseJavaString(monsterName);
     } else {

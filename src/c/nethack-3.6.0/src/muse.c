@@ -999,9 +999,9 @@ struct monst *mtmp;
     struct permonst *pm = mtmp->data;
     int difficulty = monstr[(monsndx(pm))];
     int trycnt = 0;
-    int mc = monsterClass(pm->monsterTypeID);
+    int mc = monsterClass(pmid4(pm));
 
-    if (isAnimal(pm->monsterTypeID) || attacktype(pm, AT_EXPL) || isMindless(pm->monsterTypeID)
+    if (isAnimal(pmid4(pm)) || attacktype(pm, AT_EXPL) || isMindless(pmid4(pm))
         || mc == S_GHOST || mc == S_KOP)
         return 0;
 try_again:
@@ -1031,7 +1031,7 @@ try_again:
         return (mtmp->data != &mons[PM_PESTILENCE]) ? POT_FULL_HEALING
                                                     : POT_SICKNESS;
     case 7:
-        if (isFloater(pm->monsterTypeID) || mtmp->isshk || mtmp->isgd || mtmp->ispriest)
+        if (isFloater(pmid4(pm)) || mtmp->isshk || mtmp->isgd || mtmp->ispriest)
             return 0;
         else
             return WAN_DIGGING;
@@ -1541,9 +1541,9 @@ struct monst *mtmp;
 {
     struct permonst *pm = mtmp->data;
     int difficulty = monstr[(monsndx(pm))];
-    int mc = monsterClass(pm->monsterTypeID);
+    int mc = monsterClass(pmid4(pm));
 
-    if (isAnimal(pm->monsterTypeID) || attacktype(pm, AT_EXPL) || isMindless(pm->monsterTypeID)
+    if (isAnimal(pmid4(pm)) || attacktype(pm, AT_EXPL) || isMindless(pmid4(pm))
         || mc == S_GHOST || mc == S_KOP)
         return 0;
     if (difficulty > 7 && !rn2(35))
@@ -1552,8 +1552,8 @@ struct monst *mtmp;
     case 0: {
         struct obj *helmet = which_armor(mtmp, W_ARMH);
 
-        if ((helmet && is_metallic(helmet)) || isAmorphous(pm->monsterTypeID)
-            || passesThroughWalls(pm->monsterTypeID) || isNoncorporeal(pm->monsterTypeID) || isUnsolid(pm->monsterTypeID))
+        if ((helmet && is_metallic(helmet)) || isAmorphous(pmid4(pm))
+            || passesThroughWalls(pmid4(pm)) || isNoncorporeal(pmid4(pm)) || isUnsolid(pmid4(pm)))
             return SCR_EARTH;
     } /* fall through */
     case 1:
@@ -1603,12 +1603,12 @@ struct monst *mtmp;
     int x = mtmp->mx, y = mtmp->my;
     struct trap *t;
     int xx, yy, pmidx = NON_PM;
-    boolean immobile = (monsterMovementSpeed(mdat->monsterTypeID) == 0);
+    boolean immobile = (monsterMovementSpeed(pmid4(mdat)) == 0);
     boolean stuck = (mtmp == u.ustuck);
 
     m.misc = (struct obj *) 0;
     m.has_misc = 0;
-    if (isAnimal(mdat->monsterTypeID) || isMindless(mdat->monsterTypeID))
+    if (isAnimal(pmid4(mdat)) || isMindless(pmid4(mdat)))
         return 0;
     if (swallowed() && stuck)
         return FALSE;
@@ -1622,8 +1622,8 @@ struct monst *mtmp;
 
     if (!stuck && !immobile && (mtmp->cham == NON_PM)
         && monstr[(pmidx = monsndx(mdat))] < 6) {
-        boolean ignore_boulders = (isVerySmallMonster(mdat->monsterTypeID) || throwsRocks(mdat->monsterTypeID)
-                                   || passesThroughWalls(mdat->monsterTypeID)),
+        boolean ignore_boulders = (isVerySmallMonster(pmid4(mdat)) || throwsRocks(pmid4(mdat))
+                                   || passesThroughWalls(pmid4(mdat))),
             diag_ok = !NODIAG(pmidx);
 
         for (xx = x - 1; xx <= x + 1; xx++)
@@ -1643,7 +1643,7 @@ struct monst *mtmp;
                         }
                     }
     }
-    if (hasNoHands(mdat->monsterTypeID))
+    if (hasNoHands(pmid4(mdat)))
         return 0;
 
 #define nomore(x)       if (m.has_misc == x) continue
@@ -1977,9 +1977,9 @@ struct monst *mtmp;
 {
     struct permonst *pm = mtmp->data;
     int difficulty = monstr[(monsndx(pm))];
-    int mc = monsterClass(pm->monsterTypeID);
+    int mc = monsterClass(pmid4(pm));
 
-    if (isAnimal(pm->monsterTypeID) || attacktype(pm, AT_EXPL) || isMindless(pm->monsterTypeID)
+    if (isAnimal(pmid4(pm)) || attacktype(pm, AT_EXPL) || isMindless(pmid4(pm))
         || mc == S_GHOST || mc == S_KOP)
         return 0;
     /* Unlike other rnd_item functions, we only allow _weak_ monsters
@@ -1989,7 +1989,7 @@ struct monst *mtmp;
     if (difficulty < 6 && !rn2(30))
         return rn2(6) ? POT_POLYMORPH : WAN_POLYMORPH;
 
-    if (!rn2(40) && !isNonliving(pm->monsterTypeID) && !is_vampshifter(mtmp))
+    if (!rn2(40) && !isNonliving(pmid4(pm)) && !is_vampshifter(mtmp))
         return AMULET_OF_LIFE_SAVING;
 
     switch (rn2(3)) {
@@ -2440,12 +2440,12 @@ struct monst *mon;
         return FALSE;
 #ifdef TEXTCOLOR
     if (iflags.use_color) {
-	int mcolor = monsterColor(ptr->monsterTypeID);
+	int mcolor = monsterColor(pmid4(ptr));
         return (mcolor == CLR_GREEN || mcolor == CLR_BRIGHT_GREEN);
     }
 #endif
     /* approximation */
-    javaString monsterName = monsterTypeName(ptr->monsterTypeID);
+    javaString monsterName = monsterTypeName(pmid4(ptr));
     boolean isGreen = (NULL != strstri(monsterName.c_str, "green"));
     releaseJavaString(monsterName);
    
@@ -2467,7 +2467,7 @@ struct monst *mon;
     case PM_WOOD_NYMPH:
         return TRUE;
     default:
-        if (isElf(ptr->monsterTypeID) && !isPrince(ptr->monsterTypeID) && !isLord(ptr->monsterTypeID)
+        if (isElf(pmid4(ptr)) && !isPrince(pmid4(ptr)) && !isLord(pmid4(ptr))
             && ptr != &mons[PM_GREY_ELF])
             return TRUE;
         break;

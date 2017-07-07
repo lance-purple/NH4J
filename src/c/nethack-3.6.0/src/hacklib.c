@@ -65,16 +65,16 @@
 #define Static static
 #endif
 
-int pmid4dat(struct permonst* pm) {
+int pmid4(const struct permonst* pm) {
     return (pm != NULL) ? pm->monsterTypeID : NON_PM;
 }
 
-int pmid4mon(struct monst* mtmp) {
-    return (mtmp != NULL) ? pmid4dat(mtmp->data) : NON_PM;
+int pmid4mon(const struct monst* mtmp) {
+    return (mtmp != NULL) ? pmid4(mtmp->data) : NON_PM;
 }
 
 int pmid4you() {
-    return pmid4dat(youmonst.data);
+    return pmid4(youmonst.data);
 }
 
 jclass getJavaClass(const char* className) {
@@ -2761,7 +2761,7 @@ extern long monsterConveysResistances(int id) {
 
 extern boolean monsterDoesNotAttack(const struct permonst *ptr)
 {
-    int pmid = ptr->monsterTypeID;
+    int pmid = pmid4(ptr);
     return javaGetBooleanFromInt(MONSTER_TYPE_CLASS, "monsterDoesNotAttack", pmid);
 }
 

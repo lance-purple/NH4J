@@ -50,7 +50,7 @@ STATIC_DCL int FDECL(spell_hit_bonus, (int));
 #define is_hero_spell(type) ((type) >= 10 && (type) < 20)
 
 static boolean M_IN_WATER(struct permonst* ptr) {
-    int pmid = ptr->monsterTypeID;
+    int pmid = pmid4(ptr);
     return (monsterClass(pmid) == S_EEL || isAmphibious(pmid) || isSwimmer(pmid));
 }
 
@@ -1609,9 +1609,9 @@ struct obj *obj;
             smell = TRUE;
         } else if (obj->otyp == STATUE || obj->otyp == FIGURINE) {
             ptr = &mons[obj->corpsenm];
-            if (isGolem(ptr->monsterTypeID)) {
+            if (isGolem(pmid4(ptr))) {
                 golem_xform = (ptr != &mons[PM_FLESH_GOLEM]);
-            } else if (isVegetarianOption(ptr->monsterTypeID)) {
+            } else if (isVegetarianOption(pmid4(ptr))) {
                 /* Don't animate monsters that aren't flesh */
                 obj = poly_obj(obj, MEATBALL);
                 smell = TRUE;
@@ -1646,9 +1646,9 @@ struct obj *obj;
             if (mon) {
                 ptr = mon->data;
                 /* this golem handling is redundant... */
-                if (isGolem(ptr->monsterTypeID) && ptr != &mons[PM_FLESH_GOLEM])
+                if (isGolem(pmid4(ptr)) && ptr != &mons[PM_FLESH_GOLEM])
                     (void) newcham(mon, &mons[PM_FLESH_GOLEM], TRUE, FALSE);
-            } else if ((monsterGenerationMask(ptr->monsterTypeID) & (G_NOCORPSE | G_UNIQ)) != 0) {
+            } else if ((monsterGenerationMask(pmid4(ptr)) & (G_NOCORPSE | G_UNIQ)) != 0) {
                 /* didn't revive but can't leave corpse either */
                 res = 0;
             } else {

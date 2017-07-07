@@ -407,7 +407,7 @@ e_survives_at(etmp, x, y)
 struct entity *etmp;
 int x, y;
 {
-    int epmid = etmp->edata->monsterTypeID;
+    int epmid = pmid4(etmp->edata);
     if (isNoncorporeal(epmid)) {
         return TRUE;
     }
@@ -498,7 +498,7 @@ STATIC_OVL boolean
 automiss(etmp)
 struct entity *etmp;
 {
-    int epmid = etmp->edata->monsterTypeID;
+    int epmid = pmid4(etmp->edata);
     return (boolean) ((is_u(etmp) ? youCanPassThroughWalls() : passesThroughWalls(epmid))
                       || isNoncorporeal(epmid));
 }
@@ -520,7 +520,7 @@ boolean chunks;
     if (automiss(etmp))
         return TRUE;
 
-    int epmid = etmp->edata->monsterTypeID;
+    int epmid = pmid4(etmp->edata);
 
     if (isFlyer(epmid)
         && (is_u(etmp) ? youAreAware()
@@ -557,7 +557,7 @@ struct entity *etmp;
 
     if (is_u(etmp) ? (youAreUnaware() || youKeepFumbling())
                    : (!etmp->emon->mcanmove || etmp->emon->msleeping
-                      || !monsterMovementSpeed(etmp->edata->monsterTypeID) || etmp->emon->wormno))
+                      || !monsterMovementSpeed(pmid4(etmp->edata)) || etmp->emon->wormno))
         return FALSE;
 
     if (is_u(etmp) ? youAreConfused() : etmp->emon->mconf)
@@ -741,7 +741,7 @@ struct entity *etmp;
                 You_hear("a splash.");
             }
         }
-        int epmid = etmp->edata->monsterTypeID;
+        int epmid = pmid4(etmp->edata);
         if (e_survives_at(etmp, etmp->ex, etmp->ey)) {
             if (e_inview && !isFlyer(epmid) && !isFloater(epmid)) {
                 pline("%s from the bridge.", E_phrase(etmp, "fall"));

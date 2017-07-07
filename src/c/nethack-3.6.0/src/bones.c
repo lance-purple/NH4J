@@ -366,7 +366,7 @@ make_bones:
         if (DEADMONSTER(mtmp))
             continue;
         mptr = mtmp->data;
-	int msound = monsterSound(mptr->monsterTypeID);
+	int msound = monsterSound(pmid4(mptr));
         if (mtmp->iswiz || mptr == &mons[PM_MEDUSA]
             || msound == MS_NEMESIS || msound == MS_LEADER
             || mptr == &mons[PM_VLAD_THE_IMPALER]
