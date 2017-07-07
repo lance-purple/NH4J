@@ -163,7 +163,7 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
 
     if (mtmp->mundetected && !canseemon(mtmp)
         && !glyph_is_warning(glyph_at(bhitpos.x, bhitpos.y))
-        && (hidesUnderStuff(pmid4mon(mtmp)) || monsterClass(mtmp->data->monsterTypeID) == S_EEL)) {
+        && (hidesUnderStuff(pmid4mon(mtmp)) || monsterClass(pmid4mon(mtmp)) == S_EEL)) {
         mtmp->mundetected = mtmp->msleeping = 0;
         newsym(mtmp->mx, mtmp->my);
         if (glyph_is_invisible(levl[mtmp->mx][mtmp->my].glyph)) {
@@ -1281,7 +1281,7 @@ struct obj *obj;   /* weapon */
 
     /* odds to joust are expert:80%, skilled:60%, basic:40%, unskilled:20% */
     if ((joust_dieroll = rn2(5)) < skill_rating) {
-        if (joust_dieroll == 0 && rnl(50) == (50 - 1) && !isUnsolid(mon->data->monsterTypeID)
+        if (joust_dieroll == 0 && rnl(50) == (50 - 1) && !isUnsolid(pmid4mon(mon))
             && !obj_resists(obj, 0, 100))
             return -1; /* hit that breaks lance */
         return 1;      /* successful joust */
@@ -2173,7 +2173,7 @@ register struct monst *mon;
                 if (!swallowed()
                     && (compat = could_seduce(&youmonst, mon, mattk))) {
                     You("%s %s %s.",
-                        mon->mcansee && hasEyes(mon->data->monsterTypeID) ? "smile at"
+                        mon->mcansee && hasEyes(pmid4mon(mon)) ? "smile at"
                                                            : "talk to",
                         mon_nam(mon),
                         compat == 2 ? "engagingly" : "seductively");
@@ -2245,7 +2245,7 @@ register struct monst *mon;
                 if (mon->data == &mons[PM_SHADE])
                     Your("attempt to surround %s is harmless.", mon_nam(mon));
                 else {
-		    int mc = monsterClass(mon->data->monsterTypeID);
+		    int mc = monsterClass(pmid4mon(mon));
                     sum[i] = gulpum(mon, mattk);
                     if (sum[i] == 2 && (mc == S_ZOMBIE || mc == S_MUMMY)
                         && rn2(5) && !youResistSickness()) {

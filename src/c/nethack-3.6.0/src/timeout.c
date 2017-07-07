@@ -547,7 +547,7 @@ long timeout;
                 /* tame if your own egg hatches while you're on the
                    same dungeon level, or any dragon egg which hatches
                    while it's in your inventory */
-		int mc = monsterClass(mon->data->monsterTypeID);
+		int mc = monsterClass(pmid4mon(mon));
                 if ((yours && !silent)
                     || (carried(egg) && mc == S_DRAGON)) {
                     if (tamedog(mon, (struct obj *) 0)) {
@@ -614,7 +614,7 @@ long timeout;
                 pline("%s cries sound like \"%s%s\"",
                       siblings ? "Their" : "Its",
                       flags.female ? "mommy" : "daddy", egg->spe ? "." : "?");
-            } else if (monsterClass(mon->data->monsterTypeID) == S_DRAGON && !youAreDeaf()) {
+            } else if (monsterClass(pmid4mon(mon)) == S_DRAGON && !youAreDeaf()) {
                 verbalize("Gleep!"); /* Mything eggs :-) */
             }
             break;

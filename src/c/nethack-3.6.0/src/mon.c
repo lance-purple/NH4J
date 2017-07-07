@@ -476,7 +476,7 @@ register struct monst *mtmp;
          * protect their stuff. Fire resistant monsters can only protect
          * themselves  --ALI
          */
-        if (!isClinger(pmid4mon(mtmp)) && !likesLava(mtmp->data->monsterTypeID)) {
+        if (!isClinger(pmid4mon(mtmp)) && !likesLava(pmid4mon(mtmp))) {
             if (!resists_fire(mtmp)) {
                 if (cansee(mtmp->mx, mtmp->my))
                     pline("%s %s.", Monnam(mtmp),
@@ -505,7 +505,7 @@ register struct monst *mtmp;
          * water damage to dead monsters' inventory, but survivors need to
          * be handled here.  Swimmers are able to protect their stuff...
          */
-        if (!isClinger(pmid4mon(mtmp)) && !isSwimmer(mtmp->data->monsterTypeID)
+        if (!isClinger(pmid4mon(mtmp)) && !isSwimmer(pmid4mon(mtmp))
             && !isAmphibious(pmid4mon(mtmp))) {
             if (cansee(mtmp->mx, mtmp->my)) {
                 pline("%s drowns.", Monnam(mtmp));
@@ -540,7 +540,7 @@ int
 mcalcmove(mon)
 struct monst *mon;
 {
-    int mmove = monsterMovementSpeed(mon->data->monsterTypeID);
+    int mmove = monsterMovementSpeed(pmid4mon(mon));
 
     /* Note: MSLOW's `+ 1' prevents slowed speed 1 getting reduced to 0;
      *       MFAST's `+ 2' prevents hasted speed 1 from becoming a no-op;
@@ -1684,7 +1684,7 @@ struct obj *
 mlifesaver(mon)
 struct monst *mon;
 {
-    if (!isNonliving(mon->data->monsterTypeID) || is_vampshifter(mon)) {
+    if (!isNonliving(pmid4mon(mon)) || is_vampshifter(mon)) {
         struct obj *otmp = which_armor(mon, W_AMUL);
 
         if (otmp && otmp->otyp == AMULET_OF_LIFE_SAVING)
@@ -2626,7 +2626,7 @@ rescham()
             (void) newcham(mtmp, &mons[mcham], FALSE, FALSE);
             mtmp->cham = NON_PM;
         }
-        if (isWere(pmid4mon(mtmp)) && monsterClass(mtmp->data->monsterTypeID) != S_HUMAN)
+        if (isWere(pmid4mon(mtmp)) && monsterClass(pmid4mon(mtmp)) != S_HUMAN)
             new_were(mtmp);
         if (mtmp->m_ap_type && cansee(mtmp->mx, mtmp->my)) {
             seemimic(mtmp);
@@ -2669,7 +2669,7 @@ struct monst *mon;
         if (mcham >= LOW_PM) {
             mon->cham = NON_PM;
             (void) newcham(mon, &mons[mcham], FALSE, FALSE);
-        } else if (isWere(mon->data->monsterTypeID) && !isHuman(mon->data->monsterTypeID)) {
+        } else if (isWere(pmid4mon(mon)) && !isHuman(pmid4mon(mon))) {
             new_were(mon);
         }
     } else if (mon->cham == NON_PM) {
@@ -2744,17 +2744,17 @@ void
 hide_monst(mon)
 struct monst *mon;
 {
-    int mc = monsterClass(mon->data->monsterTypeID);
-    boolean hider_under = hidesUnderStuff(mon->data->monsterTypeID) || mc == S_EEL;
+    int mc = monsterClass(pmid4mon(mon));
+    boolean hider_under = hidesUnderStuff(pmid4mon(mon)) || mc == S_EEL;
 
-    if ((isHider(mon->data->monsterTypeID) || hider_under)
+    if ((isHider(pmid4mon(mon)) || hider_under)
         && !(mon->mundetected || mon->m_ap_type)) {
         xchar x = mon->mx, y = mon->my;
         char save_viz = viz_array[y][x];
 
         /* override vision, forcing hero to be unable to see monster's spot */
         viz_array[y][x] &= ~(IN_SIGHT | COULD_SEE);
-        if (isHider(mon->data->monsterTypeID))
+        if (isHider(pmid4mon(mon)))
             (void) restrap(mon);
         /* try again if mimic missed its 1/3 chance to hide */
         if (mc == S_MIMIC && !mon->m_ap_type)
@@ -2833,7 +2833,7 @@ int shiftflags;
          */
         if ((mon->mhp <= mon->mhpmax / 6) && rn2(4) && (mon->cham >= LOW_PM))
             (void) newcham(mon, &mons[mon->cham], FALSE, msg);
-    } else if (monsterClass(mon->data->monsterTypeID) == S_VAMPIRE && mon->cham == NON_PM && !rn2(6)
+    } else if (monsterClass(pmid4mon(mon)) == S_VAMPIRE && mon->cham == NON_PM && !rn2(6)
                && (mon->mhp > mon->mhpmax - ((mon->mhpmax / 10) + 1))) {
         (void) newcham(mon, (struct permonst *) 0, FALSE, msg);
     }

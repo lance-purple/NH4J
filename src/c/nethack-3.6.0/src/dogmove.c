@@ -706,7 +706,7 @@ register int after; /* this is extra fast monster movement */
         You("get released!");
     }
 #endif
-    if (!hasNoHands(pmid4mon(mtmp)) && !isVerySmallMonster(mtmp->data->monsterTypeID)) {
+    if (!hasNoHands(pmid4mon(mtmp)) && !isVerySmallMonster(pmid4mon(mtmp))) {
         allowflags |= OPENDOOR;
         if (monhaskey(mtmp, TRUE))
             allowflags |= UNLOCKDOOR;
@@ -891,7 +891,7 @@ newdogpos:
         if (((IS_ROCK(levl[nix][niy].typ) && may_dig(nix, niy))
              || closed_door(nix, niy))
             && mtmp->weapon_check != NO_WEAPON_WANTED
-            && isTunneler(pmid4mon(mtmp)) && needsPickaxe(mtmp->data->monsterTypeID)) {
+            && isTunneler(pmid4mon(mtmp)) && needsPickaxe(pmid4mon(mtmp))) {
             if (closed_door(nix, niy)) {
                 if (!(mw_tmp = MON_WEP(mtmp)) || !is_pick(mw_tmp)
                     || !is_axe(mw_tmp))
@@ -966,9 +966,9 @@ could_reach_item(mon, nx, ny)
 struct monst *mon;
 xchar nx, ny;
 {
-    if ((!is_pool(nx, ny) || isSwimmer(mon->data->monsterTypeID))
-        && (!is_lava(nx, ny) || likesLava(mon->data->monsterTypeID))
-        && (!sobj_at(BOULDER, nx, ny) || throwsRocks(mon->data->monsterTypeID)))
+    if ((!is_pool(nx, ny) || isSwimmer(pmid4mon(mon)))
+        && (!is_lava(nx, ny) || likesLava(pmid4mon(mon)))
+        && (!sobj_at(BOULDER, nx, ny) || throwsRocks(pmid4mon(mon))))
         return TRUE;
     return FALSE;
 }
@@ -1000,8 +1000,8 @@ xchar mx, my, fx, fy;
                 continue;
             if (dist2(i, j, fx, fy) >= dist)
                 continue;
-            if (IS_ROCK(levl[i][j].typ) && !passesThroughWalls(mon->data->monsterTypeID)
-                && (!may_dig(i, j) || !isTunneler(mon->data->monsterTypeID)))
+            if (IS_ROCK(levl[i][j].typ) && !passesThroughWalls(pmid4mon(mon))
+                && (!may_dig(i, j) || !isTunneler(pmid4mon(mon))))
                 continue;
             if (IS_DOOR(levl[i][j].typ)
                 && (levl[i][j].doormask & (D_CLOSED | D_LOCKED)))

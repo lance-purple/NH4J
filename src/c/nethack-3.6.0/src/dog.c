@@ -541,7 +541,7 @@ long nmv; /* number of moves */
      * of dying the next time we call dog_move()
      */
     if (mtmp->mtame && !mtmp->isminion
-        && (isCarnivorous(pmid4mon(mtmp)) || isHerbivorous(mtmp->data->monsterTypeID))) {
+        && (isCarnivorous(pmid4mon(mtmp)) || isHerbivorous(pmid4mon(mtmp)))) {
         struct edog *edog = EDOG(mtmp);
 
         if ((monstermoves > edog->hungrytime + 500 && mtmp->mhp < 3)
@@ -797,7 +797,7 @@ register struct obj *obj;
                 || (isPoisonous(fptr->monsterTypeID) && !resists_poison(mon)))
                 return POISON;
             /* turning into slime is preferable to starvation */
-            else if (fptr == &mons[PM_GREEN_SLIME] && !isSlimeproof(mon->data->monsterTypeID))
+            else if (fptr == &mons[PM_GREEN_SLIME] && !isSlimeproof(pmid4mon(mon)))
                 return starving ? ACCFOOD : POISON;
             else if (isVeganOption(fptr->monsterTypeID))
                 return herbi ? CADAVER : MANFOOD;
@@ -924,7 +924,7 @@ register struct obj *obj;
     if (mtmp->mtame || !mtmp->mcanmove
         /* monsters with conflicting structures cannot be tamed */
         || mtmp->isshk || mtmp->isgd || mtmp->ispriest || mtmp->isminion
-        || isCovetous(pmid4mon(mtmp)) || isHuman(mtmp->data->monsterTypeID)
+        || isCovetous(pmid4mon(mtmp)) || isHuman(pmid4mon(mtmp))
         || (isDemon(pmid4mon(mtmp)) && !isDemon(pmid4you()))
         || (obj && dogfood(mtmp, obj) >= MANFOOD))
         return FALSE;

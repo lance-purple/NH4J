@@ -477,7 +477,7 @@ register struct monst *mon;
         if (youAreHallucinating())
             wl = rn1(WARNCOUNT - 1, 1);
         glyph = warning_to_glyph(wl);
-    } else if (MATCH_WARN_OF_MON(mon->data->monsterTypeID)) {
+    } else if (MATCH_WARN_OF_MON(pmid4mon(mon))) {
         glyph = mon_to_glyph(mon);
     } else {
         impossible("display_warning did not match warning type?");
@@ -665,7 +665,7 @@ xchar x, y;
     /* draw monster on top if we can sense it */
     if ((x != currentX() || y != currentY()) && (mon = m_at(x, y)) && senseMonsters(mon))
         display_monster(x, y, mon,
-                        (telepathicallySenseMonsters(mon) || MATCH_WARN_OF_MON(mon->data->monsterTypeID))
+                        (telepathicallySenseMonsters(mon) || MATCH_WARN_OF_MON(pmid4mon(mon)))
                             ? PHYSICALLY_SEEN
                             : DETECTED,
                         is_worm_tail(mon));
@@ -754,7 +754,7 @@ register int x, y;
             see_it =
                 mon && (worm_tail ? (!mon->minvis || youCanSeeInvisible())
                                   : (mon_visible(mon)) || telepathicallySenseMonsters(mon)
-                                        || MATCH_WARN_OF_MON(mon->data->monsterTypeID));
+                                        || MATCH_WARN_OF_MON(pmid4mon(mon)));
             if (mon && (see_it || (!worm_tail && youCanDetectMonsters()))) {
                 if (mon->mtrapped) {
                     struct trap *trap = t_at(x, y);
@@ -788,7 +788,7 @@ register int x, y;
             if (canspotself())
                 display_self();
         } else if ((mon = m_at(x, y))
-                   && ((see_it = (telepathicallySenseMonsters(mon) || MATCH_WARN_OF_MON(mon->data->monsterTypeID)
+                   && ((see_it = (telepathicallySenseMonsters(mon) || MATCH_WARN_OF_MON(pmid4mon(mon))
                                   || (seeWithInfrared(mon)
                                       && mon_visible(mon))))
                        || youCanDetectMonsters())) {
@@ -1176,7 +1176,7 @@ see_monsters()
         newsym(mon->mx, mon->my);
         if (mon->wormno)
             see_wsegs(mon);
-        if (youAreWarnedOfMonsters() && (monsterHasFlag2(mon->data->monsterTypeID, context.warntype.obj))) {
+        if (youAreWarnedOfMonsters() && (monsterHasFlag2(pmid4mon(mon), context.warntype.obj))) {
             new_warn_obj_cnt++;
 	}
     }
@@ -2491,7 +2491,7 @@ boolean telepathicallySenseMonsters(struct monst* mon)
     /* AND     2a. hero is blind and telepathic  */ 
     /* OR 2b. hero is using a telepathy inducing */
     /*        object and in range                */
-    return (!isMindless(mon->data->monsterTypeID))
+    return (!isMindless(pmid4mon(mon)))
       && ((youCannotSee() && youHaveTelepathyWhenBlind())
           || (youHaveTelepathyWhenNotBlind()
               && (distanceSquaredToYou(mon->mx, mon->my) <= (BOLT_LIM * BOLT_LIM))));

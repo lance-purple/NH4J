@@ -3061,7 +3061,7 @@ struct obj *obj;
             mtmp->mundetected = 0;
             rloc_to(mtmp, cc.x, cc.y);
             return 1;
-        } else if ((!isBigMonster(pmid4mon(mtmp)) && !isStrongMonster(mtmp->data->monsterTypeID))
+        } else if ((!isBigMonster(pmid4mon(mtmp)) && !isStrongMonster(pmid4mon(mtmp)))
                    || rn2(4)) {
             flags.confirm = FALSE;
             (void) attack_checks(mtmp, uwep);

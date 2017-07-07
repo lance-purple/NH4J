@@ -80,7 +80,7 @@ struct monst *mon;
         dtype = (!rn2(20)) ? dlord(atyp) : (!rn2(6)) ? ndemon(atyp)
                                                      : monsndx(ptr);
         cnt = 1;
-    } else if (isLawfulMinion(mon->data->monsterTypeID)) {
+    } else if (isLawfulMinion(pmid4mon(mon))) {
         dtype = (isLord(ptr->monsterTypeID) && !rn2(20))
                     ? llord()
                     : (isLord(ptr->monsterTypeID) || !rn2(6)) ? lminion() : monsndx(ptr);

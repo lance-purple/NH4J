@@ -385,7 +385,7 @@ struct obj *obj;         /* missile (or stack providing it) */
                 hitv = 3 - distmin(currentX(), currentY(), mon->mx, mon->my);
                 if (hitv < -4)
                     hitv = -4;
-                if (isElf(mon->data->monsterTypeID)
+                if (isElf(pmid4mon(mon))
                     && objects[singleobj->otyp].oc_skill == P_BOW) {
                     hitv++;
                     if (MON_WEP(mon) && MON_WEP(mon)->otyp == ELVEN_BOW)

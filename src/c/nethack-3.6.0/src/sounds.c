@@ -59,7 +59,7 @@ dosounds()
             if (DEADMONSTER(mtmp))
                 continue;
             if ((mtmp->msleeping || isLord(pmid4mon(mtmp))
-                 || isPrince(pmid4mon(mtmp))) && !isAnimal(mtmp->data->monsterTypeID)
+                 || isPrince(pmid4mon(mtmp))) && !isAnimal(pmid4mon(mtmp))
                 && mon_in_room(mtmp, COURT)) {
                 /* finding one is enough, at least for now */
                 int which = rn2(3) + hallu;
@@ -459,7 +459,7 @@ beg(mtmp)
 register struct monst *mtmp;
 {
     if (mtmp->msleeping || !mtmp->mcanmove
-        || !(isCarnivorous(pmid4mon(mtmp)) || isHerbivorous(mtmp->data->monsterTypeID)))
+        || !(isCarnivorous(pmid4mon(mtmp)) || isHerbivorous(pmid4mon(mtmp))))
         return;
 
     /* presumably nearness and soundok checks have already been made */

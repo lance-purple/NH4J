@@ -1428,7 +1428,7 @@ domove()
             return;
         }
         if (context.forcefight || !mtmp->mundetected || senseMonsters(mtmp)
-            || ((hidesUnderStuff(pmid4mon(mtmp)) || monsterClass(mtmp->data->monsterTypeID) == S_EEL)
+            || ((hidesUnderStuff(pmid4mon(mtmp)) || monsterClass(pmid4mon(mtmp)) == S_EEL)
                 && !is_safepet(mtmp))) {
             /* try to attack; note that it might evade */
             /* also, we don't attack tame when _safepet_ */

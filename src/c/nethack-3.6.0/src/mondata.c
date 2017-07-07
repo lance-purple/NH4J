@@ -347,7 +347,7 @@ struct monst *mon;
        who don't need to breathe (brain, if any, doesn't care).
        Mindless creatures who do need to breath are vulnerable, as
        are non-breathing creatures which have higher brain function. */
-    if (!hasAHead(mon->data->monsterTypeID))
+    if (!hasAHead(pmid4mon(mon)))
         return FALSE;
     if (mon == &youmonst) {
         /* hero can't be mindless but poly'ing into mindless form can
@@ -355,10 +355,10 @@ struct monst *mon;
         nobrainer = isMindless(pmid4you());
         nonbreathing = youNeedNotBreathe();
     } else {
-        nobrainer = isMindless(mon->data->monsterTypeID);
+        nobrainer = isMindless(pmid4mon(mon));
         /* monsters don't wear amulets of magical breathing,
            so second part doesn't achieve anything useful... */
-        nonbreathing = (doesNotBreathe(mon->data->monsterTypeID)
+        nonbreathing = (doesNotBreathe(pmid4mon(mon))
                         || ((mamul = which_armor(mon, W_AMUL)) != 0
                             && (mamul->otyp == AMULET_OF_MAGICAL_BREATHING)));
     }

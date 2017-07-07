@@ -760,7 +760,7 @@ int dx, dy, range;
     /* Is the monster stuck or too heavy to push?
      * (very large monsters have too much inertia, even floaters and flyers)
      */
-    if (monsterSize(mon->data->monsterTypeID) >= MZ_HUGE || mon == u.ustuck || mon->mtrapped)
+    if (monsterSize(pmid4mon(mon)) >= MZ_HUGE || mon == u.ustuck || mon->mtrapped)
         return;
 
     /* Make sure dx and dy are [-1,0,1] */
@@ -1273,7 +1273,7 @@ boolean mon_notices;
     int tmp = 0;
 
     /* size of target affects the chance of hitting */
-    tmp += (monsterSize(mon->data->monsterTypeID) - MZ_MEDIUM); /* -2..+5 */
+    tmp += (monsterSize(pmid4mon(mon)) - MZ_MEDIUM); /* -2..+5 */
     /* sleeping target is more likely to be hit */
     if (mon->msleeping) {
         tmp += 2;
@@ -1281,7 +1281,7 @@ boolean mon_notices;
             mon->msleeping = 0;
     }
     /* ditto for immobilized target */
-    int mmove = monsterMovementSpeed(mon->data->monsterTypeID);
+    int mmove = monsterMovementSpeed(pmid4mon(mon));
     if (!mon->mcanmove || !mmove) {
         tmp += 4;
         if (mon_notices && mmove && !rn2(10)) {
@@ -1409,14 +1409,14 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
     }
 
     tmp += omon_adj(mon, obj, TRUE);
-    if (isOrc(mon->data->monsterTypeID) && areYouElvish()) {
+    if (isOrc(pmid4mon(mon)) && areYouElvish()) {
         tmp++;
     }
     if (guaranteed_hit) {
         tmp += 1000; /* Guaranteed hit */
     }
 
-    if (obj->oclass == GEM_CLASS && isUnicorn(mon->data->monsterTypeID)) {
+    if (obj->oclass == GEM_CLASS && isUnicorn(pmid4mon(mon))) {
         if (mon->msleeping || !mon->mcanmove) {
             tmiss(obj, mon, FALSE);
             return 0;
@@ -1618,7 +1618,7 @@ register struct monst *mon;
 register struct obj *obj;
 {
     char buf[BUFSZ];
-    boolean is_buddy = sgn(monsterAlignment(mon->data->monsterTypeID)) == sgn(currentAlignmentType());
+    boolean is_buddy = sgn(monsterAlignment(pmid4mon(mon))) == sgn(currentAlignmentType());
     boolean is_gem = objects[obj->otyp].oc_material == GEMSTONE;
     int ret = 0;
     static NEARDATA const char nogood[] = " is not interested in your junk.";

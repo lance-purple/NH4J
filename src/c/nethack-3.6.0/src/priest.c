@@ -74,7 +74,7 @@ register xchar omx, omy, gx, gy;
         allowflags |= ALLOW_ROCK;
     if (isTunneler(pmid4mon(mtmp)))
         allowflags |= ALLOW_DIG;
-    if (!hasNoHands(pmid4mon(mtmp)) && !isVerySmallMonster(mtmp->data->monsterTypeID)) {
+    if (!hasNoHands(pmid4mon(mtmp)) && !isVerySmallMonster(pmid4mon(mtmp))) {
         allowflags |= OPENDOOR;
         if (monhaskey(mtmp, TRUE))
             allowflags |= UNLOCKDOOR;
@@ -285,7 +285,7 @@ struct monst *mon;
 {
     aligntyp algn = mon->ispriest ? EPRI(mon)->shralign
                                   : mon->isminion ? EMIN(mon)->min_align
-                                                  : monsterAlignment(mon->data->monsterTypeID);
+                                                  : monsterAlignment(pmid4mon(mon));
 
     if (algn == A_NONE)
         return A_NONE; /* negative but differs from chaotic */
@@ -316,7 +316,7 @@ char *pname; /* caller-supplied output buffer */
     if (do_hallu) {
         what.c_str = rndmonnam(&whatcode);
     } else {
-        what = monsterTypeName(mon->data->monsterTypeID);
+        what = monsterTypeName(pmid4mon(mon));
     }
 
     if (!mon->ispriest && !mon->isminion) {       /* should never happen...  */
@@ -728,7 +728,7 @@ xchar x, y;
     register struct monst *priest;
 
     if (mon) {
-        if (isMinion(mon->data->monsterTypeID) || is_rider(mon->data))
+        if (isMinion(pmid4mon(mon)) || is_rider(mon->data))
             return FALSE;
         x = mon->mx, y = mon->my;
     }

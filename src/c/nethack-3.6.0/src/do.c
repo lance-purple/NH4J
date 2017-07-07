@@ -155,7 +155,7 @@ const char *verb;
                           vtense((const char *) 0, verb),
                           (mtmp) ? "" : " with you");
             if (mtmp) {
-                if (!passesThroughWalls(pmid4mon(mtmp)) && !throwsRocks(mtmp->data->monsterTypeID)) {
+                if (!passesThroughWalls(pmid4mon(mtmp)) && !throwsRocks(pmid4mon(mtmp))) {
                     if (hmon(mtmp, obj, TRUE) && !isWhirly(pmid4mon(mtmp)))
                         return FALSE; /* still alive */
                 }

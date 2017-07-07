@@ -8,10 +8,10 @@ void
 were_change(mon)
 register struct monst *mon;
 {
-    if (!isWere(mon->data->monsterTypeID))
+    if (!isWere(pmid4mon(mon)))
         return;
 
-    if (isHuman(mon->data->monsterTypeID)) {
+    if (isHuman(pmid4mon(mon))) {
         if (!youHaveProtectionFromShapeChangers()
             && !rn2(night() ? (flags.moonphase == FULL_MOON ? 3 : 30)
                             : (flags.moonphase == FULL_MOON ? 10 : 50))) {
@@ -96,7 +96,7 @@ register struct monst *mon;
 
     pm = counter_were(monsndx(mon->data));
     if (pm < LOW_PM) {
-	javaString wereName = monsterTypeName(mon->data->monsterTypeID);
+	javaString wereName = monsterTypeName(pmid4mon(mon));
         impossible("unknown lycanthrope %s.", wereName.c_str);
 	releaseJavaString(wereName);
         return;

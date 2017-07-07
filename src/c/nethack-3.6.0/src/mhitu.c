@@ -852,7 +852,7 @@ struct monst *mon;
            protection is too easy); it confers minimum mc 1 instead of 0 */
         if ((is_you && ((yourIntrinsic(PROTECTION) && blessings()) || armorBonusFromProtectionSpell()))
             /* aligned priests and angels have innate intrinsic Protection */
-            || (mon->data == &mons[PM_ALIGNED_PRIEST] || isMinion(mon->data->monsterTypeID)))
+            || (mon->data == &mons[PM_ALIGNED_PRIEST] || isMinion(pmid4mon(mon))))
             mc = 1;
     }
     return mc;
@@ -1600,7 +1600,7 @@ register const struct Attack mattk;
         if (youTakeHalfDamageFromPhysicalAttacks()
             /* Mitre of Holiness */
             || (Role_if(PM_PRIEST) && uarmh && is_quest_artifact(uarmh)
-                && (isUndead(pmid4mon(mtmp)) || isDemon(mtmp->data->monsterTypeID)
+                && (isUndead(pmid4mon(mtmp)) || isDemon(pmid4mon(mtmp))
                     || is_vampshifter(mtmp))))
             dmg = (dmg + 1) / 2;
 

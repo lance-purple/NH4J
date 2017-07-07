@@ -1182,7 +1182,7 @@ genericptr_t num;
             (*(int *) num)++;
         }
         if (mtmp->mundetected
-            && (isHider(pmid4mon(mtmp)) || monsterClass(mtmp->data->monsterTypeID) == S_EEL)) {
+            && (isHider(pmid4mon(mtmp)) || monsterClass(pmid4mon(mtmp)) == S_EEL)) {
             mtmp->mundetected = 0;
             newsym(zx, zy);
             (*(int *) num)++;

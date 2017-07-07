@@ -654,7 +654,7 @@ int *fail_reason;
                         ? "disappears"
                         : golem_xform
                               ? "turns into flesh"
-                              : (isNonliving(mon->data->monsterTypeID) || is_vampshifter(mon))
+                              : (isNonliving(pmid4mon(mon)) || is_vampshifter(mon))
                                     ? "moves"
                                     : "comes to life";
     if ((x == currentX() && y == currentY()) || cause == ANIMATE_SPELL) {
@@ -4058,7 +4058,7 @@ boolean stuff;
         pline("%s is %s for you to lift.", Monnam(mtmp),
               stuff ? "carrying too much" : "too heavy");
         if (!ttmp->madeby_u && !mtmp->mpeaceful && mtmp->mcanmove
-            && !isMindless(pmid4mon(mtmp)) && monsterClass(mtmp->data->monsterTypeID) != S_HUMAN
+            && !isMindless(pmid4mon(mtmp)) && monsterClass(pmid4mon(mtmp)) != S_HUMAN
             && rnl(10) < 3) {
             mtmp->mpeaceful = 1;
             set_malign(mtmp); /* reset alignment */

@@ -271,7 +271,7 @@ struct obj *obj; /* item to make known if effect can be seen */
         mon->mspeed = mon->permspeed;
 
     /* no message if monster is immobile (temp or perm) or unseen */
-    if (give_msg && (mon->mspeed != oldspeed || petrify) && monsterMovementSpeed(mon->data->monsterTypeID)
+    if (give_msg && (mon->mspeed != oldspeed || petrify) && monsterMovementSpeed(pmid4mon(mon))
         && !(mon->mfrozen || mon->msleeping) && canseemon(mon)) {
         /* fast to slow (skipping intermediate state) or vice versa */
         const char *howmuch =
@@ -375,7 +375,7 @@ boolean on, silently;
                check whether any other worn item confers it.  Note that
                we don't currently check for anything conferred via simply
                carrying an object. */
-            if (!(monsterResistances(mon->data->monsterTypeID) & mask)) {
+            if (!(monsterResistances(pmid4mon(mon)) & mask)) {
                 for (otmp = mon->minvent; otmp; otmp = otmp->nobj)
                     if (otmp->owornmask
                         && (int) objects[otmp->otyp].oc_oprop == which)
@@ -415,7 +415,7 @@ find_mac(mon)
 register struct monst *mon;
 {
     register struct obj *obj;
-    int base = monsterBaseArmorClass(mon->data->monsterTypeID);
+    int base = monsterBaseArmorClass(pmid4mon(mon));
     long mwflags = mon->misc_worn_check;
 
     for (obj = mon->minvent; obj; obj = obj->nobj) {
@@ -454,12 +454,12 @@ boolean creation;
      * except for the additional restriction on intelligence.  (Players
      * are always intelligent, even if polymorphed).
      */
-    if (isVerySmallMonster(mon->data->monsterTypeID) || hasNoHands(mon->data->monsterTypeID) || isAnimal(mon->data->monsterTypeID))
+    if (isVerySmallMonster(pmid4mon(mon)) || hasNoHands(pmid4mon(mon)) || isAnimal(pmid4mon(mon)))
         return;
     /* give mummies a chance to wear their wrappings
      * and let skeletons wear their initial armor */
-    if (isMindless(mon->data->monsterTypeID)
-        && (!creation || (monsterClass(mon->data->monsterTypeID) != S_MUMMY
+    if (isMindless(pmid4mon(mon))
+        && (!creation || (monsterClass(pmid4mon(mon)) != S_MUMMY
                           && mon->data != &mons[PM_SKELETON])))
         return;
 
@@ -469,13 +469,13 @@ boolean creation;
         m_dowear_type(mon, W_ARMU, creation, FALSE);
     /* treating small as a special case allows
        hobbits, gnomes, and kobolds to wear cloaks */
-    if (!cantweararm(mon->data) || monsterSize(mon->data->monsterTypeID) == MZ_SMALL)
+    if (!cantweararm(mon->data) || monsterSize(pmid4mon(mon)) == MZ_SMALL)
         m_dowear_type(mon, W_ARMC, creation, FALSE);
     m_dowear_type(mon, W_ARMH, creation, FALSE);
     if (!MON_WEP(mon) || !bimanual(MON_WEP(mon)))
         m_dowear_type(mon, W_ARMS, creation, FALSE);
     m_dowear_type(mon, W_ARMG, creation, FALSE);
-    if (!isSlithy(mon->data->monsterTypeID) && monsterClass(mon->data->monsterTypeID) != S_CENTAUR)
+    if (!isSlithy(pmid4mon(mon)) && monsterClass(pmid4mon(mon)) != S_CENTAUR)
         m_dowear_type(mon, W_ARMF, creation, FALSE);
     if (!cantweararm(mon->data))
         m_dowear_type(mon, W_ARM, creation, FALSE);
@@ -825,7 +825,7 @@ boolean polyspot;
         }
         if ((otmp = which_armor(mon, W_ARMC)) != 0) {
             if (vis) {
-                if (isWhirly(mon->data->monsterTypeID))
+                if (isWhirly(pmid4mon(mon)))
                     pline("%s %s falls, unsupported!", s_suffix(Monnam(mon)),
                           cloak_simple_name(otmp));
                 else
@@ -888,7 +888,7 @@ boolean polyspot;
     if (handless_or_tiny || isSlithy(mdat->monsterTypeID) || monsterClass(mdat->monsterTypeID) == S_CENTAUR) {
         if ((otmp = which_armor(mon, W_ARMF)) != 0) {
             if (vis) {
-                if (isWhirly(mon->data->monsterTypeID))
+                if (isWhirly(pmid4mon(mon)))
                     pline("%s boots fall away!", s_suffix(Monnam(mon)));
                 else
                     pline("%s boots %s off %s feet!", s_suffix(Monnam(mon)),

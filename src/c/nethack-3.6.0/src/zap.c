@@ -3444,7 +3444,7 @@ struct obj **ootmp; /* to return worn armor for caller to disintegrate */
                 tmp = 0;
                 break;
             }
-            if (isNonliving(mon->data->monsterTypeID) || isDemon(mon->data->monsterTypeID)
+            if (isNonliving(pmid4mon(mon)) || isDemon(pmid4mon(mon))
                 || is_vampshifter(mon) || resists_magm(mon)) {
                 /* similar to player */
                 sho_shieldeff = TRUE;
@@ -4265,7 +4265,7 @@ short exploding_wand_typ;
                     /* probably ought to do some hefty damage to any
                        non-ice creature caught in freezing water;
                        at a minimum, eels are forced out of hiding */
-                    if (isSwimmer(mon->data->monsterTypeID) && mon->mundetected) {
+                    if (isSwimmer(pmid4mon(mon)) && mon->mundetected) {
                         mon->mundetected = 0;
                         newsym(x, y);
                     }

@@ -1247,7 +1247,7 @@ boolean your_fault;
                         s_suffix(x_monnam(mon, ARTICLE_THE, (char *) 0,
                                           (SUPPRESS_IT | SUPPRESS_SADDLE),
                                           FALSE)));
-            } else if (hasAHead(mon->data->monsterTypeID)) {
+            } else if (hasAHead(pmid4mon(mon))) {
                 Sprintf(buf, "%s %s", s_suffix(mnam),
                         (notonhead ? "body" : "head"));
             } else {
@@ -1379,7 +1379,7 @@ boolean your_fault;
             mon_adjust_speed(mon, 1, obj);
             break;
         case POT_BLINDNESS:
-            if (hasEyes(mon->data->monsterTypeID)) {
+            if (hasEyes(pmid4mon(mon))) {
                 register int btmp = 64 + rn2(32)
                             + rn2(32) * !resist(mon, POTION_CLASS, 0, NOTELL);
 
@@ -1389,18 +1389,18 @@ boolean your_fault;
             }
             break;
         case POT_WATER:
-            if (isUndead(mon->data->monsterTypeID) || isDemon(mon->data->monsterTypeID)
-                || isWere(mon->data->monsterTypeID) || is_vampshifter(mon)) {
+            if (isUndead(pmid4mon(mon)) || isDemon(pmid4mon(mon))
+                || isWere(pmid4mon(mon)) || is_vampshifter(mon)) {
                 if (obj->blessed) {
                     pline("%s %s in pain!", Monnam(mon),
-                          isSilent(mon->data->monsterTypeID) ? "writhes" : "shrieks");
-                    if (!isSilent(mon->data->monsterTypeID))
-                        wake_nearto(mon->mx, mon->my, monsterLevel(mon->data->monsterTypeID) * 10);
+                          isSilent(pmid4mon(mon)) ? "writhes" : "shrieks");
+                    if (!isSilent(pmid4mon(mon)))
+                        wake_nearto(mon->mx, mon->my, monsterLevel(pmid4mon(mon)) * 10);
                     mon->mhp -= d(2, 6);
                     /* should only be by you */
                     if (mon->mhp < 1)
                         killed(mon);
-                    else if (isWere(mon->data->monsterTypeID) && !isHuman(mon->data->monsterTypeID))
+                    else if (isWere(pmid4mon(mon)) && !isHuman(pmid4mon(mon)))
                         new_were(mon); /* revert to human */
                 } else if (obj->cursed) {
                     angermon = FALSE;
@@ -1409,7 +1409,7 @@ boolean your_fault;
                     mon->mhp += d(2, 6);
                     if (mon->mhp > mon->mhpmax)
                         mon->mhp = mon->mhpmax;
-                    if (isWere(mon->data->monsterTypeID) && isHuman(mon->data->monsterTypeID)
+                    if (isWere(pmid4mon(mon)) && isHuman(pmid4mon(mon))
                         && !youHaveProtectionFromShapeChangers())
                         new_were(mon); /* transform into beast */
                 }
@@ -1432,9 +1432,9 @@ boolean your_fault;
         case POT_ACID:
             if (!resists_acid(mon) && !resist(mon, POTION_CLASS, 0, NOTELL)) {
                 pline("%s %s in pain!", Monnam(mon),
-                      isSilent(mon->data->monsterTypeID) ? "writhes" : "shrieks");
-                if (!isSilent(mon->data->monsterTypeID))
-                    wake_nearto(mon->mx, mon->my, monsterLevel(mon->data->monsterTypeID) * 10);
+                      isSilent(pmid4mon(mon)) ? "writhes" : "shrieks");
+                if (!isSilent(pmid4mon(mon)))
+                    wake_nearto(mon->mx, mon->my, monsterLevel(pmid4mon(mon)) * 10);
                 mon->mhp -= d(obj->cursed ? 2 : 1, obj->blessed ? 4 : 8);
                 if (mon->mhp < 1) {
                     if (your_fault)

@@ -55,7 +55,7 @@ register boolean clumsy;
     if (mon->data == &mons[PM_SHADE])
         dmg = 0;
 
-    if ((isUndead(mon->data->monsterTypeID) || isDemon(mon->data->monsterTypeID) || is_vampshifter(mon))
+    if ((isUndead(pmid4mon(mon)) || isDemon(pmid4mon(mon)) || is_vampshifter(mon))
         && uarmf && uarmf->blessed)
         blessed_foot_damage = 1;
 
@@ -98,7 +98,7 @@ register boolean clumsy;
     dmg += damageBonus(); /* add ring(s) of increase damage */
     if (dmg > 0)
         mon->mhp -= dmg;
-    if (mon->mhp > 0 && martial() && !isBigMonster(mon->data->monsterTypeID) && !rn2(3)
+    if (mon->mhp > 0 && martial() && !isBigMonster(pmid4mon(mon)) && !rn2(3)
         && mon->mcanmove && mon != u.ustuck && !mon->mtrapped) {
         /* see if the monster has a place to move into */
         mdx = mon->mx + directionX();

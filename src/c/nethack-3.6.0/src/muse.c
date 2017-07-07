@@ -275,7 +275,7 @@ struct monst *mtmp;
     boolean immobile = (monsterMovementSpeed(pmid4mon(mtmp)) == 0);
     int fraction;
 
-    if (isAnimal(pmid4mon(mtmp)) || isMindless(mtmp->data->monsterTypeID))
+    if (isAnimal(pmid4mon(mtmp)) || isMindless(pmid4mon(mtmp)))
         return FALSE;
     if (dist2(x, y, mtmp->mux, mtmp->muy) > 25)
         return FALSE;
@@ -289,7 +289,7 @@ struct monst *mtmp;
      * silly trying to use the same cursed horn round after round
      */
     if (mtmp->mconf || mtmp->mstun || !mtmp->mcansee) {
-        if (!isUnicorn(pmid4mon(mtmp)) && !hasNoHands(mtmp->data->monsterTypeID)) {
+        if (!isUnicorn(pmid4mon(mtmp)) && !hasNoHands(pmid4mon(mtmp))) {
             for (obj = mtmp->minvent; obj; obj = obj->nobj)
                 if (obj->otyp == UNICORN_HORN && !obj->cursed)
                     break;
@@ -467,7 +467,7 @@ struct monst *mtmp;
             for (yy = y - 3; yy <= y + 3; yy++) {
                 if (!isok(xx, yy) || (xx == x && yy == y))
                     continue;
-                if ((mon = m_at(xx, yy)) != 0 && isMercenary(mon->data->monsterTypeID)
+                if ((mon = m_at(xx, yy)) != 0 && isMercenary(pmid4mon(mon))
                     && mon->data != &mons[PM_GUARD]
                     && (mon->msleeping || !mon->mcanmove)) {
                     m.defensive = obj;
@@ -1071,7 +1071,7 @@ struct monst *mtmp;
 
     m.offensive = (struct obj *) 0;
     m.has_offense = 0;
-    if (mtmp->mpeaceful || isAnimal(pmid4mon(mtmp)) || isMindless(mtmp->data->monsterTypeID)
+    if (mtmp->mpeaceful || isAnimal(pmid4mon(mtmp)) || isMindless(pmid4mon(mtmp))
         || hasNoHands(pmid4mon(mtmp)))
         return FALSE;
     if (swallowed())
@@ -1168,8 +1168,8 @@ struct monst *mtmp;
         nomore(MUSE_SCR_EARTH);
         if (obj->otyp == SCR_EARTH
             && ((helmet && is_metallic(helmet)) || mtmp->mconf
-                || isAmorphous(pmid4mon(mtmp)) || passesThroughWalls(mtmp->data->monsterTypeID)
-                || isNoncorporeal(pmid4mon(mtmp)) || isUnsolid(mtmp->data->monsterTypeID)
+                || isAmorphous(pmid4mon(mtmp)) || passesThroughWalls(pmid4mon(mtmp))
+                || isNoncorporeal(pmid4mon(mtmp)) || isUnsolid(pmid4mon(mtmp))
                 || !rn2(10))
             && dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) <= 2
             && mtmp->mcansee && hasEyes(pmid4mon(mtmp))
@@ -2015,7 +2015,7 @@ struct obj *obj;
 {
     int typ = obj->otyp;
 
-    if (isAnimal(mon->data->monsterTypeID) || isMindless(mon->data->monsterTypeID)
+    if (isAnimal(pmid4mon(mon)) || isMindless(pmid4mon(mon))
         || mon->data == &mons[PM_GHOST]) /* don't loot bones piles */
         return FALSE;
 
@@ -2030,7 +2030,7 @@ struct obj *obj;
         if (obj->spe <= 0)
             return FALSE;
         if (typ == WAN_DIGGING)
-            return (boolean) !isFloater(mon->data->monsterTypeID);
+            return (boolean) !isFloater(pmid4mon(mon));
         if (typ == WAN_POLYMORPH)
             return (boolean) (monstr[monsndx(mon->data)] < 6);
         if (objects[typ].oc_dir == RAY || typ == WAN_STRIKING
@@ -2053,15 +2053,15 @@ struct obj *obj;
         break;
     case AMULET_CLASS:
         if (typ == AMULET_OF_LIFE_SAVING)
-            return (boolean) !(isNonliving(mon->data->monsterTypeID) || is_vampshifter(mon));
+            return (boolean) !(isNonliving(pmid4mon(mon)) || is_vampshifter(mon));
         if (typ == AMULET_OF_REFLECTION)
             return TRUE;
         break;
     case TOOL_CLASS:
         if (typ == PICK_AXE)
-            return (boolean) needsPickaxe(mon->data->monsterTypeID);
+            return (boolean) needsPickaxe(pmid4mon(mon));
         if (typ == UNICORN_HORN)
-            return (boolean) (!obj->cursed && !isUnicorn(mon->data->monsterTypeID));
+            return (boolean) (!obj->cursed && !isUnicorn(pmid4mon(mon)));
         if (typ == FROST_HORN || typ == FIRE_HORN)
             return (obj->spe > 0);
         break;
@@ -2245,7 +2245,7 @@ boolean stoning;
     if (lizard && (mon->mconf || mon->mstun)) {
         mon->mconf = 0;
         mon->mstun = 0;
-        if (vis && !isBat(mon->data->monsterTypeID) && mon->data != &mons[PM_STALKER])
+        if (vis && !isBat(pmid4mon(mon)) && mon->data != &mons[PM_STALKER])
             pline("%s seems steadier now.", Monnam(mon));
     }
     if (mon->mtame && !mon->isminion && nutrit > 0) {
@@ -2276,7 +2276,7 @@ boolean tinok;
     return (boolean) (obj->corpsenm == PM_LIZARD
                       || (isAcidic(mons[obj->corpsenm].monsterTypeID)
                           && (obj->corpsenm != PM_GREEN_SLIME
-                              || isSlimeproof(mon->data->monsterTypeID))));
+                              || isSlimeproof(pmid4mon(mon)))));
 }
 
 STATIC_OVL boolean
@@ -2288,7 +2288,7 @@ struct monst *mon;
 
     /* monkeys who manage to steal tins can't open and eat them
        even if they happen to also have the appropriate tool */
-    if (isAnimal(mon->data->monsterTypeID))
+    if (isAnimal(pmid4mon(mon)))
         return FALSE;
 
     mwep = MON_WEP(mon);
@@ -2324,7 +2324,7 @@ boolean by_you;
      * (via our caller) newcham()'s "mon turns into slime" feedback.
      */
 
-    if (isSlimeproof(mon->data->monsterTypeID))
+    if (isSlimeproof(pmid4mon(mon)))
         return FALSE;
     if (mon->meating || !mon->mcanmove || mon->msleeping)
         return FALSE;
@@ -2421,7 +2421,7 @@ struct obj *obj;
 {
     /* scroll of fire, non-empty wand or horn of fire */
     if (obj->otyp == SCR_FIRE)
-        return (hasEyes(mon->data->monsterTypeID) && mon->mcansee);
+        return (hasEyes(pmid4mon(mon)) && mon->mcansee);
     /* hero doesn't need hands or even limbs to zap, so mon doesn't either */
     return ((obj->otyp == WAN_FIRE || obj->otyp == FIRE_HORN)
             && obj->spe > 0);
