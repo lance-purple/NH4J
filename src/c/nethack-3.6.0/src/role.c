@@ -2067,7 +2067,7 @@ role_init()
     quest_status.godgend = !strcmpi(align_gtitle(alignmnt), "goddess");
 
     /* Fix up infravision */
-    if (hasInfravision(mons[urace.malenum].monsterTypeID)) {
+    if (hasInfravision(urace.malenum)) {
         /* although an infravision intrinsic is possible, infravision
          * is purely a property of the physical race.  This means that we
          * must put the infravision flag in the player's current race
@@ -2077,9 +2077,9 @@ role_init()
          * but since infravision has no effect for NPCs anyway we can
          * ignore this.
          */
-        setMonsterFlag3(mons[urole.malenum].monsterTypeID, M3_INFRAVISION);
+        setMonsterFlag3(urole.malenum, M3_INFRAVISION);
         if (urole.femalenum != NON_PM) {
-            setMonsterFlag3(mons[urole.femalenum].monsterTypeID, M3_INFRAVISION);
+            setMonsterFlag3(urole.femalenum, M3_INFRAVISION);
 	}
     }
 

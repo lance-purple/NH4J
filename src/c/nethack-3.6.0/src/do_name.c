@@ -1204,12 +1204,12 @@ char *code;
     do {
         name = rn1(SPECIAL_PM + BOGUSMONSIZE - LOW_PM, LOW_PM);
     } while (name < SPECIAL_PM
-             && (typeIsProperName(mons[name].monsterTypeID) || (monsterGenerationMask(mons[name].monsterTypeID) & G_NOGEN)));
+             && (typeIsProperName(name) || (monsterGenerationMask(name) & G_NOGEN)));
 
     if (name >= SPECIAL_PM) {
         mname = bogusmon(buf, code);
     } else {
-	javaString monsterName = monsterTypeName(mons[name].monsterTypeID);
+	javaString monsterName = monsterTypeName(name);
         mname = strcpy(buf, monsterName.c_str);
 	releaseJavaString(monsterName);
     }

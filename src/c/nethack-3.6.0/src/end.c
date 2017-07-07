@@ -1081,7 +1081,7 @@ int how;
         /* give this feedback even if bones aren't going to be created,
            so that its presence or absence doesn't tip off the player to
            new bones or their lack; it might be a lie if makemon fails */
-        int graveMonsterType = mons[ariseFromGraveAsMonster()].monsterTypeID;
+        int graveMonsterType = ariseFromGraveAsMonster();
 	javaString graveMonster = monsterTypeName(graveMonsterType);
         Your("body rises from the dead as %s...",
              an(graveMonster.c_str));
@@ -1438,8 +1438,8 @@ boolean ask;
         if (mvitals[i].died)
             ntypes++;
         total_killed += (long) mvitals[i].died;
-        if (monsterLevel(mons[i].monsterTypeID) > max_lev)
-            max_lev = monsterLevel(mons[i].monsterTypeID);
+        if (monsterLevel(i) > max_lev)
+            max_lev = monsterLevel(i);
     }
 
     /* vanquished creatures list;
@@ -1460,12 +1460,12 @@ boolean ask;
             /* countdown by monster "toughness" */
             for (lev = max_lev; lev >= 0; lev--) {
                 for (i = LOW_PM; i < NUMMONS; i++) {
-		    javaString monsterName = monsterTypeName(mons[i].monsterTypeID);
-                    if (monsterLevel(mons[i].monsterTypeID) == lev
+		    javaString monsterName = monsterTypeName(i);
+                    if (monsterLevel(i) == lev
                         && (nkilled = mvitals[i].died) > 0) {
-                        if ((monsterGenerationMask(mons[i].monsterTypeID) & G_UNIQ) && i != PM_HIGH_PRIEST) {
+                        if ((monsterGenerationMask(i) & G_UNIQ) && i != PM_HIGH_PRIEST) {
                             Sprintf(buf, "%s%s",
-                                    !typeIsProperName(mons[i].monsterTypeID) ? "The " : "",
+                                    !typeIsProperName(i) ? "The " : "",
                                     monsterName.c_str);
                             if (nkilled > 1) {
                                 switch (nkilled) {
@@ -1533,7 +1533,7 @@ num_extinct()
 
     for (i = LOW_PM; i < NUMMONS; ++i)
         if (!(mvitals[i].mvflags & G_GENOD) && (mvitals[i].mvflags & G_GONE)
-            && !(monsterGenerationMask(mons[i].monsterTypeID) & G_UNIQ))
+            && !(monsterGenerationMask(i) & G_UNIQ))
             ++n;
 
     return n;
@@ -1571,12 +1571,12 @@ boolean ask;
             putstr(klwin, 0, "");
 
             for (i = LOW_PM; i < NUMMONS; i++) {
-                int geno = monsterGenerationMask(mons[i].monsterTypeID);
+                int geno = monsterGenerationMask(i);
                 if (mvitals[i].mvflags & G_GONE && !(geno & G_UNIQ)) {
-		    javaString monsterName = monsterTypeName(mons[i].monsterTypeID);
+		    javaString monsterName = monsterTypeName(i);
                     if ((geno & G_UNIQ) && i != PM_HIGH_PRIEST) {
                         Sprintf(buf, "%s%s",
-                                !typeIsProperName(mons[i].monsterTypeID) ? "" : "the ",
+                                !typeIsProperName(i) ? "" : "the ",
                                 monsterName.c_str);
 		    } else {
                         Strcpy(buf, makeplural(monsterName.c_str));

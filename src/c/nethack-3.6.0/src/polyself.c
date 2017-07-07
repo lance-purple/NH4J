@@ -455,8 +455,8 @@ int psflags;
                 /* Note:  humans are illegal as monsters, but an
                  * illegal monster forces newman(), which is what we
                  * want if they specified a human.... */
-            } else if (!okToPolymorphInto(mons[mntmp].monsterTypeID)
-                       && !(mntmp == PM_HUMAN || isOfYourRace(mons[mntmp].monsterTypeID, urace.selfmask)
+            } else if (!okToPolymorphInto(mntmp)
+                       && !(mntmp == PM_HUMAN || isOfYourRace(mntmp, urace.selfmask)
                             || mntmp == urole.malenum
                             || mntmp == urole.femalenum)) {
 
@@ -470,11 +470,11 @@ int psflags;
                        0 and trigger thats_enough_tries message */
                     ++tryct;
                 }
-                javaString pm_name = monsterTypeName(mons[mntmp].monsterTypeID);
+                javaString pm_name = monsterTypeName(mntmp);
                 if (the_unique_pm(&mons[mntmp])) {
                     You_cant("polymorph into %s.", the(pm_name.c_str));
 		}
-                else if (!typeIsProperName(mons[mntmp].monsterTypeID)) {
+                else if (!typeIsProperName(mntmp)) {
                     You_cant("polymorph into %s.", an(pm_name.c_str));
 		}
 		else {
@@ -490,7 +490,7 @@ int psflags;
         if (draconian && (tryct <= 0 || mntmp == armor_to_dragon(uarm->otyp)))
             goto do_merge;
         if (isvamp && (tryct <= 0 || mntmp == PM_WOLF || mntmp == PM_FOG_CLOUD
-                       || isBat(mons[mntmp].monsterTypeID)))
+                       || isBat(mntmp)))
             goto do_vampyr;
     } else if (draconian || iswere || isvamp) {
         /* special changes that don't require okToPolymorphInto() */
@@ -537,12 +537,12 @@ int psflags;
                 mntmp = lycanthropeType();
         } else if (isvamp) {
         do_vampyr:
-            if (mntmp < LOW_PM || (monsterGenerationMask(mons[mntmp].monsterTypeID) & G_UNIQ))
+            if (mntmp < LOW_PM || (monsterGenerationMask(mntmp) & G_UNIQ))
                 mntmp = (youmonst.data != &mons[PM_VAMPIRE] && !rn2(10))
                             ? PM_WOLF
                             : !rn2(4) ? PM_FOG_CLOUD : PM_VAMPIRE_BAT;
             if (controllable_poly) {
-		javaString monsterName = monsterTypeName(mons[mntmp].monsterTypeID); 
+		javaString monsterName = monsterTypeName(mntmp); 
                 Sprintf(buf, "Become %s?", an(monsterName.c_str));
 		releaseJavaString(monsterName);
                 if (yn(buf) != 'y')
@@ -564,7 +564,7 @@ int psflags;
         do {
             /* randomly pick an "ordinary" monster */
             mntmp = rn1(SPECIAL_PM - LOW_PM, LOW_PM);
-            if (okToPolymorphInto(mons[mntmp].monsterTypeID) && !is_placeholder(&mons[mntmp]))
+            if (okToPolymorphInto(mntmp) && !is_placeholder(&mons[mntmp]))
                 break;
         } while (--tryct > 0);
     }
@@ -573,8 +573,8 @@ int psflags;
      * we deliberately chose something illegal to force newman().
      */
     sex_change_ok++;
-    if (!okToPolymorphInto(mons[mntmp].monsterTypeID) || (!forcecontrol && !rn2(5))
-        || isOfYourRace(mons[mntmp].monsterTypeID, urace.selfmask)) {
+    if (!okToPolymorphInto(mntmp) || (!forcecontrol && !rn2(5))
+        || isOfYourRace(mntmp, urace.selfmask)) {
         newman();
     } else {
         (void) polymon(mntmp);
@@ -605,7 +605,7 @@ int mntmp;
     int mlvl;
 
     if (mvitals[mntmp].mvflags & G_GENOD) { /* allow G_EXTINCT */
-	javaString monsterName = monsterTypeName(mons[mntmp].monsterTypeID);
+	javaString monsterName = monsterTypeName(mntmp);
         You_feel("rather %s-ish.", monsterName.c_str);
 	releaseJavaString(monsterName);
         exercise(A_WIS, TRUE);
@@ -645,27 +645,27 @@ int mntmp;
         && monsterClass(pmid4you()) != S_MIMIC)
         unmul("");
     /* if becoming a non-mimic, stop mimicking anything */
-    if (monsterClass(mons[mntmp].monsterTypeID) != S_MIMIC) {
+    if (monsterClass(mntmp) != S_MIMIC) {
         /* as in polyman() */
         youmonst.m_ap_type = M_AP_NOTHING;
     }
-    if (isMale(mons[mntmp].monsterTypeID)) {
+    if (isMale(mntmp)) {
         if (flags.female)
             dochange = TRUE;
-    } else if (isFemale(mons[mntmp].monsterTypeID)) {
+    } else if (isFemale(mntmp)) {
         if (!flags.female)
             dochange = TRUE;
-    } else if (!isNeuter(mons[mntmp].monsterTypeID) && mntmp != lycanthropeType()) {
+    } else if (!isNeuter(mntmp) && mntmp != lycanthropeType()) {
         if (sex_change_ok && !rn2(10))
             dochange = TRUE;
     }
 
-    javaString monsterName = monsterTypeName(mons[mntmp].monsterTypeID);
+    javaString monsterName = monsterTypeName(mntmp);
     if (dochange) {
         flags.female = !flags.female;
         You("%s %s%s!",
             (currentMonsterNumber() != mntmp) ? "turn into a" : "feel like a new",
-            (isMale(mons[mntmp].monsterTypeID) || isFemale(mons[mntmp].monsterTypeID))
+            (isMale(mntmp) || isFemale(mntmp))
                 ? ""
                 : flags.female ? "female " : "male ",
             monsterName.c_str);
@@ -690,7 +690,7 @@ int mntmp;
     /* New stats for monster, to last only as long as polymorphed.
      * Currently only strength gets changed.
      */
-    if (isStrongMonster(mons[mntmp].monsterTypeID)) {
+    if (isStrongMonster(mntmp)) {
         setYourCurrentAttr(A_STR, STR18(100));
         setYourAttrMax(A_STR, STR18(100));
     }
@@ -720,7 +720,7 @@ int mntmp;
      * We can't do the above, since there's no such thing as an
      * "experience level of you as a monster" for a polymorphed character.
      */
-    mlvl = monsterLevel(mons[mntmp].monsterTypeID);
+    mlvl = monsterLevel(mntmp);
     if (monsterClass(pmid4you()) == S_DRAGON && mntmp >= PM_GRAY_DRAGON) {
         setMaximumHitPointsAsMonster(areYouInEndgame() ? (8 * mlvl) : (4 * mlvl + d(mlvl, 4)));
     } else if (isGolem(pmid4you())) {

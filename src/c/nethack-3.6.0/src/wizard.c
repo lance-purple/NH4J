@@ -435,7 +435,7 @@ pick_nasty()
      * We want monsters represented by uppercase on rogue level,
      * but we don't try very hard.
      */
-    int mc = monsterClass(mons[res].monsterTypeID);
+    int mc = monsterClass(res);
     if (areYouOnRogueLevel()
         && !('A' <= mc && mc <= 'Z'))
         res = nasties[rn2(SIZE(nasties))];

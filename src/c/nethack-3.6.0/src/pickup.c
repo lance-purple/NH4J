@@ -1993,7 +1993,7 @@ register struct obj *obj;
 
     /* boxes, boulders, and big statues can't fit into any container */
     if (obj->otyp == ICE_BOX || Is_box(obj) || obj->otyp == BOULDER
-        || (obj->otyp == STATUE && isBigMonster(mons[obj->corpsenm].monsterTypeID))) {
+        || (obj->otyp == STATUE && isBigMonster(obj->corpsenm))) {
         /*
          *  xname() uses a static result array.  Save obj's name
          *  before current_container's name is computed.  Don't

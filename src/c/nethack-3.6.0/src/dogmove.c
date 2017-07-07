@@ -147,8 +147,8 @@ struct obj *obj;
      */
     if (obj->oclass == FOOD_CLASS) {
         if (obj->otyp == CORPSE) {
-            mtmp->meating = 3 + (monsterCorpseWeight(mons[obj->corpsenm].monsterTypeID) >> 6);
-            nutrit = monsterCorpseNutrition(mons[obj->corpsenm].monsterTypeID);
+            mtmp->meating = 3 + (monsterCorpseWeight(obj->corpsenm) >> 6);
+            nutrit = monsterCorpseNutrition(obj->corpsenm);
         } else {
             mtmp->meating = objects[obj->otyp].oc_delay;
             nutrit = objects[obj->otyp].oc_nutrition;
@@ -1099,7 +1099,7 @@ struct monst *mtmp;
         newsym(mtmp->mx, mtmp->my);
 	javaString monsterName = NO_JAVA_STRING;
         if (mtmp->m_ap_type == M_AP_MONSTER) {
-	    monsterName = monsterTypeName(mons[mtmp->mappearance].monsterTypeID);
+	    monsterName = monsterTypeName(mtmp->mappearance);
 	}
 
         You("%s %s appear where %s was!",

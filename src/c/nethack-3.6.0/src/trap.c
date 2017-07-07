@@ -623,7 +623,7 @@ int *fail_reason;
 
     if (!mon) {
         if (fail_reason)
-            *fail_reason = corpseOrStatueIsUnique(mons[statue->corpsenm].monsterTypeID)
+            *fail_reason = corpseOrStatueIsUnique(statue->corpsenm)
                                ? AS_MON_IS_UNIQUE
                                : AS_NO_MON;
         return (struct monst *) 0;
@@ -2697,7 +2697,7 @@ const char *arg;
 
     if (uwep && uwep->otyp == CORPSE && touchPetrifies(uwep->corpsenm)
         && !youResistStoning()) {
-	javaString corpseName = monsterTypeName(mons[uwep->corpsenm].monsterTypeID);
+	javaString corpseName = monsterTypeName(uwep->corpsenm);
         pline("%s touch the %s corpse.", arg, corpseName.c_str);
         Sprintf(kbuf, "%s corpse", an(corpseName.c_str));
 	releaseJavaString(corpseName);
@@ -2710,7 +2710,7 @@ const char *arg;
        allow two-weapon combat when either weapon is a corpse] */
     if (usingTwoWeapons() && uswapwep && uswapwep->otyp == CORPSE
         && touchPetrifies(uswapwep->corpsenm) && !youResistStoning()) {
-	javaString corpseName = monsterTypeName(mons[uswapwep->corpsenm].monsterTypeID);
+	javaString corpseName = monsterTypeName(uswapwep->corpsenm);
         pline("%s touch the %s corpse.", arg, corpseName.c_str);
         Sprintf(kbuf, "%s corpse", an(corpseName.c_str));
 	releaseJavaString(corpseName);
@@ -3032,7 +3032,7 @@ struct obj *box; /* null for floor trap */
         }
         if (alt > num)
             num = alt;
-        if (maximumHitPointsAsMonster() > monsterLevel(mons[currentMonsterNumber()].monsterTypeID)) {
+        if (maximumHitPointsAsMonster() > monsterLevel(currentMonsterNumber())) {
             decreaseMaximumHitPointsAsMonster(rn2(min(maximumHitPointsAsMonster(), num + 1)));
             context.botl = 1;
         }

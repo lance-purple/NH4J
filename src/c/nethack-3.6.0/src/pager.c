@@ -70,8 +70,7 @@ char *outbuf;
         Sprintf(race, "%s ", urace.adj);
     }
 
-    int currentMonsterType = mons[currentMonsterNumber()].monsterTypeID;
-    javaString currentMonsterName = monsterTypeName(currentMonsterType);
+    javaString currentMonsterName = monsterTypeName(currentMonsterNumber());
     Sprintf(outbuf, "%s%s%s called %s",
             /* being blinded may hide invisibility from self */
             (youAreInvisibleToOthers() && (senseself() || youCanSee())) ? "invisible " : "", race,

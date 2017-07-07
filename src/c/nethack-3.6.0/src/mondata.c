@@ -766,7 +766,7 @@ const char *in_str;
     }
 
     for (len = 0, i = LOW_PM; i < NUMMONS; i++) {
-	javaString monsterName = monsterTypeName(mons[i].monsterTypeID);
+	javaString monsterName = monsterTypeName(i);
         register int m_i_len = strlen(monsterName.c_str);
 
         if (m_i_len > len && !strncmpi(monsterName.c_str, str, m_i_len)) {
@@ -864,7 +864,7 @@ int *mndx_p;
                     return -i; /* class */
                 if (mndx_p)
                     *mndx_p = i; /* monster */
-                return monsterClass(mons[i].monsterTypeID);
+                return monsterClass(i);
             }
         /* check monster class descriptions */
         for (i = 1; i < MAXMCLASSES; i++) {
@@ -875,14 +875,14 @@ int *mndx_p;
         /* check individual species names; not as thorough as mon_to_name()
            but our caller can call that directly if desired */
         for (i = LOW_PM; i < NUMMONS; i++) {
-            javaString x = monsterTypeName(mons[i].monsterTypeID);
+            javaString x = monsterTypeName(i);
             if ((p = strstri(x.c_str, in_str)) != 0
                 && (p == x.c_str || *(p - 1) == ' ')) {
                 if (mndx_p) {
                     *mndx_p = i;
 		}
                 releaseJavaString(x);
-                return monsterClass(mons[i].monsterTypeID);
+                return monsterClass(i);
             } else {
                 releaseJavaString(x);
 	    }

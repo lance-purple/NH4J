@@ -2006,7 +2006,7 @@ int final;
         you_are(buf, "");
     }
     if (youAreWarnedOfMonsters() && context.warntype.speciesidx) {
-	int warnedOfType = mons[context.warntype.speciesidx].monsterTypeID;
+	int warnedOfType = context.warntype.speciesidx;
 	javaString warnedOfTypeName = monsterTypeName(warnedOfType);
         Sprintf(buf, "aware of the presence of %s",
                 makeplural(warnedOfTypeName.c_str));
@@ -2188,8 +2188,7 @@ int final;
         you_can("lay eggs", "");
     if (lycanthropeType() >= LOW_PM) {
         /* "you are a werecreature [in beast form]" */
-	int lycanthropeTypeID = mons[lycanthropeType()].monsterTypeID;
-	javaString lycanthropeTypeName = monsterTypeName(lycanthropeTypeID);
+	javaString lycanthropeTypeName = monsterTypeName(lycanthropeType());
         Strcpy(buf, an(lycanthropeTypeName.c_str));
 	releaseJavaString(lycanthropeTypeName);
         if (currentMonsterNumber() == lycanthropeType()) {

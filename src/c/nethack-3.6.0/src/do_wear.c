@@ -1969,7 +1969,7 @@ void
 find_ac()
 {
     /* base armor class for current form */
-    int uac = monsterBaseArmorClass(mons[currentMonsterNumber()].monsterTypeID);
+    int uac = monsterBaseArmorClass(currentMonsterNumber());
 
     /* armor class from worn gear */
     if (uarm)

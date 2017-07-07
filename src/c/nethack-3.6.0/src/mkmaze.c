@@ -442,7 +442,7 @@ fixup_special()
             if (goodpos(x, y, (struct monst *) 0, 0)) {
                 otmp = mk_tt_object(STATUE, x, y);
                 while (otmp && (poly_when_stoned(&mons[otmp->corpsenm])
-                                || monsterTypeResistsStoning(mons[otmp->corpsenm].monsterTypeID))) {
+                                || monsterTypeResistsStoning(otmp->corpsenm))) {
                     /* set_corpsenm() handles weight too */
                     set_corpsenm(otmp, rndmonnum());
                 }
@@ -456,7 +456,7 @@ fixup_special()
                 mkcorpstat(STATUE, (struct monst *) 0, (struct permonst *) 0,
                            somex(croom), somey(croom), CORPSTAT_NONE);
         if (otmp) {
-            while (monsterTypeResistsStoning(mons[otmp->corpsenm].monsterTypeID)
+            while (monsterTypeResistsStoning(otmp->corpsenm)
                    || poly_when_stoned(&mons[otmp->corpsenm])) {
                 /* set_corpsenm() handles weight too */
                 set_corpsenm(otmp, rndmonnum());

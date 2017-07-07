@@ -2195,7 +2195,7 @@ boolean stoning;
     boolean vis = canseemon(mon), tinned = obj->otyp == TIN,
             food = obj->otyp == CORPSE || tinned,
             acid = obj->otyp == POT_ACID
-                   || (food && isAcidic(mons[obj->corpsenm].monsterTypeID)),
+                   || (food && isAcidic(obj->corpsenm)),
             lizard = food && obj->corpsenm == PM_LIZARD;
     int nutrit = food ? dog_nutrition(mon, obj) : 0; /* also sets meating */
 
@@ -2274,7 +2274,7 @@ boolean tinok;
         return FALSE;
     /* corpse, or tin that mon can open */
     return (boolean) (obj->corpsenm == PM_LIZARD
-                      || (isAcidic(mons[obj->corpsenm].monsterTypeID)
+                      || (isAcidic(obj->corpsenm)
                           && (obj->corpsenm != PM_GREEN_SLIME
                               || isSlimeproof(pmid4mon(mon)))));
 }

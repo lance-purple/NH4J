@@ -494,8 +494,7 @@ register struct monst *mtmp;
                                            ? "tries to pick you up"
                                            : "disturbs you");
 	} else {
-            int monsterType = mons[currentMonsterNumber()].monsterTypeID;
-	    javaString monsterName = monsterTypeName(monsterType);
+	    javaString monsterName = monsterTypeName(currentMonsterNumber());
             pline("Wait, %s!  That %s is really %s named %s!", m_monnam(mtmp),
                   mimic_obj_name(&youmonst), an(monsterName.c_str),
                   plname);
@@ -939,8 +938,7 @@ register const struct Attack mattk;
                 if (otmp->otyp == CORPSE
                     && touchPetrifies(otmp->corpsenm)) {
                     dmg = 1;
-		    javaString corpseName = monsterTypeName(
-                          mons[otmp->corpsenm].monsterTypeID);
+		    javaString corpseName = monsterTypeName(otmp->corpsenm);
                     pline("%s hits you with the %s corpse.", Monnam(mtmp),
                           corpseName.c_str);
 		    releaseJavaString(corpseName);

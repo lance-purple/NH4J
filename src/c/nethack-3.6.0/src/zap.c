@@ -706,7 +706,7 @@ boolean by_hero;
             x = xy.x, y = xy.y;
     }
 
-    if (monsterClass(mons[montype].monsterTypeID) == S_EEL && !IS_POOL(levl[x][y].typ)) {
+    if (monsterClass(montype) == S_EEL && !IS_POOL(levl[x][y].typ)) {
         if (by_hero && cansee(x,y))
             pline("%s twitches feebly.",
                 upstart(corpse_xname(corpse, (const char *) 0, CXN_PFX_THE)));
@@ -1249,7 +1249,7 @@ int okind;
         mdat = &mons[pm_index];
 
     mtmp = makemon(mdat, obj->ox, obj->oy, NO_MM_FLAGS);
-    polyuse(obj, okind, monsterCorpseWeight(mons[pm_index].monsterTypeID));
+    polyuse(obj, okind, monsterCorpseWeight(pm_index));
 
     if (mtmp && cansee(mtmp->mx, mtmp->my)) {
         pline("Some %sobjects meld, and %s arises from the pile!", material,
@@ -1894,10 +1894,10 @@ struct obj *obj, *otmp;
                         You_hear("the sound of a defibrillator.");
                         learn_it = TRUE;
                     } else if (youCanSee()) {
-			javaString corpseName = monsterTypeName(mons[corpsenm].monsterTypeID);
+			javaString corpseName = monsterTypeName(corpsenm);
                         You("observe %s %s change dramatically.",
                             s_suffix(an(corpseName.c_str)),
-                            isNonliving(mons[corpsenm].monsterTypeID) ? "motility"
+                            isNonliving(corpsenm) ? "motility"
                                                        : "health");
 			releaseJavaString(corpseName);
                         learn_it = TRUE;

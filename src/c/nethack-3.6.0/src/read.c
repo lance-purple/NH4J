@@ -1969,11 +1969,11 @@ do_class_genocide()
 
         class = name_to_monclass(buf, (int *) 0);
         if (class == 0 && (i = name_to_mon(buf)) != NON_PM)
-            class = monsterClass(mons[i].monsterTypeID);
+            class = monsterClass(i);
         immunecnt = gonecnt = goodcnt = 0;
         for (i = LOW_PM; i < NUMMONS; i++) {
-            if (monsterClass(mons[i].monsterTypeID) == class) {
-                if (!(monsterGenerationMask(mons[i].monsterTypeID) & G_GENO))
+            if (monsterClass(i) == class) {
+                if (!(monsterGenerationMask(i) & G_GENO))
                     immunecnt++;
                 else if (mvitals[i].mvflags & G_GENOD)
                     gonecnt++;
@@ -1981,8 +1981,8 @@ do_class_genocide()
                     goodcnt++;
             }
         }
-        if (!goodcnt && class != monsterClass(mons[urole.malenum].monsterTypeID)
-            && class != monsterClass(mons[urace.malenum].monsterTypeID)) {
+        if (!goodcnt && class != monsterClass(urole.malenum)
+            && class != monsterClass(urace.malenum)) {
             if (gonecnt)
                 pline("All such monsters are already nonexistent.");
             else if (immunecnt || class == S_invisible)
@@ -2007,10 +2007,10 @@ do_class_genocide()
         }
 
         for (i = LOW_PM; i < NUMMONS; i++) {
-            if (monsterClass(mons[i].monsterTypeID) == class) {
+            if (monsterClass(i) == class) {
                 char nam[BUFSZ];
 
-		javaString monsterName = monsterTypeName(mons[i].monsterTypeID);
+		javaString monsterName = monsterTypeName(i);
                 Strcpy(nam, makeplural(monsterName.c_str));
 		releaseJavaString(monsterName);
 
@@ -2018,7 +2018,7 @@ do_class_genocide()
                  * from both race and role; thus genocide affects either.
                  */
                 if (Your_Own_Role(i) || Your_Own_Race(i)
-                    || ((monsterGenerationMask(mons[i].monsterTypeID) & G_GENO)
+                    || ((monsterGenerationMask(i) & G_GENO)
                         && !(mvitals[i].mvflags & G_GENOD))) {
                     /* This check must be first since player monsters might
                      * have G_GENOD or !G_GENO.
@@ -2059,7 +2059,7 @@ do_class_genocide()
                 } else if (!gameover) {
                     /* suppress feedback about quest beings except
                        for those applicable to our own role */
-		    int msound = monsterSound(mons[i].monsterTypeID);
+		    int msound = monsterSound(i);
                     if ((msound != MS_LEADER
                          || quest_info(MS_LEADER) == i)
                         && (msound != MS_NEMESIS
@@ -2072,13 +2072,13 @@ do_class_genocide()
                             || Role_if(PM_SAMURAI))) {
                         boolean named, uniq;
 
-                        named = typeIsProperName(mons[i].monsterTypeID) ? TRUE : FALSE;
-                        uniq = (monsterGenerationMask(mons[i].monsterTypeID) & G_UNIQ) ? TRUE : FALSE;
+                        named = typeIsProperName(i) ? TRUE : FALSE;
+                        uniq = (monsterGenerationMask(i) & G_UNIQ) ? TRUE : FALSE;
                         /* one special case */
                         if (i == PM_HIGH_PRIEST)
                             uniq = FALSE;
 
-		        javaString monsterName = monsterTypeName(mons[i].monsterTypeID);
+		        javaString monsterName = monsterTypeName(i);
                         You("aren't permitted to genocide %s%s.",
                             (uniq && !named) ? "the " : "",
                             (uniq || named) ? monsterName.c_str : nam);
@@ -2117,7 +2117,7 @@ int how;
     if (how & PLAYER) {
         mndx = originalMonsterNumber(); /* non-polymorphed mon num */
         ptr = &mons[mndx];
-        javaString monsterName = monsterTypeName(mons[mndx].monsterTypeID);
+        javaString monsterName = monsterTypeName(mndx);
         Strcpy(buf, monsterName.c_str);
 	releaseJavaString(monsterName);
         killplayer++;
@@ -2246,7 +2246,7 @@ int how;
     } else {
         int cnt = 0, census = monster_census(FALSE);
 
-        if (!(monsterGenerationMask(mons[mndx].monsterTypeID) & G_UNIQ)
+        if (!(monsterGenerationMask(mndx) & G_UNIQ)
             && !(mvitals[mndx].mvflags & (G_GENOD | G_EXTINCT)))
             for (i = rn1(3, 4); i > 0; i--) {
                 if (!makemon(ptr, currentX(), currentY(), NO_MINVENT))
@@ -2343,7 +2343,7 @@ struct obj *from_obj;
     } else if (*mtype == PM_LONG_WORM_TAIL) { /* for create_particular() */
         *mtype = PM_LONG_WORM;
         return TRUE;
-    } else if (corpseOrStatueIsUnique(mons[*mtype].monsterTypeID)
+    } else if (corpseOrStatueIsUnique(*mtype)
                && (!from_obj || !has_omonst(from_obj))) {
         /* unique corpses (from bones or wizard mode wish) or
            statues (bones or any wish) end up as shapechangers */
@@ -2423,8 +2423,8 @@ create_particular()
             firstchoice = which;
             if (cant_revive(&which, FALSE, (struct obj *) 0)) {
                 /* wizard mode can override handling of special monsters */
-		javaString whichMonsterName = monsterTypeName(mons[which].monsterTypeID);
-		javaString firstChoiceName  = monsterTypeName(mons[firstchoice].monsterTypeID);
+		javaString whichMonsterName = monsterTypeName(which);
+		javaString firstChoiceName  = monsterTypeName(firstchoice);
                 Sprintf(buf, "Creating %s instead; force %s?",
                         whichMonsterName.c_str, firstChoiceName.c_str);
                 if (yn(buf) == 'y') {

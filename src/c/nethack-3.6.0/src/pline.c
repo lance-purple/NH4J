@@ -401,7 +401,7 @@ register struct monst *mtmp;
        won't be relevant for it, but wand of probing doesn't */
     javaString mimicMonster = NO_JAVA_STRING;
     if (mtmp->m_ap_type == M_AP_MONSTER) {
-        mimicMonster = monsterTypeName(mons[mtmp->mappearance].monsterTypeID);
+        mimicMonster = monsterTypeName(mtmp->mappearance);
     }
     if (mtmp->m_ap_type)
         Sprintf(eos(info), ", mimicking %s",
@@ -551,7 +551,7 @@ ustatusline()
                                                   ? "nominally "
                                                   : "insufficiently ",
           align_str(currentAlignmentType()),
-          areYouPolymorphed() ? monsterLevel(mons[currentMonsterNumber()].monsterTypeID) : currentExperienceLevel(), areYouPolymorphed() ? currentHitPointsAsMonster() : currentHitPoints(),
+          areYouPolymorphed() ? monsterLevel(currentMonsterNumber()) : currentExperienceLevel(), areYouPolymorphed() ? currentHitPointsAsMonster() : currentHitPoints(),
           areYouPolymorphed() ? maximumHitPointsAsMonster() : maximumHitPoints(), armorClass(), info);
 }
 

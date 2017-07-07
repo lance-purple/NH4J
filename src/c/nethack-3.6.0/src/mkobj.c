@@ -794,7 +794,7 @@ boolean artif;
                 else
                     for (tryct = 200; tryct > 0; --tryct) {
                         mndx = undead_to_corpse(rndmonnum());
-                        if (monsterCorpseNutrition(mons[mndx].monsterTypeID)
+                        if (monsterCorpseNutrition(mndx)
                             && !(mvitals[mndx].mvflags & G_NOCORPSE)) {
                             otmp->corpsenm = mndx;
                             set_tin_variety(otmp, RANDOM_TIN);
@@ -893,7 +893,7 @@ boolean artif;
                 int tryct2 = 0;
                 do
                     otmp->corpsenm = rndmonnum();
-                while (isHuman(mons[otmp->corpsenm].monsterTypeID) && tryct2++ < 30);
+                while (isHuman(otmp->corpsenm) && tryct2++ < 30);
                 blessorcurse(otmp, 4);
                 break;
             }
@@ -1000,7 +1000,7 @@ boolean artif;
             case STATUE:
                 /* possibly overridden by mkcorpstat() */
                 otmp->corpsenm = rndmonnum();
-                if (!isVerySmallMonster(mons[otmp->corpsenm].monsterTypeID)
+                if (!isVerySmallMonster(otmp->corpsenm)
                     && rn2(level_difficulty() / 2 + 10) > 10)
                     (void) add_to_container(otmp, mkobj(SPBOOK_CLASS, FALSE));
             }
@@ -1141,7 +1141,7 @@ struct obj *body;
             if (!rn2(3))
                 break;
 
-    } else if (monsterClass(mons[body->corpsenm].monsterTypeID) == S_TROLL && !body->norevive) {
+    } else if (monsterClass(body->corpsenm) == S_TROLL && !body->norevive) {
         long age;
         for (age = 2; age <= TAINT_AGE; age++)
             if (!rn2(TROLL_REVIVE_CHANCE)) { /* troll revives */
@@ -1339,7 +1339,7 @@ register struct obj *obj;
         register int cwt = 0;
 
         if (obj->otyp == STATUE && obj->corpsenm >= LOW_PM)
-            wt = (int) obj->quan * (monsterCorpseWeight(mons[obj->corpsenm].monsterTypeID) * 3 / 2);
+            wt = (int) obj->quan * (monsterCorpseWeight(obj->corpsenm) * 3 / 2);
 
         for (contents = obj->cobj; contents; contents = contents->nobj)
             cwt += weight(contents);
@@ -1364,7 +1364,7 @@ register struct obj *obj;
         return wt + cwt;
     }
     if (obj->otyp == CORPSE && obj->corpsenm >= LOW_PM) {
-        long long_wt = obj->quan * (long) monsterCorpseWeight(mons[obj->corpsenm].monsterTypeID);
+        long long_wt = obj->quan * (long) monsterCorpseWeight(obj->corpsenm);
 
         wt = (long_wt > LARGEST_INT) ? LARGEST_INT : (int) long_wt;
         if (obj->oeaten)
@@ -1411,7 +1411,7 @@ int x, y;
 /* return TRUE if the corpse has special timing */
 static boolean special_corpse(int num) {
   return (((num) == PM_LIZARD) || ((num) == PM_LICHEN) || (is_rider(&mons[num]))
-     || (monsterClass(mons[num].monsterTypeID) == S_TROLL));
+     || (monsterClass(num) == S_TROLL));
 }
 
 /*

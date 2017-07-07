@@ -804,7 +804,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                         ; /* maybe turn the corpse into a statue? */
 #endif
                     }
-                    tmp = (obj->corpsenm >= LOW_PM ? monsterSize(mons[obj->corpsenm].monsterTypeID)
+                    tmp = (obj->corpsenm >= LOW_PM ? monsterSize(obj->corpsenm)
                                                    : 0) + 1;
                     break;
 
@@ -835,7 +835,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
 
                     if (touchPetrifies(obj->corpsenm)) {
                         /*learn_egg_type(obj->corpsenm);*/
-			javaString corpseName = monsterTypeName(mons[obj->corpsenm].monsterTypeID);
+			javaString corpseName = monsterTypeName(obj->corpsenm);
                         pline("Splat! You hit %s with %s %s egg%s!",
                               mon_nam(mon),
                               obj->known ? "the" : cnt > 1L ? "some" : "a",
@@ -851,7 +851,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                             break;
                         return (boolean) (mon->mhp > 0);
                     } else { /* ordinary egg(s) */
-			javaString corpseName = monsterTypeName(mons[obj->corpsenm].monsterTypeID);
+			javaString corpseName = monsterTypeName(obj->corpsenm);
                         const char *eggp =
                             (obj->corpsenm != NON_PM && obj->known)
                                 ? the(corpseName.c_str)

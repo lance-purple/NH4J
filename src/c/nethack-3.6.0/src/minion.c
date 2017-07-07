@@ -71,11 +71,11 @@ struct monst *mon;
     if (isDemonPrince(pmid4(ptr)) || (ptr == &mons[PM_WIZARD_OF_YENDOR])) {
         dtype = (!rn2(20)) ? dprince(atyp) : (!rn2(4)) ? dlord(atyp)
                                                        : ndemon(atyp);
-        cnt = (!rn2(4) && isNamelessMajorDemon(mons[dtype].monsterTypeID)) ? 2 : 1;
+        cnt = (!rn2(4) && isNamelessMajorDemon(dtype)) ? 2 : 1;
     } else if (isDemonLord(pmid4(ptr))) {
         dtype = (!rn2(50)) ? dprince(atyp) : (!rn2(20)) ? dlord(atyp)
                                                         : ndemon(atyp);
-        cnt = (!rn2(4) && isNamelessMajorDemon(mons[dtype].monsterTypeID)) ? 2 : 1;
+        cnt = (!rn2(4) && isNamelessMajorDemon(dtype)) ? 2 : 1;
     } else if (isNamelessMajorDemon(pmid4(ptr))) {
         dtype = (!rn2(20)) ? dlord(atyp) : (!rn2(6)) ? ndemon(atyp)
                                                      : monsndx(ptr);
@@ -84,7 +84,7 @@ struct monst *mon;
         dtype = (isLord(pmid4(ptr)) && !rn2(20))
                     ? llord()
                     : (isLord(pmid4(ptr)) || !rn2(6)) ? lminion() : monsndx(ptr);
-        cnt = (!rn2(4) && !isLord(mons[dtype].monsterTypeID)) ? 2 : 1;
+        cnt = (!rn2(4) && !isLord(dtype)) ? 2 : 1;
     } else if (ptr == &mons[PM_ANGEL]) {
         /* non-lawful angels can also summon */
         if (!rn2(6)) {
@@ -100,14 +100,14 @@ struct monst *mon;
         } else {
             dtype = PM_ANGEL;
         }
-        cnt = (!rn2(4) && !isLord(mons[dtype].monsterTypeID)) ? 2 : 1;
+        cnt = (!rn2(4) && !isLord(dtype)) ? 2 : 1;
     }
 
     if (dtype == NON_PM)
         return 0;
 
     /* sanity checks */
-    if (cnt > 1 && (monsterGenerationMask(mons[dtype].monsterTypeID) & G_UNIQ))
+    if (cnt > 1 && (monsterGenerationMask(dtype) & G_UNIQ))
         cnt = 1;
     /*
      * If this daemon is unique and being re-summoned (the only way we
@@ -327,7 +327,7 @@ aligntyp atyp;
     for (tryct = !areYouInEndgame() ? 20 : 0; tryct > 0; --tryct) {
         pm = rn1(PM_DEMOGORGON + 1 - PM_ORCUS, PM_ORCUS);
         if (!(mvitals[pm].mvflags & G_GONE)
-            && (atyp == A_NONE || sgn(monsterAlignment(mons[pm].monsterTypeID)) == sgn(atyp)))
+            && (atyp == A_NONE || sgn(monsterAlignment(pm)) == sgn(atyp)))
             return (pm);
     }
     return (dlord(atyp)); /* approximate */
@@ -342,7 +342,7 @@ aligntyp atyp;
     for (tryct = !areYouInEndgame() ? 20 : 0; tryct > 0; --tryct) {
         pm = rn1(PM_YEENOGHU + 1 - PM_JUIBLEX, PM_JUIBLEX);
         if (!(mvitals[pm].mvflags & G_GONE)
-            && (atyp == A_NONE || sgn(monsterAlignment(mons[pm].monsterTypeID)) == sgn(atyp)))
+            && (atyp == A_NONE || sgn(monsterAlignment(pm)) == sgn(atyp)))
             return (pm);
     }
     return (ndemon(atyp)); /* approximate */

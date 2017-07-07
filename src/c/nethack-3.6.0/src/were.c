@@ -103,9 +103,9 @@ register struct monst *mon;
     }
 
     if (canseemon(mon) && !youAreHallucinating()) {
-	javaString monsterName = monsterTypeName(mons[pm].monsterTypeID);
+	javaString monsterName = monsterTypeName(pm);
         pline("%s changes into a %s.", Monnam(mon),
-              isHuman(mons[pm].monsterTypeID) ? "human" : monsterName.c_str + 4);
+              isHuman(pm) ? "human" : monsterName.c_str + 4);
 	releaseJavaString(monsterName);
     }
 
@@ -183,7 +183,7 @@ you_were()
         return;
     if (controllable_poly) {
         /* `+4' => skip "were" prefix to get name of beast */
-	javaString wereName = monsterTypeName(mons[lycanthropeType()].monsterTypeID);
+	javaString wereName = monsterTypeName(lycanthropeType());
         Sprintf(qbuf, "Do you want to change into %s?",
                 an(wereName.c_str + 4));
 	releaseJavaString(wereName);

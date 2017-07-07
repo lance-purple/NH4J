@@ -35,7 +35,7 @@ bot1()
         char mbot[BUFSZ];
         int k = 0;
 
-	int pmid = mons[currentMonsterNumber()].monsterTypeID;
+	int pmid = currentMonsterNumber();
 	javaString monsterName = monsterTypeName(pmid);
         Strcpy(mbot, monsterName.c_str);
 	releaseJavaString(monsterName);
@@ -98,7 +98,7 @@ bot2()
             hpmax, currentMagicalEnergy(), maximumMagicalEnergy(), armorClass());
 
     if (areYouPolymorphed())
-        Sprintf(nb = eos(nb), " HD:%d", monsterLevel(mons[currentMonsterNumber()].monsterTypeID));
+        Sprintf(nb = eos(nb), " HD:%d", monsterLevel(currentMonsterNumber()));
     else if (flags.showexp)
         Sprintf(nb = eos(nb), " Xp:%u/%-1ld", currentExperienceLevel(), currentXP());
     else
@@ -414,7 +414,7 @@ bot()
         char mbot[BUFSZ];
         int k = 0;
 
-	int pmid = mons[currentMonsterNumber()].monsterTypeID;
+	int pmid = currentMonsterNumber();
 	javaString monsterName = monsterTypeName(pmid);
         Strcpy(mbot, monsterName.c_str);
 	releaseJavaString(monsterName);
@@ -515,7 +515,7 @@ bot()
     /* Monster level (if areYouPolymorphed()) */
 
     if (areYouPolymorphed())
-        blstats[idx][BL_HD].a.a_int = monsterLevel(mons[currentMonsterNumber()].monsterTypeID);
+        blstats[idx][BL_HD].a.a_int = monsterLevel(currentMonsterNumber());
     else
         blstats[idx][BL_HD].a.a_int = 0;
 

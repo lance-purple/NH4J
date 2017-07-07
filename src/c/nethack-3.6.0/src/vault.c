@@ -887,7 +887,7 @@ paygd()
         pline("%s remits your gold to the vault.", Monnam(grd));
         gx = rooms[EGD(grd)->vroom].lx + rn2(2);
         gy = rooms[EGD(grd)->vroom].ly + rn2(2);
-	javaString monsterName = monsterTypeName(mons[originalMonsterNumber()].monsterTypeID);
+	javaString monsterName = monsterTypeName(originalMonsterNumber());
         Sprintf(buf, "To Croesus: here's the gold recovered from %s the %s.",
                 plname, monsterName.c_str);
 	releaseJavaString(monsterName);

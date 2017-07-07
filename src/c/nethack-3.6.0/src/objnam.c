@@ -324,7 +324,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
         /* If we use an() here we'd have to remember never to use */
         /* it whenever calling doname() or xname(). */
         if (typ == FIGURINE && omndx != NON_PM) {
-	    javaString monsterName = monsterTypeName(mons[omndx].monsterTypeID);
+	    javaString monsterName = monsterTypeName(omndx);
             Sprintf(eos(buf), " of a%s %s",
                     index(vowels, monsterName.c_str[0]) ? "n" : "",
                     monsterName.c_str);
@@ -418,13 +418,13 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
         break;
     case ROCK_CLASS:
         if (typ == STATUE && omndx != NON_PM) {
-	    javaString monsterName = monsterTypeName(mons[omndx].monsterTypeID);
+	    javaString monsterName = monsterTypeName(omndx);
             Sprintf(buf, "%s%s of %s%s",
                     (Role_if(PM_ARCHEOLOGIST) && (obj->spe & STATUE_HISTORIC))
                        ? "historic "
                        : "",
                     actualn,
-                    typeIsProperName(mons[omndx].monsterTypeID)
+                    typeIsProperName(omndx)
                        ? ""
                        : the_unique_pm(&mons[omndx])
                           ? "the "
@@ -936,7 +936,7 @@ boolean with_price;
 #endif
             if (omndx >= LOW_PM
                 && (known || (mvitals[omndx].mvflags & MV_KNOWS_EGG))) {
-		javaString monsterName = monsterTypeName(mons[omndx].monsterTypeID);
+		javaString monsterName = monsterTypeName(omndx);
                 Strcat(prefix, monsterName.c_str);
 		releaseJavaString(monsterName);
                 Strcat(prefix, " ");
@@ -1122,15 +1122,15 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
         /* avoid "aligned priest"; it just exposes internal details */
         mname.c_str = "priest";
     } else {
-        mname = monsterTypeName(mons[omndx].monsterTypeID);
-        if (the_unique_pm(&mons[omndx]) || typeIsProperName(mons[omndx].monsterTypeID)) {
+        mname = monsterTypeName(omndx);
+        if (the_unique_pm(&mons[omndx]) || typeIsProperName(omndx)) {
 	    const char* ss = s_suffix(mname.c_str);
 	    releaseJavaString(mname);
             mname.j_str = NULL;
             mname.c_str = ss;
             possessive = TRUE;
             /* don't precede personal name like "Medusa" with an article */
-            if (typeIsProperName(mons[omndx].monsterTypeID))
+            if (typeIsProperName(omndx))
                 no_prefix = TRUE;
             /* always precede non-personal unique monster name like
                "Oracle" with "the" unless explicitly overridden */
@@ -2736,7 +2736,7 @@ struct obj *no_wish;
                                 mntmplen; /* double check for rank title */
                             char *obp = bp;
                             mntmptoo = title_to_mon(bp, (int *) 0, &mntmplen);
-			    javaString monsterName = monsterTypeName(mons[mntmp].monsterTypeID);
+			    javaString monsterName = monsterTypeName(mntmp);
                             bp += mntmp != mntmptoo
                                       ? (int) strlen(monsterName.c_str)
                                       : mntmplen;
@@ -3368,22 +3368,22 @@ typfnd:
             otmp->spe = 0; /* No spinach */
             if (dead_species(mntmp, FALSE)) {
                 otmp->corpsenm = NON_PM; /* it's empty */
-            } else if (!(monsterGenerationMask(mons[mntmp].monsterTypeID) & G_UNIQ)
+            } else if (!(monsterGenerationMask(mntmp) & G_UNIQ)
                        && !(mvitals[mntmp].mvflags & G_NOCORPSE)
-                       && monsterCorpseNutrition(mons[mntmp].monsterTypeID) != 0) {
+                       && monsterCorpseNutrition(mntmp) != 0) {
                 otmp->corpsenm = mntmp;
             }
             break;
         case CORPSE:
-            if (!(monsterGenerationMask(mons[mntmp].monsterTypeID) & G_UNIQ)
+            if (!(monsterGenerationMask(mntmp) & G_UNIQ)
                 && !(mvitals[mntmp].mvflags & G_NOCORPSE)) {
-                if (monsterSound(mons[mntmp].monsterTypeID) == MS_GUARDIAN)
+                if (monsterSound(mntmp) == MS_GUARDIAN)
                     mntmp = genus(mntmp, 1);
                 set_corpsenm(otmp, mntmp);
             }
             break;
         case FIGURINE:
-            if (!(monsterGenerationMask(mons[mntmp].monsterTypeID) & G_UNIQ) && !isHuman(mons[mntmp].monsterTypeID)
+            if (!(monsterGenerationMask(mntmp) & G_UNIQ) && !isHuman(mntmp)
 #ifdef MAIL
                 && mntmp != PM_MAIL_DAEMON
 #endif
@@ -3397,7 +3397,7 @@ typfnd:
             break;
         case STATUE:
             otmp->corpsenm = mntmp;
-            if (Has_contents(otmp) && isVerySmallMonster(mons[mntmp].monsterTypeID))
+            if (Has_contents(otmp) && isVerySmallMonster(mntmp))
                 delete_contents(otmp); /* no spellbook */
             otmp->spe = ishistoric ? STATUE_HISTORIC : 0;
             break;
@@ -3506,7 +3506,7 @@ typfnd:
 
     if (halfeaten && otmp->oclass == FOOD_CLASS) {
         if (otmp->otyp == CORPSE)
-            otmp->oeaten = monsterCorpseNutrition(mons[otmp->corpsenm].monsterTypeID);
+            otmp->oeaten = monsterCorpseNutrition(otmp->corpsenm);
         else
             otmp->oeaten = objects[otmp->otyp].oc_nutrition;
         /* (do this adjustment before setting up object's weight) */

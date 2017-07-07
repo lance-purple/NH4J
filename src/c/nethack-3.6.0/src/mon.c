@@ -177,7 +177,7 @@ int mndx, mode;
         break;
     default:
         if (mndx >= LOW_PM && mndx < NUMMONS) {
-            int pmid = mons[mndx].monsterTypeID;
+            int pmid = mndx;
 
             if (isHuman(pmid))
                 mndx = PM_HUMAN;
@@ -206,7 +206,7 @@ int mndx;
      * As of 3.6.0 we just check M2_SHAPESHIFTER instead of having a
      * big switch statement with hardcoded shapeshifter types here.
      */
-    if (mndx >= LOW_PM && isShapeshifter(mons[mndx].monsterTypeID)) {
+    if (mndx >= LOW_PM && isShapeshifter(mndx)) {
         mcham = mndx;
     }
     return mcham;
@@ -1000,7 +1000,7 @@ register const char *str;
                 /* let a handful of corpse types thru to can_carry() */
                 && !touchPetrifies(otmp->corpsenm)
                 && otmp->corpsenm != PM_LIZARD
-                && !isAcidic(mons[otmp->corpsenm].monsterTypeID))
+                && !isAcidic(otmp->corpsenm))
                 continue;
             if (!touch_artifact(otmp, mtmp))
                 continue;
@@ -2016,7 +2016,7 @@ struct monst *mdef;
             if (obj->otyp == BOULDER
 #if 0 /* monsters don't carry statues */
                 ||  (obj->otyp == STATUE
-                     && monsterSize(mons[obj->corpsenm].monsterTypeID) >= monsterSize(pmid4mon(mdef)))
+                     && monsterSize(obj->corpsenm) >= monsterSize(pmid4mon(mdef)))
 #endif
                 /* invocation tools resist even with 0% resistance */
                 || obj_resists(obj, 0, 0)) {
@@ -2779,7 +2779,7 @@ boolean construct;
         /* if (animal_list) impossible("animal_list already exists"); */
 
         for (n = 0, i = LOW_PM; i < SPECIAL_PM; i++)
-            if (isAnimal(mons[i].monsterTypeID))
+            if (isAnimal(i))
                 animal_temp[n++] = i;
         /* if (n == 0) animal_temp[n++] = NON_PM; */
 
@@ -2806,7 +2806,7 @@ pick_animal()
     /* rogue level should use monsters represented by uppercase letters
        only, but since chameleons aren't generated there (not uppercase!)
        we don't perform a lot of retries */
-    if (areYouOnRogueLevel() && !isupper((uchar) monsterClass(mons[res].monsterTypeID)))
+    if (areYouOnRogueLevel() && !isupper((uchar) monsterClass(res)))
         res = animal_list[rn2(animal_list_count)];
     return res;
 }
@@ -2983,7 +2983,7 @@ struct monst *mon;
             tryct = 5;
             do {
                 mndx = rn1(SPECIAL_PM - LOW_PM, LOW_PM);
-                if (isHumanoid(mons[mndx].monsterTypeID) && okToPolymorphInto(mons[mndx].monsterTypeID))
+                if (isHumanoid(mndx) && okToPolymorphInto(mndx))
                     break;
             } while (--tryct > 0);
             if (!tryct)
@@ -3062,7 +3062,7 @@ struct monst *mon;
         } while (--tryct > 0 && !validspecmon(mon, mndx)
                  /* try harder to select uppercase monster on rogue level */
                  && (tryct > 40 && areYouOnRogueLevel()
-                     && !isupper((uchar) monsterClass(mons[mndx].monsterTypeID))));
+                     && !isupper((uchar) monsterClass(mndx))));
     }
     return mndx;
 }
@@ -3330,7 +3330,7 @@ int mnum;
      * grow into queen bees.  Ditto for [winged-]gargoyles.
      */
     if (mnum == PM_KILLER_BEE || mnum == PM_GARGOYLE
-        || (laysEggs(mons[mnum].monsterTypeID)
+        || (laysEggs(mnum)
             && (BREEDER_EGG
                 || (mnum != PM_QUEEN_BEE && mnum != PM_WINGED_GARGOYLE))))
         return mnum;

@@ -1674,7 +1674,7 @@ long num;
     char obuf[BUFSZ];
 
     Sprintf(obuf, "%s%s",
-            (otmp->otyp == CORPSE && typeIsProperName(mons[otmp->corpsenm].monsterTypeID))
+            (otmp->otyp == CORPSE && typeIsProperName(otmp->corpsenm))
                 ? ""
                 : "The ",
             cxname(otmp));

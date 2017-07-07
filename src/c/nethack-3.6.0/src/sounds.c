@@ -516,7 +516,7 @@ register struct monst *mtmp;
         msound = MS_LEADER;
     /* make sure it's your role's quest guardian; adjust if not */
     else if (msound == MS_GUARDIAN && ptr != &mons[urole.guardnum])
-        msound = monsterSound(mons[genus(monsndx(ptr), 1)].monsterTypeID);
+        msound = monsterSound(genus(monsndx(ptr), 1));
     /* some normally non-speaking types can/will speak if hero is similar */
     else if (msound == MS_ORC         /* note: MS_ORC is same as MS_GRUNT */
              && (same_race(ptr, youmonst.data)           /* current form, */
@@ -619,8 +619,7 @@ register struct monst *mtmp;
                     Sprintf(verbuf, vampmsg[vampindex], body_part(BLOOD));
                     verbl_msg = verbuf;
                 } else if (vampindex == 1) {
-		    int currentMonsterType = mons[currentMonsterNumber()].monsterTypeID;
-		    javaString currentMonsterName = monsterTypeName(currentMonsterType);
+		    javaString currentMonsterName = monsterTypeName(currentMonsterNumber());
                     Sprintf(verbuf, vampmsg[vampindex],
                             areYouPolymorphed() ? an(currentMonsterName.c_str)
                                    : an(racenoun));

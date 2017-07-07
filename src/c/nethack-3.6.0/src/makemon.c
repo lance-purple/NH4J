@@ -851,7 +851,7 @@ boolean ghostly;
     result = (((int) mvitals[mndx].born < lim) && !gone) ? TRUE : FALSE;
 
     /* if it's unique, don't ever make it again */
-    int geno = monsterGenerationMask(mons[mndx].monsterTypeID);
+    int geno = monsterGenerationMask(mndx);
     if (geno & G_UNIQ)
         mvitals[mndx].mvflags |= G_EXTINCT;
 
@@ -1377,13 +1377,13 @@ STATIC_OVL boolean
 uncommon(mndx)
 int mndx;
 {
-    int geno = monsterGenerationMask(mons[mndx].monsterTypeID);
+    int geno = monsterGenerationMask(mndx);
     if (geno & (G_NOGEN | G_UNIQ))
         return TRUE;
     if (mvitals[mndx].mvflags & G_GONE)
         return TRUE;
     if (areYouInHell())
-        return (boolean) (monsterAlignment(mons[mndx].monsterTypeID) > A_NEUTRAL);
+        return (boolean) (monsterAlignment(mndx) > A_NEUTRAL);
     else
         return (boolean) ((geno & G_HELL) != 0);
 }
@@ -1572,18 +1572,18 @@ int spc;
      *                  mons[] array.
      */
     for (first = LOW_PM; first < SPECIAL_PM; first++)
-        if (monsterClass(mons[first].monsterTypeID) == class)
+        if (monsterClass(first) == class)
             break;
     if (first == SPECIAL_PM)
         return (struct permonst *) 0;
 
-    for (last = first; last < SPECIAL_PM && monsterClass(mons[last].monsterTypeID) == class; last++)
+    for (last = first; last < SPECIAL_PM && monsterClass(last) == class; last++)
         if (mk_gen_ok(last, G_GONE, mask)) {
             /* consider it */
             if (num && toostrong(last, maxmlev)
                 && monstr[last] != monstr[last - 1] && rn2(2))
                 break;
-            num += monsterGenerationMask(mons[last].monsterTypeID) & G_FREQ;
+            num += monsterGenerationMask(last) & G_FREQ;
         }
     if (!num)
         return (struct permonst *) 0;
@@ -1594,10 +1594,10 @@ int spc;
     for (num = rnd(num); num > 0; first++)
         if (mk_gen_ok(first, G_GONE, mask)) {
             /* skew towards lower value monsters at lower exp. levels */
-            num -= monsterGenerationMask(mons[first].monsterTypeID) & G_FREQ;
+            num -= monsterGenerationMask(first) & G_FREQ;
             if (num && adj_lev(&mons[first]) > (currentExperienceLevel() * 2)) {
                 /* but not when multiple monsters are same level */
-                if (monsterLevel(mons[first].monsterTypeID) != monsterLevel(mons[first + 1].monsterTypeID))
+                if (monsterLevel(first) != monsterLevel(first + 1))
                     num--;
             }
         }
@@ -1618,20 +1618,20 @@ int class;
     register int first, last, num = 0;
 
     for (first = LOW_PM; first < SPECIAL_PM; first++)
-        if (monsterClass(mons[first].monsterTypeID) == class)
+        if (monsterClass(first) == class)
             break;
     if (first == SPECIAL_PM)
         return NON_PM;
 
-    for (last = first; last < SPECIAL_PM && monsterClass(mons[last].monsterTypeID) == class; last++)
+    for (last = first; last < SPECIAL_PM && monsterClass(last) == class; last++)
         if (mk_gen_ok(last, G_GENOD, (G_NOGEN | G_UNIQ)))
-            num += monsterGenerationMask(mons[last].monsterTypeID) & G_FREQ;
+            num += monsterGenerationMask(last) & G_FREQ;
     if (!num)
         return NON_PM;
 
     for (num = rnd(num); num > 0; first++)
         if (mk_gen_ok(first, G_GENOD, (G_NOGEN | G_UNIQ)))
-            num -= monsterGenerationMask(mons[first].monsterTypeID) & G_FREQ;
+            num -= monsterGenerationMask(first) & G_FREQ;
     first--; /* correct an off-by-one error */
 
     return first;
@@ -1711,7 +1711,7 @@ struct monst *mtmp, *victim;
             hp_threshold *= 3;
         lev_limit = 3 * monsterLevel(pmid4(ptr)) / 2; /* same as adj_lev() */
         /* If they can grow up, be sure the level is high enough for that */
-	int newmlevel = monsterLevel(mons[newtype].monsterTypeID);
+	int newmlevel = monsterLevel(newtype);
         if (oldtype != newtype && newmlevel > lev_limit)
             lev_limit = newmlevel;
         /* number of hit points to gain; unlike for the player, we put
@@ -1741,7 +1741,7 @@ struct monst *mtmp, *victim;
     else if (lev_limit > 49)
         lev_limit = (monsterLevel(pmid4(ptr)) > 49 ? 50 : 49);
 
-    if ((int) ++mtmp->m_lev >= monsterLevel(mons[newtype].monsterTypeID) && newtype != oldtype) {
+    if ((int) ++mtmp->m_lev >= monsterLevel(newtype) && newtype != oldtype) {
         ptr = &mons[newtype];
         if (mvitals[newtype].mvflags & G_GENOD) { /* allow G_EXTINCT */
             if (canspotmon(mtmp)) {

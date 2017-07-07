@@ -198,7 +198,7 @@ boolean the_pfx;
                               CXN_SINGULAR | (the_pfx ? CXN_PFX_THE : 0));
         /* not strictly needed since pname values are capitalized
            and the() is a no-op for them */
-        if (typeIsProperName(mons[food->corpsenm].monsterTypeID))
+        if (typeIsProperName(food->corpsenm))
             the_pfx = FALSE;
     } else {
         /* the ordinary case */
@@ -308,7 +308,7 @@ struct obj *otmp;
     if (!otmp->oeaten) {
         costly_alteration(otmp, COST_BITE);
         otmp->oeaten =
-            (otmp->otyp == CORPSE ? monsterCorpseNutrition(mons[otmp->corpsenm].monsterTypeID)
+            (otmp->otyp == CORPSE ? monsterCorpseNutrition(otmp->corpsenm)
                                   : objects[otmp->otyp].oc_nutrition);
     }
 
@@ -641,7 +641,7 @@ register int pm;
         if (!youResistStoning()
             && !(poly_when_stoned(youmonst.data)
                  && polymon(PM_STONE_GOLEM))) {
-	    javaString monsterName = monsterTypeName(mons[pm].monsterTypeID);
+	    javaString monsterName = monsterTypeName(pm);
             Sprintf(killer.name, "tasting %s meat", monsterName.c_str);
 	    releaseJavaString(monsterName);
             killer.format = KILLED_BY;
@@ -662,7 +662,7 @@ register int pm;
     case PM_LARGE_CAT:
         /* cannibals are allowed to eat domestic animals without penalty */
         if (!CANNIBAL_ALLOWED()) {
-	    javaString monsterName = monsterTypeName(mons[pm].monsterTypeID);
+	    javaString monsterName = monsterTypeName(pm);
             You_feel("that eating the %s was a bad idea.", monsterName.c_str);
 	    releaseJavaString(monsterName);
             setYourIntrinsicMask(AGGRAVATE_MONSTER, FROMOUTSIDE);
@@ -676,7 +676,7 @@ register int pm;
     case PM_PESTILENCE:
     case PM_FAMINE: {
         pline("Eating that is instantly fatal.");
-	javaString monsterName = monsterTypeName(mons[pm].monsterTypeID);
+	javaString monsterName = monsterTypeName(pm);
         Sprintf(killer.name, "unwisely ate the body of %s", monsterName.c_str);
 	releaseJavaString(monsterName);
         killer.format = NO_KILLER_PREFIX;
@@ -700,7 +700,7 @@ register int pm;
         }
     /* Fall through */
     default:
-        if (isAcidic(mons[pm].monsterTypeID) && youAreTurningToStone())
+        if (isAcidic(pm) && youAreTurningToStone())
             fix_petrification();
         break;
     }
@@ -1197,8 +1197,8 @@ char *buf;
             } else {
                 Strcpy(eos(buf), " of ");
             }
-	    javaString monsterName = monsterTypeName(mons[mnum].monsterTypeID);
-            if (isVegetarianOption(mons[mnum].monsterTypeID))
+	    javaString monsterName = monsterTypeName(mnum);
+            if (isVegetarianOption(mnum))
                 Sprintf(eos(buf), "%s", monsterName.c_str);
             else
                 Sprintf(eos(buf), "%s meat", monsterName.c_str);
@@ -1217,7 +1217,7 @@ int forcetype;
     if (forcetype == SPINACH_TIN
         || (forcetype == HEALTHY_TIN
             && (obj->corpsenm == NON_PM /* empty or already spinach */
-                || !isVegetarianOption(mons[obj->corpsenm].monsterTypeID)))) { /* replace meat */
+                || !isVegetarianOption(obj->corpsenm)))) { /* replace meat */
         obj->corpsenm = NON_PM; /* not based on any monster */
         obj->spe = 1;           /* spinach */
         return;
@@ -1296,10 +1296,10 @@ const char *mesg;
         } else if (youAreHallucinating()) {
             what.c_str = rndmonnam(NULL);
         } else {
-            what = monsterTypeName(mons[mnum].monsterTypeID);
+            what = monsterTypeName(mnum);
             if (the_unique_pm(&mons[mnum]))
                 which = 2;
-            else if (typeIsProperName(mons[mnum].monsterTypeID))
+            else if (typeIsProperName(mnum))
                 which = 1;
         }
         if (which == 0) {
@@ -1330,7 +1330,7 @@ const char *mesg;
         context.victual.fullwarn = context.victual.eating =
             context.victual.doreset = FALSE;
 
-	javaString monsterName = monsterTypeName(mons[mnum].monsterTypeID);
+	javaString monsterName = monsterTypeName(mnum);
         You("consume %s %s.", tintxts[r].txt, monsterName.c_str);
 	releaseJavaString(monsterName);
 
@@ -1556,9 +1556,9 @@ struct obj *otmp;
                          && !poly_when_stoned(youmonst.data));
 
     /* KMH, conduct */
-    if (!isVeganOption(mons[mnum].monsterTypeID))
+    if (!isVeganOption(mnum))
         setVeganConduct(FALSE);
-    if (!isVegetarianOption(mons[mnum].monsterTypeID))
+    if (!isVegetarianOption(mnum))
         violated_vegetarian();
 
     if (!nonrotting_corpse(mnum)) {
@@ -1575,9 +1575,9 @@ struct obj *otmp;
         boolean cannibal = maybe_cannibal(mnum, FALSE);
 
         pline("Ulch - that %s was tainted%s!",
-              monsterClass(mons[mnum].monsterTypeID) == S_FUNGUS
+              monsterClass(mnum) == S_FUNGUS
                   ? "fungoid vegetation"
-                  : !isVegetarianOption(mons[mnum].monsterTypeID) ? "meat" : "protoplasm",
+                  : !isVegetarianOption(mnum) ? "meat" : "protoplasm",
               cannibal ? ", you cannibal" : "");
         if (youResistSickness()) {
             pline("It doesn't seem at all sickening, though...");
@@ -1600,11 +1600,11 @@ struct obj *otmp;
         else
             useupf(otmp, 1L);
         return 2;
-    } else if (isAcidic(mons[mnum].monsterTypeID) && !youResistAcid()) {
+    } else if (isAcidic(mnum) && !youResistAcid()) {
         tp++;
         You("have a very bad case of stomach acid.");   /* not body_part() */
         losehp(rnd(15), "acidic corpse", KILLED_BY_AN); /* acid damage */
-    } else if (isPoisonous(mons[mnum].monsterTypeID) && rn2(5)) {
+    } else if (isPoisonous(mnum) && rn2(5)) {
         tp++;
         pline("Ecch - that must have been poisonous!");
         if (!youResistPoison()) {
@@ -1620,7 +1620,7 @@ struct obj *otmp;
     }
 
     /* delay is weight dependent */
-    context.victual.reqtime = 3 + (monsterCorpseWeight(mons[mnum].monsterTypeID) >> 6);
+    context.victual.reqtime = 3 + (monsterCorpseWeight(mnum) >> 6);
 
     if (!tp && !nonrotting_corpse(mnum) && (otmp->orotten || !rn2(7))) {
         if (rottenfood(otmp)) {
@@ -1629,7 +1629,7 @@ struct obj *otmp;
             retcode = 1;
         }
 
-        if (!monsterCorpseNutrition(mons[otmp->corpsenm].monsterTypeID)) {
+        if (!monsterCorpseNutrition(otmp->corpsenm)) {
             /* no nutrition: rots away, no message if you passed out */
             if (!retcode)
                 pline_The("corpse rots away completely.");
@@ -1650,14 +1650,14 @@ struct obj *otmp;
     } else {
         /* [is this right?  omnivores end up always disliking the taste] */
 	int upmid = pmid4you();
-        boolean yummy = isVeganOption(mons[mnum].monsterTypeID)
+        boolean yummy = isVeganOption(mnum)
                            ? (!isCarnivorous(upmid)
                               && isHerbivorous(upmid))
                            : (isCarnivorous(upmid)
                               && !isHerbivorous(upmid));
 
         pline("%s%s %s!",
-              typeIsProperName(mons[mnum].monsterTypeID)
+              typeIsProperName(mnum)
                  ? "" : the_unique_pm(&mons[mnum]) ? "The " : "This ",
               food_xname(otmp, FALSE),
               youAreHallucinating()
@@ -2147,8 +2147,7 @@ struct obj *otmp;
                 && !(poly_when_stoned(youmonst.data)
                      && polymon(PM_STONE_GOLEM))) {
                 if (!youAreTurningToStone()) {
-                    int corpseTypeID = mons[otmp->corpsenm].monsterTypeID;
-		    javaString corpseName = monsterTypeName(corpseTypeID);
+		    javaString corpseName = monsterTypeName(otmp->corpsenm);
                     Sprintf(killer.name, "%s egg", corpseName.c_str);
 		    releaseJavaString(corpseName);
                     make_stoned(5L, (char *) 0, KILLED_BY_AN, killer.name);
@@ -2275,7 +2274,7 @@ struct obj *otmp;
         else
             return 2;
     }
-    if (cadaver && isPoisonous(mons[mnum].monsterTypeID) && !youResistPoison()) {
+    if (cadaver && isPoisonous(mnum) && !youResistPoison()) {
         /* poisonous */
         Sprintf(buf, "%s like %s might be poisonous! %s", foodsmell,
                 it_or_they, eat_it_anyway);
@@ -2290,7 +2289,7 @@ struct obj *otmp;
                 it_or_they, eat_it_anyway);
         return (yn_function(buf, ynchars, 'n') == 'n') ? 1 : 2;
     }
-    if (cadaver && !isVegetarianOption(mons[mnum].monsterTypeID) && vegetarianConduct()
+    if (cadaver && !isVegetarianOption(mnum) && vegetarianConduct()
         && Role_if(PM_MONK)) {
         Sprintf(buf, "%s unhealthy. %s", foodsmell, eat_it_anyway);
         if (yn_function(buf, ynchars, 'n') == 'n')
@@ -2298,7 +2297,7 @@ struct obj *otmp;
         else
             return 2;
     }
-    if (cadaver && isAcidic(mons[mnum].monsterTypeID) && !youResistAcid()) {
+    if (cadaver && isAcidic(mnum) && !youResistAcid()) {
         Sprintf(buf, "%s rather acidic. %s", foodsmell, eat_it_anyway);
         if (yn_function(buf, ynchars, 'n') == 'n')
             return 1;
@@ -2321,7 +2320,7 @@ struct obj *otmp;
     if (veganConduct()
         && ((material == LEATHER || material == BONE
              || material == DRAGON_HIDE || material == WAX)
-            || (cadaver && !isVeganOption(mons[mnum].monsterTypeID)))) {
+            || (cadaver && !isVeganOption(mnum)))) {
         Sprintf(buf, "%s foul and unfamiliar to you. %s", foodsmell,
                 eat_it_anyway);
         if (yn_function(buf, ynchars, 'n') == 'n')
@@ -2332,7 +2331,7 @@ struct obj *otmp;
     if (vegetarianConduct()
         && ((material == LEATHER || material == BONE
              || material == DRAGON_HIDE)
-            || (cadaver && !isVegetarianOption(mons[mnum].monsterTypeID)))) {
+            || (cadaver && !isVegetarianOption(mnum)))) {
         Sprintf(buf, "%s unfamiliar to you. %s", foodsmell, eat_it_anyway);
         if (yn_function(buf, ynchars, 'n') == 'n')
             return 1;
@@ -2579,7 +2578,7 @@ doeat()
 
     /* re-calc the nutrition */
     if (otmp->otyp == CORPSE)
-        basenutrit = monsterCorpseNutrition(mons[otmp->corpsenm].monsterTypeID);
+        basenutrit = monsterCorpseNutrition(otmp->corpsenm);
     else
         basenutrit = objects[otmp->otyp].oc_nutrition;
 
@@ -3046,7 +3045,7 @@ struct obj *obj;
 
     uneaten_amt = (long) obj->oeaten;
     full_amount = (obj->otyp == CORPSE)
-                      ? (long) monsterCorpseNutrition(mons[obj->corpsenm].monsterTypeID)
+                      ? (long) monsterCorpseNutrition(obj->corpsenm)
                       : (long) objects[obj->otyp].oc_nutrition;
     if (uneaten_amt > full_amount) {
         impossible(
@@ -3159,7 +3158,7 @@ int threat;
     /* flesh from lizards and acidic critters stops petrification */
     case STONED:
         return (boolean) (mndx >= LOW_PM
-                          && (mndx == PM_LIZARD || isAcidic(mons[mndx].monsterTypeID)));
+                          && (mndx == PM_LIZARD || isAcidic(mndx)));
     /* no tins can cure these (yet?) */
     case SLIMED:
     case SICK:

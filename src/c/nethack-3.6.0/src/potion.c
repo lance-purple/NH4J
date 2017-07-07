@@ -583,8 +583,7 @@ register struct obj *otmp;
                 pline("This burns like acid!");
                 exercise(A_CON, FALSE);
                 if (lycanthropeType() >= LOW_PM) {
-		    int lycanthropeTypeID = mons[lycanthropeType()].monsterTypeID;
-		    javaString lycanthropeName = monsterTypeName(lycanthropeTypeID);
+		    javaString lycanthropeName = monsterTypeName(lycanthropeType());
                     Your("affinity to %s disappears!",
                          makeplural(lycanthropeName.c_str));
 		    releaseJavaString(lycanthropeName);

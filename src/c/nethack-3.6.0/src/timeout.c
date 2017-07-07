@@ -323,9 +323,9 @@ nh_timeout()
                 dealloc_killer(kptr);
 
                 if ((m_idx = name_to_mon(killer.name)) >= LOW_PM) {
-                    if (typeIsProperName(mons[m_idx].monsterTypeID)) {
+                    if (typeIsProperName(m_idx)) {
                         killer.format = KILLED_BY;
-                    } else if (monsterGenerationMask(mons[m_idx].monsterTypeID) & G_UNIQ) {
+                    } else if (monsterGenerationMask(m_idx) & G_UNIQ) {
                         Strcpy(killer.name, the(killer.name));
                         killer.format = KILLED_BY;
                     }
@@ -538,7 +538,7 @@ long timeout;
     if (get_obj_location(egg, &x, &y, 0)) {
         hatchcount = rnd((int) egg->quan);
         cansee_hatchspot = cansee(x, y) && !silent;
-        if (!(monsterGenerationMask(mons[mnum].monsterTypeID) & G_UNIQ)
+        if (!(monsterGenerationMask(mnum) & G_UNIQ)
             && !(mvitals[mnum].mvflags & (G_GENOD | G_EXTINCT))) {
             for (i = hatchcount; i > 0; i--) {
                 if (!enexto(&cc, x, y, &mons[mnum])
@@ -741,7 +741,7 @@ slip_or_trip()
         }
         if (!uarmf && otmp->otyp == CORPSE
             && touchPetrifies(otmp->corpsenm) && !youResistStoning()) {
-	    javaString corpseName = monsterTypeName(mons[otmp->corpsenm].monsterTypeID);
+	    javaString corpseName = monsterTypeName(otmp->corpsenm);
             Sprintf(killer.name, "tripping over %s corpse",
                     an(corpseName.c_str));
 	    releaseJavaString(corpseName);

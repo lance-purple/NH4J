@@ -186,7 +186,7 @@ int rx, ry, *resp;
         corpse = 0;               /* can't reach corpse on floor */
         /* you can't reach tiny statues (even though you can fight
            tiny monsters while levitating--consistency, what's that?) */
-        while (statue && monsterSize(mons[statue->corpsenm].monsterTypeID) == MZ_TINY)
+        while (statue && monsterSize(statue->corpsenm) == MZ_TINY)
             statue = nxtobj(statue, STATUE, TRUE);
     }
     /* when both corpse and statue are present, pick the uppermost one */
@@ -384,7 +384,7 @@ register struct obj *obj;
                 what = simple_typename(mtmp->mappearance);
                 break;
             case M_AP_MONSTER: /* ignore hallucination here */
-	        monsterName = monsterTypeName(mons[mtmp->mappearance].monsterTypeID);
+	        monsterName = monsterTypeName(mtmp->mappearance);
                 what = monsterName.c_str;
                 break;
             case M_AP_FURNITURE:
@@ -1661,7 +1661,7 @@ struct obj *corpse;
 {
     if (corpse->oeaten)
         return 0;
-    if (!monsterCorpseNutrition(mons[corpse->corpsenm].monsterTypeID))
+    if (!monsterCorpseNutrition(corpse->corpsenm))
         return 0;
     return 1;
 }
@@ -1689,7 +1689,7 @@ struct obj *obj;
         && !uarmg) {
         char kbuf[BUFSZ];
 
-	int pmid = mons[corpse->corpsenm].monsterTypeID;
+	int pmid = corpse->corpsenm;
 	javaString monsterName = monsterTypeName(pmid);
         if (poly_when_stoned(youmonst.data)) {
             You("tin %s without wearing gloves.",
@@ -1712,7 +1712,7 @@ struct obj *obj;
             pline_The("corpse evades your grasp.");
         return;
     }
-    if (monsterCorpseNutrition(mons[corpse->corpsenm].monsterTypeID) == 0) {
+    if (monsterCorpseNutrition(corpse->corpsenm) == 0) {
         pline("That's too insubstantial to tin.");
         return;
     }
@@ -2068,14 +2068,14 @@ boolean quietly;
         return FALSE;
     }
     if (IS_ROCK(levl[x][y].typ)
-        && !(passesThroughWalls(mons[obj->corpsenm].monsterTypeID) && may_passwall(x, y))) {
+        && !(passesThroughWalls(obj->corpsenm) && may_passwall(x, y))) {
         if (!quietly)
             You("cannot place a figurine in %s!",
                 IS_TREE(levl[x][y].typ) ? "a tree" : "solid rock");
         return FALSE;
     }
-    if (sobj_at(BOULDER, x, y) && !passesThroughWalls(mons[obj->corpsenm].monsterTypeID)
-        && !throwsRocks(mons[obj->corpsenm].monsterTypeID)) {
+    if (sobj_at(BOULDER, x, y) && !passesThroughWalls(obj->corpsenm)
+        && !throwsRocks(obj->corpsenm)) {
         if (!quietly)
             You("cannot fit the figurine on the boulder.");
         return FALSE;
@@ -2679,8 +2679,7 @@ struct obj *obj;
                              && polymon(PM_STONE_GOLEM))) {
                         char kbuf[BUFSZ];
 
-			int monsterTypeID = mons[otmp->corpsenm].monsterTypeID;
-	                javaString monsterName = monsterTypeName(monsterTypeID);
+	                javaString monsterName = monsterTypeName(otmp->corpsenm);
                         Sprintf(kbuf, "%s corpse",
                                 an(monsterName.c_str));
                         pline("Snatching %s is a fatal mistake.", kbuf);
