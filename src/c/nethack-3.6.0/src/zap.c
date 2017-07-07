@@ -1693,7 +1693,7 @@ struct obj *obj;
            non-omnivorous form, regardless of whether it's herbivorous,
            non-eating, or something stranger) */
         if (Role_if(PM_MONK) || vegetarianConduct()
-            || !isCarnivorous(youmonst.data->monsterTypeID))
+            || !isCarnivorous(pmid4you()))
             Norep("You smell the odor of meat.");
         else
             Norep("You smell a delicious smell.");
@@ -1794,7 +1794,7 @@ struct obj *obj, *otmp;
             if (obj_shudders(obj)) {
                 boolean cover =
                     ((obj == level.objects[currentX()][currentY()]) && lurking()
-                     && hidesUnderStuff(youmonst.data->monsterTypeID));
+                     && hidesUnderStuff(pmid4you()));
 
                 if (cansee(obj->ox, obj->oy))
                     learn_it = TRUE;
@@ -1969,7 +1969,7 @@ schar zz;
         next_obj = otmp->nexthere;
         /* for zap downwards, don't hit object poly'd hero is hiding under */
         if (zz > 0 && lurking() && otmp == level.objects[currentX()][currentY()]
-            && hidesUnderStuff(youmonst.data->monsterTypeID))
+            && hidesUnderStuff(pmid4you()))
             continue;
 
         hitanything += (*fhito)(otmp, obj);
@@ -2299,7 +2299,7 @@ boolean ordinary;
 
     case WAN_DEATH:
     case SPE_FINGER_OF_DEATH:
-        if (isNonliving(youmonst.data->monsterTypeID) || isDemon(youmonst.data->monsterTypeID)) {
+        if (isNonliving(pmid4you()) || isDemon(pmid4you())) {
             pline((obj->otyp == WAN_DEATH)
                       ? "The wand shoots an apparently harmless beam at you."
                       : "You seem no deader than before.");
@@ -2317,7 +2317,7 @@ boolean ordinary;
     case SPE_TURN_UNDEAD:
         learn_it = TRUE;
         (void) unturn_dead(&youmonst);
-        if (isUndead(youmonst.data->monsterTypeID)) {
+        if (isUndead(pmid4you())) {
             You_feel("frightened and %sstunned.",
                      youAreStunned() ? "even more " : "");
             make_stunned(yourIntrinsicTimeout(STUNNED) + (long) rnd(30), FALSE);
@@ -2798,7 +2798,7 @@ struct obj *obj; /* wand or spell */
         /* game flavor: if you're hiding under "something"
          * a zap upward should hit that "something".
          */
-        if (lurking() && hidesUnderStuff(youmonst.data->monsterTypeID)) {
+        if (lurking() && hidesUnderStuff(pmid4you())) {
             int hitit = 0;
             otmp = level.objects[currentX()][currentY()];
 
@@ -3614,7 +3614,7 @@ xchar sx, sy;
                 (void) destroy_arm(uarmc);
             if (uarmu)
                 (void) destroy_arm(uarmu);
-        } else if (isNonliving(youmonst.data->monsterTypeID) || isDemon(youmonst.data->monsterTypeID)) {
+        } else if (isNonliving(pmid4you()) || isDemon(pmid4you())) {
             shieldeff(sx, sy);
             You("seem unaffected.");
             break;
@@ -3908,7 +3908,7 @@ register int dx, dy;
                             pline("%s disintegrates.", Monnam(mon));
                             pline("%s body reintegrates before your %s!",
                                   s_suffix(Monnam(mon)),
-                                  (eyeCount(youmonst.data->monsterTypeID) == 1)
+                                  (eyeCount(pmid4you()) == 1)
                                       ? body_part(EYE)
                                       : makeplural(body_part(EYE)));
                             pline("%s resurrects!", Monnam(mon));
@@ -4654,7 +4654,7 @@ register int osym, dmgtyp;
             pline("%s %s %s!", mult, xname(obj),
                   destroy_strings[dindx][(cnt > 1L)]);
             if (osym == POTION_CLASS && dmgtyp != AD_COLD) {
-                if (!doesNotBreathe(youmonst.data->monsterTypeID) || hasEyes(youmonst.data->monsterTypeID))
+                if (!doesNotBreathe(pmid4you()) || hasEyes(pmid4you()))
                     potionbreathe(obj);
             }
             if (obj->owornmask) {

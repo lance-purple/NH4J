@@ -104,7 +104,7 @@ register struct obj *pen;
     boolean by_descr = FALSE;
     const char *typeword;
 
-    if (hasNoHands(youmonst.data->monsterTypeID)) {
+    if (hasNoHands(pmid4you())) {
         You("need hands to be able to write!");
         return 0;
     } else if (youHaveSlipperyFingers()) {

@@ -196,7 +196,7 @@ xchar x, y;
             tmp = find_roll_to_hit(mon, AT_KICK, (struct obj *) 0, &attknum,
                                    &armorpenalty);
 	
-	int upmid = youmonst.data->monsterTypeID;
+	int upmid = pmid4you();
 
         for (i = 0; i < monsterAttacks(upmid); i++) {
             /* first of two kicks might have provoked counterattack
@@ -762,7 +762,7 @@ dokick()
     register struct monst *mtmp;
     boolean no_kick = FALSE;
     char buf[BUFSZ];
-    int upmid = youmonst.data->monsterTypeID;
+    int upmid = pmid4you();
 
     if (hasNoLimbs(upmid) || isSlithy(upmid)) {
         You("have no legs to kick with.");
@@ -792,7 +792,7 @@ dokick()
     } else if (near_capacity() > SLT_ENCUMBER) {
         Your("load is too heavy to balance yourself for a kick.");
         no_kick = TRUE;
-    } else if (monsterClass(youmonst.data->monsterTypeID) == S_LIZARD) {
+    } else if (monsterClass(pmid4you()) == S_LIZARD) {
         Your("legs cannot kick effectively.");
         no_kick = TRUE;
     } else if (inWater() && !rn2(2)) {
@@ -933,7 +933,7 @@ dokick()
             int range;
 
             range =
-                (monsterCorpseWeight(youmonst.data->monsterTypeID) + (weight_cap() + inv_weight()));
+                (monsterCorpseWeight(pmid4you()) + (weight_cap() + inv_weight()));
             if (range < 1)
                 range = 1; /* divide by zero avoidance */
             range = (3 * monsterCorpseWeight(mdat->monsterTypeID)) / range;

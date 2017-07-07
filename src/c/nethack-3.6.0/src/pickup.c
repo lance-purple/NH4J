@@ -502,7 +502,7 @@ int what; /* should be a long */
             check_here(FALSE);
             return 0;
         }
-        if (doesNotTakeStuff(youmonst.data->monsterTypeID)) {
+        if (doesNotTakeStuff(pmid4you())) {
             if (!autopickup)
                 You("are physically incapable of picking anything up.");
             else
@@ -662,7 +662,7 @@ int what; /* should be a long */
     }
 
     if (!swallowed()) {
-        if (hidesUnderStuff(youmonst.data->monsterTypeID))
+        if (hidesUnderStuff(pmid4you()))
             (void) hideunder(&youmonst);
 
         /* position may need updating (invisible hero) */
@@ -1285,7 +1285,7 @@ boolean telekinesis;
        and for boulder picked up by hero poly'd into a giant; override
        availability of open inventory slot iff not already carrying one */
     if (obj->otyp == LOADSTONE
-        || (obj->otyp == BOULDER && throwsRocks(youmonst.data->monsterTypeID))) {
+        || (obj->otyp == BOULDER && throwsRocks(pmid4you()))) {
         if (inv_cnt(FALSE) < 52 || !carrying(obj->otyp)
             || merge_choice(invent, obj))
             return 1; /* lift regardless of current situation */
@@ -1551,7 +1551,7 @@ boolean looting; /* loot vs tip */
         You("cannot %s things that are deep in the %s.", verb,
             is_lava(x, y) ? "lava" : "water");
         return FALSE;
-    } else if (hasNoLimbs(youmonst.data->monsterTypeID)) {
+    } else if (hasNoLimbs(pmid4you())) {
         pline("Without limbs, you cannot %s anything.", verb);
         return FALSE;
     } else if (looting && !freehand()) {
@@ -1627,7 +1627,7 @@ doloot()
         /* "Can't do that while carrying so much stuff." */
         return 0;
     }
-    if (hasNoHands(youmonst.data->monsterTypeID)) {
+    if (hasNoHands(pmid4you())) {
         You("have no hands!"); /* not `body_part(HAND)' */
         return 0;
     }
@@ -1868,7 +1868,7 @@ boolean *prev_loot;
             qbuf, "Do you want to remove the saddle from %s?",
             x_monnam(mtmp, ARTICLE_THE, (char *) 0, SUPPRESS_SADDLE, FALSE));
         if ((c = yn_function(qbuf, ynqchars, 'n')) == 'y') {
-            if (hasNoLimbs(youmonst.data->monsterTypeID)) {
+            if (hasNoLimbs(pmid4you())) {
                 You_cant("do that without limbs."); /* not body_part(HAND) */
                 return 0;
             }
@@ -2246,7 +2246,7 @@ explain_container_prompt()
 boolean
 u_handsy()
 {
-    if (hasNoHands(youmonst.data->monsterTypeID)) {
+    if (hasNoHands(pmid4you())) {
         You("have no hands!"); /* not `body_part(HAND)' */
         return FALSE;
     } else if (!freehand()) {

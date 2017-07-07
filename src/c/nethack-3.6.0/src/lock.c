@@ -95,7 +95,7 @@ picklock(VOID_ARGS)
         }
     }
 
-    if (xlock.usedtime++ >= 50 || hasNoHands(youmonst.data->monsterTypeID)) {
+    if (xlock.usedtime++ >= 50 || hasNoHands(pmid4you())) {
         You("give up your attempt at %s.", lock_action());
         exercise(A_DEX, TRUE); /* even if you don't succeed */
         return ((xlock.usedtime = 0));
@@ -189,7 +189,7 @@ forcelock(VOID_ARGS)
     if ((xlock.box->ox != currentX()) || (xlock.box->oy != currentY()))
         return ((xlock.usedtime = 0)); /* you or it moved */
 
-    if (xlock.usedtime++ >= 50 || !uwep || hasNoHands(youmonst.data->monsterTypeID)) {
+    if (xlock.usedtime++ >= 50 || !uwep || hasNoHands(pmid4you())) {
         You("give up your attempt to force the lock.");
         if (xlock.usedtime >= 50) /* you made the effort */
             exercise((xlock.picktyp) ? A_DEX : A_STR, TRUE);
@@ -255,7 +255,7 @@ struct obj *pick;
     if (xlock.usedtime && picktyp == xlock.picktyp) {
         static char no_longer[] = "Unfortunately, you can no longer %s %s.";
 
-        if (hasNoHands(youmonst.data->monsterTypeID)) {
+        if (hasNoHands(pmid4you())) {
             const char *what = (picktyp == LOCK_PICK) ? "pick" : "key";
             if (picktyp == CREDIT_CARD)
                 what = "card";
@@ -275,7 +275,7 @@ struct obj *pick;
         }
     }
 
-    if (hasNoHands(youmonst.data->monsterTypeID)) {
+    if (hasNoHands(pmid4you())) {
         You_cant("hold %s -- you have no hands!", doname(pick));
         return PICKLOCK_DID_NOTHING;
     } else if (swallowed()) {
@@ -566,7 +566,7 @@ int x, y;
     boolean portcullis;
     int res = 0;
 
-    if (hasNoHands(youmonst.data->monsterTypeID)) {
+    if (hasNoHands(pmid4you())) {
         You_cant("open anything -- you have no hands!");
         return 0;
     }
@@ -637,7 +637,7 @@ int x, y;
         return res;
     }
 
-    if (isVerySmallMonster(youmonst.data->monsterTypeID)) {
+    if (isVerySmallMonster(pmid4you())) {
         pline("You're too small to pull the door open.");
         return res;
     }
@@ -705,7 +705,7 @@ doclose()
     boolean portcullis;
     int res = 0;
 
-    if (hasNoHands(youmonst.data->monsterTypeID)) {
+    if (hasNoHands(pmid4you())) {
         You_cant("close anything -- you have no hands!");
         return 0;
     }
@@ -774,7 +774,7 @@ doclose()
     }
 
     if (door->doormask == D_ISOPEN) {
-        if (isVerySmallMonster(youmonst.data->monsterTypeID) && !u.usteed) {
+        if (isVerySmallMonster(pmid4you()) && !u.usteed) {
             pline("You're too small to push the door closed.");
             return res;
         }
@@ -1004,7 +1004,7 @@ struct obj *otmp;
 
     if (otmp->oclass == POTION_CLASS) {
         You("%s %s shatter!", youCannotSee() ? "hear" : "see", an(bottlename()));
-        if (!doesNotBreathe(youmonst.data->monsterTypeID) || hasEyes(youmonst.data->monsterTypeID))
+        if (!doesNotBreathe(pmid4you()) || hasEyes(pmid4you()))
             potionbreathe(otmp);
         return;
     }

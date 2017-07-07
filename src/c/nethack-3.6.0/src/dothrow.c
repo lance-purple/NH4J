@@ -75,7 +75,7 @@ int shotlimit;
         return 0;
     }
     if ((obj->oartifact == ART_MJOLLNIR && ACURR(A_STR) < STR19(25))
-        || (obj->otyp == BOULDER && !throwsRocks(youmonst.data->monsterTypeID))) {
+        || (obj->otyp == BOULDER && !throwsRocks(pmid4you()))) {
         pline("It's too heavy.");
         return 1;
     }
@@ -242,10 +242,10 @@ int *shotlimit_p; /* (see dothrow()) */
     *shotlimit_p = (multi || save_cm) ? multi + 1 : 0;
     multi = 0; /* reset; it's been used up */
 
-    if (doesNotTakeStuff(youmonst.data->monsterTypeID)) {
+    if (doesNotTakeStuff(pmid4you())) {
         You("are physically incapable of throwing or shooting anything.");
         return FALSE;
-    } else if (hasNoHands(youmonst.data->monsterTypeID)) {
+    } else if (hasNoHands(pmid4you())) {
         You_cant("throw or shoot without hands."); /* not body_part(HAND) */
         return FALSE;
         /*[what about !freehand(), aside from cursed missile launcher?]*/
@@ -589,7 +589,7 @@ int x, y;
             boolean too_much =
                 (invent && (inv_weight() + weight_cap() > 600));
             /* Move at a diagonal. */
-            if (isBigMonster(youmonst.data->monsterTypeID) || too_much) {
+            if (isBigMonster(pmid4you()) || too_much) {
                 You("%sget forcefully wedged into a crevice.",
                     too_much ? "and all your belongings " : "");
                 dmg = rnd(2 + *range);
@@ -1367,7 +1367,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
     tmp = -1 + currentLuckWithBonus() + find_mac(mon) + toHitModifier();
 
     if (areYouPolymorphed()) {
-        tmp += monsterLevel(youmonst.data->monsterTypeID);
+        tmp += monsterLevel(pmid4you());
     } else {
         tmp += currentExperienceLevel();
     }
@@ -1479,7 +1479,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
                  * Polymorphing won't make you a bow expert.
                  */
                 if ((Race_if(PM_ELF) || Role_if(PM_SAMURAI))
-                    && (!areYouPolymorphed() || isOfYourRace(youmonst.data->monsterTypeID, urace.selfmask))
+                    && (!areYouPolymorphed() || isOfYourRace(pmid4you(), urace.selfmask))
                     && objects[uwep->otyp].oc_skill == P_BOW) {
                     tmp++;
                     if (Race_if(PM_ELF) && uwep->otyp == ELVEN_BOW)
@@ -1782,7 +1782,7 @@ boolean hero_caused; /* is this the hero's fault? */
 boolean from_invent;
 {
     boolean fracture = FALSE;
-    int upmid = youmonst.data->monsterTypeID;
+    int upmid = pmid4you();
 
     switch (obj->oclass == POTION_CLASS ? POT_WATER : obj->otyp) {
     case MIRROR:

@@ -440,7 +440,7 @@ register struct monst *mtmp;
             pline("%s whispers at thin air.",
                   cansee(mtmp->mux, mtmp->muy) ? Monnam(mtmp) : "It");
 
-            if (isDemon(youmonst.data->monsterTypeID)) {
+            if (isDemon(pmid4you())) {
                 /* "Good hunting, brother" */
                 if (!tele_restrict(mtmp))
                     (void) rloc(mtmp, TRUE);
@@ -881,7 +881,7 @@ not_special:
     if ((!mtmp->mpeaceful || !rn2(10)) && (!areYouOnRogueLevel())) {
         boolean in_line = (lined_up(mtmp)
                && (distmin(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy)
-                   <= (throwsRocks(youmonst.data->monsterTypeID) ? 20 : ACURRSTR / 2 + 1)));
+                   <= (throwsRocks(pmid4you()) ? 20 : ACURRSTR / 2 + 1)));
 
         if (appr != 1 || !in_line) {
             /* Monsters in combat won't pick stuff up, avoiding the

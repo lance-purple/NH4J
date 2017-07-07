@@ -221,7 +221,7 @@ Boots_off(VOID_ARGS)
     case WATER_WALKING_BOOTS:
         /* check for lava since fireproofed boots make it viable */
         if ((is_pool(currentX(), currentY()) || is_lava(currentX(), currentY()))
-            && !youAreLevitating() && !youAreFlying() && !isClinger(youmonst.data->monsterTypeID)
+            && !youAreLevitating() && !youAreFlying() && !isClinger(pmid4you())
             && !context.takeoff.cancelled_don
             /* avoid recursive call to lava_effects() */
             && !iflags.in_lava_effects) {
@@ -775,7 +775,7 @@ Amulet_off()
             /* intrinsic magical breathing must be set off
                 before calling drown() */
             setworn((struct obj *) 0, W_AMUL);
-            if (!doesNotBreathe(youmonst.data->monsterTypeID) && !isAmphibious(youmonst.data->monsterTypeID)
+            if (!doesNotBreathe(pmid4you()) && !isAmphibious(pmid4you())
                 && !youCanSwim()) {
                 You("suddenly inhale an unhealthy amount of water!");
                 (void) drown();
@@ -1592,7 +1592,7 @@ boolean noisy;
                         : 0;
     if (which && cantweararm(youmonst.data)
         /* same exception for cloaks as used in m_dowear() */
-        && (which != c_cloak || monsterSize(youmonst.data->monsterTypeID) != MZ_SMALL)
+        && (which != c_cloak || monsterSize(pmid4you()) != MZ_SMALL)
         && (racial_exception(&youmonst, otmp) < 1)) {
         if (noisy)
             pline_The("%s will not fit on your body.", which);
@@ -1647,11 +1647,11 @@ boolean noisy;
             if (noisy)
                 already_wearing(c_boots);
             err++;
-        } else if (areYouPolymorphed() && isSlithy(youmonst.data->monsterTypeID)) {
+        } else if (areYouPolymorphed() && isSlithy(pmid4you())) {
             if (noisy)
                 You("have no feet..."); /* not body_part(FOOT) */
             err++;
-        } else if (areYouPolymorphed() && monsterClass(youmonst.data->monsterTypeID) == S_CENTAUR) {
+        } else if (areYouPolymorphed() && monsterClass(pmid4you()) == S_CENTAUR) {
             /* break_armor() pushes boots off for centaurs,
                so don't let dowear() put them back on... */
             if (noisy)
@@ -1777,7 +1777,7 @@ struct obj *obj;
         if (ring) {
             char answer, qbuf[QBUFSZ];
             int res = 0;
-	    int upmid = youmonst.data->monsterTypeID;
+	    int upmid = pmid4you();
 
             if (hasNoLimbs(upmid)) {
                 You("cannot make the ring stick to your body.");
@@ -1931,7 +1931,7 @@ dowear()
 
     /* cantweararm() checks for suits of armor, not what we want here;
        verysmall() or hasNoHands() checks for shields, gloves, etc... */
-    if ((isVerySmallMonster(youmonst.data->monsterTypeID) || hasNoHands(youmonst.data->monsterTypeID))) {
+    if ((isVerySmallMonster(pmid4you()) || hasNoHands(pmid4you()))) {
         pline("Don't even bother.");
         return 0;
     }
@@ -1955,7 +1955,7 @@ doputon()
         && uarm && uarmu && uarmc && uarmh && uarms && uarmg && uarmf) {
         /* 'P' message doesn't mention armor */
         Your("%s%s are full, and you're already wearing an amulet and %s.",
-             isHumanoid(youmonst.data->monsterTypeID) ? "ring-" : "",
+             isHumanoid(pmid4you()) ? "ring-" : "",
              makeplural(body_part(FINGER)),
              (ublindf->otyp == LENSES) ? "some lenses" : "a blindfold");
         return 0;
@@ -2023,7 +2023,7 @@ glibr()
     leftfall = (uleft && !uleft->cursed
                 && (!uwep || !welded(uwep) || !bimanual(uwep)));
     rightfall = (uright && !uright->cursed && (!welded(uwep)));
-    if (!uarmg && (leftfall || rightfall) && !hasNoLimbs(youmonst.data->monsterTypeID)) {
+    if (!uarmg && (leftfall || rightfall) && !hasNoLimbs(pmid4you())) {
         /* changed so cursed rings don't fall off, GAN 10/30/86 */
         Your("%s off your %s.",
              (leftfall && rightfall) ? "rings slip" : "ring slips",
@@ -2140,7 +2140,7 @@ int otyp;
     if (ring && ring->otyp == otyp) {
         /* reasons ring can't be removed match those checked by select_off();
            limbless case has extra checks because ordinarily it's temporary */
-        if (hasNoLimbs(youmonst.data->monsterTypeID) && uamul
+        if (hasNoLimbs(pmid4you()) && uamul
             && uamul->otyp == AMULET_OF_UNCHANGING && uamul->cursed)
             return uamul;
         if (welded(uwep) && (ring == uright || bimanual(uwep)))
@@ -2177,7 +2177,7 @@ register struct obj *otmp;
 
     /* special ring checks */
     if (otmp == uright || otmp == uleft) {
-        if (hasNoLimbs(youmonst.data->monsterTypeID)) {
+        if (hasNoLimbs(pmid4you())) {
             pline_The("ring is stuck.");
             return 0;
         }

@@ -32,6 +32,7 @@ typedef struct {
 
 E int FDECL(pmid4dat, (struct permonst*));
 E int FDECL(pmid4mon, (struct monst*));
+E int FDECL(pmid4you, ());
 
 E javaString FDECL(monsterTypeName, (int));
 E void FDECL(releaseJavaString, (javaString));

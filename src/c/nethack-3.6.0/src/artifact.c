@@ -1266,7 +1266,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                 otmp->dknown = TRUE;
                 return TRUE;
             } else {
-                if (isBigMonster(youmonst.data->monsterTypeID)) {
+                if (isBigMonster(pmid4you())) {
                     pline("%s cuts deeply into you!",
                           magr ? Monnam(magr) : wepdesc);
                     *dmgptr *= 2;
@@ -1314,7 +1314,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                 otmp->dknown = TRUE;
                 return TRUE;
             } else {
-		int upmid = youmonst.data->monsterTypeID;
+		int upmid = pmid4you();
                 if (!hasAHead(upmid)) {
                     pline("Somehow, %s misses you wildly.",
                           magr ? mon_nam(magr) : wepdesc);

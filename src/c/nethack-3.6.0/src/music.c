@@ -376,7 +376,7 @@ int force;
                         }
                     } else if (x == currentX() && y == currentY()) {
                         if (youAreLevitating() || youAreFlying()
-                            || isClinger(youmonst.data->monsterTypeID)) {
+                            || isClinger(pmid4you())) {
                             if (!tu_pit) { /* no pit here previously */
                                 pline("A chasm opens up under you!");
                                 You("don't fall in!");
@@ -405,8 +405,8 @@ int force;
                                 exercise(A_DEX, TRUE);
                             else
                                 selftouch(
-                                    (areYouPolymorphed() && (isSlithy(youmonst.data->monsterTypeID)
-                                                || hasNoLimbs(youmonst.data->monsterTypeID)))
+                                    (areYouPolymorphed() && (isSlithy(pmid4you())
+                                                || hasNoLimbs(pmid4you())))
                                         ? "Shaken, you"
                                         : "Falling down, you");
                         }

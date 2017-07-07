@@ -85,7 +85,7 @@ register struct obj *obj;
     /* above also prevents the Amulet from being eaten, so we must never
        allow fake amulets to be eaten either [which is already the case] */
 
-    if (isMetallivorous(youmonst.data->monsterTypeID) && is_metallic(obj)
+    if (isMetallivorous(pmid4you()) && is_metallic(obj)
         && (youmonst.data != &mons[PM_RUST_MONSTER] || is_rustprone(obj)))
         return TRUE;
 
@@ -693,7 +693,7 @@ register int pm;
         return;
     }
     case PM_GREEN_SLIME:
-        if (!youAreTurningToSlime() && !youAreUnchanging() && !isSlimeproof(youmonst.data->monsterTypeID)) {
+        if (!youAreTurningToSlime() && !youAreUnchanging() && !isSlimeproof(pmid4you())) {
             You("don't feel very well.");
             make_slimed(10L, (char *) 0);
             delayed_killer(SLIMED, KILLED_BY_AN, "");
@@ -987,7 +987,7 @@ register int pm;
         /*FALLTHRU*/
     case PM_SMALL_MIMIC:
         tmp += 20;
-        if (monsterClass(youmonst.data->monsterTypeID) != S_MIMIC && !youAreUnchanging()) {
+        if (monsterClass(pmid4you()) != S_MIMIC && !youAreUnchanging()) {
             char buf[BUFSZ];
 
             incrementPolyselfCount(1); /* you're changing form */
@@ -998,7 +998,7 @@ register int pm;
                 dismount_steed(DISMOUNT_FELL);
             nomul(-tmp);
             multi_reason = "pretending to be a pile of gold";
-	    javaString youAsMonsterName = monsterTypeName(youmonst.data->monsterTypeID);
+	    javaString youAsMonsterName = monsterTypeName(pmid4you());
             Sprintf(buf,
                     youAreHallucinating()
                        ? "You suddenly dread being peeled and mimic %s again!"
@@ -1426,10 +1426,10 @@ struct obj *otmp;
     const char *mesg = 0;
     register int tmp;
 
-    if (isMetallivorous(youmonst.data->monsterTypeID)) {
+    if (isMetallivorous(pmid4you())) {
         mesg = "You bite right into the metal tin...";
         tmp = 0;
-    } else if (cannotWieldThings(youmonst.data->monsterTypeID)) { /* nohands || isVerySmallMonster */
+    } else if (cannotWieldThings(pmid4you())) { /* nohands || isVerySmallMonster */
         You("cannot handle the tin properly to open it.");
         return;
     } else if (otmp->blessed) {
@@ -1649,7 +1649,7 @@ struct obj *otmp;
         You("peck the eyeball with delight.");
     } else {
         /* [is this right?  omnivores end up always disliking the taste] */
-	int upmid = youmonst.data->monsterTypeID;
+	int upmid = pmid4you();
         boolean yummy = isVeganOption(mons[mnum].monsterTypeID)
                            ? (!isCarnivorous(upmid)
                               && isHerbivorous(upmid))
@@ -1729,7 +1729,7 @@ STATIC_OVL void
 fprefx(otmp)
 struct obj *otmp;
 {
-    int upmid = youmonst.data->monsterTypeID;
+    int upmid = pmid4you();
     switch (otmp->otyp) {
     case FOOD_RATION:
         if (currentNutrition() <= 200)
@@ -1760,7 +1760,7 @@ struct obj *otmp;
     case MEAT_RING:
         goto give_feedback;
     case CLOVE_OF_GARLIC:
-        if (isUndead(youmonst.data->monsterTypeID)) {
+        if (isUndead(pmid4you())) {
             make_vomiting((long) rn1(context.victual.reqtime, 5), FALSE);
             break;
         }
@@ -1892,7 +1892,7 @@ struct obj *otmp;
                 set_mimic_blocking();
                 see_monsters();
                 if (youAreInvisibleToOthers() && !oldprop && !yourIntrinsic(SEE_INVIS)
-                    && !perceivesTheInvisible(youmonst.data->monsterTypeID) && youCanSee()) {
+                    && !perceivesTheInvisible(pmid4you()) && youCanSee()) {
                     newsym(currentX(), currentY());
                     pline("Suddenly you can see yourself.");
                     makeknown(typ);
@@ -2100,7 +2100,7 @@ struct obj *otmp;
 {
     switch (otmp->otyp) {
     case SPRIG_OF_WOLFSBANE:
-        if (lycanthropeType() >= LOW_PM || isWere(youmonst.data->monsterTypeID))
+        if (lycanthropeType() >= LOW_PM || isWere(pmid4you()))
             you_unwere(TRUE);
         break;
     case CARROT:
@@ -2231,7 +2231,7 @@ struct obj *otmp;
                         && !poly_when_stoned(youmonst.data));
 
         if (mnum == PM_GREEN_SLIME || otmp->otyp == GLOB_OF_GREEN_SLIME)
-            stoneorslime = (!youAreUnchanging() && !isSlimeproof(youmonst.data->monsterTypeID));
+            stoneorslime = (!youAreUnchanging() && !isSlimeproof(pmid4you()));
 
         if (cadaver && !nonrotting_corpse(mnum)) {
             long age = peek_at_iced_corpse_age(otmp);
@@ -2651,7 +2651,7 @@ gethungry()
         return; /* you don't feel hungrier */
 
     if ((!sleepingSinceMove() || !rn2(10)) /* slow metabolic rate while asleep */
-        && (isCarnivorous(youmonst.data->monsterTypeID) || isHerbivorous(youmonst.data->monsterTypeID))
+        && (isCarnivorous(pmid4you()) || isHerbivorous(pmid4you()))
         && !youHaveSlowDigestion()) {
         decreaseCurrentNutrition(1); /* ordinary food consumption */
     }
@@ -2944,11 +2944,11 @@ int corpsecheck; /* 0, no check, 1, corpses, 2, tinnable corpses */
     /* if we can't touch floor objects then use invent food only */
     if (!can_reach_floor(TRUE) || (feeding && u.usteed)
         || (is_pool_or_lava(currentX(), currentY())
-            && (canYouWalkOnWater() || isClinger(youmonst.data->monsterTypeID)
+            && (canYouWalkOnWater() || isClinger(pmid4you())
                 || (youAreFlying() && !youNeedNotBreathe()))))
         goto skipfloor;
 
-    if (feeding && isMetallivorous(youmonst.data->monsterTypeID)) {
+    if (feeding && isMetallivorous(pmid4you())) {
         struct obj *gold;
         struct trap *ttmp = t_at(currentX(), currentY());
 

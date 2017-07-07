@@ -155,7 +155,7 @@ boolean
 can_ride(mtmp)
 struct monst *mtmp;
 {
-    int upmid = youmonst.data->monsterTypeID;
+    int upmid = pmid4you();
     return (mtmp->mtame && isHumanoid(upmid)
             && !isVerySmallMonster(upmid) && !isBigMonster(upmid)
             && (!underwater() || isSwimmer(upmid)));
@@ -222,7 +222,7 @@ boolean force;      /* Quietly force this animal */
             return (FALSE);
     }
 
-    int upmid = youmonst.data->monsterTypeID;
+    int upmid = pmid4you();
 
     if (areYouPolymorphed() && (!isHumanoid(upmid) || isVerySmallMonster(upmid)
                    || isBigMonster(upmid) || isSlithy(upmid))) {
@@ -444,7 +444,7 @@ int forceit;
                         || (distance == min_distance && rn2(2))) {
                         if (i > 0 || (((t = t_at(x, y)) == 0 || !t->tseen)
                                       && (!sobj_at(BOULDER, x, y)
-                                          || throwsRocks(youmonst.data->monsterTypeID)))) {
+                                          || throwsRocks(pmid4you())))) {
                             spot->x = x;
                             spot->y = y;
                             min_distance = distance;

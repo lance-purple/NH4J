@@ -352,7 +352,7 @@ struct monst *mon;
     if (mon == &youmonst) {
         /* hero can't be mindless but poly'ing into mindless form can
            confer strangulation protection */
-        nobrainer = isMindless(youmonst.data->monsterTypeID);
+        nobrainer = isMindless(pmid4you());
         nonbreathing = youNeedNotBreathe();
     } else {
         nobrainer = isMindless(mon->data->monsterTypeID);

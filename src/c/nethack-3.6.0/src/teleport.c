@@ -75,7 +75,7 @@ unsigned gpflags;
                 return (youAreLevitating() || youAreFlying()
                         || (youResistFire() && canYouWalkOnWater() && uarmf
                             && uarmf->oerodeproof)
-                        || (areYouPolymorphed() && likesLava(youmonst.data->monsterTypeID)));
+                        || (areYouPolymorphed() && likesLava(pmid4you())));
             else
                 return (isFloater(mdat->monsterTypeID) || isFlyer(pmid)
                         || likesLava(mdat->monsterTypeID));
@@ -291,7 +291,7 @@ boolean allow_drag;
     setOriginalX(currentX());
     setOriginalY(currentY());
 
-    if (!hideunder(&youmonst) && monsterClass(youmonst.data->monsterTypeID) == S_MIMIC) {
+    if (!hideunder(&youmonst) && monsterClass(pmid4you()) == S_MIMIC) {
         /* mimics stop being unnoticed */
         youmonst.m_ap_type = M_AP_NOTHING;
     }
@@ -519,7 +519,7 @@ dotele()
         register int sp_no = 0, energy = 0;
 
         if (!youCanTeleport() || (currentExperienceLevel() < (Role_if(PM_WIZARD) ? 8 : 12)
-                               && !canTeleport(youmonst.data->monsterTypeID))) {
+                               && !canTeleport(pmid4you()))) {
             /* Try to use teleport away spell. */
             if (objects[SPE_TELEPORT_AWAY].oc_name_known && !youAreConfused())
                 for (sp_no = 0; sp_no < MAXSPELL; sp_no++)
@@ -663,7 +663,7 @@ level_tele()
             if (ynq("Go to Nowhere.  Are you sure?") != 'y')
                 return;
             You("%s in agony as your body begins to warp...",
-                isSilent(youmonst.data->monsterTypeID) ? "writhe" : "scream");
+                isSilent(pmid4you()) ? "writhe" : "scream");
             display_nhwindow(WIN_MESSAGE, FALSE);
             You("cease to exist.");
             if (invent)

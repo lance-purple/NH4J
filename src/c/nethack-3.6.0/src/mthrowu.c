@@ -342,7 +342,7 @@ struct obj *obj;         /* missile (or stack providing it) */
 
             if (singleobj->oclass == GEM_CLASS
                 && singleobj->otyp <= LAST_GEM + 9 /* 9 glass colors */
-                && isUnicorn(youmonst.data->monsterTypeID)) {
+                && isUnicorn(pmid4you())) {
                 if (singleobj->otyp > LAST_GEM) {
                     You("catch the %s.", xname(singleobj));
                     You("are not interested in %s junk.",
@@ -393,7 +393,7 @@ struct obj *obj;         /* missile (or stack providing it) */
                     if (singleobj->otyp == ELVEN_ARROW)
                         dam++;
                 }
-                if (isBigMonster(youmonst.data->monsterTypeID))
+                if (isBigMonster(pmid4you()))
                     hitv++;
                 hitv += 8 + singleobj->spe;
                 if (dam < 1)
@@ -425,7 +425,7 @@ struct obj *obj;         /* missile (or stack providing it) */
                 } else if (singleobj->otyp == BLINDING_VENOM) {
                     const char *eyes = body_part(EYE);
 
-                    if (eyeCount(youmonst.data->monsterTypeID) != 1)
+                    if (eyeCount(pmid4you()) != 1)
                         eyes = makeplural(eyes);
                     /* venom in the eyes */
                     if (youCanSee())
@@ -551,7 +551,7 @@ struct monst *mtmp;
         hitv = 3 - distmin(currentX(), currentY(), mtmp->mx, mtmp->my);
         if (hitv < -4)
             hitv = -4;
-        if (isBigMonster(youmonst.data->monsterTypeID))
+        if (isBigMonster(pmid4you()))
             hitv++;
         hitv += 8 + otmp->spe;
         if (dam < 1)

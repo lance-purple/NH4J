@@ -157,7 +157,7 @@ boolean check_pit;
 
     return (boolean) ((!youAreLevitating() || areYouOnAirLevel()
                        || areYouOnWaterLevel())
-                      && (!lurking() || !isHider(youmonst.data->monsterTypeID)
+                      && (!lurking() || !isHider(pmid4you())
                           || currentMonsterNumber() == PM_TRAPPER));
 }
 
@@ -490,7 +490,7 @@ doengrave()
     ebuf[0] = (char) 0;
     post_engr_text[0] = (char) 0;
     maxelen = BUFSZ - 1;
-    if (isDemon(youmonst.data->monsterTypeID) || monsterClass(youmonst.data->monsterTypeID) == S_VAMPIRE)
+    if (isDemon(pmid4you()) || monsterClass(pmid4you()) == S_VAMPIRE)
         type = ENGR_BLOOD;
 
     /* Can the adventurer engrave at all? */
@@ -519,7 +519,7 @@ doengrave()
         You_cant("write here.");
         return 0;
     }
-    if (cannotWieldThings(youmonst.data->monsterTypeID)) {
+    if (cannotWieldThings(pmid4you())) {
         You_cant("even hold anything!");
         return 0;
     }

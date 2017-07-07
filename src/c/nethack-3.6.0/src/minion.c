@@ -244,7 +244,7 @@ register struct monst *mtmp;
         }
         newsym(mtmp->mx, mtmp->my);
     }
-    if (monsterClass(youmonst.data->monsterTypeID) == S_DEMON) { /* Won't blackmail their own. */
+    if (monsterClass(pmid4you()) == S_DEMON) { /* Won't blackmail their own. */
         pline("%s says, \"Good hunting, %s.\"", Amonnam(mtmp),
               flags.female ? "Sister" : "Brother");
         if (!tele_restrict(mtmp))

@@ -1,0 +1,17 @@
+while read XX
+do
+file $XX
+done << EOF
+src/do_wear.c
+src/eat.c
+src/engrave.c
+src/hack.c
+src/lock.c
+src/mcastu.c
+src/polyself.c
+src/potion.c
+src/pray.c
+src/read.c
+src/trap.c
+src/zap.c
+EOF

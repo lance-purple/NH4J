@@ -925,7 +925,7 @@ register struct obj *obj;
         /* monsters with conflicting structures cannot be tamed */
         || mtmp->isshk || mtmp->isgd || mtmp->ispriest || mtmp->isminion
         || isCovetous(mtmp->data->monsterTypeID) || isHuman(mtmp->data->monsterTypeID)
-        || (isDemon(mtmp->data->monsterTypeID) && !isDemon(youmonst.data->monsterTypeID))
+        || (isDemon(mtmp->data->monsterTypeID) && !isDemon(pmid4you()))
         || (obj && dogfood(mtmp, obj) >= MANFOOD))
         return FALSE;
 
@@ -987,7 +987,7 @@ boolean was_dead;
             if (!rn2(edog->abuse + 1))
                 mtmp->mpeaceful = 1;
         if (!quietly && cansee(mtmp->mx, mtmp->my)) {
-            if (hasEyes(youmonst.data->monsterTypeID)) {
+            if (hasEyes(pmid4you())) {
                 if (hasEyes(mtmp->data->monsterTypeID))
                     pline("%s %s to look you in the %s.", Monnam(mtmp),
                           mtmp->mpeaceful ? "seems unable" : "refuses",

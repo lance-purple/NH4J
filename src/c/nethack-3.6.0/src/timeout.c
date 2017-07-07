@@ -32,7 +32,7 @@ stoned_dialogue()
         char buf[BUFSZ];
 
         Strcpy(buf, stoned_texts[SIZE(stoned_texts) - i]);
-        if (hasNoLimbs(youmonst.data->monsterTypeID) && strstri(buf, "limbs"))
+        if (hasNoLimbs(pmid4you()) && strstri(buf, "limbs"))
             (void) strsubst(buf, "limbs", "extremities");
         pline1(buf);
     }
@@ -170,7 +170,7 @@ slime_dialogue()
         char buf[BUFSZ];
 
         Strcpy(buf, slime_texts[SIZE(slime_texts) - i - 1L]);
-        if (hasNoLimbs(youmonst.data->monsterTypeID) && strstri(buf, "limbs"))
+        if (hasNoLimbs(pmid4you()) && strstri(buf, "limbs"))
             (void) strsubst(buf, "limbs", "extremities");
 
         if (index(buf, '%')) {
@@ -251,7 +251,7 @@ nh_timeout()
         decreaseTimeRemainingAsMonster(1);
         if (0 == timeRemainingAsMonster()) {
             if (youAreUnchanging()) {
-                setTimeRemainingAsMonster(rnd(100 * monsterLevel(youmonst.data->monsterTypeID) + 1));
+                setTimeRemainingAsMonster(rnd(100 * monsterLevel(pmid4you()) + 1));
             } else {
                 rehumanize();
             }

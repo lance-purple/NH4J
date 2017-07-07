@@ -443,7 +443,7 @@ register struct obj *spellbook;
 
         if (dullbook > 0) {
             eyes = body_part(EYE);
-            if (eyeCount(youmonst.data->monsterTypeID) > 1)
+            if (eyeCount(pmid4you()) > 1)
                 eyes = makeplural(eyes);
             pline("This book is so dull that you can't keep your %s open.",
                   eyes);

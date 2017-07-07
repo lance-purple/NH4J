@@ -346,7 +346,7 @@ doread()
             pline(nodisappear
                       ? "You %s the formula on the scroll."
                       : "As you %s the formula on it, the scroll disappears.",
-                  isSilent(youmonst.data->monsterTypeID) ? "cogitate" : "pronounce");
+                  isSilent(pmid4you()) ? "cogitate" : "pronounce");
         else
             pline(nodisappear ? "You read the scroll."
                               : "As you read the scroll, it disappears.");
@@ -355,7 +355,7 @@ doread()
                 pline("Being so trippy, you screw up...");
             else
                 pline("Being confused, you %s the magic words...",
-                      isSilent(youmonst.data->monsterTypeID) ? "misunderstand"
+                      isSilent(pmid4you()) ? "misunderstand"
                                                : "mispronounce");
         }
     }
@@ -1145,7 +1145,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
     } break;
     case SCR_CONFUSE_MONSTER:
     case SPE_CONFUSE_MONSTER:
-        if (monsterClass(youmonst.data->monsterTypeID) != S_HUMAN || scursed) {
+        if (monsterClass(pmid4you()) != S_HUMAN || scursed) {
             if (!yourIntrinsic(CONFUSION))
                 You_feel("confused.");
             make_confused(yourIntrinsic(CONFUSION) + rnd(100), FALSE);
@@ -1662,8 +1662,8 @@ boolean confused, helmet_protects, byu, skip_uswallow;
         return;
     otmp2->quan = confused ? rn1(5, 2) : 1;
     otmp2->owt = weight(otmp2);
-    if (!isAmorphous(youmonst.data->monsterTypeID) && !youCanPassThroughWalls()
-        && !isNoncorporeal(youmonst.data->monsterTypeID) && !isUnsolid(youmonst.data->monsterTypeID)) {
+    if (!isAmorphous(pmid4you()) && !youCanPassThroughWalls()
+        && !isNoncorporeal(pmid4you()) && !isUnsolid(pmid4you())) {
         You("are hit by %s!", doname(otmp2));
         dmg = dmgval(otmp2, &youmonst) * otmp2->quan;
         if (uarmh && helmet_protects) {
@@ -2183,7 +2183,7 @@ int how;
     which = "all ";
     if (youAreHallucinating()) {
         if (areYouPolymorphed()) {
-	    javaString youMonsterName = monsterTypeName(youmonst.data->monsterTypeID);
+	    javaString youMonsterName = monsterTypeName(pmid4you());
             Strcpy(buf, youMonsterName.c_str);
 	    releaseJavaString(youMonsterName);
 	} else {
@@ -2281,7 +2281,7 @@ struct obj *sobj;
         uball->owt += 160 * (1 + sobj->cursed);
         return;
     }
-    int upmid = youmonst.data->monsterTypeID;
+    int upmid = pmid4you();
     if (isAmorphous(upmid) || isWhirly(upmid) || isUnsolid(upmid)) {
         if (!reuse_ball) {
             pline("A ball and chain appears, then falls away.");

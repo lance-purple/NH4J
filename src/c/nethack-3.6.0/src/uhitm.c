@@ -235,7 +235,7 @@ struct monst *mtmp;
 
 boolean areYouElvish() {
     if (areYouPolymorphed()) {
-        return isElf(youmonst.data->monsterTypeID);
+        return isElf(pmid4you());
     } else {
        	return Race_if(PM_ELF);
     }
@@ -243,7 +243,7 @@ boolean areYouElvish() {
 
 boolean areYouOrcish() {
     if (areYouPolymorphed()) {
-        return isOrc(youmonst.data->monsterTypeID);
+        return isOrc(pmid4you());
     } else {
        	return Race_if(PM_ORC);
     }
@@ -263,7 +263,7 @@ int *attk_count, *role_roll_penalty;
     tmp = 1 + currentLuckWithBonus() + abon() + find_mac(mtmp) + toHitModifier();
 
     if (areYouPolymorphed()) {
-        tmp += monsterLevel(youmonst.data->monsterTypeID);
+        tmp += monsterLevel(pmid4you());
     } else {
         tmp += currentExperienceLevel();
     }
@@ -412,7 +412,7 @@ register struct monst *mtmp;
             if (uwep)
                 You("begin bashing monsters with %s.",
                     yobjnam(uwep, (char *) 0));
-            else if (!cannotWieldThings(youmonst.data->monsterTypeID))
+            else if (!cannotWieldThings(pmid4you()))
                 You("begin %sing monsters with your %s %s.",
                     Role_if(PM_MONK) ? "strik" : "bash",
                     uarmg ? "gloved" : "bare", /* Del Lamb */
@@ -434,7 +434,7 @@ register struct monst *mtmp;
     if (areYouPolymorphed()) {
         (void) hmonas(mtmp);
     } else {
-	int upmid = youmonst.data->monsterTypeID;
+	int upmid = pmid4you();
         (void) hitum(mtmp, monsterAttack(upmid, 0));
     }
     mtmp->mstrategy &= ~STRAT_WAITMASK;
@@ -1369,7 +1369,7 @@ const struct Attack mattk;
     }
 
     if (stealoid) { /* we will be taking everything */
-        if (gender(mdef) == (int) inherentlyFemale() && monsterClass(youmonst.data->monsterTypeID) == S_NYMPH)
+        if (gender(mdef) == (int) inherentlyFemale() && monsterClass(pmid4you()) == S_NYMPH)
             You("charm %s.  She gladly hands over her possessions.",
                 mon_nam(mdef));
         else
@@ -1427,7 +1427,7 @@ register const struct Attack mattk;
     /* since hero can't be cancelled, only defender's armor applies */
     negated = !(rn2(10) >= 3 * armpro);
 
-    if (isDemon(youmonst.data->monsterTypeID) && !rn2(13) && !uwep
+    if (isDemon(pmid4you()) && !rn2(13) && !uwep
         && currentMonsterNumber() != PM_SUCCUBUS && currentMonsterNumber() != PM_INCUBUS
         && currentMonsterNumber() != PM_BALROG) {
         demonpet();
@@ -2072,9 +2072,9 @@ register const struct Attack mattk;
                 if (mdef->mhp <= 0) /* not lifesaved */
                     return 2;
             }
-            You("%s %s!", isAnimal(youmonst.data->monsterTypeID) ? "regurgitate" : "expel",
+            You("%s %s!", isAnimal(pmid4you()) ? "regurgitate" : "expel",
                 mon_nam(mdef));
-            if (youHaveSlowDigestion() || isAnimal(youmonst.data->monsterTypeID)) {
+            if (youHaveSlowDigestion() || isAnimal(pmid4you())) {
                 pline("Obviously, you didn't like %s taste.",
                       s_suffix(mon_nam(mdef)));
             }
@@ -2152,11 +2152,11 @@ register struct monst *mon;
                 sum[i] = damageum(mon, mattk);
             break;
         case AT_CLAW:
-            if (uwep && !cannotWieldThings(youmonst.data->monsterTypeID) && !weapon_used)
+            if (uwep && !cannotWieldThings(pmid4you()) && !weapon_used)
                 goto use_weapon;
             /*FALLTHRU*/
         case AT_TUCH:
-            if (uwep && monsterClass(youmonst.data->monsterTypeID) == S_LICH && !weapon_used)
+            if (uwep && monsterClass(pmid4you()) == S_LICH && !weapon_used)
                 goto use_weapon;
             /*FALLTHRU*/
         case AT_KICK:
@@ -2262,9 +2262,9 @@ register struct monst *mon;
             /* No check for uwep; if wielding nothing we want to
              * do the normal 1-2 points bare hand damage...
              */
-            if ((monsterClass(youmonst.data->monsterTypeID) == S_KOBOLD ||
-                 monsterClass(youmonst.data->monsterTypeID) == S_ORC ||
-		 monsterClass(youmonst.data->monsterTypeID) == S_GNOME) && !weapon_used)
+            if ((monsterClass(pmid4you()) == S_KOBOLD ||
+                 monsterClass(pmid4you()) == S_ORC ||
+		 monsterClass(pmid4you()) == S_GNOME) && !weapon_used)
                 goto use_weapon;
 
         case AT_NONE:

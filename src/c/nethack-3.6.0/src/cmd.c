@@ -487,7 +487,7 @@ extcmd_via_menu()
 STATIC_PTR int
 domonability(VOID_ARGS)
 {
-    int upmid = youmonst.data->monsterTypeID;
+    int upmid = pmid4you();
     if (can_breathe(youmonst.data))
         return dobreathe();
     else if (attacktype(youmonst.data, AT_SPIT))
@@ -496,7 +496,7 @@ domonability(VOID_ARGS)
         return doremove();
     else if (attacktype(youmonst.data, AT_GAZE))
         return dogaze();
-    else if (isWere(youmonst.data->monsterTypeID))
+    else if (isWere(pmid4you()))
         return dosummon();
     else if (webmaker(youmonst.data))
         return dospinweb();
@@ -510,7 +510,7 @@ domonability(VOID_ARGS)
                 dryup(currentX(), currentY(), TRUE);
         } else
             There("is no fountain here.");
-    } else if (isUnicorn(youmonst.data->monsterTypeID)) {
+    } else if (isUnicorn(pmid4you())) {
         use_unicorn_horn((struct obj *) 0);
         return 1;
     } else if (monsterSound(upmid) == MS_SHRIEK) {
@@ -1704,7 +1704,7 @@ int final;
     if (youAreHallucinating())
         you_are("hallucinating", "");
     if (youCannotSee()) {
-	int upmid = youmonst.data->monsterTypeID;
+	int upmid = pmid4you();
         /* from_what() (currently wizard-mode only) checks !hasEyes()
            before permanentlyBlind, so we should too */
         Sprintf(buf, "%s blind",
@@ -1856,7 +1856,7 @@ int final;
     /* report being weaponless; distinguish whether gloves are worn */
     if (!uwep) {
         you_are(uarmg ? "empty handed" /* gloves imply hands */
-                      : isHumanoid(youmonst.data->monsterTypeID)
+                      : isHumanoid(pmid4you())
                          /* hands but no weapon and no gloves */
                          ? "bare handed"
                          /* alternate phrasing for paws or lack of hands */
@@ -1970,7 +1970,7 @@ int final;
         you_can("recognize detrimental food", "");
 
     /*** Vision and senses ***/
-    if (youCanSee() && (youAreTemporarilyBlinded() || !hasEyes(youmonst.data->monsterTypeID)))
+    if (youCanSee() && (youAreTemporarilyBlinded() || !hasEyes(pmid4you())))
         you_can("see", from_what(-BLINDED)); /* Eyes of the Overworld */
     if (youCanSeeInvisible()) {
         if (youCanSee())
@@ -2178,14 +2178,14 @@ int final;
         you_have("polymorph control", from_what(POLYMORPH_CONTROL));
     if (areYouPolymorphed() && currentMonsterNumber() != lycanthropeType()) {
         /* foreign shape (except were-form which is handled below) */
-	javaString youAsMonsterName = monsterTypeName(youmonst.data->monsterTypeID);
+	javaString youAsMonsterName = monsterTypeName(pmid4you());
         Sprintf(buf, "polymorphed into %s", an(youAsMonsterName.c_str));
 	releaseJavaString(youAsMonsterName);
         if (wizard)
             Sprintf(eos(buf), " (%d)", timeRemainingAsMonster());
         you_are(buf, "");
     }
-    if (laysEggs(youmonst.data->monsterTypeID) && flags.female) /* areYouPolymorphed() */
+    if (laysEggs(pmid4you()) && flags.female) /* areYouPolymorphed() */
         you_can("lay eggs", "");
     if (lycanthropeType() >= LOW_PM) {
         /* "you are a werecreature [in beast form]" */
@@ -2388,7 +2388,7 @@ minimal_enlightenment()
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
     }
     /* don't want poly_gender() here; it forces `2' for non-humanoids */
-    genidx = isNeuter(youmonst.data->monsterTypeID) ? 2 : flags.female;
+    genidx = isNeuter(pmid4you()) ? 2 : flags.female;
     Sprintf(buf, fmtstr, "gender", genders[genidx].adj);
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
     if (areYouPolymorphed() && (int) inherentlyFemale() != genidx) {
@@ -2472,7 +2472,7 @@ int msgflag;          /* for variant message phrasing */
             ; /* something unexpected; leave 'buf' as-is */
         }
     } else if (lurking()) {
-	int upmid = youmonst.data->monsterTypeID;
+	int upmid = pmid4you();
         bp = eos(buf); /* points past "hiding" */
         if (monsterClass(upmid) == S_EEL) {
             if (is_pool(currentX(), currentY()))

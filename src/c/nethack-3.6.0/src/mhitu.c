@@ -46,7 +46,7 @@ register const struct Attack mattk;
             break;
         case AT_KICK:
             pline("%s kicks%c", Monnam(mtmp),
-                  isThickSkinned(youmonst.data->monsterTypeID) ? '.' : '!');
+                  isThickSkinned(pmid4you()) ? '.' : '!');
             break;
         case AT_STNG:
             pline("%s stings!", Monnam(mtmp));
@@ -349,7 +349,7 @@ register struct monst *mtmp;
         if (!canspotmon(mtmp))
             map_invisible(mtmp->mx, mtmp->my);
         setLurking(FALSE);
-        if (isHider(youmonst.data->monsterTypeID) && currentMonsterNumber() != PM_TRAPPER) {
+        if (isHider(pmid4you()) && currentMonsterNumber() != PM_TRAPPER) {
             /* ceiling hider */
             coord cc; /* maybe we need a unexto() function? */
             struct obj *obj;
@@ -390,7 +390,7 @@ register struct monst *mtmp;
             set_apparxy(mtmp);
             newsym(currentX(), currentY());
 
-            if (monsterClass(youmonst.data->monsterTypeID) != S_PIERCER)
+            if (monsterClass(pmid4you()) != S_PIERCER)
                 return 0; /* lurkers don't attack */
 
             obj = which_armor(mtmp, WORN_HELMET);
@@ -422,7 +422,7 @@ register struct monst *mtmp;
                 struct obj *obj = level.objects[currentX()][currentY()];
 
                 if (obj || currentMonsterNumber() == PM_TRAPPER
-                    || (monsterClass(youmonst.data->monsterTypeID) == S_EEL
+                    || (monsterClass(pmid4you()) == S_EEL
                         && is_pool(currentX(), currentY()))) {
                     int save_spe = 0; /* suppress warning */
 
@@ -432,8 +432,8 @@ register struct monst *mtmp;
                             obj->spe = 0;
 			}
                     }
-		    javaString youMonsterName = monsterTypeName(youmonst.data->monsterTypeID);
-                    if (monsterClass(youmonst.data->monsterTypeID) == S_EEL
+		    javaString youMonsterName = monsterTypeName(pmid4you());
+                    if (monsterClass(pmid4you()) == S_EEL
                         || currentMonsterNumber() == PM_TRAPPER) {
                         pline(
                              "Wait, %s!  There's a hidden %s named %s there!",
@@ -458,7 +458,7 @@ register struct monst *mtmp;
     }
 
     /* hero might be a mimic, concealed via #monster */
-    if (monsterClass(youmonst.data->monsterTypeID) == S_MIMIC && youmonst.m_ap_type && !range2
+    if (monsterClass(pmid4you()) == S_MIMIC && youmonst.m_ap_type && !range2
         && foundyou && !swallowed()) {
         boolean sticky = sticks(youmonst.data);
 
@@ -468,7 +468,7 @@ register struct monst *mtmp;
 	if (sticky && !youseeit) {
             pline("It gets stuck on you.");
 	} else {
-	    javaString youMonsterName = monsterTypeName(youmonst.data->monsterTypeID);
+	    javaString youMonsterName = monsterTypeName(pmid4you());
             pline("Wait, %s!  That's a %s named %s!", m_monnam(mtmp),
                   youMonsterName.c_str, plname);
 	    releaseJavaString(youMonsterName);
@@ -504,7 +504,7 @@ register struct monst *mtmp;
         if (multi < 0) { /* this should always be the case */
             char buf[BUFSZ];
 
-	    javaString youMonsterName = monsterTypeName(youmonst.data->monsterTypeID);
+	    javaString youMonsterName = monsterTypeName(pmid4you());
             Sprintf(buf, "You appear to be %s again.",
                     areYouPolymorphed() ? (const char *) an(youMonsterName.c_str)
                            : (const char *) "yourself");
@@ -623,11 +623,11 @@ register struct monst *mtmp;
         case AT_BUTT:
         case AT_TENT:
             if (!range2 && (!MON_WEP(mtmp) || mtmp->mconf || youCauseConflict()
-                            || !touchPetrifies(youmonst.data->monsterTypeID))) {
+                            || !touchPetrifies(pmid4you()))) {
                 if (foundyou) {
                     if (tmp > (j = rnd(20 + i))) {
                         if (mattk.type != AT_KICK
-                            || !isThickSkinned(youmonst.data->monsterTypeID))
+                            || !isThickSkinned(pmid4you()))
                             sum[i] = hitmu(mtmp, mattk);
                     } else
                         missmu(mtmp, (tmp == j), mattk);
@@ -1085,7 +1085,7 @@ register const struct Attack mattk;
         break;
     case AD_DRIN:
         hitmsg(mtmp, mattk);
-        if (defends(AD_DRIN, uwep) || !hasAHead(youmonst.data->monsterTypeID)) {
+        if (defends(AD_DRIN, uwep) || !hasAHead(pmid4you())) {
             You("don't seem harmed.");
             /* Not clear what to do for green slimes */
             break;
@@ -1267,7 +1267,7 @@ register const struct Attack mattk;
         break;
     case AD_SGLD:
         hitmsg(mtmp, mattk);
-        if (monsterClass(youmonst.data->monsterTypeID) == monsterClass(mdat->monsterTypeID))
+        if (monsterClass(pmid4you()) == monsterClass(mdat->monsterTypeID))
             break;
         if (!mtmp->mcan)
             stealgold(mtmp);
@@ -1384,7 +1384,7 @@ register const struct Attack mattk;
     case AD_HEAL:
         /* a cancelled nurse is just an ordinary monster,
          * nurses don't heal those that cause petrification */
-        if (mtmp->mcan || (areYouPolymorphed() && touchPetrifies(youmonst.data->monsterTypeID))) {
+        if (mtmp->mcan || (areYouPolymorphed() && touchPetrifies(pmid4you()))) {
             hitmsg(mtmp, mattk);
             break;
         }
@@ -1505,7 +1505,7 @@ register const struct Attack mattk;
         break;
     case AD_DETH:
         pline("%s reaches out with its deadly touch.", Monnam(mtmp));
-        if (isUndead(youmonst.data->monsterTypeID)) {
+        if (isUndead(pmid4you())) {
             /* Still does normal damage */
             pline("Was that the touch of death?");
             break;
@@ -1555,7 +1555,7 @@ register const struct Attack mattk;
         if (flaming(youmonst.data)) {
             pline_The("slime burns away!");
             dmg = 0;
-        } else if (youAreUnchanging() || isNoncorporeal(youmonst.data->monsterTypeID)
+        } else if (youAreUnchanging() || isNoncorporeal(pmid4you())
                    || youmonst.data == &mons[PM_GREEN_SLIME]) {
             You("are unaffected.");
             dmg = 0;
@@ -1625,7 +1625,7 @@ register const struct Attack mattk;
 
             if (areYouPolymorphed()) {
                 /* [can't use youmonst.m_lev] */
-                lowerlimit = min(monsterLevel(youmonst.data->monsterTypeID), currentExperienceLevel());
+                lowerlimit = min(monsterLevel(pmid4you()), currentExperienceLevel());
                 if (maximumHitPointsAsMonster() - permdmg > lowerlimit) {
                     decreaseMaximumHitPointsAsMonster(permdmg);
                 } else if (maximumHitPointsAsMonster() > lowerlimit) {
@@ -1730,7 +1730,7 @@ register const struct Attack mattk;
             unleash_all();
         }
 
-        if (touchPetrifies(youmonst.data->monsterTypeID) && !resists_ston(mtmp)) {
+        if (touchPetrifies(pmid4you()) && !resists_ston(mtmp)) {
             /* put the attacker back where it started;
                the resulting statue will end up there */
             remove_monster(mtmp->mx, mtmp->my); /* currentX(),currentY() */
@@ -1802,7 +1802,7 @@ register const struct Attack mattk;
                 flaming(youmonst.data)
                     ? "are smoldering out!"
                     : youNeedNotBreathe() ? "find it mildly uncomfortable."
-                                 : isAmphibious(youmonst.data->monsterTypeID)
+                                 : isAmphibious(pmid4you())
                                        ? "feel comforted."
                                        : "can barely breathe!");
             /* NB: Amphibious includes Breathless */
@@ -1900,11 +1900,11 @@ register const struct Attack mattk;
     if (tmp)
         stop_occupation();
 
-    if (touchPetrifies(youmonst.data->monsterTypeID) && !resists_ston(mtmp)) {
+    if (touchPetrifies(pmid4you()) && !resists_ston(mtmp)) {
         pline("%s very hurriedly %s you!", Monnam(mtmp),
               isAnimal(mtmp->data->monsterTypeID) ? "regurgitates" : "expels");
         expels(mtmp, mtmp->data, FALSE);
-    } else if (!timeSinceBeingSwallowed() || monsterSize(youmonst.data->monsterTypeID) >= MZ_HUGE) {
+    } else if (!timeSinceBeingSwallowed() || monsterSize(pmid4you()) >= MZ_HUGE) {
         You("get %s!", isAnimal(mtmp->data->monsterTypeID) ? "regurgitated" : "expelled");
         if (flags.verbose
             && (isAnimal(mtmp->data->monsterTypeID)
@@ -2602,7 +2602,7 @@ register const struct Attack mattk;
 {
     int i, tmp;
 
-    int upmid = youmonst.data->monsterTypeID;
+    int upmid = pmid4you();
     int oldupmid = olduasmon->monsterTypeID;
 
     for (i = 0;; i++) {
@@ -2795,7 +2795,7 @@ cloneu()
     mon->mcloned = 1;
     mon = christen_monst(mon, plname);
     initedog(mon);
-    mon->m_lev = monsterLevel(youmonst.data->monsterTypeID);
+    mon->m_lev = monsterLevel(pmid4you());
     mon->mhpmax = maximumHitPointsAsMonster();
     mon->mhp = currentHitPointsAsMonster() / 2;
     decreaseCurrentHitPointsAsMonster(mon->mhp);

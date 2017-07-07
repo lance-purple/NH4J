@@ -494,10 +494,10 @@ boolean td; /* td == TRUE : trap door or hole */
         ; /* KMH -- You can't escape the Sokoban level traps */
     else if (youAreLevitating() || u.ustuck
              || (!canYouFallThroughCurrentLevel() && !levl[currentX()][currentY()].candig) || youAreFlying()
-             || isClinger(youmonst.data->monsterTypeID)
+             || isClinger(pmid4you())
              || (areYouInHell() && ! haveInvokedGateToSanctum() && newlevel == bottom)) {
         dont_fall = "don't fall in.";
-    } else if (monsterSize(youmonst.data->monsterTypeID) >= MZ_HUGE) {
+    } else if (monsterSize(pmid4you()) >= MZ_HUGE) {
         dont_fall = "don't fit through.";
     } else if (!next_to_u()) {
         dont_fall = "are jerked back by your pet!";
@@ -726,7 +726,7 @@ int *fail_reason;
     delobj(statue);
 
     /* avoid hiding under nothing */
-    if (x == currentX() && y == currentY() && areYouPolymorphed() && hidesUnderStuff(youmonst.data->monsterTypeID)
+    if (x == currentX() && y == currentY() && areYouPolymorphed() && hidesUnderStuff(pmid4you())
         && !OBJ_AT(x, y)) {
         setLurking(FALSE);
     }
@@ -843,7 +843,7 @@ unsigned trflags;
         if (!youKeepFumbling() && ttype != MAGIC_PORTAL && ttype != VIBRATING_SQUARE
             && ttype != ANTI_MAGIC && !forcebungle && !plunged && !adj_pit
             && (!rn2(5) || ((ttype == PIT || ttype == SPIKED_PIT)
-                            && isClinger(youmonst.data->monsterTypeID)))) {
+                            && isClinger(pmid4you())))) {
             You("escape %s %s.", (ttype == ARROW_TRAP && !trap->madeby_u)
                                      ? "an"
                                      : a_your[trap->madeby_u],
@@ -983,13 +983,13 @@ unsigned trflags;
         if ((youAreLevitating() || youAreFlying()) && !forcetrap)
             break;
         feeltrap(trap);
-        if (isAmorphous(youmonst.data->monsterTypeID) || isWhirly(youmonst.data->monsterTypeID)
-            || isUnsolid(youmonst.data->monsterTypeID)) {
+        if (isAmorphous(pmid4you()) || isWhirly(pmid4you())
+            || isUnsolid(pmid4you())) {
             pline("%s bear trap closes harmlessly through you.",
                   A_Your[trap->madeby_u]);
             break;
         }
-        if (!u.usteed && monsterSize(youmonst.data->monsterTypeID) <= MZ_SMALL) {
+        if (!u.usteed && monsterSize(pmid4you()) <= MZ_SMALL) {
             pline("%s bear trap closes harmlessly over you.",
                   A_Your[trap->madeby_u]);
             break;
@@ -1015,7 +1015,7 @@ unsigned trflags;
 
     case SLP_GAS_TRAP:
         seetrap(trap);
-        if (youResistSleep() || doesNotBreathe(youmonst.data->monsterTypeID)) {
+        if (youResistSleep() || doesNotBreathe(pmid4you())) {
             You("are enveloped in a cloud of gas!");
         } else {
             pline("A cloud of gas puts you to sleep!");
@@ -1092,7 +1092,7 @@ unsigned trflags;
         if (!Sokoban && (youAreLevitating() || (youAreFlying() && !plunged)))
             break;
         feeltrap(trap);
-        if (!Sokoban && isClinger(youmonst.data->monsterTypeID) && !plunged) {
+        if (!Sokoban && isClinger(pmid4you()) && !plunged) {
             if (trap->tseen) {
                 You_see("%s %spit below you.", a_your[trap->madeby_u],
                         ttype == SPIKED_PIT ? "spiked " : "");
@@ -1163,7 +1163,7 @@ unsigned trflags;
             } else {
                 /* plunging flyers take spike damage but not pit damage */
                 if (!adj_pit
-                    && !(plunged && (youAreFlying() || isClinger(youmonst.data->monsterTypeID))))
+                    && !(plunged && (youAreFlying() || isClinger(pmid4you()))))
                     losehp(Maybe_Half_Phys(rnd(6)),
                            plunged ? "deliberately plunged into a pit"
                                    : "fell into a pit",
@@ -1205,9 +1205,9 @@ unsigned trflags;
 
     case WEB: /* Our luckless player has stumbled into a web. */
         feeltrap(trap);
-        if (isAmorphous(youmonst.data->monsterTypeID) || isWhirly(youmonst.data->monsterTypeID)
-            || isUnsolid(youmonst.data->monsterTypeID)) {
-            if (isAcidic(youmonst.data->monsterTypeID) || currentMonsterNumber() == PM_GELATINOUS_CUBE
+        if (isAmorphous(pmid4you()) || isWhirly(pmid4you())
+            || isUnsolid(pmid4you())) {
+            if (isAcidic(pmid4you()) || currentMonsterNumber() == PM_GELATINOUS_CUBE
                 || currentMonsterNumber() == PM_FIRE_ELEMENTAL) {
                 if (webmsgok)
                     You("%s %s spider web!",
@@ -2962,7 +2962,7 @@ climb_pit()
         display_nhwindow(WIN_MESSAGE, FALSE);
         clear_nhwindow(WIN_MESSAGE);
         You("free your %s.", body_part(LEG));
-    } else if ((youAreFlying() || isClinger(youmonst.data->monsterTypeID)) && !Sokoban) {
+    } else if ((youAreFlying() || isClinger(pmid4you())) && !Sokoban) {
         /* eg fell in pit, then poly'd to a flying monster;
            or used '>' to deliberately enter it */
         You("%s from the pit.", youAreFlying() ? "fly" : "climb");
@@ -3105,7 +3105,7 @@ domagictrap()
             if (areYouOnLevel(&qstart_level))
                 You_feel(
                     "%slike the prodigal son.",
-                    (flags.female || (areYouPolymorphed() && isNeuter(youmonst.data->monsterTypeID)))
+                    (flags.female || (areYouPolymorphed() && isNeuter(pmid4you())))
                         ? "oddly "
                         : "");
             else
@@ -3603,7 +3603,7 @@ drown()
         vision_full_recalc = 1;
         return FALSE;
     }
-    if ((youCanTeleport() || canTeleport(youmonst.data->monsterTypeID)) && youAreAware()
+    if ((youCanTeleport() || canTeleport(pmid4you())) && youAreAware()
         && (youHaveTeleportControl() || rn2(3) < currentLuckWithBonus() + 2)) {
         You("attempt a teleport spell."); /* utcsri!carroll */
         if (!level.flags.noteleport) {
@@ -3629,7 +3629,7 @@ drown()
     if (is_fainted())
         reset_faint();
     /* can't crawl if unable to move (crawl_ok flag stays false) */
-    if (multi < 0 || (areYouPolymorphed() && !monsterMovementSpeed(youmonst.data->monsterTypeID)))
+    if (multi < 0 || (areYouPolymorphed() && !monsterMovementSpeed(pmid4you())))
         goto crawl;
     /* look around for a place to crawl to */
     for (i = 0; i < 100; i++) {
@@ -3722,8 +3722,8 @@ dountrap()
         pline("You're too strained to do that.");
         return 0;
     }
-    if ((hasNoHands(youmonst.data->monsterTypeID) && !webmaker(youmonst.data))
-        || !monsterMovementSpeed(youmonst.data->monsterTypeID)) {
+    if ((hasNoHands(pmid4you()) && !webmaker(youmonst.data))
+        || !monsterMovementSpeed(pmid4you())) {
         pline("And just how do you expect to do that?");
         return 0;
     } else if (u.ustuck && sticks(youmonst.data)) {
@@ -3862,7 +3862,7 @@ boolean force_failure;
     if (directionX() && directionY() && bad_rock(youmonst.data, currentX(), ttmp->ty)
         && bad_rock(youmonst.data, ttmp->tx, currentY())) {
         if ((invent && (inv_weight() + weight_cap() > 600))
-            || isBigMonster(youmonst.data->monsterTypeID)) {
+            || isBigMonster(pmid4you())) {
             /* don't allow untrap if they can't get thru to it */
             You("are unable to reach the %s!",
                 defsyms[trap_to_defsym(ttype)].explanation);
@@ -4996,7 +4996,7 @@ lava_effects()
     boolean usurvive, boil_away;
 
     burn_away_slime();
-    if (likesLava(youmonst.data->monsterTypeID))
+    if (likesLava(pmid4you()))
         return FALSE;
 
     usurvive = youResistFire() || (canYouWalkOnWater() && dmg < currentHitPoints());

@@ -503,7 +503,7 @@ ustatusline()
         Strcat(info, ", blind");
         if (creamed()) {
             if ((long) creamed() < yourIntrinsic(BLINDED) || youAreBlindfolded()
-                || !hasEyes(youmonst.data->monsterTypeID))
+                || !hasEyes(pmid4you()))
                 Strcat(info, ", cover");
             Strcat(info, "ed by sticky goop");
         } /* note: "goop" == "glop"; variation is intentional */

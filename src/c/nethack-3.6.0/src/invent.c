@@ -975,7 +975,7 @@ register const char *let, *word;
 
     /* Equivalent of an "ugly check" for gold */
     if (usegold && !strcmp(word, "eat")
-        && (!isMetallivorous(youmonst.data->monsterTypeID)
+        && (!isMetallivorous(pmid4you())
             || youmonst.data == &mons[PM_RUST_MONSTER]))
         usegold = FALSE;
 
@@ -994,7 +994,7 @@ register const char *let, *word;
 
     /* another ugly check: show boulders (not statues) */
     if (*let == WEAPON_CLASS && !strcmp(word, "throw")
-        && throwsRocks(youmonst.data->monsterTypeID))
+        && throwsRocks(pmid4you()))
         useboulder = TRUE;
 
     if (allownone)
@@ -3160,7 +3160,7 @@ long numused;
             (void) stolen_value(otmp, otmp->ox, otmp->oy, FALSE, FALSE);
     }
     delobj(otmp);
-    if (at_u && lurking() && hidesUnderStuff(youmonst.data->monsterTypeID))
+    if (at_u && lurking() && hidesUnderStuff(pmid4you()))
         (void) hideunder(&youmonst);
 }
 

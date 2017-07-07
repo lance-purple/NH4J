@@ -306,7 +306,7 @@ register struct obj *obj;
     boolean interference = (swallowed() && isWhirly(u.ustuck->data->monsterTypeID)
                             && !rn2(Role_if(PM_HEALER) ? 10 : 3));
 
-    if (hasNoHands(youmonst.data->monsterTypeID)) {
+    if (hasNoHands(pmid4you())) {
         You("have no hands!"); /* not `body_part(HAND)' */
         return 0;
     } else if (youAreDeaf()) {
@@ -820,7 +820,7 @@ struct obj *obj;
                     }
                     nomovemsg = 0; /* default, "you can move again" */
                 }
-            } else if (monsterClass(youmonst.data->monsterTypeID) == S_VAMPIRE)
+            } else if (monsterClass(pmid4you()) == S_VAMPIRE)
                 You("don't have a reflection.");
             else if (currentMonsterNumber() == PM_UMBER_HULK) {
                 pline("Huh?  That doesn't look like you!");
@@ -1508,7 +1508,7 @@ int magic; /* 0=Physical, otherwise skill level */
 {
     coord cc;
 
-    int upmid = youmonst.data->monsterTypeID;
+    int upmid = pmid4you();
 
     if (!magic && (hasNoLimbs(upmid) || isSlithy(upmid))) {
         /* normally (nolimbs || slithy) implies no jumping,
@@ -2154,7 +2154,7 @@ struct obj *obj;
         if (otmp != &zeroobj) {
             You("cover %s with a thick layer of grease.", yname(otmp));
             otmp->greased = 1;
-            if (obj->cursed && !hasNoHands(youmonst.data->monsterTypeID)) {
+            if (obj->cursed && !hasNoHands(pmid4you())) {
                 incrementYourIntrinsicTimeout(SLIPPERY_FINGERS, rnd(15));
                 pline("Some of the grease gets all over your %s.",
                       makeplural(body_part(HAND)));
@@ -2326,7 +2326,7 @@ struct obj *otmp;
     int levtyp = levl[currentX()][currentY()].typ;
     const char *occutext = "setting the trap";
 
-    if (hasNoHands(youmonst.data->monsterTypeID))
+    if (hasNoHands(pmid4you()))
         what = "without hands";
     else if (youAreStunned())
         what = "while stunned";
@@ -3117,7 +3117,7 @@ struct obj *obj;
                                  "?", obj, yname, ysimple_name, "the wand")))
         return 0;
 
-    if (hasNoHands(youmonst.data->monsterTypeID)) {
+    if (hasNoHands(pmid4you())) {
         You_cant("break %s without hands!", yname(obj));
         return 0;
     } else if (ACURR(A_STR) < (is_fragile ? 5 : 10)) {

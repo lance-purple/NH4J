@@ -156,8 +156,8 @@ int expltype;
                     break;
                 case AD_DISN:
                     explmask[i][j] = (olet == WAND_CLASS)
-                                         ? !!(isNonliving(youmonst.data->monsterTypeID)
-                                              || isDemon(youmonst.data->monsterTypeID))
+                                         ? !!(isNonliving(pmid4you())
+                                              || isDemon(pmid4you()))
                                          : !!youResistDisintegration();
                     break;
                 case AD_ELEC:
@@ -659,7 +659,7 @@ struct obj *obj; /* only scatter this obj        */
                         if (multi)
                             nomul(0);
                         hitvalu = 8 + stmp->obj->spe;
-                        if (isBigMonster(youmonst.data->monsterTypeID))
+                        if (isBigMonster(pmid4you()))
                             hitvalu++;
                         hitu = thitu(hitvalu, dmgval(stmp->obj, &youmonst),
                                      stmp->obj, (char *) 0);

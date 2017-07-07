@@ -161,7 +161,7 @@ const char *verb;
                 }
                 mtmp->mtrapped = 0;
             } else {
-                if (!youCanPassThroughWalls() && !throwsRocks(youmonst.data->monsterTypeID)) {
+                if (!youCanPassThroughWalls() && !throwsRocks(pmid4you())) {
                     losehp(Maybe_Half_Phys(rnd(15)),
                            "squished under a boulder", NO_KILLER_PREFIX);
                     return FALSE; /* player remains trapped */

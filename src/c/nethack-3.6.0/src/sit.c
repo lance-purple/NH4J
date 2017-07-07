@@ -41,7 +41,7 @@ dosit()
         You("are already sitting on %s.", mon_nam(u.usteed));
         return 0;
     }
-    if (lurking() && isHider(youmonst.data->monsterTypeID) && currentMonsterNumber() != PM_TRAPPER)
+    if (lurking() && isHider(pmid4you()) && currentMonsterNumber() != PM_TRAPPER)
         setLurking(FALSE); /* no longer on the ceiling */
 
     if (!can_reach_floor(FALSE)) {
@@ -70,7 +70,7 @@ dosit()
         register struct obj *obj;
 
         obj = level.objects[currentX()][currentY()];
-        if (monsterClass(youmonst.data->monsterTypeID) == S_DRAGON && obj->oclass == COIN_CLASS) {
+        if (monsterClass(pmid4you()) == S_DRAGON && obj->oclass == COIN_CLASS) {
             You("coil up around your %shoard.",
                 (obj->quan + money_cnt(invent) < currentExperienceLevel() * 1000) ? "meager "
                                                                   : "");
@@ -130,7 +130,7 @@ dosit()
             (void) water_damage(uarm, "armor", TRUE);
     } else if (IS_SINK(typ)) {
         You(sit_message, defsyms[S_sink].explanation);
-        Your("%s gets wet.", isHumanoid(youmonst.data->monsterTypeID) ? "rump" : "underside");
+        Your("%s gets wet.", isHumanoid(pmid4you()) ? "rump" : "underside");
     } else if (IS_ALTAR(typ)) {
         You(sit_message, defsyms[S_altar].explanation);
         altar_wrath(currentX(), currentY());
@@ -144,7 +144,7 @@ dosit()
         /* must be WWalking */
         You(sit_message, "lava");
         burn_away_slime();
-        if (likesLava(youmonst.data->monsterTypeID)) {
+        if (likesLava(pmid4you())) {
             pline_The("lava feels warm.");
             return 1;
         }
@@ -272,7 +272,7 @@ dosit()
                 break;
             }
         } else {
-            if (isPrince(youmonst.data->monsterTypeID))
+            if (isPrince(pmid4you()))
                 You_feel("very comfortable here.");
             else
                 You_feel("somehow out of place...");
@@ -284,7 +284,7 @@ dosit()
             pline_The("throne vanishes in a puff of logic.");
             newsym(currentX(), currentY());
         }
-    } else if (laysEggs(youmonst.data->monsterTypeID)) {
+    } else if (laysEggs(pmid4you())) {
         struct obj *uegg;
 
         if (!flags.female) {

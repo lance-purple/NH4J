@@ -355,7 +355,7 @@ int spellnum;
     switch (spellnum) {
     case MGC_DEATH_TOUCH:
         pline("Oh no, %s's using the touch of death!", mhe(mtmp));
-        if (isNonliving(youmonst.data->monsterTypeID) || isDemon(youmonst.data->monsterTypeID)) {
+        if (isNonliving(pmid4you()) || isDemon(pmid4you())) {
             You("seem no deader than before.");
         } else if (!youResistMagic() && rn2(mtmp->m_lev) > 12) {
             if (youAreHallucinating()) {
@@ -639,7 +639,7 @@ int spellnum;
     case CLC_BLIND_YOU:
         /* note: resists_blnd() doesn't apply here */
         if (!youAreTemporarilyBlinded()) {
-            int num_eyes = eyeCount(youmonst.data->monsterTypeID);
+            int num_eyes = eyeCount(pmid4you());
             pline("Scales cover your %s!", (num_eyes == 1)
                                                ? body_part(EYE)
                                                : makeplural(body_part(EYE)));

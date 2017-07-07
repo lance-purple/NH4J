@@ -740,7 +740,7 @@ int
 is_innate(intrinsic)
 int intrinsic;
 {
-    if (intrinsic == BLINDED && !hasEyes(youmonst.data->monsterTypeID))
+    if (intrinsic == BLINDED && !hasEyes(pmid4you()))
         return 1;
     return innately(intrinsic);
 }
@@ -1000,7 +1000,7 @@ int x;
 #endif
     } else if (x == A_CHA) {
         if (tmp < 18
-            && (monsterClass(youmonst.data->monsterTypeID) == S_NYMPH || currentMonsterNumber() == PM_SUCCUBUS
+            && (monsterClass(pmid4you()) == S_NYMPH || currentMonsterNumber() == PM_SUCCUBUS
                 || currentMonsterNumber() == PM_INCUBUS))
             return (schar) 18;
     } else if (x == A_INT || x == A_WIS) {
@@ -1451,13 +1451,13 @@ extern boolean youAreBlindfolded() {
 /* you are blind because of a blindfold, and *only* that */
 extern boolean youAreBlindDueToBlindfold() {
     return (youAreBlindfolded() && ublindf->oartifact != ART_EYES_OF_THE_OVERWORLD 
-     && !permanentlyBlind() && !youAreTemporarilyBlinded() && hasEyes(youmonst.data->monsterTypeID));
+     && !permanentlyBlind() && !youAreTemporarilyBlinded() && hasEyes(pmid4you()));
 }
 
 /* you cannot see for whatever reason */
 extern boolean youCannotSee() {
     return ((permanentlyBlind() || youAreTemporarilyBlinded() || youAreBlindfolded()
-      || !hasEyes(youmonst.data->monsterTypeID)) 
+      || !hasEyes(pmid4you())) 
      && !(ublindf && ublindf->oartifact == ART_EYES_OF_THE_OVERWORLD));
     /* ...the Eyes operate even when you really are blind
            or don't have any eyes */
@@ -1621,11 +1621,11 @@ extern boolean youCanSwim() {
 
 /* Get wet, may go under surface */
 extern boolean youAreAmphibious() {
-  return (youHaveIntrinsic(MAGICAL_BREATHING) || youHaveExtrinsic(MAGICAL_BREATHING) || isAmphibious(youmonst.data->monsterTypeID));
+  return (youHaveIntrinsic(MAGICAL_BREATHING) || youHaveExtrinsic(MAGICAL_BREATHING) || isAmphibious(pmid4you()));
 }
 
 extern boolean youNeedNotBreathe() {
-  return (youHaveIntrinsic(MAGICAL_BREATHING) || youHaveExtrinsic(MAGICAL_BREATHING) || doesNotBreathe(youmonst.data->monsterTypeID));
+  return (youHaveIntrinsic(MAGICAL_BREATHING) || youHaveExtrinsic(MAGICAL_BREATHING) || doesNotBreathe(pmid4you()));
 }
 
 extern boolean youCanPassThroughWalls() {
@@ -1739,7 +1739,7 @@ extern boolean yourLifeCanBeSaved() {
 }
 
 extern int attributeMaximum(int index) {
-    if ((index == A_STR) && areYouPolymorphed() && isStrongMonster(pmid4dat(youmonst.data))) {
+    if ((index == A_STR) && areYouPolymorphed() && isStrongMonster(pmid4you())) {
         return STR18(100);
     } else {
         return urace.attrmax[index];

@@ -131,7 +131,7 @@ boolean resuming;
                         /* your speed doesn't augment steed's speed */
                         moveamt = mcalcmove(u.usteed);
                     } else {
-                        moveamt = monsterMovementSpeed(pmid4dat(youmonst.data));
+                        moveamt = monsterMovementSpeed(pmid4you());
 
                         if (youAreVeryFast()) { /* speed boots or potion */
                             /* average movement is 1.67 times normal */
@@ -198,7 +198,7 @@ boolean resuming;
                     if (invulnerableWhilePraying()) {
                         /* for the moment at least, you're in tiptop shape */
                         wtcap = UNENCUMBERED;
-                    } else if (areYouPolymorphed() && monsterClass(pmid4dat(youmonst.data)) == S_EEL
+                    } else if (areYouPolymorphed() && monsterClass(pmid4you()) == S_EEL
                                && !is_pool(currentX(), currentY())
                                && !areYouOnWaterLevel()) {
                         /* eel out of water loses hp, same as for monsters;

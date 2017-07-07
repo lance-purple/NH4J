@@ -73,6 +73,10 @@ int pmid4mon(struct monst* mtmp) {
     return (mtmp != NULL) ? pmid4dat(mtmp->data) : NON_PM;
 }
 
+int pmid4you() {
+    return pmid4dat(youmonst.data);
+}
+
 jclass getJavaClass(const char* className) {
     jclass javaClass = (*jni_env)->FindClass(jni_env, className);
     if ((*jni_env)->ExceptionCheck(jni_env)) {

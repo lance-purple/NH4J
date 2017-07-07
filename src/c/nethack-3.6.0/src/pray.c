@@ -190,7 +190,7 @@ in_trouble()
                 continue;
             if (!isok(currentX() + i, currentY() + j)
                 || IS_ROCK(levl[currentX() + i][currentY() + j].typ)
-                || (blocked_boulder(i, j) && !throwsRocks(youmonst.data->monsterTypeID)))
+                || (blocked_boulder(i, j) && !throwsRocks(pmid4you())))
                 count++;
         }
     if (count == 8 && !youCanPassThroughWalls())
@@ -200,13 +200,13 @@ in_trouble()
         || stuck_ring(uleft, RIN_LEVITATION)
         || stuck_ring(uright, RIN_LEVITATION))
         return TROUBLE_CURSED_LEVITATION;
-    if (hasNoHands(youmonst.data->monsterTypeID) || !freehand()) {
+    if (hasNoHands(pmid4you()) || !freehand()) {
         /* for bag/box access [cf use_container()]...
            make sure it's a case that we know how to handle;
            otherwise "fix all troubles" would get stuck in a loop */
         if (welded(uwep))
             return TROUBLE_UNUSEABLE_HANDS;
-        if (areYouPolymorphed() && hasNoHands(youmonst.data->monsterTypeID)
+        if (areYouPolymorphed() && hasNoHands(pmid4you())
             && (!youAreUnchanging() || ((otmp = unchanger()) != 0 && otmp->cursed)))
             return TROUBLE_UNUSEABLE_HANDS;
     }
@@ -229,7 +229,7 @@ in_trouble()
             return TROUBLE_SADDLE;
     }
 
-    if (yourIntrinsic(BLINDED) > 1 && hasEyes(youmonst.data->monsterTypeID)
+    if (yourIntrinsic(BLINDED) > 1 && hasEyes(pmid4you())
         && (!swallowed()
             || !monsterHasAttackWithDamageType(u.ustuck->data, AT_ENGL, AD_BLND)))
         return TROUBLE_BLIND;
@@ -417,7 +417,7 @@ int trouble;
             otmp = uwep;
             goto decurse;
         }
-        if (areYouPolymorphed() && hasNoHands(youmonst.data->monsterTypeID)) {
+        if (areYouPolymorphed() && hasNoHands(pmid4you())) {
             if (!youAreUnchanging()) {
                 Your("shape becomes uncertain.");
                 rehumanize(); /* "You return to {normal} form." */
@@ -426,7 +426,7 @@ int trouble;
                 goto decurse;
             }
         }
-        if (hasNoHands(youmonst.data->monsterTypeID) || !freehand())
+        if (hasNoHands(pmid4you()) || !freehand())
             impossible("fix_worst_trouble: couldn't cure hands.");
         break;
     case TROUBLE_CURSED_BLINDFOLD:
@@ -490,7 +490,7 @@ int trouble;
     case TROUBLE_BLIND: {
         const char *eyes = body_part(EYE);
 
-        if (eyeCount(youmonst.data->monsterTypeID) != 1)
+        if (eyeCount(pmid4you()) != 1)
             eyes = makeplural(eyes);
         Your("%s %s better.", eyes, vtense(eyes, "feel"));
         setCreamed(0);
@@ -652,7 +652,7 @@ aligntyp resp_god;
               (ugod_is_angry() && resp_god == currentAlignmentType())
                   ? "hast strayed from the path"
                   : "art arrogant",
-              monsterClass(youmonst.data->monsterTypeID) == S_HUMAN ? "mortal" : "creature");
+              monsterClass(pmid4you()) == S_HUMAN ? "mortal" : "creature");
         verbalize("Thou must relearn thy lessons!");
         (void) adjattrib(A_WIS, -1, FALSE);
         losexp((char *) 0);
@@ -678,7 +678,7 @@ aligntyp resp_god;
                       ? "scorn"
                       : "call upon");
         pline("\"Then die, %s!\"",
-              monsterClass(youmonst.data->monsterTypeID) == S_HUMAN ? "mortal" : "creature");
+              monsterClass(pmid4you()) == S_HUMAN ? "mortal" : "creature");
         summon_minion(resp_god, FALSE);
         break;
 
@@ -1017,7 +1017,7 @@ aligntyp g_align;
             if (! haveOpenedDrawbridge() && ! enteredGehennomViaValley()) {
                 if (knowledgeOfPasstune() < 1) {
                     godvoice(g_align, (char *) 0);
-                    verbalize("Hark, %s!", monsterClass(youmonst.data->monsterTypeID) == S_HUMAN
+                    verbalize("Hark, %s!", monsterClass(pmid4you()) == S_HUMAN
                                                ? "mortal"
                                                : "creature");
                     verbalize(
@@ -1311,7 +1311,7 @@ dosacrifice()
         }
 
         if (isOfYourRace(ptr->monsterTypeID, urace.selfmask)) {
-            if (isDemon(youmonst.data->monsterTypeID)) {
+            if (isDemon(pmid4you())) {
                 You("find the idea very satisfying.");
                 exercise(A_WIS, TRUE);
             } else if (currentAlignmentType() != A_CHAOTIC) {
@@ -1735,7 +1735,7 @@ boolean praying; /* false means no messages should be given */
     p_aligntyp = on_altar() ? a_align(currentX(), currentY()) : currentAlignmentType();
     p_trouble = in_trouble();
 
-    if (isDemon(youmonst.data->monsterTypeID) && (p_aligntyp != A_CHAOTIC)) {
+    if (isDemon(pmid4you()) && (p_aligntyp != A_CHAOTIC)) {
         if (praying)
             pline_The("very idea of praying to a %s god is repugnant to you.",
                       p_aligntyp ? "lawful" : "neutral");
@@ -1765,7 +1765,7 @@ boolean praying; /* false means no messages should be given */
             p_type = 3;
     }
 
-    if (isUndead(youmonst.data->monsterTypeID) && !areYouInHell()
+    if (isUndead(pmid4you()) && !areYouInHell()
         && (p_aligntyp == A_LAWFUL || (p_aligntyp == A_NEUTRAL && !rn2(10))))
         p_type = -1;
     /* Note:  when !praying, the random factor for neutrals makes the
@@ -1901,7 +1901,7 @@ doturn()
     setAtheistConduct(FALSE);
 
     if ((currentAlignmentType() != A_CHAOTIC
-         && (isDemon(youmonst.data->monsterTypeID) || isUndead(youmonst.data->monsterTypeID)))
+         && (isDemon(pmid4you()) || isUndead(pmid4you())))
         || divineWrath() > 6) { /* "Die, mortal!" */
         pline("For some reason, %s seems to ignore you.", u_gname());
         aggravate();

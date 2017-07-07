@@ -203,7 +203,7 @@ boolean purify;
         You_feel("purified.");
         setLycanthropeType(NON_PM); /* cure lycanthropy */
     }
-    if (!youAreUnchanging() && isWere(youmonst.data->monsterTypeID)
+    if (!youAreUnchanging() && isWere(pmid4you())
         && (!controllable_poly || yn("Remain in beast form?") == 'n'))
         rehumanize();
 }

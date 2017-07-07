@@ -2485,12 +2485,12 @@ char *buf;
                                            "esteemed",
                                            "most renowned and sacred" };
     Strcat(buf, honored[rn2(SIZE(honored) - 1) + becameDemigod()]);
-    if (isVampire(youmonst.data->monsterTypeID))
+    if (isVampire(pmid4you()))
         Strcat(buf, (flags.female) ? " dark lady" : " dark lord");
-    else if (isElf(youmonst.data->monsterTypeID))
+    else if (isElf(pmid4you()))
         Strcat(buf, (flags.female) ? " hiril" : " hir");
     else
-        Strcat(buf, !isHuman(youmonst.data->monsterTypeID) ? " creature" : (flags.female)
+        Strcat(buf, !isHuman(pmid4you()) ? " creature" : (flags.female)
                                                                  ? " lady"
                                                                  : " sir");
 }
@@ -4393,7 +4393,7 @@ boolean altusage; /* used as a verbalized exclamation:  \"Cad! ...\" */
 {
     const char *res = 0;
 
-    switch (isDemon(youmonst.data->monsterTypeID) ? 3 : poly_gender()) {
+    switch (isDemon(pmid4you()) ? 3 : poly_gender()) {
     case 0:
         res = "cad";
         break;

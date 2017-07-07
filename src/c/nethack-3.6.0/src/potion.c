@@ -233,11 +233,11 @@ boolean talk;
     } else if (priorBlinded && !xtime) {
         /* clearing temporary blindness without toggling blindness */
         if (talk) {
-            if (!hasEyes(youmonst.data->monsterTypeID)) {
+            if (!hasEyes(pmid4you())) {
                 strange_feeling((struct obj *) 0, (char *) 0);
             } else if (youAreBlindfolded()) {
                 eyes = body_part(EYE);
-                if (eyeCount(youmonst.data->monsterTypeID) != 1)
+                if (eyeCount(pmid4you()) != 1)
                     eyes = makeplural(eyes);
                 Your(eyemsg, eyes, vtense(eyes, "itch"));
             } else { /* Eyes of the Overworld */
@@ -259,11 +259,11 @@ boolean talk;
     } else if (!priorBlinded && xtime) {
         /* setting temporary blindness without toggling blindness */
         if (talk) {
-            if (!hasEyes(youmonst.data->monsterTypeID)) {
+            if (!hasEyes(pmid4you())) {
                 strange_feeling((struct obj *) 0, (char *) 0);
             } else if (youAreBlindfolded()) {
                 eyes = body_part(EYE);
-                if (eyeCount(youmonst.data->monsterTypeID) != 1)
+                if (eyeCount(pmid4you()) != 1)
                     eyes = makeplural(eyes);
                 Your(eyemsg, eyes, vtense(eyes, "twitch"));
             } else { /* Eyes of the Overworld */
@@ -333,12 +333,12 @@ long mask; /* nonzero if resistance status should change by mask */
 
         /* clearing temporary hallucination without toggling vision */
         if (!changed && !yourIntrinsic(HALLUC) && old && talk) {
-            if (!hasEyes(youmonst.data->monsterTypeID)) {
+            if (!hasEyes(pmid4you())) {
                 strange_feeling((struct obj *) 0, (char *) 0);
             } else if (youCannotSee()) {
                 const char *eyes = body_part(EYE);
 
-                if (eyeCount(youmonst.data->monsterTypeID) != 1)
+                if (eyeCount(pmid4you()) != 1)
                     eyes = makeplural(eyes);
                 Your(eyemsg, eyes, vtense(eyes, "itch"));
             } else { /* Grayswandir */
@@ -577,7 +577,7 @@ register struct obj *otmp;
             break;
         }
         unkn++;
-        if (isUndead(youmonst.data->monsterTypeID) || isDemon(youmonst.data->monsterTypeID)
+        if (isUndead(pmid4you()) || isDemon(pmid4you())
             || currentAlignmentType() == A_CHAOTIC) {
             if (otmp->blessed) {
                 pline("This burns like acid!");
@@ -1024,7 +1024,7 @@ register struct obj *otmp;
         boolean good_for_you = FALSE;
 
         if (otmp->lamplit) {
-            if (likesFire(youmonst.data->monsterTypeID)) {
+            if (likesFire(pmid4you())) {
                 pline("Ahh, a refreshing drink.");
                 good_for_you = TRUE;
             } else {
@@ -1464,7 +1464,7 @@ boolean your_fault;
 
     /* Note: potionbreathe() does its own docall() */
     if ((distance == 0 || ((distance < 3) && rn2(5)))
-        && (!doesNotBreathe(youmonst.data->monsterTypeID) || hasEyes(youmonst.data->monsterTypeID))) {
+        && (!doesNotBreathe(pmid4you()) || hasEyes(pmid4you()))) {
         potionbreathe(obj);
     } else if (obj->dknown && !objects[obj->otyp].oc_name_known
              && !objects[obj->otyp].oc_uname && cansee(mon->mx, mon->my)) {
@@ -1493,12 +1493,12 @@ register struct obj *obj;
     case POT_RESTORE_ABILITY:
     case POT_GAIN_ABILITY:
         if (obj->cursed) {
-            if (!doesNotBreathe(youmonst.data->monsterTypeID))
+            if (!doesNotBreathe(pmid4you()))
                 pline("Ulch!  That potion smells terrible!");
-            else if (hasEyes(youmonst.data->monsterTypeID)) {
+            else if (hasEyes(pmid4you())) {
                 const char *eyes = body_part(EYE);
 
-                if (eyeCount(youmonst.data->monsterTypeID) != 1)
+                if (eyeCount(pmid4you()) != 1)
                     eyes = makeplural(eyes);
                 Your("%s %s!", eyes, vtense(eyes, "sting"));
             }
@@ -1888,7 +1888,7 @@ dodip()
             pline("BOOM!  They explode!");
             wake_nearto(currentX(), currentY(), (BOLT_LIM + 1) * (BOLT_LIM + 1));
             exercise(A_STR, FALSE);
-            if (!doesNotBreathe(youmonst.data->monsterTypeID) || hasEyes(youmonst.data->monsterTypeID))
+            if (!doesNotBreathe(pmid4you()) || hasEyes(pmid4you()))
                 potionbreathe(obj);
             useupall(obj);
             useup(potion);

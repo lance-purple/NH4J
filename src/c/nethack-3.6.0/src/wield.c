@@ -247,7 +247,7 @@ dowield()
 
     /* May we attempt this? */
     multi = 0;
-    if (cannotWieldThings(youmonst.data->monsterTypeID)) {
+    if (cannotWieldThings(pmid4you())) {
         pline("Don't be ridiculous!");
         return 0;
     }
@@ -298,7 +298,7 @@ doswapweapon()
 
     /* May we attempt this? */
     multi = 0;
-    if (cannotWieldThings(youmonst.data->monsterTypeID)) {
+    if (cannotWieldThings(pmid4you())) {
         pline("Don't be ridiculous!");
         return 0;
     }
@@ -435,7 +435,7 @@ const char *verb; /* "rub",&c */
         }
         return FALSE;
     }
-    if (cannotWieldThings(youmonst.data->monsterTypeID)) {
+    if (cannotWieldThings(pmid4you())) {
         You_cant("hold %s strongly enough.", more_than_1 ? "them" : "it");
         return FALSE;
     }

@@ -118,7 +118,7 @@ moverock()
             /* Give them a chance to climb over it? */
             return -1;
         }
-        if (isVerySmallMonster(youmonst.data->monsterTypeID) && !u.usteed) {
+        if (isVerySmallMonster(pmid4you()) && !u.usteed) {
             if (youCannotSee())
                 feel_location(sx, sy);
             pline("You're too small to push that %s.", xname(otmp));
@@ -279,7 +279,7 @@ moverock()
                 if (!u.usteed) {
                     if (moves > lastmovetime + 2 || moves < lastmovetime)
                         pline("With %s effort you move %s.",
-                              throwsRocks(youmonst.data->monsterTypeID) ? "little"
+                              throwsRocks(pmid4you()) ? "little"
                                                           : "great",
                               the(xname(otmp)));
                     exercise(A_STR, TRUE);
@@ -309,7 +309,7 @@ moverock()
             if (youCannotSee())
                 feel_location(sx, sy);
         cannot_push:
-            if (throwsRocks(youmonst.data->monsterTypeID)) {
+            if (throwsRocks(pmid4you())) {
                 if (u.usteed && weaponSkill(P_RIDING) < P_BASIC) {
                     You("aren't skilled enough to %s %s from %s.",
                         (flags.pickup && !Sokoban) ? "pick up" : "push aside",
@@ -328,7 +328,7 @@ moverock()
                 && (((!invent || inv_weight() <= -850)
                      && (!directionX() || !directionY() || (IS_ROCK(levl[currentX()][sy].typ)
                                             && IS_ROCK(levl[sx][currentY()].typ))))
-                    || isVerySmallMonster(youmonst.data->monsterTypeID))) {
+                    || isVerySmallMonster(pmid4you()))) {
                 pline(
                    "However, you can squeeze yourself into a small opening.");
                 sokoban_guilt();
@@ -691,7 +691,7 @@ int mode;
                     You("cannot pass through the bars.");
                 return FALSE;
             }
-        } else if (isTunneler(youmonst.data->monsterTypeID) && !needsPickaxe(youmonst.data->monsterTypeID)) {
+        } else if (isTunneler(pmid4you()) && !needsPickaxe(pmid4you())) {
             /* Eat the rock. */
             if (mode == DO_MOVE && still_chewing(x, y))
                 return FALSE;
@@ -723,13 +723,13 @@ int mode;
             else if (can_ooze(&youmonst)) {
                 if (mode == DO_MOVE)
                     You("ooze under the door.");
-            } else if (isTunneler(youmonst.data->monsterTypeID) && !needsPickaxe(youmonst.data->monsterTypeID)) {
+            } else if (isTunneler(pmid4you()) && !needsPickaxe(pmid4you())) {
                 /* Eat the door. */
                 if (mode == DO_MOVE && still_chewing(x, y))
                     return FALSE;
             } else {
                 if (mode == DO_MOVE) {
-                    if (isAmorphous(youmonst.data->monsterTypeID))
+                    if (isAmorphous(pmid4you()))
                         You(
    "try to ooze under the door, but can't squeeze your possessions through.");
                     if (flags.autoopen && !running() && !youAreConfused()
@@ -796,7 +796,7 @@ int mode;
         struct trap *t = t_at(x, y);
 
         if ((t && t->tseen)
-            || (!youAreLevitating() && !youAreFlying() && !isClinger(youmonst.data->monsterTypeID)
+            || (!youAreLevitating() && !youAreFlying() && !isClinger(pmid4you())
                 && is_pool_or_lava(x, y) && levl[x][y].seenv))
             return FALSE;
     }
@@ -816,7 +816,7 @@ int mode;
             return FALSE;
         if (mode == DO_MOVE) {
             /* tunneling monsters will chew before pushing */
-            if (isTunneler(youmonst.data->monsterTypeID) && !needsPickaxe(youmonst.data->monsterTypeID)
+            if (isTunneler(pmid4you()) && !needsPickaxe(pmid4you())
                 && !Sokoban) {
                 if (still_chewing(x, y))
                     return FALSE;
@@ -828,7 +828,7 @@ int mode;
             /* don't pick two boulders in a row, unless there's a way thru */
             if (sobj_at(BOULDER, ux, uy) && !Sokoban) {
                 if (!youCanPassThroughWalls()
-                    && !(isTunneler(youmonst.data->monsterTypeID) && !needsPickaxe(youmonst.data->monsterTypeID))
+                    && !(isTunneler(pmid4you()) && !needsPickaxe(pmid4you()))
                     && !carrying(PICK_AXE) && !carrying(DWARVISH_MATTOCK)
                     && !((obj = carrying(WAN_DIGGING))
                          && !objects[obj->otyp].oc_name_known))
@@ -1197,7 +1197,7 @@ struct trap *desttrap; /* nonnull if another trap at <x,y> */
 boolean
 u_rooted()
 {
-    if (!monsterMovementSpeed(youmonst.data->monsterTypeID)) {
+    if (!monsterMovementSpeed(pmid4you())) {
         You("are rooted %s.",
             youAreLevitating() || areYouOnAirLevel() || areYouOnWaterLevel()
                 ? "in place"
@@ -1277,8 +1277,8 @@ domove()
             if (!skates)
                 skates = find_skates();
             if ((uarmf && uarmf->otyp == skates) || resists_cold(&youmonst)
-                || youAreFlying() || isFloater(youmonst.data->monsterTypeID)
-                || isClinger(youmonst.data->monsterTypeID) || isWhirly(youmonst.data->monsterTypeID))
+                || youAreFlying() || isFloater(pmid4you())
+                || isClinger(pmid4you()) || isWhirly(pmid4you()))
                 on_ice = FALSE;
             else if (!rn2(youResistCold() ? 3 : 2)) {
                 setYourIntrinsicMask(FUMBLING, FROMOUTSIDE);
@@ -1321,7 +1321,7 @@ domove()
             return;
         }
         if (((trap = t_at(x, y)) && trap->tseen)
-            || (youCannotSee() && !youAreLevitating() && !youAreFlying() && !isClinger(youmonst.data->monsterTypeID)
+            || (youCannotSee() && !youAreLevitating() && !youAreFlying() && !isClinger(pmid4you())
                 && is_pool_or_lava(x, y) && levl[x][y].seenv)) {
             if (runningPace() >= RUN_TIL_DIVERTED) {
                 nomul(0);
@@ -1676,7 +1676,7 @@ domove()
                 nomul(0);
     }
 
-    if (hidesUnderStuff(youmonst.data->monsterTypeID) || (monsterClass(youmonst.data->monsterTypeID) == S_EEL) || directionX()
+    if (hidesUnderStuff(pmid4you()) || (monsterClass(pmid4you()) == S_EEL) || directionX()
         || directionY())
         (void) hideunder(&youmonst);
 
@@ -2415,7 +2415,7 @@ dopickup()
         }
     }
     if (is_pool(currentX(), currentY())) {
-        if (canYouWalkOnWater() || isFloater(youmonst.data->monsterTypeID) || isClinger(youmonst.data->monsterTypeID)
+        if (canYouWalkOnWater() || isFloater(pmid4you()) || isClinger(pmid4you())
             || (youAreFlying() && !youNeedNotBreathe())) {
             You("cannot dive into the water to pick things up.");
             return 0;
@@ -2425,11 +2425,11 @@ dopickup()
         }
     }
     if (is_lava(currentX(), currentY())) {
-        if (canYouWalkOnWater() || isFloater(youmonst.data->monsterTypeID) || isClinger(youmonst.data->monsterTypeID)
+        if (canYouWalkOnWater() || isFloater(pmid4you()) || isClinger(pmid4you())
             || (youAreFlying() && !youNeedNotBreathe())) {
             You_cant("reach the bottom to pick things up.");
             return 0;
-        } else if (!likesLava(youmonst.data->monsterTypeID)) {
+        } else if (!likesLava(pmid4you())) {
             You("would burn to a crisp trying to pick things up.");
             return 0;
         }
@@ -2550,7 +2550,7 @@ lookaround()
                 /* water and lava only stop you if directly in front, and stop
                  * you even if you are running
                  */
-                if (!youAreLevitating() && !youAreFlying() && !isClinger(youmonst.data->monsterTypeID)
+                if (!youAreLevitating() && !youAreFlying() && !isClinger(pmid4you())
                     && x == currentX() + directionX() && y == currentY() + directionY())
                     /* No canYouWalkOnWater() check; otherwise they'd be able
                      * to test boots by trying to SHIFT-direction
@@ -2785,13 +2785,13 @@ weight_cap()
     carrcap = 25 * (ACURRSTR + ACURR(A_CON)) + 50;
     if (areYouPolymorphed()) {
         /* consistent with can_carry() in mon.c */
-	int yourCorpseWeight = monsterCorpseWeight(youmonst.data->monsterTypeID);
-        if (monsterClass(youmonst.data->monsterTypeID) == S_NYMPH)
+	int yourCorpseWeight = monsterCorpseWeight(pmid4you());
+        if (monsterClass(pmid4you()) == S_NYMPH)
             carrcap = MAX_CARR_CAP;
         else if (!yourCorpseWeight)
-            carrcap = (carrcap * (long) monsterSize(youmonst.data->monsterTypeID)) / MZ_HUMAN;
-        else if (!isStrongMonster(youmonst.data->monsterTypeID)
-                 || (isStrongMonster(youmonst.data->monsterTypeID)
+            carrcap = (carrcap * (long) monsterSize(pmid4you())) / MZ_HUMAN;
+        else if (!isStrongMonster(pmid4you())
+                 || (isStrongMonster(pmid4you())
                      && (yourCorpseWeight > WT_HUMAN)))
             carrcap = (carrcap * (long) yourCorpseWeight / WT_HUMAN);
     }
@@ -2827,7 +2827,7 @@ inv_weight()
     while (otmp) {
         if (otmp->oclass == COIN_CLASS)
             wt += (int) (((long) otmp->quan + 50L) / 100L);
-        else if (otmp->otyp != BOULDER || !throwsRocks(youmonst.data->monsterTypeID))
+        else if (otmp->otyp != BOULDER || !throwsRocks(pmid4you()))
             wt += otmp->owt;
         otmp = otmp->nobj;
     }

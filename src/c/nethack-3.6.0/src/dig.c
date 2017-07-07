@@ -1995,7 +1995,7 @@ long timeout;
         if (mtmp && !OBJ_AT(x, y) && mtmp->mundetected
             && hidesUnderStuff(mtmp->data->monsterTypeID)) {
             mtmp->mundetected = 0;
-        } else if (x == currentX() && y == currentY() && lurking() && hidesUnderStuff(youmonst.data->monsterTypeID))
+        } else if (x == currentX() && y == currentY() && lurking() && hidesUnderStuff(pmid4you()))
             (void) hideunder(&youmonst);
         newsym(x, y);
     } else if (in_invent)
@@ -2065,7 +2065,7 @@ escape_tomb()
         boolean good;
 
         if (isAmorphous(youmonst.data) || youCanPassThroughWalls()
-            || isNoncorporeal(youmonst.data->monsterTypeID)
+            || isNoncorporeal(pmid4you())
             || (isUnsolid(youmonst.data)
                 && youmonst.data != &mons[PM_WATER_ELEMENTAL])
             || (isTunneler(youmonst.data) && !needsPickaxe(youmonst.data))) {

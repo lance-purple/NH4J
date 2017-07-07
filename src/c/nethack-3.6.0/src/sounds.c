@@ -985,8 +985,8 @@ dochat()
     int tx, ty;
     struct obj *otmp;
 
-    if (isSilent(youmonst.data->monsterTypeID)) {
-	javaString youMonsterName = monsterTypeName(youmonst.data->monsterTypeID);
+    if (isSilent(pmid4you())) {
+	javaString youMonsterName = monsterTypeName(pmid4you());
         pline("As %s, you cannot speak.", an(youMonsterName.c_str));
 	releaseJavaString(youMonsterName);
         return 0;
