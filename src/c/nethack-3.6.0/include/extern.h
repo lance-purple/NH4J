@@ -2198,6 +2198,19 @@ E boolean FDECL(likesLava, (int));
 E boolean FDECL(befriendWithObject, (struct permonst*, struct obj*));
 
 E boolean FDECL(hasHorns, (int));
+E boolean FDECL(isFlaming, (int));
+E boolean FDECL(isWooden, (int));
+E boolean FDECL(isTelepathic, (int));
+E boolean FDECL(isArmed, (int));
+E boolean FDECL(hasBreathWeapon, (int));
+E boolean FDECL(cannotWearArmor, (int));
+E boolean FDECL(makesWebs, (int));
+E boolean FDECL(isLongWorm, (int));
+E boolean FDECL(isMonsterPlayer, (int));
+E boolean FDECL(isWatchman, (int));
+E boolean FDECL(isRiderOfTheApocalypse, (int));
+E boolean FDECL(isPlaceholderMonster, (int));
+E boolean FDECL(isInvisibleMonsterType, (int));
 
 /* ### monmove.c ### */
 

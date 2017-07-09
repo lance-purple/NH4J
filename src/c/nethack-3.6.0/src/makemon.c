@@ -908,7 +908,7 @@ int mndx;
     mon->m_lev = adj_lev(ptr);
     if (isGolem(pmid4(ptr))) {
         mon->mhpmax = mon->mhp = golemhp(mndx);
-    } else if (is_rider(ptr)) {
+    } else if (isRiderOfTheApocalypse(pmid4(ptr))) {
         /* we want low HP, but a high monsterLevel so they can attack well */
         mon->mhpmax = mon->mhp = d(10, 8);
     } else if (monsterLevel(pmid4(ptr)) > 49) {
@@ -1302,7 +1302,7 @@ int mmflags;
     }
 
     if (allow_minvent) {
-        if (is_armed(ptr))
+        if (isArmed(pmid4(ptr)))
             m_initweap(mtmp); /* equip with weapons / armor */
         m_initinv(mtmp); /* add on a few special items incl. more armor */
         m_dowear(mtmp, TRUE);
@@ -1534,17 +1534,15 @@ STATIC_OVL boolean
 mk_gen_ok(mndx, mvflagsmask, genomask)
 int mndx, mvflagsmask, genomask;
 {
-    struct permonst *ptr = &mons[mndx];
-
     if (mvitals[mndx].mvflags & mvflagsmask)
         return FALSE;
-    if (monsterGenerationMask(pmid4(ptr)) & genomask)
+    if (monsterGenerationMask(mndx) & genomask)
         return FALSE;
-    if (is_placeholder(ptr))
+    if (isPlaceholderMonster(mndx))
         return FALSE;
 #ifdef MAIL
     /* special levels might ask for random demon type; reject this one */
-    if (ptr == &mons[PM_MAIL_DAEMON])
+    if (mndx == PM_MAIL_DAEMON)
         return FALSE;
 #endif
     return TRUE;
@@ -1734,7 +1732,7 @@ struct monst *mtmp, *victim;
     if (mtmp->mhpmax <= hp_threshold)
         return ptr; /* doesn't gain a level */
 
-    if (is_mplayer(ptr))
+    if (isMonsterPlayer(pmid4(ptr)))
         lev_limit = 30; /* same as player */
     else if (lev_limit < 5)
         lev_limit = 5; /* arbitrary */
@@ -1802,7 +1800,7 @@ int otyp;
             if (otmp->spe < 0)
                 otmp->spe = 0;
             otmp->oerodeproof = TRUE;
-        } else if (is_mplayer(mtmp->data) && is_sword(otmp)) {
+        } else if (isMonsterPlayer(pmid4mon(mtmp)) && is_sword(otmp)) {
             otmp->spe = (3 + rn2(4));
         }
 

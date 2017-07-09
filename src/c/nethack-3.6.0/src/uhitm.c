@@ -353,7 +353,7 @@ register struct monst *mtmp;
              * there's also a chance of displacing a "frozen" monster.
              * sleeping monsters might magically walk in their sleep.
              */
-            boolean foo = (youAreBeingPunished() || !rn2(7) || is_longworm(mtmp->data)),
+            boolean foo = (youAreBeingPunished() || !rn2(7) || isLongWorm(pmid4mon(mtmp))),
                     inshop = FALSE;
             char *p;
 
@@ -550,7 +550,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
     boolean result, anger_guards;
 
     anger_guards = (mon->mpeaceful
-                    && (mon->ispriest || mon->isshk || is_watch(mon->data)));
+                    && (mon->ispriest || mon->isshk || isWatchman(pmid4mon(mon))));
     result = hmon_hitmon(mon, obj, thrown);
     if (mon->ispriest && !rn2(2))
         ghod_hitsu(mon);
@@ -1911,13 +1911,13 @@ register const struct Attack mattk;
         /* engulfing a cockatrice or digesting a Rider or Medusa */
         fatal_gulp = (touchPetrifies(pmid4(pd)) && !youResistStoning())
                      || (mattk.damageType == AD_DGST
-                         && (is_rider(pd) || (pd == &mons[PM_MEDUSA]
+                         && (isRiderOfTheApocalypse(pmid4(pd)) || (pd == &mons[PM_MEDUSA]
                                               && !youResistStoning())));
 
         if ((mattk.damageType == AD_DGST && !youHaveSlowDigestion()) || fatal_gulp)
             eating_conducts(pd);
 
-        if (fatal_gulp && !is_rider(pd)) { /* petrification */
+        if (fatal_gulp && !isRiderOfTheApocalypse(pmid4(pd))) { /* petrification */
             char kbuf[BUFSZ];
             You("englut %s.", mon_nam(mdef));
 
@@ -1934,7 +1934,7 @@ register const struct Attack mattk;
             switch (mattk.damageType) {
             case AD_DGST:
                 /* eating a Rider or its corpse is fatal */
-                if (is_rider(pd)) {
+                if (isRiderOfTheApocalypse(pmid4(pd))) {
                     pline("Unfortunately, digesting any of it is fatal.");
                     end_engulf();
                     javaString monsterName = monsterTypeName(pmid4(pd));
@@ -1999,7 +1999,7 @@ register const struct Attack mattk;
             case AD_PHYS:
                 if (youmonst.data == &mons[PM_FOG_CLOUD]) {
                     pline("%s is laden with your moisture.", Monnam(mdef));
-                    if (isAmphibious(pmid4(pd)) && !flaming(pd)) {
+                    if (isAmphibious(pmid4(pd)) && !isFlaming(pmid4(pd))) {
                         dam = 0;
                         pline("%s seems unharmed.", Monnam(mdef));
                     }

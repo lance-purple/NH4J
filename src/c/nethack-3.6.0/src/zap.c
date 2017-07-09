@@ -530,7 +530,7 @@ coord *cc;
     if (mtmp2) {
         /* save_mtraits() validated mtmp2->mnum */
         mtmp2->data = &mons[mtmp2->mnum];
-        if (mtmp2->mhpmax <= 0 && !is_rider(mtmp2->data))
+        if (mtmp2->mhpmax <= 0 && !isRiderOfTheApocalypse(pmid4mon(mtmp2)))
             return (struct monst *) 0;
         mtmp = makemon(mtmp2->data, cc->x, cc->y,
                        NO_MINVENT | MM_NOWAIT | MM_NOCOUNTBIRTH);
@@ -538,7 +538,7 @@ coord *cc;
             return mtmp;
 
         /* heal the monster */
-        if (mtmp->mhpmax > mtmp2->mhpmax && is_rider(mtmp2->data))
+        if (mtmp->mhpmax > mtmp2->mhpmax && isRiderOfTheApocalypse(pmid4mon(mtmp2)))
             mtmp2->mhpmax = mtmp->mhpmax;
         mtmp2->mhp = mtmp2->mhpmax;
         /* Get these ones from mtmp */
@@ -1083,7 +1083,7 @@ int ochance, achance; /* percent chance for ordinary objects, artifacts */
         || obj->otyp == SPE_BOOK_OF_THE_DEAD
         || obj->otyp == CANDELABRUM_OF_INVOCATION
         || obj->otyp == BELL_OF_OPENING
-        || (obj->otyp == CORPSE && is_rider(&mons[obj->corpsenm]))) {
+        || (obj->otyp == CORPSE && isRiderOfTheApocalypse(obj->corpsenm))) {
         return TRUE;
     } else {
         int chance = rn2(100);
@@ -3901,7 +3901,7 @@ register int dx, dy;
                     boolean mon_could_move = mon->mcanmove;
                     int tmp = zhitm(mon, type, nd, &otmp);
 
-                    if (is_rider(mon->data)
+                    if (isRiderOfTheApocalypse(pmid4mon(mon))
                         && abs(type) == ZT_BREATH(ZT_DEATH)) {
                         if (canseemon(mon)) {
                             hit(fltxt, mon, ".");
@@ -4841,7 +4841,7 @@ int damage, tell;
     if (dlev > 50)
         dlev = 50;
     else if (dlev < 1)
-        dlev = is_mplayer(mtmp->data) ? currentExperienceLevel() : 1;
+        dlev = isMonsterPlayer(pmid4mon(mtmp)) ? currentExperienceLevel() : 1;
 
     resisted = rn2(100 + alev - dlev) < monsterBaseMagicResistance(pmid4mon(mtmp));
     if (resisted) {

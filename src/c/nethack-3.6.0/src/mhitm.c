@@ -255,7 +255,7 @@ boolean quietly;
     place_monster(mdef, fx, fy);
     if (vis && !quietly)
         pline("%s moves %s out of %s way!", Monnam(magr), mon_nam(mdef),
-              is_rider(pa) ? "the" : mhis(magr));
+              isRiderOfTheApocalypse(pmid4(pa)) ? "the" : mhis(magr));
     newsym(fx, fy);  /* see it */
     newsym(tx, ty);  /*   all happen */
     flush_screen(0); /* make sure it shows up */
@@ -772,7 +772,7 @@ register const struct Attack mattk;
     switch (mattk.damageType) {
     case AD_DGST:
         /* eating a Rider or its corpse is fatal */
-        if (is_rider(pd)) {
+        if (isRiderOfTheApocalypse(pmid4(pd))) {
             if (vis)
                 pline("%s %s!", Monnam(magr),
                       (pd == &mons[PM_FAMINE])

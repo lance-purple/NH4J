@@ -325,7 +325,7 @@ struct monst *mon;
         if (otmp->blessed
             && (isUndead(pmid4(ptr)) || isDemon(pmid4(ptr)) || is_vampshifter(mon)))
             bonus += rnd(4);
-        if (is_axe(otmp) && is_wooden(ptr))
+        if (is_axe(otmp) && isWooden(pmid4(ptr)))
             bonus += rnd(4);
         if (objects[otyp].oc_material == SILVER && mon_hates_silver(mon))
             bonus += rnd(20);

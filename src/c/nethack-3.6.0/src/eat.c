@@ -45,7 +45,7 @@ char msgbuf[BUFSZ];
 /* Rider corpses are treated as non-rotting so that attempting to eat one
    will be sure to reach the stage of eating where that meal is fatal */
 #define nonrotting_corpse(mnum) \
-    ((mnum) == PM_LIZARD || (mnum) == PM_LICHEN || is_rider(&mons[mnum]))
+    ((mnum) == PM_LIZARD || (mnum) == PM_LICHEN || isRiderOfTheApocalypse(mnum))
 
 /* non-rotting non-corpses; unlike lizard corpses, these items will behave
    as if rotten if they are cursed (fortune cookies handled elsewhere) */
@@ -509,7 +509,7 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
             pline("%s doesn't notice.", Monnam(mdef));
             /* all done; no extra harm inflicted upon target */
             return MM_MISS;
-        } else if (is_rider(pd)) {
+        } else if (isRiderOfTheApocalypse(pmid4(pd))) {
             pline("Ingesting that is fatal.");
 	    javaString monsterName = monsterTypeName(pmid4(pd));
             Sprintf(killer.name, "unwisely ate the brain of %s", monsterName.c_str);
@@ -575,7 +575,7 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
             if (visflag)
                 pline("%s doesn't notice.", Monnam(mdef));
             return MM_MISS;
-        } else if (is_rider(pd)) {
+        } else if (isRiderOfTheApocalypse(pmid4(pd))) {
             mondied(magr);
             if (magr->mhp <= 0)
                 result = MM_AGR_DIED;
@@ -780,7 +780,7 @@ register struct permonst *ptr;
         ifdebugresist("can get teleport control");
         break;
     case TELEPAT:
-        res = telepathic(ptr);
+        res = isTelepathic(pmid4(ptr));
         ifdebugresist("can get telepathy");
         break;
     default:

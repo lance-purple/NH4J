@@ -1222,7 +1222,7 @@ unsigned trflags;
                 You("flow through %s spider web.", a_your[trap->madeby_u]);
             break;
         }
-        if (webmaker(youmonst.data)) {
+        if (makesWebs(pmid4you())) {
             if (webmsgok)
                 pline(trap->madeby_u ? "You take a walk on your web."
                                      : "There is a spider web here.");
@@ -2428,7 +2428,7 @@ register struct monst *mtmp;
             break;
         case WEB:
             /* Monster in a web. */
-            if (webmaker(mptr))
+            if (makesWebs(pmid4(mptr)))
                 break;
             if (isAmorphous(pmid4(mptr)) || isWhirly(pmid4(mptr)) || isUnsolid(pmid4(mptr))) {
                 if (isAcidic(pmid4(mptr)) || mptr == &mons[PM_GELATINOUS_CUBE]
@@ -3722,7 +3722,7 @@ dountrap()
         pline("You're too strained to do that.");
         return 0;
     }
-    if ((hasNoHands(pmid4you()) && !webmaker(youmonst.data))
+    if ((hasNoHands(pmid4you()) && !makesWebs(pmid4you()))
         || !monsterMovementSpeed(pmid4you())) {
         pline("And just how do you expect to do that?");
         return 0;
@@ -3745,7 +3745,7 @@ struct trap *ttmp;
     int chance = 3;
 
     /* Only spiders know how to deal with webs reliably */
-    if (ttmp->ttyp == WEB && !webmaker(youmonst.data))
+    if (ttmp->ttyp == WEB && !makesWebs(pmid4you()))
         chance = 30;
     if (youAreConfused() || youAreHallucinating())
         chance++;
@@ -3890,7 +3890,7 @@ boolean force_failure;
                     if ((mtmp->mhp -= rnd(4)) <= 0)
                         killed(mtmp);
                 } else if (ttype == WEB) {
-                    if (!webmaker(youmonst.data)) {
+                    if (!makesWebs(pmid4you())) {
                         struct trap *ttmp2 = maketrap(currentX(), currentY(), WEB);
 
                         if (ttmp2) {

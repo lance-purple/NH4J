@@ -768,7 +768,7 @@ NEARDATA struct permonst mons[] = {
         /* In reality, they tunnel instead of cutting lumber.  Oh, well. */
         M2_WANDER | M2_HOSTILE, M3_INFRAVISIBLE, CLR_BROWN),
     /*
-     * spiders & scorpions (keep webmaker() in sync if new critters are added)
+     * spiders & scorpions (keep makesWebs() in sync if new critters are added)
      */
     MON(PM_CAVE_SPIDER, "cave spider", S_SPIDER, LVL(1, 12, 3, 0, 0), (G_GENO | G_SGROUP | 2),
         A(ATTK(AT_BITE, AD_PHYS, 1, 2), NO_ATTK, NO_ATTK, NO_ATTK, NO_ATTK,

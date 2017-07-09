@@ -859,7 +859,7 @@ struct monst *mtmp;
         otmp2 = otmp->nexthere;
 
         /* touch sensitive items */
-        if (otmp->otyp == CORPSE && is_rider(&mons[otmp->corpsenm])) {
+        if (otmp->otyp == CORPSE && isRiderOfTheApocalypse(otmp->corpsenm)) {
             /* Rider corpse isn't just inedible; can't engulf it either */
             (void) revive_corpse(otmp);
 
@@ -1104,7 +1104,7 @@ struct obj *otmp;
     if (otyp == CORPSE && touchPetrifies(otmp->corpsenm)
         && !(mtmp->misc_worn_check & W_ARMG) && !resists_ston(mtmp))
         return 0;
-    if (otyp == CORPSE && is_rider(&mons[otmp->corpsenm]))
+    if (otyp == CORPSE && isRiderOfTheApocalypse(otmp->corpsenm))
         return 0;
     if (objects[otyp].oc_material == SILVER && mon_hates_silver(mtmp)
         && (otyp != BELL_OF_OPENING || !isCovetous(pmid4(mdat))))
@@ -1372,7 +1372,7 @@ nexttry: /* eels prefer the water, but if there is no water nearby,
                         && (ttmp->ttyp != FIRE_TRAP || !resists_fire(mon))
                         && (ttmp->ttyp != SQKY_BOARD || !isFlyer(pmid))
                         && (ttmp->ttyp != WEB
-                            || (!isAmorphous(pmid) && !webmaker(mdat)))
+                            || (!isAmorphous(pmid) && !makesWebs(pmid4mon(mon))))
                         && (ttmp->ttyp != ANTI_MAGIC || !resists_magm(mon))) {
                         if (!(flag & ALLOW_TRAPS)) {
                             if (mon->mtrapseen & (1L << (ttmp->ttyp - 1)))
@@ -1433,7 +1433,7 @@ struct monst *magr, /* monster that is currently deciding where to move */
         /* no displacing trapped monsters or multi-location longworms */
         && !mdef->mtrapped && (!mdef->wormno || !count_wsegs(mdef))
         /* riders can move anything; others, same size or smaller only */
-        && (is_rider(pa) || monsterSize(pmid4(pa)) >= monsterSize(pmid4(pd))))
+        && (isRiderOfTheApocalypse(pmid4(pa)) || monsterSize(pmid4(pa)) >= monsterSize(pmid4(pd))))
         return ALLOW_MDISP;
     return 0L;
 }
@@ -1940,7 +1940,7 @@ boolean was_swallowed; /* digestion */
         return FALSE;
 
     if (((isBigMonster(pmid4(mdat)) || mdat == &mons[PM_LIZARD]) && !mon->mcloned)
-        || isGolem(pmid4(mdat)) || is_mplayer(mdat) || is_rider(mdat))
+        || isGolem(pmid4(mdat)) || isMonsterPlayer(pmid4(mdat)) || isRiderOfTheApocalypse(pmid4(mdat)))
         return TRUE;
     tmp = 2 + ((monsterGenerationMask(pmid4(mdat)) & G_FREQ) < 2) + isVerySmallMonster(pmid4(mdat));
     return (boolean) !rn2(tmp);
@@ -3072,22 +3072,19 @@ STATIC_OVL struct permonst *
 accept_newcham_form(mndx)
 int mndx;
 {
-    struct permonst *mdat;
-
     if (mndx == NON_PM)
         return 0;
-    mdat = &mons[mndx];
     if ((mvitals[mndx].mvflags & G_GENOD) != 0)
         return 0;
-    if (is_placeholder(mdat))
+    if (isPlaceholderMonster(mndx))
         return 0;
     /* select_newcham_form() might deliberately pick a player
        character type (random selection never does) which
        okToPolymorphInto() rejects, so we need a special case here */
-    if (is_mplayer(mdat))
-        return mdat;
+    if (isMonsterPlayer(mndx))
+        return &mons[mndx];
     /* okToPolymorphInto() rules out M2_PNAME, M2_WERE, and all humans except Kops */
-    return okToPolymorphInto(pmid4(mdat)) ? mdat : 0;
+    return okToPolymorphInto(mndx) ? &mons[mndx] : 0;
 }
 
 void
@@ -3123,7 +3120,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
     char oldname[BUFSZ], newname[BUFSZ];
 
     /* Riders are immune to polymorph and green slime */
-    if (is_rider(mtmp->data))
+    if (isRiderOfTheApocalypse(pmid4mon(mtmp)))
         return 0;
 
     if (msg) {
@@ -3156,7 +3153,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
 
     mgender_from_permonst(mtmp, mdat);
 
-    if (areYouInEndgame() && is_mplayer(olddata) && has_mname(mtmp)) {
+    if (areYouInEndgame() && isMonsterPlayer(pmid4(olddata)) && has_mname(mtmp)) {
         /* mplayers start out as "Foo the Bar", but some of the
          * titles are inappropriate when polymorphed, particularly
          * into the opposite sex.  players don't use ranks when
@@ -3211,8 +3208,8 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
             new_light_source(mtmp->mx, mtmp->my, emitsLightWithRange(pmid4mon(mtmp)),
                              LS_MONSTER, monst_to_any(mtmp));
     }
-    if (!mtmp->perminvis || pm_invisible(olddata))
-        mtmp->perminvis = pm_invisible(mdat);
+    if (!mtmp->perminvis || isInvisibleMonsterType(pmid4(olddata)))
+        mtmp->perminvis = isInvisibleMonsterType(pmid4(mdat));
     mtmp->minvis = mtmp->invis_blkd ? 0 : mtmp->perminvis;
     if (mtmp->mundetected)
         (void) hideunder(mtmp);
@@ -3494,7 +3491,7 @@ boolean silent;
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
         if (DEADMONSTER(mtmp))
             continue;
-        if (is_watch(mtmp->data) && mtmp->mpeaceful) {
+        if (isWatchman(pmid4mon(mtmp)) && mtmp->mpeaceful) {
             ct++;
             if (cansee(mtmp->mx, mtmp->my) && mtmp->mcanmove) {
                 if (distanceSquaredToYou(mtmp->mx, mtmp->my) == 2)
@@ -3537,7 +3534,7 @@ pacify_guards()
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
         if (DEADMONSTER(mtmp))
             continue;
-        if (is_watch(mtmp->data))
+        if (isWatchman(pmid4mon(mtmp)))
             mtmp->mpeaceful = 1;
     }
 }

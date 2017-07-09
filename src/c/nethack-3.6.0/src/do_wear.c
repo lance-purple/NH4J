@@ -1590,7 +1590,7 @@ boolean noisy;
                     : is_suit(otmp)
                         ? c_suit
                         : 0;
-    if (which && cantweararm(youmonst.data)
+    if (which && cannotWearArmor(pmid4you())
         /* same exception for cloaks as used in m_dowear() */
         && (which != c_cloak || monsterSize(pmid4you()) != MZ_SMALL)
         && (racial_exception(&youmonst, otmp) < 1)) {
@@ -1929,7 +1929,7 @@ dowear()
 {
     struct obj *otmp;
 
-    /* cantweararm() checks for suits of armor, not what we want here;
+    /* cannotWearArmor() checks for suits of armor, not what we want here;
        verysmall() or hasNoHands() checks for shields, gloves, etc... */
     if ((isVerySmallMonster(pmid4you()) || hasNoHands(pmid4you()))) {
         pline("Don't even bother.");

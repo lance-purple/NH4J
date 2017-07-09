@@ -1279,7 +1279,7 @@ dokick()
             for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
                 if (DEADMONSTER(mtmp))
                     continue;
-                if (is_watch(mtmp->data) && couldsee(mtmp->mx, mtmp->my)
+                if (isWatchman(pmid4mon(mtmp)) && couldsee(mtmp->mx, mtmp->my)
                     && mtmp->mpeaceful) {
                     mon_yells(mtmp, "Halt, thief!  You're under arrest!");
                     (void) angry_guards(FALSE);
@@ -1295,7 +1295,7 @@ dokick()
             for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
                 if (DEADMONSTER(mtmp))
                     continue;
-                if (is_watch(mtmp->data) && mtmp->mpeaceful
+                if (isWatchman(pmid4mon(mtmp)) && mtmp->mpeaceful
                     && couldsee(mtmp->mx, mtmp->my)) {
                     if (levl[x][y].looted & D_WARNED) {
                         mon_yells(mtmp,

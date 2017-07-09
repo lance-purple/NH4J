@@ -1705,7 +1705,7 @@ struct obj *obj;
 
         instapetrify(kbuf);
     }
-    if (is_rider(&mons[corpse->corpsenm])) {
+    if (isRiderOfTheApocalypse(corpse->corpsenm)) {
         if (revive_corpse(corpse))
             verbalize("Yes...  But War does not preserve its enemies...");
         else

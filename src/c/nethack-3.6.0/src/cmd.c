@@ -488,7 +488,7 @@ STATIC_PTR int
 domonability(VOID_ARGS)
 {
     int upmid = pmid4you();
-    if (can_breathe(youmonst.data))
+    if (hasBreathWeapon(pmid4you()))
         return dobreathe();
     else if (attacktype(youmonst.data, AT_SPIT))
         return dospit();
@@ -498,7 +498,7 @@ domonability(VOID_ARGS)
         return dogaze();
     else if (isWere(pmid4you()))
         return dosummon();
-    else if (webmaker(youmonst.data))
+    else if (makesWebs(upmid))
         return dospinweb();
     else if (isHider(upmid))
         return dohide();

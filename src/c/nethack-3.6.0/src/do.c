@@ -1731,13 +1731,13 @@ long timeout UNUSED;
         long when;
         int action;
 
-        if (is_rider(mptr) && rn2(99)) { /* Rider usually tries again */
+        if (isRiderOfTheApocalypse(pmid4(mptr)) && rn2(99)) { /* Rider usually tries again */
             action = REVIVE_MON;
             for (when = 3L; when < 67L; when++)
                 if (!rn2(3))
                     break;
         } else { /* rot this corpse away */
-            You_feel("%sless hassled.", is_rider(mptr) ? "much " : "");
+            You_feel("%sless hassled.", isRiderOfTheApocalypse(pmid4(mptr)) ? "much " : "");
             action = ROT_CORPSE;
             when = 250L - (monstermoves - body->age);
             if (when < 1L)

@@ -127,7 +127,7 @@ struct monst *mtmp;
     /* creatures who are directly resistant to magical scaring:
      * Rodney, lawful minions, angels, the Riders */
     if (mtmp->iswiz || isLawfulMinion(pmid4mon(mtmp)) || mtmp->data == &mons[PM_ANGEL]
-        || is_rider(mtmp->data))
+        || isRiderOfTheApocalypse(pmid4mon(mtmp)))
         return FALSE;
 
     /* should this still be true for defiled/molochian altars? */
@@ -457,7 +457,7 @@ register struct monst *mtmp;
     }
 
     /* the watch will look around and see if you are up to no good :-) */
-    if (is_watch(mdat)) {
+    if (isWatchman(pmid4(mdat))) {
         watch_on_duty(mtmp);
 
     } else if (isMindFlayer(pmid4(mdat)) && !rn2(20)) {
@@ -497,7 +497,7 @@ register struct monst *mtmp;
                 continue;
             if (m2 == mtmp)
                 continue;
-            if ((telepathic(m2->data) && (rn2(2) || m2->mblinded))
+            if ((isTelepathic(pmid4mon(m2)) && (rn2(2) || m2->mblinded))
                 || !rn2(10)) {
                 if (cansee(m2->mx, m2->my))
                     pline("It locks on to %s.", mon_nam(m2));
@@ -755,7 +755,7 @@ register int after;
         can_tunnel = isTunneler(pmid4(ptr));
     can_open = !(cannotWieldThings(pmid4(ptr)));
     can_unlock =
-        ((can_open && monhaskey(mtmp, TRUE)) || mtmp->iswiz || is_rider(ptr));
+        ((can_open && monhaskey(mtmp, TRUE)) || mtmp->iswiz || isRiderOfTheApocalypse(pmid4(ptr)));
     doorbuster = isGiant(pmid4(ptr));
     if (mtmp->wormno)
         goto not_special;
@@ -957,7 +957,7 @@ not_special:
                          || (likeobjs && index(practical, otmp->oclass)
                              && (otmp->otyp != CORPSE
                                  || (monsterClass(pmid4(ptr)) == S_NYMPH
-                                     && !is_rider(&mons[otmp->corpsenm]))))
+                                     && !isRiderOfTheApocalypse(otmp->corpsenm))))
                          || (likemagic && index(magical, otmp->oclass))
                          || (uses_items && searches_for_item(mtmp, otmp))
                          || (likerock && otmp->otyp == BOULDER)
@@ -1021,7 +1021,7 @@ not_special:
         flag |= (ALLOW_SANCT | ALLOW_SSM);
     else
         flag |= ALLOW_U;
-    if (isMinion(pmid) || is_rider(ptr))
+    if (isMinion(pmid) || isRiderOfTheApocalypse(pmid4(ptr)))
         flag |= ALLOW_SANCT;
     /* unicorn may not be able to avoid hero on a noteleport level */
     if (isUnicorn(pmid) && !level.flags.noteleport)

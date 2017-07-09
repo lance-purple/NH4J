@@ -1551,7 +1551,7 @@ struct mkroom *croom;
             loc |= (HOT | WET);
         if (passesThroughWalls(pmid) || isNoncorporeal(pmid))
             loc |= SOLID;
-        if (flaming(pm))
+        if (isFlaming(pmid))
             loc |= HOT;
         /* If water-liking monster, first try is without DRY */
         get_location_coord(&x, &y, loc | NO_LOC_WARN, croom, m->coord);
@@ -1666,8 +1666,8 @@ struct mkroom *croom;
                                              emitsLightWithRange(pmid4mon(mtmp)),
                                              LS_MONSTER, (genericptr_t) mtmp);
                     }
-                    if (!mtmp->perminvis || pm_invisible(olddata))
-                        mtmp->perminvis = pm_invisible(mdat);
+                    if (!mtmp->perminvis || isInvisibleMonsterType(pmid4(olddata)))
+                        mtmp->perminvis = isInvisibleMonsterType(pmid4(mdat));
                 }
                 break;
             }

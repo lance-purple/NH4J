@@ -465,11 +465,11 @@ boolean creation;
 
     m_dowear_type(mon, W_AMUL, creation, FALSE);
     /* can't put on shirt if already wearing suit */
-    if (!cantweararm(mon->data) && !(mon->misc_worn_check & W_ARM))
+    if (!cannotWearArmor(pmid4mon(mon)) && !(mon->misc_worn_check & W_ARM))
         m_dowear_type(mon, W_ARMU, creation, FALSE);
     /* treating small as a special case allows
        hobbits, gnomes, and kobolds to wear cloaks */
-    if (!cantweararm(mon->data) || monsterSize(pmid4mon(mon)) == MZ_SMALL)
+    if (!cannotWearArmor(pmid4mon(mon)) || monsterSize(pmid4mon(mon)) == MZ_SMALL)
         m_dowear_type(mon, W_ARMC, creation, FALSE);
     m_dowear_type(mon, W_ARMH, creation, FALSE);
     if (!MON_WEP(mon) || !bimanual(MON_WEP(mon)))
@@ -477,7 +477,7 @@ boolean creation;
     m_dowear_type(mon, W_ARMG, creation, FALSE);
     if (!isSlithy(pmid4mon(mon)) && monsterClass(pmid4mon(mon)) != S_CENTAUR)
         m_dowear_type(mon, W_ARMF, creation, FALSE);
-    if (!cantweararm(mon->data))
+    if (!cannotWearArmor(pmid4mon(mon)))
         m_dowear_type(mon, W_ARM, creation, FALSE);
     else
         m_dowear_type(mon, W_ARM, creation, RACE_EXCEPTION);

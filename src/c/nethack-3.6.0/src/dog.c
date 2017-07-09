@@ -307,7 +307,7 @@ boolean with_you;
         set_residency(mtmp, FALSE);
 
     num_segs = mtmp->wormno;
-    /* baby long worms have no tail so don't use is_longworm() */
+    /* baby long worms have no tail so don't use isLongWorm() */
     if (mtmp->data == &mons[PM_LONG_WORM]) {
         mtmp->wormno = get_wormno();
         if (mtmp->wormno)
@@ -751,7 +751,7 @@ register struct obj *obj;
         if (obj->otyp == CORPSE || obj->otyp == TIN || obj->otyp == EGG)
             fptr = &mons[obj->corpsenm];
 
-        if (obj->otyp == CORPSE && is_rider(fptr))
+        if (obj->otyp == CORPSE && isRiderOfTheApocalypse(pmid4(fptr)))
             return TABU;
         if ((obj->otyp == CORPSE || obj->otyp == EGG) && touchPetrifies(pmid4(fptr))
             && !resists_ston(mon))

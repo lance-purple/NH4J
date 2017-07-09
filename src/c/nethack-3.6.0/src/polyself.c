@@ -79,9 +79,9 @@ set_uasmon()
     PROPSET(STUNNED, (mdat == &mons[PM_STALKER] || isBat(pmid4(mdat))));
     PROPSET(HALLUC_RES, dmgtype(mdat, AD_HALU));
     PROPSET(SEE_INVIS, perceivesTheInvisible(pmid4(mdat)));
-    PROPSET(TELEPAT, telepathic(mdat));
+    PROPSET(TELEPAT, isTelepathic(pmid4(mdat)));
     PROPSET(INFRAVISION, hasInfravision(pmid4(mdat)));
-    PROPSET(INVIS, pm_invisible(mdat));
+    PROPSET(INVIS, isInvisibleMonsterType(pmid4(mdat)));
     PROPSET(TELEPORT, canTeleport(pmid4(mdat)));
     PROPSET(TELEPORT_CONTROL, canControlTeleport(pmid4(mdat)));
     PROPSET(LEVITATION, isFloater(pmid4(mdat)));
@@ -564,7 +564,7 @@ int psflags;
         do {
             /* randomly pick an "ordinary" monster */
             mntmp = rn1(SPECIAL_PM - LOW_PM, LOW_PM);
-            if (okToPolymorphInto(mntmp) && !is_placeholder(&mons[mntmp]))
+            if (okToPolymorphInto(mntmp) && !isPlaceholderMonster(mntmp))
                 break;
         } while (--tryct > 0);
     }
@@ -704,7 +704,7 @@ int mntmp;
         You("no longer feel sick.");
     }
     if (youAreTurningToSlime()) {
-        if (flaming(youmonst.data)) {
+        if (isFlaming(pmid4you())) {
             make_slimed(0L, "The slime burns away!");
         } else if (mntmp == PM_GREEN_SLIME) {
             /* do it silently */
@@ -789,7 +789,7 @@ int mntmp;
 
         int upmid = pmid4you();
 
-        if (can_breathe(youmonst.data))
+        if (hasBreathWeapon(upmid))
             pline(use_thec, monsterc, "use your breath weapon");
         if (attacktype(youmonst.data, AT_SPIT))
             pline(use_thec, monsterc, "spit venom");
@@ -801,7 +801,7 @@ int mntmp;
             pline(use_thec, monsterc, "hide");
         if (isWere(pmid4you()))
             pline(use_thec, monsterc, "summon help");
-        if (webmaker(youmonst.data))
+        if (makesWebs(upmid))
             pline(use_thec, monsterc, "spin a web");
         if (currentMonsterNumber() == PM_GREMLIN)
             pline(use_thec, monsterc, "multiply in a fountain");
@@ -861,7 +861,7 @@ int mntmp;
         /* probably should burn webs too if PM_FIRE_ELEMENTAL */
         setCurrentTrapTimeout(0);
     }
-    if (webmaker(youmonst.data) && currentlyTrapped() && currentTrapType() == TT_WEB) {
+    if (makesWebs(pmid4you()) && currentlyTrapped() && currentTrapType() == TT_WEB) {
         You("orient yourself on the web.");
         setCurrentTrapTimeout(0);
     }
@@ -1547,11 +1547,11 @@ domindblast()
             continue;
         if (mtmp->mpeaceful)
             continue;
-        u_sen = telepathic(mtmp->data) && !mtmp->mcansee;
-        if (u_sen || (telepathic(mtmp->data) && rn2(2)) || !rn2(10)) {
+        u_sen = isTelepathic(pmid4mon(mtmp)) && !mtmp->mcansee;
+        if (u_sen || (isTelepathic(pmid4mon(mtmp)) && rn2(2)) || !rn2(10)) {
             You("lock in on %s %s.", s_suffix(mon_nam(mtmp)),
                 u_sen ? "telepathy"
-                      : telepathic(mtmp->data) ? "latent telepathy" : "mind");
+                      : isTelepathic(pmid4mon(mtmp)) ? "latent telepathy" : "mind");
             mtmp->mhp -= rnd(15);
             if (mtmp->mhp <= 0)
                 killed(mtmp);

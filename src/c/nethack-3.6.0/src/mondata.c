@@ -556,8 +556,8 @@ struct permonst *pm1, *pm2;
     if (let1 == S_NAGA)
         return (let2 == S_NAGA);
     /* other critters get steadily messier */
-    if (is_rider(pm1))
-        return is_rider(pm2); /* debatable */
+    if (isRiderOfTheApocalypse(pmid1))
+        return isRiderOfTheApocalypse(pmid2); /* debatable */
     if (isMinion(pmid1))
         return isMinion(pmid2); /* [needs work?] */
     /* tengu don't match imps (first test handled case of both being tengu) */
@@ -609,8 +609,8 @@ struct permonst *pm1, *pm2;
     if (pm1 == &mons[PM_KILLER_BEE] || pm1 == &mons[PM_QUEEN_BEE])
         return (pm2 == &mons[PM_KILLER_BEE] || pm2 == &mons[PM_QUEEN_BEE]);
 
-    if (is_longworm(pm1))
-        return is_longworm(pm2); /* handles tail */
+    if (isLongWorm(pmid1))
+        return isLongWorm(pmid2); /* handles tail */
     /* [currently there's no reason to bother matching up
         assorted bugs and blobs with their closest variants] */
     /* didn't match */
@@ -1555,5 +1555,56 @@ extern boolean befriendWithObject(struct permonst* pm, struct obj* otmp) {
     return (otmp && (otmp->oclass == FOOD_CLASS) && isDomestic(pmid4(pm)));
 }
 
+boolean isFlaming(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isFlaming", pmid);
+}
+
+boolean isWooden(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isWooden", pmid);
+}
+
+boolean isTelepathic(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isTelepathic", pmid);
+}
+
+boolean isArmed(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isArmed", pmid);
+}
+
+boolean hasBreathWeapon(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "hasBreathWeapon", pmid);
+}
+
+boolean cannotWearArmor(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "cannotWearArmor", pmid);
+}
+
+boolean makesWebs(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "makesWebs", pmid);
+}
+
+boolean isLongWorm(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isLongWorm", pmid);
+}
+
+boolean isMonsterPlayer(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isMonsterPlayer", pmid);
+}
+
+boolean isWatchman(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isWatchman", pmid);
+}
+
+boolean isRiderOfTheApocalypse(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isRiderOfTheApocalypse", pmid);
+}
+
+boolean isPlaceholderMonster(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isPlaceholderMonster", pmid);
+}
+
+boolean isInvisibleMonsterType(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isInvisibleMonsterType", pmid);
+}
 
 /*mondata.c*/
