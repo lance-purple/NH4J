@@ -1914,8 +1914,9 @@ register const struct Attack mattk;
                          && (isRiderOfTheApocalypse(pmid4(pd)) || (pd == &mons[PM_MEDUSA]
                                               && !youResistStoning())));
 
-        if ((mattk.damageType == AD_DGST && !youHaveSlowDigestion()) || fatal_gulp)
-            eating_conducts(pd);
+        if ((mattk.damageType == AD_DGST && !youHaveSlowDigestion()) || fatal_gulp) {
+            updateConductsAfterEating(pmid4(pd));
+        }
 
         if (fatal_gulp && !isRiderOfTheApocalypse(pmid4(pd))) { /* petrification */
             char kbuf[BUFSZ];
