@@ -3859,8 +3859,8 @@ boolean force_failure;
         return 0;
     }
     /* duplicate tight-space checks from test_move */
-    if (directionX() && directionY() && bad_rock(youmonst.data, currentX(), ttmp->ty)
-        && bad_rock(youmonst.data, ttmp->tx, currentY())) {
+    if (directionX() && directionY() && badRock(pmid4you(), currentX(), ttmp->ty)
+        && badRock(pmid4you(), ttmp->tx, currentY())) {
         if ((invent && (inv_weight() + weight_cap() > 600))
             || isBigMonster(pmid4you())) {
             /* don't allow untrap if they can't get thru to it */

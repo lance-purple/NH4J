@@ -609,15 +609,15 @@ register xchar x, y;
 }
 
 boolean
-bad_rock(mdat, x, y)
-struct permonst *mdat;
+badRock(pmid, x, y)
+int pmid;
 register xchar x, y;
 {
     return (boolean) ((Sokoban && sobj_at(BOULDER, x, y))
                       || (IS_ROCK(levl[x][y].typ)
-                          && (!isTunneler(pmid4(mdat)) || needsPickaxe(pmid4(mdat))
+                          && (!isTunneler(pmid) || needsPickaxe(pmid)
                               || !may_dig(x, y))
-                          && !(passesThroughWalls(pmid4(mdat)) && may_passwall(x, y))));
+                          && !(passesThroughWalls(pmid) && may_passwall(x, y))));
 }
 
 /* caller has already decided that it's a tight diagonal; check whether a
@@ -764,8 +764,7 @@ int mode;
             }
         }
     }
-    if (dx && dy && bad_rock(youmonst.data, ux, y)
-        && bad_rock(youmonst.data, x, uy)) {
+    if (dx && dy && badRock(pmid4you(), ux, y) && badRock(pmid4you(), x, uy)) {
         /* Move at a diagonal. */
         switch (cant_squeeze_thru(&youmonst)) {
         case 3:
@@ -1304,7 +1303,7 @@ domove()
                 confdir();
                 x = currentX() + directionX();
                 y = currentY() + directionY();
-            } while (!isok(x, y) || bad_rock(youmonst.data, x, y));
+            } while (!isok(x, y) || badRock(pmid4you(), x, y));
         }
         /* turbulence might alter your actual destination */
         if (inWater()) {
@@ -1601,8 +1600,8 @@ domove()
             setCurrentX(originalX());
             setCurrentY(originalY());
             You("stop.  %s can't move diagonally.", upstart(y_monnam(mtmp)));
-        } else if ((originalX() != x) && (originalY() != y) && bad_rock(mtmp->data, x, originalY())
-                   && bad_rock(mtmp->data, originalX(), y)
+        } else if ((originalX() != x) && (originalY() != y) && badRock(pmid4mon(mtmp), x, originalY())
+                   && badRock(pmid4mon(mtmp), originalX(), y)
                    && (isBigMonster(pmid4mon(mtmp)) || (curr_mon_load(mtmp) > 600))) {
             /* can't swap places when pet won't fit thru the opening */
             setCurrentX(originalX());
@@ -2644,8 +2643,8 @@ int x, y;
     if (IS_DOOR(levl[x][y].typ) && (!doorless_door(x, y) || block_door(x, y)))
         return FALSE;
     /* finally, are we trying to squeeze through a too-narrow gap? */
-    return !(bad_rock(youmonst.data, currentX(), y)
-             && bad_rock(youmonst.data, x, currentY()));
+    return !(badRock(pmid4you(), currentX(), y)
+             && badRock(pmid4you(), x, currentY()));
 }
 
 /* something like lookaround, but we are not running */

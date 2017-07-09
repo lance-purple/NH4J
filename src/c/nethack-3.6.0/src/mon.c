@@ -1342,8 +1342,8 @@ nexttry: /* eels prefer the water, but if there is no water nearby,
                     info[cnt] |= NOTONL;
                 }
                 /* check for diagonal tight squeeze */
-                if (nx != x && ny != y && bad_rock(mdat, x, ny)
-                    && bad_rock(mdat, nx, y) && cant_squeeze_thru(mon))
+                if (nx != x && ny != y && badRock(pmid4(mdat), x, ny)
+                    && badRock(pmid4(mdat), nx, y) && cant_squeeze_thru(mon))
                     continue;
                 /* The monster avoids a particular type of trap if it's
                  * familiar with the trap type.  Pets get ALLOW_TRAPS
