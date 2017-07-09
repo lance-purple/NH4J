@@ -201,7 +201,7 @@ const char *fmt, *arg;
         done(GENOCIDED);
     }
 
-    if (usingTwoWeapons() && cannotUseTwoWeapons(youmonst.data))
+    if (usingTwoWeapons() && cannotUseTwoWeapons(pmid4you()))
         untwoweapon();
 
     if (currentlyTrapped() && currentTrapType() == TT_PIT) {
@@ -1037,7 +1037,7 @@ int alone;
             if (candropwep)
                 dropx(otmp);
             update_inventory();
-        } else if (cannotUseTwoWeapons(youmonst.data)) {
+        } else if (cannotUseTwoWeapons(pmid4you())) {
             untwoweapon();
         }
     }

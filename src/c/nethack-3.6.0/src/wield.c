@@ -477,7 +477,7 @@ can_twoweapon()
     struct obj *otmp;
 
 #define NOT_WEAPON(obj) (!is_weptool(obj) && obj->oclass != WEAPON_CLASS)
-    if (cannotUseTwoWeapons(youmonst.data)) {
+    if (cannotUseTwoWeapons(pmid4you())) {
         if (areYouPolymorphed())
             You_cant("use two weapons in your current form.");
         else

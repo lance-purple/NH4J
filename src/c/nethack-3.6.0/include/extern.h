@@ -2107,7 +2107,7 @@ E boolean FDECL(isSilent, (int));
 E boolean FDECL(isBigMonster, (int));
 E boolean FDECL(isVerySmallMonster, (int));
 E boolean FDECL(cannotWieldThings, (int));
-E boolean FDECL(cannotUseTwoWeapons, (struct permonst *));
+E boolean FDECL(cannotUseTwoWeapons, (int));
 E boolean FDECL(isFlyer, (int));
 
 E boolean FDECL(isClinger, (int));
@@ -2195,7 +2195,7 @@ E boolean FDECL(fleshPetrifies, (int));
 E boolean FDECL(isMindFlayer, (int));
 E boolean FDECL(likesFire, (int));
 E boolean FDECL(likesLava, (int));
-E boolean FDECL(befriendWithObject, (struct permonst*, struct obj*));
+E boolean FDECL(befriendWithObject, (int, struct obj*));
 
 E boolean FDECL(hasHorns, (int));
 E boolean FDECL(isFlaming, (int));
@@ -2244,8 +2244,7 @@ E void NDECL(monstr_init);
 
 /* ### mplayer.c ### */
 
-E struct monst *FDECL(mk_mplayer,
-                      (struct permonst *, XCHAR_P, XCHAR_P, BOOLEAN_P));
+E struct monst *FDECL(mk_mplayer, (struct permonst *, XCHAR_P, XCHAR_P, BOOLEAN_P));
 E void FDECL(create_mplayers, (int, BOOLEAN_P));
 E void FDECL(mplayer_talk, (struct monst *));
 

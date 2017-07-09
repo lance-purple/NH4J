@@ -1215,8 +1215,8 @@ boolean monsterTypeResistsStoning(int pmid) {
     return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "monsterTypeResistsStoning", pmid);
 }
 
-boolean cannotUseTwoWeapons(struct permonst* ptr) {
-    return (monsterAttack(pmid4(ptr), 1).type != AT_WEAP);
+boolean cannotUseTwoWeapons(int pmid) {
+    return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "cannotUseTwoWeapons", pmid);
 }
 
 boolean isFlyer(int pmid) {
@@ -1551,8 +1551,8 @@ int numberOfHorns(int pmid) {
     return javaGetIntFromInt(MONSTER_DATA_CLASS, "numberOfHorns", pmid);
 }
 
-extern boolean befriendWithObject(struct permonst* pm, struct obj* otmp) {
-    return (otmp && (otmp->oclass == FOOD_CLASS) && isDomestic(pmid4(pm)));
+extern boolean befriendWithObject(int pmid, struct obj* otmp) {
+    return (otmp && (otmp->oclass == FOOD_CLASS) && isDomestic(pmid));
 }
 
 boolean isFlaming(int pmid) {

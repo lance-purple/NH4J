@@ -350,9 +350,10 @@ public class MonsterData {
     public static boolean cannotWieldThings(int pmid) {
     	return hasNoHands(pmid) || isVerySmallMonster(pmid);
     }
-    
-    //#define could_twoweap(ptr) ((ptr)->mattk[1].aatyp == AT_WEAP)
-    
+
+    public static boolean cannotUseTwoWeapons(int pmid) {
+    	return (MonsterType.getMonsterType(pmid).numberOfAttacksOfType(AT.WEAP) < 2);
+    }
 
     /* creature will slide out of armor */
     public static boolean slipsOutOfArmor(int pmid) {

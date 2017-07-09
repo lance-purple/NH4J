@@ -3128,4 +3128,14 @@ public class MonsterType {
 		attacks.addAll(Arrays.asList(newAttacks));
 	}
 
+	public int numberOfAttacksOfType(AT type) {
+		int n = 0;
+        for (Attack attack : attacks) {
+        	if (attack.type().equals(type)) {
+        		n++;
+        	}
+        }
+        return n;
+	}
+
 }
