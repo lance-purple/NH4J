@@ -1154,7 +1154,7 @@ int in_sight;
             }
         } else if (tt == MAGIC_PORTAL) {
             if (areYouInEndgame()
-                && (mon_has_amulet(mtmp) || is_home_elemental(mptr))) {
+                && (mon_has_amulet(mtmp) || isHomeElemental(pmid4(mptr)))) {
                 if (in_sight && monsterClass(pmid4(mptr)) != S_ELEMENTAL) {
                     pline("%s seems to shimmer for a moment.", Monnam(mtmp));
                     seetrap(trap);

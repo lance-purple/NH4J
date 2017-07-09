@@ -730,8 +730,9 @@ int mntmp;
             setMaximumHitPointsAsMonster(rnd(4));
         else
             setMaximumHitPointsAsMonster(d(mlvl, 8));
-        if (is_home_elemental(&mons[mntmp]))
+        if (isHomeElemental(mntmp)) {
             multiplyMaximumHitPointsAsMonster(3);
+	}
     }
     setCurrentHitPointsAsMonster(maximumHitPointsAsMonster());
 

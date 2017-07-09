@@ -39,11 +39,11 @@ static boolean tooweak(int monindx, int lev) {
 }
 
 boolean
-is_home_elemental(ptr)
-struct permonst *ptr;
+isHomeElemental(pmid)
+int pmid;
 {
-    if (monsterClass(pmid4(ptr)) == S_ELEMENTAL)
-        switch (monsndx(ptr)) {
+    if (monsterClass(pmid) == S_ELEMENTAL)
+        switch (pmid) {
         case PM_AIR_ELEMENTAL:
             return areYouOnAirLevel();
         case PM_FIRE_ELEMENTAL:
@@ -64,7 +64,7 @@ wrong_elem_type(ptr)
 struct permonst *ptr;
 {
     if (monsterClass(pmid4(ptr)) == S_ELEMENTAL) {
-        return (boolean) !is_home_elemental(ptr);
+        return (boolean) !isHomeElemental(pmid4(ptr));
     } else if (areYouOnEarthLevel()) {
         /* no restrictions? */
     } else if (areYouOnWaterLevel()) {
@@ -932,7 +932,7 @@ int mndx;
         mon->mhpmax = mon->mhp = rnd(4);
     } else {
         mon->mhpmax = mon->mhp = d((int) mon->m_lev, 8);
-        if (is_home_elemental(ptr))
+        if (isHomeElemental(pmid4(ptr)))
             mon->mhpmax = (mon->mhp *= 3);
     }
 }
@@ -1709,7 +1709,7 @@ struct monst *mtmp, *victim;
             hp_threshold = 4;
         else if (isGolem(pmid4(ptr))) /* strange creatures */
             hp_threshold = ((mtmp->mhpmax / 10) + 1) * 10 - 1;
-        else if (is_home_elemental(ptr))
+        else if (isHomeElemental(pmid4(ptr)))
             hp_threshold *= 3;
         lev_limit = 3 * monsterLevel(pmid4(ptr)) / 2; /* same as adj_lev() */
         /* If they can grow up, be sure the level is high enough for that */

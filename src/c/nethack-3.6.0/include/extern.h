@@ -1766,7 +1766,7 @@ E void FDECL(readmail, (struct obj *));
 /* ### makemon.c ### */
 
 E void FDECL(dealloc_monst, (struct monst *));
-E boolean FDECL(is_home_elemental, (struct permonst *));
+E boolean FDECL(isHomeElemental, (int));
 E struct monst *FDECL(clone_mon, (struct monst *, XCHAR_P, XCHAR_P));
 E int FDECL(monhp_per_lvl, (struct monst *));
 E void FDECL(newmonhp, (struct monst *, int));
