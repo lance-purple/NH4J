@@ -630,6 +630,9 @@ struct permonst *ptr;
               fmt_ptr((genericptr_t) ptr));
         return NON_PM; /* will not get here */
     }
+    if (i != pmid4(ptr)) {
+        panic("monsndx - %d != pmid4() %d", i, pmid4(ptr));
+    }
     return i;
 }
 

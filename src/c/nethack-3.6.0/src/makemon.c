@@ -27,12 +27,16 @@ STATIC_DCL void FDECL(m_initweap, (struct monst *));
 STATIC_DCL void FDECL(m_initinv, (struct monst *));
 STATIC_DCL boolean FDECL(makemon_rnd_goodpos, (struct monst *, unsigned, coord *));
 
-extern const int monstr[];
-
 #define m_initsgrp(mtmp, x, y) m_initgrp(mtmp, x, y, 3)
 #define m_initlgrp(mtmp, x, y) m_initgrp(mtmp, x, y, 10)
-#define toostrong(monindx, lev) (monstr[monindx] > lev)
-#define tooweak(monindx, lev) (monstr[monindx] < lev)
+
+static boolean toostrong(int monindx, int lev) {
+    return (monsterDifficulty(monindx) > lev);
+}
+
+static boolean tooweak(int monindx, int lev) {
+    return (monsterDifficulty(monindx) < lev);
+}
 
 boolean
 is_home_elemental(ptr)
@@ -1579,7 +1583,7 @@ int spc;
         if (mk_gen_ok(last, G_GONE, mask)) {
             /* consider it */
             if (num && toostrong(last, maxmlev)
-                && monstr[last] != monstr[last - 1] && rn2(2))
+                && monsterDifficulty(last) != monsterDifficulty(last - 1) && rn2(2))
                 break;
             num += monsterGenerationMask(last) & G_FREQ;
         }

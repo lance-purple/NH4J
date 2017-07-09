@@ -38,6 +38,7 @@ E javaString FDECL(monsterTypeName, (int));
 E void FDECL(releaseJavaString, (javaString));
 E int FDECL(monsterClass, (int));
 E int FDECL(monsterLevel, (int));
+E int FDECL(monsterDifficulty, (int));
 E int FDECL(monsterMovementSpeed, (int));
 E int FDECL(monsterBaseArmorClass, (int));
 E int FDECL(monsterBaseMagicResistance, (int));
@@ -2237,10 +2238,6 @@ E boolean FDECL(undesirable_disp, (struct monst *, XCHAR_P, XCHAR_P));
 /* ### monst.c ### */
 
 E void NDECL(monst_init);
-
-/* ### monstr.c ### */
-
-E void NDECL(monstr_init);
 
 /* ### mplayer.c ### */
 

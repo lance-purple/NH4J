@@ -10,8 +10,6 @@
 #include "hack.h"
 #include "qtext.h"
 
-extern const int monstr[];
-
 STATIC_DCL short FDECL(which_arti, (int));
 STATIC_DCL boolean FDECL(mon_has_arti, (struct monst *, SHORT_P));
 STATIC_DCL struct monst *FDECL(other_mon_has_arti, (struct monst *, SHORT_P));
@@ -478,7 +476,7 @@ struct monst *mcast;
                 do {
                     makeindex = pick_nasty();
                 } while (mcast && attacktype(&mons[makeindex], AT_MAGC)
-                         && monstr[makeindex] >= monstr[mcast->mnum]);
+                         && monsterDifficulty(makeindex) >= monsterDifficulty(mcast->mnum));
                 /* do this after picking the monster to place */
                 if (mcast
                     && !enexto(&bypos, mcast->mux, mcast->muy,

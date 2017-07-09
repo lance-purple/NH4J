@@ -1292,7 +1292,6 @@ dosacrifice()
     if (otmp->otyp == CORPSE) {
         register struct permonst *ptr = &mons[otmp->corpsenm];
         struct monst *mtmp;
-        extern const int monstr[];
 
         /* KMH, conduct */
         setAtheistConduct(FALSE);
@@ -1305,7 +1304,7 @@ dosacrifice()
 
         if (otmp->corpsenm == PM_ACID_BLOB
             || (monstermoves <= peek_at_iced_corpse_age(otmp) + 50)) {
-            value = monstr[otmp->corpsenm] + 1;
+            value = monsterDifficulty(otmp->corpsenm) + 1;
             if (otmp->oeaten)
                 value = eaten_stat(value, otmp);
         }

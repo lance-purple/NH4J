@@ -30,7 +30,6 @@ boolean resuming;
     */
     decl_init();
     monst_init();
-    monstr_init(); /* monster strengths */
     objects_init();
 
     if (wizard)

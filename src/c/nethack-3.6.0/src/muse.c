@@ -8,8 +8,6 @@
 
 #include "hack.h"
 
-extern const int monstr[];
-
 boolean m_using = FALSE;
 
 /* Let monsters use magic items.  Arbitrary assumptions: Monsters only use
@@ -997,7 +995,7 @@ rnd_defensive_item(mtmp)
 struct monst *mtmp;
 {
     struct permonst *pm = mtmp->data;
-    int difficulty = monstr[(monsndx(pm))];
+    int difficulty = monsterDifficulty(pmid4mon(mtmp));
     int trycnt = 0;
     int mc = monsterClass(pmid4(pm));
 
@@ -1540,7 +1538,7 @@ rnd_offensive_item(mtmp)
 struct monst *mtmp;
 {
     struct permonst *pm = mtmp->data;
-    int difficulty = monstr[(monsndx(pm))];
+    int difficulty = monsterDifficulty(pmid4mon(mtmp));
     int mc = monsterClass(pmid4(pm));
 
     if (isAnimal(pmid4(pm)) || attacktype(pm, AT_EXPL) || isMindless(pmid4(pm))
@@ -1621,7 +1619,7 @@ struct monst *mtmp;
         return FALSE;
 
     if (!stuck && !immobile && (mtmp->cham == NON_PM)
-        && monstr[(pmidx = monsndx(mdat))] < 6) {
+        && monsterDifficulty(pmidx = pmid4(mdat)) < 6) {
         boolean ignore_boulders = (isVerySmallMonster(pmid4(mdat)) || throwsRocks(pmid4(mdat))
                                    || passesThroughWalls(pmid4(mdat))),
             diag_ok = !NODIAG(pmidx);
@@ -1707,13 +1705,13 @@ struct monst *mtmp;
         }
         nomore(MUSE_WAN_POLYMORPH);
         if (obj->otyp == WAN_POLYMORPH && obj->spe > 0
-            && (mtmp->cham == NON_PM) && monstr[monsndx(mdat)] < 6) {
+            && (mtmp->cham == NON_PM) && monsterDifficulty(pmid4(mdat)) < 6) {
             m.misc = obj;
             m.has_misc = MUSE_WAN_POLYMORPH;
         }
         nomore(MUSE_POT_POLYMORPH);
         if (obj->otyp == POT_POLYMORPH && (mtmp->cham == NON_PM)
-            && monstr[monsndx(mdat)] < 6) {
+            && monsterDifficulty(pmid4(mdat)) < 6) {
             m.misc = obj;
             m.has_misc = MUSE_POT_POLYMORPH;
         }
@@ -1976,7 +1974,7 @@ rnd_misc_item(mtmp)
 struct monst *mtmp;
 {
     struct permonst *pm = mtmp->data;
-    int difficulty = monstr[(monsndx(pm))];
+    int difficulty = monsterDifficulty(pmid4mon(mtmp));
     int mc = monsterClass(pmid4(pm));
 
     if (isAnimal(pmid4(pm)) || attacktype(pm, AT_EXPL) || isMindless(pmid4(pm))
@@ -2032,7 +2030,7 @@ struct obj *obj;
         if (typ == WAN_DIGGING)
             return (boolean) !isFloater(pmid4mon(mon));
         if (typ == WAN_POLYMORPH)
-            return (boolean) (monstr[monsndx(mon->data)] < 6);
+            return (boolean) (monsterDifficulty(pmid4mon(mon)) < 6);
         if (objects[typ].oc_dir == RAY || typ == WAN_STRIKING
             || typ == WAN_TELEPORTATION || typ == WAN_CREATE_MONSTER)
             return TRUE;
