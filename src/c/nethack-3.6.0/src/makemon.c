@@ -130,7 +130,7 @@ register int x, y, n;
     mm.x = x;
     mm.y = y;
     while (cnt--) {
-        if (peace_minded(mtmp->data))
+        if (peacefullyMinded(pmid4mon(mtmp)))
             continue;
         /* Don't create groups of peaceful monsters since they'll get
          * in our way.  If the monster has a percentage chance so some
@@ -143,7 +143,7 @@ register int x, y, n;
                 mon->mpeaceful = FALSE;
                 mon->mavenge = 0;
                 set_malign(mon);
-                /* Undo the second peace_minded() check in makemon(); if the
+                /* Undo the second peacefullyMinded() check in makemon(); if the
                  * monster turned out to be peaceful the first time we
                  * didn't create it at all; we don't want a second check.
                  */
@@ -1155,7 +1155,7 @@ int mmflags;
 
     place_monster(mtmp, x, y);
     mtmp->mcansee = mtmp->mcanmove = TRUE;
-    mtmp->mpeaceful = (mmflags & MM_ANGRY) ? FALSE : peace_minded(ptr);
+    mtmp->mpeaceful = (mmflags & MM_ANGRY) ? FALSE : peacefullyMinded(pmid4(ptr));
 
     switch (monsterClass(pmid4(ptr))) {
     case S_MIMIC:
@@ -1877,25 +1877,25 @@ int type;
  *      (Some "animal" types are co-aligned, but also hungry.)
  */
 boolean
-peace_minded(ptr)
-register struct permonst *ptr;
+peacefullyMinded(pmid)
+int pmid;
 {
-    aligntyp mal = monsterAlignment(pmid4(ptr));
+    aligntyp mal = monsterAlignment(pmid);
     aligntyp ual = currentAlignmentType();
-    int msound = monsterSound(pmid4(ptr));
+    int msound = monsterSound(pmid);
 
-    if (isAlwaysPeaceful(pmid4(ptr)))
+    if (isAlwaysPeaceful(pmid))
         return TRUE;
-    if (isAlwaysHostile(pmid4(ptr)))
+    if (isAlwaysHostile(pmid))
         return FALSE;
     if (msound == MS_LEADER || msound == MS_GUARDIAN)
         return TRUE;
     if (msound == MS_NEMESIS)
         return FALSE;
 
-    if (racialFriendship(pmid4(ptr), urace.lovemask))
+    if (racialFriendship(pmid, urace.lovemask))
         return TRUE;
-    if (racialHostility(pmid4(ptr), urace.hatemask))
+    if (racialHostility(pmid, urace.hatemask))
         return FALSE;
 
     /* the monster is hostile if its alignment is different from the
@@ -1908,15 +1908,14 @@ register struct permonst *ptr;
         return FALSE;
 
     /* minions are hostile to players that have strayed at all */
-    if (isMinion(pmid4(ptr)))
+    if (isMinion(pmid))
         return (boolean) (currentAlignmentRecord() >= 0);
 
     /* Last case:  a chance of a co-aligned monster being
      * hostile.  This chance is greater if the player has strayed
      * (currentAlignmentRecord() negative) or the monster is not strongly aligned.
      */
-    return (boolean) (!!rn2(16 + (currentAlignmentRecord() < -15 ? -15
-                                                        : currentAlignmentRecord()))
+    return (boolean) (!!rn2(16 + (currentAlignmentRecord() < -15 ? -15 : currentAlignmentRecord()))
                       && !!rn2(2 + abs(mal)));
 }
 
