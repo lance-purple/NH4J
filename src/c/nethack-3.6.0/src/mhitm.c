@@ -344,9 +344,9 @@ register struct monst *magr, *mdef;
     magr->mlstmv = monstermoves;
 
     /* Now perform all attacks for the monster. */
-    for (i = 0; i < NATTK; i++) {
+    for (i = 0; i < monsterAttacks(pmid4mon(magr)); i++) {
         res[i] = MM_MISS;
-        mattk = getMonsterAttack(pa, i, res);
+        mattk = getMonsterAttack(pmid4mon(magr), i, res);
 
         otmp = (struct obj *) 0;
         attk = 1;

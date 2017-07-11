@@ -2113,9 +2113,9 @@ register struct monst *mon;
     boolean altwep = FALSE, weapon_used = FALSE;
     int i, tmp, armorpenalty, sum[NATTK], nsum = 0, dhit = 0, attknum = 0;
 
-    for (i = 0; i < NATTK; i++) {
+    for (i = 0; i < monsterAttacks(pmid4you()); i++) {
         sum[i] = 0;
-        mattk = getMonsterAttack(youmonst.data, i, sum);
+        mattk = getMonsterAttack(pmid4you(), i, sum);
 
         switch (mattk.type) {
         case AT_WEAP:

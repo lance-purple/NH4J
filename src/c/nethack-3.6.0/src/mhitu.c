@@ -260,11 +260,11 @@ boolean message;
 
 /* select a monster's next attack, possibly substituting for its usual one */
 const struct Attack 
-getMonsterAttack(mptr, indx, prev_result)
-struct permonst *mptr;
-int indx, prev_result[];
+getMonsterAttack(pmid, indx, prev_result)
+int pmid;
+int indx;
+int prev_result[];
 {
-    int pmid = pmid4(mptr);
     struct Attack attk = monsterAttack(pmid, indx);
 
     /* prevent a monster with two consecutive disease or hunger attacks
@@ -605,9 +605,9 @@ register struct monst *mtmp;
             return (foo == 1);
     }
 
-    for (i = 0; i < NATTK; i++) {
+    for (i = 0; i < monsterAttacks(pmid4(mdat)); i++) {
         sum[i] = 0;
-        mattk = getMonsterAttack(mdat, i, sum);
+        mattk = getMonsterAttack(pmid4(mdat), i, sum);
         if ((swallowed() && mattk.type != AT_ENGL)
             || (skipnonmagc && mattk.type != AT_MAGC))
             continue;
