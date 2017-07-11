@@ -225,7 +225,7 @@ struct monst *mon;
 {
     if (mon == u.ustuck) {
         if (swallowed()) {
-            expels(mon, mon->data, TRUE);
+            expels(mon, pmid4mon(mon), TRUE);
         } else if (!sticks(youmonst.data)) {
             unstuck(mon); /* let go */
             You("get released!");

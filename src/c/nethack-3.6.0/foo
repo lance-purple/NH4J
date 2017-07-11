@@ -1,0 +1,1 @@
+vi include/extern.h src/detect.c src/dig.c src/dog.c src/mhitu.c src/mon.c src/monmove.c src/polyself.c src/zap.c

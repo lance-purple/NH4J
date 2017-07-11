@@ -1169,7 +1169,7 @@ dospinweb()
     if (swallowed()) {
         You("release web fluid inside %s.", mon_nam(u.ustuck));
         if (isAnimal(pmid4mon(u.ustuck))) {
-            expels(u.ustuck, u.ustuck->data, TRUE);
+            expels(u.ustuck, pmid4mon(u.ustuck), TRUE);
             return 0;
         }
 	int ustuckpmid = pmid4mon(u.ustuck);

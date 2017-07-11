@@ -1824,7 +1824,7 @@ E void FDECL(rustm, (struct monst *, struct obj *));
 E const char *FDECL(mpoisons_subj, (struct monst *, const struct Attack));
 E void NDECL(u_slow_down);
 E struct monst *NDECL(cloneu);
-E void FDECL(expels, (struct monst *, struct permonst *, BOOLEAN_P));
+E void FDECL(expels, (struct monst *, int, BOOLEAN_P));
 E const struct Attack FDECL(getMonsterAttack, (struct permonst *, int, int *));
 E int FDECL(mattacku, (struct monst *));
 E int FDECL(magic_negation, (struct monst *));

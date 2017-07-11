@@ -1780,7 +1780,7 @@ register struct monst *mtmp;
             mtmp->mhp = mtmp->mhpmax;
             /* this can happen if previously a fog cloud */
             if (swallowed() && (mtmp == u.ustuck))
-                expels(mtmp, mtmp->data, FALSE);
+                expels(mtmp, pmid4mon(mtmp), FALSE);
             if (in_door) {
                 coord new_xy;
 
@@ -3223,7 +3223,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
                         (isAnimal(pmid4(mdat)) ? "'s stomach" : ""));
                     mtmp->mhp = 1; /* almost dead */
                 }
-                expels(mtmp, olddata, FALSE);
+                expels(mtmp, pmid4(olddata), FALSE);
             } else {
                 /* update swallow glyphs for new monster */
                 showHeroBeingSwallowed(0);

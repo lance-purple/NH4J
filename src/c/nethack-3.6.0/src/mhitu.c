@@ -212,20 +212,19 @@ register const struct Attack mattk;
 }
 
 void
-expels(mtmp, mdat, message)
+expels(mtmp, pmid, message)
 struct monst *mtmp;
-struct permonst *mdat; /* if mtmp is polymorphed, mdat != mtmp->data */
+int pmid; /* if mtmp is polymorphed, mdat != mtmp->data */
 boolean message;
 {
     if (message) {
-        if (isAnimal(pmid4(mdat)))
+        if (isAnimal(pmid)) {
             You("get regurgitated!");
-        else {
+        } else {
             char blast[40];
             register int i;
 
             blast[0] = '\0';
-	    int pmid = pmid4(mdat);
             for (i = 0; i < monsterAttacks(pmid); i++) {
                 if (monsterAttack(pmid, i).type == AT_ENGL) {
                     break;
@@ -1901,14 +1900,14 @@ register const struct Attack mattk;
     if (touchPetrifies(pmid4you()) && !resists_ston(mtmp)) {
         pline("%s very hurriedly %s you!", Monnam(mtmp),
               isAnimal(pmid4mon(mtmp)) ? "regurgitates" : "expels");
-        expels(mtmp, mtmp->data, FALSE);
+        expels(mtmp, pmid4mon(mtmp), FALSE);
     } else if (!timeSinceBeingSwallowed() || monsterSize(pmid4you()) >= MZ_HUGE) {
         You("get %s!", isAnimal(pmid4mon(mtmp)) ? "regurgitated" : "expelled");
         if (flags.verbose
             && (isAnimal(pmid4mon(mtmp))
                 || (dmgtype(mtmp->data, AD_DGST) && youHaveSlowDigestion())))
             pline("Obviously %s doesn't like your taste.", mon_nam(mtmp));
-        expels(mtmp, mtmp->data, FALSE);
+        expels(mtmp, pmid4mon(mtmp), FALSE);
     }
     return 1;
 }

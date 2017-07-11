@@ -178,7 +178,7 @@ struct obj *otmp;
             if (swallowed() && (mtmp == u.ustuck) && isWhirly(pmid4mon(mtmp))) {
                 You("disrupt %s!", mon_nam(mtmp));
                 pline("A huge hole opens up...");
-                expels(mtmp, mtmp->data, TRUE);
+                expels(mtmp, pmid4mon(mtmp), TRUE);
             }
         }
         break;
@@ -280,7 +280,7 @@ struct obj *otmp;
                 else
                     pline("%s opens its mouth!", Monnam(mtmp));
             }
-            expels(mtmp, mtmp->data, TRUE);
+            expels(mtmp, pmid4mon(mtmp), TRUE);
             /* zap which hits steed will only release saddle if it
                doesn't hit a holding or falling trap; playability
                here overrides the more logical target ordering */
