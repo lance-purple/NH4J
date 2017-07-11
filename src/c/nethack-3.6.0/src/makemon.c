@@ -903,26 +903,24 @@ struct monst *mon;
 /* set up a new monster's initial level and hit points;
    used by newcham() as well as by makemon() */
 void
-newmonhp(mon, mndx)
+newmonhp(mon, pmid)
 struct monst *mon;
-int mndx;
+int pmid;
 {
-    struct permonst *ptr = &mons[mndx];
-
-    mon->m_lev = adj_lev(ptr);
-    if (isGolem(pmid4(ptr))) {
-        mon->mhpmax = mon->mhp = golemhp(mndx);
-    } else if (isRiderOfTheApocalypse(pmid4(ptr))) {
+    mon->m_lev = adjustMonsterLevel(pmid);
+    if (isGolem(pmid)) {
+        mon->mhpmax = mon->mhp = golemhp(pmid);
+    } else if (isRiderOfTheApocalypse(pmid)) {
         /* we want low HP, but a high monsterLevel so they can attack well */
         mon->mhpmax = mon->mhp = d(10, 8);
-    } else if (monsterLevel(pmid4(ptr)) > 49) {
+    } else if (monsterLevel(pmid) > 49) {
         /* "special" fixed hp monster
          * the hit points are encoded in the monsterLevel in a somewhat strange
          * way to fit in the 50..127 positive range of a signed character
          * above the 1..49 that indicate "normal" monster levels */
-        mon->mhpmax = mon->mhp = 2 * (monsterLevel(pmid4(ptr)) - 6);
+        mon->mhpmax = mon->mhp = 2 * (monsterLevel(pmid) - 6);
         mon->m_lev = mon->mhp / 4; /* approximation */
-    } else if (monsterClass(pmid4(ptr)) == S_DRAGON && mndx >= PM_GRAY_DRAGON) {
+    } else if (monsterClass(pmid) == S_DRAGON && pmid >= PM_GRAY_DRAGON) {
         /* adult dragons */
         mon->mhpmax = mon->mhp =
             (int) (areYouInEndgame()
@@ -932,7 +930,7 @@ int mndx;
         mon->mhpmax = mon->mhp = rnd(4);
     } else {
         mon->mhpmax = mon->mhp = d((int) mon->m_lev, 8);
-        if (isHomeElemental(pmid4(ptr)))
+        if (isHomeElemental(pmid))
             mon->mhpmax = (mon->mhp *= 3);
     }
 }
@@ -1597,7 +1595,7 @@ int spc;
         if (mk_gen_ok(first, G_GONE, mask)) {
             /* skew towards lower value monsters at lower exp. levels */
             num -= monsterGenerationMask(first) & G_FREQ;
-            if (num && adj_lev(&mons[first]) > (currentExperienceLevel() * 2)) {
+            if (num && adjustMonsterLevel(first) > (currentExperienceLevel() * 2)) {
                 /* but not when multiple monsters are same level */
                 if (monsterLevel(first) != monsterLevel(first + 1))
                     num--;
@@ -1640,38 +1638,45 @@ int class;
 }
 
 /* adjust strength of monsters based on currentLevel and currentExperienceLevel() */
-int
-adj_lev(ptr)
-register struct permonst *ptr;
+int adjustMonsterLevel(pmid)
+int pmid;
 {
-    int tmp, tmp2;
-    int mlevel = monsterLevel(pmid4(ptr));
+    int mlevel = monsterLevel(pmid);
+    int tmp = mlevel;
+    int tmp2;
 
-    if (ptr == &mons[PM_WIZARD_OF_YENDOR]) {
+    if (pmid == PM_WIZARD_OF_YENDOR) {
         /* does not depend on other strengths, but does get stronger
          * every time he is killed
          */
-        tmp = mlevel + mvitals[PM_WIZARD_OF_YENDOR].died;
-        if (tmp > 49)
+        tmp += mvitals[PM_WIZARD_OF_YENDOR].died;
+        if (tmp > 49) {
             tmp = 49;
+	}
         return tmp;
     }
 
-    if ((tmp = mlevel) > 49)
+    if (tmp > 49) {
         return 50; /* "special" demons/devils */
+    }
+
     tmp2 = (level_difficulty() - tmp);
-    if (tmp2 < 0)
+    if (tmp2 < 0) {
         tmp--; /* if mlevel > currentrLevel decrement tmp */
-    else
+    } else {
         tmp += (tmp2 / 5); /* else increment 1 per five diff */
+    }
 
     tmp2 = (currentExperienceLevel() - mlevel); /* adjust vs. the player */
-    if (tmp2 > 0)
+    if (tmp2 > 0) {
         tmp += (tmp2 / 4); /* level as well */
+    }
 
     tmp2 = (3 * mlevel) / 2; /* crude upper limit */
-    if (tmp2 > 49)
+    if (tmp2 > 49) {
         tmp2 = 49;                                      /* hard upper limit */
+    }
+
     return ((tmp > tmp2) ? tmp2 : (tmp > 0 ? tmp : 0)); /* 0 lower limit */
 }
 
@@ -1711,7 +1716,7 @@ struct monst *mtmp, *victim;
             hp_threshold = ((mtmp->mhpmax / 10) + 1) * 10 - 1;
         else if (isHomeElemental(pmid4(ptr)))
             hp_threshold *= 3;
-        lev_limit = 3 * monsterLevel(pmid4(ptr)) / 2; /* same as adj_lev() */
+        lev_limit = 3 * monsterLevel(pmid4(ptr)) / 2; /* same as adjustMonsterLevel() */
         /* If they can grow up, be sure the level is high enough for that */
 	int newmlevel = monsterLevel(newtype);
         if (oldtype != newtype && newmlevel > lev_limit)

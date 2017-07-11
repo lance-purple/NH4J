@@ -1174,7 +1174,8 @@ int how;
         if (!Schroedingers_cat) /* check here in case disclosure was off */
             Schroedingers_cat = odds_and_ends(invent, CAT_CHECK);
         if (Schroedingers_cat) {
-            int mhp, m_lev = adj_lev(&mons[PM_HOUSECAT]);
+            int mhp;
+            int m_lev = adjustMonsterLevel(PM_HOUSECAT);
             mhp = d(m_lev, 8);
             increaseCurrentScore(mhp);
             if (!done_stopprint)

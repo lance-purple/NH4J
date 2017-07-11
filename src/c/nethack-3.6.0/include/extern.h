@@ -1779,7 +1779,7 @@ E struct permonst *NDECL(rndmonst);
 E void FDECL(reset_rndmonst, (int));
 E struct permonst *FDECL(mkclass, (CHAR_P, int));
 E int FDECL(mkclass_poly, (int));
-E int FDECL(adj_lev, (struct permonst *));
+E int FDECL(adjustMonsterLevel, (int));
 E struct permonst *FDECL(grow_up, (struct monst *, struct monst *));
 E int FDECL(mongets, (struct monst *, int));
 E int FDECL(golemhp, (int));
@@ -1930,14 +1930,12 @@ E struct obj *FDECL(mksobj, (int, BOOLEAN_P, BOOLEAN_P));
 E int FDECL(bcsign, (struct obj *));
 E int FDECL(weight, (struct obj *));
 E struct obj *FDECL(mkgold, (long, int, int));
-E struct obj *FDECL(mkcorpstat, (int, struct monst *, struct permonst *, int,
-                                 int, unsigned));
+E struct obj *FDECL(mkcorpstat, (int, struct monst *, struct permonst *, int, int, unsigned));
 E int FDECL(corpse_revive_type, (struct obj *));
 E struct obj *FDECL(obj_attach_mid, (struct obj *, unsigned));
 E struct monst *FDECL(get_mtraits, (struct obj *, BOOLEAN_P));
 E struct obj *FDECL(mk_tt_object, (int, int, int));
-E struct obj *FDECL(mk_named_object,
-                    (int, struct permonst *, int, int, const char *));
+E struct obj *FDECL(mk_named_object, (int, struct permonst *, int, int, const char *));
 E struct obj *FDECL(rnd_treefruit_at, (int, int));
 E void FDECL(set_corpsenm, (struct obj *, int));
 E void FDECL(start_corpse_timeout, (struct obj *));

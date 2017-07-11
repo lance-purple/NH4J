@@ -716,7 +716,7 @@ int mntmp;
         setYourIntrinsic(SLIPPERY_FINGERS, 0);
 
     /*
-    mlvl = adj_lev(&mons[mntmp]);
+    mlvl = adjustMonsterLevel(mntmp);
      * We can't do the above, since there's no such thing as an
      * "experience level of you as a monster" for a polymorphed character.
      */
