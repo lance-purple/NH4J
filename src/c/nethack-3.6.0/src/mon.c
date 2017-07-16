@@ -3260,10 +3260,11 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
                             ? "slime"
                             : x_monnam(mtmp, ARTICLE_A, (char *) 0,
                                        SUPPRESS_SADDLE, FALSE));
-        if (!strcmpi(oldname, "it") && !strcmpi(newname, "it"))
-            (void) usmellmon(mdat);
-        else
+        if (!strcmpi(oldname, "it") && !strcmpi(newname, "it")) {
+            (void) youCanSmellMonster(pmid4(mdat));
+	} else {
             pline("%s turns into %s!", oldname, newname);
+	}
         if (save_mname)
             MNAME(mtmp) = save_mname;
     }
@@ -3562,18 +3563,17 @@ short otyp;
 }
 
 boolean
-usmellmon(mdat)
-struct permonst *mdat;
+youCanSmellMonster(pmid)
+int pmid;
 {
-    int mndx;
     boolean nonspecific = FALSE;
     boolean msg_given = FALSE;
 
-    if (mdat) {
-        if (!olfaction(youmonst.data))
-            return FALSE;
-        mndx = monsndx(mdat);
-        switch (mndx) {
+    if (!olfaction(youmonst.data)) {
+        return FALSE;
+    }
+
+    switch (pmid) {
         case PM_ROTHE:
         case PM_MINOTAUR:
             You("notice a bovine smell.");
@@ -3636,10 +3636,11 @@ struct permonst *mdat;
         default:
             nonspecific = TRUE;
             break;
-        }
+    }
 
-        if (nonspecific)
-            switch (monsterClass(pmid4(mdat))) {
+    if (nonspecific)
+    {
+            switch (monsterClass(pmid)) {
             case S_DOG:
                 You("notice a dog smell.");
                 msg_given = TRUE;
@@ -3654,7 +3655,7 @@ struct permonst *mdat;
                 break;
             case S_UNICORN:
                 You("detect a%s odor reminiscent of a stable.",
-                    (mndx == PM_PONY) ? "n" : " strong");
+                    (pmid == PM_PONY) ? "n" : " strong");
                 msg_given = TRUE;
                 break;
             case S_ZOMBIE:
@@ -3676,6 +3677,7 @@ struct permonst *mdat;
                 break;
             }
     }
+
     return msg_given ? TRUE : FALSE;
 }
 

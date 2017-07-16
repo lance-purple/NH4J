@@ -1068,7 +1068,7 @@ wiz_levltyp_legend(VOID_ARGS)
     return;
 }
 
-/* #wizsmell command - test usmellmon(). */
+/* #wizsmell command - test youCanSmellMonster(). */
 STATIC_PTR int
 wiz_smell(VOID_ARGS)
 {
@@ -1100,7 +1100,7 @@ wiz_smell(VOID_ARGS)
             mndx = 0;
         /* Is it a monster? */
         if (mndx) {
-            if (!usmellmon(&mons[mndx]))
+            if (!youCanSmellMonster(mndx))
                 pline("That monster seems to give off no smell.");
         } else
             pline("That is not a monster.");
