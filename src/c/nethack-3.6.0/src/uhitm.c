@@ -391,7 +391,7 @@ register struct monst *mtmp;
     if (attack_checks(mtmp, uwep))
         return TRUE;
 
-    if (areYouPolymorphed() && monsterDoesNotAttack(youmonst.data)) {
+    if (areYouPolymorphed() && monsterDoesNotAttack(pmid4you())) {
         /* certain "pacifist" monsters don't attack */
         You("have no way to attack monsters physically.");
         mtmp->mstrategy &= ~STRAT_WAITMASK;

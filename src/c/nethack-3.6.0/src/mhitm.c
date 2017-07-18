@@ -1582,8 +1582,8 @@ struct monst *mon;
 boolean givemsg;
 {
     if (mon->mspec_used < 20 /* limit draining */
-        && (attacktype(mon->data, AT_MAGC)
-            || attacktype(mon->data, AT_BREA))) {
+        && (monsterHasAttackType(pmid4mon(mon), AT_MAGC)
+            || monsterHasAttackType(pmid4mon(mon), AT_BREA))) {
         mon->mspec_used += d(2, 2);
         if (givemsg)
             pline("%s seems lethargic.", Monnam(mon));

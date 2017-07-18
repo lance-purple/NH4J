@@ -1041,7 +1041,7 @@ char *hittee;              /* target's name: "you" or mon_nam(mdef) */
             } else {
                 if (mdef->data == &mons[PM_CLAY_GOLEM])
                     mdef->mhp = 1; /* cancelled clay golems will die */
-                if (youattack && attacktype(mdef->data, AT_MAGC)) {
+                if (youattack && monsterHasAttackType(pmid4mon(mdef), AT_MAGC)) {
                     You("absorb magical energy!");
                     increaseMaximumMagicalEnergy(1);
                     increaseCurrentMagicalEnergy(1);

@@ -1711,8 +1711,8 @@ struct monst *mtmp;
             makeknown(AMULET_OF_LIFE_SAVING);
             /* amulet is visible, but monster might not be */
             if (canseemon(mtmp)) {
-                if (attacktype(mtmp->data, AT_EXPL)
-                    || attacktype(mtmp->data, AT_BOOM))
+                if (monsterHasAttackType(pmid4mon(mtmp), AT_EXPL)
+                    || monsterHasAttackType(pmid4mon(mtmp), AT_BOOM))
                     pline("%s reconstitutes!", Monnam(mtmp));
                 else
                     pline("%s looks much better!", Monnam(mtmp));
@@ -3215,7 +3215,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
         (void) hideunder(mtmp);
     if (u.ustuck == mtmp) {
         if (swallowed()) {
-            if (!attacktype(mdat, AT_ENGL)) {
+            if (!monsterHasAttackType(pmid4(mdat), AT_ENGL)) {
                 /* Does mdat care? */
                 if (!isNoncorporeal(pmid4(mdat)) && !isAmorphous(pmid4(mdat))
                     && !isWhirly(pmid4(mdat)) && (mdat != &mons[PM_YELLOW_LIGHT])) {

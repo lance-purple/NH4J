@@ -447,7 +447,7 @@ int udist;
                         obj_extract_self(otmp);
                         newsym(omx, omy);
                         (void) mpickobj(mtmp, otmp);
-                        if (attacktype(mtmp->data, AT_WEAP)
+                        if (monsterHasAttackType(pmid4mon(mtmp), AT_WEAP)
                             && mtmp->weapon_check == NEED_WEAPON) {
                             mtmp->weapon_check = NEED_HTH_WEAPON;
                             (void) mon_wield_item(mtmp);

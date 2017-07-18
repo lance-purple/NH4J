@@ -488,15 +488,15 @@ STATIC_PTR int
 domonability(VOID_ARGS)
 {
     int upmid = pmid4you();
-    if (hasBreathWeapon(pmid4you()))
+    if (hasBreathWeapon(upmid))
         return dobreathe();
-    else if (attacktype(youmonst.data, AT_SPIT))
+    else if (monsterHasAttackType(upmid, AT_SPIT))
         return dospit();
     else if (monsterClass(upmid) == S_NYMPH)
         return doremove();
-    else if (attacktype(youmonst.data, AT_GAZE))
+    else if (monsterHasAttackType(upmid, AT_GAZE))
         return dogaze();
-    else if (isWere(pmid4you()))
+    else if (isWere(upmid))
         return dosummon();
     else if (makesWebs(upmid))
         return dospinweb();
@@ -510,7 +510,7 @@ domonability(VOID_ARGS)
                 dryup(currentX(), currentY(), TRUE);
         } else
             There("is no fountain here.");
-    } else if (isUnicorn(pmid4you())) {
+    } else if (isUnicorn(upmid)) {
         use_unicorn_horn((struct obj *) 0);
         return 1;
     } else if (monsterSound(upmid) == MS_SHRIEK) {

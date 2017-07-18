@@ -2049,10 +2049,10 @@ E void FDECL(decide_to_shapeshift, (struct monst *, int));
 /* ### mondata.c ### */
 
 E void FDECL(set_mon_data, (struct monst *, struct permonst *, int));
-E boolean FDECL(monsterHasAttackWithDamageType, (struct permonst *, const int, const int));
-E const struct Attack FDECL(monsterAttackWithDamageType, (struct permonst *, const int, const int));
-E boolean FDECL(attacktype, (struct permonst *, int));
-E boolean FDECL(monsterDoesNotAttack, (const struct permonst *));
+E boolean FDECL(monsterHasAttackWithDamageType, (int, const int, const int));
+E const struct Attack FDECL(monsterAttackWithDamageType, (int, const int, const int));
+E boolean FDECL(monsterHasAttackType, (int, int));
+E boolean FDECL(monsterDoesNotAttack, (int));
 E boolean FDECL(poly_when_stoned, (struct permonst *));
 E boolean FDECL(resists_drli, (struct monst *));
 E boolean FDECL(resists_magm, (struct monst *));

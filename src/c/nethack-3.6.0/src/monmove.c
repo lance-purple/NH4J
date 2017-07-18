@@ -109,7 +109,7 @@ register struct monst *mtmp;
             || distanceSquaredToYou(x, y) > (BOLT_LIM + 1) * (BOLT_LIM + 1))
         /* can see it now, or sense it and would normally see it */
         && (canseemon(mtmp) || (senseMonsters(mtmp) && couldsee(x, y)))
-        && mtmp->mcanmove && !monsterDoesNotAttack(mtmp->data)
+        && mtmp->mcanmove && !monsterDoesNotAttack(pmid4mon(mtmp))
         && !onscary(currentX(), currentY(), mtmp))
         stop_occupation();
 
@@ -516,7 +516,7 @@ toofar:
      */
     if ((!mtmp->mpeaceful || youCauseConflict()) && inrange
         && dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) <= 8
-        && attacktype(mdat, AT_WEAP)) {
+        && monsterHasAttackType(pmid4(mdat), AT_WEAP)) {
         struct obj *mw_tmp;
 
         /* The scared check is necessary.  Otherwise a monster that is
@@ -615,7 +615,7 @@ toofar:
      */
 
     if (!mtmp->mpeaceful || (youCauseConflict() && !resist(mtmp, RING_CLASS, 0, 0))) {
-        if (inrange && !monsterDoesNotAttack(mdat) && currentHitPoints() > 0 && !scared && tmp != 3)
+        if (inrange && !monsterDoesNotAttack(pmid4mon(mtmp)) && currentHitPoints() > 0 && !scared && tmp != 3)
             if (mattacku(mtmp))
                 return 1; /* monster died (e.g. exploded) */
 

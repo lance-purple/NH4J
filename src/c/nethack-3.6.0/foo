@@ -1,0 +1,1 @@
+vi include/extern.h src/artifact.c src/cmd.c src/dog.c src/dogmove.c src/dokick.c src/hack.c src/mhitm.c src/mon.c src/mondata.c src/monmove.c src/muse.c src/polyself.c src/steal.c src/trap.c src/weapon.c src/wizard.c

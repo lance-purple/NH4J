@@ -190,7 +190,7 @@ xchar x, y;
      * normally, getting all your attacks _including_ all your kicks.
      * If you have >1 kick attack, you get all of them.
      */
-    if (areYouPolymorphed() && attacktype(youmonst.data, AT_KICK)) {
+    if (areYouPolymorphed() && monsterHasAttackType(pmid4you(), AT_KICK)) {
         int sum, kickdieroll, armorpenalty,
             attknum = 0,
             tmp = find_roll_to_hit(mon, AT_KICK, (struct obj *) 0, &attknum,

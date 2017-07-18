@@ -1658,7 +1658,7 @@ boolean
 gulp_blnd_check()
 {
     if (!youAreTemporarilyBlinded() && swallowed()) {
-        struct Attack mattk = monsterAttackWithDamageType(u.ustuck->data, AT_ENGL, AD_BLND);
+        struct Attack mattk = monsterAttackWithDamageType(pmid4mon(u.ustuck), AT_ENGL, AD_BLND);
 
 	if (validAttack(mattk) && can_blnd(u.ustuck, &youmonst, mattk.type, (struct obj *) 0)) {
             increaseTimeSinceBeingSwallowed(1); /* compensate for gulpmu change */

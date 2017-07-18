@@ -485,7 +485,7 @@ register struct obj *otmp;
     /* don't want hidden light source inside the monster; assumes that
        engulfers won't have external inventories; whirly monsters cause
        the light to be extinguished rather than letting it shine thru */
-    if (obj_sheds_light(otmp) && attacktype(mtmp->data, AT_ENGL)) {
+    if (obj_sheds_light(otmp) && monsterHasAttackType(pmid4mon(mtmp), AT_ENGL)) {
         /* this is probably a burning object that you dropped or threw */
         if (swallowed() && mtmp == u.ustuck && youCanSee())
             pline("%s out.", Tobjnam(otmp, "go"));

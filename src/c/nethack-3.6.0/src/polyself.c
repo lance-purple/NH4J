@@ -792,11 +792,11 @@ int mntmp;
 
         if (hasBreathWeapon(upmid))
             pline(use_thec, monsterc, "use your breath weapon");
-        if (attacktype(youmonst.data, AT_SPIT))
+        if (monsterHasAttackType(pmid4you(), AT_SPIT))
             pline(use_thec, monsterc, "spit venom");
         if (monsterClass(upmid) == S_NYMPH)
             pline(use_thec, monsterc, "remove an iron ball");
-        if (attacktype(youmonst.data, AT_GAZE))
+        if (monsterHasAttackType(pmid4you(), AT_GAZE))
             pline(use_thec, monsterc, "gaze at monsters");
         if (isHider(upmid))
             pline(use_thec, monsterc, "hide");
@@ -1094,7 +1094,7 @@ dobreathe()
     if (!getdir((char *) 0))
         return 0;
 
-    struct Attack mattk = monsterAttackWithDamageType(youmonst.data, AT_BREA, AD_ANY);
+    struct Attack mattk = monsterAttackWithDamageType(pmid4you(), AT_BREA, AD_ANY);
 
     if (!validAttack(mattk)) {
         impossible("bad breath attack?"); /* mouthwash needed... */
@@ -1117,7 +1117,7 @@ dospit()
     if (!getdir((char *) 0))
         return 0;
 
-    struct Attack mattk = monsterAttackWithDamageType(youmonst.data, AT_SPIT, AD_ANY);
+    struct Attack mattk = monsterAttackWithDamageType(pmid4you(), AT_SPIT, AD_ANY);
 
     if (!validAttack(mattk)) {
         impossible("bad spit attack?");
@@ -1687,7 +1687,7 @@ int part;
         return humanoid_parts[part]; /* yeti/sasquatch, monkey/ape */
     }
     if ((part == HAND || part == HANDED)
-        && (isHumanoid(pmid4(mptr)) && attacktype(mptr, AT_CLAW)
+        && (isHumanoid(pmid4(mptr)) && monsterHasAttackType(pmid4(mptr), AT_CLAW)
             && !index(not_claws, mc) && mptr != &mons[PM_STONE_GOLEM]
             && mptr != &mons[PM_INCUBUS] && mptr != &mons[PM_SUCCUBUS]))
         return (part == HAND) ? "claw" : "clawed";

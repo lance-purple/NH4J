@@ -2763,9 +2763,8 @@ extern long monsterConveysResistances(int id) {
   return javaGetLongFromInt(MONSTER_TYPE_CLASS, "monsterConveysResistances", id);
 }
 
-extern boolean monsterDoesNotAttack(const struct permonst *ptr)
+extern boolean monsterDoesNotAttack(int pmid)
 {
-    int pmid = pmid4(ptr);
     return javaGetBooleanFromInt(MONSTER_TYPE_CLASS, "monsterDoesNotAttack", pmid);
 }
 

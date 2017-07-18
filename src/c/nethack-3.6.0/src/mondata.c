@@ -31,12 +31,11 @@ int flag;
 
 
 const struct Attack
-monsterAttackWithDamageType(ptr, attackType, damageType)
-struct permonst *ptr;
+monsterAttackWithDamageType(pmid, attackType, damageType)
+int pmid;
 const int attackType;
 const int damageType;
 {
-    int pmid = pmid4(ptr);
     int nAttacks = monsterAttacks(pmid);
     for (int i = 0; i < nAttacks; i++)
     {
@@ -53,21 +52,21 @@ const int damageType;
 }
 
 /* does monster-type have any attack for a specific type of damage? */
-boolean monsterHasAttackWithDamageType(ptr, attackType, damageType)
-struct permonst *ptr;
+boolean monsterHasAttackWithDamageType(pmid, attackType, damageType)
+int pmid;
 const int attackType;
 const int damageType;
 {
-    return validAttack(monsterAttackWithDamageType(ptr, attackType, damageType));
+    return validAttack(monsterAttackWithDamageType(pmid, attackType, damageType));
 }
 
 /* does monster-type have a particular type of attack */
 boolean
-attacktype(ptr, atyp)
-struct permonst *ptr;
+monsterHasAttackType(pmid, atyp)
+int pmid;
 int atyp;
 {
-    return monsterHasAttackWithDamageType(ptr, atyp, AD_ANY);
+    return monsterHasAttackWithDamageType(pmid, atyp, AD_ANY);
 }
 
 /* does monster-type transform into something else when petrified? */
@@ -267,9 +266,9 @@ struct permonst *ptr;
 {
     long atk_mask = (1L << AT_BREA) | (1L << AT_SPIT) | (1L << AT_GAZE);
 
-    /* was: (attacktype(ptr, AT_BREA) || attacktype(ptr, AT_WEAP)
-     *       || attacktype(ptr, AT_SPIT) || attacktype(ptr, AT_GAZE)
-     *       || attacktype(ptr, AT_MAGC));
+    /* was: (monsterHasAttackType(pmid, AT_BREA) || monsterHasAttackType(pmid, AT_WEAP)
+     *       || monsterHasAttackType(pmid, AT_SPIT) || monsterHasAttackType(pmid, AT_GAZE)
+     *       || monsterHasAttackType(pmid, AT_MAGC));
      * but that's too slow -dlc
      */
     int pmid = pmid4(ptr);
@@ -406,7 +405,7 @@ sticks(ptr)
 register struct permonst *ptr;
 {
     return (boolean) (dmgtype(ptr, AD_STCK) || dmgtype(ptr, AD_WRAP)
-                      || attacktype(ptr, AT_HUGS));
+                      || monsterHasAttackType(pmid4(ptr), AT_HUGS));
 }
 
 /* some monster-types can't vomit */

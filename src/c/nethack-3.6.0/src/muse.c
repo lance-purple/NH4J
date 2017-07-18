@@ -994,12 +994,13 @@ int
 rnd_defensive_item(mtmp)
 struct monst *mtmp;
 {
+    int pmid = pmid4mon(mtmp);
     struct permonst *pm = mtmp->data;
     int difficulty = monsterDifficulty(pmid4mon(mtmp));
     int trycnt = 0;
     int mc = monsterClass(pmid4(pm));
 
-    if (isAnimal(pmid4(pm)) || attacktype(pm, AT_EXPL) || isMindless(pmid4(pm))
+    if (isAnimal(pmid) || monsterHasAttackType(pmid, AT_EXPL) || isMindless(pmid)
         || mc == S_GHOST || mc == S_KOP)
         return 0;
 try_again:
@@ -1026,10 +1027,9 @@ try_again:
     case 4:
         return POT_EXTRA_HEALING;
     case 5:
-        return (mtmp->data != &mons[PM_PESTILENCE]) ? POT_FULL_HEALING
-                                                    : POT_SICKNESS;
+        return (pmid != PM_PESTILENCE) ? POT_FULL_HEALING : POT_SICKNESS;
     case 7:
-        if (isFloater(pmid4(pm)) || mtmp->isshk || mtmp->isgd || mtmp->ispriest)
+        if (isFloater(pmid) || mtmp->isshk || mtmp->isgd || mtmp->ispriest)
             return 0;
         else
             return WAN_DIGGING;
@@ -1140,7 +1140,7 @@ struct monst *mtmp;
             m.has_offense = MUSE_POT_PARALYSIS;
         }
         nomore(MUSE_POT_BLINDNESS);
-        if (obj->otyp == POT_BLINDNESS && !attacktype(mtmp->data, AT_GAZE)) {
+        if (obj->otyp == POT_BLINDNESS && !monsterHasAttackType(pmid4mon(mtmp), AT_GAZE)) {
             m.offensive = obj;
             m.has_offense = MUSE_POT_BLINDNESS;
         }
@@ -1537,11 +1537,12 @@ int
 rnd_offensive_item(mtmp)
 struct monst *mtmp;
 {
+    int pmid = pmid4mon(mtmp);
     struct permonst *pm = mtmp->data;
-    int difficulty = monsterDifficulty(pmid4mon(mtmp));
-    int mc = monsterClass(pmid4(pm));
+    int difficulty = monsterDifficulty(pmid);
+    int mc = monsterClass(pmid);
 
-    if (isAnimal(pmid4(pm)) || attacktype(pm, AT_EXPL) || isMindless(pmid4(pm))
+    if (isAnimal(pmid) || monsterHasAttackType(pmid, AT_EXPL) || isMindless(pmid)
         || mc == S_GHOST || mc == S_KOP)
         return 0;
     if (difficulty > 7 && !rn2(35))
@@ -1550,8 +1551,8 @@ struct monst *mtmp;
     case 0: {
         struct obj *helmet = which_armor(mtmp, W_ARMH);
 
-        if ((helmet && is_metallic(helmet)) || isAmorphous(pmid4(pm))
-            || passesThroughWalls(pmid4(pm)) || isNoncorporeal(pmid4(pm)) || isUnsolid(pmid4(pm)))
+        if ((helmet && is_metallic(helmet)) || isAmorphous(pmid)
+            || passesThroughWalls(pmid) || isNoncorporeal(pmid) || isUnsolid(pmid))
             return SCR_EARTH;
     } /* fall through */
     case 1:
@@ -1681,14 +1682,14 @@ struct monst *mtmp;
         nomore(MUSE_WAN_MAKE_INVISIBLE);
         if (obj->otyp == WAN_MAKE_INVISIBLE && obj->spe > 0 && !mtmp->minvis
             && !mtmp->invis_blkd && (!mtmp->mpeaceful || youCanSeeInvisible())
-            && (!attacktype(mtmp->data, AT_GAZE) || mtmp->mcan)) {
+            && (!monsterHasAttackType(pmid4mon(mtmp), AT_GAZE) || mtmp->mcan)) {
             m.misc = obj;
             m.has_misc = MUSE_WAN_MAKE_INVISIBLE;
         }
         nomore(MUSE_POT_INVISIBILITY);
         if (obj->otyp == POT_INVISIBILITY && !mtmp->minvis
             && !mtmp->invis_blkd && (!mtmp->mpeaceful || youCanSeeInvisible())
-            && (!attacktype(mtmp->data, AT_GAZE) || mtmp->mcan)) {
+            && (!monsterHasAttackType(pmid4mon(mtmp), AT_GAZE) || mtmp->mcan)) {
             m.misc = obj;
             m.has_misc = MUSE_POT_INVISIBILITY;
         }
@@ -1973,11 +1974,12 @@ int
 rnd_misc_item(mtmp)
 struct monst *mtmp;
 {
+    int pmid = pmid4mon(mtmp);
     struct permonst *pm = mtmp->data;
-    int difficulty = monsterDifficulty(pmid4mon(mtmp));
-    int mc = monsterClass(pmid4(pm));
+    int difficulty = monsterDifficulty(pmid);
+    int mc = monsterClass(pmid);
 
-    if (isAnimal(pmid4(pm)) || attacktype(pm, AT_EXPL) || isMindless(pmid4(pm))
+    if (isAnimal(pmid) || monsterHasAttackType(pmid, AT_EXPL) || isMindless(pmid)
         || mc == S_GHOST || mc == S_KOP)
         return 0;
     /* Unlike other rnd_item functions, we only allow _weak_ monsters
@@ -1987,7 +1989,7 @@ struct monst *mtmp;
     if (difficulty < 6 && !rn2(30))
         return rn2(6) ? POT_POLYMORPH : WAN_POLYMORPH;
 
-    if (!rn2(40) && !isNonliving(pmid4(pm)) && !is_vampshifter(mtmp))
+    if (!rn2(40) && !isNonliving(pmid) && !is_vampshifter(mtmp))
         return AMULET_OF_LIFE_SAVING;
 
     switch (rn2(3)) {
@@ -2012,14 +2014,14 @@ struct monst *mon;
 struct obj *obj;
 {
     int typ = obj->otyp;
+    int pmid = pmid4mon(mon);
 
-    if (isAnimal(pmid4mon(mon)) || isMindless(pmid4mon(mon))
-        || mon->data == &mons[PM_GHOST]) /* don't loot bones piles */
+    if (isAnimal(pmid) || isMindless(pmid) || pmid == PM_GHOST) /* don't loot bones piles */
         return FALSE;
 
     if (typ == WAN_MAKE_INVISIBLE || typ == POT_INVISIBILITY)
         return (boolean) (!mon->minvis && !mon->invis_blkd
-                          && !attacktype(mon->data, AT_GAZE));
+                          && !monsterHasAttackType(pmid, AT_GAZE));
     if (typ == WAN_SPEED_MONSTER || typ == POT_SPEED)
         return (boolean) (mon->mspeed != MFAST);
 
@@ -2028,9 +2030,9 @@ struct obj *obj;
         if (obj->spe <= 0)
             return FALSE;
         if (typ == WAN_DIGGING)
-            return (boolean) !isFloater(pmid4mon(mon));
+            return (boolean) !isFloater(pmid);
         if (typ == WAN_POLYMORPH)
-            return (boolean) (monsterDifficulty(pmid4mon(mon)) < 6);
+            return (boolean) (monsterDifficulty(pmid) < 6);
         if (objects[typ].oc_dir == RAY || typ == WAN_STRIKING
             || typ == WAN_TELEPORTATION || typ == WAN_CREATE_MONSTER)
             return TRUE;
@@ -2041,7 +2043,7 @@ struct obj *obj;
             || typ == POT_GAIN_LEVEL || typ == POT_PARALYSIS
             || typ == POT_SLEEPING || typ == POT_ACID || typ == POT_CONFUSION)
             return TRUE;
-        if (typ == POT_BLINDNESS && !attacktype(mon->data, AT_GAZE))
+        if (typ == POT_BLINDNESS && !monsterHasAttackType(pmid, AT_GAZE))
             return TRUE;
         break;
     case SCROLL_CLASS:
@@ -2051,15 +2053,15 @@ struct obj *obj;
         break;
     case AMULET_CLASS:
         if (typ == AMULET_OF_LIFE_SAVING)
-            return (boolean) !(isNonliving(pmid4mon(mon)) || is_vampshifter(mon));
+            return (boolean) !(isNonliving(pmid) || is_vampshifter(mon));
         if (typ == AMULET_OF_REFLECTION)
             return TRUE;
         break;
     case TOOL_CLASS:
         if (typ == PICK_AXE)
-            return (boolean) needsPickaxe(pmid4mon(mon));
+            return (boolean) needsPickaxe(pmid);
         if (typ == UNICORN_HORN)
-            return (boolean) (!obj->cursed && !isUnicorn(pmid4mon(mon)));
+            return (boolean) (!obj->cursed && !isUnicorn(pmid));
         if (typ == FROST_HORN || typ == FIRE_HORN)
             return (obj->spe > 0);
         break;
@@ -2334,7 +2336,7 @@ boolean by_you;
        [possible extension: monst capable of casting high level clerical
        spells could toss pillar of fire at self--probably too suicidal] */
     if (!mon->mcan && !mon->mspec_used
-        && monsterHasAttackWithDamageType(mon->data, AT_BREA, AD_FIRE)) {
+        && monsterHasAttackWithDamageType(pmid4mon(mon), AT_BREA, AD_FIRE)) {
         odummy = zeroobj; /* otyp == STRANGE_OBJECT */
         return muse_unslime(mon, &odummy, by_you);
     }

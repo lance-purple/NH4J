@@ -231,7 +231,7 @@ in_trouble()
 
     if (yourIntrinsic(BLINDED) > 1 && hasEyes(pmid4you())
         && (!swallowed()
-            || !monsterHasAttackWithDamageType(u.ustuck->data, AT_ENGL, AD_BLND)))
+            || !monsterHasAttackWithDamageType(pmid4mon(u.ustuck), AT_ENGL, AD_BLND)))
         return TROUBLE_BLIND;
     for (i = 0; i < A_MAX; i++)
         if (yourCurrentAttr(i) < yourAttrMax(i))
