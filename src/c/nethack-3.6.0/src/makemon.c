@@ -137,7 +137,7 @@ register int x, y, n;
          * are peaceful and some are not, the result will just be a
          * smaller group.
          */
-        if (enexto(&mm, mm.x, mm.y, mtmp->data)) {
+        if (canPlaceMonsterNear(&mm, mm.x, mm.y, pmid4mon(mtmp), 0)) {
             mon = makemon(mtmp->data, mm.x, mm.y, NO_MM_FLAGS);
             if (mon) {
                 mon->mpeaceful = FALSE;
@@ -747,7 +747,7 @@ xchar x, y; /* clone's preferred location or 0 (near mon) */
     if (x == 0) {
         mm.x = mon->mx;
         mm.y = mon->my;
-        if (!enexto(&mm, mm.x, mm.y, mon->data) || MON_AT(mm.x, mm.y))
+        if (!canPlaceMonsterNear(&mm, mm.x, mm.y, pmid4mon(mon), 0) || MON_AT(mm.x, mm.y))
             return (struct monst *) 0;
     } else if (!isok(x, y)) {
         return (struct monst *) 0; /* paranoia */
@@ -755,7 +755,7 @@ xchar x, y; /* clone's preferred location or 0 (near mon) */
         mm.x = x;
         mm.y = y;
         if (MON_AT(mm.x, mm.y)) {
-            if (!enexto(&mm, mm.x, mm.y, mon->data) || MON_AT(mm.x, mm.y))
+            if (!canPlaceMonsterNear(&mm, mm.x, mm.y, pmid4mon(mon), 0) || MON_AT(mm.x, mm.y))
                 return (struct monst *) 0;
         }
     }
@@ -1052,7 +1052,7 @@ int mmflags;
     } else if (byyou && !in_mklev) {
         coord bypos;
 
-        if (enexto_core(&bypos, currentX(), currentY(), ptr, gpflags)) {
+        if (canPlaceMonsterNear(&bypos, currentX(), currentY(), pmid4(ptr), gpflags)) {
             x = bypos.x;
             y = bypos.y;
         } else
@@ -1063,7 +1063,7 @@ int mmflags;
     if (MON_AT(x, y)) {
         if ((mmflags & MM_ADJACENTOK) != 0) {
             coord bypos;
-            if (enexto_core(&bypos, x, y, ptr, gpflags)) {
+            if (canPlaceMonsterNear(&bypos, x, y, pmid4(ptr), gpflags)) {
                 x = bypos.x;
                 y = bypos.y;
             } else
@@ -1363,7 +1363,7 @@ boolean neverask;
         x = currentX(), y = currentY();
         /* if in water, try to encourage an aquatic monster
            by finding and then specifying another wet location */
-        if (!mptr && inWater() && enexto(&c, x, y, &mons[PM_GIANT_EEL]))
+        if (!mptr && inWater() && canPlaceMonsterNear(&c, x, y, PM_GIANT_EEL, 0))
             x = c.x, y = c.y;
 
         mon = makemon(mptr, x, y, NO_MM_FLAGS);
