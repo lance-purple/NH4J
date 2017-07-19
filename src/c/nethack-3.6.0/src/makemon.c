@@ -1089,19 +1089,17 @@ int mmflags;
          * for instance.)
          */
         int tryct = 0; /* maybe there are no good choices */
-        struct monst fakemon;
 
         do {
             if (!(ptr = rndmonst())) {
                 debugpline0("Warning: no monster.");
                 return (struct monst *) 0; /* no more monsters! */
             }
-            fakemon.data = ptr; /* set up for goodpos */
         } while (++tryct <= 50
                  /* in Sokoban, don't accept a giant on first try;
                     after that, boulder carriers are fair game */
                  && ((tryct == 1 && throwsRocks(pmid4(ptr)) && areYouOnASokobanLevel())
-                     || !goodpos(x, y, &fakemon, gpflags)));
+                     || !goodPositionForMonsterOfType(x, y, pmid4(ptr), gpflags)));
         mndx = monsndx(ptr);
     }
     (void) propagate(mndx, countbirth, FALSE);

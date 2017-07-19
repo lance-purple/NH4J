@@ -13,6 +13,59 @@ STATIC_DCL void FDECL(mvault_tele, (struct monst *));
 /* non-null when teleporting via having read this scroll */
 STATIC_VAR struct obj *telescroll = 0;
 
+boolean goodPositionForMonsterOfType(x, y, pmid, gpflags)
+int x, y;
+int pmid;
+unsigned gpflags;
+{
+    boolean ignorewater = ((gpflags & MM_IGNOREWATER) != 0);
+
+    if (!isok(x, y)) {
+        return FALSE;
+    }
+
+    /* in many cases, we're trying to create a new monster, which
+     * can't go on top of the player or any existing monster.
+     * however, occasionally we are relocating engravings or objects,
+     * which could be co-located and thus get restricted a bit too much.
+     * oh well.
+     */
+    if (x == currentX() && y == currentY()) {
+        return FALSE;
+    }
+
+    if (m_at(x, y)) {
+        return FALSE;
+    }
+
+    if (is_pool(x, y) && !ignorewater) {
+        return (isFloater(pmid) || isFlyer(pmid) || isSwimmer(pmid) || isClinger(pmid));
+    } else if (monsterClass(pmid) == S_EEL && rn2(13) && !ignorewater) {
+        return FALSE;
+    } else if (is_lava(x, y)) {
+        return (isFloater(pmid) || isFlyer(pmid) || likesLava(pmid));
+    }
+
+    if (passesThroughWalls(pmid) && may_passwall(x, y)) {
+        return TRUE;
+    }
+    if (isAmorphous(pmid) && closed_door(x, y)) {
+        return TRUE;
+    }
+
+    if (!accessible(x, y)) {
+        if (!(is_pool(x, y) && ignorewater)) {
+            return FALSE;
+	}
+    }
+
+    if (sobj_at(BOULDER, x, y) && (!throwsRocks(pmid))) {
+        return FALSE;
+    }
+
+    return TRUE;
+}
+
 /*
  * Is (x,y) a good position of mtmp?  If mtmp is NULL, then is (x,y) good
  * for an object?
@@ -123,14 +176,15 @@ unsigned entflags;
     coord good[MAX_GOOD], *good_ptr;
     int x, y, range, i;
     int xmin, xmax, ymin, ymax;
-    struct monst fakemon; /* dummy monster */
+    int pmid;
 
-    if (!mdat) {
+    if (mdat) {
+	pmid = pmid4(mdat);
+    } else {
         debugpline0("enexto() called with null mdat");
         /* default to player's original monster type */
-        mdat = &mons[originalMonsterNumber()];
+        pmid = originalMonsterNumber();
     }
-    fakemon.data = mdat; /* set up for goodpos */
     good_ptr = good;
     range = 1;
     /*
@@ -144,7 +198,7 @@ unsigned entflags;
         ymax = min(ROWNO - 1, yy + range);
 
         for (x = xmin; x <= xmax; x++)
-            if (goodpos(x, ymin, &fakemon, entflags)) {
+            if (goodPositionForMonsterOfType(x, ymin, pmid, entflags)) {
                 good_ptr->x = x;
                 good_ptr->y = ymin;
                 /* beware of accessing beyond segment boundaries.. */
@@ -152,7 +206,7 @@ unsigned entflags;
                     goto full;
             }
         for (x = xmin; x <= xmax; x++)
-            if (goodpos(x, ymax, &fakemon, entflags)) {
+            if (goodPositionForMonsterOfType(x, ymax, pmid, entflags)) {
                 good_ptr->x = x;
                 good_ptr->y = ymax;
                 /* beware of accessing beyond segment boundaries.. */
@@ -160,7 +214,7 @@ unsigned entflags;
                     goto full;
             }
         for (y = ymin + 1; y < ymax; y++)
-            if (goodpos(xmin, y, &fakemon, entflags)) {
+            if (goodPositionForMonsterOfType(xmin, y, pmid, entflags)) {
                 good_ptr->x = xmin;
                 good_ptr->y = y;
                 /* beware of accessing beyond segment boundaries.. */
@@ -168,7 +222,7 @@ unsigned entflags;
                     goto full;
             }
         for (y = ymin + 1; y < ymax; y++)
-            if (goodpos(xmax, y, &fakemon, entflags)) {
+            if (goodPositionForMonsterOfType(xmax, y, pmid, entflags)) {
                 good_ptr->x = xmax;
                 good_ptr->y = y;
                 /* beware of accessing beyond segment boundaries.. */
