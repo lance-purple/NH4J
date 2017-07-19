@@ -1131,7 +1131,7 @@ dokick()
                 mm.x = x;
                 mm.y = y;
                 while (cnt--) {
-                    if (enexto(&mm, mm.x, mm.y, &mons[PM_KILLER_BEE])
+                    if (canPlaceMonsterNear(&mm, mm.x, mm.y, PM_KILLER_BEE, 0)
                         && makemon(&mons[PM_KILLER_BEE], mm.x, mm.y,
                                    MM_ANGRY))
                         made++;

@@ -479,8 +479,8 @@ struct monst *mcast;
                          && monsterDifficulty(makeindex) >= monsterDifficulty(mcast->mnum));
                 /* do this after picking the monster to place */
                 if (mcast
-                    && !enexto(&bypos, mcast->mux, mcast->muy,
-                               &mons[makeindex]))
+                    && !canPlaceMonsterNear(&bypos, mcast->mux, mcast->muy,
+                               makeindex, 0))
                     continue;
                 if ((mtmp = makemon(&mons[makeindex], bypos.x, bypos.y,
                                     NO_MM_FLAGS)) != 0) {

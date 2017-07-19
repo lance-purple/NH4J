@@ -414,9 +414,9 @@ kick_steed()
 
 /*
  * Try to find a dismount point adjacent to the steed's location.
- * If all else fails, try enexto().  Use enexto() as a last resort because
- * enexto() chooses its point randomly, possibly even outside the
- * room's walls, which is not what we want.
+ * If all else fails, try canPlaceMonsterNear().  Use this as a last
+ * resort because canPlaceMonsterNear() chooses its point randomly,
+ * possibly even outside the room's walls, which is not what we want.
  * Adapted from mail daemon code.
  */
 STATIC_OVL boolean
@@ -455,9 +455,9 @@ int forceit;
             }
     }
 
-    /* If we didn't find a good spot and forceit is on, try enexto(). */
+    /* If we didn't find a good spot and forceit is on, try canPlaceMonsterNear(). */
     if (forceit && min_distance < 0
-        && !enexto(spot, currentX(), currentY(), youmonst.data))
+        && !canPlaceMonsterNear(spot, currentX(), currentY(), pmid4you(), 0))
         return FALSE;
 
     return found;
@@ -547,7 +547,7 @@ int reason; /* Player was thrown off etc. */
        unless we're in the midst of creating a bones file. */
     if (reason == DISMOUNT_BONES) {
         /* move the steed to an adjacent square */
-        if (enexto(&cc, currentX(), currentY(), mtmp->data))
+        if (canPlaceMonsterNear(&cc, currentX(), currentY(), pmid4mon(mtmp), 0))
             rloc_to(mtmp, cc.x, cc.y);
         else /* evidently no room nearby; move steed elsewhere */
             (void) rloc(mtmp, FALSE);
@@ -609,7 +609,7 @@ int reason; /* Player was thrown off etc. */
                     (void) mintrap(mtmp);
             }
             /* Couldn't... try placing the steed */
-        } else if (enexto(&cc, currentX(), currentY(), mtmp->data)) {
+        } else if (canPlaceMonsterNear(&cc, currentX(), currentY(), pmid4mon(mtmp), 0)) {
             /* Keep player here, move the steed to cc */
             rloc_to(mtmp, cc.x, cc.y);
             /* Player stays put */

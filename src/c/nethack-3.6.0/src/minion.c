@@ -413,7 +413,7 @@ struct monst *mon; /* if null, angel hasn't been created yet */
     for (i = rn1(3, 2); i > 0; --i) {
         mm.x = currentX();
         mm.y = currentY();
-        if (enexto(&mm, mm.x, mm.y, &mons[PM_ANGEL]))
+        if (canPlaceMonsterNear(&mm, mm.x, mm.y, PM_ANGEL, 0))
             (void) mk_roamer(&mons[PM_ANGEL], currentAlignmentType(), mm.x, mm.y,
                              FALSE);
     }
@@ -439,7 +439,7 @@ gain_guardian_angel()
         verbalize("Thou hast been worthy of me!");
         mm.x = currentX();
         mm.y = currentY();
-        if (enexto(&mm, mm.x, mm.y, &mons[PM_ANGEL])
+        if (canPlaceMonsterNear(&mm, mm.x, mm.y, PM_ANGEL, 0)
             && (mtmp = mk_roamer(&mons[PM_ANGEL], currentAlignmentType(), mm.x, mm.y,
                                  TRUE)) != 0) {
             mtmp->mstrategy &= ~STRAT_APPEARMSG;

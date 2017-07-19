@@ -1,1 +1,1 @@
-vi include/extern.h src/artifact.c src/cmd.c src/dog.c src/dogmove.c src/dokick.c src/hack.c src/mhitm.c src/mon.c src/mondata.c src/monmove.c src/muse.c src/polyself.c src/steal.c src/trap.c src/weapon.c src/wizard.c
+vi include/extern.h src/apply.c src/bones.c src/dbridge.c src/do.c src/dokick.c src/hack.c src/mail.c src/makemon.c src/mcastu.c src/mhitu.c src/minion.c src/mkroom.c src/mon.c src/muse.c src/shk.c src/sp_lev.c src/steed.c src/teleport.c src/timeout.c src/wizard.c src/worm.c src/zap.c

@@ -580,7 +580,7 @@ int spellnum;
         if (quan < 3)
             quan = 3;
         for (i = 0; i <= quan; i++) {
-            if (!enexto(&bypos, mtmp->mux, mtmp->muy, mtmp->data))
+            if (!canPlaceMonsterNear(&bypos, mtmp->mux, mtmp->muy, pmid4mon(mtmp), 0))
                 break;
             if ((pm = mkclass(let, 0)) != 0
                 && (mtmp2 = makemon(pm, bypos.x, bypos.y, MM_ANGRY)) != 0) {

@@ -3048,9 +3048,7 @@ E boolean FDECL(stucksteed, (BOOLEAN_P));
 
 E boolean FDECL(goodPositionForMonsterOfType, (int, int, int, unsigned));
 E boolean FDECL(goodpos, (int, int, struct monst *, unsigned));
-E boolean FDECL(enexto, (coord *, XCHAR_P, XCHAR_P, struct permonst *));
-E boolean
-FDECL(enexto_core, (coord *, XCHAR_P, XCHAR_P, struct permonst *, unsigned));
+E boolean FDECL(canPlaceMonsterNear, (coord *, XCHAR_P, XCHAR_P, int, unsigned));
 E void FDECL(teleds, (int, int, BOOLEAN_P));
 E boolean FDECL(safe_teleds, (BOOLEAN_P));
 E boolean FDECL(teleport_pet, (struct monst *, BOOLEAN_P));

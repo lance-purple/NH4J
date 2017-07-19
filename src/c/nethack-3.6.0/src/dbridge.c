@@ -453,7 +453,7 @@ int dest, how;
             done(how);
             /* So, you didn't die */
             if (!e_survives_at(etmp, etmp->ex, etmp->ey)) {
-                if (enexto(&xy, etmp->ex, etmp->ey, etmp->edata)) {
+                if (canPlaceMonsterNear(&xy, etmp->ex, etmp->ey, pmid4(etmp->edata), 0)) {
                     pline("A %s force teleports you away...",
                           youAreHallucinating() ? "normal" : "strange");
                     teleds(xy.x, xy.y, FALSE);

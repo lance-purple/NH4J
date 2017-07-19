@@ -1373,7 +1373,7 @@ boolean at_stairs, falling, portal;
            the latter was done unconditionally. */
         coord cc;
 
-        if (!rn2(2) && enexto(&cc, currentX(), currentY(), youmonst.data)
+        if (!rn2(2) && canPlaceMonsterNear(&cc, currentX(), currentY(), pmid4you(), 0)
             && distanceSquaredToYou(cc.x, cc.y) <= 2)
             u_on_newpos(cc.x, cc.y); /*[maybe give message here?]*/
         else

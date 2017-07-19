@@ -1564,7 +1564,7 @@ struct mkroom *croom;
     }
 
     /* try to find a close place if someone else is already there */
-    if (MON_AT(x, y) && enexto(&cc, x, y, pm))
+    if (MON_AT(x, y) && canPlaceMonsterNear(&cc, x, y, pmid4(pm), 0))
         x = cc.x, y = cc.y;
 
     if (m->align != -(MAX_REGISTERS + 2))
@@ -1630,7 +1630,7 @@ struct mkroom *croom;
                             x = m->x;
                             y = m->y;
                             get_location(&x, &y, DRY, croom);
-                            if (MON_AT(x, y) && enexto(&cc, x, y, pm))
+                            if (MON_AT(x, y) && canPlaceMonsterNear(&cc, x, y, pmid4(pm), 0))
                                 x = cc.x, y = cc.y;
                         } while (m_bad_boulder_spot(x, y)
                                  && --retrylimit > 0);

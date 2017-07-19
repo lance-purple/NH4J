@@ -149,39 +149,24 @@ unsigned gpflags;
 }
 
 /*
- * "entity next to"
- *
  * Attempt to find a good place for the given monster type in the closest
  * position to (xx,yy).  Do so in successive square rings around (xx,yy).
  * If there is more than one valid position in the ring, choose one randomly.
  * Return TRUE and the position chosen when successful, FALSE otherwise.
  */
-boolean
-enexto(cc, xx, yy, mdat)
+boolean canPlaceMonsterNear(cc, xx, yy, pmid, entflags)
 coord *cc;
 register xchar xx, yy;
-struct permonst *mdat;
-{
-    return enexto_core(cc, xx, yy, mdat, 0);
-}
-
-boolean
-enexto_core(cc, xx, yy, mdat, entflags)
-coord *cc;
-register xchar xx, yy;
-struct permonst *mdat;
+int pmid;
 unsigned entflags;
 {
 #define MAX_GOOD 15
     coord good[MAX_GOOD], *good_ptr;
     int x, y, range, i;
     int xmin, xmax, ymin, ymax;
-    int pmid;
 
-    if (mdat) {
-	pmid = pmid4(mdat);
-    } else {
-        debugpline0("enexto() called with null mdat");
+    if (NON_PM == pmid) {
+        debugpline0("canPlaceMonsterNear() called with NON_PM");
         /* default to player's original monster type */
         pmid = originalMonsterNumber();
     }
@@ -1397,7 +1382,7 @@ boolean give_feedback;
         unstuck(mtmp);
         (void) rloc(mtmp, TRUE);
     } else if (isRiderOfTheApocalypse(pmid4mon(mtmp)) && rn2(13)
-               && enexto(&cc, currentX(), currentY(), mtmp->data))
+               && canPlaceMonsterNear(&cc, currentX(), currentY(), pmid4mon(mtmp), 0))
         rloc_to(mtmp, cc.x, cc.y);
     else
         (void) rloc(mtmp, TRUE);

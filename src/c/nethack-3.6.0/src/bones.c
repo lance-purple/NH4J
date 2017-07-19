@@ -277,7 +277,7 @@ struct monst *oracle;
         /* room found and she's not not in it, so try to move her there */
         cc.x = (rooms[ridx].lx + rooms[ridx].hx) / 2;
         cc.y = (rooms[ridx].ly + rooms[ridx].hy) / 2;
-        if (enexto(&cc, cc.x, cc.y, oracle->data)) {
+        if (canPlaceMonsterNear(&cc, cc.x, cc.y, pmid4mon(oracle), 0)) {
             rloc_to(oracle, cc.x, cc.y);
             o_ridx = levl[oracle->mx][oracle->my].roomno - ROOMOFFSET;
         }

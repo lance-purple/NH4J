@@ -541,7 +541,7 @@ long timeout;
         if (!(monsterGenerationMask(mnum) & G_UNIQ)
             && !(mvitals[mnum].mvflags & (G_GENOD | G_EXTINCT))) {
             for (i = hatchcount; i > 0; i--) {
-                if (!enexto(&cc, x, y, &mons[mnum])
+                if (!canPlaceMonsterNear(&cc, x, y, mnum, 0)
                     || !(mon = makemon(&mons[mnum], cc.x, cc.y, NO_MINVENT)))
                     break;
                 /* tame if your own egg hatches while you're on the
