@@ -4719,7 +4719,7 @@ boolean disarm;
                 if (youAreHallucinating())
                     pline("What a groovy feeling!");
                 else
-                    You("%s%s...", stagger(youmonst.data, "stagger"),
+                    You("%s%s...", staggerVerb(pmid4you(), "stagger"),
                         youResistHallucination() ? ""
                                           : youCannotSee() ? " and get dizzy"
                                                   : " and your vision blurs");

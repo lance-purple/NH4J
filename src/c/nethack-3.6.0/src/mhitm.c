@@ -825,7 +825,7 @@ register const struct Attack mattk;
             break;
         if (canseemon(mdef))
             pline("%s %s for a moment.", Monnam(mdef),
-                  makeplural(stagger(pd, "stagger")));
+                  makeplural(staggerVerb(pmid4(pd), "stagger")));
         mdef->mstun = 1;
         goto physical;
     case AD_LEGS:
@@ -1532,7 +1532,7 @@ int mdead;
                 magr->mstun = 1;
                 if (canseemon(magr))
                     pline("%s %s...", Monnam(magr),
-                          makeplural(stagger(magr->data, "stagger")));
+                          makeplural(staggerVerb(pmid4mon(magr), "stagger")));
             }
             tmp = 0;
             break;

@@ -1076,7 +1076,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
             && !isThickSkinned(pmid4(mdat))) {
             if (canspotmon(mon))
                 pline("%s %s from your powerful strike!", Monnam(mon),
-                      makeplural(stagger(mon->data, "stagger")));
+                      makeplural(staggerVerb(pmid4mon(mon), "stagger")));
             /* avoid migrating a dead monster */
             if (mon->mhp > tmp) {
                 mhurtle(mon, directionX(), directionY(), 1);
@@ -1437,7 +1437,7 @@ register const struct Attack mattk;
     case AD_STUN:
         if (youCanSee())
             pline("%s %s for a moment.", Monnam(mdef),
-                  makeplural(stagger(pd, "stagger")));
+                  makeplural(staggerVerb(pmid4(pd), "stagger")));
         mdef->mstun = 1;
         goto physical;
     case AD_LEGS:

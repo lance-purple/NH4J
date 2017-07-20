@@ -1481,7 +1481,7 @@ encumber_msg()
             break;
         case 3:
             You("%s under your heavy load.  Movement is very hard.",
-                stagger(youmonst.data, "stagger"));
+                staggerVerb(pmid4you(), "stagger"));
             break;
         default:
             You("%s move a handspan with this load!",
@@ -1502,7 +1502,7 @@ encumber_msg()
             break;
         case 3:
             You("%s under your load.  Movement is still very hard.",
-                stagger(youmonst.data, "stagger"));
+                staggerVerb(pmid4you(), "stagger"));
             break;
         }
         context.botl = 1;

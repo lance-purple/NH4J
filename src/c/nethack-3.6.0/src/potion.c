@@ -67,7 +67,7 @@ boolean talk;
             if (u.usteed)
                 You("wobble in the saddle.");
             else
-                You("%s...", stagger(youmonst.data, "stagger"));
+                You("%s...", staggerVerb(pmid4you(), "stagger"));
         }
     }
     if ((!xtime && priorStunned) || (xtime && !priorStunned))

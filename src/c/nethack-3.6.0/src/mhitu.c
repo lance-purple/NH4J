@@ -2734,7 +2734,7 @@ register const struct Attack mattk;
             if (!mtmp->mstun) {
                 mtmp->mstun = 1;
                 pline("%s %s.", Monnam(mtmp),
-                      makeplural(stagger(mtmp->data, "stagger")));
+                      makeplural(staggerVerb(pmid4mon(mtmp), "stagger")));
             }
             tmp = 0;
             break;

@@ -1058,13 +1058,11 @@ const char *def;
 }
 
 const char *
-stagger(ptr, def)
-const struct permonst *ptr;
+staggerVerb(pmid, def)
+int pmid;
 const char *def;
 {
     int capitalize = 2 + (*def == highc(*def));
-
-    int pmid = pmid4(ptr);
 
     int msize = monsterSize(pmid);
 
