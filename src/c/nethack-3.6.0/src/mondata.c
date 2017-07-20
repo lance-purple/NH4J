@@ -1078,13 +1078,13 @@ const char *def;
 
 /* return phrase describing the effect of fire attack on a type of monster */
 const char *
-on_fire(mptr, mattk)
-struct permonst *mptr;
+fireDescription(pmid, mattk)
+int pmid;
 const struct Attack mattk;
 {
     const char *what;
 
-    switch (monsndx(mptr)) {
+    switch (pmid) {
     case PM_FLAMING_SPHERE:
     case PM_FIRE_VORTEX:
     case PM_FIRE_ELEMENTAL:

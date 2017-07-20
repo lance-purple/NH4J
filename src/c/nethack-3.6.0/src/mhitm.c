@@ -870,7 +870,7 @@ register const struct Attack mattk;
             break;
         }
         if (vis) {
-            pline("%s is %s!", Monnam(mdef), on_fire(pd, mattk));
+            pline("%s is %s!", Monnam(mdef), fireDescription(pmid4(pd), mattk));
 	}
         if (pd == &mons[PM_STRAW_GOLEM] || pd == &mons[PM_PAPER_GOLEM]) {
             if (vis)

@@ -991,7 +991,7 @@ register const struct Attack mattk;
     case AD_FIRE:
         hitmsg(mtmp, mattk);
         if (uncancelled) {
-            pline("You're %s!", on_fire(youmonst.data, mattk));
+            pline("You're %s!", fireDescription(pmid4you(), mattk));
             if (youmonst.data == &mons[PM_STRAW_GOLEM]
                 || youmonst.data == &mons[PM_PAPER_GOLEM]) {
                 You("roast!");
