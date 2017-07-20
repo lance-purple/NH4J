@@ -1320,7 +1320,7 @@ register const struct Attack mattk;
             if (isAnimal(pmid4mon(mtmp)) && *buf) {
                 if (canseemon(mtmp))
                     pline("%s tries to %s away with %s.", Monnam(mtmp),
-                          locomotion(mtmp->data, "run"), buf);
+                          locomotionVerb(pmid4mon(mtmp), "run"), buf);
             }
             monflee(mtmp, 0, FALSE, FALSE);
             return 3;

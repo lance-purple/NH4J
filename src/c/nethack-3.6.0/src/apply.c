@@ -1980,7 +1980,7 @@ long timeout;
         if (mtmp->mundetected) {
             if (hidesUnderStuff(pmid) && mshelter) {
                 Sprintf(and_vanish, " and %s under %s",
-                        locomotion(mtmp->data, "crawl"), doname(mshelter));
+                        locomotionVerb(pmid4mon(mtmp), "crawl"), doname(mshelter));
             } else if (monsterClass(pmid) == S_MIMIC
                        || monsterClass(pmid) == S_EEL) {
                 suppress_see = TRUE;
@@ -1992,10 +1992,10 @@ long timeout;
         case OBJ_INVENT:
             if (youCannotSee() || suppress_see)
                 You_feel("%s %s from your pack!", something,
-                         locomotion(mtmp->data, "drop"));
+                         locomotionVerb(pmid4mon(mtmp), "drop"));
             else
                 You_see("%s %s out of your pack%s!", monnambuf,
-                        locomotion(mtmp->data, "drop"), and_vanish);
+                        locomotionVerb(pmid4mon(mtmp), "drop"), and_vanish);
             break;
 
         case OBJ_FLOOR:
@@ -2021,7 +2021,7 @@ long timeout;
                 else
                     Strcpy(carriedby, "thin air");
                 You_see("%s %s out of %s%s!", monnambuf,
-                        locomotion(mtmp->data, "drop"), carriedby,
+                        locomotionVerb(pmid4mon(mtmp), "drop"), carriedby,
                         and_vanish);
             }
             break;

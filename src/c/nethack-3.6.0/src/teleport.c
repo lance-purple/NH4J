@@ -79,8 +79,8 @@ int x, y;
 struct monst *mtmp;
 unsigned gpflags;
 {
-    struct permonst *mdat = (struct permonst *) 0;
     boolean ignorewater = ((gpflags & MM_IGNOREWATER) != 0);
+    int pmid = pmid4mon(mtmp);
 
     if (!isok(x, y))
         return FALSE;
@@ -111,8 +111,6 @@ unsigned gpflags;
         if (mtmp2 && (mtmp2 != mtmp || mtmp->wormno))
             return FALSE;
 
-        mdat = mtmp->data;
-        int pmid = pmid4(mdat);
         if (is_pool(x, y) && !ignorewater) {
             if (mtmp == &youmonst) {
                 return (youAreLevitating() || youAreFlying() || canYouWalkOnWater() || youCanSwim()
@@ -130,12 +128,11 @@ unsigned gpflags;
                             && uarmf->oerodeproof)
                         || (areYouPolymorphed() && likesLava(pmid4you())));
             else
-                return (isFloater(pmid4(mdat)) || isFlyer(pmid)
-                        || likesLava(pmid4(mdat)));
+                return (isFloater(pmid) || isFlyer(pmid) || likesLava(pmid));
         }
-        if (passesThroughWalls(pmid4(mdat)) && may_passwall(x, y))
+        if (passesThroughWalls(pmid) && may_passwall(x, y))
             return TRUE;
-        if (isAmorphous(pmid4(mdat)) && closed_door(x, y))
+        if (isAmorphous(pmid) && closed_door(x, y))
             return TRUE;
     }
     if (!accessible(x, y)) {
@@ -143,7 +140,7 @@ unsigned gpflags;
             return FALSE;
     }
 
-    if (sobj_at(BOULDER, x, y) && (!mdat || !throwsRocks(pmid4(mdat))))
+    if (sobj_at(BOULDER, x, y) && ((NON_PM == pmid) || !throwsRocks(pmid)))
         return FALSE;
     return TRUE;
 }
@@ -551,7 +548,7 @@ dotele()
         }
         if (trap)
             You("%s onto the teleportation trap.",
-                locomotion(youmonst.data, "jump"));
+                locomotionVerb(pmid4you(), "jump"));
     }
     if (!trap) {
         boolean castit = FALSE;
@@ -920,7 +917,7 @@ struct trap *trap;
 {
     You("%s onto a level teleport trap!",
         youAreLevitating() ? (const char *) "float"
-                   : locomotion(youmonst.data, "step"));
+                   : locomotionVerb(pmid4you(), "step"));
     if (youResistMagic()) {
         shieldeff(currentX(), currentY());
     }
@@ -1172,7 +1169,6 @@ boolean force_it;
 int in_sight;
 {
     int tt = trap->ttyp;
-    struct permonst *mptr = mtmp->data;
 
     if (mtmp == u.ustuck) /* probably a vortex */
         return 0;         /* temporary? kludge */
@@ -1193,8 +1189,8 @@ int in_sight;
             }
         } else if (tt == MAGIC_PORTAL) {
             if (areYouInEndgame()
-                && (mon_has_amulet(mtmp) || isHomeElemental(pmid4(mptr)))) {
-                if (in_sight && monsterClass(pmid4(mptr)) != S_ELEMENTAL) {
+                && (mon_has_amulet(mtmp) || isHomeElemental(pmid4mon(mtmp)))) {
+                if (in_sight && monsterClass(pmid4mon(mtmp)) != S_ELEMENTAL) {
                     pline("%s seems to shimmer for a moment.", Monnam(mtmp));
                     seetrap(trap);
                 }

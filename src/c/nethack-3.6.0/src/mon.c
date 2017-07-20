@@ -2062,7 +2062,7 @@ struct monst *mdef;
     if (wasinside) {
         if (isAnimal(pmid4mon(mdef)))
             You("%s through an opening in the new %s.",
-                locomotion(youmonst.data, "jump"), xname(otmp));
+                locomotionVerb(pmid4you(), "jump"), xname(otmp));
     }
 }
 

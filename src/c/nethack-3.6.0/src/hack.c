@@ -2303,7 +2303,7 @@ register boolean newlev;
             break;
         case MORGUE:
             if (midnight()) {
-                const char *run = locomotion(youmonst.data, "Run");
+                const char *run = locomotionVerb(pmid4you(), "Run");
                 pline("%s away!  %s away!", run, run);
             } else
                 You("have an uncanny feeling...");

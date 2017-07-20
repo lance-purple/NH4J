@@ -1316,7 +1316,7 @@ postmov:
                 } else if (flags.verbose && canseemon(mtmp))
                     Norep("%s %s %s the iron bars.", Monnam(mtmp),
                           /* pluralization fakes verb conjugation */
-                          makeplural(locomotion(ptr, "pass")),
+                          makeplural(locomotionVerb(pmid4(ptr), "pass")),
                           passesThroughWalls(pmid4(ptr)) ? "through" : "between");
             }
 

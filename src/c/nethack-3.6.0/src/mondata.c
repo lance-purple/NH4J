@@ -1039,13 +1039,11 @@ static const char *immobile[4] = { "wiggle", "Wiggle", "pulsate", "Pulsate" };
 static const char *crawl[4] = { "crawl", "Crawl", "falter", "Falter" };
 
 const char *
-locomotion(ptr, def)
-const struct permonst *ptr;
+locomotionVerb(pmid, def)
+int pmid;
 const char *def;
 {
     int capitalize = (*def == highc(*def));
-
-    int pmid = pmid4(ptr);
 
     int msize = monsterSize(pmid);
 

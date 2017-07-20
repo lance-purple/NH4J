@@ -945,7 +945,7 @@ dodown()
     }
 
     if (trap)
-        You("%s %s.", youAreFlying() ? "fly" : locomotion(youmonst.data, "jump"),
+        You("%s %s.", youAreFlying() ? "fly" : locomotionVerb(pmid4you(), "jump"),
             trap->ttyp == HOLE ? "down the hole" : "through the trap door");
 
     if (trap && areYouOnStrongholdLevel()) {
@@ -1679,7 +1679,7 @@ struct obj *corpse;
                 Strcpy(sackname, an(xname(container)));
                 pline("%s %s out of %s in your pack!",
                       youCannotSee() ? Something : Amonnam(mtmp),
-                      locomotion(mtmp->data, "writhes"), sackname);
+                      locomotionVerb(pmid4mon(mtmp), "writhes"), sackname);
             } else if (container_where == OBJ_FLOOR && container
                        && cansee(mtmp->mx, mtmp->my)) {
                 Strcpy(sackname, an(xname(container)));

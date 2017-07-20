@@ -1240,7 +1240,7 @@ unsigned trflags;
             } else {
                 Sprintf(verbbuf, "%s into",
                         youAreLevitating() ? (const char *) "float"
-                                   : locomotion(youmonst.data, "stumble"));
+                                   : locomotionVerb(pmid4you(), "stumble"));
             }
             You("%s %s spider web!", verbbuf, a_your[trap->madeby_u]);
         }
@@ -1376,7 +1376,7 @@ unsigned trflags;
         else
             Sprintf(verbbuf, "%s", youAreLevitating()
                                        ? (const char *) "float"
-                                       : locomotion(youmonst.data, "step"));
+                                       : locomotionVerb(pmid4you(), "step"));
         You("%s onto a polymorph trap!", verbbuf);
         if (youResistMagic() || youAreUnchanging()) {
             shieldeff(currentX(), currentY());

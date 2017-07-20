@@ -606,10 +606,10 @@ long timeout;
             knows_egg = TRUE; /* true even if you are blind */
             if (!cansee_hatchspot)
                 You_feel("%s %s from your pack!", something,
-                         locomotion(mon->data, "drop"));
+                         locomotionVerb(pmid4mon(mon), "drop"));
             else
                 You_see("%s %s out of your pack!", monnambuf,
-                        locomotion(mon->data, "drop"));
+                        locomotionVerb(pmid4mon(mon), "drop"));
             if (yours) {
                 pline("%s cries sound like \"%s%s\"",
                       siblings ? "Their" : "Its",
@@ -639,7 +639,7 @@ long timeout;
                 else
                     Strcpy(carriedby, "thin air");
                 You_see("%s %s out of %s!", monnambuf,
-                        locomotion(mon->data, "drop"), carriedby);
+                        locomotionVerb(pmid4mon(mon), "drop"), carriedby);
             }
             break;
 #if 0
