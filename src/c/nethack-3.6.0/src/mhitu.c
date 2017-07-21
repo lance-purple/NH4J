@@ -551,7 +551,7 @@ register struct monst *mtmp;
             char buf[BUFSZ], genericwere[BUFSZ];
 
             Strcpy(genericwere, "creature");
-            numhelp = were_summon(mdat, FALSE, &numseen, genericwere);
+            numhelp = wereCreatureSummonsOtherMonsters(pmid4mon(mtmp), FALSE, &numseen, genericwere);
             if (youseeit) {
                 pline("%s summons help!", Monnam(mtmp));
                 if (numhelp > 0) {

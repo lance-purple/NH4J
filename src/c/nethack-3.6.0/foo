@@ -1,1 +1,0 @@
-vi include/extern.h src/cmd.c src/mon.c

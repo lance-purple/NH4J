@@ -2671,8 +2671,7 @@ E struct monst *FDECL(findpriest, (CHAR_P));
 E void FDECL(intemple, (int));
 E void FDECL(forget_temple_entry, (struct monst *));
 E void FDECL(priest_talk, (struct monst *));
-E struct monst *FDECL(mk_roamer, (struct permonst *, ALIGNTYP_P, XCHAR_P,
-                                  XCHAR_P, BOOLEAN_P));
+E struct monst *FDECL(mk_roamer, (struct permonst *, ALIGNTYP_P, XCHAR_P, XCHAR_P, BOOLEAN_P));
 E void FDECL(reset_hostility, (struct monst *));
 E boolean FDECL(in_your_sanctuary, (struct monst *, XCHAR_P, XCHAR_P));
 E void FDECL(ghod_hitsu, (struct monst *));
@@ -3426,7 +3425,7 @@ E void FDECL(were_change, (struct monst *));
 E int FDECL(counter_were, (int));
 E int FDECL(were_beastie, (int));
 E void FDECL(new_were, (struct monst *));
-E int FDECL(were_summon, (struct permonst *, BOOLEAN_P, int *, char *));
+E int FDECL(wereCreatureSummonsOtherMonsters, (int, BOOLEAN_P, int *, char *));
 E void NDECL(you_were);
 E void FDECL(you_unwere, (BOOLEAN_P));
 
