@@ -615,7 +615,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                 barehand_silver_rings++;
             if (uright && objects[uright->otyp].oc_material == SILVER)
                 barehand_silver_rings++;
-            if (barehand_silver_rings && mon_hates_silver(mon)) {
+            if (barehand_silver_rings && monsterHatesSilver(mon)) {
                 tmp += rnd(20);
                 silvermsg = TRUE;
             }
@@ -640,7 +640,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                 else
                     tmp = rnd(2);
                 if (objects[obj->otyp].oc_material == SILVER
-                    && mon_hates_silver(mon)) {
+                    && monsterHatesSilver(mon)) {
                     silvermsg = TRUE;
                     silverobj = TRUE;
                     /* if it will already inflict dmg, make it worse */
@@ -714,7 +714,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                     hittxt = TRUE;
                 }
                 if (objects[obj->otyp].oc_material == SILVER
-                    && mon_hates_silver(mon)) {
+                    && monsterHatesSilver(mon)) {
                     silvermsg = TRUE;
                     silverobj = TRUE;
                 }
@@ -972,7 +972,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                      * so we need another silver check.
                      */
                     if (objects[obj->otyp].oc_material == SILVER
-                        && mon_hates_silver(mon)) {
+                        && monsterHatesSilver(mon)) {
                         tmp += rnd(20);
                         silvermsg = TRUE;
                         silverobj = TRUE;

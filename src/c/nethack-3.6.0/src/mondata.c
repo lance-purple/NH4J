@@ -261,8 +261,8 @@ struct obj *obj; /* type == AT_WEAP, AT_SPIT */
 
 /* returns True if monster can attack at range */
 boolean
-ranged_attk(ptr)
-struct permonst *ptr;
+monsterHasRangedAttack(pmid)
+int pmid;
 {
     long atk_mask = (1L << AT_BREA) | (1L << AT_SPIT) | (1L << AT_GAZE);
 
@@ -271,7 +271,6 @@ struct permonst *ptr;
      *       || monsterHasAttackType(pmid, AT_MAGC));
      * but that's too slow -dlc
      */
-    int pmid = pmid4(ptr);
     int nAttacks = monsterAttacks(pmid);
     for (int i = 0; i < nAttacks; i++) {
         int atyp = monsterAttack(pmid, i).type;
@@ -286,22 +285,21 @@ struct permonst *ptr;
 
 /* True if specific monster is especially affected by silver weapons */
 boolean
-mon_hates_silver(mon)
+monsterHatesSilver(mon)
 struct monst *mon;
 {
-    return (boolean) (is_vampshifter(mon) || hates_silver(mon->data));
+    return (boolean) (is_vampshifter(mon) || monsterTypeHatesSilver(pmid4mon(mon)));
 }
 
 /* True if monster-type is especially affected by silver weapons */
 boolean
-hates_silver(ptr)
-register struct permonst *ptr;
+monsterTypeHatesSilver(pmid)
+int pmid;
 {
-    int pmid = pmid4(ptr);
     int mc = monsterClass(pmid);
     return (boolean) (isWere(pmid) || mc == S_VAMPIRE || isDemon(pmid)
-                      || ptr == &mons[PM_SHADE]
-                      || (mc == S_IMP && ptr != &mons[PM_TENGU]));
+                      || (pmid == PM_SHADE)
+                      || (mc == S_IMP && pmid != PM_TENGU));
 }
 
 /* True iff the type of monster pass through iron bars */

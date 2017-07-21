@@ -197,7 +197,7 @@ boolean verbose;    /* give message(s) even when you can't see what happened */
             }
         }
         if (objects[otmp->otyp].oc_material == SILVER
-            && mon_hates_silver(mtmp)) {
+            && monsterHatesSilver(mtmp)) {
             if (vis)
                 pline_The("silver sears %s flesh!", s_suffix(mon_nam(mtmp)));
             else if (verbose)

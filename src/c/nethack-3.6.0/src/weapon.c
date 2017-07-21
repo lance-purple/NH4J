@@ -327,7 +327,7 @@ struct monst *mon;
             bonus += rnd(4);
         if (is_axe(otmp) && isWooden(pmid4(ptr)))
             bonus += rnd(4);
-        if (objects[otyp].oc_material == SILVER && mon_hates_silver(mon))
+        if (objects[otyp].oc_material == SILVER && monsterHatesSilver(mon))
             bonus += rnd(20);
 
         /* if the weapon is going to get a double damage bonus, adjust
@@ -432,7 +432,7 @@ register struct monst *mtmp;
                   && (mtmp->misc_worn_check & W_ARMS) == 0)
                  || !objects[pwep[i]].oc_bimanual)
                 && (objects[pwep[i]].oc_material != SILVER
-                    || !mon_hates_silver(mtmp))) {
+                    || !monsterHatesSilver(mtmp))) {
                 if ((otmp = oselect(mtmp, pwep[i])) != 0
                     && (otmp == mwep || !mweponly)) {
                     propellor = otmp; /* force the monster to wield it */
@@ -556,7 +556,7 @@ register struct monst *mtmp;
             continue;
         if (((strong && !wearing_shield) || !objects[hwep[i]].oc_bimanual)
             && (objects[hwep[i]].oc_material != SILVER
-                || !mon_hates_silver(mtmp)))
+                || !monsterHatesSilver(mtmp)))
             Oselect(hwep[i]);
     }
 

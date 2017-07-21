@@ -1106,7 +1106,7 @@ struct obj *otmp;
         return 0;
     if (otyp == CORPSE && isRiderOfTheApocalypse(otmp->corpsenm))
         return 0;
-    if (objects[otyp].oc_material == SILVER && mon_hates_silver(mtmp)
+    if (objects[otyp].oc_material == SILVER && monsterHatesSilver(mtmp)
         && (otyp != BELL_OF_OPENING || !isCovetous(pmid4(mdat))))
         return 0;
 
