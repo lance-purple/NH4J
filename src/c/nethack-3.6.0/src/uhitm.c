@@ -140,7 +140,7 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
         if (mtmp->m_ap_type && !youHaveProtectionFromShapeChangers()
             /* applied pole-arm attack is too far to get stuck */
             && distanceSquaredToYou(mtmp->mx, mtmp->my) <= 2) {
-            if (!u.ustuck && !mtmp->mflee && dmgtype(mtmp->data, AD_STCK))
+            if (!u.ustuck && !mtmp->mflee && monsterTypeCanCauseDamageType(pmid4mon(mtmp), AD_STCK))
                 u.ustuck = mtmp;
         }
         wakeup(mtmp); /* always necessary; also un-mimics mimics */
@@ -2675,7 +2675,7 @@ struct monst *mtmp;
 {
     const char *fmt = "Wait!  That's %s!", *generic = "a monster", *what = 0;
 
-    if (!u.ustuck && !mtmp->mflee && dmgtype(mtmp->data, AD_STCK))
+    if (!u.ustuck && !mtmp->mflee && monsterTypeCanCauseDamageType(pmid4mon(mtmp), AD_STCK))
         u.ustuck = mtmp;
 
     if (youCannotSee()) {

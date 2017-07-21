@@ -612,7 +612,7 @@ struct monst *magr, *mdef;
         dx = currentX(), dy = currentY();
     lev = &levl[dx][dy];
     if (IS_ROCK(lev->typ) || closed_door(dx, dy) || IS_TREE(lev->typ)
-        /* not passes_bars(); engulfer isn't squeezing through */
+        /* not monsterPassesThroughBars(); engulfer isn't squeezing through */
         || (lev->typ == IRONBARS && !isWhirly(pmid4mon(magr))))
         return FALSE;
 
@@ -1391,11 +1391,11 @@ struct obj *obj;
     if (!mdef || !obj)
         return; /* just in case */
     /* AD_ACID is handled in passivemm */
-    if (dmgtype(mdef->data, AD_CORR))
+    if (monsterTypeCanCauseDamageType(pmid4mon(mdef), AD_CORR))
         dmgtyp = ERODE_CORRODE;
-    else if (dmgtype(mdef->data, AD_RUST))
+    else if (monsterTypeCanCauseDamageType(pmid4mon(mdef), AD_RUST))
         dmgtyp = ERODE_RUST;
-    else if (dmgtype(mdef->data, AD_FIRE))
+    else if (monsterTypeCanCauseDamageType(pmid4mon(mdef), AD_FIRE))
         dmgtyp = ERODE_BURN;
     else
         return;

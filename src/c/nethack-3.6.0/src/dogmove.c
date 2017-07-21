@@ -683,7 +683,7 @@ register int after; /* this is extra fast monster movement */
     allowflags = ALLOW_M | ALLOW_TRAPS | ALLOW_SSM | ALLOW_SANCT;
     if (passesThroughWalls(pmid4mon(mtmp)))
         allowflags |= (ALLOW_ROCK | ALLOW_WALL);
-    if (passes_bars(mtmp->data))
+    if (monsterPassesThroughBars(pmid4mon(mtmp)))
         allowflags |= ALLOW_BARS;
     if (throwsRocks(pmid4mon(mtmp)))
         allowflags |= ALLOW_ROCK;

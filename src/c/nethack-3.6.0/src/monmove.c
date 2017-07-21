@@ -1028,7 +1028,7 @@ not_special:
         flag |= NOTONL;
     if (passesThroughWalls(pmid))
         flag |= (ALLOW_WALL | ALLOW_ROCK);
-    if (passes_bars(ptr))
+    if (monsterPassesThroughBars(pmid))
         flag |= ALLOW_BARS;
     if (can_tunnel)
         flag |= ALLOW_DIG;
@@ -1308,7 +1308,7 @@ postmov:
                 }
             } else if (levl[mtmp->mx][mtmp->my].typ == IRONBARS) {
                 if (may_dig(mtmp->mx, mtmp->my)
-                    && (dmgtype(ptr, AD_RUST) || dmgtype(ptr, AD_CORR))) {
+                    && (monsterTypeCanCauseDamageType(pmid4(ptr), AD_RUST) || monsterTypeCanCauseDamageType(pmid4(ptr), AD_CORR))) {
                     if (canseemon(mtmp))
                         pline("%s eats through the iron bars.", Monnam(mtmp));
                     dissolve_bars(mtmp->mx, mtmp->my);

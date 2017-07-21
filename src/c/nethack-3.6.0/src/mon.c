@@ -221,7 +221,7 @@ static boolean KEEPTRAITS(register struct monst* mon)
         /* but he or she might have been polymorphed  */
      || (mon)->m_id == quest_status.leader_m_id
         /* special cancellation handling for these */
-     || (dmgtype((mon)->data, AD_SEDU) || dmgtype((mon)->data, AD_SSEX)));
+     || (monsterTypeCanCauseDamageType(pmid4mon(mon), AD_SEDU) || monsterTypeCanCauseDamageType(pmid4mon(mon), AD_SSEX)));
 }
 
 /* Creates a monster corpse, a "special" corpse, or nothing if it doesn't

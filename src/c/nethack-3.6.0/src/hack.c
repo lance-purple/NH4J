@@ -681,12 +681,12 @@ int mode;
         if (youCanPassThroughWalls() && may_passwall(x, y)) {
             ; /* do nothing */
         } else if (tmpr->typ == IRONBARS) {
-            if ((dmgtype(youmonst.data, AD_RUST)
-                 || dmgtype(youmonst.data, AD_CORR)) && mode == DO_MOVE
+            if ((monsterTypeCanCauseDamageType(pmid4you(), AD_RUST)
+                 || monsterTypeCanCauseDamageType(pmid4you(), AD_CORR)) && mode == DO_MOVE
                 && still_chewing(x, y)) {
                 return FALSE;
             }
-            if (!(youCanPassThroughWalls() || passes_bars(youmonst.data))) {
+            if (!(youCanPassThroughWalls() || monsterPassesThroughBars(pmid4you()))) {
                 if (iflags.mention_walls)
                     You("cannot pass through the bars.");
                 return FALSE;

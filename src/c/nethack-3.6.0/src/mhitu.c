@@ -1285,8 +1285,8 @@ register const struct Attack mattk;
             if (mtmp->mcan)
                 break;
             /* Continue below */
-        } else if (dmgtype(youmonst.data, AD_SEDU)
-                   || (SYSOPT_SEDUCE && dmgtype(youmonst.data, AD_SSEX))) {
+        } else if (monsterTypeCanCauseDamageType(pmid4you(), AD_SEDU)
+                   || (SYSOPT_SEDUCE && monsterTypeCanCauseDamageType(pmid4you(), AD_SSEX))) {
             pline("%s %s.", Monnam(mtmp),
                   mtmp->minvent
                       ? "brags about the goods some dungeon explorer provided"
@@ -1905,7 +1905,7 @@ register const struct Attack mattk;
         You("get %s!", isAnimal(pmid4mon(mtmp)) ? "regurgitated" : "expelled");
         if (flags.verbose
             && (isAnimal(pmid4mon(mtmp))
-                || (dmgtype(mtmp->data, AD_DGST) && youHaveSlowDigestion())))
+                || (monsterTypeCanCauseDamageType(pmid4mon(mtmp), AD_DGST) && youHaveSlowDigestion())))
             pline("Obviously %s doesn't like your taste.", mon_nam(mtmp));
         expels(mtmp, pmid4mon(mtmp), FALSE);
     }
@@ -1982,7 +1982,7 @@ boolean ufound;
         case AD_HALU:
             not_affected |= youCannotSee() || (currentMonsterNumber() == PM_BLACK_LIGHT
                                       || currentMonsterNumber() == PM_VIOLET_FUNGUS
-                                      || dmgtype(youmonst.data, AD_STUN));
+                                      || monsterTypeCanCauseDamageType(pmid4you(), AD_STUN));
             if (!not_affected) {
                 boolean chg;
                 if (!youAreHallucinating())

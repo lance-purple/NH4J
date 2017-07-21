@@ -1064,11 +1064,12 @@ register int pm;
         }
     /*FALLTHRU*/
     default: {
+        int pmid = pm;
         struct permonst *ptr = &mons[pm];
-        boolean conveys_STR = isGiant(pmid4(ptr));
+        boolean conveys_STR = isGiant(pmid);
         int i, count;
 
-        if (dmgtype(ptr, AD_STUN) || dmgtype(ptr, AD_HALU)
+        if (monsterTypeCanCauseDamageType(pmid, AD_STUN) || monsterTypeCanCauseDamageType(pmid, AD_HALU)
             || pm == PM_VIOLET_FUNGUS) {
             pline("Oh wow!  Great stuff!");
             (void) make_hallucinated(yourIntrinsicTimeout(HALLUC) + 200L, FALSE,

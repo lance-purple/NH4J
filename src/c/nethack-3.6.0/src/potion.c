@@ -1330,9 +1330,9 @@ boolean your_fault;
         case POT_SICKNESS:
             if (mon->data == &mons[PM_PESTILENCE])
                 goto do_healing;
-            if (dmgtype(mon->data, AD_DISE)
+            if (monsterTypeCanCauseDamageType(pmid4mon(mon), AD_DISE)
                 /* won't happen, see prior goto */
-                || dmgtype(mon->data, AD_PEST)
+                || monsterTypeCanCauseDamageType(pmid4mon(mon), AD_PEST)
                 /* most common case */
                 || resists_poison(mon)) {
                 if (canseemon(mon))

@@ -2062,7 +2062,7 @@ FDECL(can_blnd, (struct monst *, struct monst *, UCHAR_P, struct obj *));
 E boolean FDECL(monsterHasRangedAttack, (int));
 E boolean FDECL(monsterTypeHatesSilver, (int));
 E boolean FDECL(monsterHatesSilver, (struct monst *));
-E boolean FDECL(passes_bars, (struct permonst *));
+E boolean FDECL(monsterPassesThroughBars, (int));
 E boolean FDECL(can_blow, (struct monst *));
 E boolean FDECL(can_be_strangled, (struct monst *));
 E boolean FDECL(can_track, (struct permonst *));
@@ -2072,7 +2072,7 @@ E boolean FDECL(sticks, (struct permonst *));
 E boolean FDECL(cantvomit, (struct permonst *));
 E int FDECL(numberOfHorns, (int));
 /* E boolean FDECL(canseemon, (struct monst *)); */
-E boolean FDECL(dmgtype, (struct permonst *, int));
+E boolean FDECL(monsterTypeCanCauseDamageType, (int, int));
 E int FDECL(max_passive_dmg, (struct monst *, struct monst *));
 E boolean FDECL(same_race, (struct permonst *, struct permonst *));
 E int FDECL(monsndx, (struct permonst *));

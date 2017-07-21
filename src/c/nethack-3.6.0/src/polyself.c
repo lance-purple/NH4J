@@ -49,7 +49,8 @@ static void PROPSET(int propertyIndex, boolean on) {
 void
 set_uasmon()
 {
-    struct permonst *mdat = &mons[currentMonsterNumber()];
+    int pmid = currentMonsterNumber();
+    struct permonst *mdat = &mons[pmid];
 
     set_mon_data(&youmonst, mdat, 0);
 
@@ -71,13 +72,13 @@ set_uasmon()
     }
     /* resists_magm() takes wielded, worn, and carried equipment into
        into account; cheat and duplicate its monster-specific part */
-    PROPSET(ANTIMAGIC, (dmgtype(mdat, AD_MAGM)
-                        || mdat == &mons[PM_BABY_GRAY_DRAGON]
-                        || dmgtype(mdat, AD_RBRE)));
-    PROPSET(SICK_RES, (monsterClass(pmid4(mdat)) == S_FUNGUS || mdat == &mons[PM_GHOUL]));
+    PROPSET(ANTIMAGIC, (monsterTypeCanCauseDamageType(pmid, AD_MAGM)
+                        || pmid == PM_BABY_GRAY_DRAGON
+                        || monsterTypeCanCauseDamageType(pmid, AD_RBRE)));
+    PROPSET(SICK_RES, (monsterClass(pmid) == S_FUNGUS || pmid == PM_GHOUL));
 
-    PROPSET(STUNNED, (mdat == &mons[PM_STALKER] || isBat(pmid4(mdat))));
-    PROPSET(HALLUC_RES, dmgtype(mdat, AD_HALU));
+    PROPSET(STUNNED, (pmid == PM_STALKER || isBat(pmid)));
+    PROPSET(HALLUC_RES, monsterTypeCanCauseDamageType(pmid, AD_HALU));
     PROPSET(SEE_INVIS, perceivesTheInvisible(pmid4(mdat)));
     PROPSET(TELEPAT, isTelepathic(pmid4(mdat)));
     PROPSET(INFRAVISION, hasInfravision(pmid4(mdat)));

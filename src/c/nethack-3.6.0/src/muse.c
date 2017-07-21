@@ -1076,7 +1076,7 @@ struct monst *mtmp;
         return FALSE;
     if (in_your_sanctuary(mtmp, 0, 0))
         return FALSE;
-    if (dmgtype(mtmp->data, AD_HEAL)
+    if (monsterTypeCanCauseDamageType(pmid4mon(mtmp), AD_HEAL)
         && !uwep && !uarmu && !uarm && !uarmh
         && !uarms && !uarmg && !uarmc && !uarmf)
         return FALSE;
