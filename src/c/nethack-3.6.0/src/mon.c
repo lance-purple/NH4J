@@ -3569,7 +3569,7 @@ int pmid;
     boolean nonspecific = FALSE;
     boolean msg_given = FALSE;
 
-    if (!olfaction(youmonst.data)) {
+    if (!monsterHasSenseOfSmell(pmid4you())) {
         return FALSE;
     }
 

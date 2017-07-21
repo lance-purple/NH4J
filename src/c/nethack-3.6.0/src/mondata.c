@@ -1126,11 +1126,11 @@ const struct Attack mattk;
  * We're assuming all insects can smell at a distance too.
  */
 boolean
-olfaction(mdat)
-struct permonst *mdat;
+monsterHasSenseOfSmell(pmid)
+int pmid;
 {
-    int mc = monsterClass(pmid4(mdat));
-    if (isGolem(pmid4(mdat))
+    int mc = monsterClass(pmid);
+    if (isGolem(pmid)
         || mc == S_EYE /* spheres  */
         || mc == S_JELLY || mc == S_PUDDING
         || mc == S_BLOB  || mc == S_VORTEX

@@ -2087,7 +2087,7 @@ E const char *FDECL(locomotionVerb, (int, const char *));
 E const char *FDECL(staggerVerb, (int, const char *));
 E const char *FDECL(fireDescription, (int, const struct Attack));
 E const struct permonst *FDECL(raceptr, (struct monst *));
-E boolean FDECL(olfaction, (struct permonst *));
+E boolean FDECL(monsterHasSenseOfSmell, (int));
 
 E int FDECL(emitsLightWithRange, (int));
 E boolean FDECL(isFloater, (int));
