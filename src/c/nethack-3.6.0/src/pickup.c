@@ -253,7 +253,7 @@ boolean remotely;
         || !touchPetrifies(obj->corpsenm) || youResistStoning())
         return FALSE;
 
-    if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM)) {
+    if (monsterPolymorphsWhenStoned(pmid4you()) && polymon(PM_STONE_GOLEM)) {
         display_nhwindow(WIN_MESSAGE, FALSE); /* --More-- */
         return FALSE;
     }

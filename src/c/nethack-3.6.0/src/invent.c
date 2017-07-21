@@ -2785,7 +2785,7 @@ boolean picked_some;
                               ? "They're"
                               : "It's",
                       corpse_xname(otmp, (const char *) 0, CXN_ARTICLE),
-                      poly_when_stoned(youmonst.data)
+                      monsterPolymorphsWhenStoned(pmid4you())
                           ? ""
                           : ", unfortunately");
                 feel_cockatrice(otmp, FALSE);
@@ -2860,14 +2860,14 @@ boolean force_touch;
         /* "the <cockatrice> corpse" */
         Strcpy(kbuf, corpse_xname(otmp, (const char *) 0, CXN_PFX_THE));
 
-        if (poly_when_stoned(youmonst.data))
+        if (monsterPolymorphsWhenStoned(pmid4you()))
             You("touched %s with your bare %s.", kbuf,
                 makeplural(body_part(HAND)));
         else
             pline("Touching %s is a fatal mistake...", kbuf);
         /* normalize body shape here; hand, not body_part(HAND) */
         Sprintf(kbuf, "touching %s bare-handed", killer_xname(otmp));
-        /* will call polymon() for the poly_when_stoned() case */
+        /* will call polymon() for the monsterPolymorphsWhenStoned() case */
         instapetrify(kbuf);
     }
 }

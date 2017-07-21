@@ -2053,7 +2053,7 @@ E boolean FDECL(monsterHasAttackWithDamageType, (int, const int, const int));
 E const struct Attack FDECL(monsterAttackWithDamageType, (int, const int, const int));
 E boolean FDECL(monsterHasAttackType, (int, int));
 E boolean FDECL(monsterDoesNotAttack, (int));
-E boolean FDECL(poly_when_stoned, (struct permonst *));
+E boolean FDECL(monsterPolymorphsWhenStoned, (int));
 E boolean FDECL(resists_drli, (struct monst *));
 E boolean FDECL(resists_magm, (struct monst *));
 E boolean FDECL(resists_blnd, (struct monst *));

@@ -1320,8 +1320,8 @@ struct obj *otmp;
         || !touchPetrifies(otmp->corpsenm) || youResistStoning())
         return FALSE;
 
-#if 0   /* no poly_when_stoned() critter has theft capability */
-    if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM)) {
+#if 0   /* no monsterPolymorphsWhenStoned() critter has theft capability */
+    if (monsterPolymorphsWhenStoned(pmid4you()) && polymon(PM_STONE_GOLEM)) {
         display_nhwindow(WIN_MESSAGE, FALSE);   /* --More-- */
         return TRUE;
     }
@@ -2393,7 +2393,7 @@ boolean wep_was_destroyed;
                 || (protector == W_ARMH && !uarmh)
                 || (protector == (W_ARMC | W_ARMG) && (!uarmc || !uarmg))) {
                 if (!youResistStoning()
-                    && !(poly_when_stoned(youmonst.data)
+                    && !(monsterPolymorphsWhenStoned(pmid4you())
                          && polymon(PM_STONE_GOLEM))) {
                     done_in_by(mon, STONING); /* "You turn to stone..." */
                     return 2;

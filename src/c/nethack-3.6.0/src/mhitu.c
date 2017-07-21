@@ -1191,7 +1191,7 @@ register const struct Attack mattk;
                     || (flags.moonphase == NEW_MOON && !have_lizard())) {
                 do_stone:
                     if (!youAreTurningToStone() && !youResistStoning()
-                        && !(poly_when_stoned(youmonst.data)
+                        && !(monsterPolymorphsWhenStoned(pmid4you())
                              && polymon(PM_STONE_GOLEM))) {
                         javaString kname = monsterTypeName(pmid4mon(mtmp));
 
@@ -2081,7 +2081,7 @@ register const struct Attack mattk;
             && !youResistStoning()) {
             You("meet %s gaze.", s_suffix(mon_nam(mtmp)));
             stop_occupation();
-            if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))
+            if (monsterPolymorphsWhenStoned(pmid4you()) && polymon(PM_STONE_GOLEM))
                 break;
             You("turn to stone...");
             killer.format = KILLED_BY;
@@ -2649,7 +2649,7 @@ register const struct Attack mattk;
             && (protector == 0L
                 || (protector != ~0L
                     && (wornitems & protector) != protector))) {
-            if (poly_when_stoned(mtmp->data)) {
+            if (monsterPolymorphsWhenStoned(pmid4mon(mtmp))) {
                 mon_to_stone(mtmp);
                 return 1;
             }

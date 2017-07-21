@@ -485,7 +485,7 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
 		releaseJavaString(monsterName);
 	    }
         } else {
-            /* no need to check for poly_when_stoned or youResistStoning;
+            /* no need to check for monsterPolymorphsWhenStoned or youResistStoning;
                mind flayers don't have those capabilities */
             if (visflag)
                 pline("%s turns to stone!", Monnam(magr));
@@ -641,7 +641,7 @@ register int pm;
     (void) maybe_cannibal(pm, TRUE);
     if (fleshPetrifies(pm)) {
         if (!youResistStoning()
-            && !(poly_when_stoned(youmonst.data)
+            && !(monsterPolymorphsWhenStoned(pmid4you())
                  && polymon(PM_STONE_GOLEM))) {
 	    javaString monsterName = monsterTypeName(pm);
             Sprintf(killer.name, "tasting %s meat", monsterName.c_str);
@@ -1555,7 +1555,7 @@ struct obj *otmp;
     long rotted = 0L;
     int retcode = 0;
     boolean stoneable = (fleshPetrifies(mnum) && !youResistStoning()
-                         && !poly_when_stoned(youmonst.data));
+                         && !monsterPolymorphsWhenStoned(pmid4you()));
 
     /* KMH, conduct */
     if (!isVeganOption(mnum))
@@ -2146,7 +2146,7 @@ struct obj *otmp;
     case EGG:
         if (fleshPetrifies(otmp->corpsenm)) {
             if (!youResistStoning()
-                && !(poly_when_stoned(youmonst.data)
+                && !(monsterPolymorphsWhenStoned(pmid4you())
                      && polymon(PM_STONE_GOLEM))) {
                 if (!youAreTurningToStone()) {
 		    javaString corpseName = monsterTypeName(otmp->corpsenm);
@@ -2229,7 +2229,7 @@ struct obj *otmp;
     if (cadaver || otmp->otyp == EGG || otmp->otyp == TIN) {
         /* These checks must match those in eatcorpse() */
         stoneorslime = (fleshPetrifies(mnum) && !youResistStoning()
-                        && !poly_when_stoned(youmonst.data));
+                        && !monsterPolymorphsWhenStoned(pmid4you()));
 
         if (mnum == PM_GREEN_SLIME || otmp->otyp == GLOB_OF_GREEN_SLIME)
             stoneorslime = (!youAreUnchanging() && !isSlimeproof(pmid4you()));

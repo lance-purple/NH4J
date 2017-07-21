@@ -234,7 +234,7 @@ boolean quietly;
 
     if (touchPetrifies(pmid4(pd)) && !resists_ston(magr)) {
         if (which_armor(magr, W_ARMG) != 0) {
-            if (poly_when_stoned(pa)) {
+            if (monsterPolymorphsWhenStoned(pmid4mon(magr))) {
                 mon_to_stone(magr);
                 return MM_HIT; /* no damage during the polymorph */
             }
@@ -750,7 +750,7 @@ register const struct Attack mattk;
 
         if (protector == 0L
             || (protector != ~0L && (wornitems & protector) != protector)) {
-            if (poly_when_stoned(pa)) {
+            if (monsterPolymorphsWhenStoned(pmid4mon(magr))) {
                 mon_to_stone(magr);
                 return MM_HIT; /* no damage during the polymorph */
             }
@@ -995,7 +995,7 @@ register const struct Attack mattk;
         /* may die from the acid if it eats a stone-curing corpse */
         if (munstone(mdef, FALSE))
             goto post_stone;
-        if (poly_when_stoned(pd)) {
+        if (monsterPolymorphsWhenStoned(pmid4mon(mdef))) {
             mon_to_stone(mdef);
             tmp = 0;
             break;

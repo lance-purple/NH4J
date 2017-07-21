@@ -811,7 +811,7 @@ register struct monst *mtmp;
                     } else if (grow) {
                         ptr = grow_up(mtmp, (struct monst *) 0);
                     } else if (mstone) {
-                        if (poly_when_stoned(ptr)) {
+                        if (monsterPolymorphsWhenStoned(pmid4mon(mtmp))) {
                             mon_to_stone(mtmp);
                             ptr = mtmp->data;
                         } else if (!resists_ston(mtmp)) {
@@ -2315,7 +2315,7 @@ cleanup:
 }
 
 /* changes the monster into a stone monster of the same type
-   this should only be called when poly_when_stoned() is true */
+   this should only be called when monsterPolymorphsWhenStoned() is true */
 void
 mon_to_stone(mtmp)
 struct monst *mtmp;

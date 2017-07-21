@@ -1691,7 +1691,7 @@ struct obj *obj;
 
 	int pmid = corpse->corpsenm;
 	javaString monsterName = monsterTypeName(pmid);
-        if (poly_when_stoned(youmonst.data)) {
+        if (monsterPolymorphsWhenStoned(pmid4you())) {
             You("tin %s without wearing gloves.",
                 an(monsterName.c_str));
 	}
@@ -2675,7 +2675,7 @@ struct obj *obj;
                     if (otmp->otyp == CORPSE
                         && touchPetrifies(otmp->corpsenm) && !uarmg
                         && !youResistStoning()
-                        && !(poly_when_stoned(youmonst.data)
+                        && !(monsterPolymorphsWhenStoned(pmid4you())
                              && polymon(PM_STONE_GOLEM))) {
                         char kbuf[BUFSZ];
 

@@ -70,7 +70,7 @@ struct obj *otmp;
         char kbuf[BUFSZ];
 
         You("touch %s.", mon_nam(mtmp));
-        if (!(poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))) {
+        if (!(monsterPolymorphsWhenStoned(pmid4you()) && polymon(PM_STONE_GOLEM))) {
             javaString monsterName = monsterTypeName(pmid4mon(mtmp));
             Sprintf(kbuf, "attempting to saddle %s", an(monsterName.c_str));
             releaseJavaString(monsterName);

@@ -2655,7 +2655,7 @@ const char *str;
 {
     if (youResistStoning())
         return;
-    if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))
+    if (monsterPolymorphsWhenStoned(pmid4you()) && polymon(PM_STONE_GOLEM))
         return;
     You("turn to stone...");
     killer.format = KILLED_BY;
@@ -2671,7 +2671,7 @@ boolean byplayer;
 {
     if (resists_ston(mon))
         return;
-    if (poly_when_stoned(mon->data)) {
+    if (monsterPolymorphsWhenStoned(pmid4mon(mon))) {
         mon_to_stone(mon);
         return;
     }
@@ -4110,7 +4110,7 @@ struct trap *ttmp;
             makeplural(body_part(HAND)));
 	releaseJavaString(monsterName);
 
-        if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM)) {
+        if (monsterPolymorphsWhenStoned(pmid4you()) && polymon(PM_STONE_GOLEM)) {
             display_nhwindow(WIN_MESSAGE, FALSE);
         } else {
             char kbuf[BUFSZ];

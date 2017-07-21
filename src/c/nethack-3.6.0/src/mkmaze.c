@@ -441,7 +441,7 @@ fixup_special()
             y = somey(croom);
             if (goodpos(x, y, (struct monst *) 0, 0)) {
                 otmp = mk_tt_object(STATUE, x, y);
-                while (otmp && (poly_when_stoned(&mons[otmp->corpsenm])
+                while (otmp && (monsterPolymorphsWhenStoned(otmp->corpsenm)
                                 || monsterTypeResistsStoning(otmp->corpsenm))) {
                     /* set_corpsenm() handles weight too */
                     set_corpsenm(otmp, rndmonnum());
@@ -457,7 +457,7 @@ fixup_special()
                            somex(croom), somey(croom), CORPSTAT_NONE);
         if (otmp) {
             while (monsterTypeResistsStoning(otmp->corpsenm)
-                   || poly_when_stoned(&mons[otmp->corpsenm])) {
+                   || monsterPolymorphsWhenStoned(otmp->corpsenm)) {
                 /* set_corpsenm() handles weight too */
                 set_corpsenm(otmp, rndmonnum());
             }

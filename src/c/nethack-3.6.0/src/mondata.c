@@ -71,11 +71,11 @@ int atyp;
 
 /* does monster-type transform into something else when petrified? */
 boolean
-poly_when_stoned(ptr)
-struct permonst *ptr;
+monsterPolymorphsWhenStoned(pmid)
+int pmid;
 {
     /* non-stone golems turn into stone golems unless latter is genocided */
-    return (boolean) (isGolem(pmid4(ptr)) && ptr != &mons[PM_STONE_GOLEM]
+    return (boolean) (isGolem(pmid) && (pmid != PM_STONE_GOLEM)
                       && !(mvitals[PM_STONE_GOLEM].mvflags & G_GENOD));
     /* allow G_EXTINCT */
 }
