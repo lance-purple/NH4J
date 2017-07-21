@@ -374,26 +374,25 @@ int pmid;
 
 /* creature will slide out of armor */
 boolean
-sliparm(ptr)
-register struct permonst *ptr;
+slipsOutOfArmor(pmid)
+int pmid;
 {
-    return (boolean) (isWhirly(pmid4(ptr)) || monsterSize(pmid4(ptr)) <= MZ_SMALL
-                      || isNoncorporeal(pmid4(ptr)));
+    return (boolean) (isWhirly(pmid) || monsterSize(pmid) <= MZ_SMALL || isNoncorporeal(pmid));
 }
 
 /* creature will break out of armor */
 boolean
-breakarm(ptr)
-register struct permonst *ptr;
+breaksOutOfArmor(pmid)
+int pmid;
 {
-    if (sliparm(ptr))
+    if (slipsOutOfArmor(pmid))
         return FALSE;
 
-    return (boolean) (isBigMonster(pmid4(ptr))
-                      || (monsterSize(pmid4(ptr)) > MZ_SMALL && !isHumanoid(pmid4(ptr)))
+    return (boolean) (isBigMonster(pmid)
+                      || (monsterSize(pmid) > MZ_SMALL && !isHumanoid(pmid))
                       /* special cases of humanoids that cannot wear suits */
-                      || ptr == &mons[PM_MARILITH]
-                      || ptr == &mons[PM_WINGED_GARGOYLE]);
+                      || pmid == PM_MARILITH
+                      || pmid == PM_WINGED_GARGOYLE);
 }
 
 /* creature sticks other creatures it hits */
