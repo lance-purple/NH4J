@@ -104,12 +104,12 @@ vomiting_dialogue()
         break;
     case 2:
         txt = vomiting_texts[4];
-        if (cantvomit(youmonst.data))
+        if (monsterCannotVomit(pmid4you()))
             txt = "gag uncontrolably.";
         break;
     case 0:
         stop_occupation();
-        if (!cantvomit(youmonst.data))
+        if (!monsterCannotVomit(pmid4you()))
             morehungry(20);
         vomit();
         break;

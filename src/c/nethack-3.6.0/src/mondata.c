@@ -363,13 +363,13 @@ struct monst *mon;
 
 /* returns True if monster can track well */
 boolean
-can_track(ptr)
-register struct permonst *ptr;
+monsterCanTrack(pmid)
+int pmid;
 {
     if (uwep && uwep->oartifact == ART_EXCALIBUR)
         return TRUE;
     else
-        return (boolean) hasEyes(pmid4(ptr));
+        return (boolean) hasEyes(pmid);
 }
 
 /* creature will slide out of armor */
@@ -409,13 +409,13 @@ register struct permonst *ptr;
 
 /* some monster-types can't vomit */
 boolean
-cantvomit(ptr)
-struct permonst *ptr;
+monsterCannotVomit(pmid)
+int pmid;
 {
     /* rats and mice are incapable of vomiting;
        which other creatures have the same limitation? */
-    if (monsterClass(pmid4(ptr)) == S_RODENT && ptr != &mons[PM_ROCK_MOLE]
-        && ptr != &mons[PM_WOODCHUCK])
+    if (monsterClass(pmid) == S_RODENT && pmid != PM_ROCK_MOLE
+        && pmid != PM_WOODCHUCK)
         return TRUE;
     return FALSE;
 }

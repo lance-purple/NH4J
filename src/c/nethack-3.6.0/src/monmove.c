@@ -867,7 +867,7 @@ not_special:
                     > ((ygold = findgold(invent)) ? ygold->quan : 0L))))
             appr = -1;
 
-        if (!should_see && can_track(ptr)) {
+        if (!should_see && monsterCanTrack(pmid)) {
             register coord *cp;
 
             cp = gettrack(omx, omy);

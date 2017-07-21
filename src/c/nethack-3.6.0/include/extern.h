@@ -2065,11 +2065,11 @@ E boolean FDECL(monsterHatesSilver, (struct monst *));
 E boolean FDECL(monsterPassesThroughBars, (int));
 E boolean FDECL(can_blow, (struct monst *));
 E boolean FDECL(can_be_strangled, (struct monst *));
-E boolean FDECL(can_track, (struct permonst *));
+E boolean FDECL(monsterCanTrack, (int));
 E boolean FDECL(breakarm, (struct permonst *));
 E boolean FDECL(sliparm, (struct permonst *));
 E boolean FDECL(sticks, (struct permonst *));
-E boolean FDECL(cantvomit, (struct permonst *));
+E boolean FDECL(monsterCannotVomit, (int));
 E int FDECL(numberOfHorns, (int));
 /* E boolean FDECL(canseemon, (struct monst *)); */
 E boolean FDECL(monsterTypeCanCauseDamageType, (int, int));
