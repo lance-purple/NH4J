@@ -15,6 +15,7 @@ E JavaVM* java_vm;
 
 #define CONTEXT_CLASS "rec/games/roguelike/nh4j/Context"
 #define MONSTER_DATA_CLASS "rec/games/roguelike/nh4j/MonsterData"
+#define MONSTER_RANDOMIZER_CLASS "rec/games/roguelike/nh4j/MonsterRandomizer"
 #define MONSTER_TYPE_CLASS "rec/games/roguelike/nh4j/MonsterType"
 #define NOVEL_CLASS "rec/games/roguelike/nh4j/TributeNovel"
 #define OCCUPIED_ROOMS_CLASS "rec/games/roguelike/nh4j/OccupiedRooms"
@@ -1579,6 +1580,11 @@ E void FDECL(setMonsterFlag3, (int, long));
 E void FDECL(unsetMonsterFlag3, (int, long));
 
 E int FDECL(monsterColor, (int));
+
+E int FDECL(monsterRandomizerChoiceCount, ());
+E void FDECL(setMonsterRandomizerChoiceCount, (int));
+E void FDECL(increaseMonsterRandomizerChoiceCount, (int));
+E void FDECL(decreaseMonsterRandomizerChoiceCount, (int));
 
 /* ### invent.c ### */
 

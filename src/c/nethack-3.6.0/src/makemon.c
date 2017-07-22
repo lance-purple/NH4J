@@ -1425,9 +1425,8 @@ register struct permonst *ptr;
 }
 
 static NEARDATA struct {
-    int choice_count;
     char mchoices[SPECIAL_PM]; /* value range is 0..127 */
-} rndmonst_state = { -1, { 0 } };
+} rndmonst_state = { { 0 } };
 
 /* select a random monster type */
 struct permonst *
@@ -1439,12 +1438,13 @@ rndmonst()
     if (currentDungeonNumber() == quest_dnum && rn2(7) && (ptr = qt_montype()) != 0)
         return ptr;
 
-    if (rndmonst_state.choice_count < 0) { /* need to recalculate */
+    if (monsterRandomizerChoiceCount() < 0) { /* need to recalculate */
         int zlevel, minmlev, maxmlev;
         boolean elemlevel;
         boolean upper;
 
-        rndmonst_state.choice_count = 0;
+        setMonsterRandomizerChoiceCount(0);
+
         /* look for first common monster */
         for (mndx = LOW_PM; mndx < SPECIAL_PM; mndx++) {
             if (!uncommon(mndx))
@@ -1484,25 +1484,25 @@ rndmonst()
             ct = (int) (geno & G_FREQ) + align_shift(ptr);
             if (ct < 0 || ct > 127)
                 panic("rndmonst: bad count [#%d: %d]", mndx, ct);
-            rndmonst_state.choice_count += ct;
+            increaseMonsterRandomizerChoiceCount(ct);
             rndmonst_state.mchoices[mndx] = (char) ct;
         }
         /*
-         *      Possible modification:  if choice_count is "too low",
+         *      Possible modification:  if choice count is "too low",
          *      expand minmlev..maxmlev range and try again.
          */
-    } /* choice_count+mchoices[] recalc */
+    } /* choice count+mchoices[] recalc */
 
-    if (rndmonst_state.choice_count <= 0) {
+    if (monsterRandomizerChoiceCount() <= 0) {
         /* maybe no common mons left, or all are too weak or too strong */
-        debugpline1("rndmonst: choice_count=%d", rndmonst_state.choice_count);
+        debugpline1("randomMonsterChoiceCount=%d", randomMonsterChoiceCount());
         return (struct permonst *) 0;
     }
 
     /*
      *  Now, select a monster at random.
      */
-    ct = rnd(rndmonst_state.choice_count);
+    ct = rnd(monsterRandomizerChoiceCount());
     for (mndx = LOW_PM; mndx < SPECIAL_PM; mndx++)
         if ((ct -= (int) rndmonst_state.mchoices[mndx]) <= 0)
             break;
@@ -1522,9 +1522,9 @@ int mndx; /* particular species that can no longer be created */
 {
     /* cached selection info is out of date */
     if (mndx == NON_PM) {
-        rndmonst_state.choice_count = -1; /* full recalc needed */
+        setMonsterRandomizerChoiceCount(-1); /* full recalc needed */
     } else if (mndx < SPECIAL_PM) {
-        rndmonst_state.choice_count -= rndmonst_state.mchoices[mndx];
+        decreaseMonsterRandomizerChoiceCount(rndmonst_state.mchoices[mndx]);
         rndmonst_state.mchoices[mndx] = 0;
     } /* note: safe to ignore extinction of unique monsters */
 }

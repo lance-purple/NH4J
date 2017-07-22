@@ -2808,4 +2808,20 @@ extern int monsterColor(int pmid) {
     return javaGetIntFromInt(MONSTER_TYPE_CLASS, "color", pmid);
 }
 
+extern int monsterRandomizerChoiceCount() {
+    return javaGetInt(MONSTER_RANDOMIZER_CLASS, "choiceCount");
+}
+
+extern void setMonsterRandomizerChoiceCount(int c) {
+    return javaSetInt(MONSTER_RANDOMIZER_CLASS, "setChoiceCount", c);
+}
+
+extern void increaseMonsterRandomizerChoiceCount(int c) {
+    return javaSetInt(MONSTER_RANDOMIZER_CLASS, "increaseChoiceCount", c);
+}
+
+extern void decreaseMonsterRandomizerChoiceCount(int c) {
+    return javaSetInt(MONSTER_RANDOMIZER_CLASS, "decreaseChoiceCount", c);
+}
+
 /*hacklib.c*/
