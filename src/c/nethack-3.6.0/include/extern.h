@@ -1585,6 +1585,8 @@ E int FDECL(monsterRandomizerChoiceCount, ());
 E void FDECL(setMonsterRandomizerChoiceCount, (int));
 E void FDECL(increaseMonsterRandomizerChoiceCount, (int));
 E void FDECL(decreaseMonsterRandomizerChoiceCount, (int));
+E int FDECL(monsterRandomizerChoices, (int));
+E void FDECL(setMonsterRandomizerChoices, (int, int));
 
 /* ### invent.c ### */
 

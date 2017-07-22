@@ -2824,4 +2824,12 @@ extern void decreaseMonsterRandomizerChoiceCount(int c) {
     return javaSetInt(MONSTER_RANDOMIZER_CLASS, "decreaseChoiceCount", c);
 }
 
+extern int monsterRandomizerChoices(int pmid) {
+    return javaGetIntFromInt(MONSTER_RANDOMIZER_CLASS, "choices", pmid);
+}
+
+extern void setMonsterRandomizerChoices(int pmid, int c) {
+    return javaSetIntFromInt(MONSTER_RANDOMIZER_CLASS, "setChoices", pmid, c);
+}
+
 /*hacklib.c*/

@@ -1424,10 +1424,6 @@ register struct permonst *ptr;
     return alshift;
 }
 
-static NEARDATA struct {
-    char mchoices[SPECIAL_PM]; /* value range is 0..127 */
-} rndmonst_state = { { 0 } };
-
 /* select a random monster type */
 struct permonst *
 rndmonst()
@@ -1449,7 +1445,7 @@ rndmonst()
         for (mndx = LOW_PM; mndx < SPECIAL_PM; mndx++) {
             if (!uncommon(mndx))
                 break;
-            rndmonst_state.mchoices[mndx] = 0;
+	    setMonsterRandomizerChoices(mndx, 0);
         }
         if (mndx == SPECIAL_PM) {
             /* evidently they've all been exterminated */
@@ -1469,7 +1465,7 @@ rndmonst()
          */
         for ( ; mndx < SPECIAL_PM; mndx++) { /* (`mndx' initialized above) */
             ptr = &mons[mndx];
-            rndmonst_state.mchoices[mndx] = 0;
+	    setMonsterRandomizerChoices(mndx, 0);
 	    int geno = monsterGenerationMask(pmid4(ptr));
             if (tooweak(mndx, minmlev) || toostrong(mndx, maxmlev))
                 continue;
@@ -1485,7 +1481,7 @@ rndmonst()
             if (ct < 0 || ct > 127)
                 panic("rndmonst: bad count [#%d: %d]", mndx, ct);
             increaseMonsterRandomizerChoiceCount(ct);
-            rndmonst_state.mchoices[mndx] = (char) ct;
+	    setMonsterRandomizerChoices(mndx, ct);
         }
         /*
          *      Possible modification:  if choice count is "too low",
@@ -1503,9 +1499,12 @@ rndmonst()
      *  Now, select a monster at random.
      */
     ct = rnd(monsterRandomizerChoiceCount());
-    for (mndx = LOW_PM; mndx < SPECIAL_PM; mndx++)
-        if ((ct -= (int) rndmonst_state.mchoices[mndx]) <= 0)
+    for (mndx = LOW_PM; mndx < SPECIAL_PM; mndx++) {
+        ct -= monsterRandomizerChoices(mndx);
+        if (ct <= 0) {
             break;
+	}
+    }
 
     if (mndx == SPECIAL_PM || uncommon(mndx)) { /* shouldn't happen */
         impossible("rndmonst: bad `mndx' [#%d]", mndx);
@@ -1524,8 +1523,8 @@ int mndx; /* particular species that can no longer be created */
     if (mndx == NON_PM) {
         setMonsterRandomizerChoiceCount(-1); /* full recalc needed */
     } else if (mndx < SPECIAL_PM) {
-        decreaseMonsterRandomizerChoiceCount(rndmonst_state.mchoices[mndx]);
-        rndmonst_state.mchoices[mndx] = 0;
+        decreaseMonsterRandomizerChoiceCount(monsterRandomizerChoices(mndx));
+        setMonsterRandomizerChoices(mndx, 0);
     } /* note: safe to ignore extinction of unique monsters */
 }
 
