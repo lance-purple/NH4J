@@ -313,9 +313,9 @@ public class MonsterType {
 
 	private static void initializeBlobs() {
 			
-		MonsterType.of(MC.BLOB, PM.ACID_BLOB, "acid blob", 2).level(1).move(3).ac(8).mr(0).neutral().freq(2).genocidable()
-				.weight(30).nutrition(10).sound(MS.SILENT).size(MZ.TINY).resists(MR.SLEEP, MR.POISON, MR.ACID, MR.STONE)
-				.conveys(MR.STONE)
+		MonsterType.of(MC.BLOB, PM.ACID_BLOB, "acid blob", 2).level(1).move(3).ac(8).mr(0).neutral().freq(2)
+				.genocidable().attack(AT.NONE, AD.ACID, 1, Dice.D8).weight(30).nutrition(10).sound(MS.SILENT)
+				.size(MZ.TINY).resists(MR.SLEEP, MR.POISON, MR.ACID, MR.STONE).conveys(MR.STONE)
 				.flags1(M1.ACID, M1.AMORPHOUS, M1.BREATHLESS, M1.MINDLESS, M1.NOEYES, M1.NOHANDS, M1.NOHEAD, M1.NOLIMBS)
 				.flags2(M2.NEUTER, M2.WANDER).color(CLR.GREEN).add();
 
@@ -326,8 +326,9 @@ public class MonsterType {
 				.flags2(M2.HOSTILE, M2.NEUTER, M2.WANDER).color(CLR.WHITE).add();
 
 		MonsterType.of(MC.BLOB, PM.GELATINOUS_CUBE, "gelatinous cube", 8).level(6).move(6).ac(8).mr(0).neutral().freq(2)
-				.genocidable().attack(AT.TUCH, AD.PLYS, 2, Dice.D4).weight(600).nutrition(150).sound(MS.SILENT)
-				.size(MZ.LARGE).resists(MR.FIRE, MR.COLD, MR.SLEEP, MR.ELEC, MR.POISON, MR.ACID, MR.STONE)
+				.genocidable().attack(AT.TUCH, AD.PLYS, 2, Dice.D4).attack(AT.NONE, AD.PLYS, 1, Dice.D4).weight(600)
+				.nutrition(150).sound(MS.SILENT).size(MZ.LARGE)
+				.resists(MR.FIRE, MR.COLD, MR.SLEEP, MR.ELEC, MR.POISON, MR.ACID, MR.STONE)
 				.conveys(MR.FIRE, MR.COLD, MR.SLEEP, MR.ELEC).flags1(M1.ACID, M1.CARNIVORE, M1.HERBIVORE, M1.MINDLESS,
 						M1.NOEYES, M1.NOHANDS, M1.NOHEAD, M1.NOLIMBS, M1.OMNIVORE)
 				.flags2(M2.HOSTILE, M2.NEUTER, M2.WANDER).color(CLR.CYAN).add();
@@ -337,14 +338,15 @@ public class MonsterType {
 		
 		MonsterType.of(MC.COCKATRICE, PM.CHICKATRICE, "chickatrice", 7).level(4).move(4).ac(8).mr(30).neutral().freq(1)
 				.smallGroups().genocidable().attack(AT.BITE, AD.PHYS, 1, Dice.D2).attack(AT.TUCH, AD.STON, 0, Dice.D0)
-				.weight(10).nutrition(10).sound(MS.HISS).size(MZ.TINY).resists(MR.POISON, MR.STONE)
-				.conveys(MR.POISON, MR.STONE)
+				.attack(AT.NONE, AD.STON, 0, Dice.D0).weight(10).nutrition(10).sound(MS.HISS).size(MZ.TINY)
+				.resists(MR.POISON, MR.STONE).conveys(MR.POISON, MR.STONE)
 				.flags1(M1.ANIMAL, M1.CARNIVORE, M1.HERBIVORE, M1.NOHANDS, M1.NOLIMBS, M1.OMNIVORE).flags2(M2.HOSTILE)
 				.flags3(M3.INFRAVISIBLE).color(CLR.BROWN).add();
 
 		MonsterType.of(MC.COCKATRICE, PM.COCKATRICE, "cockatrice", 8).level(5).move(6).ac(6).mr(30).neutral().freq(5)
-				.genocidable().attack(AT.BITE, AD.PHYS, 1, Dice.D3).attack(AT.TUCH, AD.STON, 0, Dice.D0).weight(30)
-				.nutrition(30).sound(MS.HISS).size(MZ.SMALL).resists(MR.POISON, MR.STONE).conveys(MR.POISON, MR.STONE)
+				.genocidable().attack(AT.BITE, AD.PHYS, 1, Dice.D3).attack(AT.TUCH, AD.STON, 0, Dice.D0)
+				.attack(AT.NONE, AD.STON, 0, Dice.D0).weight(30).nutrition(30).sound(MS.HISS).size(MZ.SMALL)
+				.resists(MR.POISON, MR.STONE).conveys(MR.POISON, MR.STONE)
 				.flags1(M1.ANIMAL, M1.CARNIVORE, M1.HERBIVORE, M1.NOHANDS, M1.NOLIMBS, M1.OMNIVORE, M1.OVIPAROUS)
 				.flags2(M2.HOSTILE).flags3(M3.INFRAVISIBLE).color(CLR.YELLOW).add();
 
@@ -447,8 +449,8 @@ public class MonsterType {
 				.flags2(M2.HOSTILE, M2.NEUTER).color(CLR.GRAY).add();
 
 		MonsterType.of(MC.EYE, PM.FLOATING_EYE, "floating eye", 3).level(2).move(1).ac(9).mr(10).neutral().freq(5)
-				.genocidable().weight(10).nutrition(10).sound(MS.SILENT).size(MZ.SMALL)
-				.flags1(M1.AMPHIBIOUS, M1.FLY, M1.NOHANDS, M1.NOHEAD, M1.NOLIMBS, M1.NOTAKE)
+				.genocidable().attack(AT.NONE, AD.PLYS, 0, Dice.D70).weight(10).nutrition(10).sound(MS.SILENT)
+				.size(MZ.SMALL).flags1(M1.AMPHIBIOUS, M1.FLY, M1.NOHANDS, M1.NOHEAD, M1.NOLIMBS, M1.NOTAKE)
 				.flags2(M2.HOSTILE, M2.NEUTER).flags3(M3.INFRAVISIBLE).color(CLR.BLUE).add();
 
 		MonsterType.of(MC.EYE, PM.FREEZING_SPHERE, "freezing sphere", 8).level(6).move(13).ac(4).mr(0).neutral().freq(2)
@@ -623,20 +625,22 @@ public class MonsterType {
 	private static void initializeJellies() {
 		
 		MonsterType.of(MC.JELLY, PM.BLUE_JELLY, "blue jelly", 5).level(4).move(0).ac(8).mr(10).neutral().freq(2)
-				.genocidable().weight(50).nutrition(20).sound(MS.SILENT).size(MZ.MEDIUM)
+				.genocidable().attack(AT.NONE, AD.COLD, 0, Dice.D6).weight(50).nutrition(20).sound(MS.SILENT)
+				.size(MZ.MEDIUM)
 				.resists(MR.COLD, MR.POISON).conveys(MR.COLD, MR.POISON).flags1(M1.AMORPHOUS, M1.BREATHLESS,
 						M1.MINDLESS, M1.NOEYES, M1.NOHANDS, M1.NOHEAD, M1.NOLIMBS, M1.NOTAKE)
 				.flags2(M2.HOSTILE, M2.NEUTER).color(CLR.BLUE).add();
 
 		MonsterType.of(MC.JELLY, PM.SPOTTED_JELLY, "spotted jelly", 6).level(5).move(0).ac(8).mr(10).neutral().freq(1)
-				.genocidable().weight(50).nutrition(20).sound(MS.SILENT).size(MZ.MEDIUM)
+				.genocidable().attack(AT.NONE, AD.ACID, 0, Dice.D6).weight(50).nutrition(20).sound(MS.SILENT)
+				.size(MZ.MEDIUM)
 				.resists(MR.ACID, MR.STONE).flags1(M1.ACID, M1.AMORPHOUS, M1.BREATHLESS, M1.MINDLESS, M1.NOEYES,
 						M1.NOHANDS, M1.NOHEAD, M1.NOLIMBS, M1.NOTAKE)
 				.flags2(M2.HOSTILE, M2.NEUTER).color(CLR.GREEN).add();
 
 		MonsterType.of(MC.JELLY, PM.OCHRE_JELLY, "ochre jelly", 8).level(6).move(3).ac(8).mr(20).neutral().freq(2)
-				.genocidable().attack(AT.ENGL, AD.ACID, 3, Dice.D6).weight(50).nutrition(20).sound(MS.SILENT)
-				.size(MZ.MEDIUM)
+				.genocidable().attack(AT.ENGL, AD.ACID, 3, Dice.D6).attack(AT.NONE, AD.ACID, 3, Dice.D6).weight(50)
+				.nutrition(20).sound(MS.SILENT).size(MZ.MEDIUM)
 				.resists(MR.ACID, MR.STONE).flags1(M1.ACID, M1.AMORPHOUS, M1.BREATHLESS, M1.MINDLESS, M1.NOEYES,
 						M1.NOHANDS, M1.NOHEAD, M1.NOLIMBS, M1.NOTAKE)
 				.flags2(M2.HOSTILE, M2.NEUTER).color(CLR.BROWN).add();
@@ -966,6 +970,7 @@ public class MonsterType {
 
 		MonsterType.of(MC.VORTEX, PM.ENERGY_VORTEX, "energy vortex", 10).level(6).move(20).ac(2).mr(30).neutral().freq(1)
 				.genocidable().noCorpse().attack(AT.ENGL, AD.ELEC, 1, Dice.D6).attack(AT.ENGL, AD.DREN, 4, Dice.D6)
+				.attack(AT.NONE, AD.ELEC, 0, Dice.D4)
 				.weight(0).nutrition(0).sound(MS.SILENT).size(MZ.HUGE)
 				.resists(MR.SLEEP, MR.DISINT, MR.ELEC, MR.POISON, MR.STONE)
 				.flags1(M1.BREATHLESS, M1.FLY, M1.MINDLESS, M1.NOEYES, M1.NOHANDS, M1.NOHEAD, M1.NOLIMBS, M1.UNSOLID)
@@ -978,7 +983,8 @@ public class MonsterType {
 				.flags2(M2.HOSTILE, M2.NEUTER).flags3(M3.INFRAVISIBLE).color(CLR.BLUE).add();
 
 		MonsterType.of(MC.VORTEX, PM.FIRE_VORTEX, "fire vortex", 10).level(8).move(22).ac(2).mr(30).neutral().freq(1)
-				.onlyInHell().genocidable().noCorpse().attack(AT.ENGL, AD.FIRE, 1, Dice.D10).weight(0).nutrition(0)
+				.onlyInHell().genocidable().noCorpse().attack(AT.ENGL, AD.FIRE, 1, Dice.D10)
+				.attack(AT.NONE, AD.FIRE, 0, Dice.D4).weight(0).nutrition(0)
 				.sound(MS.SILENT).size(MZ.HUGE).resists(MR.FIRE, MR.SLEEP, MR.POISON, MR.STONE)
 				.flags1(M1.BREATHLESS, M1.FLY, M1.MINDLESS, M1.NOEYES, M1.NOHANDS, M1.NOHEAD, M1.NOLIMBS, M1.UNSOLID)
 				.flags2(M2.HOSTILE, M2.NEUTER).flags3(M3.INFRAVISIBLE).color(CLR.YELLOW).add();
@@ -1279,7 +1285,8 @@ public class MonsterType {
 				.flags2(M2.NEUTER, M2.STRONG).color(CLR.CYAN).add();
 
 		MonsterType.of(MC.ELEMENTAL, PM.FIRE_ELEMENTAL, "fire elemental", 10).level(8).move(12).ac(2).mr(30).neutral()
-				.freq(1).noCorpse().attack(AT.CLAW, AD.FIRE, 3, Dice.D6).weight(0).nutrition(0).sound(MS.SILENT)
+				.freq(1).noCorpse().attack(AT.CLAW, AD.FIRE, 3, Dice.D6)
+				.attack(AT.NONE, AD.FIRE, 0, Dice.D4).weight(0).nutrition(0).sound(MS.SILENT)
 				.size(MZ.HUGE)
 				.resists(MR.FIRE, MR.POISON, MR.STONE).flags1(M1.BREATHLESS, M1.FLY, M1.MINDLESS, M1.NOEYES, M1.NOHANDS,
 						M1.NOHEAD, M1.NOLIMBS, M1.NOTAKE, M1.UNSOLID)
@@ -1307,26 +1314,26 @@ public class MonsterType {
 				.flags2(M2.HOSTILE, M2.NEUTER).color(CLR.BRIGHT_GREEN).add();
 
 		MonsterType.of(MC.FUNGUS, PM.BROWN_MOLD, "brown mold", 2).level(1).move(0).ac(9).mr(0).neutral().freq(1)
-				.genocidable().weight(50).nutrition(30).sound(MS.SILENT).size(MZ.SMALL).resists(MR.COLD, MR.POISON)
-				.conveys(MR.COLD, MR.POISON)
+				.genocidable().attack(AT.NONE, AD.COLD, 0, Dice.D6).weight(50).nutrition(30).sound(MS.SILENT)
+				.size(MZ.SMALL).resists(MR.COLD, MR.POISON).conveys(MR.COLD, MR.POISON)
 				.flags1(M1.BREATHLESS, M1.MINDLESS, M1.NOEYES, M1.NOHANDS, M1.NOHEAD, M1.NOLIMBS, M1.NOTAKE)
 				.flags2(M2.HOSTILE, M2.NEUTER).color(CLR.BROWN).add();
 
 		MonsterType.of(MC.FUNGUS, PM.YELLOW_MOLD, "yellow mold", 2).level(1).move(0).ac(9).mr(0).neutral().freq(2)
-				.genocidable().weight(50).nutrition(30).sound(MS.SILENT).size(MZ.SMALL).resists(MR.POISON)
-				.conveys(MR.POISON)
+				.genocidable().attack(AT.NONE, AD.STUN, 0, Dice.D4).weight(50).nutrition(30).sound(MS.SILENT)
+				.size(MZ.SMALL).resists(MR.POISON).conveys(MR.POISON)
 				.flags1(M1.BREATHLESS, M1.MINDLESS, M1.NOEYES, M1.NOHANDS, M1.NOHEAD, M1.NOLIMBS, M1.NOTAKE, M1.POIS)
 				.flags2(M2.HOSTILE, M2.NEUTER).color(CLR.YELLOW).add();
 
 		MonsterType.of(MC.FUNGUS, PM.GREEN_MOLD, "green mold", 2).level(1).move(0).ac(9).mr(0).neutral().freq(1)
-				.genocidable().weight(50).nutrition(30).sound(MS.SILENT).size(MZ.SMALL).resists(MR.ACID, MR.STONE)
-				.conveys(MR.STONE)
+				.genocidable().attack(AT.NONE, AD.ACID, 0, Dice.D4).weight(50).nutrition(30).sound(MS.SILENT)
+				.size(MZ.SMALL).resists(MR.ACID, MR.STONE).conveys(MR.STONE)
 				.flags1(M1.ACID, M1.BREATHLESS, M1.MINDLESS, M1.NOEYES, M1.NOHANDS, M1.NOHEAD, M1.NOLIMBS, M1.NOTAKE)
 				.flags2(M2.HOSTILE, M2.NEUTER).color(CLR.GREEN).add();
 
-		MonsterType.of(MC.FUNGUS, PM.RED_MOLD, "red mold", 2).level(1).move(0).ac(9).mr(0).neutral().freq(1).genocidable()
-				.weight(50).nutrition(30).sound(MS.SILENT).size(MZ.SMALL).resists(MR.FIRE, MR.POISON)
-				.conveys(MR.FIRE, MR.POISON)
+		MonsterType.of(MC.FUNGUS, PM.RED_MOLD, "red mold", 2).level(1).move(0).ac(9).mr(0).neutral().freq(1)
+				.genocidable().attack(AT.NONE, AD.FIRE, 0, Dice.D4).weight(50).nutrition(30).sound(MS.SILENT)
+				.size(MZ.SMALL).resists(MR.FIRE, MR.POISON).conveys(MR.FIRE, MR.POISON)
 				.flags1(M1.BREATHLESS, M1.MINDLESS, M1.NOEYES, M1.NOHANDS, M1.NOHEAD, M1.NOLIMBS, M1.NOTAKE)
 				.flags2(M2.HOSTILE, M2.NEUTER).flags3(M3.INFRAVISIBLE).color(CLR.RED).add();
 
@@ -1644,16 +1651,17 @@ public class MonsterType {
 				.flags2(M2.HOSTILE, M2.NEUTER).color(CLR.BROWN).add();
 
 		MonsterType.of(MC.PUDDING, PM.GREEN_SLIME, "green slime", 8).level(6).move(6).ac(6).mr(0).neutral().freq(1)
-				.onlyInHell().genocidable().noCorpse().attack(AT.TUCH, AD.SLIM, 1, Dice.D4).weight(400).nutrition(150)
-				.sound(MS.SILENT).size(MZ.LARGE).resists(MR.COLD, MR.ELEC, MR.POISON, MR.ACID, MR.STONE)
+				.onlyInHell().genocidable().noCorpse().attack(AT.TUCH, AD.SLIM, 1, Dice.D4)
+				.attack(AT.NONE, AD.SLIM, 0, Dice.D0).weight(400).nutrition(150).sound(MS.SILENT).size(MZ.LARGE)
+				.resists(MR.COLD, MR.ELEC, MR.POISON, MR.ACID, MR.STONE)
 				.flags1(M1.ACID, M1.AMORPHOUS, M1.BREATHLESS, M1.CARNIVORE, M1.HERBIVORE, M1.MINDLESS, M1.NOEYES,
 						M1.NOHANDS, M1.NOHEAD, M1.NOLIMBS, M1.OMNIVORE, M1.POIS)
 				.flags2(M2.HOSTILE, M2.NEUTER).color(CLR.GREEN).add();
 
-		MonsterType.of(MC.PUDDING, PM.BLACK_PUDDING, "black pudding", 12).level(10).move(6).ac(6).mr(0).neutral().freq(1)
-				.genocidable().noCorpse().attack(AT.BITE, AD.CORR, 3, Dice.D8).weight(900).nutrition(250)
-				.sound(MS.SILENT).size(MZ.LARGE).resists(MR.COLD, MR.ELEC, MR.POISON, MR.ACID, MR.STONE)
-				.conveys(MR.COLD, MR.ELEC, MR.POISON)
+		MonsterType.of(MC.PUDDING, PM.BLACK_PUDDING, "black pudding", 12).level(10).move(6).ac(6).mr(0).neutral()
+				.freq(1).genocidable().noCorpse().attack(AT.BITE, AD.CORR, 3, Dice.D8)
+				.attack(AT.NONE, AD.CORR, 0, Dice.D0).weight(900).nutrition(250).sound(MS.SILENT).size(MZ.LARGE)
+				.resists(MR.COLD, MR.ELEC, MR.POISON, MR.ACID, MR.STONE).conveys(MR.COLD, MR.ELEC, MR.POISON)
 				.flags1(M1.ACID, M1.AMORPHOUS, M1.BREATHLESS, M1.CARNIVORE, M1.HERBIVORE, M1.MINDLESS, M1.NOEYES,
 						M1.NOHANDS, M1.NOHEAD, M1.NOLIMBS, M1.OMNIVORE)
 				.flags2(M2.HOSTILE, M2.NEUTER).color(CLR.BLACK).add();
@@ -1671,15 +1679,16 @@ public class MonsterType {
 	private static void initializeRustMonsters() {
 
 		MonsterType.of(MC.RUSTMONST, PM.RUST_MONSTER, "rust monster", 8).level(5).move(18).ac(2).mr(0).neutral().freq(2)
-				.genocidable().attack(AT.TUCH, AD.RUST, 0, Dice.D0).attack(AT.TUCH, AD.RUST, 0, Dice.D0).weight(1000)
-				.nutrition(250).sound(MS.SILENT).size(MZ.MEDIUM)
+				.genocidable().attack(AT.TUCH, AD.RUST, 0, Dice.D0).attack(AT.TUCH, AD.RUST, 0, Dice.D0)
+				.attack(AT.NONE, AD.RUST, 0, Dice.D0).weight(1000).nutrition(250).sound(MS.SILENT).size(MZ.MEDIUM)
 				.flags1(M1.ANIMAL, M1.METALLIVORE, M1.NOHANDS, M1.NOLIMBS, M1.SWIM).flags2(M2.HOSTILE)
 				.flags3(M3.INFRAVISIBLE).color(CLR.BROWN).add();
 
 		MonsterType.of(MC.RUSTMONST, PM.DISENCHANTER, "disenchanter", 14).level(12).move(12).ac(-10).mr(0).chaotic(3)
-				.freq(2).onlyInHell().genocidable().attack(AT.CLAW, AD.ENCH, 4, Dice.D4).weight(750).nutrition(200)
-				.sound(MS.GROWL).size(MZ.LARGE).flags1(M1.ANIMAL, M1.CARNIVORE, M1.OMNIVORE).flags2(M2.HOSTILE)
-				.flags3(M3.INFRAVISIBLE).color(CLR.BLUE).add();
+				.freq(2).onlyInHell().genocidable().attack(AT.CLAW, AD.ENCH, 4, Dice.D4)
+				.attack(AT.NONE, AD.ENCH, 0, Dice.D0).weight(750).nutrition(200).sound(MS.GROWL).size(MZ.LARGE)
+				.flags1(M1.ANIMAL, M1.CARNIVORE, M1.OMNIVORE).flags2(M2.HOSTILE).flags3(M3.INFRAVISIBLE).color(CLR.BLUE)
+				.add();
 	}
 
 	private static void initializeSnakes() {
@@ -2086,8 +2095,8 @@ public class MonsterType {
 				.flags3(M3.CLOSE, M3.WAITMASK, M3.INFRAVISIBLE).color(CLR.WHITE).add();
 
 		MonsterType.of(MC.HUMAN, PM.ORACLE, "Oracle", 13).level(12).move(0).ac(0).mr(50).neutral().freq(0).unique()
-				.special().weight(1450).nutrition(400).sound(MS.ORACLE).size(MZ.HUMAN)
-				.flags1(M1.CARNIVORE, M1.HERBIVORE, M1.HUMANOID, M1.OMNIVORE)
+				.special().attack(AT.NONE, AD.MAGM, 0, Dice.D4).weight(1450).nutrition(400).sound(MS.ORACLE)
+				.size(MZ.HUMAN).flags1(M1.CARNIVORE, M1.HERBIVORE, M1.HUMANOID, M1.OMNIVORE)
 				.flags2(M2.FEMALE, M2.HUMAN, M2.NOPOLY, M2.PEACEFUL).flags3(M3.INFRAVISIBLE).color(CLR.BRIGHT_BLUE)
 				.add();
 

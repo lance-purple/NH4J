@@ -14,7 +14,8 @@ public enum Dice {
 	D10(10),
 	D12(12),
 	D20(20),
-	D25(25);
+	D25(25),
+	D70(70);
 	
 	int sides;
 	
