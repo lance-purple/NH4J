@@ -492,7 +492,7 @@ const struct Attack uattk;
                 /* maybe should regurgitate if swallowed? */
                 monflee(mon, !rn2(3) ? rnd(100) : 0, FALSE, TRUE);
 
-                if (u.ustuck == mon && !swallowed() && !sticks(youmonst.data))
+                if (u.ustuck == mon && !swallowed() && !monsterSticksInCombat(pmid4you()))
                     u.ustuck = 0;
             }
             /* Vorpal Blade hit converted to miss */
@@ -1698,11 +1698,11 @@ register const struct Attack mattk;
         break;
     }
     case AD_STCK:
-        if (!negated && !sticks(pd))
+        if (!negated && !monsterSticksInCombat(pmid4(pd)))
             u.ustuck = mdef; /* it's now stuck to you */
         break;
     case AD_WRAP:
-        if (!sticks(pd)) {
+        if (!monsterSticksInCombat(pmid4(pd))) {
             if (!u.ustuck && !rn2(10)) {
                 if (m_slips_free(mdef, mattk)) {
                     tmp = 0;
@@ -2219,7 +2219,7 @@ register struct monst *mon;
             wakeup(mon);
             if (mon->data == &mons[PM_SHADE])
                 Your("hug passes harmlessly through %s.", mon_nam(mon));
-            else if (!sticks(mon->data) && !swallowed()) {
+            else if (!monsterSticksInCombat(pmid4mon(mon)) && !swallowed()) {
                 if (mon == u.ustuck) {
                     pline("%s is being %s.", Monnam(mon),
                           currentMonsterNumber() == PM_ROPE_GOLEM ? "choked" : "crushed");

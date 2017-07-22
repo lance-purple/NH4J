@@ -1761,7 +1761,7 @@ int final;
         you_are(buf, "");
     } else if (u.ustuck) {
         Sprintf(buf, "%s %s",
-                (areYouPolymorphed() && sticks(youmonst.data)) ? "holding" : "held by",
+                (areYouPolymorphed() && monsterSticksInCombat(pmid4you())) ? "holding" : "held by",
                 a_monnam(u.ustuck));
         you_are(buf, "");
     }

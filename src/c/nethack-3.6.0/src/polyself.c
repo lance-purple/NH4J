@@ -147,7 +147,7 @@ STATIC_OVL void
 polyman(fmt, arg)
 const char *fmt, *arg;
 {
-    boolean sticky = (sticks(youmonst.data) && u.ustuck && !swallowed()),
+    boolean sticky = (monsterSticksInCombat(pmid4you()) && u.ustuck && !swallowed()),
             was_mimicking = (youmonst.m_ap_type == M_AP_OBJECT);
     boolean was_blind = !!youCannotSee();
 
@@ -601,7 +601,7 @@ int
 polymon(mntmp)
 int mntmp;
 {
-    boolean sticky = sticks(youmonst.data) && u.ustuck && !swallowed(),
+    boolean sticky = monsterSticksInCombat(pmid4you()) && u.ustuck && !swallowed(),
             was_blind = !!youCannotSee(), dochange = FALSE;
     int mlvl;
 
@@ -766,9 +766,9 @@ int mntmp;
     }
     newsym(currentX(), currentY()); /* Change symbol */
 
-    if (!sticky && !swallowed() && u.ustuck && sticks(youmonst.data))
+    if (!sticky && !swallowed() && u.ustuck && monsterSticksInCombat(pmid4you()))
         u.ustuck = 0;
-    else if (sticky && !sticks(youmonst.data))
+    else if (sticky && !monsterSticksInCombat(pmid4you()))
         uunstick();
     if (u.usteed) {
         if (touchPetrifies(pmid4mon(u.usteed)) && !youResistStoning() && rnl(3)) {
@@ -1448,7 +1448,7 @@ dohide()
        (except for floor hiders [trapper or mimic] in pits) */
     if (u.ustuck || (currentlyTrapped() && (currentTrapType() != TT_PIT || on_ceiling))) {
         You_cant("hide while you're %s.",
-                 !u.ustuck ? "trapped" : !sticks(youmonst.data)
+                 !u.ustuck ? "trapped" : !monsterSticksInCombat(pmid4you())
                                              ? "being held"
                                              : isHumanoid(pmid4mon(u.ustuck))
                                                    ? "holding someone"

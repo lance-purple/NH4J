@@ -2068,7 +2068,7 @@ E boolean FDECL(can_be_strangled, (struct monst *));
 E boolean FDECL(monsterCanTrack, (int));
 E boolean FDECL(breaksOutOfArmor, (int));
 E boolean FDECL(slipsOutOfArmor, (int));
-E boolean FDECL(sticks, (struct permonst *));
+E boolean FDECL(monsterSticksInCombat, (int));
 E boolean FDECL(monsterCannotVomit, (int));
 E int FDECL(numberOfHorns, (int));
 /* E boolean FDECL(canseemon, (struct monst *)); */

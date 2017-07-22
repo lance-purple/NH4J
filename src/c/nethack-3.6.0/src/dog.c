@@ -889,7 +889,7 @@ register struct obj *obj;
     if (mtmp == u.ustuck) {
         if (swallowed())
             expels(mtmp, pmid4mon(mtmp), TRUE);
-        else if (!(areYouPolymorphed() && sticks(youmonst.data)))
+        else if (!(areYouPolymorphed() && monsterSticksInCombat(pmid4you())))
             unstuck(mtmp);
     }
 

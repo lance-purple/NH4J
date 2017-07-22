@@ -226,7 +226,7 @@ struct monst *mon;
     if (mon == u.ustuck) {
         if (swallowed()) {
             expels(mon, pmid4mon(mon), TRUE);
-        } else if (!sticks(youmonst.data)) {
+        } else if (!monsterSticksInCombat(pmid4you())) {
             unstuck(mon); /* let go */
             You("get released!");
         }
@@ -646,7 +646,7 @@ boolean
 itsstuck(mtmp)
 register struct monst *mtmp;
 {
-    if (sticks(youmonst.data) && mtmp == u.ustuck && !swallowed()) {
+    if (monsterSticksInCombat(pmid4you()) && mtmp == u.ustuck && !swallowed()) {
         pline("%s cannot escape from you!", Monnam(mtmp));
         return TRUE;
     }

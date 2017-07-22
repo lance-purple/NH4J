@@ -701,7 +701,7 @@ register int after; /* this is extra fast monster movement */
     }
 #if 0 /* [this is now handled in dochug()] */
     if (!youCauseConflict() && !mtmp->mconf
-        && mtmp == u.ustuck && !sticks(youmonst.data)) {
+        && mtmp == u.ustuck && !monsterSticksInCombat(pmid4you())) {
         unstuck(mtmp); /* swallowed case handled above */
         You("get released!");
     }

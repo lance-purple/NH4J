@@ -395,12 +395,11 @@ int pmid;
                       || pmid == PM_WINGED_GARGOYLE);
 }
 
-/* creature sticks other creatures it hits */
+/* creature sticks to other creatures it hits */
 boolean
-sticks(ptr)
-register struct permonst *ptr;
+monsterSticksInCombat(pmid)
+int pmid;
 {
-    int pmid = pmid4(ptr);
     return (boolean) (monsterTypeCanCauseDamageType(pmid, AD_STCK)
                       || monsterTypeCanCauseDamageType(pmid, AD_WRAP)
                       || monsterHasAttackType(pmid, AT_HUGS));

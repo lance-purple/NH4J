@@ -3228,7 +3228,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
                 /* update swallow glyphs for new monster */
                 showHeroBeingSwallowed(0);
             }
-        } else if (!sticks(mdat) && !sticks(youmonst.data))
+        } else if (!monsterSticksInCombat(pmid4(mdat)) && !monsterSticksInCombat(pmid4you()))
             unstuck(mtmp);
     }
 

@@ -1334,7 +1334,7 @@ domove()
             if (distanceSquaredToYou(u.ustuck->mx, u.ustuck->my) > 2) {
                 /* perhaps it fled (or was teleported or ... ) */
                 u.ustuck = 0;
-            } else if (sticks(youmonst.data)) {
+            } else if (monsterSticksInCombat(pmid4you())) {
                 /* When polymorphed into a sticking monster,
                  * u.ustuck means it's stuck to you, not you to it.
                  */

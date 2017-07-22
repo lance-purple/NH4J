@@ -716,7 +716,7 @@ register struct monst *grd;
     }
     if (um_dist(grd->mx, grd->my, 1) || egrd->gddone) {
         if (!egrd->gddone && !rn2(10) && !youAreDeaf() && !swallowed()
-            && !(u.ustuck && !sticks(youmonst.data)))
+            && !(u.ustuck && !monsterSticksInCombat(pmid4you())))
             verbalize("Move along!");
         restfakecorr(grd);
         return 0; /* didn't move */

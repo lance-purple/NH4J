@@ -459,7 +459,7 @@ register struct monst *mtmp;
     /* hero might be a mimic, concealed via #monster */
     if (monsterClass(pmid4you()) == S_MIMIC && youmonst.m_ap_type && !range2
         && foundyou && !swallowed()) {
-        boolean sticky = sticks(youmonst.data);
+        boolean sticky = monsterSticksInCombat(pmid4you());
 
         if (!canspotmon(mtmp)) {
             map_invisible(mtmp->mx, mtmp->my);
@@ -916,7 +916,7 @@ register const struct Attack mattk;
     /*  Now, adjust damages via resistances or specific attacks */
     switch (mattk.damageType) {
     case AD_PHYS:
-        if (mattk.type == AT_HUGS && !sticks(youmonst.data)) {
+        if (mattk.type == AT_HUGS && !monsterSticksInCombat(pmid4you())) {
             if (!u.ustuck && rn2(2)) {
                 if (u_slip_free(mtmp, mattk)) {
                     dmg = 0;
@@ -1214,11 +1214,11 @@ register const struct Attack mattk;
         break;
     case AD_STCK:
         hitmsg(mtmp, mattk);
-        if (uncancelled && !u.ustuck && !sticks(youmonst.data))
+        if (uncancelled && !u.ustuck && !monsterSticksInCombat(pmid4you()))
             u.ustuck = mtmp;
         break;
     case AD_WRAP:
-        if ((!mtmp->mcan || u.ustuck == mtmp) && !sticks(youmonst.data)) {
+        if ((!mtmp->mcan || u.ustuck == mtmp) && !monsterSticksInCombat(pmid4you())) {
             if (!u.ustuck && !rn2(10)) {
                 if (u_slip_free(mtmp, mattk)) {
                     dmg = 0;
