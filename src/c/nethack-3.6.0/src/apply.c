@@ -178,7 +178,6 @@ int rx, ry, *resp;
 {
     char buf[BUFSZ];
     boolean more_corpses;
-    struct permonst *mptr;
     struct obj *corpse = sobj_at(CORPSE, rx, ry),
                *statue = sobj_at(STATUE, rx, ry);
 
@@ -213,18 +212,17 @@ int rx, ry, *resp;
             /* (most corpses don't retain the monster's sex, so
                we're usually forced to use generic pronoun here) */
             if (mtmp) {
-                mptr = &mons[mtmp->mnum];
-		int pmid = pmid4(mptr);
+		int pmid = mtmp->mnum;
                 /* can't use mhe() here; it calls pronoun_gender() which
                    expects monster to be on the map (visibility check) */
                 if ((isHumanoid(pmid) || (monsterGenerationMask(pmid) & G_UNIQ)
                      || typeIsProperName(pmid)) && !isNeuter(pmid))
                     gndr = (int) mtmp->female;
             } else {
-                mptr = &mons[corpse->corpsenm];
-                if (isFemale(pmid4(mptr)))
+                int pmid = corpse->corpsenm;
+                if (isFemale(pmid))
                     gndr = 1;
-                else if (isMale(pmid4(mptr)))
+                else if (isMale(pmid))
                     gndr = 0;
             }
             Sprintf(buf, "%s's dead", genders[gndr].he); /* "he"/"she"/"it" */
@@ -259,17 +257,16 @@ int rx, ry, *resp;
         const char *what, *how;
 	javaString monsterName = NO_JAVA_STRING;
 
-        mptr = &mons[statue->corpsenm];
-	int pmid = pmid4(mptr);
+	int pmid = statue->corpsenm;
         if (youCannotSee()) { /* ignore statue->dknown; it'll always be set */
             Sprintf(buf, "%s %s",
                     (rx == currentX() && ry == currentY()) ? "This" : "That",
                     isHumanoid(pmid) ? "person" : "creature");
             what = buf;
         } else {
-	    monsterName = monsterTypeName(pmid4(mptr));
+	    monsterName = monsterTypeName(pmid);
 	    what = monsterName.c_str;
-            if (!typeIsProperName(pmid4(mptr)))
+            if (!typeIsProperName(pmid))
                 what = The(what);
         }
         how = "fine";
@@ -891,14 +888,14 @@ struct obj *obj;
     } else if (mlet == S_VAMPIRE || mlet == S_GHOST || is_vampshifter(mtmp)) {
         if (vis)
             pline("%s doesn't have a reflection.", Monnam(mtmp));
-    } else if (monable && mtmp->data == &mons[PM_MEDUSA]) {
+    } else if (monable && pmid4mon(mtmp) == PM_MEDUSA) {
         if (mon_reflects(mtmp, "The gaze is reflected away by %s %s!"))
             return 1;
         if (vis)
             pline("%s is turned to stone!", Monnam(mtmp));
         stoned = TRUE;
         killed(mtmp);
-    } else if (monable && mtmp->data == &mons[PM_FLOATING_EYE]) {
+    } else if (monable && pmid4mon(mtmp) == PM_FLOATING_EYE) {
         int tmp = d((int) mtmp->m_lev, monsterAttack(pmid4mon(mtmp), 0).diceSides);
         if (!rn2(4))
             tmp = 120;
@@ -907,12 +904,11 @@ struct obj *obj;
         else
             You_hear("%s stop moving.", something);
         paralyze_monst(mtmp, (int) mtmp->mfrozen + tmp);
-    } else if (monable && mtmp->data == &mons[PM_UMBER_HULK]) {
+    } else if (monable && pmid4mon(mtmp) == PM_UMBER_HULK) {
         if (vis)
             pline("%s confuses itself!", Monnam(mtmp));
         mtmp->mconf = 1;
-    } else if (monable && (mlet == S_NYMPH || mtmp->data == &mons[PM_SUCCUBUS]
-                           || mtmp->data == &mons[PM_INCUBUS])) {
+    } else if (monable && (mlet == S_NYMPH || pmid4mon(mtmp) == PM_SUCCUBUS || pmid4mon(mtmp) == PM_INCUBUS)) {
         if (vis) {
             char buf[BUFSZ]; /* "She" or "He" */
 
