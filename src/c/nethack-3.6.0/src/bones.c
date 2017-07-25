@@ -333,7 +333,6 @@ struct obj *corpse;
     int fd, x, y;
     struct trap *ttmp;
     struct monst *mtmp;
-    struct permonst *mptr;
     struct fruit *f;
     struct cemetery *newbones;
     char c, *bonesid;
@@ -365,12 +364,12 @@ make_bones:
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
         if (DEADMONSTER(mtmp))
             continue;
-        mptr = mtmp->data;
-	int msound = monsterSound(pmid4(mptr));
-        if (mtmp->iswiz || mptr == &mons[PM_MEDUSA]
+        int pmid = pmid4mon(mtmp);
+	int msound = monsterSound(pmid);
+        if (mtmp->iswiz || pmid == PM_MEDUSA
             || msound == MS_NEMESIS || msound == MS_LEADER
-            || mptr == &mons[PM_VLAD_THE_IMPALER]
-            || (mptr == &mons[PM_ORACLE] && !fixuporacle(mtmp)))
+            || pmid == PM_VLAD_THE_IMPALER
+            || (pmid == PM_ORACLE && !fixuporacle(mtmp)))
             mongone(mtmp);
     }
     if (u.usteed)
@@ -611,8 +610,10 @@ getbones()
                     sanitize_name(MNAME(mtmp));
                 if (mtmp->mhpmax == DEFUNCT_MONSTER) {
                     if (wizard) {
+		        javaString defunctMonsterName = monsterTypeName(pmid4mon(mtmp));
                         debugpline1("Removing defunct monster %s from bones.",
-                                    mtmp->data->mname);
+                                    defunctMonsterName.c_str);
+		        releaseJavaString(defunctMonsterName);
                     }
                     mongone(mtmp);
                 } else
