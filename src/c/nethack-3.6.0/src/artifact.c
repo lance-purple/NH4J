@@ -753,28 +753,27 @@ spec_applies(weap, mtmp)
 register const struct artifact *weap;
 struct monst *mtmp;
 {
-    struct permonst *ptr;
     boolean yours;
 
     if (!(weap->spfx & (SPFX_DBONUS | SPFX_ATTK)))
         return (weap->attk.damageType == AD_PHYS);
 
     yours = (mtmp == &youmonst);
-    ptr = mtmp->data;
+    int pmid = pmid4mon(mtmp);
 
     if (weap->spfx & SPFX_DMONS) {
-        return (ptr == &mons[(int) weap->mtype]);
+        return (pmid == (int) weap->mtype);
     } else if (weap->spfx & SPFX_DCLAS) {
-        return (weap->mtype == (unsigned long) monsterClass(pmid4(ptr)));
+        return (weap->mtype == (unsigned long) monsterClass(pmid));
     } else if (weap->spfx & SPFX_DFLAG1) {
-        return isAffectedByWeaponFlag1(pmid4(ptr), weap->mtype);
+        return isAffectedByWeaponFlag1(pmid, weap->mtype);
     } else if (weap->spfx & SPFX_DFLAG2) {
-        return (isAffectedByWeaponFlag2(pmid4(ptr), weap->mtype)
+        return (isAffectedByWeaponFlag2(pmid, weap->mtype)
                 || (yours
                     && ((!areYouPolymorphed() && (urace.selfmask & weap->mtype))
                         || ((weap->mtype & M2_WERE) && lycanthropeType() >= LOW_PM))));
     } else if (weap->spfx & SPFX_DALIGN) {
-	int malign = monsterAlignment(pmid4(ptr));
+	int malign = monsterAlignment(pmid);
         return yours ? (currentAlignmentType() != weap->alignment)
                      : (malign == A_NONE
                         || sgn(malign) != weap->alignment);
@@ -793,7 +792,7 @@ struct monst *mtmp;
             return !(yours ? youResistShock() : resists_elec(mtmp));
         case AD_MAGM:
         case AD_STUN:
-            return !(yours ? youResistMagic() : (rn2(100) < monsterBaseMagicResistance(pmid4(ptr))));
+            return !(yours ? youResistMagic() : (rn2(100) < monsterBaseMagicResistance(pmid)));
         case AD_DRST:
             return !(yours ? youResistPoison() : resists_poison(mtmp));
         case AD_DRLI:
@@ -961,7 +960,7 @@ int dieroll;               /* d20 that has already scored a hit */
 boolean vis;               /* whether the action can be seen */
 char *hittee;              /* target's name: "you" or mon_nam(mdef) */
 {
-    struct permonst *old_uasmon;
+    int old_uasmon;
     const char *verb, *fakename;
     boolean youattack = (magr == &youmonst), youdefend = (mdef == &youmonst),
             resisted = FALSE, do_stun, do_confuse, result;
@@ -1019,7 +1018,7 @@ char *hittee;              /* target's name: "you" or mon_nam(mdef) */
     /* now perform special effects */
     switch (attack_indx) {
     case MB_INDEX_CANCEL:
-        old_uasmon = youmonst.data;
+        old_uasmon = pmid4you();
         /* No mdef->mcan check: even a cancelled monster can be polymorphed
          * into a golem, and the "cancel" effect acts as if some magical
          * energy remains in spellcasting defenders to be absorbed later.
@@ -1029,7 +1028,7 @@ char *hittee;              /* target's name: "you" or mon_nam(mdef) */
         } else {
             do_stun = FALSE;
             if (youdefend) {
-                if (youmonst.data != old_uasmon)
+                if (pmid4you() != old_uasmon)
                     *dmgptr = 0; /* rehumanized, so no more damage */
                 if (maximumMagicalEnergy() > 0) {
                     You("lose magical energy!");
@@ -1039,7 +1038,7 @@ char *hittee;              /* target's name: "you" or mon_nam(mdef) */
                     context.botl = 1;
                 }
             } else {
-                if (mdef->data == &mons[PM_CLAY_GOLEM])
+                if (pmid4mon(mdef) == PM_CLAY_GOLEM)
                     mdef->mhp = 1; /* cancelled clay golems will die */
                 if (youattack && monsterHasAttackType(pmid4mon(mdef), AT_MAGC)) {
                     You("absorb magical energy!");
@@ -1181,7 +1180,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
             pline_The("fiery blade %s %s%c",
                       !spec_dbon_applies
                           ? "hits"
-                          : (mdef->data == &mons[PM_WATER_ELEMENTAL])
+                          : (pmid4mon(mdef) == PM_WATER_ELEMENTAL)
                                 ? "vaporizes part of"
                                 : "burns",
                       hittee, !spec_dbon_applies ? '.' : '!');
@@ -1284,7 +1283,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                 return TRUE;
             }
         } else if (otmp->oartifact == ART_VORPAL_BLADE
-                   && (dieroll == 1 || mdef->data == &mons[PM_JABBERWOCK])) {
+                   && (dieroll == 1 || pmid4mon(mdef) == PM_JABBERWOCK)) {
             static const char *const behead_msg[2] = { "%s beheads %s!",
                                                        "%s decapitates %s!" };
 
