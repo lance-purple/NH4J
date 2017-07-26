@@ -1786,7 +1786,7 @@ E struct monst *FDECL(makemon, (struct permonst *, int, int, int));
 E boolean FDECL(create_critters, (int, struct permonst *, BOOLEAN_P));
 E int NDECL(randomMonster);
 E void FDECL(resetMonsterRandomizer, (int));
-E struct permonst *FDECL(mkclass, (CHAR_P, int));
+E int FDECL(pickMonsterTypeOfClass, (CHAR_P, int));
 E int FDECL(mkclass_poly, (int));
 E int FDECL(adjustMonsterLevel, (int));
 E struct permonst *FDECL(grow_up, (struct monst *, struct monst *));

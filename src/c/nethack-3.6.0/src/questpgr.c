@@ -602,12 +602,12 @@ qt_montype()
         qpm = urole.enemy1num;
         if (qpm != NON_PM && rn2(5) && !(mvitals[qpm].mvflags & G_GENOD))
             return &mons[qpm];
-        return mkclass(urole.enemy1sym, 0);
+        return ptr4pmid(pickMonsterTypeOfClass(urole.enemy1sym, 0));
     }
     qpm = urole.enemy2num;
     if (qpm != NON_PM && rn2(5) && !(mvitals[qpm].mvflags & G_GENOD))
         return &mons[qpm];
-    return mkclass(urole.enemy2sym, 0);
+    return ptr4pmid(pickMonsterTypeOfClass(urole.enemy2sym, 0));
 }
 
 /* special levels can include a custom arrival message; display it */

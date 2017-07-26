@@ -362,12 +362,13 @@ int
 lminion()
 {
     int tryct;
-    struct permonst *ptr;
+    int pmid;
 
     for (tryct = 0; tryct < 20; tryct++) {
-        ptr = mkclass(S_ANGEL, 0);
-        if (ptr && !isLord(pmid4(ptr)))
-            return (monsndx(ptr));
+        pmid = pickMonsterTypeOfClass(S_ANGEL, 0);
+        if ((NON_PM != pmid) && !isLord(pmid)) {
+            return pmid;
+        }
     }
 
     return NON_PM;
@@ -378,13 +379,13 @@ ndemon(atyp)
 aligntyp atyp;
 {
     int tryct;
-    struct permonst *ptr;
+    int pmid;
 
     for (tryct = 0; tryct < 20; tryct++) {
-        ptr = mkclass(S_DEMON, 0);
-        if (ptr && isNamelessMajorDemon(pmid4(ptr))
-            && (atyp == A_NONE || sgn(monsterAlignment(pmid4(ptr))) == sgn(atyp)))
-            return (monsndx(ptr));
+        pmid = pickMonsterTypeOfClass(S_DEMON, 0);
+        if ((NON_PM != pmid) && isNamelessMajorDemon(pmid)
+            && (atyp == A_NONE || sgn(monsterAlignment(pmid)) == sgn(atyp)))
+            return (pmid);
     }
 
     return NON_PM;

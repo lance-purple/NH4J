@@ -1534,7 +1534,7 @@ struct mkroom *croom;
         else if (g_mvflags & G_GONE)    /* genocided or extinct */
             pm = (struct permonst *) 0; /* make random monster */
     } else {
-        pm = mkclass(class, G_NOGEN);
+        pm = ptr4pmid(pickMonsterTypeOfClass(class, G_NOGEN));
         /* if we can't get a specific monster type (pm == 0) then the
            class has been genocided, so settle for a random monster */
     }
@@ -3057,7 +3057,7 @@ struct sp_coder *coder;
                 } else {
                     struct permonst *pm = (struct permonst *) 0;
                     if (def_char_to_monclass(monclass) != MAXMCLASSES) {
-                        pm = mkclass(def_char_to_monclass(monclass), G_NOGEN);
+                        pm = ptr4pmid(pickMonsterTypeOfClass(def_char_to_monclass(monclass), G_NOGEN));
                     } else {
                         pm = ptr4pmid(randomMonster());
                     }

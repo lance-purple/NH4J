@@ -438,7 +438,7 @@ morguemon()
 
     if (hd > 10 && i < 10) {
         if (areYouInHell() || areYouInEndgame()) {
-            return mkclass(S_DEMON, 0);
+            return ptr4pmid(pickMonsterTypeOfClass(S_DEMON, 0));
         } else {
             int ndemon_res = ndemon(A_NONE);
             if (ndemon_res != NON_PM)
@@ -448,11 +448,11 @@ morguemon()
     }
 
     if (hd > 8 && i > 85)
-        return mkclass(S_VAMPIRE, 0);
+        return ptr4pmid(pickMonsterTypeOfClass(S_VAMPIRE, 0));
 
     return ((i < 20) ? &mons[PM_GHOST]
                      : (i < 40) ? &mons[PM_WRAITH]
-                                : mkclass(S_ZOMBIE, 0));
+                                : ptr4pmid(pickMonsterTypeOfClass(S_ZOMBIE, 0)));
 }
 
 struct permonst *
@@ -504,7 +504,7 @@ mkswamp() /* Michiel Huisjes & Fred de Wilde */
                     if ((sx + sy) % 2) {
                         levl[sx][sy].typ = POOL;
                         if (!eelct || !rn2(4)) {
-                            /* mkclass() won't do, as we might get kraken */
+                            /* pickMonsterTypeOfClass() won't do, as we might get kraken */
                             (void) makemon(rn2(5)
                                               ? &mons[PM_GIANT_EEL]
                                               : rn2(2)
@@ -514,7 +514,7 @@ mkswamp() /* Michiel Huisjes & Fred de Wilde */
                             eelct++;
                         }
                     } else if (!rn2(4)) /* swamps tend to be moldy */
-                        (void) makemon(mkclass(S_FUNGUS, 0), sx, sy,
+                        (void) makemon(ptr4pmid(pickMonsterTypeOfClass(S_FUNGUS, 0)), sx, sy,
                                        NO_MM_FLAGS);
                 }
         level.flags.has_swamp = 1;
@@ -711,25 +711,28 @@ struct permonst *
 courtmon()
 {
     int i = rn2(60) + rn2(3 * level_difficulty());
+    int pmid;
 
     if (i > 100)
-        return mkclass(S_DRAGON, 0);
+        pmid = pickMonsterTypeOfClass(S_DRAGON, 0);
     else if (i > 95)
-        return mkclass(S_GIANT, 0);
+        pmid = pickMonsterTypeOfClass(S_GIANT, 0);
     else if (i > 85)
-        return mkclass(S_TROLL, 0);
+        pmid = pickMonsterTypeOfClass(S_TROLL, 0);
     else if (i > 75)
-        return mkclass(S_CENTAUR, 0);
+        pmid = pickMonsterTypeOfClass(S_CENTAUR, 0);
     else if (i > 60)
-        return mkclass(S_ORC, 0);
+        pmid = pickMonsterTypeOfClass(S_ORC, 0);
     else if (i > 45)
-        return &mons[PM_BUGBEAR];
+        pmid = PM_BUGBEAR;
     else if (i > 30)
-        return &mons[PM_HOBGOBLIN];
+        pmid = PM_HOBGOBLIN;
     else if (i > 15)
-        return mkclass(S_GNOME, 0);
+        pmid = pickMonsterTypeOfClass(S_GNOME, 0);
     else
-        return mkclass(S_KOBOLD, 0);
+        pmid = pickMonsterTypeOfClass(S_KOBOLD, 0);
+
+    return ptr4pmid(pmid);
 }
 
 #define NSTYPES (PM_CAPTAIN - PM_SOLDIER + 1)

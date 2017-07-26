@@ -2435,7 +2435,7 @@ create_particular()
         }
         for (i = 0; i <= multi; i++) {
             if (monclass != MAXMCLASSES)
-                whichpm = mkclass(monclass, 0);
+                whichpm = ptr4pmid(pickMonsterTypeOfClass(monclass, 0));
             else if (randmonst)
                 whichpm = ptr4pmid(randomMonster());
             mtmp = makemon(whichpm, currentX(), currentY(), NO_MM_FLAGS);

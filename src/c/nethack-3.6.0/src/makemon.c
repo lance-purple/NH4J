@@ -1534,7 +1534,7 @@ int pmid; /* particular species that can no longer be created */
 }
 
 
-/* decide whether it's ok to generate a candidate monster by mkclass() */
+/* decide whether it's ok to generate a candidate monster by pickMonsterTypeOfClass() */
 STATIC_OVL boolean
 mk_gen_ok(mndx, mvflagsmask, genomask)
 int mndx, mvflagsmask, genomask;
@@ -1558,8 +1558,7 @@ int mndx, mvflagsmask, genomask;
  * to allow the normal genesis masks to be deactivated.
  * Returns Null if no monsters in that class can be made.
  */
-struct permonst *
-mkclass(class, spc)
+int pickMonsterTypeOfClass(class, spc)
 char class;
 int spc;
 {
@@ -1568,8 +1567,8 @@ int spc;
 
     maxmlev = level_difficulty() >> 1;
     if (class < 1 || class >= MAXMCLASSES) {
-        impossible("mkclass called with bad class!");
-        return (struct permonst *) 0;
+        impossible("pickMonsterTypeOfClass called with bad class!");
+        return NON_PM;
     }
     /*  Assumption #1:  monsters of a given class are contiguous in the
      *                  mons[] array.
@@ -1578,7 +1577,7 @@ int spc;
         if (monsterClass(first) == class)
             break;
     if (first == SPECIAL_PM)
-        return (struct permonst *) 0;
+        return NON_PM;
 
     for (last = first; last < SPECIAL_PM && monsterClass(last) == class; last++)
         if (mk_gen_ok(last, G_GONE, mask)) {
@@ -1589,7 +1588,7 @@ int spc;
             num += monsterGenerationMask(last) & G_FREQ;
         }
     if (!num)
-        return (struct permonst *) 0;
+        return NON_PM;
 
     /*  Assumption #2:  monsters of a given class are presented in ascending
      *                  order of strength.
@@ -1606,10 +1605,10 @@ int spc;
         }
     first--; /* correct an off-by-one error */
 
-    return &mons[first];
+    return first;
 }
 
-/* like mkclass(), but excludes difficulty considerations; used when
+/* like pickMonsterTypeOfClass(), but excludes difficulty considerations; used when
    player with polycontrol picks a class instead of a specific type;
    genocided types are avoided but extinct ones are acceptable; we don't
    check okToPolymorphInto() here--caller accepts some choices

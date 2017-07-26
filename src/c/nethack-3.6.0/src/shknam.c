@@ -451,7 +451,7 @@ int sx, sy;
 boolean mkspecl;
 {
     struct monst *mtmp;
-    struct permonst *ptr;
+    int pmid;
     int atype;
 
     /* 3.6.0 tribute */
@@ -467,8 +467,8 @@ boolean mkspecl;
     }
 
     if (rn2(100) < currentDepth() && !MON_AT(sx, sy)
-        && (ptr = mkclass(S_MIMIC, 0)) != 0
-        && (mtmp = makemon(ptr, sx, sy, NO_MM_FLAGS)) != 0) {
+        && (pmid = pickMonsterTypeOfClass(S_MIMIC, 0)) != NON_PM
+        && (mtmp = makemon(ptr4pmid(pmid), sx, sy, NO_MM_FLAGS)) != 0) {
         /* note: makemon will set the mimic symbol to a shop item */
         if (rn2(10) >= currentDepth()) {
             mtmp->m_ap_type = M_AP_OBJECT;
