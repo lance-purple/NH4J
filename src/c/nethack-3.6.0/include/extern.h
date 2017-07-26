@@ -34,6 +34,7 @@ typedef struct {
 E int FDECL(pmid4, (const struct permonst*));
 E int FDECL(pmid4mon, (const struct monst*));
 E int FDECL(pmid4you, ());
+E struct permonst* FDECL(ptr4pmid, (int));
 
 E javaString FDECL(monsterTypeName, (int));
 E void FDECL(releaseJavaString, (javaString));
@@ -1783,8 +1784,8 @@ E void FDECL(copy_mextra, (struct monst *, struct monst *));
 E void FDECL(dealloc_mextra, (struct monst *));
 E struct monst *FDECL(makemon, (struct permonst *, int, int, int));
 E boolean FDECL(create_critters, (int, struct permonst *, BOOLEAN_P));
-E struct permonst *NDECL(rndmonst);
-E void FDECL(reset_rndmonst, (int));
+E int NDECL(randomMonster);
+E void FDECL(resetMonsterRandomizer, (int));
 E struct permonst *FDECL(mkclass, (CHAR_P, int));
 E int FDECL(mkclass_poly, (int));
 E int FDECL(adjustMonsterLevel, (int));

@@ -206,7 +206,7 @@ const char *drainer; /* cause of death, if drain should be fatal */
         setCurrentExperienceLevel(currentExperienceLevel() - 1);
         /* remove intrinsic abilities */
         adjabil(currentExperienceLevel() + 1, currentExperienceLevel());
-        reset_rndmonst(NON_PM); /* new monster selection */
+        resetMonsterRandomizer(NON_PM); /* new monster selection */
     } else {
         if (drainer) {
             killer.format = KILLED_BY;
@@ -306,7 +306,7 @@ boolean incr; /* true iff via incremental experience growth */
         }
         pline("Welcome to experience level %d.", currentExperienceLevel());
         adjabil(currentExperienceLevel() - 1, currentExperienceLevel()); /* give new intrinsics */
-        reset_rndmonst(NON_PM);          /* new monster selection */
+        resetMonsterRandomizer(NON_PM);          /* new monster selection */
     }
     context.botl = 1;
 }

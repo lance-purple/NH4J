@@ -561,7 +561,7 @@ newgame()
     role_init();         /* must be before init_dungeons(), u_init(),
                           * and init_artifacts() */
 
-    init_dungeons();  /* must be before u_init() to avoid rndmonst()
+    init_dungeons();  /* must be before u_init() to avoid randomMonster()
                        * creating odd monsters for any tins and eggs
                        * in hero's initial inventory */
     init_artifacts(); /* before u_init() in case $WIZKIT specifies

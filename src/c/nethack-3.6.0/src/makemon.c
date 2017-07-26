@@ -18,9 +18,9 @@ static boolean quest_mon_represents_role(struct permonst* mptr, int role_pm) {
 }
 
 STATIC_DCL boolean FDECL(uncommon, (int));
-STATIC_DCL int FDECL(align_shift, (struct permonst *));
+STATIC_DCL int FDECL(adjustMonsterGenerationOddsByDungeonAlignent, (int));
 STATIC_DCL boolean FDECL(mk_gen_ok, (int, int, int));
-STATIC_DCL boolean FDECL(wrong_elem_type, (struct permonst *));
+STATIC_DCL boolean FDECL(wrongElementalTypeForThisPlane, (int));
 STATIC_DCL void FDECL(m_initgrp, (struct monst *, int, int, int));
 STATIC_DCL void FDECL(m_initthrow, (struct monst *, int, int));
 STATIC_DCL void FDECL(m_initweap, (struct monst *));
@@ -60,22 +60,21 @@ int pmid;
  * Return true if the given monster cannot exist on this elemental level.
  */
 STATIC_OVL boolean
-wrong_elem_type(ptr)
-struct permonst *ptr;
+wrongElementalTypeForThisPlane(pmid)
+int pmid;
 {
-    if (monsterClass(pmid4(ptr)) == S_ELEMENTAL) {
-        return (boolean) !isHomeElemental(pmid4(ptr));
+    if (monsterClass(pmid) == S_ELEMENTAL) {
+        return (boolean) !isHomeElemental(pmid);
     } else if (areYouOnEarthLevel()) {
         /* no restrictions? */
     } else if (areYouOnWaterLevel()) {
         /* just monsters that can swim */
-        if (!isSwimmer(pmid4(ptr)))
+        if (!isSwimmer(pmid))
             return TRUE;
     } else if (areYouOnFireLevel()) {
-        if (!monsterTypeResistsFire(pmid4(ptr)))
+        if (!monsterTypeResistsFire(pmid))
             return TRUE;
     } else if (areYouOnAirLevel()) {
-	int pmid = pmid4(ptr);
         if (!(isFlyer(pmid) && monsterClass(pmid) != S_TRAPPER) && !isFloater(pmid)
             && !isAmorphous(pmid) && !isNoncorporeal(pmid) && !isWhirly(pmid))
             return TRUE;
@@ -177,8 +176,10 @@ register struct monst *mtmp;
     struct obj *otmp;
     int bias, spe2, w1, w2;
 
-    if (areYouOnRogueLevel())
+    if (areYouOnRogueLevel()) {
         return;
+    }
+
     /*
      *  First a few special cases:
      *          giants get a boulder to throw sometimes
@@ -869,7 +870,7 @@ boolean ghostly;
                         makeplural(mons[mndx].mname));
         }
         mvitals[mndx].mvflags |= G_EXTINCT;
-        reset_rndmonst(mndx);
+        resetMonsterRandomizer(mndx);
     }
     return result;
 }
@@ -1091,7 +1092,8 @@ int mmflags;
         int tryct = 0; /* maybe there are no good choices */
 
         do {
-            if (!(ptr = rndmonst())) {
+            ptr = ptr4pmid(randomMonster());
+            if (NULL == ptr) {
                 debugpline0("Warning: no monster.");
                 return (struct monst *) 0; /* no more monsters! */
             }
@@ -1214,7 +1216,7 @@ int mmflags;
         } else {
             mtmp->cham = mcham;
             /* Note: shapechanger's initial form used to be
-               chosen here with rndmonst(), yielding a monster
+               chosen here with randomMonster(), yielding a monster
                which was appropriate to the level's difficulty
                but ignored the changer's usual type selection
                so would be inappropriate for vampshifters.
@@ -1394,8 +1396,8 @@ int mndx;
  *      return an integer in the range of 0-5.
  */
 STATIC_OVL int
-align_shift(ptr)
-register struct permonst *ptr;
+adjustMonsterGenerationOddsByDungeonAlignent(pmid)
+int pmid;
 {
     static NEARDATA long oldmoves = 0L; /* != 1, starting value of moves */
     static NEARDATA s_level *lev;
@@ -1405,7 +1407,7 @@ register struct permonst *ptr;
         lev = areYouOnASpecialLevel();
         oldmoves = moves;
     }
-    int malign = monsterAlignment(pmid4(ptr));
+    int malign = monsterAlignment(pmid);
     switch ((lev) ? lev->flags.align : dungeons[currentDungeonNumber()].flags.align) {
     default: /* just in case */
     case AM_NONE:
@@ -1425,14 +1427,16 @@ register struct permonst *ptr;
 }
 
 /* select a random monster type */
-struct permonst *
-rndmonst()
+int randomMonster()
 {
-    register struct permonst *ptr;
     register int mndx, ct;
 
-    if (currentDungeonNumber() == quest_dnum && rn2(7) && (ptr = qt_montype()) != 0)
-        return ptr;
+    if (currentDungeonNumber() == quest_dnum && rn2(7)) {
+        struct permonst *ptr = qt_montype();
+        if (ptr	!= 0) {
+            return pmid4(ptr);
+	}
+    }
 
     if (monsterRandomizerChoiceCount() < 0) { /* need to recalculate */
         int zlevel, minmlev, maxmlev;
@@ -1449,8 +1453,8 @@ rndmonst()
         }
         if (mndx == SPECIAL_PM) {
             /* evidently they've all been exterminated */
-            debugpline0("rndmonst: no common mons!");
-            return (struct permonst *) 0;
+            debugpline0("randomMonster: no common mons!");
+            return NON_PM;
         } /* else `mndx' now ready for use below */
         zlevel = level_difficulty();
         /* determine the level of the weakest monster to make. */
@@ -1464,22 +1468,22 @@ rndmonst()
          * Find out how many monsters exist in the range we have selected.
          */
         for ( ; mndx < SPECIAL_PM; mndx++) { /* (`mndx' initialized above) */
-            ptr = &mons[mndx];
 	    setMonsterRandomizerChoices(mndx, 0);
-	    int geno = monsterGenerationMask(pmid4(ptr));
+	    int geno = monsterGenerationMask(mndx);
             if (tooweak(mndx, minmlev) || toostrong(mndx, maxmlev))
                 continue;
-            if (upper && !isupper(def_monsyms[monsterClass(pmid4(ptr))].sym))
+            if (upper && !isupper(def_monsyms[monsterClass(mndx)].sym))
                 continue;
-            if (elemlevel && wrong_elem_type(ptr))
+            if (elemlevel && wrongElementalTypeForThisPlane(mndx))
                 continue;
             if (uncommon(mndx))
                 continue;
             if (areYouInHell() && (geno & G_NOHELL))
                 continue;
-            ct = (int) (geno & G_FREQ) + align_shift(ptr);
+            ct = (int) (geno & G_FREQ) +
+		       adjustMonsterGenerationOddsByDungeonAlignent(mndx);
             if (ct < 0 || ct > 127)
-                panic("rndmonst: bad count [#%d: %d]", mndx, ct);
+                panic("randomMonster: bad count [#%d: %d]", mndx, ct);
             increaseMonsterRandomizerChoiceCount(ct);
 	    setMonsterRandomizerChoices(mndx, ct);
         }
@@ -1492,7 +1496,7 @@ rndmonst()
     if (monsterRandomizerChoiceCount() <= 0) {
         /* maybe no common mons left, or all are too weak or too strong */
         debugpline1("randomMonsterChoiceCount=%d", randomMonsterChoiceCount());
-        return (struct permonst *) 0;
+        return NON_PM;
     }
 
     /*
@@ -1507,26 +1511,28 @@ rndmonst()
     }
 
     if (mndx == SPECIAL_PM || uncommon(mndx)) { /* shouldn't happen */
-        impossible("rndmonst: bad `mndx' [#%d]", mndx);
-        return (struct permonst *) 0;
+        impossible("randomMonster: bad mndx [#%d]", mndx);
+        return NON_PM;
     }
-    return &mons[mndx];
+
+    return mndx;
 }
 
 /* called when you change level (experience or dungeon depth) or when
    monster species can no longer be created (genocide or extinction) */
 void
-reset_rndmonst(mndx)
-int mndx; /* particular species that can no longer be created */
+resetMonsterRandomizer(pmid)
+int pmid; /* particular species that can no longer be created */
 {
     /* cached selection info is out of date */
-    if (mndx == NON_PM) {
+    if (pmid == NON_PM) {
         setMonsterRandomizerChoiceCount(-1); /* full recalc needed */
-    } else if (mndx < SPECIAL_PM) {
-        decreaseMonsterRandomizerChoiceCount(monsterRandomizerChoices(mndx));
-        setMonsterRandomizerChoices(mndx, 0);
+    } else if (pmid < SPECIAL_PM) {
+        decreaseMonsterRandomizerChoiceCount(monsterRandomizerChoices(pmid));
+        setMonsterRandomizerChoices(pmid, 0);
     } /* note: safe to ignore extinction of unique monsters */
 }
+
 
 /* decide whether it's ok to generate a candidate monster by mkclass() */
 STATIC_OVL boolean

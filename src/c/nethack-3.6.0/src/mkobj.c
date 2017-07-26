@@ -344,7 +344,7 @@ rndmonnum()
     unsigned short excludeflags;
 
     /* Plan A: get a level-appropriate common monster */
-    ptr = rndmonst();
+    ptr = ptr4pmid(randomMonster());
     if (ptr)
         return monsndx(ptr);
 

@@ -77,6 +77,13 @@ int pmid4you() {
     return pmid4(youmonst.data);
 }
 
+struct permonst* ptr4pmid(int pmid) {
+    if ((NON_PM == pmid) || (pmid >= NUMMONS)) {
+        return NULL;
+    }
+    return &mons[pmid];
+}
+
 jclass getJavaClass(const char* className) {
     jclass javaClass = (*jni_env)->FindClass(jni_env, className);
     if ((*jni_env)->ExceptionCheck(jni_env)) {

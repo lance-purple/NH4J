@@ -1909,7 +1909,7 @@ struct mkroom *croom;
          * setting corpsenm).
          */
         for (wastyp = otmp->corpsenm; i < 1000; i++, wastyp = rndmonnum()) {
-            /* makemon without rndmonst() might create a group */
+            /* makemon without randomMonster() might create a group */
             was = makemon(&mons[wastyp], 0, 0, MM_NOCOUNTBIRTH);
             if (was) {
                 if (!resists_ston(was)) {
@@ -3059,7 +3059,7 @@ struct sp_coder *coder;
                     if (def_char_to_monclass(monclass) != MAXMCLASSES) {
                         pm = mkclass(def_char_to_monclass(monclass), G_NOGEN);
                     } else {
-                        pm = rndmonst();
+                        pm = ptr4pmid(randomMonster());
                     }
                     if (pm)
                         tmpobj.corpsenm = monsndx(pm);

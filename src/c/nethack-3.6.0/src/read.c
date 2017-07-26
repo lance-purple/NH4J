@@ -2024,7 +2024,7 @@ do_class_genocide()
                      * have G_GENOD or !G_GENO.
                      */
                     mvitals[i].mvflags |= (G_GENOD | G_NOCORPSE);
-                    reset_rndmonst(i);
+                    resetMonsterRandomizer(i);
                     kill_genocided_monsters();
                     update_inventory(); /* eggs & tins */
                     pline("Wiped out all %s.", nam);
@@ -2134,7 +2134,7 @@ int how;
             if (!strcmpi(buf, "none") || !strcmpi(buf, "nothing")) {
                 /* ... but no free pass if cursed */
                 if (!(how & REALLY)) {
-                    ptr = rndmonst();
+                    ptr = ptr4pmid(randomMonster());
                     if (!ptr)
                         return; /* no message, like normal case */
                     mndx = monsndx(ptr);
@@ -2240,7 +2240,7 @@ int how;
         } else if (ptr == youmonst.data) {
             rehumanize();
         }
-        reset_rndmonst(mndx);
+        resetMonsterRandomizer(mndx);
         kill_genocided_monsters();
         update_inventory(); /* in case identified eggs were affected */
     } else {
@@ -2437,7 +2437,7 @@ create_particular()
             if (monclass != MAXMCLASSES)
                 whichpm = mkclass(monclass, 0);
             else if (randmonst)
-                whichpm = rndmonst();
+                whichpm = ptr4pmid(randomMonster());
             mtmp = makemon(whichpm, currentX(), currentY(), NO_MM_FLAGS);
             if (!mtmp) {
                 /* quit trying if creation failed and is going to repeat */

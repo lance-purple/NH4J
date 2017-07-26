@@ -93,7 +93,7 @@ boolean quietly;
         } else if (!rn2(3)) {
             pm = &mons[pet_type()];
         } else {
-            pm = rndmonst();
+            pm = ptr4pmid(randomMonster());
             if (!pm) {
                 if (!quietly)
                     There("seems to be nothing available for a familiar.");

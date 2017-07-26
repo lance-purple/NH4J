@@ -3121,7 +3121,8 @@ wiz_migrate_mons()
             assign_level(&tolevel, &valley_level);
         else
             get_level(&tolevel, currentDepth() + 1);
-        ptr = rndmonst();
+
+        ptr = ptr4pmid(randomMonster());
         mtmp = makemon(ptr, 0, 0, NO_MM_FLAGS);
         if (mtmp)
             migrate_to_level(mtmp, ledger_no(&tolevel), MIGR_RANDOM,
