@@ -1432,9 +1432,9 @@ int randomMonster()
     register int mndx, ct;
 
     if (currentDungeonNumber() == quest_dnum && rn2(7)) {
-        struct permonst *ptr = qt_montype();
-        if (ptr	!= 0) {
-            return pmid4(ptr);
+        mndx = questMonsterType();
+        if (mndx != NON_PM) {
+            return mndx;
 	}
     }
 
