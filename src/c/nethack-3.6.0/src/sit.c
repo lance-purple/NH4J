@@ -210,7 +210,7 @@ dosit()
                 verbalize("Thy audience hath been summoned, %s!",
                           flags.female ? "Dame" : "Sire");
                 while (cnt--)
-                    (void) makemon(courtmon(), currentX(), currentY(), NO_MM_FLAGS);
+                    (void) makemon(ptr4pmid(throneRoomMonsterType()), currentX(), currentY(), NO_MM_FLAGS);
                 break;
               }
             case 8:

@@ -8,7 +8,7 @@
  *      nexttodoor() -- return TRUE if adjacent to a door
  *      has_dnstairs() -- return TRUE if given room has a down staircase
  *      has_upstairs() -- return TRUE if given room has an up staircase
- *      courtmon() -- generate a court monster
+ *      throneRoomMonsterType() -- generate a throne room monster type
  *      save_rooms() -- save rooms into file fd
  *      rest_rooms() -- restore rooms from file fd
  *      cmap_to_type() -- convert S_xxx symbol to XXX topology code
@@ -304,7 +304,7 @@ struct mkroom *sroom;
             if (type == COURT && IS_THRONE(levl[sx][sy].typ))
                 continue;
             mon = makemon((type == COURT)
-                           ? courtmon()
+                           ? ptr4pmid(throneRoomMonsterType())
                            : (type == BARRACKS)
                               ? squadmon()
                               : (type == MORGUE)
@@ -706,8 +706,7 @@ schar type;
     return (struct mkroom *) 0;
 }
 
-struct permonst *
-courtmon()
+int throneRoomMonsterType()
 {
     int i = rn2(60) + rn2(3 * level_difficulty());
     int pmid;
@@ -731,7 +730,7 @@ courtmon()
     else
         pmid = pickMonsterTypeOfClass(S_KOBOLD, 0);
 
-    return ptr4pmid(pmid);
+    return pmid;
 }
 
 #define NSTYPES (PM_CAPTAIN - PM_SOLDIER + 1)
