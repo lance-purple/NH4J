@@ -318,7 +318,7 @@ struct mkroom *sroom;
                                          : (type == COCKNEST)
                                              ? &mons[PM_COCKATRICE]
                                              : (type == ANTHOLE)
-                                                 ? antholemon()
+                                                 ? ptr4pmid(antHoleMonsterType())
                                                  : (struct permonst *) 0,
                           sx, sy, NO_MM_FLAGS);
             if (mon) {
@@ -455,8 +455,7 @@ morguemon()
                                 : ptr4pmid(pickMonsterTypeOfClass(S_ZOMBIE, 0)));
 }
 
-struct permonst *
-antholemon()
+int antHoleMonsterType()
 {
     int mtyp, indx, trycnt = 0;
 
@@ -479,8 +478,8 @@ antholemon()
         /* try again if chosen type has been genocided or used up */
     } while (++trycnt < 3 && (mvitals[mtyp].mvflags & G_GONE));
 
-    return ((mvitals[mtyp].mvflags & G_GONE) ? (struct permonst *) 0
-                                             : &mons[mtyp]);
+    return ((mvitals[mtyp].mvflags & G_GONE) ? NON_PM
+                                             : mtyp);
 }
 
 STATIC_OVL void
