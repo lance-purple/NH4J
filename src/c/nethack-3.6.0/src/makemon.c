@@ -137,12 +137,12 @@ register int x, y, n;
          * smaller group.
          */
         if (canPlaceMonsterNear(&mm, mm.x, mm.y, pmid4mon(mtmp), 0)) {
-            mon = makemon(mtmp->data, mm.x, mm.y, NO_MM_FLAGS);
+            mon = makeMonsterOfType(pmid4mon(mtmp), mm.x, mm.y, NO_MM_FLAGS);
             if (mon) {
                 mon->mpeaceful = FALSE;
                 mon->mavenge = 0;
                 set_malign(mon);
-                /* Undo the second peacefullyMinded() check in makemon(); if the
+                /* Undo the second peacefullyMinded() check in makeMonsterOfType(); if the
                  * monster turned out to be peaceful the first time we
                  * didn't create it at all; we don't want a second check.
                  */
@@ -902,7 +902,7 @@ struct monst *mon;
 }
 
 /* set up a new monster's initial level and hit points;
-   used by newcham() as well as by makemon() */
+   used by newcham() as well as by makeMonsterOfType() */
 void
 newmonhp(mon, pmid)
 struct monst *mon;
@@ -1025,11 +1025,12 @@ coord *cc;
  *      In case we make a monster group, only return the one at [x,y].
  */
 struct monst *
-makemon(ptr, x, y, mmflags)
-register struct permonst *ptr;
+makeMonsterOfType(pmid, x, y, mmflags)
+int pmid;
 register int x, y;
 int mmflags;
 {
+    struct permonst *ptr = ptr4pmid(pmid);
     register struct monst *mtmp;
     int mndx, mcham, ct, mitem;
     boolean anymon = (!ptr);
@@ -1368,7 +1369,7 @@ boolean neverask;
         if (!mptr && inWater() && canPlaceMonsterNear(&c, x, y, PM_GIANT_EEL, 0))
             x = c.x, y = c.y;
 
-        mon = makemon(mptr, x, y, NO_MM_FLAGS);
+        mon = makeMonsterOfType(pmid4(mptr), x, y, NO_MM_FLAGS);
         if (mon && canspotmon(mon))
             known = TRUE;
     }
@@ -2149,7 +2150,7 @@ int *seencount;  /* secondary output */
         if (!rn2(23))
             creatcnt += rnd(7);
         do {
-            mtmp = makemon((struct permonst *) 0, currentX(), currentY(), NO_MM_FLAGS);
+            mtmp = makeMonsterOfType(NON_PM, currentX(), currentY(), NO_MM_FLAGS);
             if (mtmp) {
                 ++moncount;
                 if (canspotmon(mtmp))

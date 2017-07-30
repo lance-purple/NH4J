@@ -101,7 +101,7 @@ boolean quietly;
             }
         }
 
-        mtmp = makemon(pm, x, y, MM_EDOG | MM_IGNOREWATER | NO_MINVENT);
+        mtmp = makeMonsterOfType(pmid4(pm), x, y, MM_EDOG | MM_IGNOREWATER | NO_MINVENT);
         if (otmp && !mtmp) { /* monster was genocided or square occupied */
             if (!quietly)
                 pline_The("figurine writhes and then shatters into pieces!");
@@ -179,7 +179,7 @@ makedog()
             petname = "Sirius"; /* Orion's dog */
     }
 
-    mtmp = makemon(&mons[pettype], currentX(), currentY(), MM_EDOG);
+    mtmp = makeMonsterOfType(pettype, currentX(), currentY(), MM_EDOG);
 
     if (!mtmp)
         return ((struct monst *) 0); /* pets were genocided */

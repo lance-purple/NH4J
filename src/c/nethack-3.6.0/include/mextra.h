@@ -39,14 +39,14 @@
  *	              }
  *	          }
  *
- *	 5. Consider adding a new makemon flag MM_XX flag to include/hack.h
+ *	 5. Consider adding a new makeMonsterOfType flag MM_XX flag to include/hack.h
  *and
- *	    a corresponding change to makemon() if you require your structure
+ *	    a corresponding change to makeMonsterOfType() if you require your structure
  *	    to be added at monster creation time. Initialize your struct
- *	    after a successful return from makemon().
+ *	    after a successful return from makeMonsterOfType().
  *
  *	     src/makemon.c:  if (mmflags & MM_XX) newXX(mtmp);
- *	     your new code:  mon = makemon(&mons[mnum], x, y, MM_XX);
+ *	     your new code:  mon = makeMonsterOfType(mnum, x, y, MM_XX);
  *
  *	 6. Adjust size_monst() in src/cmd.c appropriately.
  *	 7. Adjust dealloc_mextra() in src/mon.c to clean up

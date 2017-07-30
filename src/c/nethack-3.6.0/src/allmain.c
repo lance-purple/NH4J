@@ -122,8 +122,7 @@ boolean resuming;
                                  : (currentDepth() > depth(&stronghold_level))
                                        ? 50
                                        : 70))
-                        (void) makemon((struct permonst *) 0, 0, 0,
-                                       NO_MM_FLAGS);
+                        (void) makeMonsterOfType(NON_PM, 0, 0, NO_MM_FLAGS);
 
                     /* calculate how much time passed. */
                     if (u.usteed && youMoved()) {

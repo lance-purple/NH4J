@@ -1307,7 +1307,7 @@ demonpet()
     pline("Some hell-p has arrived!");
     i = !rn2(6) ? ndemon(currentAlignmentType()) : NON_PM;
     pm = i != NON_PM ? &mons[i] : youmonst.data;
-    if ((dtmp = makemon(pm, currentX(), currentY(), NO_MM_FLAGS)) != 0)
+    if ((dtmp = makeMonsterOfType(pmid4(pm), currentX(), currentY(), NO_MM_FLAGS)) != 0)
         (void) tamedog(dtmp, (struct obj *) 0);
     exercise(A_WIS, TRUE);
 }

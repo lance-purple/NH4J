@@ -445,11 +445,10 @@ dig(VOID_ARGS)
 
             switch (rn2(2)) {
             case 0:
-                mtmp = makemon(&mons[PM_EARTH_ELEMENTAL], dpx, dpy,
-                               NO_MM_FLAGS);
+                mtmp = makeMonsterOfType(PM_EARTH_ELEMENTAL, dpx, dpy, NO_MM_FLAGS);
                 break;
             default:
-                mtmp = makemon(&mons[PM_XORN], dpx, dpy, NO_MM_FLAGS);
+                mtmp = makeMonsterOfType(PM_XORN, dpx, dpy, NO_MM_FLAGS);
                 break;
             }
             if (mtmp)
@@ -931,13 +930,13 @@ coord *cc;
         if (youCanSee())
             pline(youAreHallucinating() ? "Dude!  The living dead!"
                                 : "The grave's owner is very upset!");
-        (void) makemon(ptr4pmid(pickMonsterTypeOfClass(S_ZOMBIE, 0)), dig_x, dig_y, NO_MM_FLAGS);
+        (void) makeMonsterOfType(pickMonsterTypeOfClass(S_ZOMBIE, 0), dig_x, dig_y, NO_MM_FLAGS);
         break;
     case 3:
         if (youCanSee())
             pline(youAreHallucinating() ? "I want my mummy!"
                                 : "You've disturbed a tomb!");
-        (void) makemon(ptr4pmid(pickMonsterTypeOfClass(S_MUMMY, 0)), dig_x, dig_y, NO_MM_FLAGS);
+        (void) makeMonsterOfType(pickMonsterTypeOfClass(S_MUMMY, 0), dig_x, dig_y, NO_MM_FLAGS);
         break;
     default:
         /* No corpse */

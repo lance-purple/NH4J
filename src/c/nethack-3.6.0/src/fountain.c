@@ -43,7 +43,7 @@ dowatersnakes()
         else
             You_hear("%s hissing!", something);
         while (num-- > 0)
-            if ((mtmp = makemon(&mons[PM_WATER_MOCCASIN], currentX(), currentY(),
+            if ((mtmp = makeMonsterOfType(PM_WATER_MOCCASIN, currentX(), currentY(),
                                 NO_MM_FLAGS)) != 0
                 && t_at(mtmp->mx, mtmp->my))
                 (void) mintrap(mtmp);
@@ -58,8 +58,7 @@ dowaterdemon()
     struct monst *mtmp;
 
     if (!(mvitals[PM_WATER_DEMON].mvflags & G_GONE)) {
-        if ((mtmp = makemon(&mons[PM_WATER_DEMON], currentX(), currentY(),
-                            NO_MM_FLAGS)) != 0) {
+        if ((mtmp = makeMonsterOfType(PM_WATER_DEMON, currentX(), currentY(), NO_MM_FLAGS)) != 0) {
             if (youCanSee())
                 You("unleash %s!", a_monnam(mtmp));
             else
@@ -86,8 +85,7 @@ dowaternymph()
     register struct monst *mtmp;
 
     if (!(mvitals[PM_WATER_NYMPH].mvflags & G_GONE)
-        && (mtmp = makemon(&mons[PM_WATER_NYMPH], currentX(), currentY(),
-                           NO_MM_FLAGS)) != 0) {
+        && (mtmp = makeMonsterOfType(PM_WATER_NYMPH, currentX(), currentY(), NO_MM_FLAGS)) != 0) {
         if (youCanSee())
             You("attract %s!", a_monnam(mtmp));
         else
@@ -531,7 +529,7 @@ drinksink()
         if (mvitals[PM_SEWER_RAT].mvflags & G_GONE)
             pline_The("sink seems quite dirty.");
         else {
-            mtmp = makemon(&mons[PM_SEWER_RAT], currentX(), currentY(), NO_MM_FLAGS);
+            mtmp = makeMonsterOfType(PM_SEWER_RAT, currentX(), currentY(), NO_MM_FLAGS);
             if (mtmp)
                 pline("Eek!  There's %s in the sink!",
                       (youCannotSee() || !canspotmon(mtmp)) ? "something squirmy"
@@ -571,7 +569,7 @@ drinksink()
     case 7:
         pline_The("water moves as though of its own will!");
         if ((mvitals[PM_WATER_ELEMENTAL].mvflags & G_GONE)
-            || !makemon(&mons[PM_WATER_ELEMENTAL], currentX(), currentY(), NO_MM_FLAGS))
+            || !makeMonsterOfType(PM_WATER_ELEMENTAL, currentX(), currentY(), NO_MM_FLAGS))
             pline("But it quiets down.");
         break;
     case 8:

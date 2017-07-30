@@ -468,8 +468,8 @@ boolean mkspecl;
 
     if (rn2(100) < currentDepth() && !MON_AT(sx, sy)
         && (pmid = pickMonsterTypeOfClass(S_MIMIC, 0)) != NON_PM
-        && (mtmp = makemon(ptr4pmid(pmid), sx, sy, NO_MM_FLAGS)) != 0) {
-        /* note: makemon will set the mimic symbol to a shop item */
+        && (mtmp = makeMonsterOfType(pmid, sx, sy, NO_MM_FLAGS)) != 0) {
+        /* note: makeMonsterOfType will set the mimic symbol to a shop item */
         if (rn2(10) >= currentDepth()) {
             mtmp->m_ap_type = M_AP_OBJECT;
             mtmp->mappearance = STRANGE_OBJECT;
@@ -650,9 +650,9 @@ struct mkroom *sroom;
         (void) rloc(m_at(sx, sy), FALSE); /* insurance */
 
     /* now initialize the shopkeeper monster structure */
-    if (!(shk = makemon(&mons[PM_SHOPKEEPER], sx, sy, MM_ESHK)))
+    if (!(shk = makeMonsterOfType(PM_SHOPKEEPER, sx, sy, MM_ESHK)))
         return -1;
-    eshkp = ESHK(shk); /* makemon(...,MM_ESHK) allocates this */
+    eshkp = ESHK(shk); /* makeMonsterOfType(...,MM_ESHK) allocates this */
     shk->isshk = shk->mpeaceful = 1;
     set_malign(shk);
     shk->msleeping = 0;

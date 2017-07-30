@@ -386,7 +386,7 @@ register int x, y, typ;
                  && sgn(currentAlignmentType()) == sgn(monsterAlignment(pmid4(mptr))));
         statue = mkcorpstat(STATUE, (struct monst *) 0, mptr, x, y,
                             CORPSTAT_NONE);
-        mtmp = makemon(&mons[statue->corpsenm], 0, 0, MM_NOCOUNTBIRTH);
+        mtmp = makeMonsterOfType(statue->corpsenm, 0, 0, MM_NOCOUNTBIRTH);
         if (!mtmp)
             break; /* should never happen */
         while (mtmp->minvent) {
@@ -609,14 +609,14 @@ int *fail_reason;
             /* block quest guards from other roles */
             || (monsterSound(pmid4(mptr)) == MS_GUARDIAN
                 && quest_info(MS_GUARDIAN) != mnum)) {
-            mon = makemon(&mons[PM_DOPPELGANGER], x, y,
+            mon = makeMonsterOfType(PM_DOPPELGANGER, x, y,
                           NO_MINVENT | MM_NOCOUNTBIRTH | MM_ADJACENTOK);
             /* if hero has protection from shape changers, cham field will
                be NON_PM; otherwise, set form to match the statue */
             if (mon && mon->cham >= LOW_PM)
                 (void) newcham(mon, mptr, FALSE, FALSE);
         } else
-            mon = makemon(mptr, x, y, (cause == ANIMATE_SPELL)
+            mon = makeMonsterOfType(pmid4(mptr), x, y, (cause == ANIMATE_SPELL)
                                           ? (NO_MINVENT | MM_ADJACENTOK)
                                           : NO_MINVENT);
     }
@@ -3082,7 +3082,7 @@ domagictrap()
             You_hear("a deafening roar!");
         incrementYourIntrinsicTimeout(DEAF, rn1(20, 30));
         while (cnt--)
-            (void) makemon((struct permonst *) 0, currentX(), currentY(), NO_MM_FLAGS);
+            (void) makeMonsterOfType(NON_PM, currentX(), currentY(), NO_MM_FLAGS);
     } else
         switch (fate) {
         case 10:

@@ -244,8 +244,7 @@ boolean sanctum; /* is it the seat of the high priest? */
     if (MON_AT(sx + 1, sy))
         (void) rloc(m_at(sx + 1, sy), FALSE); /* insurance */
 
-    priest = makemon(&mons[sanctum ? PM_HIGH_PRIEST : PM_ALIGNED_PRIEST],
-                     sx + 1, sy, MM_EPRI);
+    priest = makeMonsterOfType((sanctum ? PM_HIGH_PRIEST : PM_ALIGNED_PRIEST), sx + 1, sy, MM_EPRI);
     if (priest) {
         EPRI(priest)->shroom = (schar) ((sroom - rooms) + ROOMOFFSET);
         EPRI(priest)->shralign = Amask2align(levl[sx][sy].altarmask);
@@ -268,7 +267,7 @@ boolean sanctum; /* is it the seat of the high priest? */
         for (cnt = rn1(3, 2); cnt > 0; --cnt) {
             (void) mpickobj(priest, mkobj(SPBOOK_CLASS, FALSE));
         }
-        /* robe [via makemon()] */
+        /* robe [via makeMonsterOfType()] */
         if (rn2(2) && (otmp = which_armor(priest, W_ARMC)) != 0) {
             if (p_coaligned(priest))
                 uncurse(otmp);
@@ -518,7 +517,7 @@ int roomno;
                       make sure we give one the first time */
         }
         if (!rn2(5)
-            && (mtmp = makemon(&mons[PM_GHOST], currentX(), currentY(), NO_MM_FLAGS))
+            && (mtmp = makeMonsterOfType(PM_GHOST, currentX(), currentY(), NO_MM_FLAGS))
                    != 0) {
             /* [TODO: alter this (at a minimum, by switching from
                an exclamation to a simple declaration) if hero has
@@ -686,7 +685,7 @@ boolean peaceful;
     if (MON_AT(x, y))
         (void) rloc(m_at(x, y), FALSE); /* insurance */
 
-    if (!(roamer = makemon(ptr, x, y, MM_ADJACENTOK | MM_EMIN)))
+    if (!(roamer = makeMonsterOfType(pmid4(ptr), x, y, MM_ADJACENTOK | MM_EMIN)))
         return (struct monst *) 0;
 
     EMIN(roamer)->min_align = alignment;

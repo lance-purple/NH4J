@@ -1572,7 +1572,7 @@ struct mkroom *croom;
     else if (PM_ARCHEOLOGIST <= m->id && m->id <= PM_WIZARD)
         mtmp = mk_mplayer(pm, x, y, FALSE);
     else
-        mtmp = makemon(pm, x, y, NO_MM_FLAGS);
+        mtmp = makeMonsterOfType(pmid4(pm), x, y, NO_MM_FLAGS);
 
     if (mtmp) {
         x = mtmp->mx, y = mtmp->my; /* sanity precaution */
@@ -1902,15 +1902,15 @@ struct mkroom *croom;
         struct monst *was;
         struct obj *obj;
         int wastyp;
-        int i = 0; /* prevent endless loop in case makemon always fails */
+        int i = 0; /* prevent endless loop in case makeMonsterOfType always fails */
 
         /* Named random statues are of player types, and aren't stone-
          * resistant (if they were, we'd have to reset the name as well as
          * setting corpsenm).
          */
         for (wastyp = otmp->corpsenm; i < 1000; i++, wastyp = rndmonnum()) {
-            /* makemon without randomMonster() might create a group */
-            was = makemon(&mons[wastyp], 0, 0, MM_NOCOUNTBIRTH);
+            /* makeMonsterOfType without randomMonster() might create a group */
+            was = makeMonsterOfType(wastyp, 0, 0, MM_NOCOUNTBIRTH);
             if (was) {
                 if (!resists_ston(was)) {
                     (void) propagate(wastyp, TRUE, FALSE);
@@ -2532,11 +2532,11 @@ fill_empty_maze()
         }
         for (x = rn2(2); x; x--) {
             maze1xy(&mm, DRY);
-            (void) makemon(&mons[PM_MINOTAUR], mm.x, mm.y, NO_MM_FLAGS);
+            (void) makeMonsterOfType(PM_MINOTAUR, mm.x, mm.y, NO_MM_FLAGS);
         }
         for (x = rnd((int) (12 * mapfact) / 100); x; x--) {
             maze1xy(&mm, DRY);
-            (void) makemon((struct permonst *) 0, mm.x, mm.y, NO_MM_FLAGS);
+            (void) makeMonsterOfType(NON_PM, mm.x, mm.y, NO_MM_FLAGS);
         }
         for (x = rn2((int) (15 * mapfact) / 100); x; x--) {
             maze1xy(&mm, DRY);

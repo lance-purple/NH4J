@@ -400,11 +400,11 @@ make_bones:
     } else if (ariseFromGraveAsMonster() < LOW_PM) {
         /* drop everything */
         drop_upon_death((struct monst *) 0, (struct obj *) 0, currentX(), currentY());
-        /* trick makemon() into allowing monster creation
+        /* trick makeMonsterOfType() into allowing monster creation
          * on your location
          */
         in_mklev = TRUE;
-        mtmp = makemon(&mons[PM_GHOST], currentX(), currentY(), MM_NONAME);
+        mtmp = makeMonsterOfType(PM_GHOST, currentX(), currentY(), MM_NONAME);
         in_mklev = FALSE;
         if (!mtmp)
             return;
@@ -414,7 +414,7 @@ make_bones:
     } else {
         /* give your possessions to the monster you become */
         in_mklev = TRUE; /* use <u.ux,u.uy> as-is */
-        mtmp = makemon(&mons[ariseFromGraveAsMonster()], currentX(), currentY(), NO_MINVENT);
+        mtmp = makeMonsterOfType(ariseFromGraveAsMonster(), currentX(), currentY(), NO_MINVENT);
         in_mklev = FALSE;
         if (!mtmp) {
             drop_upon_death((struct monst *) 0, (struct obj *) 0, currentX(), currentY());
@@ -600,7 +600,7 @@ getbones()
 
             /* Note that getlev() now keeps tabs on unique
              * monsters such as demon lords, and tracks the
-             * birth counts of all species just as makemon()
+             * birth counts of all species just as makeMonsterOfType()
              * does.  If a bones monster is extinct or has been
              * subject to genocide, their mhpmax will be
              * set to the magic DEFUNCT_MONSTER cookie value.

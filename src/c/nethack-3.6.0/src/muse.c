@@ -82,7 +82,7 @@ struct obj *obj;
                     return 0;
                 mquaffmsg(mon, obj);
                 m_useup(mon, obj);
-                mtmp = makemon(&mons[PM_GHOST], cc.x, cc.y, NO_MM_FLAGS);
+                mtmp = makeMonsterOfType(PM_GHOST, cc.x, cc.y, NO_MM_FLAGS);
                 if (!mtmp) {
                     if (vis)
                         pline1(empty);
@@ -108,7 +108,7 @@ struct obj *obj;
                 return 0;
             mquaffmsg(mon, obj);
             m_useup(mon, obj);
-            mtmp = makemon(&mons[PM_DJINNI], cc.x, cc.y, NO_MM_FLAGS);
+            mtmp = makeMonsterOfType(PM_DJINNI, cc.x, cc.y, NO_MM_FLAGS);
             if (!mtmp) {
                 if (vis)
                     pline1(empty);
@@ -763,7 +763,7 @@ struct monst *mtmp;
             return 0;
         mzapmsg(mtmp, otmp, FALSE);
         otmp->spe--;
-        mon = makemon((struct permonst *) 0, cc.x, cc.y, NO_MM_FLAGS);
+        mon = makeMonsterOfType(NON_PM, cc.x, cc.y, NO_MM_FLAGS);
         if (mon && canspotmon(mon) && oseen)
             makeknown(WAN_CREATE_MONSTER);
         return 2;
@@ -789,7 +789,7 @@ struct monst *mtmp;
                `pm' is what to actually create (0 => random) */
             if (!canPlaceMonsterNear(&cc, mtmp->mx, mtmp->my, pmid4(fish), 0))
                 break;
-            mon = makemon(pm, cc.x, cc.y, NO_MM_FLAGS);
+            mon = makeMonsterOfType(pmid4(pm), cc.x, cc.y, NO_MM_FLAGS);
             if (mon && canspotmon(mon))
                 known = TRUE;
         }

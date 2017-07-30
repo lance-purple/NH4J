@@ -584,7 +584,7 @@ int spellnum;
                 break;
             pm = ptr4pmid(pickMonsterTypeOfClass(let, 0));
             if ((pm != 0)
-                && (mtmp2 = makemon(pm, bypos.x, bypos.y, MM_ANGRY)) != 0) {
+                && (mtmp2 = makeMonsterOfType(pmid4(pm), bypos.x, bypos.y, MM_ANGRY)) != 0) {
                 success = TRUE;
                 mtmp2->msleeping = mtmp2->mpeaceful = mtmp2->mtame = 0;
                 set_malign(mtmp2);

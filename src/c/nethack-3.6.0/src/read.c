@@ -2249,7 +2249,7 @@ int how;
         if (!(monsterGenerationMask(mndx) & G_UNIQ)
             && !(mvitals[mndx].mvflags & (G_GENOD | G_EXTINCT)))
             for (i = rn1(3, 4); i > 0; i--) {
-                if (!makemon(ptr, currentX(), currentY(), NO_MINVENT))
+                if (!makeMonsterOfType(pmid4(ptr), currentX(), currentY(), NO_MINVENT))
                     break; /* couldn't make one */
                 ++cnt;
                 if (mvitals[mndx].mvflags & G_EXTINCT)
@@ -2438,7 +2438,7 @@ create_particular()
                 whichpm = ptr4pmid(pickMonsterTypeOfClass(monclass, 0));
             else if (randmonst)
                 whichpm = ptr4pmid(randomMonster());
-            mtmp = makemon(whichpm, currentX(), currentY(), NO_MM_FLAGS);
+            mtmp = makeMonsterOfType(pmid4(whichpm), currentX(), currentY(), NO_MM_FLAGS);
             if (!mtmp) {
                 /* quit trying if creation failed and is going to repeat */
                 if (monclass == MAXMCLASSES && !randmonst)

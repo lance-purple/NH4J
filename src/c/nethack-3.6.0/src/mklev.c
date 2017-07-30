@@ -426,7 +426,7 @@ int type;
                      && (mvitals[PM_GIANT_MIMIC].mvflags & G_GONE))) {
                 /* make a mimic instead */
                 levl[x][y].doormask = D_NODOOR;
-                mtmp = makemon(ptr4pmid(pickMonsterTypeOfClass(S_MIMIC, 0)), x, y, NO_MM_FLAGS);
+                mtmp = makeMonsterOfType(pickMonsterTypeOfClass(S_MIMIC, 0), x, y, NO_MM_FLAGS);
                 if (mtmp)
                     set_mimic_sym(mtmp);
             }
@@ -803,7 +803,7 @@ skip0:
         if (haveSpecialItem(SPECIAL_ITEM_AMULET) || !rn2(3)) {
             x = somex(croom);
             y = somey(croom);
-            tmonst = makemon((struct permonst *) 0, x, y, NO_MM_FLAGS);
+            tmonst = makeMonsterOfType(NON_PM, x, y, NO_MM_FLAGS);
             if (tmonst && tmonst->data == &mons[PM_GIANT_SPIDER]
                 && !occupied(x, y))
                 (void) maketrap(x, y, WEB);
@@ -1365,7 +1365,7 @@ coord *tm;
 
     (void) maketrap(m.x, m.y, kind);
     if (kind == WEB)
-        (void) makemon(&mons[PM_GIANT_SPIDER], m.x, m.y, NO_MM_FLAGS);
+        (void) makeMonsterOfType(PM_GIANT_SPIDER, m.x, m.y, NO_MM_FLAGS);
 }
 
 void

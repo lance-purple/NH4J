@@ -975,7 +975,7 @@ struct obj **optr;
             && !(mvitals[PM_WOOD_NYMPH].mvflags & G_GONE)
             && !(mvitals[PM_WATER_NYMPH].mvflags & G_GONE)
             && !(mvitals[PM_MOUNTAIN_NYMPH].mvflags & G_GONE)
-            && (mtmp = makemon(ptr4pmid(pickMonsterTypeOfClass(S_NYMPH, 0)), currentX(), currentY(), NO_MINVENT))
+            && (mtmp = makeMonsterOfType(pickMonsterTypeOfClass(S_NYMPH, 0), currentX(), currentY(), NO_MINVENT))
                    != 0) {
             You("summon %s!", a_monnam(mtmp));
             if (!obj_resists(obj, 93, 100)) {
@@ -3245,7 +3245,7 @@ struct obj *obj;
             continue;
         } else if (obj->otyp == WAN_CREATE_MONSTER) {
             /* u.ux,u.uy creates it near you--x,y might create it in rock */
-            (void) makemon((struct permonst *) 0, currentX(), currentY(), NO_MM_FLAGS);
+            (void) makeMonsterOfType(NON_PM, currentX(), currentY(), NO_MM_FLAGS);
             continue;
         } else if (x != currentX() || y != currentY()) {
             /*

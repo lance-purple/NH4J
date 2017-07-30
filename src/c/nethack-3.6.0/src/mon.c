@@ -1853,10 +1853,10 @@ register struct monst *mtmp;
         /* Dead Kops may come back. */
         switch (rnd(5)) {
         case 1: /* returns near the stairs */
-            (void) makemon(mtmp->data, xdnstair, ydnstair, NO_MM_FLAGS);
+            (void) makeMonsterOfType(pmid4mon(mtmp), xdnstair, ydnstair, NO_MM_FLAGS);
             break;
         case 2: /* randomly */
-            (void) makemon(mtmp->data, 0, 0, NO_MM_FLAGS);
+            (void) makeMonsterOfType(pmid4mon(mtmp), 0, 0, NO_MM_FLAGS);
             break;
         default:
             break;
@@ -2462,9 +2462,9 @@ struct monst *mtmp;
         }
         if (!rn2(10)) {
             if (!rn2(13))
-                (void) makemon(&mons[PM_PURPLE_WORM], 0, 0, NO_MM_FLAGS);
+                (void) makeMonsterOfType(PM_PURPLE_WORM, 0, 0, NO_MM_FLAGS);
             else
-                (void) makemon((struct permonst *) 0, 0, 0, NO_MM_FLAGS);
+                (void) makeMonsterOfType(NON_PM, 0, 0, NO_MM_FLAGS);
         }
         aggravate();
     }

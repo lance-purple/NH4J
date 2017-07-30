@@ -3106,7 +3106,6 @@ wiz_migrate_mons()
 {
     int mcount = 0;
     char inbuf[BUFSZ];
-    struct permonst *ptr;
     struct monst *mtmp;
     d_level tolevel;
 
@@ -3122,8 +3121,8 @@ wiz_migrate_mons()
         else
             get_level(&tolevel, currentDepth() + 1);
 
-        ptr = ptr4pmid(randomMonster());
-        mtmp = makemon(ptr, 0, 0, NO_MM_FLAGS);
+        int pmid = randomMonster();
+        mtmp = makeMonsterOfType(pmid, 0, 0, NO_MM_FLAGS);
         if (mtmp)
             migrate_to_level(mtmp, ledger_no(&tolevel), MIGR_RANDOM,
                              (coord *) 0);

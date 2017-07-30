@@ -1080,7 +1080,7 @@ int how;
     if (ariseFromGraveAsMonster() >= LOW_PM && ariseFromGraveAsMonster() != PM_GREEN_SLIME) {
         /* give this feedback even if bones aren't going to be created,
            so that its presence or absence doesn't tip off the player to
-           new bones or their lack; it might be a lie if makemon fails */
+           new bones or their lack; it might be a lie if makeMonsterOfType fails */
         int graveMonsterType = ariseFromGraveAsMonster();
 	javaString graveMonster = monsterTypeName(graveMonsterType);
         Your("body rises from the dead as %s...",

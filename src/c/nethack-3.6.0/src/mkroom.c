@@ -303,23 +303,23 @@ struct mkroom *sroom;
             /* don't place monster on explicitly placed throne */
             if (type == COURT && IS_THRONE(levl[sx][sy].typ))
                 continue;
-            mon = makemon((type == COURT)
-                           ? ptr4pmid(throneRoomMonsterType())
+            mon = makeMonsterOfType((type == COURT)
+                           ? throneRoomMonsterType()
                            : (type == BARRACKS)
-                              ? squadmon()
+                              ? pmid4(squadmon())
                               : (type == MORGUE)
-                                 ? morguemon()
+                                 ? pmid4(morguemon())
                                  : (type == BEEHIVE)
                                      ? (sx == tx && sy == ty
-                                         ? &mons[PM_QUEEN_BEE]
-                                         : &mons[PM_KILLER_BEE])
+                                         ? PM_QUEEN_BEE
+                                         : PM_KILLER_BEE)
                                      : (type == LEPREHALL)
-                                         ? &mons[PM_LEPRECHAUN]
+                                         ? PM_LEPRECHAUN
                                          : (type == COCKNEST)
-                                             ? &mons[PM_COCKATRICE]
+                                             ? PM_COCKATRICE
                                              : (type == ANTHOLE)
-                                                 ? ptr4pmid(antHoleMonsterType())
-                                                 : (struct permonst *) 0,
+                                                 ? antHoleMonsterType()
+                                                 : NON_PM,
                           sx, sy, NO_MM_FLAGS);
             if (mon) {
                 mon->msleeping = 1;
@@ -426,7 +426,7 @@ int mm_flags;
             && (!revive_corpses
                 || !(otmp = sobj_at(CORPSE, cc.x, cc.y))
                 || !revive(otmp, FALSE)))
-            (void) makemon(mdat, cc.x, cc.y, mm_flags);
+            (void) makeMonsterOfType(pmid4(mdat), cc.x, cc.y, mm_flags);
     }
     level.flags.graveyard = TRUE; /* reduced chance for undead corpse */
 }
@@ -504,17 +504,16 @@ mkswamp() /* Michiel Huisjes & Fred de Wilde */
                         levl[sx][sy].typ = POOL;
                         if (!eelct || !rn2(4)) {
                             /* pickMonsterTypeOfClass() won't do, as we might get kraken */
-                            (void) makemon(rn2(5)
-                                              ? &mons[PM_GIANT_EEL]
+                            (void) makeMonsterOfType(rn2(5)
+                                              ? PM_GIANT_EEL
                                               : rn2(2)
-                                                 ? &mons[PM_PIRANHA]
-                                                 : &mons[PM_ELECTRIC_EEL],
+                                                 ? PM_PIRANHA
+                                                 : PM_ELECTRIC_EEL,
                                            sx, sy, NO_MM_FLAGS);
                             eelct++;
                         }
                     } else if (!rn2(4)) /* swamps tend to be moldy */
-                        (void) makemon(ptr4pmid(pickMonsterTypeOfClass(S_FUNGUS, 0)), sx, sy,
-                                       NO_MM_FLAGS);
+                        (void) makeMonsterOfType(pickMonsterTypeOfClass(S_FUNGUS, 0), sx, sy, NO_MM_FLAGS);
                 }
         level.flags.has_swamp = 1;
     }

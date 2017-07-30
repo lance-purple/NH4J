@@ -1782,7 +1782,7 @@ E void FDECL(newmonhp, (struct monst *, int));
 E struct mextra *NDECL(newmextra);
 E void FDECL(copy_mextra, (struct monst *, struct monst *));
 E void FDECL(dealloc_mextra, (struct monst *));
-E struct monst *FDECL(makemon, (struct permonst *, int, int, int));
+E struct monst *FDECL(makeMonsterOfType, (int, int, int, int));
 E boolean FDECL(create_critters, (int, struct permonst *, BOOLEAN_P));
 E int NDECL(randomMonster);
 E void FDECL(resetMonsterRandomizer, (int));

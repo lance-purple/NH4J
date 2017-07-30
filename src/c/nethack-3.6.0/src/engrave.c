@@ -570,7 +570,7 @@ doengrave()
         } else if (!levl[currentX()][currentY()].disturbed) {
             You("disturb the undead!");
             levl[currentX()][currentY()].disturbed = 1;
-            (void) makemon(&mons[PM_GHOUL], currentX(), currentY(), NO_MM_FLAGS);
+            (void) makeMonsterOfType(PM_GHOUL, currentX(), currentY(), NO_MM_FLAGS);
             exercise(A_WIS, FALSE);
             return 1;
         }
