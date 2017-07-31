@@ -1344,9 +1344,9 @@ int mndx;
 /* used for wand/scroll/spell of create monster */
 /* returns TRUE iff you know monsters have been created */
 boolean
-create_critters(cnt, mptr, neverask)
+createCrittersOfType(cnt, pmid, neverask)
 int cnt;
-struct permonst *mptr; /* usually null; used for confused reading */
+int pmid;
 boolean neverask;
 {
     coord c;
@@ -1366,12 +1366,15 @@ boolean neverask;
         x = currentX(), y = currentY();
         /* if in water, try to encourage an aquatic monster
            by finding and then specifying another wet location */
-        if (!mptr && inWater() && canPlaceMonsterNear(&c, x, y, PM_GIANT_EEL, 0))
-            x = c.x, y = c.y;
+        if ((NON_PM == pmid) && inWater() && canPlaceMonsterNear(&c, x, y, PM_GIANT_EEL, 0)) {
+            x = c.x;
+	    y = c.y;
+	}
 
-        mon = makeMonsterOfType(pmid4(mptr), x, y, NO_MM_FLAGS);
-        if (mon && canspotmon(mon))
+        mon = makeMonsterOfType(pmid, x, y, NO_MM_FLAGS);
+        if (mon && canspotmon(mon)) {
             known = TRUE;
+	}
     }
     return known;
 }

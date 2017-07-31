@@ -1783,7 +1783,7 @@ E struct mextra *NDECL(newmextra);
 E void FDECL(copy_mextra, (struct monst *, struct monst *));
 E void FDECL(dealloc_mextra, (struct monst *));
 E struct monst *FDECL(makeMonsterOfType, (int, int, int, int));
-E boolean FDECL(create_critters, (int, struct permonst *, BOOLEAN_P));
+E boolean FDECL(createCrittersOfType, (int, int, BOOLEAN_P));
 E int NDECL(randomMonster);
 E void FDECL(resetMonsterRandomizer, (int));
 E int FDECL(pickMonsterTypeOfClass, (CHAR_P, int));
