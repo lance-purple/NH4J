@@ -850,7 +850,7 @@ register const struct Attack mattk;
                     (void) artifact_hit(magr, mdef, otmp, &tmp, dieroll);
                     if (mdef->mhp <= 0)
                         return (MM_DEF_DIED
-                                | (grow_up(magr, mdef) ? 0 : MM_AGR_DIED));
+                                | ((NON_PM != growUpIntoMonsterType(magr, mdef)) ? 0 : MM_AGR_DIED));
                 }
                 if (tmp)
                     rustm(mdef, otmp);
@@ -880,7 +880,7 @@ register const struct Attack mattk;
                 return 0;
             else if (mdef->mtame && !vis)
                 pline("May %s roast in peace.", mon_nam(mdef));
-            return (MM_DEF_DIED | (grow_up(magr, mdef) ? 0 : MM_AGR_DIED));
+            return (MM_DEF_DIED | ((NON_PM != growUpIntoMonsterType(magr, mdef)) ? 0 : MM_AGR_DIED));
         }
         tmp += destroy_mitem(mdef, SCROLL_CLASS, AD_FIRE);
         tmp += destroy_mitem(mdef, SPBOOK_CLASS, AD_FIRE);
@@ -958,7 +958,7 @@ register const struct Attack mattk;
                 return 0;
             else if (mdef->mtame && !vis)
                 pline("May %s rust in peace.", mon_nam(mdef));
-            return (MM_DEF_DIED | (grow_up(magr, mdef) ? 0 : MM_AGR_DIED));
+            return (MM_DEF_DIED | ((NON_PM != growUpIntoMonsterType(magr, mdef)) ? 0 : MM_AGR_DIED));
         }
         erode_armor(mdef, ERODE_RUST);
         mdef->mstrategy &= ~STRAT_WAITFORU;
@@ -982,7 +982,7 @@ register const struct Attack mattk;
                 return 0;
             else if (mdef->mtame && !vis)
                 pline("May %s rot in peace.", mon_nam(mdef));
-            return (MM_DEF_DIED | (grow_up(magr, mdef) ? 0 : MM_AGR_DIED));
+            return (MM_DEF_DIED | ((NON_PM != growUpIntoMonsterType(magr, mdef)) ? 0 : MM_AGR_DIED));
         }
         erode_armor(mdef, ERODE_CORRODE);
         mdef->mstrategy &= ~STRAT_WAITFORU;
@@ -1009,7 +1009,7 @@ register const struct Attack mattk;
                 return 0;
             else if (mdef->mtame && !vis)
                 You(brief_feeling, "peculiarly sad");
-            return (MM_DEF_DIED | (grow_up(magr, mdef) ? 0 : MM_AGR_DIED));
+            return (MM_DEF_DIED | ((NON_PM != growUpIntoMonsterType(magr, mdef)) ? 0 : MM_AGR_DIED));
         }
         tmp = (mattk.damageType == AD_STON ? 0 : 1);
         break;
@@ -1113,7 +1113,7 @@ register const struct Attack mattk;
                 else if (mdef->mtame && !vis)
                     You(brief_feeling, "strangely sad");
                 return (MM_DEF_DIED
-                        | (grow_up(magr, mdef) ? 0 : MM_AGR_DIED));
+                        | ((NON_PM != growUpIntoMonsterType(magr, mdef)) ? 0 : MM_AGR_DIED));
             }
             if (!youAreDeaf()) {
                 if (!vis)
@@ -1204,7 +1204,7 @@ register const struct Attack mattk;
             mselftouch(mdef, (const char *) 0, FALSE);
             if (mdef->mhp <= 0)
                 return (MM_DEF_DIED
-                        | (grow_up(magr, mdef) ? 0 : MM_AGR_DIED));
+                        | ((NON_PM != growUpIntoMonsterType(magr, mdef)) ? 0 : MM_AGR_DIED));
             if (monsterClass(pmid4(pa)) == S_NYMPH && !tele_restrict(magr)) {
                 (void) rloc(magr, TRUE);
                 if (vis && !canspotmon(magr))
@@ -1318,7 +1318,7 @@ register const struct Attack mattk;
             } else if (pd == &mons[PM_GREEN_SLIME] && !isSlimeproof(pmid4(pa))) {
                 (void) newcham(magr, &mons[PM_GREEN_SLIME], FALSE, TRUE);
             } else if (pd == &mons[PM_WRAITH]) {
-                (void) grow_up(magr, (struct monst *) 0);
+                (void) growUpIntoMonsterType(magr, (struct monst *) 0);
                 /* don't grow up twice */
                 return (MM_DEF_DIED | (magr->mhp > 0 ? 0 : MM_AGR_DIED));
             } else if (pd == &mons[PM_NURSE]) {
@@ -1327,7 +1327,7 @@ register const struct Attack mattk;
         }
         /* caveat: above digestion handling doesn't keep `pa' up to date */
 
-        return (MM_DEF_DIED | (grow_up(magr, mdef) ? 0 : MM_AGR_DIED));
+        return (MM_DEF_DIED | ((NON_PM != growUpIntoMonsterType(magr, mdef)) ? 0 : MM_AGR_DIED));
     }
     return (res == MM_AGR_DIED) ? MM_AGR_DIED : MM_HIT;
 }

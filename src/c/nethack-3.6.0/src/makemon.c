@@ -1688,8 +1688,8 @@ int pmid;
 
 /* monster earned experience and will gain some hit points; it might also
    grow into a bigger monster (baby to adult, soldier to officer, etc) */
-struct permonst *
-grow_up(mtmp, victim)
+int
+growUpIntoMonsterType(mtmp, victim)
 struct monst *mtmp, *victim;
 {
     int oldtype, newtype, max_increase, cur_increase, lev_limit, hp_threshold;
@@ -1697,8 +1697,9 @@ struct monst *mtmp, *victim;
 
     /* monster died after killing enemy but before calling this function */
     /* currently possible if killing a gas spore */
-    if (mtmp->mhp <= 0)
-        return (struct permonst *) 0;
+    if (mtmp->mhp <= 0) {
+        return NON_PM;
+    }
 
     /* note:  none of the monsters with special hit point calculations
        have both little and big forms */
@@ -1744,8 +1745,9 @@ struct monst *mtmp, *victim;
 
     mtmp->mhpmax += max_increase;
     mtmp->mhp += cur_increase;
-    if (mtmp->mhpmax <= hp_threshold)
-        return ptr; /* doesn't gain a level */
+    if (mtmp->mhpmax <= hp_threshold) {
+        return pmid4(ptr); /* doesn't gain a level */
+    }
 
     if (isMonsterPlayer(pmid4(ptr)))
         lev_limit = 30; /* same as player */
@@ -1766,7 +1768,7 @@ struct monst *mtmp, *victim;
 	    }
             set_mon_data(mtmp, ptr, -1); /* keep mvitals[] accurate */
             mondied(mtmp);
-            return (struct permonst *) 0;
+            return NON_PM;
         } else if (canspotmon(mtmp)) {
 	    javaString monsterName = monsterTypeName(pmid4(ptr));
             pline("%s %s %s.", Monnam(mtmp),
@@ -1790,7 +1792,7 @@ struct monst *mtmp, *victim;
     if (mtmp->mhp > mtmp->mhpmax)
         mtmp->mhp = mtmp->mhpmax;
 
-    return ptr;
+    return pmid4(ptr);
 }
 
 int

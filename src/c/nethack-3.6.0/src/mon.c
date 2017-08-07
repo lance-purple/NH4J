@@ -809,7 +809,7 @@ register struct monst *mtmp;
                         if (newcham(mtmp, (struct permonst *) 0, FALSE, FALSE))
                             ptr = mtmp->data;
                     } else if (grow) {
-                        ptr = grow_up(mtmp, (struct monst *) 0);
+                        ptr = ptr4pmid(growUpIntoMonsterType(mtmp, (struct monst *) 0));
                     } else if (mstone) {
                         if (monsterPolymorphsWhenStoned(pmid4mon(mtmp))) {
                             mon_to_stone(mtmp);
@@ -935,7 +935,7 @@ struct monst *mtmp;
                 if (newcham(mtmp, (struct permonst *) 0, FALSE, FALSE))
                     ptr = mtmp->data;
             } else if (grow) {
-                ptr = grow_up(mtmp, (struct monst *) 0);
+                ptr = ptr4pmid(growUpIntoMonsterType(mtmp, (struct monst *) 0));
             } else if (heal) {
                 mtmp->mhp = mtmp->mhpmax;
             }

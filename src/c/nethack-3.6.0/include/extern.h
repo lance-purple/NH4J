@@ -1789,7 +1789,7 @@ E void FDECL(resetMonsterRandomizer, (int));
 E int FDECL(pickMonsterTypeOfClass, (CHAR_P, int));
 E int FDECL(mkclass_poly, (int));
 E int FDECL(adjustMonsterLevel, (int));
-E struct permonst *FDECL(grow_up, (struct monst *, struct monst *));
+E int FDECL(growUpIntoMonsterType, (struct monst *, struct monst *));
 E int FDECL(mongets, (struct monst *, int));
 E int FDECL(golemhp, (int));
 E boolean FDECL(peacefullyMinded, (int));

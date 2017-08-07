@@ -335,7 +335,7 @@ boolean devour;
 
     /* limit "instant" growth to prevent potential abuse */
     if (grow && (int) mtmp->m_lev < (int) monsterLevel(pmid4mon(mtmp)) + 15) {
-        if (!grow_up(mtmp, (struct monst *) 0))
+        if (NON_PM == growUpIntoMonsterType(mtmp, (struct monst *) 0))
             return 2;
     }
     if (heal)

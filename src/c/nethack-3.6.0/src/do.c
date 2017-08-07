@@ -656,7 +656,7 @@ boolean with_impact;
                     if (!swallowed())
                         delobj(obj);
                 } else if (could_grow) {
-                    (void) grow_up(u.ustuck, (struct monst *) 0);
+                    (void) growUpIntoMonsterType(u.ustuck, (struct monst *) 0);
                     delobj(obj); /* corpse is digested */
                 } else if (could_heal) {
                     u.ustuck->mhp = u.ustuck->mhpmax;
