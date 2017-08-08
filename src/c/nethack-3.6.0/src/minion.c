@@ -78,12 +78,12 @@ struct monst *mon;
         cnt = (!rn2(4) && isNamelessMajorDemon(dtype)) ? 2 : 1;
     } else if (isNamelessMajorDemon(pmid4(ptr))) {
         dtype = (!rn2(20)) ? dlord(atyp) : (!rn2(6)) ? ndemon(atyp)
-                                                     : monsndx(ptr);
+                                                     : pmid4(ptr);
         cnt = 1;
     } else if (isLawfulMinion(pmid4mon(mon))) {
         dtype = (isLord(pmid4(ptr)) && !rn2(20))
                     ? llord()
-                    : (isLord(pmid4(ptr)) || !rn2(6)) ? lminion() : monsndx(ptr);
+                    : (isLord(pmid4(ptr)) || !rn2(6)) ? lminion() : pmid4(ptr);
         cnt = (!rn2(4) && !isLord(dtype)) ? 2 : 1;
     } else if (ptr == &mons[PM_ANGEL]) {
         /* non-lawful angels can also summon */

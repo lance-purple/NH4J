@@ -583,7 +583,9 @@ struct permonst *pm1, *pm2;
 
     /* check for monsters which grow into more mature forms */
     if (let1 == let2) {
-        int m1 = monsndx(pm1), m2 = monsndx(pm2), prv, nxt;
+        int m1 = pmid1;
+        int m2 = pmid2;
+        int prv, nxt;
 
         /* we know m1 != m2 (very first check above); test all smaller
            forms of m1 against m2, then all larger ones; don't need to
@@ -610,25 +612,6 @@ struct permonst *pm1, *pm2;
         assorted bugs and blobs with their closest variants] */
     /* didn't match */
     return FALSE;
-}
-
-/* return an index into the mons array */
-int
-monsndx(ptr)
-struct permonst *ptr;
-{
-    register int i;
-
-    i = (int) (ptr - &mons[0]);
-    if (i < LOW_PM || i >= NUMMONS) {
-        panic("monsndx - could not index monster (%s)",
-              fmt_ptr((genericptr_t) ptr));
-        return NON_PM; /* will not get here */
-    }
-    if (i != pmid4(ptr)) {
-        panic("monsndx - %d != pmid4() %d", i, pmid4(ptr));
-    }
-    return i;
 }
 
 /* for handling alternate spellings */

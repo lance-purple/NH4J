@@ -1074,7 +1074,7 @@ struct monst *mtmp;
 
     do {
         idx = rn2(SIZE(qm));
-        if (qm[idx].mndx != 0 && monsndx(mtmp->data) == qm[idx].mndx)
+        if (qm[idx].mndx != 0 && pmid4mon(mtmp) == qm[idx].mndx)
             break;
         if (qm[idx].mlet != 0 && monsterClass(pmid4mon(mtmp)) == qm[idx].mlet)
             break;

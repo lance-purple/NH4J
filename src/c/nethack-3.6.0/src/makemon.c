@@ -172,7 +172,7 @@ m_initweap(mtmp)
 register struct monst *mtmp;
 {
     register struct permonst *ptr = mtmp->data;
-    register int mm = monsndx(ptr);
+    register int mm = pmid4mon(mtmp);
     struct obj *otmp;
     int bias, spe2, w1, w2;
 
@@ -550,7 +550,7 @@ register struct monst *mtmp;
         if (isMercenary(pmid4(ptr))) {
             register int mac;
 
-            switch (monsndx(ptr)) {
+            switch (pmid4(ptr)) {
             case PM_GUARD:
                 mac = -1;
                 break;
@@ -573,7 +573,7 @@ register struct monst *mtmp;
                 mac = -2;
                 break;
             default:
-                impossible("odd mercenary %d?", monsndx(ptr));
+                impossible("odd mercenary %d?", pmid4(ptr));
                 mac = 0;
                 break;
             }
@@ -742,7 +742,7 @@ xchar x, y; /* clone's preferred location or 0 (near mon) */
     struct monst *m2;
 
     /* may be too weak or have been extinguished for population control */
-    if (mon->mhp <= 1 || (mvitals[monsndx(mon->data)].mvflags & G_EXTINCT))
+    if (mon->mhp <= 1 || (mvitals[pmid4mon(mon)].mvflags & G_EXTINCT))
         return (struct monst *) 0;
 
     if (x == 0) {
@@ -886,11 +886,11 @@ struct monst *mon;
     /* like newmonhp, but home elementals are ignored, riders use normal d8 */
     if (isGolem(pmid4(ptr))) {
         /* draining usually won't be applicable for these critters */
-        hp = golemhp(monsndx(ptr)) / monsterLevel(pmid4(ptr));
+        hp = golemhp(pmid4(ptr)) / monsterLevel(pmid4(ptr));
     } else if (monsterLevel(pmid4(ptr)) > 49) {
         /* arbitrary; such monsters won't be involved in draining anyway */
         hp = 4 + rnd(4); /* 5..8 */
-    } else if (monsterClass(pmid4(ptr)) == S_DRAGON && monsndx(ptr) >= PM_GRAY_DRAGON) {
+    } else if (monsterClass(pmid4(ptr)) == S_DRAGON && pmid4(ptr) >= PM_GRAY_DRAGON) {
         /* adult dragons; newmonhp() uses areYouInEndgame() ? 8 : 4 + rnd(4)
          */
         hp = 4 + rn2(5); /* 4..8 */
@@ -1075,7 +1075,7 @@ int mmflags;
     }
 
     if (ptr) {
-        mndx = monsndx(ptr);
+        mndx = pmid4(ptr);
         /* if you are to make a specific monster and it has
            already been genocided, return */
         if (mvitals[mndx].mvflags & G_GENOD)
@@ -1103,7 +1103,7 @@ int mmflags;
                     after that, boulder carriers are fair game */
                  && ((tryct == 1 && throwsRocks(pmid4(ptr)) && areYouOnASokobanLevel())
                      || !goodPositionForMonsterOfType(x, y, pmid4(ptr), gpflags)));
-        mndx = monsndx(ptr);
+        mndx = pmid4(ptr);
     }
     (void) propagate(mndx, countbirth, FALSE);
     mtmp = newmonst();
@@ -1703,7 +1703,7 @@ struct monst *mtmp, *victim;
 
     /* note:  none of the monsters with special hit point calculations
        have both little and big forms */
-    oldtype = monsndx(ptr);
+    oldtype = pmid4(ptr);
     newtype = little_to_big(oldtype);
     if (newtype == PM_PRIEST && mtmp->female)
         newtype = PM_PRIESTESS;

@@ -2134,7 +2134,7 @@ int how;
                     ptr = ptr4pmid(randomMonster());
                     if (!ptr)
                         return; /* no message, like normal case */
-                    mndx = monsndx(ptr);
+                    mndx = pmid4(ptr);
                     break; /* remaining checks don't apply */
                 } else
                     return;

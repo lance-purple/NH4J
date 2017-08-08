@@ -516,7 +516,7 @@ register struct monst *mtmp;
         msound = MS_LEADER;
     /* make sure it's your role's quest guardian; adjust if not */
     else if (msound == MS_GUARDIAN && ptr != &mons[urole.guardnum])
-        msound = monsterSound(genus(monsndx(ptr), 1));
+        msound = monsterSound(genus(pmid4(ptr), 1));
     /* some normally non-speaking types can/will speak if hero is similar */
     else if (msound == MS_ORC         /* note: MS_ORC is same as MS_GRUNT */
              && (same_race(ptr, youmonst.data)           /* current form, */
@@ -812,7 +812,7 @@ register struct monst *mtmp;
         else if (monsterClass(pmid4(ptr)) == S_CENTAUR)
             pline_msg = "discusses hunting.";
         else
-            switch (monsndx(ptr)) {
+            switch (pmid4(ptr)) {
             case PM_HOBBIT:
                 pline_msg =
                     (mtmp->mhpmax - mtmp->mhp >= 10)

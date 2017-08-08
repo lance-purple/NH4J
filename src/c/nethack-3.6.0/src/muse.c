@@ -403,7 +403,7 @@ struct monst *mtmp;
         boolean ignore_boulders = (isVerySmallMonster(pmid4mon(mtmp))
                                    || throwsRocks(pmid4mon(mtmp))
                                    || passesThroughWalls(pmid4mon(mtmp))),
-            diag_ok = !NODIAG(monsndx(mtmp->data));
+            diag_ok = !NODIAG(pmid4mon(mtmp));
 
         for (i = 0; i < 10; ++i) /* 10: 9 spots plus sentinel */
             locs[i][0] = locs[i][1] = 0;
@@ -2454,7 +2454,7 @@ struct monst *mon;
         return TRUE;
     } 
 
-    switch (monsndx(ptr)) {
+    switch (pmid4(ptr)) {
     case PM_FOREST_CENTAUR:
     case PM_GARTER_SNAKE:
     case PM_GECKO:

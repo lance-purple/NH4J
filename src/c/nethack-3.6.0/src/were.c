@@ -19,7 +19,7 @@ register struct monst *mon;
             if (!youAreDeaf() && !canseemon(mon)) {
                 const char *howler;
 
-                switch (monsndx(mon->data)) {
+                switch (pmid4mon(mon)) {
                 case PM_WEREWOLF:
                     howler = "wolf";
                     break;
@@ -94,7 +94,7 @@ register struct monst *mon;
 {
     register int pm;
 
-    pm = counter_were(monsndx(mon->data));
+    pm = counter_were(pmid4mon(mon));
     if (pm < LOW_PM) {
 	javaString wereName = monsterTypeName(pmid4mon(mon));
         impossible("unknown lycanthrope %s.", wereName.c_str);

@@ -857,11 +857,11 @@ not_special:
             || is_obj_mappear(&youmonst,STRANGE_OBJECT) || lurking()
             || (is_obj_mappear(&youmonst,GOLD_PIECE) && !likesGold(pmid))
             || (mtmp->mpeaceful && !mtmp->isshk) /* allow shks to follow */
-            || ((monsndx(ptr) == PM_STALKER || mc == S_BAT
+            || ((pmid4(ptr) == PM_STALKER || mc == S_BAT
                  || mc == S_LIGHT) && !rn2(3)))
             appr = 0;
 
-        if (monsndx(ptr) == PM_LEPRECHAUN && (appr == 1)
+        if (pmid4(ptr) == PM_LEPRECHAUN && (appr == 1)
             && ((lepgold = findgold(mtmp->minvent))
                 && (lepgold->quan
                     > ((ygold = findgold(invent)) ? ygold->quan : 0L))))
@@ -1611,7 +1611,7 @@ struct permonst *ptr;
             mon->cham = NON_PM;
         reslt = newcham(mon, ptr, FALSE, FALSE);
     } else if (mon->cham == NON_PM && ptr != mon->data) {
-        mon->cham = monsndx(mon->data);
+        mon->cham = pmid4mon(mon);
         reslt = newcham(mon, ptr, FALSE, FALSE);
     }
     return reslt;

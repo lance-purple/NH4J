@@ -1964,7 +1964,7 @@ register const struct Attack mattk;
                 } else {
                     tmp = 1 + (monsterCorpseWeight(pmid4(pd)) >> 8);
                     if (corpse_chance(mdef, &youmonst, TRUE)
-                        && !(mvitals[monsndx(pd)].mvflags & G_NOCORPSE)) {
+                        && !(mvitals[pmid4(pd)].mvflags & G_NOCORPSE)) {
                         /* nutrition only if there can be a corpse */
                         increaseCurrentNutrition((monsterCorpseNutrition(pmid4(pd)) + 1) / 2);
                     } else
