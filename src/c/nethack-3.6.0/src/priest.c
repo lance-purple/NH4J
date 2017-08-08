@@ -668,8 +668,8 @@ register struct monst *priest;
 }
 
 struct monst *
-mk_roamer(ptr, alignment, x, y, peaceful)
-register struct permonst *ptr;
+makeRoamingMonsterOfType(pmid, alignment, x, y, peaceful)
+int pmid;
 aligntyp alignment;
 xchar x, y;
 boolean peaceful;
@@ -685,7 +685,7 @@ boolean peaceful;
     if (MON_AT(x, y))
         (void) rloc(m_at(x, y), FALSE); /* insurance */
 
-    if (!(roamer = makeMonsterOfType(pmid4(ptr), x, y, MM_ADJACENTOK | MM_EMIN)))
+    if (!(roamer = makeMonsterOfType(pmid, x, y, MM_ADJACENTOK | MM_EMIN)))
         return (struct monst *) 0;
 
     EMIN(roamer)->min_align = alignment;
