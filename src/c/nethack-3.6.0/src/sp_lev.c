@@ -1570,7 +1570,7 @@ struct mkroom *croom;
     if (m->align != -(MAX_REGISTERS + 2))
         mtmp = makeRoamingMonsterOfType(pmid4(pm), Amask2align(amask), x, y, m->peaceful);
     else if (PM_ARCHEOLOGIST <= m->id && m->id <= PM_WIZARD)
-        mtmp = mk_mplayer(pm, x, y, FALSE);
+        mtmp = makeMonsterPlayerOfType(pmid4(pm), x, y, FALSE);
     else
         mtmp = makeMonsterOfType(pmid4(pm), x, y, NO_MM_FLAGS);
 

@@ -2247,7 +2247,7 @@ E void NDECL(monst_init);
 
 /* ### mplayer.c ### */
 
-E struct monst *FDECL(mk_mplayer, (struct permonst *, XCHAR_P, XCHAR_P, BOOLEAN_P));
+E struct monst *FDECL(makeMonsterPlayerOfType, (int, XCHAR_P, XCHAR_P, BOOLEAN_P));
 E void FDECL(create_mplayers, (int, BOOLEAN_P));
 E void FDECL(mplayer_talk, (struct monst *));
 

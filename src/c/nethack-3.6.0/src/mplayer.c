@@ -116,16 +116,17 @@ short typ;
 }
 
 struct monst *
-mk_mplayer(ptr, x, y, special)
-register struct permonst *ptr;
+makeMonsterPlayerOfType(pmid, x, y, special)
+int pmid;
 xchar x, y;
 register boolean special;
 {
     register struct monst *mtmp;
     char nam[PL_NSIZ];
 
-    if (!isMonsterPlayer(pmid4(ptr)))
+    if (!isMonsterPlayer(pmid)) {
         return ((struct monst *) 0);
+    }
 
     if (MON_AT(x, y))
         (void) rloc(m_at(x, y), FALSE); /* insurance */
@@ -133,7 +134,7 @@ register boolean special;
     if (!areYouInEndgame())
         special = FALSE;
 
-    if ((mtmp = makeMonsterOfType(pmid4(ptr), x, y, NO_MM_FLAGS)) != 0) {
+    if ((mtmp = makeMonsterOfType(pmid, x, y, NO_MM_FLAGS)) != 0) {
         short weapon = rn2(2) ? LONG_SWORD : rnd_class(SPEAR, BULLWHIP);
         short armor =
             rnd_class(GRAY_DRAGON_SCALE_MAIL, YELLOW_DRAGON_SCALE_MAIL);
@@ -160,7 +161,7 @@ register boolean special;
         mtmp->mpeaceful = 0;
         set_malign(mtmp); /* peaceful may have changed again */
 
-        switch (monsndx(ptr)) {
+        switch (pmid) {
         case PM_ARCHEOLOGIST:
             if (rn2(2))
                 weapon = BULLWHIP;
@@ -346,7 +347,7 @@ boolean special;
         if (tryct > 50)
             return;
 
-        (void) mk_mplayer(&mons[pm], (xchar) x, (xchar) y, special);
+        (void) makeMonsterPlayerOfType(pm, (xchar) x, (xchar) y, special);
         num--;
     }
 }
