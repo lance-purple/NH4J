@@ -2402,7 +2402,7 @@ E char *FDECL(fruitname, (BOOLEAN_P));
 E char *FDECL(xname, (struct obj *));
 E char *FDECL(mshot_xname, (struct obj *));
 E boolean FDECL(the_unique_obj, (struct obj *));
-E boolean FDECL(the_unique_pm, (struct permonst *));
+E boolean FDECL(isUniqueMonsterType, (int));
 E char *FDECL(doname, (struct obj *));
 E char *FDECL(doname_with_price, (struct obj *));
 E boolean FDECL(not_fully_identified, (struct obj *));

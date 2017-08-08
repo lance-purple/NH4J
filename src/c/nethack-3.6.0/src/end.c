@@ -433,7 +433,7 @@ int how;
 
         if (mimicker) {
             /* realName is already correct because champtr==mptr;
-               set up fake mptr for typeIsProperName/the_unique_pm */
+               set up fake mptr for typeIsProperName/isUniqueMonsterType */
             mptr = &mons[mtmp->mappearance];
 	    releaseJavaString(fakeName);
 	    fakeName = monsterTypeName(pmid4(mptr));
@@ -450,7 +450,7 @@ int how;
            but vampires don't take on any shapes which warrant that */
         if (alt || typeIsProperName(pmid4(mptr))) /* no article */
             Strcpy(shape, fakeName.c_str);
-        else if (the_unique_pm(mptr)) /* "the"; don't use the() here */
+        else if (isUniqueMonsterType(pmid4(mptr))) /* "the"; don't use the() here */
             Sprintf(shape, "the %s", fakeName.c_str);
         else /* "a"/"an" */
             Strcpy(shape, an(fakeName.c_str));

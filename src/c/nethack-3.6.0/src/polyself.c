@@ -472,7 +472,7 @@ int psflags;
                     ++tryct;
                 }
                 javaString pm_name = monsterTypeName(mntmp);
-                if (the_unique_pm(&mons[mntmp])) {
+                if (isUniqueMonsterType(mntmp)) {
                     You_cant("polymorph into %s.", the(pm_name.c_str));
 		}
                 else if (!typeIsProperName(mntmp)) {

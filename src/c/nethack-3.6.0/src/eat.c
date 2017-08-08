@@ -1300,7 +1300,7 @@ const char *mesg;
             what.c_str = rndmonnam(NULL);
         } else {
             what = monsterTypeName(mnum);
-            if (the_unique_pm(&mons[mnum]))
+            if (isUniqueMonsterType(mnum))
                 which = 2;
             else if (typeIsProperName(mnum))
                 which = 1;
@@ -1661,7 +1661,7 @@ struct obj *otmp;
 
         pline("%s%s %s!",
               typeIsProperName(mnum)
-                 ? "" : the_unique_pm(&mons[mnum]) ? "The " : "This ",
+                 ? "" : isUniqueMonsterType(mnum) ? "The " : "This ",
               food_xname(otmp, FALSE),
               youAreHallucinating()
                   ? (yummy ? ((currentMonsterNumber() == PM_TIGER) ? "is gr-r-reat"
