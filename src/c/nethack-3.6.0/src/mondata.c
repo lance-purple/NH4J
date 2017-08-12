@@ -504,17 +504,15 @@ register struct monst *mdef, *magr;
 
 /* determine whether two monster types are from the same species */
 boolean
-same_race(pm1, pm2)
-struct permonst *pm1, *pm2;
+sameMonsterType(pmid1, pmid2)
+int pmid1;
+int pmid2;
 {
-    int pmid1 = pmid4(pm1);
-    int pmid2 = pmid4(pm2);
-
     int let1 = monsterClass(pmid1);
     int let2 = monsterClass(pmid2);
 
 
-    if (pm1 == pm2)
+    if (pmid1 == pmid2)
         return TRUE; /* exact match */
     /* player races have their own predicates */
     if (isHuman(pmid1))
@@ -534,10 +532,8 @@ struct permonst *pm1, *pm2;
         return isGolem(pmid2); /* even moreso... */
     if (isMindFlayer(pmid1))
         return isMindFlayer(pmid2);
-    if (let1 == S_KOBOLD || pm1 == &mons[PM_KOBOLD_ZOMBIE]
-        || pm1 == &mons[PM_KOBOLD_MUMMY])
-        return (let2 == S_KOBOLD || pm2 == &mons[PM_KOBOLD_ZOMBIE]
-                || pm2 == &mons[PM_KOBOLD_MUMMY]);
+    if (let1 == S_KOBOLD || pmid1 == PM_KOBOLD_ZOMBIE || pmid1 == PM_KOBOLD_MUMMY)
+        return (let2 == S_KOBOLD || pmid2 == PM_KOBOLD_ZOMBIE || pmid2 == PM_KOBOLD_MUMMY);
     if (let1 == S_OGRE)
         return (let2 == S_OGRE);
     if (let1 == S_NYMPH)
@@ -556,7 +552,7 @@ struct permonst *pm1, *pm2;
     if (isMinion(pmid1))
         return isMinion(pmid2); /* [needs work?] */
     /* tengu don't match imps (first test handled case of both being tengu) */
-    if (pm1 == &mons[PM_TENGU] || pm2 == &mons[PM_TENGU])
+    if (pmid1 == PM_TENGU || pmid2 == PM_TENGU)
         return FALSE;
     if (let1 == S_IMP)
         return (let2 == S_IMP);
@@ -600,11 +596,10 @@ struct permonst *pm1, *pm2;
                 return TRUE;
     }
     /* not caught by little/big handling */
-    if (pm1 == &mons[PM_GARGOYLE] || pm1 == &mons[PM_WINGED_GARGOYLE])
-        return (pm2 == &mons[PM_GARGOYLE]
-                || pm2 == &mons[PM_WINGED_GARGOYLE]);
-    if (pm1 == &mons[PM_KILLER_BEE] || pm1 == &mons[PM_QUEEN_BEE])
-        return (pm2 == &mons[PM_KILLER_BEE] || pm2 == &mons[PM_QUEEN_BEE]);
+    if (pmid1 == PM_GARGOYLE || pmid1 == PM_WINGED_GARGOYLE)
+        return (pmid2 == PM_GARGOYLE || pmid2 == PM_WINGED_GARGOYLE);
+    if (pmid1 == PM_KILLER_BEE || pmid1 == PM_QUEEN_BEE)
+        return (pmid2 == PM_KILLER_BEE || pmid2 == PM_QUEEN_BEE);
 
     if (isLongWorm(pmid1))
         return isLongWorm(pmid2); /* handles tail */

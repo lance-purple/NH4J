@@ -607,7 +607,6 @@ int pm;
 boolean allowmsg;
 {
     static NEARDATA long ate_brains = 0L;
-    struct permonst *fptr = &mons[pm]; /* food type */
 
     /* when poly'd into a mind flayer, multiple tentacle hits in one
        turn cause multiple digestion checks to occur; avoid giving
@@ -621,9 +620,9 @@ boolean allowmsg;
            and also shouldn't eat current species when polymorphed
            (even if having the form of something which doesn't care
            about cannibalism--hero's innate traits aren't altered) */
-        && (isOfYourRace(pmid4(fptr), urace.selfmask) || (areYouPolymorphed() && same_race(youmonst.data, fptr)))) {
+        && (isOfYourRace(pm, urace.selfmask) || (areYouPolymorphed() && sameMonsterType(pmid4you(), pm)))) {
         if (allowmsg) {
-            if (areYouPolymorphed() && isOfYourRace(pmid4(fptr), urace.selfmask))
+            if (areYouPolymorphed() && isOfYourRace(pm, urace.selfmask))
                 You("have a bad feeling deep inside.");
             You("cannibal!  You will regret this!");
         }
