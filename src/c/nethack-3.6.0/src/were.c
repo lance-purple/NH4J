@@ -109,7 +109,7 @@ register struct monst *mon;
 	releaseJavaString(monsterName);
     }
 
-    set_mon_data(mon, &mons[pm], 0);
+    setMonsterType(mon, pm, 0);
     if (mon->msleeping || !mon->mcanmove) {
         /* transformation wakens and/or revitalizes */
         mon->msleeping = 0;

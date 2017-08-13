@@ -1126,7 +1126,7 @@ int mmflags;
 
     int msound = monsterSound(pmid4(ptr));
 
-    set_mon_data(mtmp, ptr, 0);
+    setMonsterType(mtmp, pmid4(ptr), 0);
     if (msound == MS_LEADER && quest_info(MS_LEADER) == mndx)
         quest_status.leader_m_id = mtmp->m_id;
     mtmp->mnum = mndx;
@@ -1766,7 +1766,7 @@ struct monst *mtmp, *victim;
                       isNonliving(pmid4(ptr)) ? "expires" : "dies");
 		releaseJavaString(monsterName);
 	    }
-            set_mon_data(mtmp, ptr, -1); /* keep mvitals[] accurate */
+            setMonsterType(mtmp, pmid4(ptr), -1); /* keep mvitals[] accurate */
             mondied(mtmp);
             return NON_PM;
         } else if (canspotmon(mtmp)) {
@@ -1776,7 +1776,7 @@ struct monst *mtmp, *victim;
                   an(monsterName.c_str));
 	    releaseJavaString(monsterName);
         }
-        set_mon_data(mtmp, ptr, 1);    /* preserve intrinsics */
+        setMonsterType(mtmp, pmid4(ptr), 1);    /* preserve intrinsics */
         newsym(mtmp->mx, mtmp->my);    /* color may change */
         lev_limit = (int) mtmp->m_lev; /* never undo increment */
     }

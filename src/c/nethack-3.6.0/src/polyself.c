@@ -52,7 +52,7 @@ set_uasmon()
     int pmid = currentMonsterNumber();
     struct permonst *mdat = &mons[pmid];
 
-    set_mon_data(&youmonst, mdat, 0);
+    setMonsterType(&youmonst, pmid, 0);
 
     PROPSET(FIRE_RES, resists_fire(&youmonst));
     PROPSET(COLD_RES, resists_cold(&youmonst));

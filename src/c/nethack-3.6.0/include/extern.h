@@ -2056,7 +2056,7 @@ E void FDECL(decide_to_shapeshift, (struct monst *, int));
 
 /* ### mondata.c ### */
 
-E void FDECL(set_mon_data, (struct monst *, struct permonst *, int));
+E void FDECL(setMonsterType, (struct monst *, int, int));
 E boolean FDECL(monsterHasAttackWithDamageType, (int, const int, const int));
 E const struct Attack FDECL(monsterAttackWithDamageType, (int, const int, const int));
 E boolean FDECL(monsterHasAttackType, (int, int));
