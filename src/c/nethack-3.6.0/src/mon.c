@@ -598,7 +598,7 @@ mcalcdistress()
             if (is_vampshifter(mtmp) || monsterClass(pmid4mon(mtmp)) == S_VAMPIRE)
                 decide_to_shapeshift(mtmp, 0);
             else if (!rn2(6))
-                (void) newcham(mtmp, (struct permonst *) 0, FALSE, FALSE);
+                (void) changeChameleonToType(mtmp, NON_PM, FALSE, FALSE);
         }
         were_change(mtmp);
 
@@ -806,7 +806,7 @@ register struct monst *mtmp;
                     delobj(otmp);
                     ptr = mtmp->data;
                     if (poly) {
-                        if (newcham(mtmp, (struct permonst *) 0, FALSE, FALSE))
+                        if (changeChameleonToType(mtmp, NON_PM, FALSE, FALSE))
                             ptr = mtmp->data;
                     } else if (grow) {
                         ptr = ptr4pmid(growUpIntoMonsterType(mtmp, (struct monst *) 0));
@@ -932,7 +932,7 @@ struct monst *mtmp;
             delobj(otmp); /* munch */
             ptr = mtmp->data;
             if (poly) {
-                if (newcham(mtmp, (struct permonst *) 0, FALSE, FALSE))
+                if (changeChameleonToType(mtmp, NON_PM, FALSE, FALSE))
                     ptr = mtmp->data;
             } else if (grow) {
                 ptr = ptr4pmid(growUpIntoMonsterType(mtmp, (struct monst *) 0));
@@ -1788,7 +1788,7 @@ register struct monst *mtmp;
                     rloc_to(mtmp, new_xy.x, new_xy.y);
                 }
             }
-            newcham(mtmp, &mons[mndx], FALSE, FALSE);
+            changeChameleonToType(mtmp, mndx, FALSE, FALSE);
             if (mtmp->data == &mons[mndx])
                 mtmp->cham = NON_PM;
             else
@@ -2325,7 +2325,7 @@ struct monst *mtmp;
         if (canseemon(mtmp)) {
             pline("%s solidifies...", Monnam(mtmp));
 	}
-        if (newcham(mtmp, &mons[PM_STONE_GOLEM], FALSE, FALSE)) {
+        if (changeChameleonToType(mtmp, PM_STONE_GOLEM, FALSE, FALSE)) {
             if (canseemon(mtmp)) {
 		javaString monsterName = monsterTypeName(pmid4mon(mtmp));
                 pline("Now it's %s.", an(monsterName.c_str));
@@ -2623,7 +2623,7 @@ rescham()
             continue;
         mcham = (int) mtmp->cham;
         if (mcham >= LOW_PM) {
-            (void) newcham(mtmp, &mons[mcham], FALSE, FALSE);
+            (void) changeChameleonToType(mtmp, mcham, FALSE, FALSE);
             mtmp->cham = NON_PM;
         }
         if (isWere(pmid4mon(mtmp)) && monsterClass(pmid4mon(mtmp)) != S_HUMAN)
@@ -2668,7 +2668,7 @@ struct monst *mon;
         mcham = (int) mon->cham;
         if (mcham >= LOW_PM) {
             mon->cham = NON_PM;
-            (void) newcham(mon, &mons[mcham], FALSE, FALSE);
+            (void) changeChameleonToType(mon, mcham, FALSE, FALSE);
         } else if (isWere(pmid4mon(mon)) && !isHuman(pmid4mon(mon))) {
             new_were(mon);
         }
@@ -2832,10 +2832,10 @@ int shiftflags;
          * If we're not already shifted and in good health, maybe shift.
          */
         if ((mon->mhp <= mon->mhpmax / 6) && rn2(4) && (mon->cham >= LOW_PM))
-            (void) newcham(mon, &mons[mon->cham], FALSE, msg);
+            (void) changeChameleonToType(mon, mon->cham, FALSE, msg);
     } else if (monsterClass(pmid4mon(mon)) == S_VAMPIRE && mon->cham == NON_PM && !rn2(6)
                && (mon->mhp > mon->mhpmax - ((mon->mhpmax / 10) + 1))) {
-        (void) newcham(mon, (struct permonst *) 0, FALSE, msg);
+        (void) changeChameleonToType(mon, NON_PM, FALSE, msg);
     }
     /* override the 10% chance for sex change */
     ptr = mon->data;
@@ -3067,7 +3067,7 @@ struct monst *mon;
     return mndx;
 }
 
-/* this used to be inline within newcham() but monpolycontrol needs it too */
+/* this used to be inline within changeChameleonToType() but monpolycontrol needs it too */
 STATIC_OVL struct permonst *
 accept_newcham_form(mndx)
 int mndx;
@@ -3107,10 +3107,10 @@ struct permonst *mdat;
 /* make a chameleon take on another shape, or a polymorph target
    (possibly self-inflicted) become a different monster;
    returns 1 if it actually changes form */
-int
-newcham(mtmp, mdat, polyspot, msg)
+boolean
+changeChameleonToType(mtmp, pmid, polyspot, msg)
 struct monst *mtmp;
-struct permonst *mdat;
+int pmid;
 boolean polyspot; /* change is the result of wand or spell of polymorph */
 boolean msg;      /* "The oldmon turns into a newmon!" */
 {
@@ -3120,8 +3120,9 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
     char oldname[BUFSZ], newname[BUFSZ];
 
     /* Riders are immune to polymorph and green slime */
-    if (isRiderOfTheApocalypse(pmid4mon(mtmp)))
-        return 0;
+    if (isRiderOfTheApocalypse(pmid4mon(mtmp))) {
+        return FALSE;
+    }
 
     if (msg) {
         /* like Monnam() but never mention saddle */
@@ -3130,28 +3131,32 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
         oldname[0] = highc(oldname[0]);
     }
 
-    /* mdat = 0 -> caller wants a random monster shape */
-    if (mdat == 0) {
+    /* pmid = NON_PM -> caller wants a random monster shape */
+    if (NON_PM == pmid) {
         /* select_newcham_form() loops when resorting to random but
            it doesn't always pick that so we still retry here too */
         tryct = 20;
         do {
             mndx = select_newcham_form(mtmp);
-            mdat = accept_newcham_form(mndx);
+            pmid = pmid4(accept_newcham_form(mndx));
             /* for the first several tries we require upper-case on
                the rogue level (after that, we take whatever we get) */
             if (tryct > 15 && areYouOnRogueLevel()
-                && mdat && !isupper((uchar) monsterClass(pmid4(mdat))))
-                mdat = 0;
-            if (mdat)
+                && (NON_PM != pmid) && !isupper((uchar) monsterClass(pmid))) {
+                pmid = NON_PM;
+	    }
+            if (pmid != NON_PM) {
                 break;
+	    }
         } while (--tryct > 0);
-        if (!tryct)
-            return 0;
-    } else if (mvitals[pmid4(mdat)].mvflags & G_GENOD)
-        return 0; /* passed in mdat is genocided */
+        if (!tryct) {
+            return FALSE;
+	}
+    } else if (mvitals[pmid].mvflags & G_GENOD) {
+        return FALSE; /* passed in mdat is genocided */
+    }
 
-    mgender_from_permonst(mtmp, mdat);
+    mgender_from_permonst(mtmp, ptr4pmid(pmid));
 
     if (areYouInEndgame() && isMonsterPlayer(pmid4(olddata)) && has_mname(mtmp)) {
         /* mplayers start out as "Foo the Bar", but some of the
@@ -3166,14 +3171,15 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
             *p = '\0';
     }
 
-    if (mdat == mtmp->data)
-        return 0; /* still the same monster */
+    if (pmid == pmid4mon(mtmp)) {
+        return FALSE; /* still the same monster */
+    }
 
     if (mtmp->wormno) { /* throw tail away */
         wormgone(mtmp);
         place_monster(mtmp, mtmp->mx, mtmp->my);
     }
-    if (mtmp->m_ap_type && monsterClass(pmid4(mdat)) != S_MIMIC)
+    if (mtmp->m_ap_type && monsterClass(pmid) != S_MIMIC)
         seemimic(mtmp); /* revert to normal monster */
 
     /* (this code used to try to adjust the monster's health based on
@@ -3183,7 +3189,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
     hpn = mtmp->mhp;
     hpd = mtmp->mhpmax;
     /* set level and hit points */
-    newmonhp(mtmp, pmid4(mdat));
+    newmonhp(mtmp, pmid);
     /* new hp: same fraction of max as before */
 #ifndef LINT
     mtmp->mhp = (int) (((long) hpn * (long) mtmp->mhp) / (long) hpd);
@@ -3197,7 +3203,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
         mtmp->mhp = 1;
 
     /* take on the new form... */
-    set_mon_data(mtmp, mdat, 0);
+    set_mon_data(mtmp, ptr4pmid(pmid), 0);
 
     if (emitsLightWithRange(pmid4(olddata)) != emitsLightWithRange(pmid4mon(mtmp))) {
         /* used to give light, now doesn't, or vice versa,
@@ -3208,19 +3214,21 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
             new_light_source(mtmp->mx, mtmp->my, emitsLightWithRange(pmid4mon(mtmp)),
                              LS_MONSTER, monst_to_any(mtmp));
     }
-    if (!mtmp->perminvis || isInvisibleMonsterType(pmid4(olddata)))
-        mtmp->perminvis = isInvisibleMonsterType(pmid4(mdat));
+    if (!mtmp->perminvis || isInvisibleMonsterType(pmid4(olddata))) {
+        mtmp->perminvis = isInvisibleMonsterType(pmid);
+    }
     mtmp->minvis = mtmp->invis_blkd ? 0 : mtmp->perminvis;
-    if (mtmp->mundetected)
+    if (mtmp->mundetected) {
         (void) hideunder(mtmp);
+    }
     if (u.ustuck == mtmp) {
         if (swallowed()) {
-            if (!monsterHasAttackType(pmid4(mdat), AT_ENGL)) {
-                /* Does mdat care? */
-                if (!isNoncorporeal(pmid4(mdat)) && !isAmorphous(pmid4(mdat))
-                    && !isWhirly(pmid4(mdat)) && (mdat != &mons[PM_YELLOW_LIGHT])) {
+            if (!monsterHasAttackType(pmid, AT_ENGL)) {
+                /* Does pmid care? */
+                if (!isNoncorporeal(pmid) && !isAmorphous(pmid)
+                    && !isWhirly(pmid) && (pmid != PM_YELLOW_LIGHT)) {
                     You("break out of %s%s!", mon_nam(mtmp),
-                        (isAnimal(pmid4(mdat)) ? "'s stomach" : ""));
+                        (isAnimal(pmid) ? "'s stomach" : ""));
                     mtmp->mhp = 1; /* almost dead */
                 }
                 expels(mtmp, pmid4(olddata), FALSE);
@@ -3228,19 +3236,12 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
                 /* update swallow glyphs for new monster */
                 showHeroBeingSwallowed(0);
             }
-        } else if (!monsterSticksInCombat(pmid4(mdat)) && !monsterSticksInCombat(pmid4you()))
+        } else if (!monsterSticksInCombat(pmid) && !monsterSticksInCombat(pmid4you())) {
             unstuck(mtmp);
+	}
     }
 
-#ifndef DCC30_BUG
-    if (mdat == &mons[PM_LONG_WORM] && (mtmp->wormno = get_wormno()) != 0) {
-#else
-    /* DICE 3.0 doesn't like assigning and comparing mtmp->wormno in the
-     * same expression.
-     */
-    if (mdat == &mons[PM_LONG_WORM]
-        && (mtmp->wormno = get_wormno(), mtmp->wormno != 0)) {
-#endif
+    if (pmid == PM_LONG_WORM && (mtmp->wormno = get_wormno()) != 0) {
         /* we can now create worms with tails - 11/91 */
         initworm(mtmp, rn2(5));
         if (count_wsegs(mtmp))
@@ -3256,12 +3257,12 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
             save_mname = MNAME(mtmp);
             MNAME(mtmp) = (char *) 0;
         }
-        Strcpy(newname, (mdat == &mons[PM_GREEN_SLIME])
+        Strcpy(newname, (pmid == PM_GREEN_SLIME)
                             ? "slime"
                             : x_monnam(mtmp, ARTICLE_A, (char *) 0,
                                        SUPPRESS_SADDLE, FALSE));
         if (!strcmpi(oldname, "it") && !strcmpi(newname, "it")) {
-            (void) youCanSmellMonster(pmid4(mdat));
+            (void) youCanSmellMonster(pmid);
 	} else {
             pline("%s turns into %s!", oldname, newname);
 	}
@@ -3282,7 +3283,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
      * minvent should be sorted in order to drop heaviest items first.
      */
     /* former giants can't continue carrying boulders */
-    if (mtmp->minvent && !throwsRocks(pmid4(mdat))) {
+    if (mtmp->minvent && !throwsRocks(pmid)) {
         register struct obj *otmp, *otmp2;
 
         for (otmp = mtmp->minvent; otmp; otmp = otmp2) {
@@ -3301,7 +3302,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
         }
     }
 
-    return 1;
+    return TRUE;
 }
 
 /* sometimes an egg will be special */
@@ -3433,7 +3434,7 @@ kill_genocided_monsters()
                      && (mvitals[mtmp->cham].mvflags & G_GENOD));
         if ((mvitals[mndx].mvflags & G_GENOD) || kill_cham) {
             if (mtmp->cham >= LOW_PM && !kill_cham)
-                (void) newcham(mtmp, (struct permonst *) 0, FALSE, FALSE);
+                (void) changeChameleonToType(mtmp, NON_PM, FALSE, FALSE);
             else
                 mondead(mtmp);
         }

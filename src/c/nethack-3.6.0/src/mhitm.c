@@ -1264,7 +1264,7 @@ register const struct Attack mattk;
             break; /* physical damage only */
         if (!rn2(4) && !isSlimeproof(pmid4(pd))) {
             if (!munslime(mdef, FALSE) && mdef->mhp > 0) {
-                if (newcham(mdef, &mons[PM_GREEN_SLIME], FALSE, vis))
+                if (changeChameleonToType(mdef, PM_GREEN_SLIME, FALSE, vis))
                     pd = mdef->data;
                 mdef->mstrategy &= ~STRAT_WAITFORU;
                 res = MM_HIT;
@@ -1314,9 +1314,9 @@ register const struct Attack mattk;
             /* various checks similar to dog_eat and meatobj.
              * after monkilled() to provide better message ordering */
             if (mdef->cham >= LOW_PM) {
-                (void) newcham(magr, (struct permonst *) 0, FALSE, TRUE);
+                (void) changeChameleonToType(magr, NON_PM, FALSE, TRUE);
             } else if (pd == &mons[PM_GREEN_SLIME] && !isSlimeproof(pmid4(pa))) {
-                (void) newcham(magr, &mons[PM_GREEN_SLIME], FALSE, TRUE);
+                (void) changeChameleonToType(magr, PM_GREEN_SLIME, FALSE, TRUE);
             } else if (pd == &mons[PM_WRAITH]) {
                 (void) growUpIntoMonsterType(magr, (struct monst *) 0);
                 /* don't grow up twice */

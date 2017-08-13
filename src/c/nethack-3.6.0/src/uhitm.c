@@ -1746,10 +1746,10 @@ register const struct Attack mattk;
             break; /* physical damage only */
         if (!rn2(4) && !isSlimeproof(pmid4(pd))) {
             if (!munslime(mdef, TRUE) && mdef->mhp > 0) {
-                /* this assumes newcham() won't fail; since hero has
+                /* this assumes changeChameleonToType() won't fail; since hero has
                    a slime attack, green slimes haven't been geno'd */
                 You("turn %s into slime.", mon_nam(mdef));
-                if (newcham(mdef, &mons[PM_GREEN_SLIME], FALSE, FALSE))
+                if (changeChameleonToType(mdef, PM_GREEN_SLIME, FALSE, FALSE))
                     pd = mdef->data;
             }
             /* munslime attempt could have been fatal */

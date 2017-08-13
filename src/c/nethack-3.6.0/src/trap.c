@@ -604,7 +604,7 @@ int *fail_reason;
     } else {
         /* statues of unique monsters from bones or wishing end
            up here (cant_revive() sets mnum to be doppelganger;
-           mptr reflects the original form for use by newcham()) */
+           mptr reflects the original form for use by changeChameleonToType()) */
         if ((mnum == PM_DOPPELGANGER && mptr != &mons[PM_DOPPELGANGER])
             /* block quest guards from other roles */
             || (monsterSound(pmid4(mptr)) == MS_GUARDIAN
@@ -614,7 +614,7 @@ int *fail_reason;
             /* if hero has protection from shape changers, cham field will
                be NON_PM; otherwise, set form to match the statue */
             if (mon && mon->cham >= LOW_PM)
-                (void) newcham(mon, mptr, FALSE, FALSE);
+                (void) changeChameleonToType(mon, pmid4(mptr), FALSE, FALSE);
         } else
             mon = makeMonsterOfType(pmid4(mptr), x, y, (cause == ANIMATE_SPELL)
                                           ? (NO_MINVENT | MM_ADJACENTOK)
@@ -1549,7 +1549,7 @@ struct obj *otmp;
         break;
     case POLY_TRAP:
         if (!resists_magm(steed) && !resist(steed, WAND_CLASS, 0, NOTELL)) {
-            (void) newcham(steed, (struct permonst *) 0, FALSE, FALSE);
+            (void) changeChameleonToType(steed, NON_PM, FALSE, FALSE);
             if (!can_saddle(steed) || !can_ride(steed))
                 dismount_steed(DISMOUNT_POLY);
             else
@@ -2600,7 +2600,7 @@ register struct monst *mtmp;
             if (resists_magm(mtmp)) {
                 shieldeff(mtmp->mx, mtmp->my);
             } else if (!resist(mtmp, WAND_CLASS, 0, NOTELL)) {
-                if (newcham(mtmp, (struct permonst *) 0, FALSE, FALSE))
+                if (changeChameleonToType(mtmp, NON_PM, FALSE, FALSE))
                     /* we're done with mptr but keep it up to date */
                     mptr = mtmp->data;
                 if (in_sight)

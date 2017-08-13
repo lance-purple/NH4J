@@ -232,7 +232,7 @@ struct obj *otmp;
                 /* context.bypasses = TRUE; ## for make_corpse() */
                 /* no corpse after system shock */
                 xkilled(mtmp, 3);
-            } else if (newcham(mtmp, (struct permonst *) 0,
+            } else if (changeChameleonToType(mtmp, NON_PM,
                                (otyp != POT_POLYMORPH), FALSE)) {
                 if (!youAreHallucinating() && canspotmon(mtmp))
                     learn_it = TRUE;
@@ -359,7 +359,7 @@ struct obj *otmp;
             char *name = Monnam(mtmp);
 
             /* turn into flesh golem */
-            if (newcham(mtmp, &mons[PM_FLESH_GOLEM], FALSE, FALSE)) {
+            if (changeChameleonToType(mtmp, PM_FLESH_GOLEM, FALSE, FALSE)) {
                 if (canseemon(mtmp))
                     pline("%s turns to flesh!", name);
             } else {
@@ -714,7 +714,7 @@ boolean by_hero;
 
     if (cant_revive(&montype, TRUE, corpse)) {
         /* make a zombie or doppelganger instead */
-        /* note: montype has changed; mptr keeps old value for newcham() */
+        /* note: montype has changed; mptr keeps old value for changeChameleonToType() */
         mtmp = makeMonsterOfType(montype, x, y, NO_MINVENT | MM_NOWAIT);
         if (mtmp) {
             /* skip ghost handling */
@@ -724,7 +724,7 @@ boolean by_hero;
                 free_omonst(corpse);
             if (mtmp->cham == PM_DOPPELGANGER) {
                 /* change shape to match the corpse */
-                (void) newcham(mtmp, mptr, FALSE, FALSE);
+                (void) changeChameleonToType(mtmp, pmid4(mptr), FALSE, FALSE);
             } else if (monsterClass(pmid4mon(mtmp)) == S_ZOMBIE) {
                 mtmp->mhp = mtmp->mhpmax = 100;
                 mon_adjust_speed(mtmp, 2, (struct obj *) 0); /* MFAST */
@@ -1646,7 +1646,7 @@ struct obj *obj;
                 ptr = mon->data;
                 /* this golem handling is redundant... */
                 if (isGolem(pmid4(ptr)) && ptr != &mons[PM_FLESH_GOLEM])
-                    (void) newcham(mon, &mons[PM_FLESH_GOLEM], TRUE, FALSE);
+                    (void) changeChameleonToType(mon, PM_FLESH_GOLEM, TRUE, FALSE);
             } else if ((monsterGenerationMask(pmid4(ptr)) & (G_NOCORPSE | G_UNIQ)) != 0) {
                 /* didn't revive but can't leave corpse either */
                 res = 0;

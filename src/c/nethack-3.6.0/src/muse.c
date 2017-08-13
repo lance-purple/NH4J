@@ -1722,7 +1722,7 @@ struct monst *mtmp;
 }
 
 /* type of monster to polymorph into; defaults to one suitable for the
-   current level rather than the totally arbitrary choice of newcham() */
+   current level rather than the totally arbitrary choice of changeChameleonToType() */
 static struct permonst *
 muse_newcham_mon(mon)
 struct monst *mon;
@@ -1840,7 +1840,7 @@ struct monst *mtmp;
     case MUSE_WAN_POLYMORPH:
         mzapmsg(mtmp, otmp, TRUE);
         otmp->spe--;
-        (void) newcham(mtmp, muse_newcham_mon(mtmp), TRUE, FALSE);
+        (void) changeChameleonToType(mtmp, pmid4(muse_newcham_mon(mtmp)), TRUE, FALSE);
         if (oseen)
             makeknown(WAN_POLYMORPH);
         return 2;
@@ -1848,7 +1848,7 @@ struct monst *mtmp;
         mquaffmsg(mtmp, otmp);
         if (vismon)
             pline("%s suddenly mutates!", Monnam(mtmp));
-        (void) newcham(mtmp, muse_newcham_mon(mtmp), FALSE, FALSE);
+        (void) changeChameleonToType(mtmp, pmid4(muse_newcham_mon(mtmp)), FALSE, FALSE);
         if (oseen)
             makeknown(POT_POLYMORPH);
         m_useup(mtmp, otmp);
@@ -1868,7 +1868,7 @@ struct monst *mtmp;
             worm_move(mtmp);
         newsym(trapx, trapy);
 
-        (void) newcham(mtmp, (struct permonst *) 0, FALSE, FALSE);
+        (void) changeChameleonToType(mtmp, NON_PM, FALSE, FALSE);
         return 2;
     case MUSE_BULLWHIP:
         /* attempt to disarm hero */
@@ -2321,7 +2321,7 @@ boolean by_you;
      * muse_unslime() gives "mon starts turning green", "mon zaps
      * itself with a wand of fire", and "mon's slime burns away"
      * messages.  Monsters who don't get any chance at that just have
-     * (via our caller) newcham()'s "mon turns into slime" feedback.
+     * (via our caller) changeChameleonToType()'s "mon turns into slime" feedback.
      */
 
     if (isSlimeproof(pmid4mon(mon)))

@@ -14,7 +14,7 @@ STATIC_DCL void FDECL(release_hero, (struct monst *));
 STATIC_DCL void FDECL(distfleeck, (struct monst *, int *, int *, int *));
 STATIC_DCL int FDECL(m_arrival, (struct monst *));
 STATIC_DCL boolean FDECL(stuff_prevents_passage, (struct monst *));
-STATIC_DCL int FDECL(vamp_shift, (struct monst *, struct permonst *));
+STATIC_DCL boolean FDECL(vamp_shift, (struct monst *, int));
 
 /* True if mtmp died */
 boolean
@@ -1229,7 +1229,7 @@ postmov:
                 if (here->doormask & (D_LOCKED | D_CLOSED)
                     && (isAmorphous(pmid4(ptr))
                         || (!isAmorphous(pmid4(ptr)) && can_fog(mtmp)
-                            && vamp_shift(mtmp, &mons[PM_FOG_CLOUD])))) {
+                            && vamp_shift(mtmp, PM_FOG_CLOUD)))) {
                     if (flags.verbose && canseemon(mtmp))
                         pline("%s %s under the door.", Monnam(mtmp),
                               (ptr == &mons[PM_FOG_CLOUD]
@@ -1599,20 +1599,21 @@ struct monst *mtmp;
     return FALSE;
 }
 
-STATIC_OVL int
-vamp_shift(mon, ptr)
+STATIC_OVL boolean
+vamp_shift(mon, pmid)
 struct monst *mon;
-struct permonst *ptr;
+int pmid;
 {
-    int reslt = 0;
+    boolean reslt = FALSE;
 
     if (mon->cham >= LOW_PM) {
-        if (ptr == &mons[mon->cham])
+        if (pmid == mon->cham) {
             mon->cham = NON_PM;
-        reslt = newcham(mon, ptr, FALSE, FALSE);
-    } else if (mon->cham == NON_PM && ptr != mon->data) {
+	}
+        reslt = changeChameleonToType(mon, pmid, FALSE, FALSE);
+    } else if (mon->cham == NON_PM && pmid != pmid4mon(mon)) {
         mon->cham = pmid4mon(mon);
-        reslt = newcham(mon, ptr, FALSE, FALSE);
+        reslt = changeChameleonToType(mon, pmid, FALSE, FALSE);
     }
     return reslt;
 }

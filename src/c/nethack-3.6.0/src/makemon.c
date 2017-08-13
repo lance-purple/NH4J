@@ -902,7 +902,7 @@ struct monst *mon;
 }
 
 /* set up a new monster's initial level and hit points;
-   used by newcham() as well as by makeMonsterOfType() */
+   used by changeChameleonToType() as well as by makeMonsterOfType() */
 void
 newmonhp(mon, pmid)
 struct monst *mon;
@@ -1221,8 +1221,8 @@ int mmflags;
                which was appropriate to the level's difficulty
                but ignored the changer's usual type selection
                so would be inappropriate for vampshifters.
-               Let newcham() pick the shape. */
-            if (newcham(mtmp, (struct permonst *) 0, FALSE, FALSE))
+               Let changeChameleonToType() pick the shape. */
+            if (changeChameleonToType(mtmp, NON_PM, FALSE, FALSE))
                 allow_minvent = FALSE;
         }
     } else if (mndx == PM_WIZARD_OF_YENDOR) {

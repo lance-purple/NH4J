@@ -421,7 +421,7 @@ clonewiz()
     }
 }
 
-/* also used by newcham() */
+/* also used by changeChameleonToType() */
 int
 pick_nasty()
 {

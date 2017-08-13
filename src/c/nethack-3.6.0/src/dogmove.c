@@ -328,9 +328,9 @@ boolean devour;
 #endif
 
     if (poly || slimer) {
-        struct permonst *ptr = slimer ? &mons[PM_GREEN_SLIME] : 0;
+        int pmid = slimer ? PM_GREEN_SLIME : NON_PM;
 
-        (void) newcham(mtmp, ptr, FALSE, cansee(mtmp->mx, mtmp->my));
+        (void) changeChameleonToType(mtmp, pmid, FALSE, cansee(mtmp->mx, mtmp->my));
     }
 
     /* limit "instant" growth to prevent potential abuse */
