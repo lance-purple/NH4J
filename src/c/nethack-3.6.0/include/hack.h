@@ -203,9 +203,9 @@ extern boolean MATCH_WARN_OF_MON(int pmid);
 #define MM_EMIN 0x00800   /* add emin structure */
 #define MM_EDOG 0x01000   /* add edog structure */
 
-/* flags for make_corpse() and mkcorpstat() */
+/* flags for make_corpse() and makeCorpseOrStatue() */
 #define CORPSTAT_NONE 0x00
-#define CORPSTAT_INIT 0x01   /* pass init flag to mkcorpstat */
+#define CORPSTAT_INIT 0x01   /* pass init flag to makeCorpseOrStatue */
 #define CORPSTAT_BURIED 0x02 /* bury the corpse or statue */
 
 /* flags for decide_to_shift() */

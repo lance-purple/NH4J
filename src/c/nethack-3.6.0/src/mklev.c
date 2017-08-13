@@ -528,8 +528,8 @@ int trap_type;
                     if (!rn2(5) && IS_WALL(levl[xx][yy].typ)) {
                         levl[xx][yy].typ = IRONBARS;
                         if (rn2(3))
-                            (void) mkcorpstat(CORPSE, (struct monst *) 0,
-                                              ptr4pmid(pickMonsterTypeOfClass(S_HUMAN, 0)), xx,
+                            (void) makeCorpseOrStatue(CORPSE, (struct monst *) 0,
+                                              pickMonsterTypeOfClass(S_HUMAN, 0), xx,
                                               yy + dy, TRUE);
                     }
                     if (!level.flags.noteleport)
@@ -832,8 +832,8 @@ skip0:
 
         /* put statues inside */
         if (!rn2(20))
-            (void) mkcorpstat(STATUE, (struct monst *) 0,
-                              (struct permonst *) 0, somex(croom),
+            (void) makeCorpseOrStatue(STATUE, (struct monst *) 0,
+                              NON_PM, somex(croom),
                               somey(croom), CORPSTAT_INIT);
         /* put box/chest inside;
          *  40% chance for at least 1 box, regardless of number

@@ -453,7 +453,7 @@ fixup_special()
             otmp = mk_tt_object(STATUE, somex(croom), somey(croom));
         else /* Medusa statues don't contain books */
             otmp =
-                mkcorpstat(STATUE, (struct monst *) 0, (struct permonst *) 0,
+                makeCorpseOrStatue(STATUE, (struct monst *) 0, NON_PM,
                            somex(croom), somey(croom), CORPSTAT_NONE);
         if (otmp) {
             while (monsterTypeResistsStoning(otmp->corpsenm)

@@ -384,7 +384,7 @@ register int x, y, typ;
             mptr = &mons[rndmonnum()];
         } while (--trycount > 0 && isUnicorn(pmid4(mptr))
                  && sgn(currentAlignmentType()) == sgn(monsterAlignment(pmid4(mptr))));
-        statue = mkcorpstat(STATUE, (struct monst *) 0, mptr, x, y,
+        statue = makeCorpseOrStatue(STATUE, (struct monst *) 0, pmid4(mptr), x, y,
                             CORPSTAT_NONE);
         mtmp = makeMonsterOfType(statue->corpsenm, 0, 0, MM_NOCOUNTBIRTH);
         if (!mtmp)

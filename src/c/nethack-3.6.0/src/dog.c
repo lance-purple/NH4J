@@ -459,7 +459,7 @@ boolean with_you;
                         impossible("Can't find relocated object.");
                 }
             }
-            (void) mkcorpstat(CORPSE, (struct monst *) 0, mtmp->data, xlocale,
+            (void) makeCorpseOrStatue(CORPSE, (struct monst *) 0, pmid4mon(mtmp), xlocale,
                               ylocale, CORPSTAT_NONE);
             mongone(mtmp);
         }
