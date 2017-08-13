@@ -3088,17 +3088,17 @@ int mndx;
 }
 
 void
-mgender_from_permonst(mtmp, mdat)
+monsterGenderFromType(mtmp, pmid)
 struct monst *mtmp;
-struct permonst *mdat;
+int pmid;
 {
-    if (isMale(pmid4(mdat))) {
+    if (isMale(pmid)) {
         if (mtmp->female)
             mtmp->female = FALSE;
-    } else if (isFemale(pmid4(mdat))) {
+    } else if (isFemale(pmid)) {
         if (!mtmp->female)
             mtmp->female = TRUE;
-    } else if (!isNeuter(pmid4(mdat))) {
+    } else if (!isNeuter(pmid)) {
         if (!rn2(10))
             mtmp->female = !mtmp->female;
     }
@@ -3156,7 +3156,7 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
         return FALSE; /* passed in mdat is genocided */
     }
 
-    mgender_from_permonst(mtmp, ptr4pmid(pmid));
+    monsterGenderFromType(mtmp, pmid);
 
     if (areYouInEndgame() && isMonsterPlayer(pmid4(olddata)) && has_mname(mtmp)) {
         /* mplayers start out as "Foo the Bar", but some of the

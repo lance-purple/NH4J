@@ -1654,7 +1654,7 @@ struct mkroom *croom;
                     struct permonst *mdat = &mons[mndx];
                     struct permonst *olddata = mtmp->data;
 
-                    mgender_from_permonst(mtmp, mdat);
+                    monsterGenderFromType(mtmp, mndx);
                     set_mon_data(mtmp, mdat, 0);
                     if (emitsLightWithRange(pmid4(olddata)) != emitsLightWithRange(pmid4mon(mtmp))) {
                         /* used to give light, now doesn't, or vice versa,

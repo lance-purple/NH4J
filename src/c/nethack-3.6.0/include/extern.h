@@ -2043,7 +2043,7 @@ E boolean FDECL(hideunder, (struct monst *));
 E void FDECL(hide_monst, (struct monst *));
 E void FDECL(mon_animal_list, (BOOLEAN_P));
 E int FDECL(select_newcham_form, (struct monst *));
-E void FDECL(mgender_from_permonst, (struct monst *, struct permonst *));
+E void FDECL(monsterGenderFromType, (struct monst *, int));
 E boolean FDECL(changeChameleonToType, (struct monst *, int, BOOLEAN_P, BOOLEAN_P));
 E int FDECL(can_be_hatched, (int));
 E int FDECL(egg_type_from_parent, (int, BOOLEAN_P));
