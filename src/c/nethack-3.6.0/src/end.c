@@ -1041,7 +1041,7 @@ int how;
                        ? urace.femalenum
                        : urace.malenum;
         }
-        corpse = mk_named_object(CORPSE, &mons[mnum], currentX(), currentY(), plname);
+        corpse = makeNamedObject(CORPSE, mnum, currentX(), currentY(), plname);
         Sprintf(pbuf, "%s, ", plname);
         formatkiller(eos(pbuf), sizeof pbuf - strlen(pbuf), how);
         make_grave(currentX(), currentY(), pbuf);

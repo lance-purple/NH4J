@@ -1587,19 +1587,19 @@ register int x, y;
 
 /* make a new corpse or statue, uninitialized if a statue (i.e. no books) */
 struct obj *
-mk_named_object(objtype, ptr, x, y, nm)
+makeNamedObject(objtype, pmid, x, y, nm)
 int objtype; /* CORPSE or STATUE */
-struct permonst *ptr;
+int pmid;
 int x, y;
 const char *nm;
 {
     struct obj *otmp;
-    unsigned corpstatflags =
-        (objtype != STATUE) ? CORPSTAT_INIT : CORPSTAT_NONE;
+    unsigned corpstatflags = (objtype != STATUE) ? CORPSTAT_INIT : CORPSTAT_NONE;
 
-    otmp = mkcorpstat(objtype, (struct monst *) 0, ptr, x, y, corpstatflags);
-    if (nm)
+    otmp = mkcorpstat(objtype, (struct monst *) 0, ptr4pmid(pmid), x, y, corpstatflags);
+    if (nm) {
         otmp = oname(otmp, nm);
+    }
     return otmp;
 }
 
