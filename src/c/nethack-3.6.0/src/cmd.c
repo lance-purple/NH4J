@@ -2005,9 +2005,8 @@ int final;
                                             : "certain monsters");
         you_are(buf, "");
     }
-    if (youAreWarnedOfMonsters() && context.warntype.speciesidx) {
-	int warnedOfType = context.warntype.speciesidx;
-	javaString warnedOfTypeName = monsterTypeName(warnedOfType);
+    if (youAreWarnedOfMonsters() && (NON_PM != context.warntype.pmid)) {
+	javaString warnedOfTypeName = monsterTypeName(context.warntype.pmid);
         Sprintf(buf, "aware of the presence of %s",
                 makeplural(warnedOfTypeName.c_str));
 	releaseJavaString(warnedOfTypeName);

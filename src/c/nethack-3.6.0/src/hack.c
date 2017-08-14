@@ -2916,7 +2916,7 @@ extern boolean MATCH_WARN_OF_MON(int pmid) {
     return (youAreWarnedOfMonsters() &&
        ((context.warntype.obj && monsterHasFlag2(pmid, context.warntype.obj))
        || (context.warntype.polyd && monsterHasFlag2(pmid, context.warntype.polyd))
-       || (context.warntype.species && pmid4(context.warntype.species) == pmid)));
+       || ((NON_PM != context.warntype.pmid) && (context.warntype.pmid == pmid))));
 }
 
 /*hack.c*/

@@ -544,6 +544,7 @@ newgame()
 #endif
 
     context.botlx = 1;
+    context.warntype.pmid = NON_PM;
     initIdentifier(1);
     context.stethoscope_move = -1L;
     setMonsterWarningLevel(1);

@@ -1841,10 +1841,9 @@ static boolean
 polysense(mptr)
 struct permonst *mptr;
 {
-    short warnidx = 0;
+    int warnidx = NON_PM;
 
-    context.warntype.speciesidx = 0;
-    context.warntype.species = 0;
+    context.warntype.pmid = NON_PM;
     context.warntype.polyd = 0;
 
     switch (pmid4(mptr)) {
@@ -1857,14 +1856,12 @@ struct permonst *mptr;
         setYourIntrinsicMask(WARN_OF_MON, FROMRACE);
         return TRUE;
     }
-    if (warnidx) {
-        context.warntype.speciesidx = warnidx;
-        context.warntype.species = &mons[warnidx];
+    if (NON_PM != warnidx) {
+        context.warntype.pmid = warnidx;
         setYourIntrinsicMask(WARN_OF_MON, FROMRACE);
         return TRUE;
     }
-    context.warntype.speciesidx = 0;
-    context.warntype.species = 0;
+    context.warntype.pmid = NON_PM;
     unsetYourIntrinsicMask(WARN_OF_MON, FROMRACE);
     return FALSE;
 }

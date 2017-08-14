@@ -555,8 +555,6 @@ unsigned int *stuckid, *steedid;
             return FALSE;
     }
     mread(fd, (genericptr_t) &context, sizeof(struct context_info));
-    if (context.warntype.speciesidx)
-        context.warntype.species = &mons[context.warntype.speciesidx];
 
     /* read former 'context' fields that are now stored in Java */
     initIdentifier(read_int(fd));
