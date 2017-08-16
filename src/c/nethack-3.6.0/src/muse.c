@@ -1731,7 +1731,7 @@ struct monst *mon;
 
     if ((m_armr = which_armor(mon, W_ARM)) != 0) {
         if (Is_dragon_scales(m_armr))
-            return Dragon_scales_to_pm(m_armr);
+            return ptr4pmid(monsterTypeForDragonScales(m_armr));
         else if (Is_dragon_mail(m_armr))
             return Dragon_mail_to_pm(m_armr);
     }

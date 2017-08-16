@@ -777,7 +777,7 @@ boolean polyspot;
 
     if (breaksOutOfArmor(pmid4mon(mon))) {
         if ((otmp = which_armor(mon, W_ARM)) != 0) {
-            if ((Is_dragon_scales(otmp) && mdat == Dragon_scales_to_pm(otmp))
+            if ((Is_dragon_scales(otmp) && (pmid4mon(mon) == monsterTypeForDragonScales(otmp)))
                 || (Is_dragon_mail(otmp) && mdat == Dragon_mail_to_pm(otmp)))
                 ; /* no message here;
                      "the dragon merges with his scaly armor" is odd
