@@ -289,7 +289,7 @@ boolean flag;
 
 struct entity {
     struct monst *emon;     /* youmonst for the player */
-    struct permonst *edata; /* must be non-zero for record to be valid */
+    int epmid; /* if NON_PM, record is invalid */
     int ex, ey;
 };
 
@@ -305,7 +305,7 @@ int x, y;
     int entitycnt;
 
     for (entitycnt = 0; entitycnt < ENTITIES; entitycnt++)
-        if ((occupants[entitycnt].edata) && (occupants[entitycnt].ex == x)
+        if ((NON_PM != occupants[entitycnt].epmid) && (occupants[entitycnt].ex == x)
             && (occupants[entitycnt].ey == y))
             break;
     debugpline1("entitycnt = %d", entitycnt);
@@ -327,11 +327,11 @@ struct entity *etmp;
         etmp->ex = x;
         etmp->ey = y;
         if (mtmp->wormno && (x != mtmp->mx || y != mtmp->my))
-            etmp->edata = &mons[PM_LONG_WORM_TAIL];
+            etmp->epmid = PM_LONG_WORM_TAIL;
         else
-            etmp->edata = mtmp->data;
+            etmp->epmid = pmid4mon(mtmp);
     } else
-        etmp->edata = (struct permonst *) 0;
+        etmp->epmid = NON_PM;
 }
 
 STATIC_OVL void
@@ -341,7 +341,7 @@ struct entity *etmp;
     etmp->emon = &youmonst;
     etmp->ex = currentX();
     etmp->ey = currentY();
-    etmp->edata = youmonst.data;
+    etmp->epmid = pmid4you();
 }
 
 STATIC_OVL void
@@ -354,7 +354,7 @@ struct entity *etmp;
     else if (MON_AT(x, y))
         m_to_e(m_at(x, y), x, y, etmp);
     else
-        etmp->edata = (struct permonst *) 0;
+        etmp->epmid = NON_PM;
 }
 
 #define is_u(etmp) (etmp->emon == &youmonst)
@@ -407,7 +407,7 @@ e_survives_at(etmp, x, y)
 struct entity *etmp;
 int x, y;
 {
-    int epmid = pmid4(etmp->edata);
+    int epmid = etmp->epmid;
     if (isNoncorporeal(epmid)) {
         return TRUE;
     }
@@ -453,7 +453,7 @@ int dest, how;
             done(how);
             /* So, you didn't die */
             if (!e_survives_at(etmp, etmp->ex, etmp->ey)) {
-                if (canPlaceMonsterNear(&xy, etmp->ex, etmp->ey, pmid4(etmp->edata), 0)) {
+                if (canPlaceMonsterNear(&xy, etmp->ex, etmp->ey, etmp->epmid, 0)) {
                     pline("A %s force teleports you away...",
                           youAreHallucinating() ? "normal" : "strange");
                     teleds(xy.x, xy.y, FALSE);
@@ -477,13 +477,13 @@ int dest, how;
             monkilled(etmp->emon, mk_message(dest), mk_corpse(dest));
         else /* you caused it */
             xkilled(etmp->emon, dest);
-        etmp->edata = (struct permonst *) 0;
+        etmp->epmid = NON_PM;
 
         /* dead long worm handling */
         for (entitycnt = 0; entitycnt < ENTITIES; entitycnt++) {
             if (etmp != &(occupants[entitycnt])
                 && etmp->emon == occupants[entitycnt].emon)
-                occupants[entitycnt].edata = (struct permonst *) 0;
+                occupants[entitycnt].epmid = NON_PM;
         }
 #undef mk_message
 #undef mk_corpse
@@ -498,7 +498,7 @@ STATIC_OVL boolean
 automiss(etmp)
 struct entity *etmp;
 {
-    int epmid = pmid4(etmp->edata);
+    int epmid = etmp->epmid;
     return (boolean) ((is_u(etmp) ? youCanPassThroughWalls() : passesThroughWalls(epmid))
                       || isNoncorporeal(epmid));
 }
@@ -520,7 +520,7 @@ boolean chunks;
     if (automiss(etmp))
         return TRUE;
 
-    int epmid = pmid4(etmp->edata);
+    int epmid = etmp->epmid;
 
     if (isFlyer(epmid)
         && (is_u(etmp) ? youAreAware()
@@ -557,7 +557,7 @@ struct entity *etmp;
 
     if (is_u(etmp) ? (youAreUnaware() || youKeepFumbling())
                    : (!etmp->emon->mcanmove || etmp->emon->msleeping
-                      || !monsterMovementSpeed(pmid4(etmp->edata)) || etmp->emon->wormno))
+                      || !monsterMovementSpeed(etmp->epmid) || etmp->emon->wormno))
         return FALSE;
 
     if (is_u(etmp) ? youAreConfused() : etmp->emon->mconf)
@@ -581,8 +581,9 @@ struct entity *etmp;
     boolean must_jump = FALSE, relocates = FALSE, e_inview;
     struct rm *crm;
 
-    if (!etmp->edata)
+    if (NON_PM == etmp->epmid) {
         return;
+    }
 
     e_inview = e_canseemon(etmp);
     oldx = etmp->ex;
@@ -741,7 +742,7 @@ struct entity *etmp;
                 You_hear("a splash.");
             }
         }
-        int epmid = pmid4(etmp->edata);
+        int epmid = etmp->epmid;
         if (e_survives_at(etmp, etmp->ex, etmp->ey)) {
             if (e_inview && !isFlyer(epmid) && !isFloater(epmid)) {
                 pline("%s from the bridge.", E_phrase(etmp, "fall"));
@@ -962,7 +963,7 @@ int x, y;
         setHaveOpenedDrawbridge(TRUE);
 
     set_entity(x2, y2, etmp2); /* currently only automissers can be here */
-    if (etmp2->edata) {
+    if (NON_PM != etmp2->epmid) {
         e_inview = e_canseemon(etmp2);
         if (!automiss(etmp2)) {
             if (e_inview)
@@ -974,7 +975,7 @@ int x, y;
         } /* nothing which is vulnerable can survive this */
     }
     set_entity(x, y, etmp1);
-    if (etmp1->edata) {
+    if (NON_PM != etmp1->epmid) {
         e_inview = e_canseemon(etmp1);
         if (e_missed(etmp1, TRUE)) {
             debugpline1("%s spared!", E_phrase(etmp1, "are"));
