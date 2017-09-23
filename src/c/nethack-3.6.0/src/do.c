@@ -1704,13 +1704,13 @@ anything *arg;
 long timeout UNUSED;
 {
     struct obj *body = arg->a_obj;
-    struct permonst *mptr = &mons[body->corpsenm];
+    int pmid = body->corpsenm;
     struct monst *mtmp;
     xchar x, y;
 
     /* corpse will revive somewhere else if there is a monster in the way;
        Riders get a chance to try to bump the obstacle out of their way */
-    if (isDisplacer(pmid4(mptr)) && body->where == OBJ_FLOOR
+    if (isDisplacer(pmid) && body->where == OBJ_FLOOR
         && get_obj_location(body, &x, &y, 0) && (mtmp = m_at(x, y)) != 0) {
         boolean notice_it = canseemon(mtmp); /* before rloc() */
         char *monname = Monnam(mtmp);
@@ -1730,13 +1730,13 @@ long timeout UNUSED;
         long when;
         int action;
 
-        if (isRiderOfTheApocalypse(pmid4(mptr)) && rn2(99)) { /* Rider usually tries again */
+        if (isRiderOfTheApocalypse(pmid) && rn2(99)) { /* Rider usually tries again */
             action = REVIVE_MON;
             for (when = 3L; when < 67L; when++)
                 if (!rn2(3))
                     break;
         } else { /* rot this corpse away */
-            You_feel("%sless hassled.", isRiderOfTheApocalypse(pmid4(mptr)) ? "much " : "");
+            You_feel("%sless hassled.", isRiderOfTheApocalypse(pmid) ? "much " : "");
             action = ROT_CORPSE;
             when = 250L - (monstermoves - body->age);
             if (when < 1L)

@@ -858,7 +858,7 @@ int suppress;
 boolean called;
 {
     char *buf = nextmbuf();
-    struct permonst *mdat = mtmp->data;
+    int pmid = pmid4mon(mtmp);
     javaString monsterName = NO_JAVA_STRING;
     boolean do_hallu, do_invis, do_it, do_saddle;
     boolean name_at_start, has_adjectives;
@@ -906,11 +906,11 @@ boolean called;
     }
     /* an "aligned priest" not flagged as a priest or minion should be
        "priest" or "priestess" (normally handled by priestname()) */
-    if (mdat == &mons[PM_ALIGNED_PRIEST]) {
+    if (pmid == PM_ALIGNED_PRIEST) {
         monsterName.j_str = NULL;
         monsterName.c_str = (mtmp->female ? "priestess" : "priest");
     }
-    else if (mdat == &mons[PM_HIGH_PRIEST] && mtmp->female) {
+    else if ((pmid == PM_HIGH_PRIEST) && mtmp->female) {
         monsterName.j_str = NULL;
         monsterName.c_str = "high priestess";
     }
@@ -930,7 +930,7 @@ boolean called;
             return buf;
         }
         Strcat(buf, shkname(mtmp));
-        if (mdat == &mons[PM_SHOPKEEPER] && !do_invis) {
+        if ((pmid == PM_SHOPKEEPER) && !do_invis) {
             return buf;
 	}
         Strcat(buf, " the ");
@@ -938,7 +938,7 @@ boolean called;
             Strcat(buf, "invisible ");
 
 	if (NULL == monsterName.c_str) {
-            monsterName = monsterTypeName(pmid4(mdat));
+            monsterName = monsterTypeName(pmid);
 	}
         Strcat(buf, monsterName.c_str);
         releaseJavaString(monsterName);
@@ -961,7 +961,7 @@ boolean called;
     /* Put the actual monster name or type into the buffer now */
     /* Be sure to remember whether the buffer starts with a name */
     if (NULL == monsterName.c_str) {
-        monsterName = monsterTypeName(pmid4(mdat));
+        monsterName = monsterTypeName(pmid);
     }
 
     if (do_hallu) {
@@ -973,13 +973,13 @@ boolean called;
     } else if (has_mname(mtmp)) {
         char *name = MNAME(mtmp);
 
-        if (mdat == &mons[PM_GHOST]) {
+        if (pmid == PM_GHOST) {
             Sprintf(eos(buf), "%s ghost", s_suffix(name));
             name_at_start = TRUE;
         } else if (called) {
             Sprintf(eos(buf), "%s called %s", monsterName.c_str, name);
-            name_at_start = typeIsProperName(pmid4(mdat));
-        } else if (isMonsterPlayer(pmid4(mdat)) && (bp = strstri(name, " the ")) != 0) {
+            name_at_start = typeIsProperName(pmid);
+        } else if (isMonsterPlayer(pmid) && (bp = strstri(name, " the ")) != 0) {
             /* <name> the <adjective> <invisible> <saddled> <rank> */
             char pbuf[BUFSZ];
 
@@ -995,24 +995,24 @@ boolean called;
             Strcat(buf, name);
             name_at_start = TRUE;
         }
-    } else if (isMonsterPlayer(pmid4(mdat)) && !areYouInEndgame()) {
+    } else if (isMonsterPlayer(pmid) && !areYouInEndgame()) {
         char pbuf[BUFSZ];
 
-        Strcpy(pbuf, rank_of((int) mtmp->m_lev, pmid4(mdat),
+        Strcpy(pbuf, rank_of((int) mtmp->m_lev, pmid,
                              (boolean) mtmp->female));
         Strcat(buf, lcase(pbuf));
         name_at_start = FALSE;
     } else {
         Strcat(buf, monsterName.c_str);
-        name_at_start = typeIsProperName(pmid4(mdat));
+        name_at_start = typeIsProperName(pmid);
     }
 
     if (name_at_start && (article == ARTICLE_YOUR || !has_adjectives)) {
-        if (mdat == &mons[PM_WIZARD_OF_YENDOR])
+        if (pmid == PM_WIZARD_OF_YENDOR)
             article = ARTICLE_THE;
         else
             article = ARTICLE_NONE;
-    } else if ((monsterGenerationMask(pmid4(mdat)) & G_UNIQ) && article == ARTICLE_A) {
+    } else if ((monsterGenerationMask(pmid) & G_UNIQ) && article == ARTICLE_A) {
         article = ARTICLE_THE;
     }
 
