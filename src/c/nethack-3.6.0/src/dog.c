@@ -71,19 +71,18 @@ register struct obj *otmp;
 xchar x, y;
 boolean quietly;
 {
-    struct permonst *pm;
+    int pmid;
     struct monst *mtmp = 0;
     int chance, trycnt = 100;
 
     do {
         if (otmp) { /* figurine; otherwise spell */
-            int mndx = otmp->corpsenm;
-            pm = &mons[mndx];
+            pmid = otmp->corpsenm;
             /* activating a figurine provides one way to exceed the
                maximum number of the target critter created--unless
                it has a special limit (erinys, Nazgul) */
-            if ((mvitals[mndx].mvflags & G_EXTINCT)
-                && mbirth_limit(mndx) != MAXMONNO) {
+            if ((mvitals[pmid].mvflags & G_EXTINCT)
+                && mbirth_limit(pmid) != MAXMONNO) {
                 if (!quietly)
                     /* have just been given "You <do something with>
                        the figurine and it transforms." message */
@@ -91,17 +90,17 @@ boolean quietly;
                 break; /* mtmp is null */
             }
         } else if (!rn2(3)) {
-            pm = &mons[pet_type()];
+            pmid = pet_type();
         } else {
-            pm = ptr4pmid(randomMonster());
-            if (!pm) {
+            pmid = randomMonster();
+            if (NON_PM == pmid) {
                 if (!quietly)
                     There("seems to be nothing available for a familiar.");
                 break;
             }
         }
 
-        mtmp = makeMonsterOfType(pmid4(pm), x, y, MM_EDOG | MM_IGNOREWATER | NO_MINVENT);
+        mtmp = makeMonsterOfType(pmid, x, y, MM_EDOG | MM_IGNOREWATER | NO_MINVENT);
         if (otmp && !mtmp) { /* monster was genocided or square occupied */
             if (!quietly)
                 pline_The("figurine writhes and then shatters into pieces!");
@@ -739,8 +738,8 @@ dogfood(mon, obj)
 struct monst *mon;
 register struct obj *obj;
 {
-    struct permonst *mptr = mon->data, *fptr = 0;
-    int pmid = pmid4(mptr);
+    int pmid = pmid4mon(mon);
+    int fpmid = NON_PM;
     boolean carni = isCarnivorous(pmid), herbi = isHerbivorous(pmid), starving;
 
     if (is_quest_artifact(obj) || obj_resists(obj, 0, 95))
@@ -749,11 +748,11 @@ register struct obj *obj;
     switch (obj->oclass) {
     case FOOD_CLASS:
         if (obj->otyp == CORPSE || obj->otyp == TIN || obj->otyp == EGG)
-            fptr = &mons[obj->corpsenm];
+            fpmid = obj->corpsenm;
 
-        if (obj->otyp == CORPSE && isRiderOfTheApocalypse(pmid4(fptr)))
+        if (obj->otyp == CORPSE && isRiderOfTheApocalypse(fpmid))
             return TABU;
-        if ((obj->otyp == CORPSE || obj->otyp == EGG) && touchPetrifies(pmid4(fptr))
+        if ((obj->otyp == CORPSE || obj->otyp == EGG) && touchPetrifies(fpmid)
             && !resists_ston(mon))
             return POISON;
         if (!carni && !herbi)
@@ -766,13 +765,13 @@ register struct obj *obj;
         /* ghouls prefer old corpses and unhatchable eggs, yum!
            they'll eat fresh non-veggy corpses and hatchable eggs
            when starving; they never eat stone-to-flesh'd meat */
-        if (mptr == &mons[PM_GHOUL]) {
+        if (pmid == PM_GHOUL) {
             if (obj->otyp == CORPSE)
                 return (peek_at_iced_corpse_age(obj) + 50L <= monstermoves
-                        && fptr != &mons[PM_LIZARD]
-                        && fptr != &mons[PM_LICHEN])
+                        && (fpmid != PM_LIZARD)
+                        && (fpmid != PM_LICHEN))
                            ? DOGFOOD
-                           : (starving && !isVeganOption(pmid4(fptr)))
+                           : (starving && !isVeganOption(fpmid))
                               ? ACCFOOD
                               : POISON;
             if (obj->otyp == EGG)
@@ -792,38 +791,38 @@ register struct obj *obj;
         case CORPSE:
             if ((peek_at_iced_corpse_age(obj) + 50L <= monstermoves
                  && obj->corpsenm != PM_LIZARD && obj->corpsenm != PM_LICHEN
-                 && monsterClass(pmid4(mptr)) != S_FUNGUS)
-                || (isAcidic(pmid4(fptr)) && !resists_acid(mon))
-                || (isPoisonous(pmid4(fptr)) && !resists_poison(mon)))
+                 && monsterClass(pmid) != S_FUNGUS)
+                || (isAcidic(fpmid) && !resists_acid(mon))
+                || (isPoisonous(fpmid) && !resists_poison(mon)))
                 return POISON;
             /* turning into slime is preferable to starvation */
-            else if (fptr == &mons[PM_GREEN_SLIME] && !isSlimeproof(pmid4mon(mon)))
+            else if ((fpmid == PM_GREEN_SLIME) && !isSlimeproof(pmid4mon(mon)))
                 return starving ? ACCFOOD : POISON;
-            else if (isVeganOption(pmid4(fptr)))
+            else if (isVeganOption(fpmid))
                 return herbi ? CADAVER : MANFOOD;
             /* most humanoids will avoid cannibalism unless starving;
                arbitrary: elves won't eat other elves even then */
-            else if (isHumanoid(pmid4(mptr)) && sameMonsterType(pmid4(mptr), pmid4(fptr))
-                     && (!isUndead(pmid4(mptr))
-			 && monsterClass(pmid4(fptr)) != S_KOBOLD
-                         && monsterClass(pmid4(fptr)) != S_ORC 
-			 && monsterClass(pmid4(fptr)) != S_OGRE))
-                return (starving && carni && !isElf(pmid4(mptr))) ? ACCFOOD : TABU;
+            else if (isHumanoid(pmid) && sameMonsterType(pmid, fpmid)
+                     && (!isUndead(pmid)
+			 && monsterClass(fpmid) != S_KOBOLD
+                         && monsterClass(fpmid) != S_ORC 
+			 && monsterClass(fpmid) != S_OGRE))
+                return (starving && carni && !isElf(pmid)) ? ACCFOOD : TABU;
             else
                 return carni ? CADAVER : MANFOOD;
         case CLOVE_OF_GARLIC:
-            return (isUndead(pmid4(mptr)) || is_vampshifter(mon))
+            return (isUndead(pmid) || is_vampshifter(mon))
                       ? TABU
                       : (herbi || starving)
                          ? ACCFOOD
                          : MANFOOD;
         case TIN:
-            return isMetallivorous(pmid4(mptr)) ? ACCFOOD : MANFOOD;
+            return isMetallivorous(pmid) ? ACCFOOD : MANFOOD;
         case APPLE:
         case CARROT:
             return herbi ? DOGFOOD : starving ? ACCFOOD : MANFOOD;
         case BANANA:
-            return (monsterClass(pmid4(mptr)) == S_YETI)
+            return (monsterClass(pmid) == S_YETI)
                       ? DOGFOOD
                       : (herbi || starving)
                          ? ACCFOOD
@@ -840,10 +839,11 @@ register struct obj *obj;
             return TABU;
         if (monsterHatesSilver(mon) && objects[obj->otyp].oc_material == SILVER)
             return TABU;
-        if (mptr == &mons[PM_GELATINOUS_CUBE] && is_organic(obj))
+        if ((pmid == PM_GELATINOUS_CUBE) && is_organic(obj)) {
             return ACCFOOD;
-        if (isMetallivorous(pmid4(mptr)) && is_metallic(obj)
-            && (is_rustprone(obj) || mptr != &mons[PM_RUST_MONSTER])) {
+	}
+        if (isMetallivorous(pmid) && is_metallic(obj)
+            && (is_rustprone(obj) || (pmid != PM_RUST_MONSTER))) {
             /* Non-rustproofed ferrous based metals are preferred. */
             return (is_rustprone(obj) && !obj->oerodeproof) ? DOGFOOD
                                                             : ACCFOOD;
