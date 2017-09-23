@@ -17,8 +17,8 @@ STATIC_DCL struct obj *FDECL(touchfood, (struct obj *));
 STATIC_DCL void NDECL(do_reset_eat);
 STATIC_DCL void FDECL(done_eating, (BOOLEAN_P));
 STATIC_DCL void FDECL(cprefx, (int));
-STATIC_DCL int FDECL(intrinsic_possible, (int, struct permonst *));
-STATIC_DCL void FDECL(givit, (int, struct permonst *));
+STATIC_DCL int FDECL(intrinsic_possible, (int, int));
+STATIC_DCL void FDECL(givit, (int, int));
 STATIC_DCL void FDECL(cpostfx, (int));
 STATIC_DCL void FDECL(consume_tin, (const char *));
 STATIC_DCL void FDECL(start_tin, (struct obj *));
@@ -456,14 +456,15 @@ struct monst *magr, *mdef;
 boolean visflag;
 int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
 {
-    struct permonst *pd = mdef->data;
+    int dpmid = pmid4mon(mdef);
     boolean give_nutrit = FALSE;
     int result = MM_HIT, xtra_dmg = rnd(10);
 
-    if (isNoncorporeal(pmid4(pd))) {
-        if (visflag)
+    if (isNoncorporeal(dpmid)) {
+        if (visflag) {
             pline("%s brain is unharmed.",
                   (mdef == &youmonst) ? "Your" : s_suffix(Monnam(mdef)));
+	}
         return MM_MISS; /* side-effects can't occur */
     } else if (magr == &youmonst) {
         You("eat %s brain!", s_suffix(mon_nam(mdef)));
@@ -474,13 +475,13 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
             pline("%s brain is eaten!", s_suffix(Monnam(mdef)));
     }
 
-    if (fleshPetrifies(pmid4(pd))) {
+    if (fleshPetrifies(dpmid)) {
         /* mind flayer has attempted to eat the brains of a petrification
            inducing critter (most likely Medusa; attacking a cockatrice via
            tentacle-touch should have been caught before reaching this far) */
         if (magr == &youmonst) {
             if (!youResistStoning() && !youAreTurningToStone()) {
-		javaString monsterName = monsterTypeName(pmid4(pd));
+		javaString monsterName = monsterTypeName(dpmid);
                 make_stoned(5L, (char *) 0, KILLED_BY_AN, monsterName.c_str);
 		releaseJavaString(monsterName);
 	    }
@@ -506,14 +507,14 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
         /*
          * player mind flayer is eating something's brain
          */
-        updateConductsAfterEating(pmid4(pd));
-        if (isMindless(pmid4(pd))) { /* (cannibalism not possible here) */
+        updateConductsAfterEating(dpmid);
+        if (isMindless(dpmid)) { /* (cannibalism not possible here) */
             pline("%s doesn't notice.", Monnam(mdef));
             /* all done; no extra harm inflicted upon target */
             return MM_MISS;
-        } else if (isRiderOfTheApocalypse(pmid4(pd))) {
+        } else if (isRiderOfTheApocalypse(dpmid)) {
             pline("Ingesting that is fatal.");
-	    javaString monsterName = monsterTypeName(pmid4(pd));
+	    javaString monsterName = monsterTypeName(dpmid);
             Sprintf(killer.name, "unwisely ate the brain of %s", monsterName.c_str);
 	    releaseJavaString(monsterName);
             killer.format = NO_KILLER_PREFIX;
@@ -535,7 +536,7 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
         }
         /* targetting another mind flayer or your own underlying species
            is cannibalism */
-        (void) maybe_cannibal(pmid4(pd), TRUE);
+        (void) maybe_cannibal(dpmid, TRUE);
 
     } else if (mdef == &youmonst) {
         /*
@@ -573,11 +574,11 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
         /*
          * monster mind flayer is eating another monster's brain
          */
-        if (isMindless(pmid4(pd))) {
+        if (isMindless(dpmid)) {
             if (visflag)
                 pline("%s doesn't notice.", Monnam(mdef));
             return MM_MISS;
-        } else if (isRiderOfTheApocalypse(pmid4(pd))) {
+        } else if (isRiderOfTheApocalypse(dpmid)) {
             mondied(magr);
             if (magr->mhp <= 0)
                 result = MM_AGR_DIED;
@@ -731,9 +732,9 @@ fix_petrification()
 
 /* intrinsic_possible() returns TRUE iff a monster can give an intrinsic. */
 STATIC_OVL int
-intrinsic_possible(type, ptr)
+intrinsic_possible(type, pmid)
 int type;
-register struct permonst *ptr;
+int pmid;
 {
     int res = 0;
 
@@ -746,7 +747,7 @@ register struct permonst *ptr;
 #else
 #define ifdebugresist(Msg) /*empty*/
 #endif
-    int mconveys = monsterConveysResistances(pmid4(ptr));
+    int mconveys = monsterConveysResistances(pmid);
     switch (type) {
     case FIRE_RES:
         res = (mconveys & MR_FIRE) != 0;
@@ -773,15 +774,15 @@ register struct permonst *ptr;
         ifdebugresist("can get poison resistance");
         break;
     case TELEPORT:
-        res = canTeleport(pmid4(ptr));
+        res = canTeleport(pmid);
         ifdebugresist("can get teleport");
         break;
     case TELEPORT_CONTROL:
-        res = canControlTeleport(pmid4(ptr));
+        res = canControlTeleport(pmid);
         ifdebugresist("can get teleport control");
         break;
     case TELEPAT:
-        res = isTelepathic(pmid4(ptr));
+        res = isTelepathic(pmid);
         ifdebugresist("can get telepathy");
         break;
     default:
@@ -796,9 +797,9 @@ register struct permonst *ptr;
  * and what type of intrinsic it is trying to give you.
  */
 STATIC_OVL void
-givit(type, ptr)
+givit(type, pmid)
 int type;
-register struct permonst *ptr;
+int pmid;
 {
     register int chance;
 
@@ -806,7 +807,7 @@ register struct permonst *ptr;
     /* some intrinsics are easier to get than others */
     switch (type) {
     case POISON_RES:
-        if ((ptr == &mons[PM_KILLER_BEE] || ptr == &mons[PM_SCORPION])
+        if (((pmid == PM_KILLER_BEE) || (pmid == PM_SCORPION))
             && !rn2(4))
             chance = 1;
         else
@@ -826,7 +827,7 @@ register struct permonst *ptr;
         break;
     }
 
-    if (monsterLevel(pmid4(ptr)) <= rn2(chance))
+    if (monsterLevel(pmid) <= rn2(chance))
         return; /* failed die roll */
 
     switch (type) {
@@ -1064,7 +1065,6 @@ register int pm;
     /*FALLTHRU*/
     default: {
         int pmid = pm;
-        struct permonst *ptr = &mons[pm];
         boolean conveys_STR = isGiant(pmid);
         int i, count;
 
@@ -1090,7 +1090,7 @@ register int pm;
             debugpline1("\"Intrinsic\" strength, %d", tmp);
         }
         for (i = 1; i <= LAST_PROP; i++) {
-            if (!intrinsic_possible(i, ptr))
+            if (!intrinsic_possible(i, pmid))
                 continue;
             ++count;
             /* a 1 in count chance of replacing the old choice
@@ -1109,7 +1109,7 @@ register int pm;
         if (tmp == -1)
             gainstr((struct obj *) 0, 0, TRUE);
         else if (tmp > 0)
-            givit(tmp, ptr);
+            givit(tmp, pmid);
     } break;
     }
 

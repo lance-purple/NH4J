@@ -909,7 +909,7 @@ dokick()
 
     if (mtmp) {
         /* save mtmp->data (for recoil) in case mtmp gets killed */
-        struct permonst *mdat = mtmp->data;
+        int pmid = pmid4mon(mtmp);
 
         kick_monster(mtmp, x, y);
         glyph = glyph_at(x, y);
@@ -936,7 +936,7 @@ dokick()
                 (monsterCorpseWeight(pmid4you()) + (weight_cap() + inv_weight()));
             if (range < 1)
                 range = 1; /* divide by zero avoidance */
-            range = (3 * monsterCorpseWeight(pmid4(mdat))) / range;
+            range = (3 * monsterCorpseWeight(pmid)) / range;
 
             if (range < 1)
                 range = 1;
