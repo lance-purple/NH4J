@@ -86,7 +86,7 @@ register struct obj *obj;
        allow fake amulets to be eaten either [which is already the case] */
 
     if (isMetallivorous(pmid4you()) && is_metallic(obj)
-        && (youmonst.data != &mons[PM_RUST_MONSTER] || is_rustprone(obj)))
+        && ((pmid4you() != PM_RUST_MONSTER) || is_rustprone(obj)))
         return TRUE;
 
     if (currentMonsterNumber() == PM_GELATINOUS_CUBE && is_organic(obj)
@@ -2970,7 +2970,7 @@ int corpsecheck; /* 0, no check, 1, corpses, 2, tinnable corpses */
             }
         }
 
-        if (youmonst.data != &mons[PM_RUST_MONSTER]
+        if ((pmid4you() != PM_RUST_MONSTER)
             && (gold = g_at(currentX(), currentY())) != 0) {
             if (gold->quan == 1L)
                 Sprintf(qbuf, "There is 1 gold piece here; eat it?");

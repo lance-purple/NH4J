@@ -77,6 +77,10 @@ int pmid4you() {
     return pmid4(youmonst.data);
 }
 
+void setPmid4you(int pmid) {
+    youmonst.data = ptr4pmid(pmid);
+}
+
 struct permonst* ptr4pmid(int pmid) {
     if ((NON_PM == pmid) || (pmid >= NUMMONS)) {
         return NULL;

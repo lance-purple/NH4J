@@ -605,11 +605,11 @@ register struct monst *mtmp;
             if (kindred)
                 verbl_msg =
                     "This is my hunting ground that you dare to prowl!";
-            else if (youmonst.data == &mons[PM_SILVER_DRAGON]
-                     || youmonst.data == &mons[PM_BABY_SILVER_DRAGON]) {
+            else if (pmid4you() == PM_SILVER_DRAGON
+                     || pmid4you() == PM_BABY_SILVER_DRAGON) {
                 /* Silver dragons are silver in color, not made of silver */
                 Sprintf(verbuf, "%s! Your silver sheen does not frighten me!",
-                        youmonst.data == &mons[PM_SILVER_DRAGON]
+                        (pmid4you() == PM_SILVER_DRAGON)
                             ? "Fool"
                             : "Young Fool");
                 verbl_msg = verbuf;

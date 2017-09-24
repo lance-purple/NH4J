@@ -587,8 +587,9 @@ register struct obj *otmp;
                     Your("affinity to %s disappears!",
                          makeplural(lycanthropeName.c_str));
 		    releaseJavaString(lycanthropeName);
-                    if (youmonst.data == &mons[lycanthropeType()])
+                    if (pmid4you() == lycanthropeType()) {
                         you_unwere(FALSE);
+                    }
                     setLycanthropeType(NON_PM); /* cure lycanthropy */
                 }
                 losehp(Maybe_Half_Phys(d(2, 6)), "potion of holy water",
@@ -1624,7 +1625,7 @@ register struct obj *obj;
         } else if (lycanthropeType() >= LOW_PM) {
             /* vapor from [un]holy water will trigger
                transformation but won't cure lycanthropy */
-            if (obj->blessed && youmonst.data == &mons[lycanthropeType()])
+            if (obj->blessed && pmid4you() == lycanthropeType())
                 you_unwere(FALSE);
             else if (obj->cursed && !areYouPolymorphed())
                 you_were();

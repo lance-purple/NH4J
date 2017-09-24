@@ -8,7 +8,7 @@
 STATIC_VAR NEARDATA struct obj *otmp;
 
 STATIC_DCL boolean FDECL(u_slip_free, (struct monst *, const struct Attack));
-STATIC_DCL int FDECL(passiveum, (struct permonst *, struct monst *, const struct Attack));
+STATIC_DCL int FDECL(passiveum, (int, struct monst *, const struct Attack));
 
 STATIC_DCL void FDECL(mayberem, (struct obj *, const char *));
 
@@ -871,7 +871,7 @@ register const struct Attack mattk;
     register int uncancelled, ptmp;
     int dmg, armpro, permdmg;
     char buf[BUFSZ];
-    struct permonst *olduasmon = youmonst.data;
+    int oldupmid = pmid4you();
     int res;
 
     if (!canspotmon(mtmp))
@@ -992,8 +992,8 @@ register const struct Attack mattk;
         hitmsg(mtmp, mattk);
         if (uncancelled) {
             pline("You're %s!", fireDescription(pmid4you(), mattk));
-            if (youmonst.data == &mons[PM_STRAW_GOLEM]
-                || youmonst.data == &mons[PM_PAPER_GOLEM]) {
+            if ((pmid4you() == PM_STRAW_GOLEM)
+                || (pmid4you() == PM_PAPER_GOLEM)) {
                 You("roast!");
                 /* KMH -- this is okay with unchanging */
                 rehumanize();
@@ -1553,7 +1553,7 @@ register const struct Attack mattk;
             pline_The("slime burns away!");
             dmg = 0;
         } else if (youAreUnchanging() || isNoncorporeal(pmid4you())
-                   || youmonst.data == &mons[PM_GREEN_SLIME]) {
+                   || (pmid4you() == PM_GREEN_SLIME)) {
             You("are unaffected.");
             dmg = 0;
         } else if (!youAreTurningToSlime()) {
@@ -1644,7 +1644,7 @@ register const struct Attack mattk;
     }
 
     if (dmg)
-        res = passiveum(olduasmon, mtmp, mattk);
+        res = passiveum(oldupmid, mtmp, mattk);
     else
         res = 1;
     stop_occupation();
@@ -2250,18 +2250,18 @@ could_seduce(magr, mdef, mattk)
 struct monst *magr, *mdef;
 const struct Attack mattk;
 {
-    register struct permonst *pagr;
+    int pmidagr;
     boolean agrinvis, defperc;
     xchar genagr, gendef;
 
     if (isAnimal(pmid4mon(magr)))
         return 0;
     if (magr == &youmonst) {
-        pagr = youmonst.data;
+        pmidagr = pmid4you();
         agrinvis = youAreInvisibleToOthers();
         genagr = poly_gender();
     } else {
-        pagr = magr->data;
+        pmidagr = pmid4mon(magr);
         agrinvis = magr->minvis;
         genagr = gender(magr);
     }
@@ -2277,15 +2277,15 @@ const struct Attack mattk;
         && (!SYSOPT_SEDUCE || ((validAttack(mattk)) && mattk.damageType != AD_SSEX)))
         return 0;
 
-    if (monsterClass(pmid4(pagr)) != S_NYMPH
-        && ((pagr != &mons[PM_INCUBUS] && pagr != &mons[PM_SUCCUBUS])
+    if (monsterClass(pmidagr) != S_NYMPH
+        && ((pmidagr != PM_INCUBUS && pmidagr != PM_SUCCUBUS)
             || (SYSOPT_SEDUCE && (validAttack(mattk)) && mattk.damageType != AD_SSEX)))
         return 0;
 
     if (genagr == 1 - gendef)
         return 1;
     else
-        return (monsterClass(pmid4(pagr)) == S_NYMPH) ? 2 : 0;
+        return (monsterClass(pmidagr) == S_NYMPH) ? 2 : 0;
 }
 
 /* Returns 1 if monster teleported */
@@ -2592,15 +2592,14 @@ const char *str;
 }
 
 STATIC_OVL int
-passiveum(olduasmon, mtmp, mattk)
-struct permonst *olduasmon;
+passiveum(oldupmid, mtmp, mattk)
+int oldupmid;
 register struct monst *mtmp;
 register const struct Attack mattk;
 {
     int i, tmp;
 
     int upmid = pmid4you();
-    int oldupmid = pmid4(olduasmon);
 
     for (i = 0;; i++) {
         if (i >= monsterAttacks(oldupmid)) {

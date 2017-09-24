@@ -135,7 +135,7 @@ bot2()
 void
 bot()
 {
-    if (youmonst.data) {
+    if (NON_PM != pmid4you()) {
         bot1();
         bot2();
     }
@@ -388,7 +388,7 @@ bot()
 
     if (!blinit)
         panic("bot before init.");
-    if (!youmonst.data) {
+    if (NON_PM == pmid4you()) {
         context.botl = context.botlx = 0;
         update_all = FALSE;
         return;

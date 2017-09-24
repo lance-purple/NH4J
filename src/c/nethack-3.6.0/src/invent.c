@@ -976,7 +976,7 @@ register const char *let, *word;
     /* Equivalent of an "ugly check" for gold */
     if (usegold && !strcmp(word, "eat")
         && (!isMetallivorous(pmid4you())
-            || youmonst.data == &mons[PM_RUST_MONSTER]))
+            || (pmid4you() == PM_RUST_MONSTER)))
         usegold = FALSE;
 
     if (*let == ALL_CLASSES)
@@ -3553,7 +3553,7 @@ char *title;
         /* Fool the 'weapon in hand' routine into
          * displaying 'weapon in claw', etc. properly.
          */
-        youmonst.data = mon->data;
+        setPmid4you(pmid4mon(mon));
 
         n = query_objlist(title ? title : tmp, mon->minvent,
                           INVORDER_SORT | (incl_hero ? INCLUDE_HERO : 0),

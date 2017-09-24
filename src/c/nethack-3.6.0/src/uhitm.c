@@ -1300,15 +1300,16 @@ struct obj *obj;   /* weapon */
 STATIC_OVL void
 demonpet()
 {
-    int i;
-    struct permonst *pm;
-    struct monst *dtmp;
-
     pline("Some hell-p has arrived!");
-    i = !rn2(6) ? ndemon(currentAlignmentType()) : NON_PM;
-    pm = i != NON_PM ? &mons[i] : youmonst.data;
-    if ((dtmp = makeMonsterOfType(pmid4(pm), currentX(), currentY(), NO_MM_FLAGS)) != 0)
+    int i = !rn2(6) ? ndemon(currentAlignmentType()) : NON_PM;
+    int pmid = (i != NON_PM) ? i : pmid4you();
+
+    struct monst *dtmp = makeMonsterOfType(pmid, currentX(), currentY(),
+                                           NO_MM_FLAGS);
+
+    if (dtmp != 0) {
         (void) tamedog(dtmp, (struct obj *) 0);
+    }
     exercise(A_WIS, TRUE);
 }
 
@@ -1998,7 +1999,7 @@ register const struct Attack mattk;
                 end_engulf();
                 return 2;
             case AD_PHYS:
-                if (youmonst.data == &mons[PM_FOG_CLOUD]) {
+                if (pmid4you() == PM_FOG_CLOUD) {
                     pline("%s is laden with your moisture.", Monnam(mdef));
                     if (isAmphibious(pmid4(pd)) && !isFlaming(pmid4(pd))) {
                         dam = 0;

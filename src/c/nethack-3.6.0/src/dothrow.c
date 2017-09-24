@@ -900,9 +900,10 @@ boolean hitsroof;
                 dmg = 1;
             else if (dmg > 6)
                 dmg = 6;
-            if (youmonst.data == &mons[PM_SHADE]
-                && objects[obj->otyp].oc_material != SILVER)
+            if ((pmid4you() == PM_SHADE)
+                && (objects[obj->otyp].oc_material != SILVER)) {
                 dmg = 0;
+            }
         }
         if (dmg > 1 && less_damage)
             dmg = 1;

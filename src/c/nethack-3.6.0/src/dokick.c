@@ -4,10 +4,18 @@
 
 #include "hack.h"
 
-#define is_bigfoot(x) ((x) == &mons[PM_SASQUATCH])
-#define martial()                                 \
-    (martial_bonus() || is_bigfoot(youmonst.data) \
-     || (uarmf && uarmf->otyp == KICKING_BOOTS))
+static boolean is_bigfoot(pmid)
+int pmid;
+{
+    return pmid == PM_SASQUATCH;
+}
+
+static boolean martial()
+{
+  return (martial_bonus()
+    || is_bigfoot(pmid4you())
+    || (uarmf && uarmf->otyp == KICKING_BOOTS));
+}
 
 static NEARDATA struct rm *maploc, nowhere;
 static NEARDATA const char *gate_str;

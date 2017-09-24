@@ -2152,7 +2152,7 @@ const char *fmt, *str;
         if (fmt && str)
             pline(fmt, str, uskin ? "luster" : "armor");
         return TRUE;
-    } else if (youmonst.data == &mons[PM_SILVER_DRAGON]) {
+    } else if (pmid4you() == PM_SILVER_DRAGON) {
         if (fmt && str)
             pline(fmt, str, "scales");
         return TRUE;

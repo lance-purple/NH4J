@@ -28,7 +28,7 @@ STATIC_DCL void FDECL(drop_weapon, (int));
 STATIC_DCL void NDECL(uunstick);
 STATIC_DCL int FDECL(armor_to_dragon, (int));
 STATIC_DCL void NDECL(newman);
-STATIC_DCL boolean FDECL(polysense, (struct permonst *));
+STATIC_DCL boolean FDECL(polysense, ());
 
 STATIC_VAR const char no_longer_petrify_resistant[] =
     "No longer petrify-resistant, you";
@@ -45,7 +45,7 @@ static void PROPSET(int propertyIndex, boolean on) {
 }
 
 
-/* update the youmonst.data structure pointer and intrinsics */
+/* update the youmonst intrinsics */
 void
 set_uasmon()
 {
@@ -361,7 +361,7 @@ newman()
             Strcpy(killer.name, "unsuccessful polymorph");
             done(DIED);
             newuhs(FALSE);
-            (void) polysense(youmonst.data);
+            (void) polysense();
             return; /* lifesaved */
         }
     }
@@ -376,7 +376,7 @@ newman()
         make_slimed(10L, (const char *) 0);
     }
 
-    (void) polysense(youmonst.data);
+    (void) polysense();
     context.botl = 1;
     see_monsters();
     (void) encumber_msg();
@@ -539,7 +539,7 @@ int psflags;
         } else if (isvamp) {
         do_vampyr:
             if (mntmp < LOW_PM || (monsterGenerationMask(mntmp) & G_UNIQ))
-                mntmp = (youmonst.data != &mons[PM_VAMPIRE] && !rn2(10))
+                mntmp = ((pmid4you() != PM_VAMPIRE) && !rn2(10))
                             ? PM_WOLF
                             : !rn2(4) ? PM_FOG_CLOUD : PM_VAMPIRE_BAT;
             if (controllable_poly) {
@@ -868,7 +868,7 @@ int mntmp;
         setCurrentTrapTimeout(0);
     }
     check_strangling(TRUE); /* maybe start strangling */
-    (void) polysense(youmonst.data);
+    (void) polysense();
 
     context.botl = 1;
     vision_full_recalc = 1;
@@ -1511,11 +1511,11 @@ dohide()
 int
 dopoly()
 {
-    struct permonst *savedat = youmonst.data;
+    int savepmid = pmid4you();
 
     if (isVampire(pmid4you())) {
         polyself(2);
-        if (savedat != youmonst.data) {
+        if (savepmid != pmid4you()) {
             javaString youMonsterName = monsterTypeName(pmid4you());
             You("transform into %s.", an(youMonsterName.c_str));
             releaseJavaString(youMonsterName);
@@ -1835,18 +1835,17 @@ int atyp;
 }
 
 /*
- * Some species have awareness of other species
+ * Some species may have awareness of other species
  */
 static boolean
-polysense(mptr)
-struct permonst *mptr;
+polysense()
 {
     int warnidx = NON_PM;
 
     context.warntype.pmid = NON_PM;
     context.warntype.polyd = 0;
 
-    switch (pmid4(mptr)) {
+    switch (pmid4you()) {
     case PM_PURPLE_WORM:
         warnidx = PM_SHRIEKER;
         break;

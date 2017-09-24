@@ -2171,7 +2171,7 @@ int how;
                 continue;
             }
             /* KMH -- Unchanging prevents rehumanization */
-            if (youAreUnchanging() && ptr == youmonst.data)
+            if (youAreUnchanging() && (pmid4(ptr) == pmid4you()))
                 killplayer++;
             break;
         }
@@ -2229,12 +2229,12 @@ int how;
             /* Polymorphed characters will die as soon as they're rehumanized.
              */
             /* KMH -- Unchanging prevents rehumanization */
-            if (areYouPolymorphed() && ptr != youmonst.data) {
+            if (areYouPolymorphed() && (pmid4(ptr) != pmid4you())) {
                 delayed_killer(POLYMORPH, killer.format, killer.name);
                 You_feel("dead inside.");
             } else
                 done(GENOCIDED);
-        } else if (ptr == youmonst.data) {
+        } else if (pmid4(ptr) == pmid4you()) {
             rehumanize();
         }
         resetMonsterRandomizer(mndx);
