@@ -75,7 +75,7 @@ experience(mtmp, nk)
 register struct monst *mtmp;
 register int nk;
 {
-    register struct permonst *ptr = mtmp->data;
+    int pmid = pmid4mon(mtmp);
     int i, tmp, tmp2;
 
     tmp = 1 + mtmp->m_lev * mtmp->m_lev;
@@ -85,11 +85,10 @@ register int nk;
         tmp += (7 - i) * ((i < 0) ? 2 : 1);
 
     /*  For very fast monsters, give extra experience */
-    int mmove = monsterMovementSpeed(pmid4(ptr));
+    int mmove = monsterMovementSpeed(pmid);
     if (mmove > NORMAL_SPEED)
         tmp += (mmove > (3 * NORMAL_SPEED / 2)) ? 5 : 3;
 
-    int pmid = pmid4(ptr);
     int nAttacks = monsterAttacks(pmid);
 
     /*  For each "special" attack type give extra experience */
@@ -123,7 +122,7 @@ register int nk;
     }
 
     /*  For certain "extra nasty" monsters, give even more */
-    if (isExtraNasty(pmid4(ptr)))
+    if (isExtraNasty(pmid))
         tmp += (7 * mtmp->m_lev);
 
     /*  For higher level monsters, an additional bonus is given */

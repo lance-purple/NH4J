@@ -394,13 +394,13 @@ struct monst *mtmp;
 int how;
 {
     char buf[BUFSZ];
-    struct permonst *mptr = mtmp->data,
-                    *champtr = ((mtmp->cham >= LOW_PM)
-                                   ? &mons[mtmp->cham]
-                                   : mptr);
+    int pmid = pmid4mon(mtmp);
+    int chamPmid = ((mtmp->cham >= LOW_PM)
+                                   ? mtmp->cham
+                                   : pmid);
     boolean distorted = (boolean) (youAreHallucinating() && canspotmon(mtmp)),
             mimicker = (mtmp->m_ap_type == M_AP_MONSTER),
-            imitator = (mptr != champtr || mimicker);
+            imitator = (pmid != chamPmid || mimicker);
 
     You((how == STONING) ? "turn to stone..." : "die...");
     mark_synch(); /* flush buffered screen output */
@@ -408,14 +408,14 @@ int how;
     killer.format = KILLED_BY_AN;
     /* "killed by the high priest of Crom" is okay,
        "killed by the high priest" alone isn't */
-    if ((monsterGenerationMask(pmid4(mptr)) & G_UNIQ) != 0 && !(imitator && !mimicker)
-        && !(mptr == &mons[PM_HIGH_PRIEST] && !mtmp->ispriest)) {
-        if (!typeIsProperName(pmid4(mptr)))
+    if ((monsterGenerationMask(pmid) & G_UNIQ) != 0 && !(imitator && !mimicker)
+        && !(pmid == PM_HIGH_PRIEST && !mtmp->ispriest)) {
+        if (!typeIsProperName(pmid))
             Strcat(buf, "the ");
         killer.format = KILLED_BY;
     }
     /* _the_ <invisible> <distorted> ghost of Dudley */
-    if (mptr == &mons[PM_GHOST] && has_mname(mtmp)) {
+    if (pmid == PM_GHOST && has_mname(mtmp)) {
         Strcat(buf, "the ");
         killer.format = KILLED_BY;
     }
@@ -426,17 +426,17 @@ int how;
 
     if (imitator) {
         char shape[BUFSZ];
-        javaString realName = monsterTypeName(pmid4(champtr));
-        javaString fakeName = monsterTypeName(pmid4(mptr));
+        javaString realName = monsterTypeName(chamPmid);
+        javaString fakeName = monsterTypeName(pmid);
 
         boolean alt = is_vampshifter(mtmp);
 
         if (mimicker) {
-            /* realName is already correct because champtr==mptr;
-               set up fake mptr for typeIsProperName/isUniqueMonsterType */
-            mptr = &mons[mtmp->mappearance];
+            /* realName is already correct because chamPmid==pmid;
+               set up fake pmid for typeIsProperName/isUniqueMonsterType */
+            pmid = mtmp->mappearance;
 	    releaseJavaString(fakeName);
-	    fakeName = monsterTypeName(pmid4(mptr));
+	    fakeName = monsterTypeName(pmid);
         } else if (alt && strstri(realName.c_str, "vampire")
                    && !strcmp(fakeName.c_str, "vampire bat")) {
             /* special case: use "vampire in bat form" in preference
@@ -448,9 +448,9 @@ int how;
         /* for the alternate format, always suppress any article;
            pname and the_unique should also have s_suffix() applied,
            but vampires don't take on any shapes which warrant that */
-        if (alt || typeIsProperName(pmid4(mptr))) /* no article */
+        if (alt || typeIsProperName(pmid)) /* no article */
             Strcpy(shape, fakeName.c_str);
-        else if (isUniqueMonsterType(pmid4(mptr))) /* "the"; don't use the() here */
+        else if (isUniqueMonsterType(pmid)) /* "the"; don't use the() here */
             Sprintf(shape, "the %s", fakeName.c_str);
         else /* "a"/"an" */
             Strcpy(shape, an(fakeName.c_str));
@@ -462,8 +462,8 @@ int how;
                 realName.c_str, shape);
 	releaseJavaString(fakeName);
 	releaseJavaString(realName);
-        mptr = mtmp->data; /* reset for mimicker case */
-    } else if (mptr == &mons[PM_GHOST]) {
+        pmid = pmid4mon(mtmp); /* reset for mimicker case */
+    } else if (pmid == PM_GHOST) {
         Strcat(buf, "ghost");
         if (has_mname(mtmp))
             Sprintf(eos(buf), " of %s", MNAME(mtmp));
@@ -479,7 +479,7 @@ int how;
            it overrides the effect of hallucination on priestname() */
         Strcat(buf, m_monnam(mtmp));
     } else {
-	javaString monsterName = monsterTypeName(pmid4(mptr));
+	javaString monsterName = monsterTypeName(pmid);
         Strcat(buf, monsterName.c_str);
 	releaseJavaString(monsterName);
         if (has_mname(mtmp))
@@ -487,13 +487,13 @@ int how;
     }
 
     Strcpy(killer.name, buf);
-    if (monsterClass(pmid4(mptr)) == S_WRAITH)
+    if (monsterClass(pmid) == S_WRAITH)
         setAriseFromGraveAsMonster(PM_WRAITH);
-    else if (monsterClass(pmid4(mptr)) == S_MUMMY && urace.mummynum != NON_PM)
+    else if (monsterClass(pmid) == S_MUMMY && urace.mummynum != NON_PM)
         setAriseFromGraveAsMonster(urace.mummynum);
-    else if (monsterClass(pmid4(mptr)) == S_VAMPIRE && Race_if(PM_HUMAN))
+    else if (monsterClass(pmid) == S_VAMPIRE && Race_if(PM_HUMAN))
         setAriseFromGraveAsMonster(PM_VAMPIRE);
-    else if (mptr == &mons[PM_GHOUL])
+    else if (pmid == PM_GHOUL)
         setAriseFromGraveAsMonster(PM_GHOUL);
     /* this could happen if a high-end vampire kills the hero
        when ordinary vampires are genocided; ditto for wraiths */
