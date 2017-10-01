@@ -567,9 +567,9 @@ int spellnum;
     case CLC_INSECTS: {
         /* Try for insects, and if there are none
            left, go for (sticks to) snakes.  -3. */
-        struct permonst *pm = ptr4pmid(pickMonsterTypeOfClass(S_ANT, 0));
+        int pmid = pickMonsterTypeOfClass(S_ANT, 0);
         struct monst *mtmp2 = (struct monst *) 0;
-        char let = (pm ? S_ANT : S_SNAKE);
+        char let = ((NON_PM != pmid) ? S_ANT : S_SNAKE);
         boolean success = FALSE, seecaster;
         int i, quan, oldseen, newseen;
         coord bypos;
@@ -582,9 +582,9 @@ int spellnum;
         for (i = 0; i <= quan; i++) {
             if (!canPlaceMonsterNear(&bypos, mtmp->mux, mtmp->muy, pmid4mon(mtmp), 0))
                 break;
-            pm = ptr4pmid(pickMonsterTypeOfClass(let, 0));
-            if ((pm != 0)
-                && (mtmp2 = makeMonsterOfType(pmid4(pm), bypos.x, bypos.y, MM_ANGRY)) != 0) {
+            pmid = pickMonsterTypeOfClass(let, 0);
+            if ((NON_PM != pmid)
+                && (mtmp2 = makeMonsterOfType(pmid, bypos.x, bypos.y, MM_ANGRY)) != 0) {
                 success = TRUE;
                 mtmp2->msleeping = mtmp2->mpeaceful = mtmp2->mtame = 0;
                 set_malign(mtmp2);
