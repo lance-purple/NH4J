@@ -192,15 +192,18 @@ mdisplacem(magr, mdef, quietly)
 register struct monst *magr, *mdef;
 boolean quietly;
 {
-    struct permonst *pa, *pd;
-    int tx, ty, fx, fy;
-
     /* sanity checks; could matter if we unexpectedly get a long worm */
     if (!magr || !mdef || magr == mdef)
         return MM_MISS;
-    pa = magr->data, pd = mdef->data;
-    tx = mdef->mx, ty = mdef->my; /* destination */
-    fx = magr->mx, fy = magr->my; /* current location */
+    int agrPmid = pmid4mon(magr);
+    int defPmid = pmid4mon(mdef);
+
+    int tx = mdef->mx;
+    int ty = mdef->my; /* destination */
+
+    int fx = magr->mx;
+    int fy = magr->my; /* current location */
+
     if (m_at(fx, fy) != magr || m_at(tx, ty) != mdef)
         return MM_MISS;
 
@@ -211,9 +214,11 @@ boolean quietly;
         return MM_MISS;
 
     /* Grid bugs cannot displace at an angle. */
-    if (pa == &mons[PM_GRID_BUG] && magr->mx != mdef->mx
-        && magr->my != mdef->my)
+    if ((agrPmid == PM_GRID_BUG) && (magr->mx != mdef->mx)
+        && (magr->my != mdef->my)) 
+    {
         return MM_MISS;
+    }
 
     /* undetected monster becomes un-hidden if it is displaced */
     if (mdef->mundetected)
@@ -232,9 +237,9 @@ boolean quietly;
      */
     vis = (canspotmon(magr) && canspotmon(mdef));
 
-    if (touchPetrifies(pmid4(pd)) && !resists_ston(magr)) {
+    if (touchPetrifies(defPmid) && !resists_ston(magr)) {
         if (which_armor(magr, W_ARMG) != 0) {
-            if (monsterPolymorphsWhenStoned(pmid4mon(magr))) {
+            if (monsterPolymorphsWhenStoned(agrPmid)) {
                 mon_to_stone(magr);
                 return MM_HIT; /* no damage during the polymorph */
             }
@@ -255,7 +260,7 @@ boolean quietly;
     place_monster(mdef, fx, fy);
     if (vis && !quietly)
         pline("%s moves %s out of %s way!", Monnam(magr), mon_nam(mdef),
-              isRiderOfTheApocalypse(pmid4(pa)) ? "the" : mhis(magr));
+              isRiderOfTheApocalypse(agrPmid) ? "the" : mhis(magr));
     newsym(fx, fy);  /* see it */
     newsym(tx, ty);  /*   all happen */
     flush_screen(0); /* make sure it shows up */
@@ -293,19 +298,27 @@ register struct monst *magr, *mdef;
         struck = 0, /* hit at least once */
         res[NATTK]; /* results of all attacks */
     struct Attack mattk;
-    struct permonst *pa, *pd;
 
     if (!magr || !mdef)
+    {
         return MM_MISS; /* mike@genat */
+    }
+
     if (!magr->mcanmove || magr->msleeping)
+    {
         return MM_MISS;
-    pa = magr->data;
-    pd = mdef->data;
+    }
+
+    int agrPmid = pmid4mon(magr); 
+    int defPmid = pmid4mon(mdef); 
 
     /* Grid bugs cannot attack at an angle. */
-    if (pa == &mons[PM_GRID_BUG] && magr->mx != mdef->mx
-        && magr->my != mdef->my)
+    if ((agrPmid == PM_GRID_BUG)
+        && (magr->mx != mdef->mx)
+        && (magr->my != mdef->my))
+    {
         return MM_MISS;
+    }
 
     /* Calculate the armour class differential. */
     tmp = find_mac(mdef) + magr->m_lev;
@@ -329,8 +342,10 @@ register struct monst *magr, *mdef;
     }
 
     /* Elves hate orcs. */
-    if (isElf(pmid4(pa)) && isOrc(pmid4(pd)))
+    if (isElf(agrPmid) && isOrc(defPmid))
+    {
         tmp++;
+    }
 
     /* Set up the visibility of action */
     vis = (cansee(magr->mx, magr->my) && cansee(mdef->mx, mdef->my)
@@ -733,13 +748,15 @@ register const struct Attack mattk;
 {
     struct obj *obj;
     char buf[BUFSZ];
-    struct permonst *pa = magr->data, *pd = mdef->data;
+    int agrPmid = pmid4mon(magr);
+    int defPmid = pmid4mon(mdef);
+
     int armpro, num, tmp = d(mattk.dice, mattk.diceSides),
                      res = MM_MISS;
     boolean cancelled;
 
-    if ((touchPetrifies(pmid4(pd)) /* or fleshPetrifies() */
-         || (mattk.damageType == AD_DGST && pd == &mons[PM_MEDUSA]))
+    if ((touchPetrifies(defPmid) /* or fleshPetrifies() */
+         || (mattk.damageType == AD_DGST && defPmid == PM_MEDUSA))
         && !resists_ston(magr)) {
         long protector = attk_protection((int) mattk.type),
              wornitems = magr->misc_worn_check;
@@ -750,7 +767,7 @@ register const struct Attack mattk;
 
         if (protector == 0L
             || (protector != ~0L && (wornitems & protector) != protector)) {
-            if (monsterPolymorphsWhenStoned(pmid4mon(magr))) {
+            if (monsterPolymorphsWhenStoned(agrPmid)) {
                 mon_to_stone(magr);
                 return MM_HIT; /* no damage during the polymorph */
             }
@@ -772,12 +789,12 @@ register const struct Attack mattk;
     switch (mattk.damageType) {
     case AD_DGST:
         /* eating a Rider or its corpse is fatal */
-        if (isRiderOfTheApocalypse(pmid4(pd))) {
+        if (isRiderOfTheApocalypse(defPmid)) {
             if (vis)
                 pline("%s %s!", Monnam(magr),
-                      (pd == &mons[PM_FAMINE])
+                      (defPmid == PM_FAMINE)
                           ? "belches feebly, shrivels up and dies"
-                          : (pd == &mons[PM_PESTILENCE])
+                          : (defPmid == PM_PESTILENCE)
                                 ? "coughs spasmodically and collapses"
                                 : "vomits violently and drops dead");
             mondied(magr);
@@ -802,7 +819,7 @@ register const struct Attack mattk;
          * No nutrition from G_NOCORPSE monster, eg, undead.
          * DGST monsters don't die from undead corpses
          */
-        num = pmid4(pd);
+        num = defPmid;
         if (magr->mtame && !magr->isminion
             && !(mvitals[num].mvflags & G_NOCORPSE)) {
             struct obj *virtualcorpse = mksobj(CORPSE, FALSE, FALSE);
@@ -825,7 +842,7 @@ register const struct Attack mattk;
             break;
         if (canseemon(mdef))
             pline("%s %s for a moment.", Monnam(mdef),
-                  makeplural(staggerVerb(pmid4(pd), "stagger")));
+                  makeplural(staggerVerb(defPmid, "stagger")));
         mdef->mstun = 1;
         goto physical;
     case AD_LEGS:
@@ -838,7 +855,7 @@ register const struct Attack mattk;
     case AD_HEAL:
     case AD_PHYS:
     physical:
-        if (mattk.type == AT_KICK && isThickSkinned(pmid4(pd))) {
+        if (mattk.type == AT_KICK && isThickSkinned(defPmid)) {
             tmp = 0;
         } else if (mattk.type == AT_WEAP) {
             if (otmp) {
@@ -855,7 +872,7 @@ register const struct Attack mattk;
                 if (tmp)
                     rustm(mdef, otmp);
             }
-        } else if (pa == &mons[PM_PURPLE_WORM] && pd == &mons[PM_SHRIEKER]) {
+        } else if (agrPmid == PM_PURPLE_WORM && defPmid == PM_SHRIEKER) {
             /* hack to enhance mm_aggression(); we don't want purple
                worm's bite attack to kill a shrieker because then it
                won't swallow the corpse; but if the target survives,
@@ -870,9 +887,9 @@ register const struct Attack mattk;
             break;
         }
         if (vis) {
-            pline("%s is %s!", Monnam(mdef), fireDescription(pmid4(pd), mattk));
+            pline("%s is %s!", Monnam(mdef), fireDescription(defPmid, mattk));
 	}
-        if (pd == &mons[PM_STRAW_GOLEM] || pd == &mons[PM_PAPER_GOLEM]) {
+        if (defPmid == PM_STRAW_GOLEM || defPmid == PM_PAPER_GOLEM) {
             if (vis)
                 pline("%s burns completely!", Monnam(mdef));
             mondied(mdef);
@@ -950,7 +967,7 @@ register const struct Attack mattk;
     case AD_RUST:
         if (magr->mcan)
             break;
-        if (pd == &mons[PM_IRON_GOLEM]) {
+        if (defPmid == PM_IRON_GOLEM) {
             if (vis)
                 pline("%s falls to pieces!", Monnam(mdef));
             mondied(mdef);
@@ -974,7 +991,7 @@ register const struct Attack mattk;
     case AD_DCAY:
         if (magr->mcan)
             break;
-        if (pd == &mons[PM_WOOD_GOLEM] || pd == &mons[PM_LEATHER_GOLEM]) {
+        if (defPmid == PM_WOOD_GOLEM || defPmid == PM_LEATHER_GOLEM) {
             if (vis)
                 pline("%s falls to pieces!", Monnam(mdef));
             mondied(mdef);
@@ -1084,7 +1101,7 @@ register const struct Attack mattk;
         tmp = 0;
         break;
     case AD_HALU:
-        if (!magr->mcan && hasEyes(pmid4(pd)) && mdef->mcansee) {
+        if (!magr->mcan && hasEyes(defPmid) && mdef->mcansee) {
             if (vis)
                 pline("%s looks %sconfused.", Monnam(mdef),
                       mdef->mconf ? "more " : "");
@@ -1094,14 +1111,14 @@ register const struct Attack mattk;
         tmp = 0;
         break;
     case AD_CURS:
-        if (!night() && (pa == &mons[PM_GREMLIN]))
+        if (!night() && (agrPmid == PM_GREMLIN))
             break;
         if (!magr->mcan && !rn2(10)) {
             mdef->mcan = 1; /* cancelled regardless of lifesave */
             mdef->mstrategy &= ~STRAT_WAITFORU;
-            if (isWere(pmid4(pd)) && monsterClass(pmid4(pd)) != S_HUMAN)
+            if (isWere(defPmid) && monsterClass(defPmid) != S_HUMAN)
                 were_change(mdef);
-            if (pd == &mons[PM_CLAY_GOLEM]) {
+            if (defPmid == PM_CLAY_GOLEM) {
                 if (vis) {
                     pline("Some writing vanishes from %s head!",
                           s_suffix(mon_nam(mdef)));
@@ -1205,7 +1222,7 @@ register const struct Attack mattk;
             if (mdef->mhp <= 0)
                 return (MM_DEF_DIED
                         | ((NON_PM != growUpIntoMonsterType(magr, mdef)) ? 0 : MM_AGR_DIED));
-            if (monsterClass(pmid4(pa)) == S_NYMPH && !tele_restrict(magr)) {
+            if (monsterClass(agrPmid) == S_NYMPH && !tele_restrict(magr)) {
                 (void) rloc(magr, TRUE);
                 if (vis && !canspotmon(magr))
                     pline("%s suddenly disappears!", buf);
@@ -1242,9 +1259,11 @@ register const struct Attack mattk;
         }
         break;
     case AD_DRIN:
-        if (notonhead || !hasAHead(pmid4(pd))) {
+        if (notonhead || !hasAHead(defPmid)) {
             if (vis)
+	    {
                 pline("%s doesn't seem harmed.", Monnam(mdef));
+	    }
             /* Not clear what to do for green slimes */
             tmp = 0;
             break;
@@ -1262,10 +1281,12 @@ register const struct Attack mattk;
     case AD_SLIM:
         if (cancelled)
             break; /* physical damage only */
-        if (!rn2(4) && !isSlimeproof(pmid4(pd))) {
+        if (!rn2(4) && !isSlimeproof(defPmid)) {
             if (!munslime(mdef, FALSE) && mdef->mhp > 0) {
                 if (changeChameleonToType(mdef, PM_GREEN_SLIME, FALSE, vis))
-                    pd = mdef->data;
+		{
+                    defPmid = pmid4mon(mdef);
+		}
                 mdef->mstrategy &= ~STRAT_WAITFORU;
                 res = MM_HIT;
             }
@@ -1315,13 +1336,13 @@ register const struct Attack mattk;
              * after monkilled() to provide better message ordering */
             if (mdef->cham >= LOW_PM) {
                 (void) changeChameleonToType(magr, NON_PM, FALSE, TRUE);
-            } else if (pd == &mons[PM_GREEN_SLIME] && !isSlimeproof(pmid4(pa))) {
+            } else if (defPmid == PM_GREEN_SLIME && !isSlimeproof(agrPmid)) {
                 (void) changeChameleonToType(magr, PM_GREEN_SLIME, FALSE, TRUE);
-            } else if (pd == &mons[PM_WRAITH]) {
+            } else if (defPmid == PM_WRAITH) {
                 (void) growUpIntoMonsterType(magr, (struct monst *) 0);
                 /* don't grow up twice */
                 return (MM_DEF_DIED | (magr->mhp > 0 ? 0 : MM_AGR_DIED));
-            } else if (pd == &mons[PM_NURSE]) {
+            } else if (defPmid == PM_NURSE) {
                 magr->mhp = magr->mhpmax;
             }
         }
@@ -1425,24 +1446,28 @@ register struct monst *magr, *mdef;
 boolean mhit;
 int mdead;
 {
-    register struct permonst *mddat = mdef->data;
-    register struct permonst *madat = magr->data;
+    int defPmid = pmid4mon(mdef);
+    int agrPmid = pmid4mon(magr);
+
     char buf[BUFSZ];
     int i, tmp;
 
-    int dpmid = pmid4(mddat);
-
     for (i = 0;; i++) {
-        if (i >= monsterAttacks(dpmid))
+        if (i >= monsterAttacks(defPmid))
+	{
             return (mdead | mhit); /* no passive attacks */
-        if (monsterAttack(dpmid, i).type == AT_NONE)
+	}
+        if (monsterAttack(defPmid, i).type == AT_NONE)
+	{
             break;
+	}
     }
-    struct Attack mdattk = monsterAttack(dpmid, i);
+    struct Attack mdattk = monsterAttack(defPmid, i);
+
     if (mdattk.dice) {
         tmp = d(mdattk.dice, mdattk.diceSides);
     } else if (mdattk.diceSides) {
-        tmp = d(monsterLevel(dpmid) + 1, mdattk.diceSides);
+        tmp = d(monsterLevel(defPmid) + 1, mdattk.diceSides);
     } else {
         tmp = 0;
     }
@@ -1485,11 +1510,11 @@ int mdead;
         case AD_PLYS: /* Floating eye */
             if (tmp > 127)
                 tmp = 127;
-            if (mddat == &mons[PM_FLOATING_EYE]) {
+            if (defPmid == PM_FLOATING_EYE) {
                 if (!rn2(4))
                     tmp = 127;
-                if (magr->mcansee && hasEyes(pmid4(madat)) && mdef->mcansee
-                    && (perceivesTheInvisible(pmid4(madat)) || !mdef->minvis)) {
+                if (magr->mcansee && hasEyes(agrPmid) && mdef->mcansee
+                    && (perceivesTheInvisible(agrPmid) || !mdef->minvis)) {
                     Sprintf(buf, "%s gaze is reflected by %%s %%s.",
                             s_suffix(Monnam(mdef)));
                     if (mon_reflects(magr,
