@@ -50,42 +50,44 @@ int
 msummon(mon)
 struct monst *mon;
 {
-    struct permonst *ptr;
-    int dtype = NON_PM, cnt = 0, result = 0, census;
+    int pmid;
+    int dtype = NON_PM;
+    int cnt = 0;
     aligntyp atyp;
-    struct monst *mtmp;
-    int maligntype = monsterAlignment(pmid4(ptr));
+    int maligntype;
 
     if (mon) {
-        ptr = mon->data;
+        pmid = pmid4mon(mon);
+        maligntype = monsterAlignment(pmid);
         atyp = mon->ispriest ? EPRI(mon)->shralign
                              : mon->isminion ? EMIN(mon)->min_align
                                              : (maligntype == A_NONE)
                                                    ? A_NONE
                                                    : sgn(maligntype);
     } else {
-        ptr = &mons[PM_WIZARD_OF_YENDOR];
+        pmid = PM_WIZARD_OF_YENDOR;
+        maligntype = monsterAlignment(pmid);
         atyp = (maligntype == A_NONE) ? A_NONE : sgn(maligntype);
     }
 
-    if (isDemonPrince(pmid4(ptr)) || (ptr == &mons[PM_WIZARD_OF_YENDOR])) {
+    if (isDemonPrince(pmid) || (pmid == PM_WIZARD_OF_YENDOR)) {
         dtype = (!rn2(20)) ? dprince(atyp) : (!rn2(4)) ? dlord(atyp)
                                                        : ndemon(atyp);
         cnt = (!rn2(4) && isNamelessMajorDemon(dtype)) ? 2 : 1;
-    } else if (isDemonLord(pmid4(ptr))) {
+    } else if (isDemonLord(pmid)) {
         dtype = (!rn2(50)) ? dprince(atyp) : (!rn2(20)) ? dlord(atyp)
                                                         : ndemon(atyp);
         cnt = (!rn2(4) && isNamelessMajorDemon(dtype)) ? 2 : 1;
-    } else if (isNamelessMajorDemon(pmid4(ptr))) {
+    } else if (isNamelessMajorDemon(pmid)) {
         dtype = (!rn2(20)) ? dlord(atyp) : (!rn2(6)) ? ndemon(atyp)
-                                                     : pmid4(ptr);
+                                                     : pmid;
         cnt = 1;
-    } else if (isLawfulMinion(pmid4mon(mon))) {
-        dtype = (isLord(pmid4(ptr)) && !rn2(20))
+    } else if (isLawfulMinion(pmid)) {
+        dtype = (isLord(pmid) && !rn2(20))
                     ? llord()
-                    : (isLord(pmid4(ptr)) || !rn2(6)) ? lminion() : pmid4(ptr);
+                    : (isLord(pmid) || !rn2(6)) ? lminion() : pmid;
         cnt = (!rn2(4) && !isLord(dtype)) ? 2 : 1;
-    } else if (ptr == &mons[PM_ANGEL]) {
+    } else if (pmid == PM_ANGEL) {
         /* non-lawful angels can also summon */
         if (!rn2(6)) {
             switch (atyp) { /* see summon_minion */
@@ -121,10 +123,11 @@ struct monst *mon;
 
     /* some candidates can generate a group of monsters, so simple
        count of non-null makeMonsterOfType() result is not sufficient */
-    census = monster_census(FALSE);
+    int census = monster_census(FALSE);
+    int result = 0;
 
     while (cnt > 0) {
-        mtmp = makeMonsterOfType(dtype, currentX(), currentY(), MM_EMIN);
+        struct monst *mtmp = makeMonsterOfType(dtype, currentX(), currentY(), MM_EMIN);
         if (mtmp) {
             result++;
             /* an angel's alignment should match the summoner */
@@ -142,7 +145,9 @@ struct monst *mon;
 
     /* how many monsters exist now compared to before? */
     if (result)
+    {
         result = monster_census(FALSE) - census;
+    }
 
     return result;
 }
