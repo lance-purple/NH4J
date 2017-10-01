@@ -12,7 +12,7 @@ STATIC_DCL int FDECL(passiveum, (int, struct monst *, const struct Attack));
 
 STATIC_DCL void FDECL(mayberem, (struct obj *, const char *));
 
-STATIC_DCL boolean FDECL(diseasemu, (struct permonst *));
+STATIC_DCL boolean FDECL(diseasemu, (int));
 STATIC_DCL int FDECL(hitmu, (struct monst *, const struct Attack));
 STATIC_DCL int FDECL(gulpmu, (struct monst *, const struct Attack));
 STATIC_DCL int FDECL(explmu, (struct monst *, const struct Attack, BOOLEAN_P));
@@ -214,7 +214,7 @@ register const struct Attack mattk;
 void
 expels(mtmp, pmid, message)
 struct monst *mtmp;
-int pmid; /* if mtmp is polymorphed, mdat != mtmp->data */
+int pmid; /* if mtmp is polymorphed, pmid != pmid4mon(mtmp) */
 boolean message;
 {
     if (message) {
@@ -294,7 +294,8 @@ register struct monst *mtmp;
 {
     struct Attack mattk;
     int i, j, tmp, sum[NATTK];
-    struct permonst *mdat = mtmp->data;
+    int pmid = pmid4mon(mtmp);
+
     boolean ranged = (distanceSquaredToYou(mtmp->mx, mtmp->my) > 3);
     /* Is it near you?  Affects your actions */
     boolean range2 = !monnear(mtmp, mtmp->mux, mtmp->muy);
@@ -517,7 +518,7 @@ register struct monst *mtmp;
     tmp += mtmp->m_lev;
     if (multi < 0)
         tmp += 4;
-    if ((youAreInvisibleToOthers() && !perceivesTheInvisible(pmid4(mdat))) || !mtmp->mcansee)
+    if ((youAreInvisibleToOthers() && !perceivesTheInvisible(pmid)) || !mtmp->mcansee)
         tmp -= 2;
     if (mtmp->mtrapped)
         tmp -= 2;
@@ -525,26 +526,26 @@ register struct monst *mtmp;
         tmp = 1;
 
     /* make eels visible the moment they hit/miss us */
-    if (monsterClass(pmid4(mdat)) == S_EEL && mtmp->minvis && cansee(mtmp->mx, mtmp->my)) {
+    if (monsterClass(pmid) == S_EEL && mtmp->minvis && cansee(mtmp->mx, mtmp->my)) {
         mtmp->minvis = 0;
         newsym(mtmp->mx, mtmp->my);
     }
 
     /*  Special demon handling code */
-    if ((mtmp->cham == NON_PM) && isDemon(pmid4(mdat)) && !range2
+    if ((mtmp->cham == NON_PM) && isDemon(pmid) && !range2
         && mtmp->data != &mons[PM_BALROG] && mtmp->data != &mons[PM_SUCCUBUS]
         && mtmp->data != &mons[PM_INCUBUS])
         if (!mtmp->mcan && !rn2(13))
             (void) msummon(mtmp);
 
     /*  Special lycanthrope handling code */
-    if ((mtmp->cham == NON_PM) && isWere(pmid4(mdat)) && !range2) {
-        if (isHuman(pmid4(mdat))) {
+    if ((mtmp->cham == NON_PM) && isWere(pmid) && !range2) {
+        if (isHuman(pmid)) {
             if (!rn2(5 - (night() * 2)) && !mtmp->mcan)
                 new_were(mtmp);
         } else if (!rn2(30) && !mtmp->mcan)
             new_were(mtmp);
-        mdat = mtmp->data;
+        pmid = pmid4mon(mtmp);
 
         if (!rn2(10) && !mtmp->mcan) {
             int numseen, numhelp;
@@ -605,9 +606,9 @@ register struct monst *mtmp;
             return (foo == 1);
     }
 
-    for (i = 0; i < monsterAttacks(pmid4(mdat)); i++) {
+    for (i = 0; i < monsterAttacks(pmid); i++) {
         sum[i] = 0;
-        mattk = getMonsterAttack(pmid4(mdat), i, sum);
+        mattk = getMonsterAttack(pmid, i, sum);
         if ((swallowed() && mattk.type != AT_ENGL)
             || (skipnonmagc && mattk.type != AT_MAGC))
             continue;
@@ -647,8 +648,10 @@ register struct monst *mtmp;
         case AT_GAZE: /* can affect you either ranged or not */
             /* Medusa gaze already operated through m_respond in
                dochug(); don't gaze more than once per round. */
-            if (mdat != &mons[PM_MEDUSA])
+            if (pmid != PM_MEDUSA)
+	    {
                 sum[i] = gazemu(mtmp, mattk);
+	    }
             break;
 
         case AT_EXPL: /* automatic hit if next to, and aimed at you */
@@ -757,14 +760,14 @@ register struct monst *mtmp;
 }
 
 STATIC_OVL boolean
-diseasemu(mdat)
-struct permonst *mdat;
+diseasemu(pmid)
+int pmid;
 {
     if (youResistSickness()) {
         You_feel("a slight illness.");
         return FALSE;
     } else {
-	javaString monsterName = monsterTypeName(pmid4(mdat));
+	javaString monsterName = monsterTypeName(pmid);
         make_sick(youAreSick() ? yourIntrinsic(SICK) / 3L + 1L : (long) rn1(ACURR(A_CON), 20),
                   monsterName.c_str, TRUE, SICK_NONVOMITABLE);
 	releaseJavaString(monsterName);
@@ -867,7 +870,7 @@ hitmu(mtmp, mattk)
 register struct monst *mtmp;
 register const struct Attack mattk;
 {
-    register struct permonst *mdat = mtmp->data;
+    int pmid = pmid4mon(mtmp);
     register int uncancelled, ptmp;
     int dmg, armpro, permdmg;
     char buf[BUFSZ];
@@ -880,7 +883,7 @@ register const struct Attack mattk;
     /*  If the monster is undetected & hits you, you should know where
      *  the attack came from.
      */
-    if (mtmp->mundetected && (hidesUnderStuff(pmid4(mdat)) || monsterClass(pmid4(mdat)) == S_EEL)) {
+    if (mtmp->mundetected && (hidesUnderStuff(pmid) || monsterClass(pmid) == S_EEL)) {
         mtmp->mundetected = 0;
         if (!(youCannotSee() ? youHaveTelepathyWhenBlind() : youHaveTelepathyWhenNotBlind())) {
             struct obj *obj;
@@ -902,7 +905,7 @@ register const struct Attack mattk;
 
     /*  First determine the base damage done */
     dmg = d(mattk.dice, mattk.diceSides);
-    if ((isUndead(pmid4(mdat)) || is_vampshifter(mtmp)) && midnight())
+    if ((isUndead(pmid) || is_vampshifter(mtmp)) && midnight())
         dmg += d(mattk.dice, mattk.diceSides); /* extra damage */
 
     /*  Next a cancellation factor.
@@ -985,7 +988,7 @@ register const struct Attack mattk;
         break;
     case AD_DISE:
         hitmsg(mtmp, mattk);
-        if (!diseasemu(mdat))
+        if (!diseasemu(pmid))
             dmg = 0;
         break;
     case AD_FIRE:
@@ -1075,7 +1078,7 @@ register const struct Attack mattk;
         if (uncancelled && !rn2(8)) {
             Sprintf(buf, "%s %s", s_suffix(Monnam(mtmp)),
                     mpoisons_subj(mtmp, mattk));
-	    javaString monsterName = monsterTypeName(pmid4(mdat));
+	    javaString monsterName = monsterTypeName(pmid);
             poisoned(buf, ptmp, monsterName.c_str, 30, FALSE);
 	    releaseJavaString(monsterName);
         }
@@ -1258,13 +1261,13 @@ register const struct Attack mattk;
             && !youHaveProtectionFromShapeChangers() && !defends(AD_WERE, uwep)) {
             You_feel("feverish.");
             exercise(A_CON, FALSE);
-            setLycanthropeType(pmid4(mdat));
+            setLycanthropeType(pmid);
             retouch_equipment(2);
         }
         break;
     case AD_SGLD:
         hitmsg(mtmp, mattk);
-        if (monsterClass(pmid4you()) == monsterClass(pmid4(mdat)))
+        if (monsterClass(pmid4you()) == monsterClass(pmid))
             break;
         if (!mtmp->mcan)
             stealgold(mtmp);
@@ -1439,8 +1442,10 @@ register const struct Attack mattk;
         break;
     case AD_CURS:
         hitmsg(mtmp, mattk);
-        if (!night() && mdat == &mons[PM_GREMLIN])
+        if (!night() && (pmid == PM_GREMLIN))
+	{
             break;
+	}
         if (!mtmp->mcan && !rn2(10)) {
             if (!youAreDeaf()) {
                 if (youCannotSee())
@@ -1536,7 +1541,7 @@ register const struct Attack mattk;
         break;
     case AD_PEST:
         pline("%s reaches out, and you feel fever and chills.", Monnam(mtmp));
-        (void) diseasemu(mdat); /* plus the normal damage */
+        (void) diseasemu(pmid); /* plus the normal damage */
         break;
     case AD_FAMN:
         pline("%s reaches out, and your body shrivels.", Monnam(mtmp));
@@ -1875,7 +1880,7 @@ register const struct Attack mattk;
             tmp = 0;
         break;
     case AD_DISE:
-        if (!diseasemu(mtmp->data))
+        if (!diseasemu(pmid4mon(mtmp)))
             tmp = 0;
         break;
     case AD_DREN:
