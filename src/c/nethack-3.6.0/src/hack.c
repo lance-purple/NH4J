@@ -13,7 +13,7 @@ STATIC_DCL void NDECL(dosinkfall);
 STATIC_DCL boolean FDECL(findtravelpath, (BOOLEAN_P));
 STATIC_DCL boolean FDECL(trapmove, (int, int, struct trap *));
 STATIC_DCL void NDECL(switch_terrain);
-STATIC_DCL struct monst *FDECL(monstinroom, (struct permonst *, int));
+STATIC_DCL struct monst *FDECL(monstinroom, (int, int));
 STATIC_DCL boolean FDECL(doorless_door, (int, int));
 STATIC_DCL void FDECL(move_update, (BOOLEAN_P));
 
@@ -628,12 +628,12 @@ int /* returns 0 if we can squeeze through */
 struct monst *mon;
 {
     int amt;
-    struct permonst *ptr = mon->data;
+    int pmid = pmid4mon(mon);
 
     /* too big? */
-    if (isBigMonster(pmid4(ptr))
-        && !(isAmorphous(pmid4(ptr)) || isWhirly(pmid4(ptr)) || isNoncorporeal(pmid4(ptr))
-             || isSlithy(pmid4(ptr)) || can_fog(mon)))
+    if (isBigMonster(pmid)
+        && !(isAmorphous(pmid) || isWhirly(pmid) || isNoncorporeal(pmid)
+             || isSlithy(pmid) || can_fog(mon)))
         return 1;
 
     /* lugging too much junk? */
@@ -2041,18 +2041,20 @@ spotdone:
 
 /* returns first matching monster */
 STATIC_OVL struct monst *
-monstinroom(mdat, roomno)
-struct permonst *mdat;
+monstinroom(pmid, roomno)
+int pmid;
 int roomno;
 {
     register struct monst *mtmp;
 
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
-        if (DEADMONSTER(mtmp))
+        if (DEADMONSTER(mtmp)) {
             continue;
-        if (mtmp->data == mdat
-            && oneOfRoomsHasID(allPlainRoomsLocatedAt(mtmp->mx, mtmp->my), roomno + ROOMOFFSET))
-            return mtmp;
+	}
+        if ((pmid == pmid4mon(mtmp))
+            && oneOfRoomsHasID(allPlainRoomsLocatedAt(mtmp->mx, mtmp->my), roomno + ROOMOFFSET)) {
+            return mtmp; 
+	}
     }
     return (struct monst *) 0;
 }
@@ -2318,16 +2320,16 @@ register boolean newlev;
             You("enter an anthole!");
             break;
         case BARRACKS:
-            if (monstinroom(&mons[PM_SOLDIER], roomno)
-                || monstinroom(&mons[PM_SERGEANT], roomno)
-                || monstinroom(&mons[PM_LIEUTENANT], roomno)
-                || monstinroom(&mons[PM_CAPTAIN], roomno))
+            if (monstinroom(PM_SOLDIER, roomno)
+                || monstinroom(PM_SERGEANT, roomno)
+                || monstinroom(PM_LIEUTENANT, roomno)
+                || monstinroom(PM_CAPTAIN, roomno))
                 You("enter a military barracks!");
             else
                 You("enter an abandoned barracks.");
             break;
         case DELPHI: {
-            struct monst *oracle = monstinroom(&mons[PM_ORACLE], roomno);
+            struct monst *oracle = monstinroom(PM_ORACLE, roomno);
             if (oracle) {
                 if (!oracle->mpeaceful)
                     verbalize("You're in Delphi, %s.", plname);
