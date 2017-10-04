@@ -1598,38 +1598,48 @@ find_misc(mtmp)
 struct monst *mtmp;
 {
     register struct obj *obj;
-    struct permonst *mdat = mtmp->data;
+    int pmid = pmid4mon(mtmp);
     int x = mtmp->mx, y = mtmp->my;
     struct trap *t;
     int xx, yy, pmidx = NON_PM;
-    boolean immobile = (monsterMovementSpeed(pmid4(mdat)) == 0);
+    boolean immobile = (monsterMovementSpeed(pmid) == 0);
     boolean stuck = (mtmp == u.ustuck);
 
     m.misc = (struct obj *) 0;
     m.has_misc = 0;
-    if (isAnimal(pmid4(mdat)) || isMindless(pmid4(mdat)))
+    if (isAnimal(pmid) || isMindless(pmid))
+    { 
         return 0;
+    }
     if (swallowed() && stuck)
+    {
         return FALSE;
+    }
 
     /* We arbitrarily limit to times when a player is nearby for the
      * same reason as Junior Pac-Man doesn't have energizers eaten until
      * you can see them...
      */
     if (dist2(x, y, mtmp->mux, mtmp->muy) > 36)
+    {
         return FALSE;
+    }
 
     if (!stuck && !immobile && (mtmp->cham == NON_PM)
-        && monsterDifficulty(pmidx = pmid4(mdat)) < 6) {
-        boolean ignore_boulders = (isVerySmallMonster(pmid4(mdat)) || throwsRocks(pmid4(mdat))
-                                   || passesThroughWalls(pmid4(mdat))),
-            diag_ok = !NODIAG(pmidx);
+        && monsterDifficulty(pmidx = pmid) < 6) {
+        boolean ignore_boulders = (isVerySmallMonster(pmid)
+			           || throwsRocks(pmid)
+                                   || passesThroughWalls(pmid));
+        boolean diag_ok = !NODIAG(pmidx);
 
         for (xx = x - 1; xx <= x + 1; xx++)
+	{
             for (yy = y - 1; yy <= y + 1; yy++)
+	    {
                 if (isok(xx, yy) && (xx != currentX() || yy != currentY())
                     && (diag_ok || xx == x || yy == y)
                     && ((xx == x && yy == y) || !level.monsters[xx][yy]))
+		{
                     if ((t = t_at(xx, yy)) != 0
                         && (ignore_boulders || !sobj_at(BOULDER, xx, yy))
                         && !onscary(xx, yy, mtmp)) {
@@ -1641,9 +1651,14 @@ struct monst *mtmp;
                             return TRUE;
                         }
                     }
+		}
+	    }
+	}
     }
-    if (hasNoHands(pmid4(mdat)))
+    if (hasNoHands(pmid))
+    {
         return 0;
+    }
 
 #define nomore(x)       if (m.has_misc == x) continue
     /*
@@ -1706,13 +1721,13 @@ struct monst *mtmp;
         }
         nomore(MUSE_WAN_POLYMORPH);
         if (obj->otyp == WAN_POLYMORPH && obj->spe > 0
-            && (mtmp->cham == NON_PM) && monsterDifficulty(pmid4(mdat)) < 6) {
+            && (mtmp->cham == NON_PM) && monsterDifficulty(pmid) < 6) {
             m.misc = obj;
             m.has_misc = MUSE_WAN_POLYMORPH;
         }
         nomore(MUSE_POT_POLYMORPH);
         if (obj->otyp == POT_POLYMORPH && (mtmp->cham == NON_PM)
-            && monsterDifficulty(pmid4(mdat)) < 6) {
+            && monsterDifficulty(pmid) < 6) {
             m.misc = obj;
             m.has_misc = MUSE_POT_POLYMORPH;
         }
@@ -1975,7 +1990,6 @@ rnd_misc_item(mtmp)
 struct monst *mtmp;
 {
     int pmid = pmid4mon(mtmp);
-    struct permonst *pm = mtmp->data;
     int difficulty = monsterDifficulty(pmid);
     int mc = monsterClass(pmid);
 
