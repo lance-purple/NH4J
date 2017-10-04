@@ -21,8 +21,8 @@ STATIC_DCL struct mkroom *FDECL(pick_room, (BOOLEAN_P));
 STATIC_DCL void NDECL(mkshop), FDECL(mkzoo, (int)), NDECL(mkswamp);
 STATIC_DCL void NDECL(mktemple);
 STATIC_DCL coord *FDECL(shrine_pos, (int));
-STATIC_DCL struct permonst *NDECL(morguemon);
-STATIC_DCL struct permonst *NDECL(squadmon);
+STATIC_DCL int NDECL(morguemon);
+STATIC_DCL int NDECL(squadmon);
 STATIC_DCL void FDECL(save_room, (int, struct mkroom *));
 STATIC_DCL void FDECL(rest_room, (int, struct mkroom *));
 
@@ -416,43 +416,46 @@ boolean revive_corpses;
 int mm_flags;
 {
     int cnt = (level_difficulty() + 1) / 10 + rnd(5);
-    struct permonst *mdat;
+    int pmid;
     struct obj *otmp;
     coord cc;
 
     while (cnt--) {
-        mdat = morguemon();
-        if (mdat && canPlaceMonsterNear(&cc, mm->x, mm->y, pmid4(mdat), 0)
+        pmid = morguemon();
+        if ((NON_PM != pmid) && canPlaceMonsterNear(&cc, mm->x, mm->y, pmid, 0)
             && (!revive_corpses
                 || !(otmp = sobj_at(CORPSE, cc.x, cc.y))
                 || !revive(otmp, FALSE)))
-            (void) makeMonsterOfType(pmid4(mdat), cc.x, cc.y, mm_flags);
+            (void) makeMonsterOfType(pmid, cc.x, cc.y, mm_flags);
     }
     level.flags.graveyard = TRUE; /* reduced chance for undead corpse */
 }
 
-STATIC_OVL struct permonst *
-morguemon()
+STATIC_OVL int morguemon()
 {
     register int i = rn2(100), hd = rn2(level_difficulty());
 
     if (hd > 10 && i < 10) {
         if (areYouInHell() || areYouInEndgame()) {
-            return ptr4pmid(pickMonsterTypeOfClass(S_DEMON, 0));
+            return pickMonsterTypeOfClass(S_DEMON, 0);
         } else {
             int ndemon_res = ndemon(A_NONE);
             if (ndemon_res != NON_PM)
-                return &mons[ndemon_res];
+	    {
+                return ndemon_res;
+	    }
             /* else do what? As is, it will drop to ghost/wraith/zombie */
         }
     }
 
     if (hd > 8 && i > 85)
-        return ptr4pmid(pickMonsterTypeOfClass(S_VAMPIRE, 0));
+    {
+        return pickMonsterTypeOfClass(S_VAMPIRE, 0);
+    }
 
-    return ((i < 20) ? &mons[PM_GHOST]
-                     : (i < 40) ? &mons[PM_WRAITH]
-                                : ptr4pmid(pickMonsterTypeOfClass(S_ZOMBIE, 0)));
+    return ((i < 20) ? PM_GHOST
+                     : (i < 40) ? PM_WRAITH
+                                : pickMonsterTypeOfClass(S_ZOMBIE, 0));
 }
 
 int antHoleMonsterType()
@@ -743,8 +746,7 @@ static struct {
                          { PM_CAPTAIN, 1 } };
 
 /* return soldier types. */
-STATIC_OVL struct permonst *
-squadmon()
+STATIC_OVL int squadmon()
 {
     int sel_prob, i, cpro, mndx;
 
@@ -761,9 +763,9 @@ squadmon()
     mndx = squadprob[rn2(NSTYPES)].pm;
 gotone:
     if (!(mvitals[mndx].mvflags & G_GONE))
-        return &mons[mndx];
+        return mndx;
     else
-        return (struct permonst *) 0;
+        return NON_PM;
 }
 
 /*

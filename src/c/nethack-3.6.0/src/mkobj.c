@@ -339,23 +339,23 @@ struct obj *box;
 int
 rndmonnum()
 {
-    register struct permonst *ptr;
-    register int i;
+    int pmid;
     unsigned short excludeflags;
 
     /* Plan A: get a level-appropriate common monster */
-    ptr = ptr4pmid(randomMonster());
-    if (ptr)
-        return pmid4(ptr);
+    pmid = randomMonster();
+    if (NON_PM != pmid)
+    {
+        return pmid;
+    }
 
     /* Plan B: get any common monster */
     excludeflags = G_UNIQ | G_NOGEN | (areYouInHell() ? G_NOHELL : G_HELL);
     do {
-        i = rn1(SPECIAL_PM - LOW_PM, LOW_PM);
-        ptr = &mons[i];
-    } while ((monsterGenerationMask(pmid4(ptr)) & excludeflags) != 0);
+        pmid = rn1(SPECIAL_PM - LOW_PM, LOW_PM);
+    } while ((monsterGenerationMask(pmid) & excludeflags) != 0);
 
-    return i;
+    return pmid;
 }
 
 void

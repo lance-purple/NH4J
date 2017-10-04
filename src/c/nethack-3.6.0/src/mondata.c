@@ -85,15 +85,16 @@ boolean
 resists_drli(mon)
 struct monst *mon;
 {
-    struct permonst *ptr = mon->data;
-    int pmid = pmid4(ptr);
+    int pmid = pmid4mon(mon);
     struct obj *wep;
 
     if (isUndead(pmid) || isDemon(pmid) || isWere(pmid)
         /* isWere() doesn't handle hero in human form */
         || (mon == &youmonst && lycanthropeType() >= LOW_PM)
-        || ptr == &mons[PM_DEATH] || is_vampshifter(mon))
+        || (pmid == PM_DEATH) || is_vampshifter(mon))
+    {
         return TRUE;
+    }
     wep = (mon == &youmonst) ? uwep : MON_WEP(mon);
     return (boolean) (wep && wep->oartifact && defends(AD_DRLI, wep));
 }
@@ -103,32 +104,51 @@ boolean
 resists_magm(mon)
 struct monst *mon;
 {
-    struct permonst *ptr = mon->data;
+    int pmid = pmid4mon(mon);
     boolean is_you = (mon == &youmonst);
     long slotmask;
     struct obj *o;
 
     /* as of 3.2.0:  gray dragons, Angels, Oracle, Yeenoghu */
-    if (monsterTypeCanCauseDamageType(pmid4mon(mon), AD_MAGM) || ptr == &mons[PM_BABY_GRAY_DRAGON]
-        || monsterTypeCanCauseDamageType(pmid4mon(mon), AD_RBRE)) /* Chromatic Dragon */
+    if (monsterTypeCanCauseDamageType(pmid, AD_MAGM)
+        || (pmid == PM_BABY_GRAY_DRAGON)
+        || monsterTypeCanCauseDamageType(pmid, AD_RBRE)) /* Chromatic Dragon */
+    {
         return TRUE;
+    }
+
     /* check for magic resistance granted by wielded weapon */
     o = is_you ? uwep : MON_WEP(mon);
     if (o && o->oartifact && defends(AD_MAGM, o))
+    {
         return TRUE;
+    }
+
     /* check for magic resistance granted by worn or carried items */
     o = is_you ? invent : mon->minvent;
     slotmask = W_ARMOR | W_ACCESSORY;
+
     if (!is_you /* assumes monsters don't wield non-weapons */
         || (uwep && (uwep->oclass == WEAPON_CLASS || is_weptool(uwep))))
+    {
         slotmask |= W_WEP;
+    }
+
     if (is_you && usingTwoWeapons())
+    {
         slotmask |= W_SWAPWEP;
+    }
+
     for (; o; o = o->nobj)
+    {
         if (((o->owornmask & slotmask) != 0L
              && objects[o->otyp].oc_oprop == ANTIMAGIC)
             || (o->oartifact && defends_when_carried(AD_MAGM, o)))
+	{
             return TRUE;
+	}
+    }
+
     return FALSE;
 }
 
@@ -137,36 +157,52 @@ boolean
 resists_blnd(mon)
 struct monst *mon;
 {
-    struct permonst *ptr = mon->data;
+    int pmid = pmid4mon(mon);
     boolean is_you = (mon == &youmonst);
     long slotmask;
     struct obj *o;
 
     if (is_you ? (youCannotSee() || youAreUnaware())
-               : (mon->mblinded || !mon->mcansee || !hasEyes(pmid4(ptr))
+               : (mon->mblinded || !mon->mcansee || !hasEyes(pmid)
                   /* BUG: temporary sleep sets mfrozen, but since
                           paralysis does too, we can't check it */
                   || mon->msleeping))
+    {
         return TRUE;
+    }
+
     /* yellow light, Archon; !dust vortex, !cobra, !raven */
-    if (monsterCanCauseDamageTypeWithAttackType(pmid4mon(mon), AD_BLND, AT_EXPL)
-        || monsterCanCauseDamageTypeWithAttackType(pmid4mon(mon), AD_BLND, AT_GAZE))
+    if (monsterCanCauseDamageTypeWithAttackType(pmid, AD_BLND, AT_EXPL)
+        || monsterCanCauseDamageTypeWithAttackType(pmid, AD_BLND, AT_GAZE))
+    {
         return TRUE;
+    }
+
     o = is_you ? uwep : MON_WEP(mon);
     if (o && o->oartifact && defends(AD_BLND, o))
+    {
         return TRUE;
+    }
     o = is_you ? invent : mon->minvent;
     slotmask = W_ARMOR | W_ACCESSORY;
     if (!is_you /* assumes monsters don't wield non-weapons */
         || (uwep && (uwep->oclass == WEAPON_CLASS || is_weptool(uwep))))
+    {
         slotmask |= W_WEP;
+    }
     if (is_you && usingTwoWeapons())
+    {
         slotmask |= W_SWAPWEP;
+    }
     for (; o; o = o->nobj)
+    {
         if (((o->owornmask & slotmask) != 0L
              && objects[o->otyp].oc_oprop == BLINDED)
             || (o->oartifact && defends_when_carried(AD_BLND, o)))
+	{
             return TRUE;
+	}
+    }
     return FALSE;
 }
 
