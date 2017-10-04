@@ -1152,9 +1152,9 @@ int pmid;
 
 boolean validAttack(const struct Attack attack) 
 {
-    return ((attack.type       != NO_ATTACK.type) &&
-	    (attack.damageType != NO_ATTACK.damageType) &&
-	    (attack.dice       != NO_ATTACK.dice) &&
+    return ((attack.type       != NO_ATTACK.type) ||
+	    (attack.damageType != NO_ATTACK.damageType) ||
+	    (attack.dice       != NO_ATTACK.dice) ||
 	    (attack.diceSides  != NO_ATTACK.diceSides));
 }
 
