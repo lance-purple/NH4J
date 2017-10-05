@@ -1290,7 +1290,7 @@ dosacrifice()
 #define MAXVALUE 24 /* Highest corpse value (besides Wiz) */
 
     if (otmp->otyp == CORPSE) {
-        register struct permonst *ptr = &mons[otmp->corpsenm];
+        int pmid = otmp->corpsenm;
         struct monst *mtmp;
 
         /* KMH, conduct */
@@ -1309,7 +1309,7 @@ dosacrifice()
                 value = eaten_stat(value, otmp);
         }
 
-        if (isOfYourRace(pmid4(ptr), urace.selfmask)) {
+        if (isOfYourRace(pmid, urace.selfmask)) {
             if (isDemon(pmid4you())) {
                 You("find the idea very satisfying.");
                 exercise(A_WIS, TRUE);
@@ -1390,11 +1390,11 @@ dosacrifice()
             adjalign(-3);
             value = -1;
             setYourIntrinsicMask(AGGRAVATE_MONSTER, FROMOUTSIDE);
-        } else if (isUndead(pmid4(ptr))) { /* Not demons--no demon corpses */
+        } else if (isUndead(pmid)) { /* Not demons--no demon corpses */
             if (currentAlignmentType() != A_CHAOTIC)
                 value += 1;
-        } else if (isUnicorn(pmid4(ptr))) {
-            int unicalign = sgn(monsterAlignment(pmid4(ptr)));
+        } else if (isUnicorn(pmid)) {
+            int unicalign = sgn(monsterAlignment(pmid));
 
             if (unicalign == altaralign) {
                 /* When same as altar, always a very bad action.

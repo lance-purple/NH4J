@@ -13,8 +13,8 @@ STATIC_DCL int FDECL(append_str, (char *, const char *));
 STATIC_DCL void FDECL(look_at_object, (char *, int, int, int));
 STATIC_DCL void FDECL(look_at_monster, (char *, char *,
                                         struct monst *, int, int));
-STATIC_DCL struct permonst *FDECL(lookat, (int, int, char *, char *));
-STATIC_DCL void FDECL(checkfile, (char *, struct permonst *,
+STATIC_DCL int FDECL(lookat, (int, int, char *, char *));
+STATIC_DCL void FDECL(checkfile, (char *, int,
                                   BOOLEAN_P, BOOLEAN_P));
 STATIC_DCL void FDECL(look_all, (BOOLEAN_P,BOOLEAN_P));
 STATIC_DCL boolean FDECL(help_menu, (int *));
@@ -262,13 +262,13 @@ int x, y;
  * Return the name of the glyph found at (x,y).
  * If not hallucinating and the glyph is a monster, also monster data.
  */
-STATIC_OVL struct permonst *
+STATIC_OVL int
 lookat(x, y, buf, monbuf)
 int x, y;
 char *buf, *monbuf;
 {
     struct monst *mtmp = (struct monst *) 0;
-    struct permonst *pm = (struct permonst *) 0;
+    int pmid = NON_PM;
     int glyph;
 
     buf[0] = monbuf[0] = '\0';
@@ -281,7 +281,9 @@ char *buf, *monbuf;
            and correspondingly named player character, always picking the
            former; force it to find the general "wizard" entry instead */
         if (Role_if(PM_WIZARD) && Race_if(PM_GNOME) && !areYouPolymorphed())
-            pm = &mons[PM_WIZARD];
+	{
+            pmid = PM_WIZARD;
+	}
 
         /* When you see yourself normally, no explanation is appended
            (even if you could also see yourself via other means).
@@ -311,13 +313,13 @@ char *buf, *monbuf;
         /* all locations when swallowed other than the hero are the monster */
         Sprintf(buf, "interior of %s",
                 youCannotSee() ? "a monster" : a_monnam(u.ustuck));
-        pm = u.ustuck->data;
+        pmid = pmid4mon(u.ustuck);
     } else if (glyph_is_monster(glyph)) {
         bhitpos.x = x;
         bhitpos.y = y;
         if ((mtmp = m_at(x, y)) != 0) {
             look_at_monster(buf, monbuf, mtmp, x, y);
-            pm = mtmp->data;
+            pmid = pmid4mon(mtmp);
         }
     } else if (glyph_is_object(glyph)) {
         look_at_object(buf, x, y, glyph); /* fill in buf[] */
@@ -368,7 +370,7 @@ char *buf, *monbuf;
             break;
         }
 
-    return (pm && !youAreHallucinating()) ? pm : (struct permonst *) 0;
+    return ((NON_PM != pmid) && !youAreHallucinating()) ? pmid : NON_PM;
 }
 
 /*
@@ -382,9 +384,9 @@ char *buf, *monbuf;
  *       Therefore, we create a copy of inp _just_ for data.base lookup.
  */
 STATIC_OVL void
-checkfile(inp, pm, user_typed_name, without_asking)
+checkfile(inp, pmid, user_typed_name, without_asking)
 char *inp;
-struct permonst *pm;
+int pmid;
 boolean user_typed_name, without_asking;
 {
     dlb *fp;
@@ -413,8 +415,8 @@ boolean user_typed_name, without_asking;
      * for Angel and angel, make the lookup string the same for both
      * user_typed_name and picked name.
      */
-    if (pm != (struct permonst *) 0 && !user_typed_name) {
-	javaString monsterName =  monsterTypeName(pmid4(pm));
+    if ((pmid != NON_PM) && !user_typed_name) {
+	javaString monsterName =  monsterTypeName(pmid);
         dbase_str = strcpy(newstr, monsterName.c_str);
 	releaseJavaString(monsterName);
     } else {
@@ -801,7 +803,7 @@ coord *click_cc;
     boolean clicklook = (mode == 2); /* right mouse-click method */
     char out_str[BUFSZ];
     const char *firstmatch = 0;
-    struct permonst *pm = 0;
+    int pmid = NON_PM;
     int i = '\0', ans = 0;
     int sym;              /* typed symbol or converted glyph */
     int found;            /* count of matching syms found */
@@ -897,7 +899,7 @@ coord *click_cc;
                     break;
                 }
             if (*out_str)
-                checkfile(out_str, pm, TRUE, TRUE);
+                checkfile(out_str, pmid, TRUE, TRUE);
             return 0;
           }
         case '?':
@@ -907,7 +909,7 @@ coord *click_cc;
                 return 0;
 
             if (out_str[1]) { /* user typed in a complete string */
-                checkfile(out_str, pm, TRUE, TRUE);
+                checkfile(out_str, pmid, TRUE, TRUE);
                 return 0;
             }
             sym = out_str[0];
@@ -940,7 +942,7 @@ coord *click_cc;
      */
     do {
         /* Reset some variables. */
-        pm = (struct permonst *) 0;
+        pmid = NON_PM;
         found = 0;
         out_str[0] = '\0';
 
@@ -977,7 +979,7 @@ coord *click_cc;
                 char temp_buf[BUFSZ];
 
                 Strcpy(temp_buf, firstmatch);
-                checkfile(temp_buf, pm, FALSE,
+                checkfile(temp_buf, pmid, FALSE,
                           (boolean) (ans == LOOK_VERBOSE));
             }
         } else {
