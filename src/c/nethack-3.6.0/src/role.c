@@ -1972,7 +1972,7 @@ void
 role_init()
 {
     int alignmnt;
-    struct permonst *pm;
+    int pmid;
 
     /* Strip the role letter out of the player name.
      * This is included for backwards compatibility.
@@ -2018,38 +2018,38 @@ role_init()
 
     /* Fix up the quest leader */
     if (urole.ldrnum != NON_PM) {
-        pm = &mons[urole.ldrnum];
-        setMonsterSound(pmid4(pm), MS_LEADER);
-        setMonsterFlag2(pmid4(pm), M2_PEACEFUL);
-        setMonsterFlag3(pmid4(pm), M3_CLOSE);
-        setMonsterAlignment(pmid4(pm), (alignmnt * 3));
+        pmid = urole.ldrnum;
+        setMonsterSound(pmid, MS_LEADER);
+        setMonsterFlag2(pmid, M2_PEACEFUL);
+        setMonsterFlag3(pmid, M3_CLOSE);
+        setMonsterAlignment(pmid, (alignmnt * 3));
         /* if gender is random, we choose it now instead of waiting
            until the leader monster is created */
         quest_status.ldrgend =
-            isNeuter(pmid4(pm)) ? 2 : isFemale(pmid4(pm)) ? 1 : isMale(pmid4(pm))
+            isNeuter(pmid) ? 2 : isFemale(pmid) ? 1 : isMale(pmid)
                                                         ? 0
                                                         : (rn2(100) < 50);
     }
 
     /* Fix up the quest guardians */
     if (urole.guardnum != NON_PM) {
-        pm = &mons[urole.guardnum];
-        setMonsterFlag2(pmid4(pm), M2_PEACEFUL);
-        setMonsterAlignment(pmid4(pm), (alignmnt * 3));
+        pmid = urole.guardnum;
+        setMonsterFlag2(pmid, M2_PEACEFUL);
+        setMonsterAlignment(pmid, (alignmnt * 3));
     }
 
     /* Fix up the quest nemesis */
     if (urole.neminum != NON_PM) {
-        pm = &mons[urole.neminum];
-        setMonsterSound(pmid4(pm), MS_NEMESIS);
-        unsetMonsterFlag2(pmid4(pm), M2_PEACEFUL);
-        setMonsterFlag2(pmid4(pm), M2_NASTY | M2_STALK | M2_HOSTILE);
-        unsetMonsterFlag3(pmid4(pm), M3_CLOSE);
-        setMonsterFlag3(pmid4(pm), M3_WANTSARTI | M3_WAITFORU);
+        pmid = urole.neminum;
+        setMonsterSound(pmid, MS_NEMESIS);
+        unsetMonsterFlag2(pmid, M2_PEACEFUL);
+        setMonsterFlag2(pmid, M2_NASTY | M2_STALK | M2_HOSTILE);
+        unsetMonsterFlag3(pmid, M3_CLOSE);
+        setMonsterFlag3(pmid, M3_WANTSARTI | M3_WAITFORU);
         /* if gender is random, we choose it now instead of waiting
            until the nemesis monster is created */
-        quest_status.nemgend = isNeuter(pmid4(pm)) ? 2 : isFemale(pmid4(pm)) ? 1
-                                   : isMale(pmid4(pm)) ? 0 : (rn2(100) < 50);
+        quest_status.nemgend = isNeuter(pmid) ? 2 : isFemale(pmid) ? 1
+                                   : isMale(pmid) ? 0 : (rn2(100) < 50);
     }
 
     /* Fix up the god names */

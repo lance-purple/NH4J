@@ -2107,14 +2107,12 @@ int how;
 {
     char buf[BUFSZ];
     register int i, killplayer = 0;
-    register int mndx;
-    register struct permonst *ptr;
+    register int pmid;
     const char *which;
 
     if (how & PLAYER) {
-        mndx = originalMonsterNumber(); /* non-polymorphed mon num */
-        ptr = &mons[mndx];
-        javaString monsterName = monsterTypeName(mndx);
+        pmid = originalMonsterNumber(); /* non-polymorphed mon num */
+        javaString monsterName = monsterTypeName(pmid);
         Strcpy(buf, monsterName.c_str);
 	releaseJavaString(monsterName);
         killplayer++;
@@ -2131,35 +2129,36 @@ int how;
             if (!strcmpi(buf, "none") || !strcmpi(buf, "nothing")) {
                 /* ... but no free pass if cursed */
                 if (!(how & REALLY)) {
-                    ptr = ptr4pmid(randomMonster());
-                    if (!ptr)
+                    pmid = randomMonster();
+                    if (NON_PM == pmid)
+		    {
                         return; /* no message, like normal case */
-                    mndx = pmid4(ptr);
+		    }
                     break; /* remaining checks don't apply */
-                } else
+                } else {
                     return;
+		}
             }
 
-            mndx = name_to_mon(buf);
-            if (mndx == NON_PM || (mvitals[mndx].mvflags & G_GENOD)) {
+            pmid = name_to_mon(buf);
+            if ((pmid == NON_PM) || (mvitals[pmid].mvflags & G_GENOD)) {
                 pline("Such creatures %s exist in this world.",
-                      (mndx == NON_PM) ? "do not" : "no longer");
+                      (pmid == NON_PM) ? "do not" : "no longer");
                 continue;
             }
-            ptr = &mons[mndx];
             /* Although "genus" is Latin for race, the hero benefits
              * from both race and role; thus genocide affects either.
              */
-            if (Your_Own_Role(mndx) || Your_Own_Race(mndx)) {
+            if (Your_Own_Role(pmid) || Your_Own_Race(pmid)) {
                 killplayer++;
                 break;
             }
-            if (isHuman(pmid4(ptr)))
+            if (isHuman(pmid))
                 adjalign(-sgn(currentAlignmentType()));
-            if (isDemon(pmid4(ptr)))
+            if (isDemon(pmid))
                 adjalign(sgn(currentAlignmentType()));
 
-            if (!(monsterGenerationMask(pmid4(ptr)) & G_GENO)) {
+            if (!(monsterGenerationMask(pmid) & G_GENO)) {
                 if (!youAreDeaf()) {
                     /* fixme: unconditional "caverns" will be silly in some
                      * circumstances */
@@ -2171,8 +2170,10 @@ int how;
                 continue;
             }
             /* KMH -- Unchanging prevents rehumanization */
-            if (youAreUnchanging() && (pmid4(ptr) == pmid4you()))
+            if (youAreUnchanging() && (pmid == pmid4you()))
+	    {
                 killplayer++;
+	    }
             break;
         }
     }
@@ -2189,28 +2190,30 @@ int how;
             buf[0] = lowc(buf[0]);
         }
     } else {
-	javaString monsterName = monsterTypeName(pmid4(ptr));
+	javaString monsterName = monsterTypeName(pmid);
         Strcpy(buf, monsterName.c_str); /* make sure we have standard singular */
 	releaseJavaString(monsterName);
 
-        if ((monsterGenerationMask(pmid4(ptr)) & G_UNIQ) && ptr != &mons[PM_HIGH_PRIEST])
-            which = !typeIsProperName(pmid4(ptr)) ? "the " : "";
+        if ((monsterGenerationMask(pmid) & G_UNIQ) && (pmid != PM_HIGH_PRIEST))
+	{
+            which = !typeIsProperName(pmid) ? "the " : "";
+	}
     }
     if (how & REALLY) {
         /* setting no-corpse affects wishing and random tin generation */
-        mvitals[mndx].mvflags |= (G_GENOD | G_NOCORPSE);
+        mvitals[pmid].mvflags |= (G_GENOD | G_NOCORPSE);
         pline("Wiped out %s%s.", which,
               (*which != 'a') ? buf : makeplural(buf));
 
         if (killplayer) {
             /* might need to wipe out dual role */
-            if (urole.femalenum != NON_PM && mndx == urole.malenum)
+            if (urole.femalenum != NON_PM && pmid == urole.malenum)
                 mvitals[urole.femalenum].mvflags |= (G_GENOD | G_NOCORPSE);
-            if (urole.femalenum != NON_PM && mndx == urole.femalenum)
+            if (urole.femalenum != NON_PM && pmid == urole.femalenum)
                 mvitals[urole.malenum].mvflags |= (G_GENOD | G_NOCORPSE);
-            if (urace.femalenum != NON_PM && mndx == urace.malenum)
+            if (urace.femalenum != NON_PM && pmid == urace.malenum)
                 mvitals[urace.femalenum].mvflags |= (G_GENOD | G_NOCORPSE);
-            if (urace.femalenum != NON_PM && mndx == urace.femalenum)
+            if (urace.femalenum != NON_PM && pmid == urace.femalenum)
                 mvitals[urace.malenum].mvflags |= (G_GENOD | G_NOCORPSE);
 
             setCurrentHitPoints(-1);
@@ -2229,27 +2232,27 @@ int how;
             /* Polymorphed characters will die as soon as they're rehumanized.
              */
             /* KMH -- Unchanging prevents rehumanization */
-            if (areYouPolymorphed() && (pmid4(ptr) != pmid4you())) {
+            if (areYouPolymorphed() && (pmid != pmid4you())) {
                 delayed_killer(POLYMORPH, killer.format, killer.name);
                 You_feel("dead inside.");
             } else
                 done(GENOCIDED);
-        } else if (pmid4(ptr) == pmid4you()) {
+        } else if (pmid == pmid4you()) {
             rehumanize();
         }
-        resetMonsterRandomizer(mndx);
+        resetMonsterRandomizer(pmid);
         kill_genocided_monsters();
         update_inventory(); /* in case identified eggs were affected */
     } else {
         int cnt = 0, census = monster_census(FALSE);
 
-        if (!(monsterGenerationMask(mndx) & G_UNIQ)
-            && !(mvitals[mndx].mvflags & (G_GENOD | G_EXTINCT)))
+        if (!(monsterGenerationMask(pmid) & G_UNIQ)
+            && !(mvitals[pmid].mvflags & (G_GENOD | G_EXTINCT)))
             for (i = rn1(3, 4); i > 0; i--) {
-                if (!makeMonsterOfType(pmid4(ptr), currentX(), currentY(), NO_MINVENT))
+                if (!makeMonsterOfType(pmid, currentX(), currentY(), NO_MINVENT))
                     break; /* couldn't make one */
                 ++cnt;
-                if (mvitals[mndx].mvflags & G_EXTINCT)
+                if (mvitals[pmid].mvflags & G_EXTINCT)
                     break; /* just made last one */
             }
         if (cnt) {
@@ -2367,7 +2370,7 @@ create_particular()
 {
     char buf[BUFSZ], *bufp, monclass;
     int which, tryct, i, firstchoice = NON_PM;
-    struct permonst *whichpm = NULL;
+    int whichPmid = NON_PM;
     struct monst *mtmp;
     boolean madeany = FALSE;
     boolean maketame, makepeaceful, makehostile;
@@ -2428,14 +2431,14 @@ create_particular()
                     which = firstchoice;
 		}
             }
-            whichpm = &mons[which];
+            whichPmid = which;
         }
         for (i = 0; i <= multi; i++) {
             if (monclass != MAXMCLASSES)
-                whichpm = ptr4pmid(pickMonsterTypeOfClass(monclass, 0));
+                whichPmid = pickMonsterTypeOfClass(monclass, 0);
             else if (randmonst)
-                whichpm = ptr4pmid(randomMonster());
-            mtmp = makeMonsterOfType(pmid4(whichpm), currentX(), currentY(), NO_MM_FLAGS);
+                whichPmid = randomMonster();
+            mtmp = makeMonsterOfType(whichPmid, currentX(), currentY(), NO_MM_FLAGS);
             if (!mtmp) {
                 /* quit trying if creation failed and is going to repeat */
                 if (monclass == MAXMCLASSES && !randmonst)
