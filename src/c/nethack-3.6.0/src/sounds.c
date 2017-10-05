@@ -32,7 +32,9 @@ dosounds()
     struct monst *mtmp;
 
     if (youAreDeaf() || !flags.acoustics || swallowed() || underwater())
+    {
         return;
+    }
 
     hallu = youAreHallucinating() ? 1 : 0;
 

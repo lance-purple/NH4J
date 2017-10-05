@@ -50,7 +50,6 @@ void
 set_uasmon()
 {
     int pmid = currentMonsterNumber();
-    struct permonst *mdat = &mons[pmid];
 
     setMonsterType(&youmonst, pmid, 0);
 
@@ -79,20 +78,20 @@ set_uasmon()
 
     PROPSET(STUNNED, (pmid == PM_STALKER || isBat(pmid)));
     PROPSET(HALLUC_RES, monsterTypeCanCauseDamageType(pmid, AD_HALU));
-    PROPSET(SEE_INVIS, perceivesTheInvisible(pmid4(mdat)));
-    PROPSET(TELEPAT, isTelepathic(pmid4(mdat)));
-    PROPSET(INFRAVISION, hasInfravision(pmid4(mdat)));
-    PROPSET(INVIS, isInvisibleMonsterType(pmid4(mdat)));
-    PROPSET(TELEPORT, canTeleport(pmid4(mdat)));
-    PROPSET(TELEPORT_CONTROL, canControlTeleport(pmid4(mdat)));
-    PROPSET(LEVITATION, isFloater(pmid4(mdat)));
-    PROPSET(FLYING, isFlyer(pmid4(mdat)));
-    PROPSET(SWIMMING, isSwimmer(pmid4(mdat)));
+    PROPSET(SEE_INVIS, perceivesTheInvisible(pmid));
+    PROPSET(TELEPAT, isTelepathic(pmid));
+    PROPSET(INFRAVISION, hasInfravision(pmid));
+    PROPSET(INVIS, isInvisibleMonsterType(pmid));
+    PROPSET(TELEPORT, canTeleport(pmid));
+    PROPSET(TELEPORT_CONTROL, canControlTeleport(pmid));
+    PROPSET(LEVITATION, isFloater(pmid));
+    PROPSET(FLYING, isFlyer(pmid));
+    PROPSET(SWIMMING, isSwimmer(pmid));
     /* [don't touch MAGICAL_BREATHING here; both Amphibious and Breathless
        key off of it but include different monster forms...] */
-    PROPSET(PASSES_WALLS, passesThroughWalls(pmid4(mdat)));
-    PROPSET(REGENERATION, regenerates(pmid4(mdat)));
-    PROPSET(REFLECTING, (mdat == &mons[PM_SILVER_DRAGON]));
+    PROPSET(PASSES_WALLS, passesThroughWalls(pmid));
+    PROPSET(REGENERATION, regenerates(pmid));
+    PROPSET(REFLECTING, (pmid == PM_SILVER_DRAGON));
 
     float_vs_flight(); /* maybe toggle (BFlying & I_SPECIAL) */
 
@@ -1664,12 +1663,12 @@ int part;
         S_QUANTMECH, S_VAMPIRE, S_ORC,    S_GIANT, /* quest nemeses */
         '\0' /* string terminator; assert( S_xxx != 0 ); */
     };
-    struct permonst *mptr = mon->data;
+    int pmid = pmid4mon(mon);
 
     /* some special cases */
-    int mc = monsterClass(pmid4(mptr));
+    int mc = monsterClass(pmid);
     if (mc == S_DOG || mc == S_FELINE
-        || mc == S_RODENT || mptr == &mons[PM_OWLBEAR]) {
+        || mc == S_RODENT || (pmid == PM_OWLBEAR)) {
         switch (part) {
         case HAND:
             return "paw";
@@ -1688,57 +1687,97 @@ int part;
         return humanoid_parts[part]; /* yeti/sasquatch, monkey/ape */
     }
     if ((part == HAND || part == HANDED)
-        && (isHumanoid(pmid4(mptr)) && monsterHasAttackType(pmid4(mptr), AT_CLAW)
-            && !index(not_claws, mc) && mptr != &mons[PM_STONE_GOLEM]
-            && mptr != &mons[PM_INCUBUS] && mptr != &mons[PM_SUCCUBUS]))
+        && (isHumanoid(pmid) && monsterHasAttackType(pmid, AT_CLAW)
+            && !index(not_claws, mc) && (pmid != PM_STONE_GOLEM)
+            && (pmid != PM_INCUBUS) && (pmid != PM_SUCCUBUS)))
+    {
         return (part == HAND) ? "claw" : "clawed";
-    if ((mptr == &mons[PM_MUMAK] || mptr == &mons[PM_MASTODON])
-        && part == NOSE)
+    }
+    if (((pmid == PM_MUMAK) || (pmid == PM_MASTODON)) && part == NOSE)
+    {
         return "trunk";
-    if (mptr == &mons[PM_SHARK] && part == HAIR)
+    }
+    if ((pmid == PM_SHARK) && part == HAIR)
+    {
         return "skin"; /* sharks don't have scales */
-    if ((mptr == &mons[PM_JELLYFISH] || mptr == &mons[PM_KRAKEN])
+    }
+    if (((pmid == PM_JELLYFISH) || (pmid == PM_KRAKEN))
         && (part == ARM || part == FINGER || part == HAND || part == FOOT
             || part == TOE))
+    {
         return "tentacle";
-    if (mptr == &mons[PM_FLOATING_EYE] && part == EYE)
+    }
+    if ((pmid == PM_FLOATING_EYE) && part == EYE)
+    {
         return "cornea";
-    if (isHumanoid(pmid4(mptr)) && (part == ARM || part == FINGER || part == FINGERTIP
+    }
+    if (isHumanoid(pmid) && (part == ARM || part == FINGER || part == FINGERTIP
                            || part == HAND || part == HANDED))
+    {
         return humanoid_parts[part];
-    if (mptr == &mons[PM_RAVEN])
+    }
+    if (pmid == PM_RAVEN)
+    {
         return bird_parts[part];
+    }
     if (mc == S_CENTAUR || mc == S_UNICORN
-        || (mptr == &mons[PM_ROTHE] && part != HAIR))
+        || ((pmid == PM_ROTHE) && part != HAIR))
+    {
         return horse_parts[part];
+    }
     if (mc == S_LIGHT) {
         if (part == HANDED)
+	{
             return "rayed";
+	}
         else if (part == ARM || part == FINGER || part == FINGERTIP
                  || part == HAND)
+	{
             return "ray";
+	}
         else
+	{
             return "beam";
+	}
     }
-    if (mptr == &mons[PM_STALKER] && part == HEAD)
+    if ((pmid == PM_STALKER) && part == HEAD)
+    {
         return "head";
-    if (mc == S_EEL && mptr != &mons[PM_JELLYFISH])
+    }
+    if (mc == S_EEL && (pmid != PM_JELLYFISH))
+    {
         return fish_parts[part];
+    }
     if (mc == S_WORM)
+    {
         return worm_parts[part];
-    if (isSlithy(pmid4(mptr)) || (mc == S_DRAGON && part == HAIR))
+    }
+    if (isSlithy(pmid) || (mc == S_DRAGON && part == HAIR))
+    {
         return snake_parts[part];
+    }
     if (mc == S_EYE)
+    {
         return sphere_parts[part];
+    }
     if (mc == S_JELLY || mc == S_PUDDING
-        || mc == S_BLOB || mptr == &mons[PM_JELLYFISH])
+        || mc == S_BLOB || (pmid == PM_JELLYFISH))
+    {
         return jelly_parts[part];
+    }
     if (mc == S_VORTEX || mc == S_ELEMENTAL)
+    {
         return vortex_parts[part];
+    }
     if (mc == S_FUNGUS)
+    {
         return fungus_parts[part];
-    if (isHumanoid(pmid4(mptr)))
+    }
+    if (isHumanoid(pmid))
+    {
         return humanoid_parts[part];
+    }
+
     return animal_parts[part];
 }
 

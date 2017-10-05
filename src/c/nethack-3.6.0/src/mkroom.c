@@ -306,9 +306,9 @@ struct mkroom *sroom;
             mon = makeMonsterOfType((type == COURT)
                            ? throneRoomMonsterType()
                            : (type == BARRACKS)
-                              ? pmid4(squadmon())
+                              ? squadmon()
                               : (type == MORGUE)
-                                 ? pmid4(morguemon())
+                                 ? morguemon()
                                  : (type == BEEHIVE)
                                      ? (sx == tx && sy == ty
                                          ? PM_QUEEN_BEE

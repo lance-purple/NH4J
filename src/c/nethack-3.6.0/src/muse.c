@@ -16,7 +16,7 @@ boolean m_using = FALSE;
  * are confused don't know not to read scrolls, etc....
  */
 
-STATIC_DCL struct permonst *FDECL(muse_newcham_mon, (struct monst *));
+STATIC_DCL int FDECL(muse_newcham_mon, (struct monst *));
 STATIC_DCL int FDECL(precheck, (struct monst *, struct obj *));
 STATIC_DCL void FDECL(mzapmsg, (struct monst *, struct obj *, BOOLEAN_P));
 STATIC_DCL void FDECL(mreadmsg, (struct monst *, struct obj *));
@@ -753,14 +753,16 @@ struct monst *mtmp;
     case MUSE_WAN_CREATE_MONSTER: {
         coord cc;
         /* pm: 0 => random, eel => aquatic, croc => amphibious */
-        struct permonst *pm =
+        int pmid =
             !is_pool(mtmp->mx, mtmp->my)
-                ? 0
-                : &mons[inWater() ? PM_GIANT_EEL : PM_CROCODILE];
+                ? NON_PM
+                : (inWater() ? PM_GIANT_EEL : PM_CROCODILE);
         struct monst *mon;
 
-        if (!canPlaceMonsterNear(&cc, mtmp->mx, mtmp->my, pmid4(pm), 0))
+        if (!canPlaceMonsterNear(&cc, mtmp->mx, mtmp->my, pmid, 0))
+	{
             return 0;
+	}
         mzapmsg(mtmp, otmp, FALSE);
         otmp->spe--;
         mon = makeMonsterOfType(NON_PM, cc.x, cc.y, NO_MM_FLAGS);
@@ -770,28 +772,42 @@ struct monst *mtmp;
     }
     case MUSE_SCR_CREATE_MONSTER: {
         coord cc;
-        struct permonst *pm = 0, *fish = 0;
+	int pmid = NON_PM;
+	int fish = NON_PM;
         int cnt = 1;
         struct monst *mon;
         boolean known = FALSE;
 
         if (!rn2(73))
+	{
             cnt += rnd(4);
+	}
         if (mtmp->mconf || otmp->cursed)
+	{
             cnt += 12;
+	}
         if (mtmp->mconf)
-            pm = fish = &mons[PM_ACID_BLOB];
+	{
+            pmid = PM_ACID_BLOB;
+            fish = PM_ACID_BLOB;
+	}
         else if (is_pool(mtmp->mx, mtmp->my))
-            fish = &mons[inWater() ? PM_GIANT_EEL : PM_CROCODILE];
+	{
+            fish = inWater() ? PM_GIANT_EEL : PM_CROCODILE;
+	}
         mreadmsg(mtmp, otmp);
         while (cnt--) {
             /* `fish' potentially gives bias towards water locations;
                `pm' is what to actually create (0 => random) */
-            if (!canPlaceMonsterNear(&cc, mtmp->mx, mtmp->my, pmid4(fish), 0))
+            if (!canPlaceMonsterNear(&cc, mtmp->mx, mtmp->my, fish, 0))
+	    {
                 break;
-            mon = makeMonsterOfType(pmid4(pm), cc.x, cc.y, NO_MM_FLAGS);
+	    }
+            mon = makeMonsterOfType(pmid, cc.x, cc.y, NO_MM_FLAGS);
             if (mon && canspotmon(mon))
+	    {
                 known = TRUE;
+	    }
         }
         /* The only case where we don't use oseen.  For wands, you
          * have to be able to see the monster zap the wand to know
@@ -799,10 +815,14 @@ struct monst *mtmp;
          * the monster to know it teleported.
          */
         if (known)
+	{
             makeknown(SCR_CREATE_MONSTER);
+	}
         else if (!objects[SCR_CREATE_MONSTER].oc_name_known
                  && !objects[SCR_CREATE_MONSTER].oc_uname)
+	{
             docall(otmp);
+	}
         m_useup(mtmp, otmp);
         return 2;
     }
@@ -995,10 +1015,9 @@ rnd_defensive_item(mtmp)
 struct monst *mtmp;
 {
     int pmid = pmid4mon(mtmp);
-    struct permonst *pm = mtmp->data;
-    int difficulty = monsterDifficulty(pmid4mon(mtmp));
+    int difficulty = monsterDifficulty(pmid);
     int trycnt = 0;
-    int mc = monsterClass(pmid4(pm));
+    int mc = monsterClass(pmid);
 
     if (isAnimal(pmid) || monsterHasAttackType(pmid, AT_EXPL) || isMindless(pmid)
         || mc == S_GHOST || mc == S_KOP)
@@ -1538,7 +1557,6 @@ rnd_offensive_item(mtmp)
 struct monst *mtmp;
 {
     int pmid = pmid4mon(mtmp);
-    struct permonst *pm = mtmp->data;
     int difficulty = monsterDifficulty(pmid);
     int mc = monsterClass(pmid);
 
@@ -1738,19 +1756,18 @@ struct monst *mtmp;
 
 /* type of monster to polymorph into; defaults to one suitable for the
    current level rather than the totally arbitrary choice of changeChameleonToType() */
-static struct permonst *
-muse_newcham_mon(mon)
+static int muse_newcham_mon(mon)
 struct monst *mon;
 {
     struct obj *m_armr;
 
     if ((m_armr = which_armor(mon, W_ARM)) != 0) {
         if (Is_dragon_scales(m_armr))
-            return ptr4pmid(monsterTypeForDragonScales(m_armr));
+            return monsterTypeForDragonScales(m_armr);
         else if (Is_dragon_mail(m_armr))
-            return Dragon_mail_to_pm(m_armr);
+            return Dragon_mail_to_pmid(m_armr);
     }
-    return ptr4pmid(randomMonster());
+    return randomMonster();
 }
 
 int
@@ -1855,7 +1872,7 @@ struct monst *mtmp;
     case MUSE_WAN_POLYMORPH:
         mzapmsg(mtmp, otmp, TRUE);
         otmp->spe--;
-        (void) changeChameleonToType(mtmp, pmid4(muse_newcham_mon(mtmp)), TRUE, FALSE);
+        (void) changeChameleonToType(mtmp, muse_newcham_mon(mtmp), TRUE, FALSE);
         if (oseen)
             makeknown(WAN_POLYMORPH);
         return 2;
@@ -1863,7 +1880,7 @@ struct monst *mtmp;
         mquaffmsg(mtmp, otmp);
         if (vismon)
             pline("%s suddenly mutates!", Monnam(mtmp));
-        (void) changeChameleonToType(mtmp, pmid4(muse_newcham_mon(mtmp)), FALSE, FALSE);
+        (void) changeChameleonToType(mtmp, muse_newcham_mon(mtmp), FALSE, FALSE);
         if (oseen)
             makeknown(POT_POLYMORPH);
         m_useup(mtmp, otmp);
@@ -2448,18 +2465,18 @@ STATIC_OVL boolean
 green_mon(mon)
 struct monst *mon;
 {
-    struct permonst *ptr = mon->data;
+    int pmid = pmid4mon(mon);
 
     if (youAreHallucinating())
         return FALSE;
 #ifdef TEXTCOLOR
     if (iflags.use_color) {
-	int mcolor = monsterColor(pmid4(ptr));
+	int mcolor = monsterColor(pmid);
         return (mcolor == CLR_GREEN || mcolor == CLR_BRIGHT_GREEN);
     }
 #endif
     /* approximation */
-    javaString monsterName = monsterTypeName(pmid4(ptr));
+    javaString monsterName = monsterTypeName(pmid);
     boolean isGreen = (NULL != strstri(monsterName.c_str, "green"));
     releaseJavaString(monsterName);
    
@@ -2468,7 +2485,7 @@ struct monst *mon;
         return TRUE;
     } 
 
-    switch (pmid4(ptr)) {
+    switch (pmid) {
     case PM_FOREST_CENTAUR:
     case PM_GARTER_SNAKE:
     case PM_GECKO:
@@ -2481,9 +2498,11 @@ struct monst *mon;
     case PM_WOOD_NYMPH:
         return TRUE;
     default:
-        if (isElf(pmid4(ptr)) && !isPrince(pmid4(ptr)) && !isLord(pmid4(ptr))
-            && ptr != &mons[PM_GREY_ELF])
+        if (isElf(pmid) && !isPrince(pmid) && !isLord(pmid)
+            && (pmid != PM_GREY_ELF))
+	{
             return TRUE;
+	}
         break;
     }
     return FALSE;
