@@ -60,14 +60,18 @@ register boolean clumsy;
         dmg = 0;
 
     /* attacking a shade is useless */
-    if (mon->data == &mons[PM_SHADE])
+    if (pmid == PM_SHADE)
+    {
         dmg = 0;
+    }
 
-    if ((isUndead(pmid4mon(mon)) || isDemon(pmid4mon(mon)) || is_vampshifter(mon))
+    if ((isUndead(pmid) || isDemon(pmid) || is_vampshifter(mon))
         && uarmf && uarmf->blessed)
+    {
         blessed_foot_damage = 1;
+    }
 
-    if (mon->data == &mons[PM_SHADE] && !blessed_foot_damage) {
+    if ((pmid == PM_SHADE) && !blessed_foot_damage) {
         pline_The("%s.", kick_passes_thru);
         /* doesn't exercise skill or abuse alignment or frighten pet,
            and shades have no passive counterattack */
@@ -218,7 +222,7 @@ xchar x, y;
             if (uattk.type != AT_KICK)
                 continue;
 
-            if (mon->data == &mons[PM_SHADE] && (!uarmf || !uarmf->blessed)) {
+            if ((pmid == PM_SHADE) && (!uarmf || !uarmf->blessed)) {
                 /* doesn't matter whether it would have hit or missed,
                    and shades have no passive counterattack */
                 Your("%s %s.", kick_passes_thru, mon_nam(mon));
@@ -375,14 +379,23 @@ register struct obj *gold;
             long goldreqd = 0L;
 
             if (rn2(3)) {
-                if (mtmp->data == &mons[PM_SOLDIER])
+		int pmid = pmid4mon(mtmp);
+                if (pmid == PM_SOLDIER)
+		{
                     goldreqd = 100L;
-                else if (mtmp->data == &mons[PM_SERGEANT])
+		}
+                else if (pmid == PM_SERGEANT)
+		{
                     goldreqd = 250L;
-                else if (mtmp->data == &mons[PM_LIEUTENANT])
+		}
+                else if (pmid == PM_LIEUTENANT)
+		{
                     goldreqd = 500L;
-                else if (mtmp->data == &mons[PM_CAPTAIN])
+		}
+                else if (pmid == PM_CAPTAIN)
+		{
                     goldreqd = 750L;
+		}
 
                 if (goldreqd) {
                     umoney = money_cnt(invent);
@@ -916,7 +929,7 @@ dokick()
      */
 
     if (mtmp) {
-        /* save mtmp->data (for recoil) in case mtmp gets killed */
+        /* save pmid (for recoil) in case mtmp gets killed */
         int pmid = pmid4mon(mtmp);
 
         kick_monster(mtmp, x, y);

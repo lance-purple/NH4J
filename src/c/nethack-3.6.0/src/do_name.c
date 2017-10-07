@@ -1158,7 +1158,7 @@ char *outbuf;
     /* high priest(ess)'s identity is concealed on the Astral Plane,
        unless you're adjacent (overridden for hallucination which does
        its own obfuscation) */
-    if (mon->data == &mons[PM_HIGH_PRIEST] && !youAreHallucinating()
+    if ((pmid4mon(mon) == PM_HIGH_PRIEST) && !youAreHallucinating()
         && areYouOnAstralLevel() && distanceSquaredToYou(mon->mx, mon->my) > 2) {
         Strcpy(outbuf, article == ARTICLE_THE ? "the " : "");
         Strcat(outbuf, mon->female ? "high priestess" : "high priest");

@@ -1595,7 +1595,7 @@ domove()
             /* can't swap places with pet pinned in a pit by a boulder */
             setCurrentX(originalX());
             setCurrentY(originalY()); /* didn't move after all */
-        } else if ((originalX() != x) && (originalY() != y) && NODIAG(mtmp->data - mons)) {
+        } else if ((originalX() != x) && (originalY() != y) && NODIAG(pmid4mon(mtmp))) {
             /* can't swap places when pet can't move to your spot */
             setCurrentX(originalX());
             setCurrentY(originalY());

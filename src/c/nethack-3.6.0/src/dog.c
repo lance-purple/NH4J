@@ -307,7 +307,7 @@ boolean with_you;
 
     num_segs = mtmp->wormno;
     /* baby long worms have no tail so don't use isLongWorm() */
-    if (mtmp->data == &mons[PM_LONG_WORM]) {
+    if (pmid4mon(mtmp) == PM_LONG_WORM) {
         mtmp->wormno = get_wormno();
         if (mtmp->wormno)
             initworm(mtmp, num_segs);
@@ -869,7 +869,7 @@ register struct monst *mtmp;
 register struct obj *obj;
 {
     /* The Wiz, Medusa and the quest nemeses aren't even made peaceful. */
-    if (mtmp->iswiz || mtmp->data == &mons[PM_MEDUSA]
+    if (mtmp->iswiz || (pmid4mon(mtmp) == PM_MEDUSA)
         || monsterHasFlag3(pmid4mon(mtmp), M3_WANTSARTI)) {
         return FALSE;
     }

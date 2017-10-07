@@ -693,7 +693,7 @@ int ttyp;
                 /*[don't we need special sokoban handling here?]*/
                 int pmid = pmid4mon(mtmp);
                 if (isFlyer(pmid) || isFloater(pmid)
-                    || mtmp->data == &mons[PM_WUMPUS]
+                    || (pmid == PM_WUMPUS)
                     || (mtmp->wormno && count_wsegs(mtmp) > 5)
                     || monsterSize(pmid) >= MZ_HUGE) {
                     return;

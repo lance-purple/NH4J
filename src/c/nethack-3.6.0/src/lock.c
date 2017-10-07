@@ -391,7 +391,7 @@ struct obj *pick;
         if (mtmp && canseemon(mtmp) && mtmp->m_ap_type != M_AP_FURNITURE
             && mtmp->m_ap_type != M_AP_OBJECT) {
             if (picktyp == CREDIT_CARD
-                && (mtmp->isshk || mtmp->data == &mons[PM_ORACLE]))
+                && (mtmp->isshk || (pmid4mon(mtmp) == PM_ORACLE)))
                 verbalize("No checks, no credit, no problem.");
             else
                 pline("I don't think %s would appreciate that.",

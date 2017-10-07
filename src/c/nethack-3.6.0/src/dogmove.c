@@ -290,7 +290,7 @@ boolean devour;
         edog->apport += (int) (200L / ((long) edog->dropdist + monstermoves
                                        - edog->droptime));
 #endif
-    if (mtmp->data == &mons[PM_RUST_MONSTER] && obj->oerodeproof) {
+    if ((pmid4mon(mtmp) == PM_RUST_MONSTER) && obj->oerodeproof) {
         /* The object's rustproofing is gone now */
         if (obj->unpaid)
             costly_alteration(obj, COST_DEGRD);
@@ -329,7 +329,6 @@ boolean devour;
 
     if (poly || slimer) {
         int pmid = slimer ? PM_GREEN_SLIME : NON_PM;
-
         (void) changeChameleonToType(mtmp, pmid, FALSE, cansee(mtmp->mx, mtmp->my));
     }
 
@@ -758,12 +757,13 @@ register int after; /* this is extra fast monster movement */
             int mstatus;
             register struct monst *mtmp2 = m_at(nx, ny);
 	    int m2sound = monsterSound(pmid4mon(mtmp2));
+	    int pmid2 = pmid4mon(mtmp2);
 
             if ((int) mtmp2->m_lev >= (int) mtmp->m_lev + 2
-                || (mtmp2->data == &mons[PM_FLOATING_EYE] && rn2(10)
+                || ((pmid2 == PM_FLOATING_EYE) && rn2(10)
                     && mtmp->mcansee && hasEyes(pmid4mon(mtmp)) && mtmp2->mcansee
                     && (perceivesTheInvisible(pmid4mon(mtmp)) || !mtmp2->minvis))
-                || (mtmp2->data == &mons[PM_GELATINOUS_CUBE] && rn2(10))
+                || ((pmid2 == PM_GELATINOUS_CUBE) && rn2(10))
                 || (max_passive_dmg(mtmp2, mtmp) >= mtmp->mhp)
                 || ((mtmp->mhp * 4 < mtmp->mhpmax
                      || m2sound == MS_GUARDIAN

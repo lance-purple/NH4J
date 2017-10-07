@@ -635,21 +635,31 @@ int mclass;                /* monster class, 0 for all */
         cls();
         for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
             if (DEADMONSTER(mtmp))
+	    {
                 continue;
-            if (!mclass || monsterClass(pmid4mon(mtmp)) == mclass
-                || (mtmp->data == &mons[PM_LONG_WORM]
-                    && mclass == S_WORM_TAIL))
+	    }
+	    int pmid = pmid4mon(mtmp);
+            if (!mclass || (monsterClass(pmid) == mclass)
+                || ((pmid == PM_LONG_WORM) && mclass == S_WORM_TAIL))
+	    {
                 if (mtmp->mx > 0) {
                     if (mclass && def_monsyms[mclass].sym == ' ')
+		    {
                         show_glyph(mtmp->mx, mtmp->my,
                                    detected_mon_to_glyph(mtmp));
+		    }
                     else
+		    {
                         show_glyph(mtmp->mx, mtmp->my,
                                    mtmp->mtame ? pet_to_glyph(mtmp) : mon_to_glyph(mtmp));
+		    }
                     /* don't be stingy - display entire worm */
-                    if (mtmp->data == &mons[PM_LONG_WORM])
+                    if (pmid == PM_LONG_WORM)
+		    {
                         detect_wsegs(mtmp, 0);
+		    }
                 }
+	    }
             if (otmp && otmp->cursed
                 && (mtmp->msleeping || !mtmp->mcanmove)) {
                 mtmp->msleeping = mtmp->mfrozen = 0;
