@@ -640,7 +640,6 @@ struct obj *corpse;
 boolean by_hero;
 {
     struct monst *mtmp = 0;
-    struct permonst *mptr;
     struct obj *container;
     coord xy;
     xchar x, y;
@@ -695,7 +694,7 @@ boolean by_hero;
 
     /* prepare for the monster */
     montype = corpse->corpsenm;
-    mptr = &mons[montype];
+    int oldMontype = montype;
     /* [should probably handle recorporealization first; if corpse and
        ghost are at same location, revived creature shouldn't be bumped
        to an adjacent spot by ghost which joins with it] */
@@ -723,8 +722,8 @@ boolean by_hero;
                 free_omonst(corpse);
             if (mtmp->cham == PM_DOPPELGANGER) {
                 /* change shape to match the corpse */
-                (void) changeChameleonToType(mtmp, pmid4(mptr), FALSE, FALSE);
-            } else if (monsterClass(pmid4mon(mtmp)) == S_ZOMBIE) {
+                (void) changeChameleonToType(mtmp, oldMontype, FALSE, FALSE);
+            } else if (monsterClass(oldMontype) == S_ZOMBIE) {
                 mtmp->mhp = mtmp->mhpmax = 100;
                 mon_adjust_speed(mtmp, 2, (struct obj *) 0); /* MFAST */
             }
@@ -737,7 +736,7 @@ boolean by_hero;
             wary_dog(mtmp, TRUE);
     } else {
         /* make a new monster */
-        mtmp = makeMonsterOfType(pmid4(mptr), x, y, NO_MINVENT | MM_NOWAIT | MM_NOCOUNTBIRTH);
+        mtmp = makeMonsterOfType(oldMontype, x, y, NO_MINVENT | MM_NOWAIT | MM_NOCOUNTBIRTH);
     }
     if (!mtmp)
         return (struct monst *) 0;
@@ -1168,7 +1167,6 @@ create_polymon(obj, okind)
 struct obj *obj;
 int okind;
 {
-    struct permonst *mdat = (struct permonst *) 0;
     struct monst *mtmp;
     const char *material;
     int pm_index;
@@ -1243,10 +1241,13 @@ int okind;
         break;
     }
 
+    int pmid = NON_PM;
     if (!(mvitals[pm_index].mvflags & G_GENOD))
-        mdat = &mons[pm_index];
+    {
+        pmid = pm_index;
+    }
 
-    mtmp = makeMonsterOfType(pmid4(mdat), obj->ox, obj->oy, NO_MM_FLAGS);
+    mtmp = makeMonsterOfType(pmid, obj->ox, obj->oy, NO_MM_FLAGS);
     polyuse(obj, okind, monsterCorpseWeight(pm_index));
 
     if (mtmp && cansee(mtmp->mx, mtmp->my)) {
@@ -1584,7 +1585,6 @@ stone_to_flesh_obj(obj)
 struct obj *obj;
 {
     int res = 1; /* affected object by default */
-    struct permonst *ptr;
     struct monst *mon;
     struct obj *item;
     xchar oox, ooy;
@@ -1606,10 +1606,10 @@ struct obj *obj;
             obj = poly_obj(obj, HUGE_CHUNK_OF_MEAT);
             smell = TRUE;
         } else if (obj->otyp == STATUE || obj->otyp == FIGURINE) {
-            ptr = &mons[obj->corpsenm];
-            if (isGolem(pmid4(ptr))) {
-                golem_xform = (ptr != &mons[PM_FLESH_GOLEM]);
-            } else if (isVegetarianOption(pmid4(ptr))) {
+            int pmid = obj->corpsenm;
+            if (isGolem(pmid)) {
+                golem_xform = (pmid != PM_FLESH_GOLEM);
+            } else if (isVegetarianOption(pmid)) {
                 /* Don't animate monsters that aren't flesh */
                 obj = poly_obj(obj, MEATBALL);
                 smell = TRUE;
@@ -1621,8 +1621,8 @@ struct obj *obj;
                 mon = animate_statue(obj, oox, ooy, ANIMATE_SPELL, (int *) 0);
             } else { /* (obj->otyp == FIGURINE) */
                 if (golem_xform)
-                    ptr = &mons[PM_FLESH_GOLEM];
-                mon = makeMonsterOfType(pmid4(ptr), oox, ooy, NO_MINVENT);
+                    pmid = PM_FLESH_GOLEM;
+                mon = makeMonsterOfType(pmid, oox, ooy, NO_MINVENT);
                 if (mon) {
                     if (costly_spot(oox, ooy) && !obj->no_charge) {
                         if (costly_spot(currentX(), currentY()))
@@ -1642,11 +1642,11 @@ struct obj *obj;
                 }
             }
             if (mon) {
-                ptr = mon->data;
+                pmid = pmid4mon(mon);
                 /* this golem handling is redundant... */
-                if (isGolem(pmid4(ptr)) && ptr != &mons[PM_FLESH_GOLEM])
+                if (isGolem(pmid) && (pmid != PM_FLESH_GOLEM))
                     (void) changeChameleonToType(mon, PM_FLESH_GOLEM, TRUE, FALSE);
-            } else if ((monsterGenerationMask(pmid4(ptr)) & (G_NOCORPSE | G_UNIQ)) != 0) {
+            } else if ((monsterGenerationMask(pmid) & (G_NOCORPSE | G_UNIQ)) != 0) {
                 /* didn't revive but can't leave corpse either */
                 res = 0;
             } else {

@@ -144,7 +144,7 @@ struct obj *otmp;
 struct monst *mon;
 {
     int tmp = 0;
-    struct permonst *ptr = mon->data;
+    int pmid = pmid4mon(mon);
     boolean Is_weapon = (otmp->oclass == WEAPON_CLASS || is_weptool(otmp));
 
     if (Is_weapon)
@@ -157,15 +157,15 @@ struct monst *mon;
 
     /* Blessed weapons used against undead or demons */
     if (Is_weapon && otmp->blessed
-        && (isDemon(pmid4(ptr)) || isUndead(pmid4(ptr)) || is_vampshifter(mon)))
+        && (isDemon(pmid) || isUndead(pmid) || is_vampshifter(mon)))
         tmp += 2;
 
-    if (is_spear(otmp) && index(kebabable, monsterClass(pmid4(ptr))))
+    if (is_spear(otmp) && index(kebabable, monsterClass(pmid)))
         tmp += 2;
 
     /* trident is highly effective against swimmers */
-    if (otmp->otyp == TRIDENT && isSwimmer(pmid4(ptr))) {
-	int mc = monsterClass(pmid4(ptr));
+    if (otmp->otyp == TRIDENT && isSwimmer(pmid)) {
+	int mc = monsterClass(pmid);
         if (is_pool(mon->mx, mon->my))
             tmp += 4;
         else if (mc == S_EEL || mc == S_SNAKE)
@@ -173,7 +173,7 @@ struct monst *mon;
     }
 
     /* Picks used against xorns and earth elementals */
-    if (is_pick(otmp) && (passesThroughWalls(pmid4(ptr)) && isThickSkinned(pmid4(ptr))))
+    if (is_pick(otmp) && (passesThroughWalls(pmid) && isThickSkinned(pmid)))
         tmp += 2;
 
     /* Check specially named weapon "to hit" bonuses */
@@ -215,13 +215,13 @@ struct obj *otmp;
 struct monst *mon;
 {
     int tmp = 0, otyp = otmp->otyp;
-    struct permonst *ptr = mon->data;
+    int pmid = pmid4mon(mon);
     boolean Is_weapon = (otmp->oclass == WEAPON_CLASS || is_weptool(otmp));
 
     if (otyp == CREAM_PIE)
         return 0;
 
-    if (isBigMonster(pmid4(ptr))) {
+    if (isBigMonster(pmid)) {
         if (objects[otyp].oc_wldam)
             tmp = rnd(objects[otyp].oc_wldam);
         switch (otyp) {
@@ -299,10 +299,10 @@ struct monst *mon;
             tmp = 0;
     }
 
-    if (objects[otyp].oc_material <= LEATHER && isThickSkinned(pmid4(ptr)))
+    if (objects[otyp].oc_material <= LEATHER && isThickSkinned(pmid))
         /* thick skinned/scaled creatures don't feel it */
         tmp = 0;
-    if (ptr == &mons[PM_SHADE] && !shade_glare(otmp))
+    if ((pmid == PM_SHADE) && !shade_glare(otmp))
         tmp = 0;
 
     /* "very heavy iron ball"; weight increase is in increments of 160 */
@@ -323,9 +323,9 @@ struct monst *mon;
         int bonus = 0;
 
         if (otmp->blessed
-            && (isUndead(pmid4(ptr)) || isDemon(pmid4(ptr)) || is_vampshifter(mon)))
+            && (isUndead(pmid) || isDemon(pmid) || is_vampshifter(mon)))
             bonus += rnd(4);
-        if (is_axe(otmp) && isWooden(pmid4(ptr)))
+        if (is_axe(otmp) && isWooden(pmid))
             bonus += rnd(4);
         if (objects[otyp].oc_material == SILVER && monsterHatesSilver(mon))
             bonus += rnd(20);

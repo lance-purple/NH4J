@@ -1365,7 +1365,6 @@ NEARDATA struct permonst mons[] = {
         M2_GNOME | M2_PRINCE | M2_MALE | M2_COLLECT,
         M3_INFRAVISIBLE | M3_INFRAVISION, HI_LORD),
 #ifdef SPLITMON_1
-};
 #endif
 #endif /* !SPLITMON_2 */
 
@@ -1381,7 +1380,6 @@ NEARDATA struct permonst mons[] = {
 
 #ifndef SPLITMON_1
 #ifdef SPLITMON_2
-struct permonst _mons2[] = {
 #endif
     /*
      * giant Humanoids

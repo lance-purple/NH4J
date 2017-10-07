@@ -1955,7 +1955,7 @@ winid where;
  *      Special setup modifications here:
  *
  *      Unfortunately, this is going to have to be done
- *      on each newgame or restore, because you lose the permonst mods
+ *      on each newgame or restore, because you lose the MonsterType mods
  *      across a save/restore.  :-)
  *
  *      1 - The Rogue Leader is the Tourist Nemesis.
@@ -2071,7 +2071,7 @@ role_init()
         /* although an infravision intrinsic is possible, infravision
          * is purely a property of the physical race.  This means that we
          * must put the infravision flag in the player's current race
-         * (either that or have separate permonst entries for
+         * (either that or have separate MonsterType entries for
          * elven/non-elven members of each class).  The side effect is that
          * all NPCs of that class will have (probably bogus) infravision,
          * but since infravision has no effect for NPCs anyway we can

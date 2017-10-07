@@ -504,35 +504,51 @@ register struct monst *mtmp;
     register const char *pline_msg = 0, /* Monnam(mtmp) will be prepended */
         *verbl_msg = 0,                 /* verbalize() */
             *verbl_msg_mcan = 0;        /* verbalize() if cancelled */
-    struct permonst *ptr = mtmp->data;
-    int msound = monsterSound(pmid4(ptr));
+    int pmid = pmid4mon(mtmp);
+    int msound = monsterSound(pmid);
 
     /* presumably nearness and sleep checks have already been made */
     if (youAreDeaf())
+    {
         return 0;
-    if (isSilent(pmid4(ptr)))
+    }
+
+    if (isSilent(pmid))
+    {
         return 0;
+    }
 
     /* leader might be poly'd; if he can still speak, give leader speech */
     if (mtmp->m_id == quest_status.leader_m_id && msound > MS_ANIMAL)
+    {
+
         msound = MS_LEADER;
+    }
     /* make sure it's your role's quest guardian; adjust if not */
-    else if (msound == MS_GUARDIAN && ptr != &mons[urole.guardnum])
-        msound = monsterSound(genus(pmid4(ptr), 1));
+    else if (msound == MS_GUARDIAN && (pmid != urole.guardnum))
+    {
+        msound = monsterSound(genus(pmid, 1));
+    }
     /* some normally non-speaking types can/will speak if hero is similar */
     else if (msound == MS_ORC         /* note: MS_ORC is same as MS_GRUNT */
-             && (sameMonsterType(pmid4(ptr), pmid4you())           /* current form, */
-                 || sameMonsterType(pmid4(ptr), Race_switch))) /* unpoly'd form */
+             && (sameMonsterType(pmid, pmid4you())           /* current form, */
+                 || sameMonsterType(pmid, Race_switch))) /* unpoly'd form */
+    {
         msound = MS_HUMANOID;
+    }
     /* silliness, with slight chance to interfere with shopping */
     else if (youAreHallucinating() && mon_is_gecko(mtmp))
+    {
         msound = MS_SELL;
+    }
 
     /* be sure to do this before talking; the monster might teleport away, in
      * which case we want to check its pre-teleport position
      */
     if (!canspotmon(mtmp))
+    {
         map_invisible(mtmp->mx, mtmp->my);
+    }
 
     switch (msound) {
     case MS_ORACLE:
@@ -636,7 +652,7 @@ register struct monst *mtmp;
         if (flags.moonphase == FULL_MOON && (night() ^ !rn2(13))) {
             pline("%s throws back %s head and lets out a blood curdling %s!",
                   Monnam(mtmp), mhis(mtmp),
-                  ptr == &mons[PM_HUMAN_WERERAT] ? "shriek" : "howl");
+                  (pmid == PM_HUMAN_WERERAT) ? "shriek" : "howl");
             wake_nearto(mtmp->mx, mtmp->my, 11 * 11);
         } else
             pline_msg =
@@ -649,13 +665,18 @@ register struct monst *mtmp;
             if (mtmp->mtame
                 && (mtmp->mconf || mtmp->mflee || mtmp->mtrapped
                     || moves > EDOG(mtmp)->hungrytime || mtmp->mtame < 5))
+	    {
                 pline_msg = "whines.";
+	    }
             else if (mtmp->mtame && EDOG(mtmp)->hungrytime > moves + 1000)
+	    {
                 pline_msg = "yips.";
+	    }
             else {
-                if (mtmp->data
-                    != &mons[PM_DINGO]) /* dingos do not actually bark */
+                if (pmid4mon(mtmp) != PM_DINGO) /* dingos do not actually bark */
+		{
                     pline_msg = "barks.";
+		}
             }
         } else {
             pline_msg = "growls.";
@@ -684,10 +705,14 @@ register struct monst *mtmp;
         pline_msg = "squeaks.";
         break;
     case MS_SQAWK:
-        if (ptr == &mons[PM_RAVEN] && !mtmp->mpeaceful)
+        if ((pmid == PM_RAVEN) && !mtmp->mpeaceful)
+	{
             verbl_msg = "Nevermore!";
+	}
         else
+	{
             pline_msg = "squawks.";
+	}
         break;
     case MS_HISS:
         if (!mtmp->mpeaceful)
@@ -745,13 +770,19 @@ register struct monst *mtmp;
         if (mtmp->mtame) {
             verbl_msg = "Sorry, I'm all out of wishes.";
         } else if (mtmp->mpeaceful) {
-            if (ptr == &mons[PM_WATER_DEMON])
+            if (pmid == PM_WATER_DEMON)
+	    {
                 pline_msg = "gurgles.";
+	    }
             else
+	    {
                 verbl_msg = "I'm free!";
+	    }
         } else {
-            if (ptr != &mons[PM_PRISONER])
+            if (pmid != PM_PRISONER)
+	    {
                 verbl_msg = "This will teach you not to disturb me!";
+	    }
 #if 0
             else
                 verbl_msg = "??????????";
@@ -778,10 +809,14 @@ register struct monst *mtmp;
     /* else FALLTHRU */
     case MS_HUMANOID:
         if (!mtmp->mpeaceful) {
-            if (areYouInEndgame() && isMonsterPlayer(pmid4(ptr)))
+            if (areYouInEndgame() && isMonsterPlayer(pmid))
+	    {
                 mplayer_talk(mtmp);
+	    }
             else
+	    {
                 pline_msg = "threatens you.";
+	    }
             break;
         }
         /* Generic peaceful humanoid behaviour. */
@@ -799,22 +834,36 @@ register struct monst *mtmp;
             if (t)
                 t->tseen = 1;
             verbl_msg = "I'm trapped!";
-        } else if (mtmp->mhp < mtmp->mhpmax / 2)
+        }
+	else if (mtmp->mhp < mtmp->mhpmax / 2)
+	{
             pline_msg = "asks for a potion of healing.";
+	}
         else if (mtmp->mtame && !mtmp->isminion
                  && moves > EDOG(mtmp)->hungrytime)
+	{
             verbl_msg = "I'm hungry.";
+	}
+
         /* Specific monsters' interests */
-        else if (isElf(pmid4(ptr)))
+        else if (isElf(pmid))
+	{
             pline_msg = "curses orcs.";
-        else if (isDwarf(pmid4(ptr)))
+	}
+        else if (isDwarf(pmid))
+	{
             pline_msg = "talks about mining.";
-        else if (likesMagicItems(pmid4(ptr)))
+	}
+        else if (likesMagicItems(pmid))
+	{
             pline_msg = "talks about spellcraft.";
-        else if (monsterClass(pmid4(ptr)) == S_CENTAUR)
+	}
+        else if (monsterClass(pmid) == S_CENTAUR)
+	{
             pline_msg = "discusses hunting.";
+	}
         else
-            switch (pmid4(ptr)) {
+            switch (pmid) {
             case PM_HOBBIT:
                 pline_msg =
                     (mtmp->mhpmax - mtmp->mhp >= 10)
@@ -836,7 +885,7 @@ register struct monst *mtmp;
     case MS_SEDUCE: {
         int swval;
         if (SYSOPT_SEDUCE) {
-            if (monsterClass(pmid4(ptr)) != S_NYMPH
+            if (monsterClass(pmid) != S_NYMPH
                 && could_seduce(mtmp, &youmonst, NO_ATTACK) == 1) {
                 (void) doseduce(mtmp);
                 break;
@@ -920,7 +969,7 @@ register struct monst *mtmp;
     }
     case MS_RIDER:
         /* 3.6.0 tribute */
-        if (ptr == &mons[PM_DEATH]
+        if ((pmid == PM_DEATH)
             && !tributeNovelNoticedByDeath() && u_have_novel()) {
             struct obj *book = u_have_novel();
             const char *tribtitle = (char *)0;
@@ -939,12 +988,12 @@ register struct monst *mtmp;
                 verbl_msg = verbuf;
                 setTributeNovelNoticedByDeath(TRUE);
             }
-        } else if (ptr == &mons[PM_DEATH]
+        } else if ((pmid == PM_DEATH)
                    && !rn2(2) && Death_quote(verbuf, BUFSZ)) {
                 verbl_msg = verbuf;
         }
         /* end of tribute addition */
-        else if (ptr == &mons[PM_DEATH] && !rn2(10))
+        else if ((pmid == PM_DEATH) && !rn2(10))
             pline_msg = "is busy reading a copy of Sandman #8.";
         else
             verbl_msg = "Who do you think you are, War?";
@@ -956,7 +1005,7 @@ register struct monst *mtmp;
     else if (mtmp->mcan && verbl_msg_mcan)
         verbalize1(verbl_msg_mcan);
     else if (verbl_msg) {
-        if (ptr == &mons[PM_DEATH]) {
+        if (pmid == PM_DEATH) {
             /* Death talks in CAPITAL LETTERS
                and without quotation marks */
             char tmpbuf[BUFSZ];

@@ -770,15 +770,15 @@ struct monst *mon;
 boolean polyspot;
 {
     register struct obj *otmp;
-    struct permonst *mdat = mon->data;
+    int pmid = pmid4mon(mon);
     boolean vis = cansee(mon->mx, mon->my);
-    boolean handless_or_tiny = (hasNoHands(pmid4(mdat)) || isVerySmallMonster(pmid4(mdat)));
+    boolean handless_or_tiny = (hasNoHands(pmid) || isVerySmallMonster(pmid));
     const char *pronoun = mhim(mon), *ppronoun = mhis(mon);
 
     if (breaksOutOfArmor(pmid4mon(mon))) {
         if ((otmp = which_armor(mon, W_ARM)) != 0) {
             if ((Is_dragon_scales(otmp) && (pmid4mon(mon) == monsterTypeForDragonScales(otmp)))
-                || (Is_dragon_mail(otmp) && mdat == Dragon_mail_to_pm(otmp)))
+                || (Is_dragon_mail(otmp) && pmid == Dragon_mail_to_pmid(otmp)))
                 ; /* no message here;
                      "the dragon merges with his scaly armor" is odd
                      and the monster's previous form is already gone */
@@ -812,7 +812,7 @@ boolean polyspot;
                 You_hear("a ripping sound.");
             m_useup(mon, otmp);
         }
-    } else if (slipsOutOfArmor(pmid4(mdat))) {
+    } else if (slipsOutOfArmor(pmid)) {
         if ((otmp = which_armor(mon, W_ARM)) != 0) {
             if (vis)
                 pline("%s armor falls around %s!", s_suffix(Monnam(mon)),
@@ -871,7 +871,7 @@ boolean polyspot;
             m_lose_armor(mon, otmp);
         }
     }
-    if (handless_or_tiny || hasHorns(pmid4(mdat))) {
+    if (handless_or_tiny || hasHorns(pmid)) {
         if ((otmp = which_armor(mon, W_ARMH)) != 0
             /* flimsy test for horns matches polyself handling */
             && (handless_or_tiny || !is_flimsy(otmp))) {
@@ -885,14 +885,14 @@ boolean polyspot;
             m_lose_armor(mon, otmp);
         }
     }
-    if (handless_or_tiny || isSlithy(pmid4(mdat)) || monsterClass(pmid4(mdat)) == S_CENTAUR) {
+    if (handless_or_tiny || isSlithy(pmid) || monsterClass(pmid) == S_CENTAUR) {
         if ((otmp = which_armor(mon, W_ARMF)) != 0) {
             if (vis) {
                 if (isWhirly(pmid4mon(mon)))
                     pline("%s boots fall away!", s_suffix(Monnam(mon)));
                 else
                     pline("%s boots %s off %s feet!", s_suffix(Monnam(mon)),
-                          isVerySmallMonster(pmid4(mdat)) ? "slide" : "are pushed", ppronoun);
+                          isVerySmallMonster(pmid) ? "slide" : "are pushed", ppronoun);
             }
             if (polyspot)
                 bypass_obj(otmp);

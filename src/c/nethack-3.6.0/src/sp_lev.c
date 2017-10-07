@@ -1505,7 +1505,7 @@ struct mkroom *croom;
     char class;
     aligntyp amask;
     coord cc;
-    struct permonst *pm;
+    int pmid;
     unsigned g_mvflags;
 
     if (m->class >= 0)
@@ -1525,34 +1525,50 @@ struct mkroom *croom;
                      : (m->align < 0 ? ralign[-m->align - 1] : m->align);
 
     if (!class)
-        pm = (struct permonst *) 0;
+    {
+        pmid = NON_PM;
+    }
     else if (m->id != NON_PM) {
-        pm = &mons[m->id];
-        g_mvflags = (unsigned) mvitals[pmid4(pm)].mvflags;
-        if ((monsterGenerationMask(pmid4(pm)) & G_UNIQ) && (g_mvflags & G_EXTINCT))
+        pmid = m->id;
+        g_mvflags = (unsigned) mvitals[pmid].mvflags;
+        if ((monsterGenerationMask(pmid) & G_UNIQ) && (g_mvflags & G_EXTINCT))
+	{
             return;
+	}
         else if (g_mvflags & G_GONE)    /* genocided or extinct */
-            pm = (struct permonst *) 0; /* make random monster */
+	{
+            pmid = NON_PM; /* make random monster */
+	}
     } else {
-        pm = ptr4pmid(pickMonsterTypeOfClass(class, G_NOGEN));
+        pmid = pickMonsterTypeOfClass(class, G_NOGEN);
         /* if we can't get a specific monster type (pm == 0) then the
            class has been genocided, so settle for a random monster */
     }
-    if (areYouInTheMines() && pm && isOfYourRace(pmid4(pm), urace.selfmask)
+    if (areYouInTheMines() && (pmid != NON_PM) && isOfYourRace(pmid, urace.selfmask)
         && (Race_if(PM_DWARF) || Race_if(PM_GNOME)) && rn2(3))
-        pm = (struct permonst *) 0;
+    {
+        pmid = NON_PM;
+    }
 
-    if (pm) {
-        int pmid = pmid4(pm);
+    if (pmid != NON_PM) {
         int loc = DRY;
         if (monsterClass(pmid) == S_EEL || isAmphibious(pmid) || isSwimmer(pmid))
+	{
             loc = WET;
+	}
         if (isFlyer(pmid) || isFloater(pmid))
+	{
             loc |= (HOT | WET);
+	}
         if (passesThroughWalls(pmid) || isNoncorporeal(pmid))
+	{
             loc |= SOLID;
+	}
         if (isFlaming(pmid))
+	{
             loc |= HOT;
+	}
+
         /* If water-liking monster, first try is without DRY */
         get_location_coord(&x, &y, loc | NO_LOC_WARN, croom, m->coord);
         if (x == -1 && y == -1) {
@@ -1564,15 +1580,15 @@ struct mkroom *croom;
     }
 
     /* try to find a close place if someone else is already there */
-    if (MON_AT(x, y) && canPlaceMonsterNear(&cc, x, y, pmid4(pm), 0))
+    if (MON_AT(x, y) && canPlaceMonsterNear(&cc, x, y, pmid, 0))
         x = cc.x, y = cc.y;
 
     if (m->align != -(MAX_REGISTERS + 2))
-        mtmp = makeRoamingMonsterOfType(pmid4(pm), Amask2align(amask), x, y, m->peaceful);
+        mtmp = makeRoamingMonsterOfType(pmid, Amask2align(amask), x, y, m->peaceful);
     else if (PM_ARCHEOLOGIST <= m->id && m->id <= PM_WIZARD)
-        mtmp = makeMonsterPlayerOfType(pmid4(pm), x, y, FALSE);
+        mtmp = makeMonsterPlayerOfType(pmid, x, y, FALSE);
     else
-        mtmp = makeMonsterOfType(pmid4(pm), x, y, NO_MM_FLAGS);
+        mtmp = makeMonsterOfType(pmid, x, y, NO_MM_FLAGS);
 
     if (mtmp) {
         x = mtmp->mx, y = mtmp->my; /* sanity precaution */
@@ -1630,7 +1646,7 @@ struct mkroom *croom;
                             x = m->x;
                             y = m->y;
                             get_location(&x, &y, DRY, croom);
-                            if (MON_AT(x, y) && canPlaceMonsterNear(&cc, x, y, pmid4(pm), 0))
+                            if (MON_AT(x, y) && canPlaceMonsterNear(&cc, x, y, pmid, 0))
                                 x = cc.x, y = cc.y;
                         } while (m_bad_boulder_spot(x, y)
                                  && --retrylimit > 0);
@@ -1651,23 +1667,24 @@ struct mkroom *croom;
                 else
                     mndx = name_to_mon(m->appear_as.str);
                 if ((mndx != NON_PM) && (&mons[mndx] != mtmp->data)) {
-                    struct permonst *mdat = &mons[mndx];
-                    struct permonst *olddata = mtmp->data;
+		    int oldpmid = pmid4mon(mtmp);
 
                     monsterGenderFromType(mtmp, mndx);
                     setMonsterType(mtmp, mndx, 0);
-                    if (emitsLightWithRange(pmid4(olddata)) != emitsLightWithRange(pmid4mon(mtmp))) {
+                    if (emitsLightWithRange(oldpmid) != emitsLightWithRange(pmid4mon(mtmp))) {
                         /* used to give light, now doesn't, or vice versa,
                            or light's range has changed */
-                        if (emitsLightWithRange(pmid4(olddata)))
+                        if (emitsLightWithRange(oldpmid))
                             del_light_source(LS_MONSTER, (genericptr_t) mtmp);
                         if (emitsLightWithRange(pmid4mon(mtmp)))
                             new_light_source(mtmp->mx, mtmp->my,
                                              emitsLightWithRange(pmid4mon(mtmp)),
                                              LS_MONSTER, (genericptr_t) mtmp);
                     }
-                    if (!mtmp->perminvis || isInvisibleMonsterType(pmid4(olddata)))
-                        mtmp->perminvis = isInvisibleMonsterType(pmid4(mdat));
+                    if (!mtmp->perminvis || isInvisibleMonsterType(oldpmid))
+		    {
+                        mtmp->perminvis = isInvisibleMonsterType(mndx);
+		    }
                 }
                 break;
             }
@@ -3055,14 +3072,16 @@ struct sp_coder *coder;
                     tmpobj.corpsenm = monid;
                     break; /* we're done! */
                 } else {
-                    struct permonst *pm = (struct permonst *) 0;
+                    int pmid = NON_PM;
                     if (def_char_to_monclass(monclass) != MAXMCLASSES) {
-                        pm = ptr4pmid(pickMonsterTypeOfClass(def_char_to_monclass(monclass), G_NOGEN));
+                        pmid = pickMonsterTypeOfClass(def_char_to_monclass(monclass), G_NOGEN);
                     } else {
-                        pm = ptr4pmid(randomMonster());
+                        pmid = randomMonster();
                     }
-                    if (pm)
-                        tmpobj.corpsenm = pmid4(pm);
+                    if (NON_PM != pmid)
+		    {
+                        tmpobj.corpsenm = pmid;
+		    }
                 }
             }
             break;

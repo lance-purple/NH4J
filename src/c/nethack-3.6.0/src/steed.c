@@ -26,11 +26,10 @@ boolean
 can_saddle(mtmp)
 struct monst *mtmp;
 {
-    struct permonst *ptr = mtmp->data;
-
-    return (index(steeds, monsterClass(pmid4(ptr))) && (monsterSize(pmid4(ptr)) >= MZ_MEDIUM)
-            && (!isHumanoid(pmid4(ptr)) || monsterClass(pmid4(ptr)) == S_CENTAUR) && !isAmorphous(pmid4(ptr))
-            && !isNoncorporeal(pmid4(ptr)) && !isWhirly(pmid4(ptr)) && !isUnsolid(pmid4(ptr)));
+    int pmid = pmid4mon(mtmp);
+    return (index(steeds, monsterClass(pmid)) && (monsterSize(pmid) >= MZ_MEDIUM)
+            && (!isHumanoid(pmid) || monsterClass(pmid) == S_CENTAUR) && !isAmorphous(pmid)
+            && !isNoncorporeal(pmid) && !isWhirly(pmid) && !isUnsolid(pmid));
 }
 
 int
@@ -38,7 +37,6 @@ use_saddle(otmp)
 struct obj *otmp;
 {
     struct monst *mtmp;
-    struct permonst *ptr;
     int chance;
     const char *s;
 
@@ -65,8 +63,8 @@ struct obj *otmp;
         pline("%s doesn't need another one.", Monnam(mtmp));
         return 1;
     }
-    ptr = mtmp->data;
-    if (touchPetrifies(pmid4(ptr)) && !uarmg && !youResistStoning()) {
+    int pmid = pmid4mon(mtmp);
+    if (touchPetrifies(pmid) && !uarmg && !youResistStoning()) {
         char kbuf[BUFSZ];
 
         You("touch %s.", mon_nam(mtmp));
@@ -77,7 +75,7 @@ struct obj *otmp;
             instapetrify(kbuf);
         }
     }
-    if (ptr == &mons[PM_INCUBUS] || ptr == &mons[PM_SUCCUBUS]) {
+    if ((pmid == PM_INCUBUS) || (pmid == PM_SUCCUBUS)) {
         pline("Shame on you!");
         exercise(A_WIS, FALSE);
         return 1;
@@ -186,7 +184,6 @@ boolean force;      /* Quietly force this animal */
 {
     struct obj *otmp;
     char buf[BUFSZ];
-    struct permonst *ptr;
 
     /* Sanity checks */
     if (u.usteed) {
@@ -257,8 +254,8 @@ boolean force;      /* Quietly force this animal */
         pline("%s is not saddled.", Monnam(mtmp));
         return (FALSE);
     }
-    ptr = mtmp->data;
-    if (touchPetrifies(pmid4(ptr)) && !youResistStoning()) {
+    int pmid = pmid4mon(mtmp);
+    if (touchPetrifies(pmid) && !youResistStoning()) {
         char kbuf[BUFSZ];
 
         You("touch %s.", mon_nam(mtmp));
@@ -288,7 +285,7 @@ boolean force;      /* Quietly force this animal */
             m_unleash(mtmp, FALSE);
         return (FALSE);
     }
-    if (!force && underwater() && !isSwimmer(pmid4(ptr))) {
+    if (!force && underwater() && !isSwimmer(pmid)) {
         You_cant("ride that creature while under water.");
         return (FALSE);
     }
@@ -298,8 +295,6 @@ boolean force;      /* Quietly force this animal */
     }
 
     /* Is the player impaired? */
-    int pmid = pmid4(ptr);
-
     if (!force && !isFloater(pmid) && !isFlyer(pmid) && youAreLevitating()
         && !youCanLevitateAtWill()) {
         You("cannot reach %s.", mon_nam(mtmp));
@@ -556,10 +551,9 @@ int reason; /* Player was thrown off etc. */
     if (mtmp->mhp > 0) {
         place_monster(mtmp, currentX(), currentY());
         if (!swallowed() && !u.ustuck && have_spot) {
-            struct permonst *mdat = mtmp->data;
+            int pmid = pmid4mon(mtmp);
 
             /* The steed may drop into water/lava */
-            int pmid = pmid4(mdat);
             if (!isFlyer(pmid) && !isFloater(pmid) && !isClinger(pmid)) {
                 if (is_pool(currentX(), currentY())) {
                     if (!underwater())
@@ -571,7 +565,7 @@ int reason; /* Player was thrown off etc. */
                     }
                 } else if (is_lava(currentX(), currentY())) {
                     pline("%s is pulled into the lava!", Monnam(mtmp));
-                    if (!likesLava(pmid4(mdat))) {
+                    if (!likesLava(pmid)) {
                         killed(mtmp);
                         adjalign(-1);
                     }
