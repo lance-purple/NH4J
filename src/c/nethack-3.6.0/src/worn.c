@@ -454,30 +454,34 @@ boolean creation;
      * except for the additional restriction on intelligence.  (Players
      * are always intelligent, even if polymorphed).
      */
-    if (isVerySmallMonster(pmid4mon(mon)) || hasNoHands(pmid4mon(mon)) || isAnimal(pmid4mon(mon)))
+    int pmid = pmid4mon(mon);
+
+    if (isVerySmallMonster(pmid) || hasNoHands(pmid) || isAnimal(pmid))
         return;
     /* give mummies a chance to wear their wrappings
      * and let skeletons wear their initial armor */
-    if (isMindless(pmid4mon(mon))
-        && (!creation || (monsterClass(pmid4mon(mon)) != S_MUMMY
-                          && mon->data != &mons[PM_SKELETON])))
+    if (isMindless(pmid)
+        && (!creation || (monsterClass(pmid) != S_MUMMY
+                          && (pmid != PM_SKELETON))))
+    {
         return;
+    }
 
     m_dowear_type(mon, W_AMUL, creation, FALSE);
     /* can't put on shirt if already wearing suit */
-    if (!cannotWearArmor(pmid4mon(mon)) && !(mon->misc_worn_check & W_ARM))
+    if (!cannotWearArmor(pmid) && !(mon->misc_worn_check & W_ARM))
         m_dowear_type(mon, W_ARMU, creation, FALSE);
     /* treating small as a special case allows
        hobbits, gnomes, and kobolds to wear cloaks */
-    if (!cannotWearArmor(pmid4mon(mon)) || monsterSize(pmid4mon(mon)) == MZ_SMALL)
+    if (!cannotWearArmor(pmid) || monsterSize(pmid) == MZ_SMALL)
         m_dowear_type(mon, W_ARMC, creation, FALSE);
     m_dowear_type(mon, W_ARMH, creation, FALSE);
     if (!MON_WEP(mon) || !bimanual(MON_WEP(mon)))
         m_dowear_type(mon, W_ARMS, creation, FALSE);
     m_dowear_type(mon, W_ARMG, creation, FALSE);
-    if (!isSlithy(pmid4mon(mon)) && monsterClass(pmid4mon(mon)) != S_CENTAUR)
+    if (!isSlithy(pmid) && monsterClass(pmid) != S_CENTAUR)
         m_dowear_type(mon, W_ARMF, creation, FALSE);
-    if (!cannotWearArmor(pmid4mon(mon)))
+    if (!cannotWearArmor(pmid))
         m_dowear_type(mon, W_ARM, creation, FALSE);
     else
         m_dowear_type(mon, W_ARM, creation, RACE_EXCEPTION);

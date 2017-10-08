@@ -248,8 +248,9 @@ strategy(mtmp)
 register struct monst *mtmp;
 {
     unsigned long strat, dstrat;
+    int pmid = pmid4mon(mtmp);
 
-    if (!isCovetous(pmid4mon(mtmp))
+    if (!isCovetous(pmid)
         /* perhaps a shopkeeper has been polymorphed into a master
            lich; we don't want it teleporting to the stairs to heal
            because that will leave its shop untended */
@@ -265,8 +266,10 @@ register struct monst *mtmp;
         return (unsigned long) STRAT_HEAL;
 
     case 1: /* the wiz is less cautious */
-        if (mtmp->data != &mons[PM_WIZARD_OF_YENDOR])
+        if (pmid != PM_WIZARD_OF_YENDOR)
+	{
             return (unsigned long) STRAT_HEAL;
+	}
     /* else fall through */
 
     case 2:

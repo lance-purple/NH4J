@@ -143,6 +143,7 @@ struct obj *otmp;
     struct obj *obj;
     boolean disguised_mimic =
         (monsterClass(pmid4mon(mtmp)) == S_MIMIC && mtmp->m_ap_type != M_AP_NOTHING);
+    int pmid = pmid4mon(mtmp);
 
     if (swallowed() && mtmp == u.ustuck)
         reveal_invis = FALSE;
@@ -308,7 +309,7 @@ struct obj *otmp;
     case SPE_HEALING:
     case SPE_EXTRA_HEALING:
         reveal_invis = TRUE;
-        if (mtmp->data != &mons[PM_PESTILENCE]) {
+        if (pmid != PM_PESTILENCE) {
             wake = FALSE; /* wakeup() makes the target angry */
             mtmp->mhp += d(6, otyp == SPE_EXTRA_HEALING ? 8 : 4);
             if (mtmp->mhp > mtmp->mhpmax)
@@ -784,7 +785,7 @@ boolean by_hero;
         (void) memcpy((genericptr_t) &m_id, (genericptr_t) OMID(corpse),
                       sizeof m_id);
         ghost = find_mid(m_id, FM_FMON);
-        if (ghost && ghost->data == &mons[PM_GHOST]) {
+        if (ghost && (pmid4mon(ghost) == PM_GHOST)) {
             if (canseemon(ghost))
                 pline("%s is suddenly drawn into its former body!",
                       Monnam(ghost));
@@ -2590,10 +2591,14 @@ boolean youattack, allow_cancel_kill, self_cancel;
     } else {
         mdef->mcan = TRUE;
 
-        if (isWere(pmid4mon(mdef)) && monsterClass(pmid4mon(mdef)) != S_HUMAN)
-            were_change(mdef);
+	int pmid = pmid4mon(mdef);
 
-        if (mdef->data == &mons[PM_CLAY_GOLEM]) {
+        if (isWere(pmid) && monsterClass(pmid) != S_HUMAN)
+	{
+            were_change(mdef);
+	}
+
+        if (pmid == PM_CLAY_GOLEM) {
             if (canseemon(mdef))
                 pline(writing_vanishes, s_suffix(mon_nam(mdef)));
 
@@ -3381,6 +3386,7 @@ struct obj **ootmp; /* to return worn armor for caller to disintegrate */
     register int abstype = abs(type) % 10;
     boolean sho_shieldeff = FALSE;
     boolean spellcaster = is_hero_spell(type); /* maybe get a bonus! */
+    int pmid = pmid4mon(mon);
 
     *ootmp = (struct obj *) 0;
     switch (abstype) {
@@ -3433,7 +3439,7 @@ struct obj **ootmp; /* to return worn armor for caller to disintegrate */
         break;
     case ZT_DEATH:                              /* death/disintegration */
         if (abs(type) != ZT_BREATH(ZT_DEATH)) { /* death */
-            if (mon->data == &mons[PM_DEATH]) {
+            if (pmid == PM_DEATH) {
                 mon->mhpmax += mon->mhpmax / 2;
                 if (mon->mhpmax >= MAGIC_COOKIE)
                     mon->mhpmax = MAGIC_COOKIE - 1;
@@ -3885,6 +3891,7 @@ register int dx, dy;
                 mon->mstrategy &= ~STRAT_WAITMASK;
         buzzmonst:
             if (zap_hit(find_mac(mon), spell_type)) {
+		int pmid = pmid4mon(mon);
                 if (mon_reflects(mon, (char *) 0)) {
                     if (cansee(mon->mx, mon->my)) {
                         hit(fltxt, mon, exclam(0));
@@ -3898,7 +3905,7 @@ register int dx, dy;
                     boolean mon_could_move = mon->mcanmove;
                     int tmp = zhitm(mon, type, nd, &otmp);
 
-                    if (isRiderOfTheApocalypse(pmid4mon(mon))
+                    if (isRiderOfTheApocalypse(pmid)
                         && abs(type) == ZT_BREATH(ZT_DEATH)) {
                         if (canseemon(mon)) {
                             hit(fltxt, mon, ".");
@@ -3913,7 +3920,7 @@ register int dx, dy;
                         mon->mhp = mon->mhpmax;
                         break; /* Out of while loop */
                     }
-                    if (mon->data == &mons[PM_DEATH] && abstype == ZT_DEATH) {
+                    if ((pmid == PM_DEATH) && abstype == ZT_DEATH) {
                         if (canseemon(mon)) {
                             hit(fltxt, mon, ".");
                             pline("%s absorbs the deadly %s!", Monnam(mon),

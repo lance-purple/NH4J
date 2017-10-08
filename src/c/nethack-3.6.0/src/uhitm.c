@@ -2116,6 +2116,7 @@ register struct monst *mon;
     struct obj *weapon;
     boolean altwep = FALSE, weapon_used = FALSE;
     int i, tmp, armorpenalty, sum[NATTK], nsum = 0, dhit = 0, attknum = 0;
+    int pmid = pmid4mon(mon);
 
     for (i = 0; i < monsterAttacks(pmid4you()); i++) {
         sum[i] = 0;
@@ -2188,7 +2189,7 @@ register struct monst *mon;
                 }
                 wakeup(mon);
                 /* maybe this check should be in damageum()? */
-                if (mon->data == &mons[PM_SHADE]
+                if ((pmid == PM_SHADE)
                     && !(mattk.type == AT_KICK && uarmf
                          && uarmf->blessed)) {
                     Your("attack passes harmlessly through %s.",
@@ -2221,7 +2222,7 @@ register struct monst *mon;
              */
             dhit = 1;
             wakeup(mon);
-            if (mon->data == &mons[PM_SHADE])
+            if (pmid == PM_SHADE)
                 Your("hug passes harmlessly through %s.", mon_nam(mon));
             else if (!monsterSticksInCombat(pmid4mon(mon)) && !swallowed()) {
                 if (mon == u.ustuck) {
@@ -2247,7 +2248,7 @@ register struct monst *mon;
                                    &attknum, &armorpenalty);
             if ((dhit = (tmp > rnd(20 + i)))) {
                 wakeup(mon);
-                if (mon->data == &mons[PM_SHADE])
+                if (pmid == PM_SHADE)
                     Your("attempt to surround %s is harmless.", mon_nam(mon));
                 else {
 		    int mc = monsterClass(pmid4mon(mon));
@@ -2754,7 +2755,7 @@ struct obj *otmp; /* source of flash */
                 pline("%s is blinded by the flash!", Monnam(mtmp));
                 res = 1;
             }
-            if (mtmp->data == &mons[PM_GREMLIN]) {
+            if (pmid4mon(mtmp) == PM_GREMLIN) {
                 /* Rule #1: Keep them out of the light. */
                 amt = otmp->otyp == WAN_LIGHT ? d(1 + otmp->spe, 4)
                                               : rn2(min(mtmp->mhp, 4));
