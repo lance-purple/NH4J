@@ -1337,9 +1337,11 @@ dogaze()
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
         if (DEADMONSTER(mtmp))
             continue;
+
+	int pmid = pmid4mon(mtmp);
         if (canseemon(mtmp) && couldsee(mtmp->mx, mtmp->my)) {
             looked++;
-            if (youAreInvisibleToOthers() && !perceivesTheInvisible(pmid4mon(mtmp))) {
+            if (youAreInvisibleToOthers() && !perceivesTheInvisible(pmid)) {
                 pline("%s seems not to notice your gaze.", Monnam(mtmp));
             } else if (mtmp->minvis && !youCanSeeInvisible()) {
                 You_cant("see where to gaze at %s.", Monnam(mtmp));
@@ -1359,7 +1361,7 @@ dogaze()
                     setmangry(mtmp);
                 }
                 if (!mtmp->mcanmove || mtmp->mstun || mtmp->msleeping
-                    || !mtmp->mcansee || !hasEyes(pmid4mon(mtmp))) {
+                    || !mtmp->mcansee || !hasEyes(pmid)) {
                     looked--;
                     continue;
                 }
@@ -1398,9 +1400,8 @@ dogaze()
                 if (DEADMONSTER(mtmp))
                     continue;
 
-                if (mtmp->data == &mons[PM_FLOATING_EYE] && !mtmp->mcan) {
+                if ((pmid == PM_FLOATING_EYE) && !mtmp->mcan) {
                     if (!youHaveFreeAction()) {
-			int pmid = pmid4mon(mtmp);
                         You("are frozen by %s gaze!",
                             s_suffix(mon_nam(mtmp)));
                         nomul((currentExperienceLevel() > 6 || rn2(4))
@@ -1419,7 +1420,7 @@ dogaze()
                  * works on the monster's turn, but for it to *not* have an
                  * effect would be too weird.
                  */
-                if (mtmp->data == &mons[PM_MEDUSA] && !mtmp->mcan) {
+                if ((pmid == PM_MEDUSA) && !mtmp->mcan) {
                     pline("Gazing at the awake %s is not a very good idea.",
                           l_monnam(mtmp));
                     /* as if gazing at a sleeping anything is fruitful... */

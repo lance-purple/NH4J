@@ -306,9 +306,11 @@ priestname(mon, pname)
 register struct monst *mon;
 char *pname; /* caller-supplied output buffer */
 {
-    boolean do_hallu = youAreHallucinating(),
-            aligned_priest = mon->data == &mons[PM_ALIGNED_PRIEST],
-            high_priest = mon->data == &mons[PM_HIGH_PRIEST];
+    boolean do_hallu = youAreHallucinating();
+    int pmid = pmid4mon(mon);
+    boolean aligned_priest = (pmid == PM_ALIGNED_PRIEST);
+    boolean high_priest = (pmid == PM_HIGH_PRIEST);
+
     char whatcode = '\0';
     javaString what = NO_JAVA_STRING;
 
@@ -427,7 +429,7 @@ int roomno;
 
         epri_p = EPRI(priest);
         shrined = has_shrine(priest);
-        sanctum = (priest->data == &mons[PM_HIGH_PRIEST]
+        sanctum = ((pmid4mon(priest) == PM_HIGH_PRIEST)
                    && (areYouOnSanctumLevel() || areYouInEndgame()));
         can_speak = (priest->mcanmove && !priest->msleeping);
         if (can_speak && !youAreDeaf() && moves >= epri_p->intone_time) {
@@ -702,9 +704,12 @@ register struct monst *roamer;
 {
     if (!roamer->isminion)
         return;
-    if (roamer->data != &mons[PM_ALIGNED_PRIEST]
-        && roamer->data != &mons[PM_ANGEL])
+
+    int pmid = pmid4mon(roamer);
+    if ((pmid != PM_ALIGNED_PRIEST) && (pmid != PM_ANGEL))
+    {
         return;
+    }
 
     if (EMIN(roamer)->min_align != currentAlignmentType()) {
         roamer->mpeaceful = roamer->mtame = 0;

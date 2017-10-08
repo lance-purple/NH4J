@@ -389,7 +389,7 @@ register struct monst *mtmp;
         }
     } else if (mtmp->mpeaceful)
         Strcat(info, ", peaceful");
-    if (mtmp->cham >= LOW_PM && mtmp->data != &mons[mtmp->cham])
+    if (mtmp->cham >= LOW_PM && (pmid4mon(mtmp) != mtmp->cham))
         /* don't reveal the innate form (chameleon, vampire, &c),
            just expose the fact that this current form isn't it */
         Strcat(info, ", shapechanger");

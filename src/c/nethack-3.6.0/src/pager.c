@@ -160,7 +160,7 @@ int x, y;
     char *name, monnambuf[BUFSZ];
     boolean accurate = !youAreHallucinating();
 
-    if (mtmp->data == &mons[PM_COYOTE] && accurate)
+    if ((pmid4mon(mtmp) == PM_COYOTE) && accurate)
         name = coyotename(mtmp, monnambuf);
     else
         name = distant_monnam(mtmp, ARTICLE_NONE, monnambuf);

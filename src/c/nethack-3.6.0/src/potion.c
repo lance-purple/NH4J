@@ -1220,6 +1220,7 @@ boolean your_fault;
     int distance;
     struct obj *saddle = (struct obj *) 0;
     boolean hit_saddle = FALSE;
+    int pmid = pmid4mon(mon);
 
     if (isyou) {
         distance = 0;
@@ -1315,7 +1316,7 @@ boolean your_fault;
         case POT_HEALING:
         case POT_EXTRA_HEALING:
         case POT_FULL_HEALING:
-            if (mon->data == &mons[PM_PESTILENCE])
+            if (pmid == PM_PESTILENCE)
                 goto do_illness;
         /*FALLTHRU*/
         case POT_RESTORE_ABILITY:
@@ -1329,7 +1330,7 @@ boolean your_fault;
             }
             break;
         case POT_SICKNESS:
-            if (mon->data == &mons[PM_PESTILENCE])
+            if (pmid == PM_PESTILENCE)
                 goto do_healing;
             if (monsterTypeCanCauseDamageType(pmid4mon(mon), AD_DISE)
                 /* won't happen, see prior goto */
@@ -1413,10 +1414,10 @@ boolean your_fault;
                         && !youHaveProtectionFromShapeChangers())
                         new_were(mon); /* transform into beast */
                 }
-            } else if (mon->data == &mons[PM_GREMLIN]) {
+            } else if (pmid == PM_GREMLIN) {
                 angermon = FALSE;
                 (void) split_mon(mon, (struct monst *) 0);
-            } else if (mon->data == &mons[PM_IRON_GOLEM]) {
+            } else if (pmid == PM_IRON_GOLEM) {
                 if (canseemon(mon))
                     pline("%s rusts.", Monnam(mon));
                 mon->mhp -= d(1, 6);
