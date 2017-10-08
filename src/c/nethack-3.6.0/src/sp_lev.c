@@ -1666,7 +1666,7 @@ struct mkroom *croom;
                     mndx = select_newcham_form(mtmp);
                 else
                     mndx = name_to_mon(m->appear_as.str);
-                if ((mndx != NON_PM) && (&mons[mndx] != mtmp->data)) {
+                if ((mndx != NON_PM) && (mndx != mtmp->pmid)) {
 		    int oldpmid = pmid4mon(mtmp);
 
                     monsterGenderFromType(mtmp, mndx);

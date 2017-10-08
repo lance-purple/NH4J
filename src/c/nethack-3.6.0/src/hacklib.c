@@ -65,28 +65,18 @@
 #define Static static
 #endif
 
-int pmid4(const struct permonst* pm) {
-    return (pm != NULL) ? pm->monsterTypeID : NON_PM;
-}
-
 int pmid4mon(const struct monst* mtmp) {
-    return (mtmp != NULL) ? pmid4(mtmp->data) : NON_PM;
+    return (mtmp != NULL) ? (mtmp->pmid) : NON_PM;
 }
 
 int pmid4you() {
-    return pmid4(youmonst.data);
+    return youmonst.pmid;
 }
 
 void setPmid4you(int pmid) {
-    youmonst.data = ptr4pmid(pmid);
+    youmonst.pmid = pmid;
 }
 
-struct permonst* ptr4pmid(int pmid) {
-    if ((NON_PM == pmid) || (pmid >= NUMMONS)) {
-        return NULL;
-    }
-    return &mons[pmid];
-}
 
 jclass getJavaClass(const char* className) {
     jclass javaClass = (*jni_env)->FindClass(jni_env, className);

@@ -18,7 +18,7 @@ struct monst *mon;
 int pmid;
 int flag;
 {
-    mon->data = ptr4pmid(pmid);
+    mon->pmid = pmid;
     if (flag == -1)
         return; /* "don't care" */
 

@@ -175,7 +175,7 @@
 #define MH_GNOME M2_GNOME
 #define MH_ORC M2_ORC
 
-/* for mons[].geno (constant during game) */
+/* for MonsterType geno (constant during game) */
 #define G_UNIQ 0x1000     /* generated only once */
 #define G_NOHELL 0x0800   /* not generated in "hell" */
 #define G_HELL 0x0400     /* generated only in "hell" */

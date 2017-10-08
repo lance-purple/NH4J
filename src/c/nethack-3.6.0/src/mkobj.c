@@ -1536,7 +1536,7 @@ struct monst *mtmp;
         /* m_id is needed to know if this is a revived quest leader */
         /* but m_id must be cleared when loading bones */
         mtmp2->nmon = (struct monst *) 0;
-        mtmp2->data = (struct permonst *) 0;
+        mtmp2->pmid = NON_PM;
         mtmp2->minvent = (struct obj *) 0;
         if (mtmp->mextra)
             copy_mextra(mtmp2, mtmp);

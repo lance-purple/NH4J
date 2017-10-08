@@ -409,7 +409,7 @@ boolean ghostly;
             mtmp->m_id = nid;
         }
         offset = mtmp->mnum;
-        mtmp->data = &mons[offset];
+        mtmp->pmid = offset;
         if (ghostly) {
             int mndx = pmid4mon(mtmp);
             if (propagate(mndx, TRUE, ghostly) == 0) {

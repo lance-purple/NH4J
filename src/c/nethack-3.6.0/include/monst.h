@@ -39,11 +39,11 @@
 
 struct monst {
     struct monst *nmon;
-    struct permonst *data;
     unsigned m_id;
     short mnum;      /* permanent monster index number */
-    short cham;      /* if shapeshifter, orig mons[] idx goes here */
-    short movement;  /* movement points (derived from permonst definition and
+    int pmid;
+    short cham;      /* if shapeshifter, original pmid goes here */
+    short movement;  /* movement points (derived from MonsterType definition and
                         added effects */
     uchar m_lev;     /* adjusted difficulty level of monster */
     aligntyp malign; /* alignment of this monster, relative to the

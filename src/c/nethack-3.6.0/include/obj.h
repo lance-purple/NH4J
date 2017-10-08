@@ -108,7 +108,7 @@ struct obj {
     Bitfield(lknown, 1); /* locked/unlocked status is known */
     /* 4 free bits */
 
-    int corpsenm;         /* type of corpse is mons[corpsenm] */
+    int corpsenm;         /* pmid of corpse */
 #define leashmon corpsenm /* gets m_id of attached pet */
 #define fromsink corpsenm /* a potion from a sink */
 #define novelidx corpsenm /* 3.6.0 tribute - the index of the novel title */
@@ -271,9 +271,6 @@ struct obj {
 #define Is_dragon_armor(obj) (Is_dragon_scales(obj) || Is_dragon_mail(obj))
 #define monsterTypeForDragonScales(obj) \
     (PM_GRAY_DRAGON + (obj)->otyp - GRAY_DRAGON_SCALES)
-
-#define Dragon_mail_to_pm(obj) \
-    &mons[PM_GRAY_DRAGON + (obj)->otyp - GRAY_DRAGON_SCALE_MAIL]
 
 #define Dragon_mail_to_pmid(obj) \
     (PM_GRAY_DRAGON + (obj)->otyp - GRAY_DRAGON_SCALE_MAIL)

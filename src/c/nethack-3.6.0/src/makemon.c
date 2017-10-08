@@ -1045,8 +1045,8 @@ int mmflags;
         struct monst fakemon;
 
         cc.x = cc.y = 0; /* lint suppression */
-        fakemon.data = ptr4pmid(pmid); /* set up for goodpos */
-        if (!makemon_rnd_goodpos(fakemon.data ? &fakemon : (struct monst *)0,
+        fakemon.pmid = pmid; /* set up for goodpos */
+        if (!makemon_rnd_goodpos(fakemon.pmid ? &fakemon : (struct monst *)0,
                                  gpflags, &cc))
             return (struct monst *) 0;
         x = cc.x;

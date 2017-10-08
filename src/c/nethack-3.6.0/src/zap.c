@@ -529,7 +529,7 @@ coord *cc;
         mtmp2 = get_mtraits(obj, TRUE);
     if (mtmp2) {
         /* save_mtraits() validated mtmp2->mnum */
-        mtmp2->data = &mons[mtmp2->mnum];
+        mtmp2->pmid = mtmp2->mnum;
         if (mtmp2->mhpmax <= 0 && !isRiderOfTheApocalypse(pmid4mon(mtmp2)))
             return (struct monst *) 0;
         mtmp = makeMonsterOfType(pmid4mon(mtmp2), cc->x, cc->y, NO_MINVENT | MM_NOWAIT | MM_NOCOUNTBIRTH);
