@@ -791,12 +791,13 @@ cast_protection()
                 pline_The("%s haze around you becomes more dense.", hgolden);
             } else {
                 rmtyp = levl[currentX()][currentY()].typ;
+		int ustuckPmid = pmid4mon(u.ustuck);
                 atmosphere = swallowed()
-                                ? ((u.ustuck->data == &mons[PM_FOG_CLOUD])
+                                ? ((ustuckPmid == PM_FOG_CLOUD)
                                    ? "mist"
-                                   : isWhirly(pmid4mon(u.ustuck))
+                                   : isWhirly(ustuckPmid)
                                       ? "maelstrom"
-                                      : isAnimal(pmid4mon(u.ustuck))
+                                      : isAnimal(ustuckPmid)
                                          ? "maw"
                                          : "ooze")
                                 : (inWater()

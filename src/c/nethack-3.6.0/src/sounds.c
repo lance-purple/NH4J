@@ -185,10 +185,6 @@ dosounds()
             if (DEADMONSTER(mtmp))
                 continue;
             if (isMercenary(pmid4mon(mtmp))
-#if 0 /* don't bother excluding these */
-                && !strstri(mtmp->data->mname, "watch")
-                && !strstri(mtmp->data->mname, "guard")
-#endif
                 && mon_in_room(mtmp, BARRACKS)
                 /* sleeping implies not-yet-disturbed (usually) */
                 && (mtmp->msleeping || ++count > 5)) {
@@ -282,7 +278,7 @@ dosounds()
         for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
             if (DEADMONSTER(mtmp))
                 continue;
-            if (mtmp->data == &mons[PM_ORACLE])
+            if (pmid4mon(mtmp) == PM_ORACLE)
                 break;
         }
         /* and don't produce silly effects when she's clearly visible */
@@ -482,14 +478,21 @@ mon_is_gecko(mon)
 struct monst *mon;
 {
     int glyph;
+    int pmid = pmid4mon(mon);
 
     /* return True if it is actually a gecko */
-    if (mon->data == &mons[PM_GECKO])
+    if (pmid == PM_GECKO)
+    {
         return TRUE;
+    }
+
     /* return False if it is a long worm; we might be chatting to its tail
        (not strictly needed; long worms are MS_SILENT so won't get here) */
-    if (mon->data == &mons[PM_LONG_WORM])
+    if (pmid == PM_LONG_WORM)
+    {
         return FALSE;
+    }
+
     /* result depends upon whether map spot shows a gecko, which will
        be due to hallucination or to mimickery since mon isn't one */
     glyph = glyph_at(mon->mx, mon->my);

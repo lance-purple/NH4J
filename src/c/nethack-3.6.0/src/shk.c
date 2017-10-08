@@ -3495,7 +3495,7 @@ register struct monst *shkp;
     if (inhishop(shkp))
         remove_damage(shkp, FALSE);
 
-    if ((udist = distanceSquaredToYou(omx, omy)) < 3 && (shkp->data != &mons[PM_GRID_BUG]
+    if ((udist = distanceSquaredToYou(omx, omy)) < 3 && ((pmid4mon(shkp) != PM_GRID_BUG)
                                           || (omx == currentX() || omy == currentY()))) {
         if (ANGRY(shkp) || (youCauseConflict() && !resist(shkp, RING_CLASS, 0, 0))) {
             if (youAppearDisplaced())
