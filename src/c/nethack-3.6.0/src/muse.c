@@ -328,8 +328,9 @@ struct monst *mtmp;
      * These would be hard to combine because of the control flow.
      * Pestilence won't use healing even when blind.
      */
-    if (!mtmp->mcansee && !hasNoHands(pmid4mon(mtmp))
-        && mtmp->data != &mons[PM_PESTILENCE]) {
+    int pmid = pmid4mon(mtmp);
+    if (!mtmp->mcansee && !hasNoHands(pmid)
+        && (pmid != PM_PESTILENCE)) {
         if ((obj = m_carrying(mtmp, POT_FULL_HEALING)) != 0) {
             m.defensive = obj;
             m.has_defense = MUSE_POT_FULL_HEALING;
@@ -353,7 +354,7 @@ struct monst *mtmp;
         return FALSE;
 
     if (mtmp->mpeaceful) {
-        if (!hasNoHands(pmid4mon(mtmp))) {
+        if (!hasNoHands(pmid)) {
             if ((obj = m_carrying(mtmp, POT_FULL_HEALING)) != 0) {
                 m.defensive = obj;
                 m.has_defense = MUSE_POT_FULL_HEALING;
@@ -377,33 +378,33 @@ struct monst *mtmp;
         ; /* fleeing by stairs or traps is not possible */
     } else if (levl[x][y].typ == STAIRS) {
         if (x == xdnstair && y == ydnstair) {
-            if (!isFloater(pmid4mon(mtmp)))
+            if (!isFloater(pmid))
                 m.has_defense = MUSE_DOWNSTAIRS;
         } else if (x == xupstair && y == yupstair) {
             /* don't let monster leave the dungeon with the Amulet */
             if (currentLevelLedgerNum() != 1)
                 m.has_defense = MUSE_UPSTAIRS;
         } else if (sstairs.sx && x == sstairs.sx && y == sstairs.sy) {
-            if (sstairs.up || !isFloater(pmid4mon(mtmp)))
+            if (sstairs.up || !isFloater(pmid))
                 m.has_defense = MUSE_SSTAIRS;
         }
     } else if (levl[x][y].typ == LADDER) {
         if (x == xupladder && y == yupladder) {
             m.has_defense = MUSE_UP_LADDER;
         } else if (x == xdnladder && y == ydnladder) {
-            if (!isFloater(pmid4mon(mtmp)))
+            if (!isFloater(pmid))
                 m.has_defense = MUSE_DN_LADDER;
         } else if (sstairs.sx && x == sstairs.sx && y == sstairs.sy) {
-            if (sstairs.up || !isFloater(pmid4mon(mtmp)))
+            if (sstairs.up || !isFloater(pmid))
                 m.has_defense = MUSE_SSTAIRS;
         }
     } else {
         /* Note: trap doors take precedence over teleport traps. */
         int xx, yy, i, locs[10][2];
-        boolean ignore_boulders = (isVerySmallMonster(pmid4mon(mtmp))
-                                   || throwsRocks(pmid4mon(mtmp))
-                                   || passesThroughWalls(pmid4mon(mtmp))),
-            diag_ok = !NODIAG(pmid4mon(mtmp));
+        boolean ignore_boulders = (isVerySmallMonster(pmid)
+                                   || throwsRocks(pmid)
+                                   || passesThroughWalls(pmid)),
+            diag_ok = !NODIAG(pmid);
 
         for (i = 0; i < 10; ++i) /* 10: 9 spots plus sentinel */
             locs[i][0] = locs[i][1] = 0;
@@ -435,7 +436,7 @@ struct monst *mtmp;
                 continue;
             /* use trap if it's the correct type */
             if ((t->ttyp == TRAPDOOR || t->ttyp == HOLE)
-                && !isFloater(pmid4mon(mtmp))
+                && !isFloater(pmid)
                 && !mtmp->isshk && !mtmp->isgd && !mtmp->ispriest
                 && canYouFallThroughCurrentLevel()) {
                 trapx = xx;
@@ -450,10 +451,10 @@ struct monst *mtmp;
         }
     }
 
-    if (hasNoHands(pmid4mon(mtmp))) /* can't use objects */
+    if (hasNoHands(pmid)) /* can't use objects */
         goto botm;
 
-    if (isMercenary(pmid4mon(mtmp)) && (obj = m_carrying(mtmp, BUGLE)) != 0) {
+    if (isMercenary(pmid) && (obj = m_carrying(mtmp, BUGLE)) != 0) {
         int xx, yy;
         struct monst *mon;
 
@@ -464,9 +465,11 @@ struct monst *mtmp;
         for (xx = x - 3; xx <= x + 3; xx++) {
             for (yy = y - 3; yy <= y + 3; yy++) {
                 if (!isok(xx, yy) || (xx == x && yy == y))
+		{
                     continue;
-                if ((mon = m_at(xx, yy)) != 0 && isMercenary(pmid4mon(mon))
-                    && mon->data != &mons[PM_GUARD]
+		}
+                if ((mon = m_at(xx, yy)) != 0 && isMercenary(pmid)
+                    && (pmid != PM_GUARD)
                     && (mon->msleeping || !mon->mcanmove)) {
                     m.defensive = obj;
                     m.has_defense = MUSE_BUGLE;
@@ -501,14 +504,14 @@ struct monst *mtmp;
             break;
         if (obj->otyp == WAN_DIGGING && obj->spe > 0 && !stuck && !t
             && !mtmp->isshk && !mtmp->isgd && !mtmp->ispriest
-            && !isFloater(pmid4mon(mtmp))
+            && !isFloater(pmid)
             /* monsters digging in Sokoban can ruin things */
             && !Sokoban
             /* digging wouldn't be effective; assume they know that */
             && !(levl[x][y].wall_info & W_NONDIGGABLE)
             && !(areYouOnBottomLevel() || areYouInEndgame())
             && !(is_ice(x, y) || is_pool(x, y) || is_lava(x, y))
-            && !(mtmp->data == &mons[PM_VLAD_THE_IMPALER]
+            && !((pmid == PM_VLAD_THE_IMPALER)
                  && areYouOnAVladsTowerLevel())) {
             m.defensive = obj;
             m.has_defense = MUSE_WAN_DIGGING;
@@ -532,7 +535,7 @@ struct monst *mtmp;
         }
         nomore(MUSE_SCR_TELEPORTATION);
         if (obj->otyp == SCR_TELEPORTATION && mtmp->mcansee
-            && hasEyes(pmid4mon(mtmp))
+            && hasEyes(pmid)
             && (!obj->cursed || (!(mtmp->isshk && inhishop(mtmp))
                                  && !mtmp->isgd && !mtmp->ispriest))) {
             /* see WAN_TELEPORTATION case above */
@@ -543,7 +546,7 @@ struct monst *mtmp;
             }
         }
 
-        if (mtmp->data != &mons[PM_PESTILENCE]) {
+        if (pmid != PM_PESTILENCE) {
             nomore(MUSE_POT_FULL_HEALING);
             if (obj->otyp == POT_FULL_HEALING) {
                 m.defensive = obj;
@@ -595,6 +598,7 @@ int
 use_defensive(mtmp)
 struct monst *mtmp;
 {
+    int pmid = pmid4mon(mtmp);
     int i, fleetim, how = 0;
     struct obj *otmp = m.defensive;
     boolean vis, vismon, oseen;
@@ -741,7 +745,7 @@ struct monst *mtmp;
             pline("%s has made a hole in the %s.", Monnam(mtmp),
                   surface(mtmp->mx, mtmp->my));
             pline("%s %s through...", Monnam(mtmp),
-                  isFlyer(pmid4mon(mtmp)) ? "dives" : "falls");
+                  isFlyer(pmid) ? "dives" : "falls");
         } else if (!youAreDeaf())
             You_hear("%s crash through the %s.", something,
                      surface(mtmp->mx, mtmp->my));
@@ -838,7 +842,7 @@ struct monst *mtmp;
             struct trap *t = t_at(trapx, trapy);
 
             pline("%s %s into a %s!", Monnam(mtmp),
-                  makeplural(locomotionVerb(pmid4mon(mtmp), "jump")),
+                  makeplural(locomotionVerb(pmid, "jump")),
                   t->ttyp == TRAPDOOR ? "trap door" : "hole");
             if (levl[trapx][trapy].typ == SCORR) {
                 levl[trapx][trapy].typ = CORR;
@@ -930,7 +934,7 @@ struct monst *mtmp;
         m_flee(mtmp);
         if (vis) {
             pline("%s %s onto a teleport trap!", Monnam(mtmp),
-                  makeplural(locomotionVerb(pmid4mon(mtmp), "jump")));
+                  makeplural(locomotionVerb(pmid, "jump")));
             seetrap(t_at(trapx, trapy));
         }
         /*  don't use rloc_to() because worm tails must "move" */
@@ -1195,15 +1199,6 @@ struct monst *mtmp;
             m.offensive = obj;
             m.has_offense = MUSE_SCR_EARTH;
         }
-#if 0
-        nomore(MUSE_SCR_FIRE);
-        if (obj->otyp == SCR_FIRE && resists_fire(mtmp)
-            && dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) <= 2
-            && mtmp->mcansee && hasEyes(mtmp->data)) {
-            m.offensive = obj;
-            m.has_offense = MUSE_SCR_FIRE;
-        }
-#endif /* 0 */
     }
     return (boolean) !!m.has_offense;
 #undef nomore
@@ -2122,6 +2117,7 @@ struct monst *mon;
 const char *str;
 {
     struct obj *orefl = which_armor(mon, W_ARMS);
+    int pmid = pmid4mon(mon);
 
     if (orefl && orefl->otyp == SHIELD_OF_REFLECTION) {
         if (str) {
@@ -2147,8 +2143,8 @@ const char *str;
         if (str)
             pline(str, s_suffix(mon_nam(mon)), "armor");
         return TRUE;
-    } else if (mon->data == &mons[PM_SILVER_DRAGON]
-               || mon->data == &mons[PM_CHROMATIC_DRAGON]) {
+    } else if ((pmid == PM_SILVER_DRAGON)
+               || (pmid == PM_CHROMATIC_DRAGON)) {
         /* Silver dragons only reflect when mature; babies do not */
         if (str)
             pline(str, s_suffix(mon_nam(mon)), "scales");
@@ -2273,10 +2269,12 @@ boolean stoning;
         else
             pline("%s seems limber!", Monnam(mon));
     }
+
+    int pmid = pmid4mon(mon);
     if (lizard && (mon->mconf || mon->mstun)) {
         mon->mconf = 0;
         mon->mstun = 0;
-        if (vis && !isBat(pmid4mon(mon)) && mon->data != &mons[PM_STALKER])
+        if (vis && !isBat(pmid) && (pmid != PM_STALKER))
             pline("%s seems steadier now.", Monnam(mon));
     }
     if (mon->mtame && !mon->isminion && nutrit > 0) {

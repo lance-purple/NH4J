@@ -126,8 +126,9 @@ struct monst *mtmp;
 
     /* creatures who are directly resistant to magical scaring:
      * Rodney, lawful minions, angels, the Riders */
-    if (mtmp->iswiz || isLawfulMinion(pmid4mon(mtmp)) || mtmp->data == &mons[PM_ANGEL]
-        || isRiderOfTheApocalypse(pmid4mon(mtmp)))
+    int pmid = pmid4mon(mtmp);
+    if (mtmp->iswiz || isLawfulMinion(pmid) || (pmid == PM_ANGEL)
+        || isRiderOfTheApocalypse(pmid))
         return FALSE;
 
     /* should this still be true for defiled/molochian altars? */
@@ -154,7 +155,7 @@ struct monst *mtmp;
                 || (youAppearDisplaced() && mtmp->mux == x && mtmp->muy == y))
             && !(mtmp->isshk || mtmp->isgd || !mtmp->mcansee
                  || mtmp->mpeaceful || mc == S_HUMAN
-                 || mtmp->data == &mons[PM_MINOTAUR]
+                 || (pmid == PM_MINOTAUR)
                  || areYouInHell() || areYouInEndgame()));
 }
 
@@ -198,15 +199,13 @@ register struct monst *mtmp;
      *  Aggravate or mon is (dog or human) or
      *      (1/7 and mon is not mimicing furniture or object)
      */
-    int mc = monsterClass(pmid4mon(mtmp));
+    int pmid = pmid4mon(mtmp);
+    int mc = monsterClass(pmid);
 
     if (couldsee(mtmp->mx, mtmp->my) && distanceSquaredToYou(mtmp->mx, mtmp->my) <= 100
-        && (!youAreStealthy() || (mtmp->data == &mons[PM_ETTIN] && rn2(10)))
+        && (!youAreStealthy() || ((pmid == PM_ETTIN) && rn2(10)))
         && (!(mc == S_NYMPH
-              || mtmp->data == &mons[PM_JABBERWOCK]
-#if 0 /* DEFERRED */
-              || mtmp->data == &mons[PM_VORPAL_JABBERWOCK]
-#endif
+              || (pmid == PM_JABBERWOCK)
               || mc == S_LEPRECHAUN) || !rn2(50))
         && (youAggravateMonsters()
             || (mc == S_DOG || mc == S_HUMAN)
@@ -734,7 +733,7 @@ register int after;
         if (i == 1)
             return 0; /* still in trap, so didn't move */
     }
-    int pmid = pmid4mon(mtmp); /* mintrap() can change mtmp->data -dlc */
+    int pmid = pmid4mon(mtmp); /* mintrap() can change pmid -dlc */
 
     if (mtmp->meating) {
         mtmp->meating--;
@@ -1460,7 +1459,7 @@ register struct monst *mtmp;
     if (notseen || underwater()) {
         /* Xorns can smell quantities of valuable metal
             like that in solid gold coins, treat as seen */
-        if ((mtmp->data == &mons[PM_XORN]) && umoney && !underwater())
+        if (((pmid4mon(mtmp) == PM_XORN)) && umoney && !underwater())
             disp = 0;
         else
             disp = 1;

@@ -407,8 +407,8 @@ register struct monst *magr, *mdef;
                 tmp -= hitval(otmp, mdef);
             if (strike) {
                 res[i] = hitmm(magr, mdef, mattk);
-                if ((mdef->data == &mons[PM_BLACK_PUDDING]
-                     || mdef->data == &mons[PM_BROWN_PUDDING]) && otmp
+                if (((defPmid == PM_BLACK_PUDDING)
+                     || (defPmid == PM_BROWN_PUDDING)) && otmp
                     && objects[otmp->otyp].oc_material == IRON
                     && mdef->mhp > 1
                     && !mdef->mcan) {
@@ -572,7 +572,8 @@ const struct Attack mattk;
         return MM_MISS;
     }
     /* call mon_reflects 2x, first test, then, if visible, print message */
-    if (magr->data == &mons[PM_MEDUSA] && mon_reflects(mdef, (char *) 0)) {
+    int pmidAgr = pmid4mon(magr);
+    if ((pmidAgr == PM_MEDUSA) && mon_reflects(mdef, (char *) 0)) {
         if (canseemon(mdef))
             (void) mon_reflects(mdef, "The gaze is reflected away by %s %s.");
         if (mdef->mcansee) {
@@ -582,7 +583,7 @@ const struct Attack mattk;
                         magr, "The gaze is reflected away by %s %s.");
                 return MM_MISS;
             }
-            if (mdef->minvis && !perceivesTheInvisible(pmid4mon(magr))) {
+            if (mdef->minvis && !perceivesTheInvisible(pmidAgr)) {
                 if (canseemon(magr)) {
                     pline(
                       "%s doesn't seem to notice that %s gaze was reflected.",

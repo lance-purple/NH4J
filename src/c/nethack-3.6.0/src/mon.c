@@ -47,9 +47,15 @@ struct monst *mtmp;
 const char *msg;
 {
     if (DEADMONSTER(mtmp))
+    {
         return;
-    if (mtmp->data < &mons[LOW_PM] || mtmp->data >= &mons[NUMMONS])
+    }
+
+    int pmid = pmid4mon(mtmp);
+    if ((pmid < LOW_PM) || (pmid >= NUMMONS))
+    {
         impossible("illegal mon data (%s)", msg);
+    }
 }
 
 void
@@ -447,13 +453,13 @@ register struct monst *mtmp;
      * keep going down, and when it gets to 1 hit point the clone
      * function will fail.
      */
-    if (mtmp->data == &mons[PM_GREMLIN] && (inpool || infountain) && rn2(3)) {
+    if ((pmid == PM_GREMLIN) && (inpool || infountain) && rn2(3)) {
         if (split_mon(mtmp, (struct monst *) 0))
             dryup(mtmp->mx, mtmp->my, FALSE);
         if (inpool)
             water_damage_chain(mtmp->minvent, FALSE);
         return 0;
-    } else if (mtmp->data == &mons[PM_IRON_GOLEM] && inpool && !rn2(5)) {
+    } else if ((pmid == PM_IRON_GOLEM) && inpool && !rn2(5)) {
         int dam = d(2, 6);
 
         if (cansee(mtmp->mx, mtmp->my))
@@ -480,7 +486,7 @@ register struct monst *mtmp;
             if (!resists_fire(mtmp)) {
                 if (cansee(mtmp->mx, mtmp->my))
                     pline("%s %s.", Monnam(mtmp),
-                          mtmp->data == &mons[PM_WATER_ELEMENTAL]
+                          (pmid == PM_WATER_ELEMENTAL)
                               ? "boils away"
                               : "burns to a crisp");
                 mondead(mtmp);
@@ -762,13 +768,13 @@ register struct monst *mtmp;
     for (otmp = level.objects[mtmp->mx][mtmp->my]; otmp;
          otmp = otmp->nexthere) {
         /* Don't eat indigestible/choking/inappropriate objects */
-        if ((mtmp->data == &mons[PM_RUST_MONSTER] && !is_rustprone(otmp))
+        if (((pmid4mon(mtmp) == PM_RUST_MONSTER) && !is_rustprone(otmp))
             || (otmp->otyp == AMULET_OF_STRANGULATION)
             || (otmp->otyp == RIN_SLOW_DIGESTION))
             continue;
         if (is_metallic(otmp) && !obj_resists(otmp, 5, 95)
             && touch_artifact(otmp, mtmp)) {
-            if (mtmp->data == &mons[PM_RUST_MONSTER] && otmp->oerodeproof) {
+            if ((pmid4mon(mtmp) == PM_RUST_MONSTER) && otmp->oerodeproof) {
                 if (canseemon(mtmp) && flags.verbose) {
                     pline("%s eats %s!", Monnam(mtmp),
                           distant_name(otmp, doname));
@@ -1412,9 +1418,12 @@ struct monst *magr, /* monster that is currently deciding where to move */
 {
     /* supposedly purple worms are attracted to shrieking because they
        like to eat shriekers, so attack the latter when feasible */
-    if (magr->data == &mons[PM_PURPLE_WORM]
-        && mdef->data == &mons[PM_SHRIEKER])
+    if ((pmid4mon(magr) == PM_PURPLE_WORM)
+        && (pmid4mon(mdef) == PM_SHRIEKER))
+    {
         return ALLOW_M | ALLOW_TM;
+    }
+
     /* Various other combinations such as dog vs cat, cat vs rat, and
        elf vs orc have been suggested.  For the time being we don't
        support those. */
@@ -1457,9 +1466,12 @@ int x, y;
 {
     int distance = dist2(mon->mx, mon->my, x, y);
 
-    if (distance == 2 && NODIAG(mon->data - mons))
-        return 0;
-    return (boolean) (distance < 3);
+    if (distance == 2 && NODIAG(pmid4mon(mon)))
+    {
+        return FALSE;
+    }
+
+    return (distance < 3);
 }
 
 /* really free dead monsters */
@@ -1666,7 +1678,7 @@ struct monst *mon;
 STATIC_OVL void
 m_detach(mtmp, oldPmid)
 struct monst *mtmp;
-int oldPmid; /* reflects mtmp->data _prior_ to mtmp's death */
+int oldPmid; /* reflects pmid _prior_ to mtmp's death */
 {
     if (mtmp == context.polearm.hitmon)
         context.polearm.hitmon = 0;
@@ -1801,10 +1813,14 @@ register struct monst *mtmp;
                 }
             }
             changeChameleonToType(mtmp, mndx, FALSE, FALSE);
-            if (mtmp->data == &mons[mndx])
+            if (pmid4mon(mtmp) == mndx)
+	    {
                 mtmp->cham = NON_PM;
+	    }
             else
+	    {
                 mtmp->cham = mndx;
+	    }
             if (canspotmon(mtmp)) {
                 pline(buf, a_monnam(mtmp));
                 vamp_rise_msg = TRUE;
@@ -1895,7 +1911,7 @@ register struct monst *mtmp;
         nemdead();
     } 
 
-    if (mtmp->data == &mons[PM_MEDUSA])
+    if (pmid4mon(mtmp) == PM_MEDUSA)
     {
         setAchieved(ACHIEVEMENT_KILLED_MEDUSA, TRUE);
     }
@@ -2505,7 +2521,7 @@ struct monst *mtmp;
         }
         aggravate();
     }
-    if (mtmp->data == &mons[PM_MEDUSA]) {
+    if (pmid == PM_MEDUSA) {
         register int i;
 
         for (i = 0; i < monsterAttacks(pmid); i++) {
@@ -2544,7 +2560,7 @@ struct monst *mtmp;
 
     /* attacking your own quest leader will anger his or her guardians */
     if (!context.mon_moving /* should always be the case here */
-        && mtmp->data == &mons[quest_info(MS_LEADER)]) {
+        && (pmid4mon(mtmp) == quest_info(MS_LEADER))) {
         struct monst *mon;
         int q_guardian = quest_info(MS_GUARDIAN);
         int got_mad = 0;
@@ -3497,13 +3513,14 @@ register struct monst *mon;
 int damtype, dam;
 {
     int heal = 0, slow = 0;
+    int pmid = pmid4mon(mon);
 
-    if (mon->data == &mons[PM_FLESH_GOLEM]) {
+    if (pmid == PM_FLESH_GOLEM) {
         if (damtype == AD_ELEC)
             heal = (dam + 5) / 6;
         else if (damtype == AD_FIRE || damtype == AD_COLD)
             slow = 1;
-    } else if (mon->data == &mons[PM_IRON_GOLEM]) {
+    } else if (pmid == PM_IRON_GOLEM) {
         if (damtype == AD_ELEC)
             slow = 1;
         else if (damtype == AD_FIRE)

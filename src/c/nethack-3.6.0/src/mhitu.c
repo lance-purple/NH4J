@@ -533,8 +533,9 @@ register struct monst *mtmp;
 
     /*  Special demon handling code */
     if ((mtmp->cham == NON_PM) && isDemon(pmid) && !range2
-        && mtmp->data != &mons[PM_BALROG] && mtmp->data != &mons[PM_SUCCUBUS]
-        && mtmp->data != &mons[PM_INCUBUS])
+        && (pmid != PM_BALROG)
+	&& (pmid != PM_SUCCUBUS)
+        && (pmid != PM_INCUBUS))
         if (!mtmp->mcan && !rn2(13))
             (void) msummon(mtmp);
 
@@ -821,9 +822,10 @@ struct monst *mon;
     long wearmask;
     int armpro, mc = 0;
     boolean is_you = (mon == &youmonst);
+    int pmid = pmid4mon(mon);
     boolean gotprot = is_you ? (yourExtrinsic(PROTECTION) != 0L)
                              /* high priests have innate protection */
-                             : (mon->data == &mons[PM_HIGH_PRIEST]);
+                             : (pmid == PM_HIGH_PRIEST);
 
     for (o = is_you ? invent : mon->minvent; o; o = o->nobj) {
         /* a_can field is only applicable for armor (which must be worn) */
@@ -853,7 +855,7 @@ struct monst *mon;
            protection is too easy); it confers minimum mc 1 instead of 0 */
         if ((is_you && ((yourIntrinsic(PROTECTION) && blessings()) || armorBonusFromProtectionSpell()))
             /* aligned priests and angels have innate intrinsic Protection */
-            || (mon->data == &mons[PM_ALIGNED_PRIEST] || isMinion(pmid4mon(mon))))
+            || ((pmid == PM_ALIGNED_PRIEST) || isMinion(pmid)))
             mc = 1;
     }
     return mc;
@@ -929,7 +931,7 @@ register const struct Attack mattk;
                 }
             } else if (u.ustuck == mtmp) {
                 exercise(A_STR, FALSE);
-                You("are being %s.", (mtmp->data == &mons[PM_ROPE_GOLEM])
+                You("are being %s.", (pmid == PM_ROPE_GOLEM)
                                          ? "choked"
                                          : "crushed");
             }
@@ -1799,7 +1801,7 @@ register const struct Attack mattk;
         break;
     case AD_PHYS:
         physical_damage = TRUE;
-        if (mtmp->data == &mons[PM_FOG_CLOUD]) {
+        if (pmid4mon(mtmp) == PM_FOG_CLOUD) {
             You("are laden with moisture and %s",
                 isFlaming(pmid4you())
                     ? "are smoldering out!"
@@ -2043,19 +2045,21 @@ register const struct Attack mattk;
     if (youAreHallucinating() && rn2(4))
         cancelled = TRUE;
 
+    int pmid = pmid4mon(mtmp);
+
     switch (mattk.damageType) {
     case AD_STON:
         if (cancelled || !mtmp->mcansee) {
             if (!canseemon(mtmp))
                 break; /* silently */
             pline("%s %s.", Monnam(mtmp),
-                  (mtmp->data == &mons[PM_MEDUSA] && mtmp->mcan)
+                  ((pmid == PM_MEDUSA) && mtmp->mcan)
                       ? "doesn't look all that ugly"
                       : "gazes ineffectually");
             break;
         }
         if (youCanReflectAttacks() && couldsee(mtmp->mx, mtmp->my)
-            && mtmp->data == &mons[PM_MEDUSA]) {
+            && (pmid == PM_MEDUSA)) {
             /* hero has line of sight to Medusa and she's not blind */
             boolean useeit = canseemon(mtmp);
 
@@ -2139,7 +2143,7 @@ register const struct Attack mattk;
                 already = (mtmp->mcansee == 0);
                 /* Archons gaze every round; we don't want cancelled ones
                    giving the "seems puzzled/dazzled" message that often */
-                if (mtmp->mcan && mtmp->data == &mons[PM_ARCHON] && rn2(5))
+                if (mtmp->mcan && (pmid == PM_ARCHON) && rn2(5))
                     react = -1;
             } else {
                 int blnd = d(mattk.dice, mattk.diceSides);
@@ -2299,7 +2303,7 @@ doseduce(mon)
 register struct monst *mon;
 {
     register struct obj *ring, *nring;
-    boolean fem = (mon->data == &mons[PM_SUCCUBUS]); /* otherwise incubus */
+    boolean fem = (pmid4mon(mon) == PM_SUCCUBUS); /* otherwise incubus */
     int tried_gloves = 0;
     char qbuf[QBUFSZ];
 

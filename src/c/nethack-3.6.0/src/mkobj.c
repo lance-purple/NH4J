@@ -1526,8 +1526,12 @@ struct monst *mtmp;
 
         *mtmp2 = *mtmp;
         mtmp2->mextra = (struct mextra *) 0;
-        if (mtmp->data)
-            mtmp2->mnum = pmid4mon(mtmp);
+	int pmid = pmid4mon(mtmp);
+        if (NON_PM != pmid)
+	{
+            mtmp2->mnum = pmid;
+	}
+
         /* invalidate pointers */
         /* m_id is needed to know if this is a revived quest leader */
         /* but m_id must be cleared when loading bones */

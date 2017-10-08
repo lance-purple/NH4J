@@ -804,9 +804,11 @@ skip0:
             x = somex(croom);
             y = somey(croom);
             tmonst = makeMonsterOfType(NON_PM, x, y, NO_MM_FLAGS);
-            if (tmonst && tmonst->data == &mons[PM_GIANT_SPIDER]
+            if (tmonst && (pmid4mon(tmonst) == PM_GIANT_SPIDER)
                 && !occupied(x, y))
+	    {
                 (void) maketrap(x, y, WEB);
+	    }
         }
         /* put traps and mimics inside */
         x = 8 - (level_difficulty() / 6);

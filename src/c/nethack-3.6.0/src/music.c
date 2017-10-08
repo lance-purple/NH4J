@@ -180,8 +180,11 @@ struct monst *bugler; /* monster that played instrument */
 
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
         if (DEADMONSTER(mtmp))
+	{
             continue;
-        if (isMercenary(pmid4mon(mtmp)) && mtmp->data != &mons[PM_GUARD]) {
+	}
+	int pmid = pmid4mon(mtmp);
+        if (isMercenary(pmid) && (pmid != PM_GUARD)) {
             mtmp->mpeaceful = mtmp->msleeping = mtmp->mfrozen = 0;
             mtmp->mcanmove = 1;
             mtmp->mstrategy &= ~STRAT_WAITMASK;
