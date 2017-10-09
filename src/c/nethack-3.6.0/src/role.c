@@ -811,24 +811,43 @@ int
 str2role(str)
 const char *str;
 {
-    int i, len;
-
     /* Is str valid? */
     if (!str || !str[0])
         return ROLE_NONE;
 
     /* Match as much of str as is provided */
-    len = strlen(str);
-    for (i = 0; roles[i].name.m; i++) {
+    int len = strlen(str);
+    for (int i = 0, n = numberOfKnownRoles(); i < n; i++) {
+	const struct Role *role = &roles[i];
+	javaString rnam;
+	boolean matches;
+
         /* Does it match the male name? */
-        if (!strncmpi(str, roles[i].name.m, len))
+	rnam = roleNameAsMale(role);
+	matches = (!strncmpi(str, rnam.c_str, len));
+	releaseJavaString(rnam);
+
+        if (matches)
+	{
             return i;
+	}
+
         /* Or the female name? */
-        if (roles[i].name.f && !strncmpi(str, roles[i].name.f, len))
-            return i;
+	if (roleNameHasGender(role)) {
+	    rnam = roleNameAsFemale(role);
+	    matches = (!strncmpi(str, rnam.c_str, len));
+	    releaseJavaString(rnam);
+            if (matches)
+	    {
+                return i;
+	    }
+        }
+
         /* Or the filecode? */
         if (!strcmpi(str, roles[i].filecode))
+	{
             return i;
+	}
     }
 
     if ((len == 1 && (*str == '*' || *str == '@'))
@@ -1515,9 +1534,11 @@ int buflen, rolenum, racenum, gendnum, alignnum;
             /* if role specified, and multiple choice of genders for it,
                and name of role itself does not distinguish gender */
             if ((rolenum != ROLE_NONE) && (gendercount > 1)
-                && !roles[rolenum].name.f) {
+                && !roleNameHasGender(&roles[rolenum])) {
                 if (donefirst)
+		{
                     Strcat(buf, " ");
+		}
                 Strcat(buf, genders[gendnum].adj);
                 donefirst = TRUE;
             }
@@ -1565,18 +1586,26 @@ int buflen, rolenum, racenum, gendnum, alignnum;
     if (validrole(rolenum)) {
         if (donefirst)
             Strcat(buf, " ");
+
+        javaString femaleRoleName = roleNameAsFemale(&roles[rolenum]);
+        javaString maleRoleName   = roleNameAsMale(&roles[rolenum]);
+
         if (gendnum != ROLE_NONE) {
-            if (gendnum == 1 && roles[rolenum].name.f)
-                Strcat(buf, roles[rolenum].name.f);
+            if (gendnum == 1 && roleNameHasGender(&roles[rolenum]))
+	    {
+                Strcat(buf, femaleRoleName.c_str);
+	    }
             else
-                Strcat(buf, roles[rolenum].name.m);
+	    {
+                Strcat(buf, maleRoleName.c_str);
+	    }
         } else {
-            if (roles[rolenum].name.f) {
-                Strcat(buf, roles[rolenum].name.m);
+            if (roleNameHasGender(&roles[rolenum])) {
+                Strcat(buf, maleRoleName.c_str);
                 Strcat(buf, "/");
-                Strcat(buf, roles[rolenum].name.f);
+                Strcat(buf, femaleRoleName.c_str);
             } else
-                Strcat(buf, roles[rolenum].name.m);
+                Strcat(buf, maleRoleName.c_str);
         }
         donefirst = TRUE;
     } else if (rolenum == ROLE_NONE) {
@@ -1769,20 +1798,43 @@ winid where;
     Strcat(buf, (which == RS_NAME) ? choosing : !*plname ? not_yet : plname);
     putstr(where, 0, buf);
     Sprintf(buf, "%12s ", "role:");
-    Strcat(buf, (which == RS_ROLE) ? choosing : (r == ROLE_NONE)
-                                                    ? not_yet
-                                                    : (r == ROLE_RANDOM)
-                                                          ? rand_choice
-                                                          : roles[r].name.m);
-    if (r >= 0 && roles[r].name.f) {
+
+    if (which == RS_ROLE) {
+        Strcat(buf, choosing);
+    }
+    else if (r == ROLE_NONE)
+    {
+        Strcat(buf, not_yet);
+    }
+    else if (r == ROLE_RANDOM)
+    {
+        Strcat(buf, rand_choice);
+    }
+    else
+    {
+        javaString roleName = roleNameAsMale(&roles[r]);
+        Strcat(buf, roleName.c_str);
+	releaseJavaString(roleName);
+    }
+
+    if (r >= 0 && roleNameHasGender(&roles[r])) {
         /* distinct female name [caveman/cavewoman, priest/priestess] */
         if (g == 1)
+	{
             /* female specified; replace male role name with female one */
-            Sprintf(index(buf, ':'), ": %s", roles[r].name.f);
+	    javaString femaleRoleName = roleNameAsFemale(&roles[r]);
+            Sprintf(index(buf, ':'), ": %s", femaleRoleName.c_str);
+	    releaseJavaString(femaleRoleName);
+	}
         else if (g < 0)
+	{
             /* gender unspecified; append slash and female role name */
-            Sprintf(eos(buf), "/%s", roles[r].name.f);
+	    javaString femaleRoleName = roleNameAsFemale(&roles[r]);
+            Sprintf(eos(buf), "/%s", femaleRoleName.c_str);
+	    releaseJavaString(femaleRoleName);
+	}
     }
+
     putstr(where, 0, buf);
     Sprintf(buf, "%12s ", "race:");
     Strcat(buf, (which == RS_RACE) ? choosing : (c == ROLE_NONE)
@@ -1989,7 +2041,10 @@ role_init()
 
     /* We now have a valid role index.  Copy the role name back. */
     /* This should become OBSOLETE */
-    Strcpy(pl_character, roles[flags.initrole].name.m);
+    javaString maleRoleName = roleNameAsMale(&roles[flags.initrole]);
+    Strcpy(pl_character, maleRoleName.c_str);
+    releaseJavaString(maleRoleName);
+
     pl_character[PL_CSIZ - 1] = '\0';
 
     /* Check for a valid race */
