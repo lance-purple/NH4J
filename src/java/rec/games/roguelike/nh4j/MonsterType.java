@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 public class MonsterType {
 
-	private static HashMap<Integer, MonsterType> monsterTypesByPMID = new HashMap<>();;
+	private static HashMap<Integer, MonsterType> monsterTypesByPMID = new HashMap<>();
 
 	static final int FREQUENCY_MASK = 0x7;
 	static final int LEAVES_NO_CORPSE = 0x10;

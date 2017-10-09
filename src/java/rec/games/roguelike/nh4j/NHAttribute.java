@@ -15,6 +15,11 @@ public enum NHAttribute {
 		this.index = index;
 	}
 	
+	int index()
+	{
+		return index;
+	}
+	
 	public static NHAttribute[] all() {
 		return values();
 	}

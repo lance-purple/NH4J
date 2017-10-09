@@ -631,16 +631,18 @@ boolean new_game; /* false => restoring an old game */
     *buf = '\0';
     if (new_game || originalAlignmentBase() != currentAlignmentBase())
         Sprintf(eos(buf), " %s", align_str(originalAlignmentBase()));
-    if (!urole.name.f
+    if (!roleNameHasGender(&urole)
         && (new_game
                 ? (urole.allow & ROLE_GENDMASK) == (ROLE_MALE | ROLE_FEMALE)
                 : currentgend != flags.initgend))
         Sprintf(eos(buf), " %s", genders[currentgend].adj);
 
+    javaString roleName = (currentgend && roleNameHasGender(&urole))
+	    ? roleNameAsFemale(&urole) : roleNameAsMale(&urole);
     pline(new_game ? "%s %s, welcome to NetHack!  You are a%s %s %s."
                    : "%s %s, the%s %s %s, welcome back to NetHack!",
-          Hello((struct monst *) 0), plname, buf, urace.adj,
-          (currentgend && urole.name.f) ? urole.name.f : urole.name.m);
+          Hello((struct monst *) 0), plname, buf, urace.adj, roleName.c_str);
+    releaseJavaString(roleName);
 }
 
 #ifdef POSITIONBAR

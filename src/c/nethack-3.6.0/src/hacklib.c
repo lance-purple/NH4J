@@ -136,6 +136,12 @@ boolean javaGetBooleanFromInt(const char* classname, const char* methodname, int
     return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method, i);
 }
 
+boolean javaGetBooleanFromIntAndInt(const char* classname, const char* methodname, int i, int j) {
+    jclass you_class = getJavaClass(classname);
+    jmethodID method = getStaticMethod(you_class, methodname, "(II)Z");
+    return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method, i, j);
+}
+
 boolean javaGetBooleanFromIntAndLong(const char* classname, const char* methodname, int i, long j) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "(IJ)Z");
@@ -147,6 +153,12 @@ jstring javaGetStringFromInt(const char* classname, const char* methodname, int 
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "(I)Ljava/lang/String;");
     return (*jni_env)->CallStaticObjectMethod(jni_env, you_class, method, i);
+}
+
+jstring javaGetStringFromIntAndInt(const char* classname, const char* methodname, int i, int j) {
+    jclass you_class = getJavaClass(classname);
+    jmethodID method = getStaticMethod(you_class, methodname, "(II)Ljava/lang/String;");
+    return (*jni_env)->CallStaticObjectMethod(jni_env, you_class, method, i, j);
 }
 
 void javaSetInt(const char* classname, const char* methodname, int v) {
@@ -2672,6 +2684,12 @@ extern javaString monsterTypeName(int id) {
    return result;
 }
 
+extern javaString javaStringFromC(const char* c) {
+  javaString j = NO_JAVA_STRING;
+  j.c_str = c;
+  return j;
+}
+
 extern void releaseJavaString(javaString s) {
   if (NULL != s.j_str) {
     (*jni_env)->ReleaseStringUTFChars(jni_env, s.j_str, s.c_str);
@@ -2831,6 +2849,37 @@ extern int monsterRandomizerChoices(int pmid) {
 
 extern void setMonsterRandomizerChoices(int pmid, int c) {
     return javaSetIntFromInt(MONSTER_RANDOMIZER_CLASS, "setChoices", pmid, c);
+}
+
+extern int numberOfKnownRoles() {
+    return javaGetInt(ADVENTURER_ROLE_CLASS, "numberOfKnownRoles");
+}
+
+static int roleID(const struct Role* role) {
+    if (!role) { return NON_PM; }
+    return role->malenum;
+}
+
+extern boolean roleHasName(const struct Role *role, int gender) {
+    return javaGetBooleanFromIntAndInt(ADVENTURER_ROLE_CLASS, "roleHasName", roleID(role), gender);
+}
+
+extern boolean roleNameHasGender(const struct Role *role) {
+    return javaGetBooleanFromInt(ADVENTURER_ROLE_CLASS, "roleNameHasGender", roleID(role));
+}
+
+extern javaString roleNameAsMale(const struct Role *role) {
+  jstring j_str = javaGetStringFromIntAndInt(ADVENTURER_ROLE_CLASS, "roleName", roleID(role), ROLE_MALE);
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
+}
+
+extern javaString roleNameAsFemale(const struct Role *role) {
+  jstring j_str = javaGetStringFromIntAndInt(ADVENTURER_ROLE_CLASS, "roleName", roleID(role), ROLE_FEMALE);
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
 }
 
 /*hacklib.c*/

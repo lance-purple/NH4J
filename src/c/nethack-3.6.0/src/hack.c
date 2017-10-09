@@ -2723,13 +2723,13 @@ maybe_wail()
 
     wailmsg = moves;
     if (Role_if(PM_WIZARD) || Race_if(PM_ELF) || Role_if(PM_VALKYRIE)) {
-        const char *who;
         int i, powercnt;
 
-        who = (Role_if(PM_WIZARD) || Role_if(PM_VALKYRIE)) ? urole.name.m
-                                                           : "Elf";
+        javaString who = (Role_if(PM_WIZARD) || Role_if(PM_VALKYRIE)) ?
+		            roleNameAsMale(&urole) : javaStringFromC("Elf");
+
         if (currentHitPoints() == 1) {
-            pline("%s is about to die.", who);
+            pline("%s is about to die.", who.c_str);
         } else {
             for (i = 0, powercnt = 0; i < SIZE(powers); ++i)
                 if (yourIntrinsicHasMask(powers[i], INTRINSIC))
@@ -2737,8 +2737,10 @@ maybe_wail()
 
             pline(powercnt >= 4 ? "%s, all your powers will be lost..."
                                 : "%s, your life force is running out.",
-                  who);
+                  who.c_str);
         }
+	releaseJavaString(who);
+
     } else {
         You_hear(currentHitPoints() == 1 ? "the wailing of the Banshee..."
                             : "the howling of the CwnAnnwn...");

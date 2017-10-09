@@ -13,6 +13,7 @@
 E JNIEnv* jni_env;
 E JavaVM* java_vm;
 
+#define ADVENTURER_ROLE_CLASS "rec/games/roguelike/nh4j/AdventurerRole"
 #define CONTEXT_CLASS "rec/games/roguelike/nh4j/Context"
 #define MONSTER_DATA_CLASS "rec/games/roguelike/nh4j/MonsterData"
 #define MONSTER_RANDOMIZER_CLASS "rec/games/roguelike/nh4j/MonsterRandomizer"
@@ -36,7 +37,10 @@ E int FDECL(pmid4you, ());
 E void FDECL(setPmid4you, (int));
 
 E javaString FDECL(monsterTypeName, (int));
+E javaString FDECL(javaStringFromC, (const char *));
 E void FDECL(releaseJavaString, (javaString));
+
+
 E int FDECL(monsterClass, (int));
 E int FDECL(monsterLevel, (int));
 E int FDECL(monsterDifficulty, (int));
@@ -2804,6 +2808,12 @@ E int FDECL(rne, (int));
 E int FDECL(rnz, (int));
 
 /* ### role.c ### */
+
+E int FDECL(numberOfKnownRoles, ());
+E boolean FDECL(roleHasName, (const struct Role *, int));
+E boolean FDECL(roleNameHasGender, (const struct Role *));
+E javaString FDECL(roleNameAsMale, (const struct Role *));
+E javaString FDECL(roleNameAsFemale, (const struct Role *));
 
 E boolean FDECL(validrole, (int));
 E boolean FDECL(validrace, (int, int));
