@@ -16,12 +16,12 @@ public class AdventurerRole {
 	}
 
 	private AdventurerRole named(String genericVersion) {
-		roleName = GenderedName.of(genericVersion);
+		roleName = GenderedName.of("u" + genericVersion + "u");
 		return this;
 	}
 
 	private AdventurerRole named(String maleVersion, String femaleVersion) {
-		roleName = GenderedName.of(maleVersion, femaleVersion);
+		roleName = GenderedName.of("m" + maleVersion + "m", "f" + femaleVersion + "f");
 		return this;
 	}
 	

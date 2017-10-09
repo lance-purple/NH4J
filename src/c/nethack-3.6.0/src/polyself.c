@@ -239,10 +239,19 @@ change_sex()
     if (already_polyd) /* poly'd: also change saved sex */
         setInherentlyFemale(!inherentlyFemale());
     max_rank_sz(); /* [this appears to be superfluous] */
-    if ((already_polyd ? inherentlyFemale() : flags.female) && urole.name.f)
-        Strcpy(pl_character, urole.name.f);
+
+    javaString roleName;
+    if ((already_polyd ? inherentlyFemale() : flags.female) && roleNameHasGender(&urole))
+    {
+        roleName = roleNameAsFemale(&urole);
+    }
     else
-        Strcpy(pl_character, urole.name.m);
+    {
+        roleName = roleNameAsMale(&urole);
+    }
+    Strcpy(pl_character, roleName.c_str);
+    releaseJavaString(roleName);
+
     setOriginalMonsterNumber( ((already_polyd ? inherentlyFemale() : flags.female)
                   && urole.femalenum != NON_PM)
                      ? urole.femalenum

@@ -1133,12 +1133,17 @@ int how;
     }
 
     if (!done_stopprint) {
-        Sprintf(pbuf, "%s %s the %s...", Goodbye(), plname,
-                (how != ASCENDED)
-                 ? (const char *) ((flags.female && urole.name.f)
-                                      ? urole.name.f
-                                      : urole.name.m)
-                 : (const char *) (flags.female ? "Demigoddess" : "Demigod"));
+	javaString yourRoleName;
+	if (how == ASCENDED) {
+            yourRoleName = (flags.female)
+                ? javaStringFromC("Demigoddess") : javaStringFromC("Demigod");
+	} else {
+            yourRoleName = (flags.female && roleNameHasGender(&urole))
+                ? roleNameAsFemale(&urole) : roleNameAsMale(&urole);
+	}
+
+        Sprintf(pbuf, "%s %s the %s...", Goodbye(), plname, yourRoleName.c_str);
+	releaseJavaString(yourRoleName);
         putstr(endwin, 0, pbuf);
         putstr(endwin, 0, "");
     }

@@ -1346,10 +1346,13 @@ int final; /* ENL_GAMEINPROGRESS:0, ENL_GAMEOVERALIVE, ENL_GAMEOVERDEAD */
     *tmpbuf = highc(*tmpbuf); /* same adjustment as bottom line */
     /* as in background_enlightenment, when poly'd we need to use the saved
        gender in inherentlyFemale rather than the current you-as-monster gender */
-    Sprintf(buf, "%s the %s's attributes:", tmpbuf,
-            ((areYouPolymorphed() ? inherentlyFemale() : flags.female) && urole.name.f)
-                ? urole.name.f
-                : urole.name.m);
+
+    javaString uroleName =
+            ((areYouPolymorphed() ? inherentlyFemale() : flags.female) && roleNameHasGender(&urole))
+                ? roleNameAsFemale(&urole)
+                : roleNameAsMale(&urole);
+    Sprintf(buf, "%s the %s's attributes:", tmpbuf, uroleName.c_str);
+    releaseJavaString(uroleName);
 
     en_win = create_nhwindow(NHW_MENU);
     /* title */
@@ -1385,15 +1388,12 @@ background_enlightenment(unused_mode, final)
 int unused_mode UNUSED;
 int final;
 {
-    const char *role_titl, *rank_titl;
     int innategend, difgend, difalgn;
     char buf[BUFSZ], tmpbuf[BUFSZ];
 
     /* note that if poly'd, we need to use inherentlyFemale instead of flags.female
        to access hero's saved gender-as-human/elf/&c rather than current one */
     innategend = (areYouPolymorphed() ? inherentlyFemale() : flags.female) ? 1 : 0;
-    role_titl = (innategend && urole.name.f) ? urole.name.f : urole.name.m;
-    rank_titl = rank_of(currentExperienceLevel(), Role_switch, innategend);
 
     putstr(en_win, 0, ""); /* separator after title */
     putstr(en_win, 0, "Background:");
@@ -1421,22 +1421,30 @@ int final;
 
     /* report role; omit gender if it's redundant (eg, "female priestess") */
     tmpbuf[0] = '\0';
-    if (!urole.name.f
+    if (!roleNameHasGender(&urole)
         && ((urole.allow & ROLE_GENDMASK) == (ROLE_MALE | ROLE_FEMALE)
             || innategend != flags.initgend))
         Sprintf(tmpbuf, "%s ", genders[innategend].adj);
     buf[0] = '\0';
     if (areYouPolymorphed())
+    {
         Strcpy(buf, "actually "); /* "You are actually a ..." */
-    if (!strcmpi(rank_titl, role_titl)) {
+    }
+
+    javaString role_titl = (innategend && roleNameHasGender(&urole))
+	    ? roleNameAsFemale(&urole) : roleNameAsMale(&urole);
+    const char* rank_titl = rank_of(currentExperienceLevel(), Role_switch, innategend);
+
+    if (!strcmpi(rank_titl, role_titl.c_str)) {
         /* omit role when rank title matches it */
         Sprintf(eos(buf), "%s, level %d %s%s", an(rank_titl), currentExperienceLevel(),
                 tmpbuf, urace.noun);
     } else {
         Sprintf(eos(buf), "%s, a level %d %s%s %s", an(rank_titl), currentExperienceLevel(),
-                tmpbuf, urace.adj, role_titl);
+                tmpbuf, urace.adj, role_titl.c_str);
     }
     you_are(buf, "");
+    releaseJavaString(role_titl);
 
     /* report alignment (bypass you_are() in order to omit ending period) */
     Sprintf(buf, " %s%s%s, %son a mission for %s",

@@ -152,16 +152,6 @@ int xlev;
     return (xlev <= 2) ? 0 : (xlev <= 30) ? ((xlev + 2) / 4) : 8;
 }
 
-#if 0 /* not currently needed */
-/* convert rank index (0..8) to experience level (1..30) */
-int
-rank_to_xlev(rank)
-int rank;
-{
-    return (rank <= 0) ? 1 : (rank <= 8) ? ((rank * 4) - 2) : 30;
-}
-#endif
-
 const char *
 rank_of(lev, monnum, female)
 int lev;
@@ -169,17 +159,26 @@ short monnum;
 boolean female;
 {
     register const struct Role *role;
-    register int i;
+    boolean known = FALSE;
 
     /* Find the role */
-    for (role = roles; role->name.m; role++)
+    for (int i = 0, n = numberOfKnownRoles(); i < n; i++)
+    {
+        role = &roles[i];
         if (monnum == role->malenum || monnum == role->femalenum)
+	{
+	    known = TRUE;
             break;
-    if (!role->name.m)
+	}
+    }
+
+    if (!known)
+    {
         role = &urole;
+    }
 
     /* Find the rank */
-    for (i = xlev_to_rank((int) lev); i >= 0; i--) {
+    for (int i = xlev_to_rank((int) lev); i >= 0; i--) {
         if (female && role->rank[i].f)
             return role->rank[i].f;
         if (role->rank[i].m)
@@ -187,10 +186,15 @@ boolean female;
     }
 
     /* Try the role name, instead */
-    if (female && role->name.f)
+    if (female && roleNameHasGender(role))
+    {
         return role->name.f;
+    }
     else if (role->name.m)
+    {
         return role->name.m;
+    }
+
     return "Player";
 }
 
@@ -205,10 +209,11 @@ title_to_mon(str, rank_indx, title_length)
 const char *str;
 int *rank_indx, *title_length;
 {
-    register int i, j;
+    int j;
 
     /* Loop through each of the roles */
-    for (i = 0; roles[i].name.m; i++)
+    for (int i = 0, n = numberOfKnownRoles(); i < n; i++)
+    {
         for (j = 0; j < 9; j++) {
             if (roles[i].rank[j].m
                 && !strncmpi(str, roles[i].rank[j].m,
@@ -230,6 +235,7 @@ int *rank_indx, *title_length;
                                                       : roles[i].malenum;
             }
         }
+    }
     return NON_PM;
 }
 

@@ -285,92 +285,94 @@ STATIC_OVL void
 convert_arg(c)
 char c;
 {
-    register const char *str;
+    javaString jstr;
 
     switch (c) {
     case 'p':
-        str = plname;
+        jstr = javaStringFromC(plname);
         break;
     case 'c':
-        str = (flags.female && urole.name.f) ? urole.name.f : urole.name.m;
+        jstr = (flags.female && roleNameHasGender(&urole))
+		? roleNameAsFemale(&urole) : roleNameAsMale(&urole);
         break;
     case 'r':
-        str = rank_of(currentExperienceLevel(), Role_switch, flags.female);
+        jstr = javaStringFromC(rank_of(currentExperienceLevel(), Role_switch, flags.female));
         break;
     case 'R':
-        str = rank_of(MIN_QUEST_LEVEL, Role_switch, flags.female);
+        jstr = javaStringFromC(rank_of(MIN_QUEST_LEVEL, Role_switch, flags.female));
         break;
     case 's':
-        str = (flags.female) ? "sister" : "brother";
+        jstr = (flags.female) ? javaStringFromC("sister") : javaStringFromC("brother");
         break;
     case 'S':
-        str = (flags.female) ? "daughter" : "son";
+        jstr = (flags.female) ? javaStringFromC("daughter") : javaStringFromC("son");
         break;
     case 'l':
-        str = ldrname();
+        jstr = javaStringFromC(ldrname());
         break;
     case 'i':
-        str = intermed();
+        jstr = javaStringFromC(intermed());
         break;
     case 'O':
     case 'o':
-        str = the(artiname(urole.questarti));
+        jstr = javaStringFromC(the(artiname(urole.questarti)));
         if (c == 'O') {
             /* shorten "the Foo of Bar" to "the Foo"
                (buffer returned by the() is modifiable) */
-            char *p = strstri(str, " of ");
+            char *p = strstri(jstr.c_str, " of ");
 
             if (p)
                 *p = '\0';
         }
         break;
     case 'n':
-        str = neminame();
+        jstr = javaStringFromC(neminame());
         break;
     case 'g':
-        str = guardname();
+        jstr = javaStringFromC(guardname());
         break;
     case 'G':
-        str = align_gtitle(originalAlignmentBase());
+        jstr = javaStringFromC(align_gtitle(originalAlignmentBase()));
         break;
     case 'H':
-        str = homebase();
+        jstr = javaStringFromC(homebase());
         break;
     case 'a':
-        str = align_str(originalAlignmentBase());
+        jstr = javaStringFromC(align_str(originalAlignmentBase()));
         break;
     case 'A':
-        str = align_str(currentAlignmentType());
+        jstr = javaStringFromC(align_str(currentAlignmentType()));
         break;
     case 'd':
-        str = align_gname(originalAlignmentBase());
+        jstr = javaStringFromC(align_gname(originalAlignmentBase()));
         break;
     case 'D':
-        str = align_gname(A_LAWFUL);
+        jstr = javaStringFromC(align_gname(A_LAWFUL));
         break;
     case 'C':
-        str = "chaotic";
+        jstr = javaStringFromC("chaotic");
         break;
     case 'N':
-        str = "neutral";
+        jstr = javaStringFromC("neutral");
         break;
     case 'L':
-        str = "lawful";
+        jstr = javaStringFromC("lawful");
         break;
     case 'x':
-        str = youCannotSee() ? "sense" : "see";
+        jstr = youCannotSee() ? javaStringFromC("sense") : javaStringFromC("see");
         break;
     case 'Z':
-        str = dungeons[0].dname;
+        jstr = javaStringFromC(dungeons[0].dname);
         break;
     case '%':
-        str = "%";
+        jstr = javaStringFromC("%");
         break;
     default:
-        str = "";
+        jstr = javaStringFromC("");
         break;
     }
-    Strcpy(cvt_buf, str);
+    Strcpy(cvt_buf, jstr.c_str);
+    releaseJavaString(jstr);
 }
 
 STATIC_OVL void

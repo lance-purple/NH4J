@@ -2185,9 +2185,11 @@ int how;
             Strcpy(buf, youMonsterName.c_str);
 	    releaseJavaString(youMonsterName);
 	} else {
-            Strcpy(buf, (flags.female && urole.name.f) ? urole.name.f
-                                                       : urole.name.m);
+	    javaString yourRoleName = (flags.female && roleNameHasGender(&urole))
+		    ? roleNameAsFemale(&urole) : roleNameAsMale(&urole);
+            Strcpy(buf, yourRoleName.c_str);
             buf[0] = lowc(buf[0]);
+	    releaseJavaString(yourRoleName);
         }
     } else {
 	javaString monsterName = monsterTypeName(pmid);

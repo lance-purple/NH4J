@@ -1111,10 +1111,9 @@ classmon(plch, fem)
 char *plch;
 boolean fem;
 {
-    int i;
-
     /* Look for this role in the role table */
-    for (i = 0; roles[i].name.m; i++)
+    for (int i = 0, n = numberOfKnownRoles(); i < n; i++)
+    {
         if (!strncmp(plch, roles[i].filecode, ROLESZ)) {
             if (fem && roles[i].femalenum != NON_PM)
                 return roles[i].femalenum;
@@ -1123,6 +1122,8 @@ boolean fem;
             else
                 return PM_HUMAN;
         }
+    }
+
     /* this might be from a 3.2.x score for former Elf class */
     if (!strcmp(plch, "E"))
         return PM_RANGER;

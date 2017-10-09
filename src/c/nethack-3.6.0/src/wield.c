@@ -478,12 +478,14 @@ can_twoweapon()
 
 #define NOT_WEAPON(obj) (!is_weptool(obj) && obj->oclass != WEAPON_CLASS)
     if (cannotUseTwoWeapons(pmid4you())) {
-        if (areYouPolymorphed())
+        if (areYouPolymorphed()) {
             You_cant("use two weapons in your current form.");
-        else
-            pline("%s aren't able to use two weapons at once.",
-                  makeplural((flags.female && urole.name.f) ? urole.name.f
-                                                            : urole.name.m));
+	} else {
+	    javaString roleName = (flags.female && roleNameHasGender(&urole))
+			? roleNameAsFemale(&urole) : roleNameAsMale(&urole);
+            pline("%s aren't able to use two weapons at once.", makeplural(roleName.c_str));
+            releaseJavaString(roleName);
+        }
     } else if (!uwep || !uswapwep)
         Your("%s%s%s empty.", uwep ? "left " : uswapwep ? "right " : "",
              body_part(HAND), (!uwep && !uswapwep) ? "s are" : " is");

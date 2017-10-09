@@ -769,26 +769,43 @@ namefloorobj()
                  : obj_descr[STRANGE_OBJECT].oc_name);
     use_plural = (obj->quan > 1L);
     if (youAreHallucinating()) {
-        const char *unames[6];
+        const javaString unames[6];
         char tmpbuf[BUFSZ];
 
-        /* straight role name */
-        unames[0] = ((areYouPolymorphed() ? inherentlyFemale() : flags.female) && urole.name.f)
-                     ? urole.name.f
-                     : urole.name.m;
-        /* random rank title for hero's role */
-        unames[1] = rank_of(rnd(30), Role_switch, flags.female);
-        /* random fake monster */
-        unames[2] = bogusmon(tmpbuf, (char *) 0);
-        /* increased chance for fake monster */
-        unames[3] = unames[2];
-        /* traditional */
-        unames[4] = roguename();
-        /* silly */
-        unames[5] = "Wibbly Wobbly";
+	boolean currentlyFemale = (areYouPolymorphed() ? inherentlyFemale() : flags.female);
+	javaString funnyName;
+
+	switch (rn2(6)) {
+            /* straight role name */
+            case 0:  funnyName = (currentlyFemale && roleNameHasGender(&urole))
+                         ? roleNameAsFemale(&urole)
+                         : roleNameAsMale(&urole);
+		     break;
+
+            /* random rank title for hero's role */
+            case 1:  funnyName = javaStringFromC(rank_of(rnd(30), Role_switch, flags.female));
+		     break;
+
+            /* random fake monster */
+            case 2: 
+            case 3:  funnyName = javaStringFromC(bogusmon(tmpbuf, (char *) 0));
+		     break;
+
+            /* traditional */
+            case 4:  funnyName = javaStringFromC(roguename());
+		     break;
+
+            /* silly */
+            case 5:
+	    default: funnyName = javaStringFromC("Wibbly Wobbly");
+		     break;
+	}
+
         pline("%s %s to call you \"%s.\"",
               The(buf), use_plural ? "decide" : "decides",
-              unames[rn2(SIZE(unames))]);
+              funnyName.c_str);
+        releaseJavaString(funnyName);
+	
     } else if (!objtyp_is_callable(obj->otyp)) {
         pline("%s %s can't be assigned a type name.",
               use_plural ? "Those" : "That", buf);

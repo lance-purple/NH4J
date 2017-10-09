@@ -2895,19 +2895,28 @@ boolean incr;
             break;
         case WEAK:
             if (youAreHallucinating())
+	    {
                 pline((!incr) ? "You still have the munchies."
               : "The munchies are interfering with your motor capabilities.");
-            else if (incr && (Role_if(PM_WIZARD) || Race_if(PM_ELF)
-                              || Role_if(PM_VALKYRIE)))
-                pline("%s needs food, badly!",
-                      (Role_if(PM_WIZARD) || Role_if(PM_VALKYRIE))
-                          ? urole.name.m
-                          : "Elf");
+	    }
+	    else if (incr && (Role_if(PM_WIZARD) || Role_if(PM_VALKYRIE)))
+	    {
+                javaString roleName = roleNameAsMale(&urole);
+                pline("%s needs food, badly!", roleName.c_str);
+		releaseJavaString(roleName);
+	    }
+            else if (incr && Race_if(PM_ELF))
+	    {
+                pline("Elf needs food, badly!");
+            }
             else
+	    {
                 You((!incr)
                         ? "feel weak now."
                         : (currentNutrition() < 45) ? "feel weak."
                                            : "are beginning to feel weak.");
+	    }
+
             if (incr && occupation
                 && (occupation != eatfood && occupation != opentin))
                 stop_occupation();
