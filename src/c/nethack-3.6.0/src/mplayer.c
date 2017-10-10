@@ -87,8 +87,10 @@ char *nam;
     else
         mtmp->female = 0;
     Strcat(nam, " the ");
-    Strcat(nam, rank_of((int) mtmp->m_lev, pmid4mon(mtmp),
-                        (boolean) mtmp->female));
+    javaString rankName = rankOf((int) mtmp->m_lev, pmid4mon(mtmp),
+                        (boolean) mtmp->female);
+    Strcat(nam, rankName.c_str);
+    releaseJavaString(rankName);
 }
 
 STATIC_OVL void

@@ -11,7 +11,7 @@ const char *const enc_stat[] = { "",         "Burdened",  "Stressed",
                                  "Strained", "Overtaxed", "Overloaded" };
 
 STATIC_OVL NEARDATA int mrank_sz = 0; /* loaded by max_rank_sz (from u_init) */
-STATIC_DCL const char *NDECL(rank);
+STATIC_DCL javaString NDECL(rank);
 
 #ifndef STATUS_VIA_WINDOWPORT
 
@@ -47,8 +47,11 @@ bot1()
             k++;
         }
         Strcpy(nb = eos(nb), mbot);
-    } else
-        Strcpy(nb = eos(nb), rank());
+    } else {
+        javaString rankName = rank();
+        Strcpy(nb = eos(nb), rankName.c_str);
+        releaseJavaString(rankName);
+    }
 
     Sprintf(nb = eos(nb), "  ");
     i = mrank_sz + 15;
@@ -152,8 +155,7 @@ int xlev;
     return (xlev <= 2) ? 0 : (xlev <= 30) ? ((xlev + 2) / 4) : 8;
 }
 
-const char *
-rank_of(lev, monnum, female)
+javaString rankOf(lev, monnum, female)
 int lev;
 short monnum;
 boolean female;
@@ -180,28 +182,34 @@ boolean female;
     /* Find the rank */
     for (int i = xlev_to_rank((int) lev); i >= 0; i--) {
         if (female && role->rank[i].f)
-            return role->rank[i].f;
+	{
+            return javaStringFromC(role->rank[i].f);
+	}
         if (role->rank[i].m)
-            return role->rank[i].m;
+	{
+            return javaStringFromC(role->rank[i].m);
+	}
     }
 
     /* Try the role name, instead */
-    if (female && roleNameHasGender(role))
+    if (female && roleNameHasFemaleVersion(role))
     {
-        return role->name.f;
+        return roleNameAsFemale(role);
     }
-    else if (role->name.m)
+    else if (roleNameHasMaleVersion(role))
     {
-        return role->name.m;
+        return roleNameAsMale(role);
     }
-
-    return "Player";
+    else
+    {
+        return javaStringFromC("Player");
+    }
 }
 
-STATIC_OVL const char *
+STATIC_OVL javaString
 rank()
 {
-    return rank_of(currentExperienceLevel(), Role_switch, flags.female);
+    return rankOf(currentExperienceLevel(), Role_switch, flags.female);
 }
 
 int
@@ -432,8 +440,11 @@ bot()
             k++;
         }
         Sprintf1(nb = eos(nb), mbot);
-    } else
-        Sprintf1(nb = eos(nb), rank());
+    } else {
+        javaString rankName = rank();
+        Sprintf1(nb = eos(nb), rankName.c_str);
+        releaseJavaString(rankName);
+    }
     Sprintf(blstats[idx][BL_TITLE].val, "%-29s", buf);
     valset[BL_TITLE] = TRUE; /* indicate val already set */
 

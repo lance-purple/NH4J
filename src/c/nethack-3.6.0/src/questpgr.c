@@ -292,14 +292,14 @@ char c;
         jstr = javaStringFromC(plname);
         break;
     case 'c':
-        jstr = (flags.female && roleNameHasGender(&urole))
+        jstr = (flags.female && roleNameHasFemaleVersion(&urole))
 		? roleNameAsFemale(&urole) : roleNameAsMale(&urole);
         break;
     case 'r':
-        jstr = javaStringFromC(rank_of(currentExperienceLevel(), Role_switch, flags.female));
+        jstr = rankOf(currentExperienceLevel(), Role_switch, flags.female);
         break;
     case 'R':
-        jstr = javaStringFromC(rank_of(MIN_QUEST_LEVEL, Role_switch, flags.female));
+        jstr = rankOf(MIN_QUEST_LEVEL, Role_switch, flags.female);
         break;
     case 's':
         jstr = (flags.female) ? javaStringFromC("sister") : javaStringFromC("brother");

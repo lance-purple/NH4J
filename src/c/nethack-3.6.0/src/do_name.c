@@ -777,13 +777,13 @@ namefloorobj()
 
 	switch (rn2(6)) {
             /* straight role name */
-            case 0:  funnyName = (currentlyFemale && roleNameHasGender(&urole))
+            case 0:  funnyName = (currentlyFemale && roleNameHasFemaleVersion(&urole))
                          ? roleNameAsFemale(&urole)
                          : roleNameAsMale(&urole);
 		     break;
 
             /* random rank title for hero's role */
-            case 1:  funnyName = javaStringFromC(rank_of(rnd(30), Role_switch, flags.female));
+            case 1:  funnyName = rankOf(rnd(30), Role_switch, flags.female);
 		     break;
 
             /* random fake monster */
@@ -1015,8 +1015,10 @@ boolean called;
     } else if (isMonsterPlayer(pmid) && !areYouInEndgame()) {
         char pbuf[BUFSZ];
 
-        Strcpy(pbuf, rank_of((int) mtmp->m_lev, pmid,
-                             (boolean) mtmp->female));
+        javaString rankName = rankOf((int) mtmp->m_lev, pmid, (boolean) mtmp->female);
+        Strcpy(pbuf, rankName.c_str);
+        releaseJavaString(rankName);                             
+
         Strcat(buf, lcase(pbuf));
         name_at_start = FALSE;
     } else {

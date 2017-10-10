@@ -310,7 +310,7 @@ E void NDECL(max_rank_sz);
 E long NDECL(botl_score);
 #endif
 E int FDECL(describe_level, (char *));
-E const char *FDECL(rank_of, (int, SHORT_P, BOOLEAN_P));
+E javaString FDECL(rankOf, (int, SHORT_P, BOOLEAN_P));
 E void NDECL(bot);
 #ifdef STATUS_VIA_WINDOWPORT
 E void FDECL(status_initialize, (BOOLEAN_P));
@@ -2810,9 +2810,9 @@ E int FDECL(rnz, (int));
 /* ### role.c ### */
 
 E int FDECL(numberOfKnownRoles, ());
-E boolean FDECL(roleHasName, (const struct Role *, int));
-E boolean FDECL(roleNameHasGender, (const struct Role *));
+E boolean FDECL(roleNameHasMaleVersion, (const struct Role *));
 E javaString FDECL(roleNameAsMale, (const struct Role *));
+E boolean FDECL(roleNameHasFemaleVersion, (const struct Role *));
 E javaString FDECL(roleNameAsFemale, (const struct Role *));
 
 E boolean FDECL(validrole, (int));

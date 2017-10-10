@@ -4719,7 +4719,17 @@ char *buf;
         if (currentgraphics == ROGUESET && symset[ROGUESET].name)
             Strcat(buf, ", active");
     } else if (!strcmp(optname, "role")) {
-        Sprintf(buf, "%s", rolestring(flags.initrole, roles, name.m));
+
+	    if (flags.initrole >= 0) {
+		javaString roleName = roleNameAsMale(&roles[flags.initrole]);
+		sprintf(buf, "%s", roleName.c_str);
+		releaseJavaString(roleName);
+	    } else if (flags.initrole == ROLE_RANDOM) {
+                sprintf(buf, "%s", randomrole);
+	    } else {
+                sprintf(buf, "%s", none);
+	    }
+
     } else if (!strcmp(optname, "runmode")) {
         Sprintf(buf, "%s", runmodes[flags.runmode]);
     } else if (!strcmp(optname, "scores")) {

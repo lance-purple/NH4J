@@ -833,7 +833,7 @@ const char *str;
 	}
 
         /* Or the female name? */
-	if (roleNameHasGender(role)) {
+	if (roleNameHasFemaleVersion(role)) {
 	    rnam = roleNameAsFemale(role);
 	    matches = (!strncmpi(str, rnam.c_str, len));
 	    releaseJavaString(rnam);
@@ -1534,7 +1534,7 @@ int buflen, rolenum, racenum, gendnum, alignnum;
             /* if role specified, and multiple choice of genders for it,
                and name of role itself does not distinguish gender */
             if ((rolenum != ROLE_NONE) && (gendercount > 1)
-                && !roleNameHasGender(&roles[rolenum])) {
+                && !roleNameHasFemaleVersion(&roles[rolenum])) {
                 if (donefirst)
 		{
                     Strcat(buf, " ");
@@ -1591,7 +1591,7 @@ int buflen, rolenum, racenum, gendnum, alignnum;
         javaString maleRoleName   = roleNameAsMale(&roles[rolenum]);
 
         if (gendnum != ROLE_NONE) {
-            if (gendnum == 1 && roleNameHasGender(&roles[rolenum]))
+            if (gendnum == 1 && roleNameHasFemaleVersion(&roles[rolenum]))
 	    {
                 Strcat(buf, femaleRoleName.c_str);
 	    }
@@ -1600,7 +1600,7 @@ int buflen, rolenum, racenum, gendnum, alignnum;
                 Strcat(buf, maleRoleName.c_str);
 	    }
         } else {
-            if (roleNameHasGender(&roles[rolenum])) {
+            if (roleNameHasFemaleVersion(&roles[rolenum])) {
                 Strcat(buf, maleRoleName.c_str);
                 Strcat(buf, "/");
                 Strcat(buf, femaleRoleName.c_str);
@@ -1817,7 +1817,7 @@ winid where;
 	releaseJavaString(roleName);
     }
 
-    if (r >= 0 && roleNameHasGender(&roles[r])) {
+    if (r >= 0 && roleNameHasFemaleVersion(&roles[r])) {
         /* distinct female name [caveman/cavewoman, priest/priestess] */
         if (g == 1)
 	{

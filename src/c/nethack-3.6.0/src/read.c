@@ -2185,7 +2185,7 @@ int how;
             Strcpy(buf, youMonsterName.c_str);
 	    releaseJavaString(youMonsterName);
 	} else {
-	    javaString yourRoleName = (flags.female && roleNameHasGender(&urole))
+	    javaString yourRoleName = (flags.female && roleNameHasFemaleVersion(&urole))
 		    ? roleNameAsFemale(&urole) : roleNameAsMale(&urole);
             Strcpy(buf, yourRoleName.c_str);
             buf[0] = lowc(buf[0]);

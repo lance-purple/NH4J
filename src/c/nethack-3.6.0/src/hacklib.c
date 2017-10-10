@@ -2860,23 +2860,23 @@ static int roleID(const struct Role* role) {
     return role->malenum;
 }
 
-extern boolean roleHasName(const struct Role *role, int gender) {
-    return javaGetBooleanFromIntAndInt(ADVENTURER_ROLE_CLASS, "roleHasName", roleID(role), gender);
-}
-
-extern boolean roleNameHasGender(const struct Role *role) {
-    return javaGetBooleanFromInt(ADVENTURER_ROLE_CLASS, "roleNameHasGender", roleID(role));
+extern boolean roleNameHasMaleVersion(const struct Role *role) {
+    return javaGetBooleanFromInt(ADVENTURER_ROLE_CLASS, "roleNameHasMaleVersion", roleID(role));
 }
 
 extern javaString roleNameAsMale(const struct Role *role) {
-  jstring j_str = javaGetStringFromIntAndInt(ADVENTURER_ROLE_CLASS, "roleName", roleID(role), ROLE_MALE);
+  jstring j_str = javaGetStringFromInt(ADVENTURER_ROLE_CLASS, "roleNameAsMale", roleID(role));
   const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
   javaString result = { j_str, c_str };
   return result;
 }
 
+extern boolean roleNameHasFemaleVersion(const struct Role *role) {
+    return javaGetBooleanFromInt(ADVENTURER_ROLE_CLASS, "roleNameHasFemaleVersion", roleID(role));
+}
+
 extern javaString roleNameAsFemale(const struct Role *role) {
-  jstring j_str = javaGetStringFromIntAndInt(ADVENTURER_ROLE_CLASS, "roleName", roleID(role), ROLE_FEMALE);
+  jstring j_str = javaGetStringFromInt(ADVENTURER_ROLE_CLASS, "roleNameAsFemale", roleID(role));
   const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
   javaString result = { j_str, c_str };
   return result;

@@ -241,7 +241,7 @@ change_sex()
     max_rank_sz(); /* [this appears to be superfluous] */
 
     javaString roleName;
-    if ((already_polyd ? inherentlyFemale() : flags.female) && roleNameHasGender(&urole))
+    if ((already_polyd ? inherentlyFemale() : flags.female) && roleNameHasFemaleVersion(&urole))
     {
         roleName = roleNameAsFemale(&urole);
     }

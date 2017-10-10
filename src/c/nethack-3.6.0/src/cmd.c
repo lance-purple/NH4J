@@ -1348,7 +1348,7 @@ int final; /* ENL_GAMEINPROGRESS:0, ENL_GAMEOVERALIVE, ENL_GAMEOVERDEAD */
        gender in inherentlyFemale rather than the current you-as-monster gender */
 
     javaString uroleName =
-            ((areYouPolymorphed() ? inherentlyFemale() : flags.female) && roleNameHasGender(&urole))
+            ((areYouPolymorphed() ? inherentlyFemale() : flags.female) && roleNameHasFemaleVersion(&urole))
                 ? roleNameAsFemale(&urole)
                 : roleNameAsMale(&urole);
     Sprintf(buf, "%s the %s's attributes:", tmpbuf, uroleName.c_str);
@@ -1421,7 +1421,7 @@ int final;
 
     /* report role; omit gender if it's redundant (eg, "female priestess") */
     tmpbuf[0] = '\0';
-    if (!roleNameHasGender(&urole)
+    if (!roleNameHasFemaleVersion(&urole)
         && ((urole.allow & ROLE_GENDMASK) == (ROLE_MALE | ROLE_FEMALE)
             || innategend != flags.initgend))
         Sprintf(tmpbuf, "%s ", genders[innategend].adj);
@@ -1431,20 +1431,21 @@ int final;
         Strcpy(buf, "actually "); /* "You are actually a ..." */
     }
 
-    javaString role_titl = (innategend && roleNameHasGender(&urole))
+    javaString role_titl = (innategend && roleNameHasFemaleVersion(&urole))
 	    ? roleNameAsFemale(&urole) : roleNameAsMale(&urole);
-    const char* rank_titl = rank_of(currentExperienceLevel(), Role_switch, innategend);
+    javaString rank_titl = rankOf(currentExperienceLevel(), Role_switch, innategend);
 
-    if (!strcmpi(rank_titl, role_titl.c_str)) {
+    if (!strcmpi(rank_titl.c_str, role_titl.c_str)) {
         /* omit role when rank title matches it */
-        Sprintf(eos(buf), "%s, level %d %s%s", an(rank_titl), currentExperienceLevel(),
+        Sprintf(eos(buf), "%s, level %d %s%s", an(rank_titl.c_str), currentExperienceLevel(),
                 tmpbuf, urace.noun);
     } else {
-        Sprintf(eos(buf), "%s, a level %d %s%s %s", an(rank_titl), currentExperienceLevel(),
+        Sprintf(eos(buf), "%s, a level %d %s%s %s", an(rank_titl.c_str), currentExperienceLevel(),
                 tmpbuf, urace.adj, role_titl.c_str);
     }
     you_are(buf, "");
     releaseJavaString(role_titl);
+    releaseJavaString(rank_titl);
 
     /* report alignment (bypass you_are() in order to omit ending period) */
     Sprintf(buf, " %s%s%s, %son a mission for %s",

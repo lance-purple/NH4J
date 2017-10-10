@@ -1138,7 +1138,7 @@ int how;
             yourRoleName = (flags.female)
                 ? javaStringFromC("Demigoddess") : javaStringFromC("Demigod");
 	} else {
-            yourRoleName = (flags.female && roleNameHasGender(&urole))
+            yourRoleName = (flags.female && roleNameHasFemaleVersion(&urole))
                 ? roleNameAsFemale(&urole) : roleNameAsMale(&urole);
 	}
 

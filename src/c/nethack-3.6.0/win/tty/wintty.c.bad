@@ -758,11 +758,10 @@ makepicks:
             *plbuf = '\0'; /* omit redundant gender */
 
 	javaString roleName = (GEND == 1 && roleNameHasFemaleVersion(&roles[ROLE]))
-	            ? roleNameAsFemale(&roles[ROLE])
-		    : roleNameAsMale(&roles[ROLE]);
+		    ? roleNameAsFemale(&roles[ROLE]) : roleNameAsMale(&roles[ROLE]);
         Sprintf(pbuf, "%s, %s%s %s %s", plname, aligns[ALGN].adj, plbuf,
                 races[RACE].adj, roleName.c_str);
-        releaseJavaString(roleName);
+	releaseJavaString(roleName);
 
         add_menu(win, NO_GLYPH, &any, ' ', 0, ATR_NONE, pbuf,
                  MENU_UNSELECTED);
@@ -906,50 +905,46 @@ int race, gend, algn; /* all ROLE_NONE for !filtering case */
 {
     anything any;
     boolean role_ok;
-    char thisch, lastch = '\0', maleRoleNameBuff[50], fullRoleNameBuff[50];
+    char thisch, lastch = '\0', anystrbuf[50], rolenamebuf[50];
 
     any = zeroany; /* zero out all bits */
     for (int i = 0, n = numberOfKnownRoles(); i < n; i++) {
         role_ok = ok_role(i, race, gend, algn);
         if (filtering && !role_ok)
-	{
             continue;
-	}
 
-	javaString maleRoleName = roleNameAsMale(&roles[i]);
-        Strcpy(maleRoleNameBuff, maleRoleName.c_str);
-	releaseJavaString(maleRoleName);
+	javaString maleRoleName = roleNameAsFemale(&roles[i]);
 
         if (filtering)
             any.a_int = i + 1;
         else {
-            any.a_string = maleRoleNameBuff;
+            Strcpy(anystrbuf, maleRoleName.c_str);
+            any.a_string = anystrbuf;
 	}
 
-        thisch = lowc(*maleRoleNameBuff);
-        if (thisch == lastch) {
+        thisch = lowc(maleRoleName.c_str[0]);
+        if (thisch == lastch)
             thisch = highc(thisch);
-	}
 
-        Strcpy(fullRoleNameBuff, maleRoleNameBuff);
+        Strcpy(rolenamebuf, maleRoleName.c_str);
+	releaseJavaString(maleRoleName);
 
         if (roleNameHasFemaleVersion(&roles[i])) {
-	    javaString femaleRoleName = roleNameAsMale(&roles[i]);
             /* role has distinct name for female (C,P) */
+	    javaString femaleRoleName = roleNameAsFemale(&roles[i]);
             if (gend == 1) {
                 /* female already chosen; replace male name */
-                Strcpy(fullRoleNameBuff, femaleRoleName.c_str);
+                Strcpy(rolenamebuf, femaleRoleName.c_str);
             } else if (gend < 0) {
                 /* not chosen yet; append slash+female name */
-                Strcat(fullRoleNameBuff, "/");
-                Strcpy(fullRoleNameBuff, femaleRoleName.c_str);
+                Strcat(rolenamebuf, "/");
+                Strcpy(rolenamebuf, femaleRoleName.c_str);
             }
 	    releaseJavaString(femaleRoleName);
         }
-
         /* !filtering implies reset_role_filtering() where we want to
            mark this role as preseleted if current filter excludes it */
-        add_menu(win, NO_GLYPH, &any, thisch, 0, ATR_NONE, an(fullRoleNameBuff),
+        add_menu(win, NO_GLYPH, &any, thisch, 0, ATR_NONE, an(rolenamebuf),
                  (!filtering && !role_ok) ? MENU_SELECTED : MENU_UNSELECTED);
         lastch = thisch;
     }
