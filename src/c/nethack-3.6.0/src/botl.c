@@ -181,13 +181,13 @@ boolean female;
 
     /* Find the rank */
     for (int i = xlev_to_rank((int) lev); i >= 0; i--) {
-        if (female && role->rank[i].f)
+        if (female && rankNameHasFemaleVersion(role, i))
 	{
-            return javaStringFromC(role->rank[i].f);
+            return rankNameAsFemale(role, i);
 	}
-        if (role->rank[i].m)
+        if (rankNameHasMaleVersion(role, i))
 	{
-            return javaStringFromC(role->rank[i].m);
+            return rankNameAsMale(role, i);
 	}
     }
 
@@ -223,24 +223,45 @@ int *rank_indx, *title_length;
     for (int i = 0, n = numberOfKnownRoles(); i < n; i++)
     {
         for (j = 0; j < 9; j++) {
-            if (roles[i].rank[j].m
-                && !strncmpi(str, roles[i].rank[j].m,
-                             strlen(roles[i].rank[j].m))) {
-                if (rank_indx)
-                    *rank_indx = j;
-                if (title_length)
-                    *title_length = strlen(roles[i].rank[j].m);
-                return roles[i].malenum;
+	    const struct Role *role = &(roles[i]);
+
+            if (rankNameHasMaleVersion(role, j))
+	    {
+		javaString rankName = rankNameAsMale(role, j);
+		int rankNameLen = strlen(rankName.c_str);
+		boolean matched = (!strncmpi(str, rankName.c_str, rankNameLen));
+	        releaseJavaString(rankName);
+		if (matched) {
+                    if (rank_indx)
+		    {
+                        *rank_indx = j;
+		    }
+                    if (title_length)
+		    {
+                        *title_length = rankNameLen;
+		    }
+                    return role->malenum;
+		}
             }
-            if (roles[i].rank[j].f
-                && !strncmpi(str, roles[i].rank[j].f,
-                             strlen(roles[i].rank[j].f))) {
-                if (rank_indx)
-                    *rank_indx = j;
-                if (title_length)
-                    *title_length = strlen(roles[i].rank[j].f);
-                return (roles[i].femalenum != NON_PM) ? roles[i].femalenum
-                                                      : roles[i].malenum;
+            if (rankNameHasFemaleVersion(role, j))
+	    {
+		javaString rankName = rankNameAsFemale(role, j);
+		int rankNameLen = strlen(rankName.c_str);
+		boolean matched = (!strncmpi(str, rankName.c_str, rankNameLen));
+		releaseJavaString(rankName);
+
+                if (matched) {
+                    if (rank_indx)
+		    {
+                        *rank_indx = j;
+		    }
+                    if (title_length)
+		    {
+                        *title_length = rankNameLen;
+		    }
+                    return (role->femalenum != NON_PM) ? role->femalenum
+                                                       : role->malenum;
+		}
             }
         }
     }
@@ -250,12 +271,28 @@ int *rank_indx, *title_length;
 void
 max_rank_sz()
 {
-    register int i, r, maxr = 0;
-    for (i = 0; i < 9; i++) {
-        if (urole.rank[i].m && (r = strlen(urole.rank[i].m)) > maxr)
-            maxr = r;
-        if (urole.rank[i].f && (r = strlen(urole.rank[i].f)) > maxr)
-            maxr = r;
+    int maxr = 0;
+    for (int i = 0; i < 9; i++) {
+        if (rankNameHasMaleVersion(&urole, i))
+	{
+            javaString rankName = rankNameAsMale(&urole, i);
+	    int r = strlen(rankName.c_str);
+	    releaseJavaString(rankName);
+	    if (r > maxr)
+	    {
+	        maxr = r;
+	    }
+	}
+        if (rankNameHasFemaleVersion(&urole, i))
+	{
+            javaString rankName = rankNameAsFemale(&urole, i);
+	    int r = strlen(rankName.c_str);
+	    releaseJavaString(rankName);
+	    if (r > maxr)
+	    {
+	        maxr = r;
+	    }
+	}
     }
     mrank_sz = maxr;
     return;

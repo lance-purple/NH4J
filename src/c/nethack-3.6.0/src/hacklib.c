@@ -2882,4 +2882,26 @@ extern javaString roleNameAsFemale(const struct Role *role) {
   return result;
 }
 
+extern boolean rankNameHasMaleVersion(const struct Role *role, int rank) {
+    return javaGetBooleanFromIntAndInt(ADVENTURER_ROLE_CLASS, "rankNameHasMaleVersion", roleID(role), rank+1);
+}
+
+extern javaString rankNameAsMale(const struct Role *role, int rank) {
+  jstring j_str = javaGetStringFromIntAndInt(ADVENTURER_ROLE_CLASS, "rankNameAsMale", roleID(role), rank+1);
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
+}
+
+extern boolean rankNameHasFemaleVersion(const struct Role *role, int rank) {
+    return javaGetBooleanFromIntAndInt(ADVENTURER_ROLE_CLASS, "rankNameHasFemaleVersion", roleID(role), rank+1);
+}
+
+extern javaString rankNameAsFemale(const struct Role *role, int rank) {
+  jstring j_str = javaGetStringFromIntAndInt(ADVENTURER_ROLE_CLASS, "rankNameAsFemale", roleID(role), rank+1);
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
+}
+
 /*hacklib.c*/

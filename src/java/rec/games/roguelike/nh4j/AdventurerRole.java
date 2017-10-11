@@ -15,29 +15,34 @@ public class AdventurerRole {
 	}
 
 	private AdventurerRole named(String genericVersion) {
-		roleName = GenderedName.of(genericVersion + "UU");
+		roleName = GenderedName.of(genericVersion);
 		return this;
 	}
 
 	private AdventurerRole named(String maleVersion, String femaleVersion) {
-		roleName = GenderedName.of(maleVersion + "MM", femaleVersion + "FF");
+		roleName = GenderedName.of(maleVersion, femaleVersion);
 		return this;
 	}
 
 	private AdventurerRole withRank(int rank, String genericVersion) {
-		GenderedName rankName = GenderedName.of(genericVersion + "UU");
+		GenderedName rankName = GenderedName.of(genericVersion);
 		rankNamesByIndex.put(rank, rankName);
 		return this;
 	}
 
 	private AdventurerRole withRank(int rank, String maleVersion, String femaleVersion) {
-		GenderedName rankName = GenderedName.of(maleVersion + "MM", femaleVersion + "FF");
+		GenderedName rankName = GenderedName.of(maleVersion, femaleVersion);
 		rankNamesByIndex.put(rank, rankName);
 		return this;
 	}
 
 	private void add() {
 		rolesByPMID.put(roleID.id(), this);
+	}
+	
+	private GenderedName rankName(int rank)
+	{
+		return rankNamesByIndex.get(rank);
 	}
 	
 
@@ -95,6 +100,54 @@ public class AdventurerRole {
 		if ((null != role) && (null != role.roleName))
 		{
 			return role.roleName.asFemale();
+		}
+		return "???";
+	}
+
+	
+	public static boolean rankNameHasMaleVersion(int pmid, int rank) {
+		AdventurerRole role = getRole(pmid);
+		if (null != role)
+		{
+			GenderedName rankName = role.rankName(rank);
+			return ((null != rankName) && (rankName.hasMaleVersion()));
+		}
+		return false;
+	}
+
+	public static String rankNameAsMale(int pmid, int rank) {
+		AdventurerRole role = getRole(pmid);
+		if (null != role)
+		{
+			GenderedName rankName = role.rankName(rank);
+			if (null != rankName)
+			{
+				return rankName.asMale();
+			}
+		}
+		return "???";
+	}
+
+	
+	public static boolean rankNameHasFemaleVersion(int pmid, int rank) {
+		AdventurerRole role = getRole(pmid);
+		if (null != role)
+		{
+			GenderedName rankName = role.rankName(rank);
+			return ((null != rankName) && (rankName.hasFemaleVersion()));
+		}
+		return false;
+	}
+
+	public static String rankNameAsFemale(int pmid, int rank) {
+		AdventurerRole role = getRole(pmid);
+		if (null != role)
+		{
+			GenderedName rankName = role.rankName(rank);
+			if (null != rankName)
+			{
+				return rankName.asFemale();
+			}
 		}
 		return "???";
 	}

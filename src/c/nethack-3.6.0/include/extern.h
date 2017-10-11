@@ -2815,6 +2815,11 @@ E javaString FDECL(roleNameAsMale, (const struct Role *));
 E boolean FDECL(roleNameHasFemaleVersion, (const struct Role *));
 E javaString FDECL(roleNameAsFemale, (const struct Role *));
 
+E boolean FDECL(rankNameHasMaleVersion, (const struct Role *, int));
+E javaString FDECL(rankNameAsMale, (const struct Role *, int));
+E boolean FDECL(rankNameHasFemaleVersion, (const struct Role *, int));
+E javaString FDECL(rankNameAsFemale, (const struct Role *, int));
+
 E boolean FDECL(validrole, (int));
 E boolean FDECL(validrace, (int, int));
 E boolean FDECL(validgend, (int, int, int));
