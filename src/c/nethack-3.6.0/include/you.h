@@ -52,6 +52,7 @@ struct u_realtime {
 
 /*** Unified structure containing role information ***/
 struct Role {
+    int id;
     /*** Strings that name various things ***/
     struct RoleName XXname;    /* the role's name (from u_init.c) */
     struct RoleName XXrank[9]; /* names for experience levels (from botl.c) */

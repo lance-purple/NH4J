@@ -292,8 +292,9 @@ char c;
         jstr = javaStringFromC(plname);
         break;
     case 'c':
-        jstr = (flags.female && roleNameHasFemaleVersion(&urole))
-		? roleNameAsFemale(&urole) : roleNameAsMale(&urole);
+        jstr = (flags.female && roleNameHasFemaleVersion(urole.id))
+		? roleNameAsFemale(urole.id)
+		: roleNameAsMale(urole.id);
         break;
     case 'r':
         jstr = rankOf(currentExperienceLevel(), Role_switch, flags.female);

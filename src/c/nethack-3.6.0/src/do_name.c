@@ -777,9 +777,9 @@ namefloorobj()
 
 	switch (rn2(6)) {
             /* straight role name */
-            case 0:  funnyName = (currentlyFemale && roleNameHasFemaleVersion(&urole))
-                         ? roleNameAsFemale(&urole)
-                         : roleNameAsMale(&urole);
+            case 0:  funnyName = (currentlyFemale && roleNameHasFemaleVersion(urole.id))
+                         ? roleNameAsFemale(urole.id)
+                         : roleNameAsMale(urole.id);
 		     break;
 
             /* random rank title for hero's role */

@@ -2810,15 +2810,15 @@ E int FDECL(rnz, (int));
 /* ### role.c ### */
 
 E int FDECL(numberOfKnownRoles, ());
-E boolean FDECL(roleNameHasMaleVersion, (const struct Role *));
-E javaString FDECL(roleNameAsMale, (const struct Role *));
-E boolean FDECL(roleNameHasFemaleVersion, (const struct Role *));
-E javaString FDECL(roleNameAsFemale, (const struct Role *));
+E boolean FDECL(roleNameHasMaleVersion, (int));
+E javaString FDECL(roleNameAsMale, (int));
+E boolean FDECL(roleNameHasFemaleVersion, (int));
+E javaString FDECL(roleNameAsFemale, (int));
 
-E boolean FDECL(rankNameHasMaleVersion, (const struct Role *, int));
-E javaString FDECL(rankNameAsMale, (const struct Role *, int));
-E boolean FDECL(rankNameHasFemaleVersion, (const struct Role *, int));
-E javaString FDECL(rankNameAsFemale, (const struct Role *, int));
+E boolean FDECL(rankNameHasMaleVersion, (int, int));
+E javaString FDECL(rankNameAsMale, (int, int));
+E boolean FDECL(rankNameHasFemaleVersion, (int, int));
+E javaString FDECL(rankNameAsFemale, (int, int));
 
 E boolean FDECL(validrole, (int));
 E boolean FDECL(validrace, (int, int));

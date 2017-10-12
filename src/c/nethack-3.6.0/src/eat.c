@@ -2901,7 +2901,7 @@ boolean incr;
 	    }
 	    else if (incr && (Role_if(PM_WIZARD) || Role_if(PM_VALKYRIE)))
 	    {
-                javaString roleName = roleNameAsMale(&urole);
+                javaString roleName = roleNameAsMale(urole.id);
                 pline("%s needs food, badly!", roleName.c_str);
 		releaseJavaString(roleName);
 	    }

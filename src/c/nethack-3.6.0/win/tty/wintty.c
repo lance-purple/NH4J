@@ -750,16 +750,16 @@ makepicks:
         start_menu(win);
         any = zeroany; /* zero out all bits */
         any.a_int = 0;
-        if (!roleNameHasFemaleVersion(&roles[ROLE])
+        if (!roleNameHasFemaleVersion(ROLE)
             && (roles[ROLE].allow & ROLE_GENDMASK)
                    == (ROLE_MALE | ROLE_FEMALE))
             Sprintf(plbuf, " %s", genders[GEND].adj);
         else
             *plbuf = '\0'; /* omit redundant gender */
 
-	javaString roleName = (GEND == 1 && roleNameHasFemaleVersion(&roles[ROLE]))
-	            ? roleNameAsFemale(&roles[ROLE])
-		    : roleNameAsMale(&roles[ROLE]);
+	javaString roleName = (GEND == 1 && roleNameHasFemaleVersion(ROLE))
+	            ? roleNameAsFemale(ROLE)
+		    : roleNameAsMale(ROLE);
         Sprintf(pbuf, "%s, %s%s %s %s", plname, aligns[ALGN].adj, plbuf,
                 races[RACE].adj, roleName.c_str);
         releaseJavaString(roleName);
@@ -916,7 +916,7 @@ int race, gend, algn; /* all ROLE_NONE for !filtering case */
             continue;
 	}
 
-	javaString maleRoleName = roleNameAsMale(&roles[i]);
+	javaString maleRoleName = roleNameAsMale(i);
         Strcpy(maleRoleNameBuff, maleRoleName.c_str);
 	releaseJavaString(maleRoleName);
 
@@ -933,8 +933,8 @@ int race, gend, algn; /* all ROLE_NONE for !filtering case */
 
         Strcpy(fullRoleNameBuff, maleRoleNameBuff);
 
-        if (roleNameHasFemaleVersion(&roles[i])) {
-	    javaString femaleRoleName = roleNameAsMale(&roles[i]);
+        if (roleNameHasFemaleVersion(i)) {
+	    javaString femaleRoleName = roleNameAsMale(i);
             /* role has distinct name for female (C,P) */
             if (gend == 1) {
                 /* female already chosen; replace male name */

@@ -241,13 +241,13 @@ change_sex()
     max_rank_sz(); /* [this appears to be superfluous] */
 
     javaString roleName;
-    if ((already_polyd ? inherentlyFemale() : flags.female) && roleNameHasFemaleVersion(&urole))
+    if ((already_polyd ? inherentlyFemale() : flags.female) && roleNameHasFemaleVersion(urole.id))
     {
-        roleName = roleNameAsFemale(&urole);
+        roleName = roleNameAsFemale(urole.id);
     }
     else
     {
-        roleName = roleNameAsMale(&urole);
+        roleName = roleNameAsMale(urole.id);
     }
     Strcpy(pl_character, roleName.c_str);
     releaseJavaString(roleName);

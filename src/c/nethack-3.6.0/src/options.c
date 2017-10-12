@@ -4721,7 +4721,7 @@ char *buf;
     } else if (!strcmp(optname, "role")) {
 
 	    if (flags.initrole >= 0) {
-		javaString roleName = roleNameAsMale(&roles[flags.initrole]);
+		javaString roleName = roleNameAsMale(roles[flags.initrole].id);
 		sprintf(buf, "%s", roleName.c_str);
 		releaseJavaString(roleName);
 	    } else if (flags.initrole == ROLE_RANDOM) {

@@ -24,7 +24,7 @@
  * God names use a leading underscore to flag goddesses.
  */
 const struct Role roles[] = {
-    { { "Archeologist", 0 },
+    { 0, { "Archeologist", 0 },
       { { "Digger", 0 },
         { "Field Worker", 0 },
         { "Investigator", 0 },
@@ -66,7 +66,7 @@ const struct Role roles[] = {
       A_INT,
       SPE_MAGIC_MAPPING,
       -4 },
-    { { "Barbarian", 0 },
+    { 1, { "Barbarian", 0 },
       { { "Plunderer", "Plunderess" },
         { "Pillager", 0 },
         { "Bandit", 0 },
@@ -108,7 +108,7 @@ const struct Role roles[] = {
       A_INT,
       SPE_HASTE_SELF,
       -4 },
-    { { "Caveman", "Cavewoman" },
+    { 2, { "Caveman", "Cavewoman" },
       { { "Troglodyte", 0 },
         { "Aborigine", 0 },
         { "Wanderer", 0 },
@@ -150,7 +150,7 @@ const struct Role roles[] = {
       A_INT,
       SPE_DIG,
       -4 },
-    { { "Healer", 0 },
+    { 3, { "Healer", 0 },
       { { "Rhizotomist", 0 },
         { "Empiric", 0 },
         { "Embalmer", 0 },
@@ -191,7 +191,7 @@ const struct Role roles[] = {
       A_WIS,
       SPE_CURE_SICKNESS,
       -4 },
-    { { "Knight", 0 },
+    { 4, { "Knight", 0 },
       { { "Gallant", 0 },
         { "Esquire", 0 },
         { "Bachelor", 0 },
@@ -232,7 +232,7 @@ const struct Role roles[] = {
       A_WIS,
       SPE_TURN_UNDEAD,
       -4 },
-    { { "Monk", 0 },
+    { 5, { "Monk", 0 },
       { { "Candidate", 0 },
         { "Novice", 0 },
         { "Initiate", 0 },
@@ -274,7 +274,7 @@ const struct Role roles[] = {
       A_WIS,
       SPE_RESTORE_ABILITY,
       -4 },
-    { { "Priest", "Priestess" },
+    { 6, { "Priest", "Priestess" },
       { { "Aspirant", 0 },
         { "Acolyte", 0 },
         { "Adept", 0 },
@@ -318,7 +318,7 @@ const struct Role roles[] = {
       -4 },
     /* Note:  Rogue precedes Ranger so that use of `-R' on the command line
        retains its traditional meaning. */
-    { { "Rogue", 0 },
+    { 7, { "Rogue", 0 },
       { { "Footpad", 0 },
         { "Cutpurse", 0 },
         { "Rogue", 0 },
@@ -359,7 +359,7 @@ const struct Role roles[] = {
       A_INT,
       SPE_DETECT_TREASURE,
       -4 },
-    { { "Ranger", 0 },
+    { 8, { "Ranger", 0 },
       {
 #if 0 /* OBSOLETE */
         {"Edhel",   "Elleth"},
@@ -415,7 +415,7 @@ const struct Role roles[] = {
       A_INT,
       SPE_INVISIBILITY,
       -4 },
-    { { "Samurai", 0 },
+    { 9, { "Samurai", 0 },
       { { "Hatamoto", 0 },       /* Banner Knight */
         { "Ronin", 0 },          /* no allegiance */
         { "Ninja", "Kunoichi" }, /* secret society */
@@ -456,7 +456,7 @@ const struct Role roles[] = {
       A_INT,
       SPE_CLAIRVOYANCE,
       -4 },
-    { { "Tourist", 0 },
+    { 10, { "Tourist", 0 },
       { { "Rambler", 0 },
         { "Sightseer", 0 },
         { "Excursionist", 0 },
@@ -497,7 +497,7 @@ const struct Role roles[] = {
       A_INT,
       SPE_CHARM_MONSTER,
       -4 },
-    { { "Valkyrie", 0 },
+    { 11, { "Valkyrie", 0 },
       { { "Stripling", 0 },
         { "Skirmisher", 0 },
         { "Fighter", 0 },
@@ -538,7 +538,7 @@ const struct Role roles[] = {
       A_WIS,
       SPE_CONE_OF_COLD,
       -4 },
-    { { "Wizard", 0 },
+    { 12, { "Wizard", 0 },
       { { "Evoker", 0 },
         { "Conjurer", 0 },
         { "Thaumaturge", 0 },
@@ -581,14 +581,14 @@ const struct Role roles[] = {
       SPE_MAGIC_MISSILE,
       -4 },
     /* Array terminator */
-    { { 0, 0 } }
+    { -1, { 0, 0 } }
 };
 
 /* The player's role, created at runtime from initial
  * choices.  This may be munged in role_init().
  */
 struct Role urole = {
-    { "Undefined", 0 },
+    -1, { "Undefined", 0 },
     { { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 },
       { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 } },
     "L", "N", "C",
@@ -818,12 +818,11 @@ const char *str;
     /* Match as much of str as is provided */
     int len = strlen(str);
     for (int i = 0, n = numberOfKnownRoles(); i < n; i++) {
-	const struct Role *role = &roles[i];
 	javaString rnam;
 	boolean matches;
 
         /* Does it match the male name? */
-	rnam = roleNameAsMale(role);
+	rnam = roleNameAsMale(i);
 	matches = (!strncmpi(str, rnam.c_str, len));
 	releaseJavaString(rnam);
 
@@ -833,8 +832,8 @@ const char *str;
 	}
 
         /* Or the female name? */
-	if (roleNameHasFemaleVersion(role)) {
-	    rnam = roleNameAsFemale(role);
+	if (roleNameHasFemaleVersion(i)) {
+	    rnam = roleNameAsFemale(i);
 	    matches = (!strncmpi(str, rnam.c_str, len));
 	    releaseJavaString(rnam);
             if (matches)
@@ -1534,7 +1533,7 @@ int buflen, rolenum, racenum, gendnum, alignnum;
             /* if role specified, and multiple choice of genders for it,
                and name of role itself does not distinguish gender */
             if ((rolenum != ROLE_NONE) && (gendercount > 1)
-                && !roleNameHasFemaleVersion(&roles[rolenum])) {
+                && !roleNameHasFemaleVersion(rolenum)) {
                 if (donefirst)
 		{
                     Strcat(buf, " ");
@@ -1587,11 +1586,11 @@ int buflen, rolenum, racenum, gendnum, alignnum;
         if (donefirst)
             Strcat(buf, " ");
 
-        javaString femaleRoleName = roleNameAsFemale(&roles[rolenum]);
-        javaString maleRoleName   = roleNameAsMale(&roles[rolenum]);
+        javaString femaleRoleName = roleNameAsFemale(rolenum);
+        javaString maleRoleName   = roleNameAsMale(rolenum);
 
         if (gendnum != ROLE_NONE) {
-            if (gendnum == 1 && roleNameHasFemaleVersion(&roles[rolenum]))
+            if (gendnum == 1 && roleNameHasFemaleVersion(rolenum))
 	    {
                 Strcat(buf, femaleRoleName.c_str);
 	    }
@@ -1600,7 +1599,7 @@ int buflen, rolenum, racenum, gendnum, alignnum;
                 Strcat(buf, maleRoleName.c_str);
 	    }
         } else {
-            if (roleNameHasFemaleVersion(&roles[rolenum])) {
+            if (roleNameHasFemaleVersion(rolenum)) {
                 Strcat(buf, maleRoleName.c_str);
                 Strcat(buf, "/");
                 Strcat(buf, femaleRoleName.c_str);
@@ -1812,24 +1811,24 @@ winid where;
     }
     else
     {
-        javaString roleName = roleNameAsMale(&roles[r]);
+        javaString roleName = roleNameAsMale(r);
         Strcat(buf, roleName.c_str);
 	releaseJavaString(roleName);
     }
 
-    if (r >= 0 && roleNameHasFemaleVersion(&roles[r])) {
+    if (r >= 0 && roleNameHasFemaleVersion(r)) {
         /* distinct female name [caveman/cavewoman, priest/priestess] */
         if (g == 1)
 	{
             /* female specified; replace male role name with female one */
-	    javaString femaleRoleName = roleNameAsFemale(&roles[r]);
+	    javaString femaleRoleName = roleNameAsFemale(r);
             Sprintf(index(buf, ':'), ": %s", femaleRoleName.c_str);
 	    releaseJavaString(femaleRoleName);
 	}
         else if (g < 0)
 	{
             /* gender unspecified; append slash and female role name */
-	    javaString femaleRoleName = roleNameAsFemale(&roles[r]);
+	    javaString femaleRoleName = roleNameAsFemale(r);
             Sprintf(eos(buf), "/%s", femaleRoleName.c_str);
 	    releaseJavaString(femaleRoleName);
 	}
@@ -2041,7 +2040,7 @@ role_init()
 
     /* We now have a valid role index.  Copy the role name back. */
     /* This should become OBSOLETE */
-    javaString maleRoleName = roleNameAsMale(&roles[flags.initrole]);
+    javaString maleRoleName = roleNameAsMale(flags.initrole);
     Strcpy(pl_character, maleRoleName.c_str);
     releaseJavaString(maleRoleName);
 

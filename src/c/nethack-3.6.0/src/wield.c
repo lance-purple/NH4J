@@ -481,8 +481,9 @@ can_twoweapon()
         if (areYouPolymorphed()) {
             You_cant("use two weapons in your current form.");
 	} else {
-	    javaString roleName = (flags.female && roleNameHasFemaleVersion(&urole))
-			? roleNameAsFemale(&urole) : roleNameAsMale(&urole);
+	    javaString roleName = (flags.female && roleNameHasFemaleVersion(urole.id))
+			? roleNameAsFemale(urole.id)
+			: roleNameAsMale(urole.id);
             pline("%s aren't able to use two weapons at once.", makeplural(roleName.c_str));
             releaseJavaString(roleName);
         }
