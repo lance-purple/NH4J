@@ -95,7 +95,10 @@ static int p_type; /* (-1)-3: (-1)=really naughty, 3=really good */
 #define ugod_is_angry() (currentAlignmentRecord() < 0)
 #define on_altar() IS_ALTAR(levl[currentX()][currentY()].typ)
 #define on_shrine() ((levl[currentX()][currentY()].altarmask & AM_SHRINE) != 0)
-#define a_align(x, y) ((aligntyp) Amask2align(levl[x][y].altarmask & AM_MASK))
+
+int a_align(int x, int y) {
+    return Amask2align(levl[x][y].altarmask & AM_MASK);
+}
 
 /* critically low hit points if hp <= 5 or hp <= maxhp/N for some N */
 boolean
@@ -989,9 +992,12 @@ aligntyp g_align;
                         pline("%s %s%s.", Yobjnam2(uwep, "softly glow"),
                               hcolor(NH_AMBER), repair_buf);
                         iflags.last_msg = PLNMSG_OBJ_GLOWS;
-                    } else
-                        You_feel("the power of %s over %s.", u_gname(),
+                    } else {
+		        javaString yourDeity = yourDeityName();
+                        You_feel("the power of %s over %s.", yourDeity.c_str,
                                  yname(uwep));
+		        releaseJavaString(yourDeity);
+		    }
                     uncurse(uwep);
                     uwep->bknown = TRUE;
                     *repair_buf = '\0';
@@ -1001,9 +1007,12 @@ aligntyp g_align;
                               Yobjnam2(uwep, "softly glow"),
                               an(hcolor(NH_LIGHT_BLUE)), repair_buf);
                         iflags.last_msg = PLNMSG_OBJ_GLOWS;
-                    } else
-                        You_feel("the blessing of %s over %s.", u_gname(),
+                    } else {
+		        javaString yourDeity = yourDeityName();
+                        You_feel("the blessing of %s over %s.", yourDeity.c_str,
                                  yname(uwep));
+		        releaseJavaString(yourDeity);
+		    }
                     bless(uwep);
                     uwep->bknown = TRUE;
                     *repair_buf = '\0';
@@ -1074,8 +1083,11 @@ aligntyp g_align;
             register struct obj *otmp;
             int any = 0;
 
-            if (youCannotSee())
-                You_feel("the power of %s.", u_gname());
+            if (youCannotSee()) {
+		javaString yourDeity = yourDeityName();
+                You_feel("the power of %s.", yourDeity.c_str);
+		releaseJavaString(yourDeity);
+	    }
             else
                 You("are surrounded by %s aura.", an(hcolor(NH_LIGHT_BLUE)));
             for (otmp = invent; otmp; otmp = otmp->nobj) {
@@ -1472,14 +1484,21 @@ dosacrifice()
                 useup(otmp); /* well, it's gone now */
             else
                 useupf(otmp, 1L);
-            You("offer the Amulet of Yendor to %s...", a_gname());
+
+	    javaString altarDeity = altarDeityName();
+            You("offer the Amulet of Yendor to %s...", altarDeity.c_str);
+
             if (altaralign == A_NONE) {
                 /* Moloch's high altar */
                 if (currentAlignmentRecord() > -99)
                     setCurrentAlignmentRecord(-99);
                 /*[apparently shrug/snarl can be sensed without being seen]*/
+
+		javaString yourDeity = yourDeityName();
                 pline("%s shrugs and retains dominion over %s,", Moloch,
-                      u_gname());
+                      yourDeity.c_str);
+		releaseJavaString(yourDeity);
+
                 pline("then mercilessly snuffs out your life.");
                 Sprintf(killer.name, "%s indifference", s_suffix(Moloch));
                 killer.format = KILLED_BY;
@@ -1494,10 +1513,14 @@ dosacrifice()
                 /* And the opposing team picks you up and
                    carries you off on their shoulders */
                 adjalign(-99);
+		
+		javaString yourDeity = yourDeityName();
                 pline("%s accepts your gift, and gains dominion over %s...",
-                      a_gname(), u_gname());
-                pline("%s is enraged...", u_gname());
-                pline("Fortunately, %s permits you to live...", a_gname());
+                      altarDeity.c_str, yourDeity.c_str);
+                pline("%s is enraged...", yourDeity.c_str);
+		releaseJavaString(yourDeity);
+
+                pline("Fortunately, %s permits you to live...", altarDeity.c_str);
                 pline(cloud_of_smoke, hcolor(NH_ORANGE));
                 done(ESCAPED);
             } else { /* super big win */
@@ -1513,6 +1536,7 @@ dosacrifice()
                     flags.female ? "dess" : "");
                 done(ASCENDED);
             }
+	    releaseJavaString(altarDeity);
         }
     } /* real Amulet */
 
@@ -1549,7 +1573,11 @@ dosacrifice()
          * gets the god who owns it truly pissed off.
          */
         You_feel("the air around you grow charged...");
-        pline("Suddenly, you realize that %s has noticed you...", a_gname());
+
+	javaString altarDeity = altarDeityName();
+        pline("Suddenly, you realize that %s has noticed you...", altarDeity.c_str);
+	releaseJavaString(altarDeity);
+
         godvoice(altaralign,
                  "So, mortal!  You dare desecrate my High Temple!");
         /* Throw everything we have at the player */
@@ -1569,10 +1597,16 @@ dosacrifice()
             if (ugod_is_angry() || (altaralign == A_NONE && areYouInHell())) {
                 if (currentAlignmentBase() == originalAlignmentBase()
                     && altaralign != A_NONE) {
+
+		    javaString yourDeity = yourDeityName();
                     You("have a strong feeling that %s is angry...",
-                        u_gname());
+                        yourDeity.c_str);
+		    releaseJavaString(yourDeity);
+
                     consume_offering(otmp);
-                    pline("%s accepts your allegiance.", a_gname());
+	            javaString altarDeity = altarDeityName();
+                    pline("%s accepts your allegiance.", altarDeity.c_str);
+		    releaseJavaString(altarDeity);
 
                     uchangealign(altaralign, 0);
                     /* Beware, Conversion is costly */
@@ -1581,7 +1615,9 @@ dosacrifice()
                 } else {
                     increaseDivineWrath(3);
                     adjalign(-5);
-                    pline("%s rejects your sacrifice!", a_gname());
+	            javaString altarDeity = altarDeityName();
+                    pline("%s rejects your sacrifice!", altarDeity.c_str);
+		    releaseJavaString(altarDeity);
                     godvoice(altaralign, "Suffer, infidel!");
                     change_luck(-5);
                     (void) adjattrib(A_WIS, -2, TRUE);
@@ -1591,11 +1627,15 @@ dosacrifice()
                 return 1;
             } else {
                 consume_offering(otmp);
-                You("sense a conflict between %s and %s.", u_gname(),
-                    a_gname());
+		javaString yourDeity = yourDeityName();
+	        javaString altarDeity = altarDeityName();
+                You("sense a conflict between %s and %s.", yourDeity.c_str,
+                    altarDeity.c_str);
+	        releaseJavaString(altarDeity);
+
                 if (rn2(8 + currentExperienceLevel()) > 5) {
                     struct monst *pri;
-                    You_feel("the power of %s increase.", u_gname());
+                    You_feel("the power of %s increase.", yourDeity.c_str);
                     exercise(A_WIS, TRUE);
                     change_luck(1);
                     /* Yes, this is supposed to be &=, not |= */
@@ -1621,13 +1661,15 @@ dosacrifice()
                         angry_priest();
                 } else {
                     pline("Unluckily, you feel the power of %s decrease.",
-                          u_gname());
+                          yourDeity.c_str);
                     change_luck(-1);
                     exercise(A_WIS, FALSE);
                     if (rnl(currentExperienceLevel()) > 6 && currentAlignmentRecord() > 0
                         && rnd(currentAlignmentRecord()) > (7 * ALIGNLIM) / 8)
                         summon_minion(altaralign, TRUE);
                 }
+
+		releaseJavaString(yourDeity);
                 return 1;
             }
         }
@@ -1640,20 +1682,23 @@ dosacrifice()
             if (divineWrath() < 0)
                 setDivineWrath(0);
             if (divineWrath() != saved_anger) {
-                if (divineWrath()) {
-                    pline("%s seems %s.", u_gname(),
-                          youAreHallucinating() ? "groovy" : "slightly mollified");
 
+		javaString yourDeity = yourDeityName();
+                if (divineWrath()) {
+                    pline("%s seems %s.", yourDeity.c_str,
+                          youAreHallucinating() ? "groovy" : "slightly mollified");
                     if (currentLuck() < 0)
                         change_luck(1);
                 } else {
-                    pline("%s seems %s.", u_gname(),
+                    pline("%s seems %s.", yourDeity.c_str,
                           youAreHallucinating() ? "cosmic (not a new fact)"
                                         : "mollified");
 
                     if (currentLuck() < 0)
                         setCurrentLuck(0);
                 }
+		releaseJavaString(yourDeity);
+
             } else { /* not satisfied yet */
                 if (youAreHallucinating())
                     pline_The("gods seem tall.");
@@ -1920,20 +1965,22 @@ doturn()
     }
     setAtheistConduct(FALSE);
 
+    javaString yourDeity = yourDeityName();
     if ((currentAlignmentType() != A_CHAOTIC
          && (isDemon(pmid4you()) || isUndead(pmid4you())))
         || divineWrath() > 6) { /* "Die, mortal!" */
-        pline("For some reason, %s seems to ignore you.", u_gname());
+        pline("For some reason, %s seems to ignore you.", yourDeity.c_str);
         aggravate();
         exercise(A_WIS, FALSE);
         return 0;
     }
     if (areYouInHell()) {
-        pline("Since you are in Gehennom, %s won't help you.", u_gname());
+        pline("Since you are in Gehennom, %s won't help you.", yourDeity.c_str);
         aggravate();
         return 0;
     }
-    pline("Calling upon %s, you chant an arcane formula.", u_gname());
+    pline("Calling upon %s, you chant an arcane formula.", yourDeity.c_str);
+    releaseJavaString(yourDeity);
     exercise(A_WIS, TRUE);
 
     /* note: does not perform unturn_dead() on victims' inventories */
@@ -1997,57 +2044,15 @@ doturn()
     return 1;
 }
 
-const char *
-a_gname()
+javaString altarDeityName()
 {
-    return a_gname_at(currentX(), currentY());
-}
+    int x = currentX();
+    int y = currentY();
 
-/* returns the name of an altar's deity */
-const char *
-a_gname_at(x, y)
-xchar x, y;
-{
     if (!IS_ALTAR(levl[x][y].typ))
-        return (char *) 0;
+        return javaStringFromC("");
 
-    return align_gname(a_align(x, y));
-}
-
-/* returns the name of the hero's deity */
-const char *
-u_gname()
-{
-    return align_gname(currentAlignmentType());
-}
-
-const char *
-align_gname(alignment)
-aligntyp alignment;
-{
-    const char *gnam;
-
-    switch (alignment) {
-    case A_NONE:
-        gnam = Moloch;
-        break;
-    case A_LAWFUL:
-        gnam = urole.lgod;
-        break;
-    case A_NEUTRAL:
-        gnam = urole.ngod;
-        break;
-    case A_CHAOTIC:
-        gnam = urole.cgod;
-        break;
-    default:
-        impossible("unknown alignment.");
-        gnam = "someone";
-        break;
-    }
-    if (*gnam == '_')
-        ++gnam;
-    return gnam;
+    return nameOfAlignedDeityFromYourPantheon(a_align(x, y));
 }
 
 void
@@ -2057,7 +2062,7 @@ register int x, y;
     aligntyp altaralign = a_align(x, y);
 
     javaString altarDeity = nameOfAlignedDeityFromYourPantheon(altaralign);
-    javaString yourDeity  = javaStringFromC(u_gname);
+    javaString yourDeity  = yourDeityName();
 
     if (!strcmp(altarDeity.c_str, yourDeity.c_str)) {
         godvoice(altaralign, "How darest thou desecrate my altar!");

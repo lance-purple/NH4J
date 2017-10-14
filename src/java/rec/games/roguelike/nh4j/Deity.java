@@ -1,7 +1,5 @@
 package rec.games.roguelike.nh4j;
 
-import java.util.ArrayList;
-
 public enum Deity {
 
 	AMATERASU_OMIKAMI(Gender.FEMALE, "Amaterasu Omikami"),

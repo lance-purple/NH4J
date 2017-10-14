@@ -2636,13 +2636,15 @@ char *buf;
     else if (IS_SINK(ltyp))
         cmap = S_sink; /* "sink" */
     else if (IS_ALTAR(ltyp)) {
+	javaString deityName = altarDeityName();
         Sprintf(altbuf, "%saltar to %s (%s)",
                 ((lev->altarmask & AM_SHRINE)
                  && (areYouOnAstralLevel() || areYouOnSanctumLevel()))
                     ? "high "
                     : "",
-                a_gname(),
+                deityName.c_str,
                 align_str(Amask2align(lev->altarmask & ~AM_SHRINE)));
+	releaseJavaString(deityName);
         dfeature = altbuf;
     } else if ((x == xupstair && y == yupstair)
                || (x == sstairs.sx && y == sstairs.sy && sstairs.up))

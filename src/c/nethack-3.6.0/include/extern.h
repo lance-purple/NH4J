@@ -1593,6 +1593,7 @@ E void FDECL(decreaseMonsterRandomizerChoiceCount, (int));
 E int FDECL(monsterRandomizerChoices, (int));
 E void FDECL(setMonsterRandomizerChoices, (int, int));
 
+E javaString FDECL(yourDeityName, ());
 E javaString FDECL(nameOfAlignedDeityFromYourPantheon, (int));
 E javaString FDECL(titleOfAlignedDeityFromYourPantheon, (int));
 
@@ -2661,11 +2662,9 @@ E int NDECL(prayer_done);
 E int NDECL(dosacrifice);
 E boolean FDECL(can_pray, (BOOLEAN_P));
 E int NDECL(dopray);
-E const char *NDECL(u_gname);
 E int NDECL(doturn);
-E const char *NDECL(a_gname);
-E const char *FDECL(a_gname_at, (XCHAR_P x, XCHAR_P y));
-E const char *FDECL(align_gname, (ALIGNTYP_P));
+E int FDECL(a_align, (int, int));
+E javaString NDECL(altarDeityName);
 E void FDECL(altar_wrath, (int, int));
 E javaString FDECL(randomHallucinatoryDeityName, ());
 
@@ -2813,6 +2812,8 @@ E int FDECL(rnz, (int));
 /* ### role.c ### */
 
 E int FDECL(numberOfKnownRoles, ());
+
+E boolean FDECL(roleHasDefaultPantheon, (int));
 E boolean FDECL(roleNameHasMaleVersion, (int));
 E javaString FDECL(roleNameAsMale, (int));
 E boolean FDECL(roleNameHasFemaleVersion, (int));

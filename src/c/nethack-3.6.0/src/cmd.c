@@ -1449,6 +1449,7 @@ int final;
     releaseJavaString(rank_titl);
 
     /* report alignment (bypass you_are() in order to omit ending period) */
+    javaString yourDeity = yourDeityName();
     Sprintf(buf, " %s%s%s, %son a mission for %s",
             You_, !final ? are : were,
             align_str(currentAlignmentType()),
@@ -1459,8 +1460,9 @@ int final;
                   /* atheist (ignored in very early game) */
                   : (atheistConduct() && moves > 1000L) ? "nominally "
                      /* lastly, normal case */
-                     : "",
-            u_gname());
+                     : "", yourDeity.c_str);
+    releaseJavaString(yourDeity);
+
     putstr(en_win, 0, buf);
     /* show the rest of this game's pantheon (finishes previous sentence)
        [appending "also Moloch" at the end would allow for straightforward
@@ -2263,7 +2265,10 @@ int final;
                 divineWrath() > 6 ? "extremely " : divineWrath() > 3 ? "very " : "");
         if (wizard)
             Sprintf(eos(buf), " (%d)", divineWrath());
-        enl_msg(u_gname(), " is", " was", buf, "");
+
+	javaString yourDeity = yourDeityName();
+        enl_msg(yourDeity.c_str, " is", " was", buf, "");
+	releaseJavaString(yourDeity);
     } else {
         /*
          * We need to suppress this when the game is over, because death

@@ -1526,13 +1526,17 @@ public class PlayerCharacter {
 		currentPantheon = Pantheon.values()[id];
 	}
 	
+	public static String yourDeityName()
+	{
+		return nameOfAlignedDeityFromCurrentPantheon(currentAlignmentType);
+	}
+	
 	public static String nameOfAlignedDeityFromCurrentPantheon(int alignment)
 	{
 		Deity alignedDeity = null;
 		alignedDeity = currentPantheon.deityWith(alignment);
 		return alignedDeity.deityName();
 	}
-	
 	
 	public static String titleOfAlignedDeityFromCurrentPantheon(int alignment)
 	{

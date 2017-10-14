@@ -40,6 +40,7 @@ public enum Pantheon {
 	public static final int LAWFUL_DEITY = 1;
 	public static final int NEUTRAL_DEITY = 0;
 	public static final int CHAOTIC_DEITY = -1;
+	public static final int AMORAL_DEITY = -128;
 	
 	public Deity deityWith(int alignment) {
 		
@@ -51,8 +52,12 @@ public enum Pantheon {
 		}
 		else if (CHAOTIC_DEITY == alignment) {
 			return chaoticDeity;
-		} else {
-			return null;
+		}
+		else if (AMORAL_DEITY == alignment) {
+			return Deity.MOLOCH;
+		}
+		else {
+			throw new IllegalArgumentException("Bad alignment " + alignment);
 		}
 	}
 }

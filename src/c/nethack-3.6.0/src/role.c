@@ -2109,14 +2109,13 @@ role_init()
     /* Fix up the god names */
     if (flags.pantheon == -1) {             /* new game */
         flags.pantheon = flags.initrole;    /* use own gods */
-        while (!roles[flags.pantheon].lgod) /* unless they're missing */
+        while (!roleHasDefaultPantheon(flags.pantheon)) /* unless they're missing */
+	{
             flags.pantheon = randrole();
+	}
     }
     if (-1 == yourCurrentPantheon()) {
         setYourCurrentPantheon(flags.pantheon);
-        urole.lgod = roles[flags.pantheon].lgod;
-        urole.ngod = roles[flags.pantheon].ngod;
-        urole.cgod = roles[flags.pantheon].cgod;
     }
 
     /* 0 or 1; no gods are neuter, nor is gender randomized */

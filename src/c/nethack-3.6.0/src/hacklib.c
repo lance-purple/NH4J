@@ -2862,6 +2862,10 @@ extern int numberOfKnownRoles() {
     return javaGetInt(ADVENTURER_ROLE_CLASS, "numberOfKnownRoles");
 }
 
+extern boolean roleHasDefaultPantheon(int whichRole) {
+    return javaGetBooleanFromInt(ADVENTURER_ROLE_CLASS, "hasDefaultPantheon", whichRole);
+}
+
 extern boolean roleNameHasMaleVersion(int whichRole) {
     return javaGetBooleanFromInt(ADVENTURER_ROLE_CLASS, "roleNameHasMaleVersion", whichRole);
 }
@@ -2914,13 +2918,19 @@ extern void setYourCurrentPantheon(int pid) {
   javaSetInt(PLAYER_CHARACTER_CLASS, "setCurrentPantheon", pid);
 }
 
+extern javaString yourDeityName() {
+  jstring j_str = javaGetString(PLAYER_CHARACTER_CLASS, "yourDeityName");
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
+}
+
 extern javaString nameOfAlignedDeityFromYourPantheon(int alignment) {
   jstring j_str = javaGetStringFromInt(PLAYER_CHARACTER_CLASS, "nameOfAlignedDeityFromCurrentPantheon", alignment);
   const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
   javaString result = { j_str, c_str };
   return result;
 }
-
 
 extern javaString titleOfAlignedDeityFromYourPantheon(int alignment) {
   jstring j_str = javaGetStringFromInt(PLAYER_CHARACTER_CLASS, "titleOfAlignedDeityFromCurrentPantheon", alignment);

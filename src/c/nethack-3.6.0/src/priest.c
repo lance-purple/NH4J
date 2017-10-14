@@ -804,20 +804,22 @@ struct monst *priest;
             return;
     }
 
+    javaString altarDeity = nameOfAlignedDeityFromYourPantheon(a_align(ax, ay));
     switch (rn2(3)) {
     case 0:
         pline("%s roars in anger:  \"Thou shalt suffer!\"",
-              a_gname_at(ax, ay));
+              altarDeity.c_str);
         break;
     case 1:
         pline("%s voice booms:  \"How darest thou harm my servant!\"",
-              s_suffix(a_gname_at(ax, ay)));
+              s_suffix(altarDeity.c_str));
         break;
     default:
         pline("%s roars:  \"Thou dost profane my shrine!\"",
-              a_gname_at(ax, ay));
+              altarDeity.c_str);
         break;
     }
+    releaseJavaString(altarDeity);
 
     buzz(-10 - (AD_ELEC - 1), 6, x, y, sgn(tbx),
          sgn(tby)); /* bolt of lightning */
