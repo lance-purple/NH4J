@@ -24,7 +24,6 @@ STATIC_DCL struct qtmsg *FDECL(construct_qtlist, (long));
 STATIC_DCL const char *NDECL(intermed);
 STATIC_DCL const char *NDECL(neminame);
 STATIC_DCL const char *NDECL(guardname);
-STATIC_DCL const char *NDECL(homebase);
 STATIC_DCL void FDECL(qtext_pronoun, (CHAR_P, CHAR_P));
 STATIC_DCL struct qtmsg *FDECL(msg_in, (struct qtmsg *, int));
 STATIC_DCL void FDECL(convert_arg, (CHAR_P));
@@ -226,11 +225,6 @@ guardname() /* return your role leader's guard monster name */
     return nambuf;
 }
 
-STATIC_OVL const char *
-homebase() /* return your role leader's location */
-{
-    return urole.homebase;
-}
 
 /* replace deity, leader, nemesis, or artifact name with pronoun;
    overwrites cvt_buf[] */
@@ -340,7 +334,7 @@ char c;
         jstr = titleOfAlignedDeityFromYourPantheon(originalAlignmentBase());
         break;
     case 'H':
-        jstr = javaStringFromC(homebase());
+        jstr = yourQuestHomeBase();
         break;
     case 'a':
         jstr = javaStringFromC(align_str(originalAlignmentBase()));

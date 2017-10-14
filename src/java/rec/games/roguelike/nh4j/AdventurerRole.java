@@ -13,6 +13,8 @@ public class AdventurerRole {
 	private ArrayList<GenderedName> rankNames = new ArrayList<>();
 	private Pantheon pantheon = null;
 	private String fileCode;
+	
+	private String questHomeBase;
 
 	private AdventurerRole(int id) {
 		roleID = id;
@@ -49,6 +51,13 @@ public class AdventurerRole {
 		this.fileCode = fileCode;
 		return this;
 	}
+	
+	private AdventurerRole withQuestHomeBase(String base)
+	{
+		this.questHomeBase = base;
+		return this;
+	}
+
 
 	private void add() {
 		rolesByID.put(this.roleID, this);
@@ -190,8 +199,18 @@ public class AdventurerRole {
 		{
 			return role.fileCode;
 		}
-		return "UNKNOWN";
+		return "UNK";
+	}
+	
+	public static String questHomeBase(int id) {
+		AdventurerRole role = getRole(id);
+		if (null != role)
+		{
+			return role.questHomeBase;
+		}
+		return "(UNKNOWN LOCATION)";
 	}	
+	
 	
 	
 	public static AdventurerRole random() {
@@ -218,6 +237,7 @@ public class AdventurerRole {
 			.withRank("Curator")
 			.with(Pantheon.CENTRAL_AMERICAN)
 			.withFileCode("Arc")
+			.withQuestHomeBase("the College of Archeology")
 			.add();
 
 		AdventurerRole.id(1).named("Barbarian").withRank("Plunderer", "Plunderess")
@@ -231,6 +251,7 @@ public class AdventurerRole {
 			.withRank("Conqueror", "Conqueress")
 			.with(Pantheon.HYBORIAN)
 			.withFileCode("Bar")
+			.withQuestHomeBase("the Camp of the Duali Tribe")
 			.add();
 
 		AdventurerRole.id(2).named("Caveman", "Cavewoman")
@@ -245,6 +266,7 @@ public class AdventurerRole {
 			.withRank("Pioneer")
 			.with(Pantheon.BABYLONIAN)
 			.withFileCode("Cav")
+			.withQuestHomeBase("the Caves of the Ancestors")
 			.add();
 
 		AdventurerRole.id(3).named("Healer")
@@ -259,6 +281,7 @@ public class AdventurerRole {
 			.withRank("Chirurgeon")
 			.with(Pantheon.GREEK)
 			.withFileCode("Hea")
+			.withQuestHomeBase("the Temple of Epidaurus")
 			.add();
 
 		AdventurerRole.id(4).named("Knight")
@@ -273,6 +296,7 @@ public class AdventurerRole {
 			.withRank("Paladin")
 			.with(Pantheon.CELTIC)
 			.withFileCode("Kni")
+			.withQuestHomeBase("Camelot Castle")
 			.add();
 
 		AdventurerRole.id(5).named("Monk")
@@ -287,6 +311,7 @@ public class AdventurerRole {
 			.withRank("Master")
 			.with(Pantheon.CHINESE)
 			.withFileCode("Mon")
+			.withQuestHomeBase( "the Monastery of Chan-Sune")
 			.add();
 
 		AdventurerRole.id(6).named("Priest", "Priestess")
@@ -300,6 +325,7 @@ public class AdventurerRole {
 			.withRank("Patriarch", "Matriarch")
 			.withRank("High Priest", "High Priestess")
 			.withFileCode("Pri")
+			.withQuestHomeBase("the Great Temple")
 			.add();
 
 		AdventurerRole.id(7).named("Rogue")
@@ -314,6 +340,7 @@ public class AdventurerRole {
 			.withRank("Thief")
 			.with(Pantheon.NEHWON)
 			.withFileCode("Rog")
+			.withQuestHomeBase("the Thieves' Guild Hall")
 			.add();
 
 		AdventurerRole.id(8).named("Ranger")
@@ -328,6 +355,7 @@ public class AdventurerRole {
 			.withRank("Marksman", "Markswoman")
 			.with(Pantheon.ROMAN)
 			.withFileCode("Ran")
+			.withQuestHomeBase("Orion's camp")
 			.add();
 
 		AdventurerRole.id(9).named("Samurai")
@@ -342,6 +370,7 @@ public class AdventurerRole {
 			.withRank("Shogun") /* supreme commander, warlord */
 			.with(Pantheon.JAPANESE)
 			.withFileCode("Sam")
+			.withQuestHomeBase("the Castle of the Taro Clan")
 			.add();
 
 		AdventurerRole.id(10).named("Tourist")
@@ -356,6 +385,7 @@ public class AdventurerRole {
 			.withRank("Adventurer")
 			.with(Pantheon.DISCWORLD)
 			.withFileCode("Tou")
+			.withQuestHomeBase("Ankh-Morpork")
 			.add();
 
 		AdventurerRole.id(11).named("Valkyrie")
@@ -370,6 +400,7 @@ public class AdventurerRole {
 			.withRank("Lord", "Lady")
 			.with(Pantheon.NORSE)
 			.withFileCode("Val")
+			.withQuestHomeBase("the Shrine of Destiny")
 			.add();
 
 		AdventurerRole.id(12).named("Wizard")
@@ -384,6 +415,7 @@ public class AdventurerRole {
 			.withRank("Mage")
 			.with(Pantheon.EGYPTIAN)
 			.withFileCode("Wiz")
+			.withQuestHomeBase("the Lonely Tower")
 			.add();
 
 	}

@@ -2972,5 +2972,11 @@ extern javaString yourRoleFileCode() {
   return result;
 }
 
+extern javaString yourQuestHomeBase() {
+  jstring j_str = javaGetString(PLAYER_CHARACTER_CLASS, "questHomeBase");
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
+}
 
 /*hacklib.c*/

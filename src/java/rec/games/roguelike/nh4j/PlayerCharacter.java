@@ -1563,5 +1563,9 @@ public class PlayerCharacter {
 	{
 		return AdventurerRole.fileCode(currentRoleID);
 	}
-	
+
+	public static String questHomeBase()
+	{
+		return AdventurerRole.questHomeBase(currentRoleID);
+	}
 }

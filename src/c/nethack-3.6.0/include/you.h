@@ -58,7 +58,7 @@ struct Role {
     struct RoleName XXrank[9]; /* names for experience levels (from botl.c) */
     const char *XXlgod, *XXngod, *XXcgod; /* god names (from pray.c) */
     const char *XXfilecode;           /* abbreviation for use in file names */
-    const char *homebase; /* quest leader's location (from questpgr.c) */
+    const char *XXhomebase; /* quest leader's location (from questpgr.c) */
     const char *intermed; /* quest intermediate goal (from questpgr.c) */
 
     /*** Indices of important monsters and objects ***/
