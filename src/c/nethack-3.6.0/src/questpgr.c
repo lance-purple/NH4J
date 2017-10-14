@@ -21,7 +21,6 @@ extern char *lev_message;
 static void NDECL(dump_qtlist);
 static void FDECL(Fread, (genericptr_t, int, int, dlb *));
 STATIC_DCL struct qtmsg *FDECL(construct_qtlist, (long));
-STATIC_DCL const char *NDECL(intermed);
 STATIC_DCL const char *NDECL(neminame);
 STATIC_DCL const char *NDECL(guardname);
 STATIC_DCL void FDECL(qtext_pronoun, (CHAR_P, CHAR_P));
@@ -187,13 +186,6 @@ ldrname()
     return nambuf;
 }
 
-/* return your intermediate target string */
-STATIC_OVL const char *
-intermed()
-{
-    return urole.intermed;
-}
-
 boolean
 is_quest_artifact(otmp)
 struct obj *otmp;
@@ -310,7 +302,7 @@ char c;
         jstr = javaStringFromC(ldrname());
         break;
     case 'i':
-        jstr = javaStringFromC(intermed());
+        jstr = yourIntermediateQuestLevel();
         break;
     case 'O':
     case 'o':

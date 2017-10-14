@@ -1568,4 +1568,9 @@ public class PlayerCharacter {
 	{
 		return AdventurerRole.questHomeBase(currentRoleID);
 	}
+	
+	public static String intermediateQuestLevel()
+	{
+		return AdventurerRole.intermediateQuestLevel(currentRoleID);
+	}
 }

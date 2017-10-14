@@ -15,6 +15,7 @@ public class AdventurerRole {
 	private String fileCode;
 	
 	private String questHomeBase;
+	private String intermediateQuestLevel;
 
 	private AdventurerRole(int id) {
 		roleID = id;
@@ -58,6 +59,11 @@ public class AdventurerRole {
 		return this;
 	}
 
+	private AdventurerRole withIntermediateQuestLevel(String level)
+	{
+		this.intermediateQuestLevel = level;
+		return this;
+	}
 
 	private void add() {
 		rolesByID.put(this.roleID, this);
@@ -211,7 +217,14 @@ public class AdventurerRole {
 		return "(UNKNOWN LOCATION)";
 	}	
 	
-	
+	public static String intermediateQuestLevel(int id) {
+		AdventurerRole role = getRole(id);
+		if (null != role)
+		{
+			return role.intermediateQuestLevel;
+		}
+		return "(UNKNOWN LOCATION)";
+	}	
 	
 	public static AdventurerRole random() {
 		if (rolesByID.isEmpty()) {
@@ -238,6 +251,7 @@ public class AdventurerRole {
 			.with(Pantheon.CENTRAL_AMERICAN)
 			.withFileCode("Arc")
 			.withQuestHomeBase("the College of Archeology")
+			.withIntermediateQuestLevel( "the Tomb of the Toltec Kings")
 			.add();
 
 		AdventurerRole.id(1).named("Barbarian").withRank("Plunderer", "Plunderess")
@@ -252,6 +266,7 @@ public class AdventurerRole {
 			.with(Pantheon.HYBORIAN)
 			.withFileCode("Bar")
 			.withQuestHomeBase("the Camp of the Duali Tribe")
+			.withIntermediateQuestLevel("the Duali Oasis")
 			.add();
 
 		AdventurerRole.id(2).named("Caveman", "Cavewoman")
@@ -267,6 +282,7 @@ public class AdventurerRole {
 			.with(Pantheon.BABYLONIAN)
 			.withFileCode("Cav")
 			.withQuestHomeBase("the Caves of the Ancestors")
+			.withIntermediateQuestLevel("the Dragon's Lair")
 			.add();
 
 		AdventurerRole.id(3).named("Healer")
@@ -282,6 +298,7 @@ public class AdventurerRole {
 			.with(Pantheon.GREEK)
 			.withFileCode("Hea")
 			.withQuestHomeBase("the Temple of Epidaurus")
+			.withIntermediateQuestLevel("the Temple of Coeus")
 			.add();
 
 		AdventurerRole.id(4).named("Knight")
@@ -297,6 +314,7 @@ public class AdventurerRole {
 			.with(Pantheon.CELTIC)
 			.withFileCode("Kni")
 			.withQuestHomeBase("Camelot Castle")
+			.withIntermediateQuestLevel("the Isle of Glass")
 			.add();
 
 		AdventurerRole.id(5).named("Monk")
@@ -312,6 +330,7 @@ public class AdventurerRole {
 			.with(Pantheon.CHINESE)
 			.withFileCode("Mon")
 			.withQuestHomeBase( "the Monastery of Chan-Sune")
+			.withIntermediateQuestLevel("the Monastery of the Earth-Lord")
 			.add();
 
 		AdventurerRole.id(6).named("Priest", "Priestess")
@@ -326,6 +345,7 @@ public class AdventurerRole {
 			.withRank("High Priest", "High Priestess")
 			.withFileCode("Pri")
 			.withQuestHomeBase("the Great Temple")
+			.withIntermediateQuestLevel("the Temple of Nalzok")
 			.add();
 
 		AdventurerRole.id(7).named("Rogue")
@@ -341,6 +361,7 @@ public class AdventurerRole {
 			.with(Pantheon.NEHWON)
 			.withFileCode("Rog")
 			.withQuestHomeBase("the Thieves' Guild Hall")
+			.withIntermediateQuestLevel("the Assassins' Guild Hall")
 			.add();
 
 		AdventurerRole.id(8).named("Ranger")
@@ -356,6 +377,7 @@ public class AdventurerRole {
 			.with(Pantheon.ROMAN)
 			.withFileCode("Ran")
 			.withQuestHomeBase("Orion's camp")
+			.withIntermediateQuestLevel("the cave of the wumpus")
 			.add();
 
 		AdventurerRole.id(9).named("Samurai")
@@ -371,6 +393,7 @@ public class AdventurerRole {
 			.with(Pantheon.JAPANESE)
 			.withFileCode("Sam")
 			.withQuestHomeBase("the Castle of the Taro Clan")
+			.withIntermediateQuestLevel("the Shogun's Castle")
 			.add();
 
 		AdventurerRole.id(10).named("Tourist")
@@ -386,6 +409,7 @@ public class AdventurerRole {
 			.with(Pantheon.DISCWORLD)
 			.withFileCode("Tou")
 			.withQuestHomeBase("Ankh-Morpork")
+			.withIntermediateQuestLevel("the Thieves' Guild Hall")
 			.add();
 
 		AdventurerRole.id(11).named("Valkyrie")
@@ -401,6 +425,7 @@ public class AdventurerRole {
 			.with(Pantheon.NORSE)
 			.withFileCode("Val")
 			.withQuestHomeBase("the Shrine of Destiny")
+			.withIntermediateQuestLevel("the cave of Surtur")
 			.add();
 
 		AdventurerRole.id(12).named("Wizard")
@@ -416,6 +441,7 @@ public class AdventurerRole {
 			.with(Pantheon.EGYPTIAN)
 			.withFileCode("Wiz")
 			.withQuestHomeBase("the Lonely Tower")
+			.withIntermediateQuestLevel("the Tower of Darkness")
 			.add();
 
 	}

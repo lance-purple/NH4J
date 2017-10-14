@@ -2979,4 +2979,11 @@ extern javaString yourQuestHomeBase() {
   return result;
 }
 
+extern javaString yourIntermediateQuestLevel() {
+  jstring j_str = javaGetString(PLAYER_CHARACTER_CLASS, "intermediateQuestLevel");
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
+}
+
 /*hacklib.c*/

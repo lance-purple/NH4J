@@ -59,7 +59,7 @@ struct Role {
     const char *XXlgod, *XXngod, *XXcgod; /* god names (from pray.c) */
     const char *XXfilecode;           /* abbreviation for use in file names */
     const char *XXhomebase; /* quest leader's location (from questpgr.c) */
-    const char *intermed; /* quest intermediate goal (from questpgr.c) */
+    const char *XXintermed; /* quest intermediate goal (from questpgr.c) */
 
     /*** Indices of important monsters and objects ***/
     short malenum, /* index (PM_) as a male (botl.c) */
