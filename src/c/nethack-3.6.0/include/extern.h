@@ -15,6 +15,7 @@ E JavaVM* java_vm;
 
 #define ADVENTURER_ROLE_CLASS "rec/games/roguelike/nh4j/AdventurerRole"
 #define CONTEXT_CLASS "rec/games/roguelike/nh4j/Context"
+#define HALLUCINATORY_DEITY_CLASS "rec/games/roguelike/nh4j/HallucinatoryDeity"
 #define MONSTER_DATA_CLASS "rec/games/roguelike/nh4j/MonsterData"
 #define MONSTER_RANDOMIZER_CLASS "rec/games/roguelike/nh4j/MonsterRandomizer"
 #define MONSTER_TYPE_CLASS "rec/games/roguelike/nh4j/MonsterType"
@@ -1592,6 +1593,9 @@ E void FDECL(decreaseMonsterRandomizerChoiceCount, (int));
 E int FDECL(monsterRandomizerChoices, (int));
 E void FDECL(setMonsterRandomizerChoices, (int, int));
 
+E javaString FDECL(nameOfAlignedDeityFromYourPantheon, (int));
+E javaString FDECL(titleOfAlignedDeityFromYourPantheon, (int));
+
 /* ### invent.c ### */
 
 E struct obj **FDECL(objarr_init, (int));
@@ -2662,9 +2666,8 @@ E int NDECL(doturn);
 E const char *NDECL(a_gname);
 E const char *FDECL(a_gname_at, (XCHAR_P x, XCHAR_P y));
 E const char *FDECL(align_gname, (ALIGNTYP_P));
-E const char *FDECL(halu_gname, (ALIGNTYP_P));
-E const char *FDECL(align_gtitle, (ALIGNTYP_P));
 E void FDECL(altar_wrath, (int, int));
+E javaString FDECL(randomHallucinatoryDeityName, ());
 
 /* ### priest.c ### */
 
@@ -2819,6 +2822,9 @@ E boolean FDECL(rankNameHasMaleVersion, (int, int));
 E javaString FDECL(rankNameAsMale, (int, int));
 E boolean FDECL(rankNameHasFemaleVersion, (int, int));
 E javaString FDECL(rankNameAsFemale, (int, int));
+
+E int FDECL(yourCurrentPantheon, ());
+E void FDECL(setYourCurrentPantheon, (int));
 
 E boolean FDECL(validrole, (int));
 E boolean FDECL(validrace, (int, int));

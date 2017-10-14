@@ -2112,13 +2112,17 @@ role_init()
         while (!roles[flags.pantheon].lgod) /* unless they're missing */
             flags.pantheon = randrole();
     }
-    if (!urole.lgod) {
+    if (-1 == yourCurrentPantheon()) {
+        setYourCurrentPantheon(flags.pantheon);
         urole.lgod = roles[flags.pantheon].lgod;
         urole.ngod = roles[flags.pantheon].ngod;
         urole.cgod = roles[flags.pantheon].cgod;
     }
+
     /* 0 or 1; no gods are neuter, nor is gender randomized */
-    quest_status.godgend = !strcmpi(align_gtitle(alignmnt), "goddess");
+    javaString deityTitle = titleOfAlignedDeityFromYourPantheon(alignmnt);
+    quest_status.godgend = !strcmpi(deityTitle.c_str, "goddess");
+    releaseJavaString(deityTitle);
 
     /* Fix up infravision */
     if (hasInfravision(urace.malenum)) {

@@ -1,75 +1,82 @@
 package rec.games.roguelike.nh4j;
 
-public class Deity {
+import java.util.ArrayList;
 
-	public static final Deity AMATERASU_OMIKAMI = male("Amaterasu Omikami");
-	public static final Deity ANHUR = male("Anhur");
-	public static final Deity ANSHAR = male("Anshar");
-	public static final Deity ANU = male("Anu");
-	public static final Deity ATHENA = female("Athena");
-	public static final Deity BLIND_IO = male("Blind Io");
-	public static final Deity BRIGIT = female("Brigit");
-	public static final Deity CAMAXTLI = male("Camaxtli");
-	public static final Deity CHIH_SUNG_TZU = male("Chih Sung-tzu");
-	public static final Deity CROM = male("Crom");
-	public static final Deity HERMES = male("Hermes");
-	public static final Deity HUAN_TI = male("Huan Ti");
-	public static final Deity HUHETOTL = male("Huhetotl");
-	public static final Deity ISHTAR = female("Ishtar");
-	public static final Deity ISSEK = male("Issek");
-	public static final Deity KOS = male("Kos");
-	public static final Deity LOKI = male("Loki");
-	public static final Deity LUGH = male("Lugh");
-	public static final Deity MANANNAN_MAC_LIR = male("Manannan Mac Lir");
-	public static final Deity MARS = male("Mars");
-	public static final Deity MITRA = male("Mitra");
-	public static final Deity MERCURY = male("Mercury");
-	public static final Deity MOG = male("Mog");
-	public static final Deity MOLOCH = male("Moloch");
-	public static final Deity ODIN = male("Odin");
-	public static final Deity OFFLER = male("Offler");
-	public static final Deity POSEIDON = male("Poseidon");
-	public static final Deity PTAH = male("Ptah");
-	public static final Deity QUETZALCOATL = male("Quetzalcoatl");
-	public static final Deity RAIJIN = male("Raijin");
-	public static final Deity SET = male("Set");
-	public static final Deity SHAN_LAI_CHING = male("Shan Lai Ching");
-	public static final Deity SUSANOWO = male("Susanowo");
-	public static final Deity THE_LADY = female("The Lady");
-	public static final Deity THOTH = male("Thoth");
-	public static final Deity TYR = male("Tyr");
-	public static final Deity VENUS = female("Venus");
+public enum Deity {
+
+	AMATERASU_OMIKAMI(Gender.FEMALE, "Amaterasu Omikami"),
+	ANHUR(Gender.MALE, "Anhur"),
+	ANSHAR(Gender.MALE, "Anshar"),
+	ANU(Gender.MALE, "Anu"),
+	ATHENA(Gender.FEMALE, "Athena"),
+	BLIND_IO(Gender.MALE, "Blind Io"),
+	BRIGIT(Gender.FEMALE, "Brigit"),
+	CAMAXTLI(Gender.MALE, "Camaxtli"),
+	CHIH_SUNG_TZU(Gender.MALE, "Chih Sung-tzu"),
+	CROM(Gender.MALE, "Crom"),
+	HERMES(Gender.MALE, "Hermes"),
+	HUAN_TI(Gender.MALE, "Huan Ti"),
+	HUHETOTL(Gender.MALE, "Huhetotl"),
+	ISHTAR(Gender.FEMALE, "Ishtar"),
+	ISSEK(Gender.MALE, "Issek"),
+	KOS(Gender.MALE, "Kos"),
+	LOKI(Gender.MALE, "Loki"),
+	LUGH(Gender.MALE, "Lugh"),
+	MANANNAN_MAC_LIR(Gender.MALE, "Manannan Mac Lir"),
+	MARS(Gender.MALE, "Mars"),
+	MITRA(Gender.MALE, "Mitra"),
+	MERCURY(Gender.MALE, "Mercury"),
+	MOG(Gender.MALE, "Mog"),
+    MOLOCH(Gender.MALE, "Moloch"),
+	ODIN(Gender.MALE, "Odin"),
+	OFFLER(Gender.MALE, "Offler"),
+	POSEIDON(Gender.MALE, "Poseidon"),
+	PTAH(Gender.MALE, "Ptah"),
+	QUETZALCOATL(Gender.MALE, "Quetzalcoatl"),
+	RAIJIN(Gender.MALE, "Raijin"),
+	SET(Gender.MALE, "Set"),
+	SHAN_LAI_CHING(Gender.MALE, "Shan Lai Ching"),
+	SUSANOWO(Gender.MALE, "Susanowo"),
+	THE_LADY(Gender.FEMALE, "The Lady"),
+	THOTH(Gender.MALE, "Thoth"),
+	TYR(Gender.MALE, "Tyr"),
+	VENUS(Gender.FEMALE, "Venus");
 	
 
-	private static final char FEMALE = 'f';
-	private static final char MALE = 'm';
-
-	private final String name;
-	private final char gender;
-
-	private Deity(String name, char gender) {
-		this.name = name;
+	private final String deityName;
+	private final Gender gender;
+	
+	private Deity(Gender gender, String name) {
 		this.gender = gender;
+		this.deityName = name;
 	}
 
-	public String name() {
-		return name;
+	public String deityName() {
+		return deityName;
 	}
 
 	public boolean male() {
-		return (MALE == gender);
+		return (Gender.MALE == gender);
 	}
 
 	public boolean female() {
-		return (FEMALE == gender);
+		return (Gender.FEMALE == gender);
 	}
 
-	public static Deity male(String name) {
-		return new Deity(name, MALE);
+	public static String title(Deity deity) {
+		if (null != deity)
+		{
+			if (deity.female())
+			{
+				return "goddess";
+			}
+		}
+		return "god";
 	}
-
-	public static Deity female(String name) {
-		return new Deity(name, FEMALE);
+	
+	public static Deity random() {
+		int index = Randomizer.nextInt(values().length);
+		return values()[index];
 	}
 
 }

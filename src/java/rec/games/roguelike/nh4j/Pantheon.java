@@ -36,4 +36,23 @@ public enum Pantheon {
 	public Deity chaoticDeity() {
 		return chaoticDeity;
 	}
+
+	public static final int LAWFUL_DEITY = 1;
+	public static final int NEUTRAL_DEITY = 0;
+	public static final int CHAOTIC_DEITY = -1;
+	
+	public Deity deityWith(int alignment) {
+		
+		if (LAWFUL_DEITY == alignment) {
+			return lawfulDeity;
+		}
+		else if (NEUTRAL_DEITY == alignment) {
+			return neutralDeity;
+		}
+		else if (CHAOTIC_DEITY == alignment) {
+			return chaoticDeity;
+		} else {
+			return null;
+		}
+	}
 }

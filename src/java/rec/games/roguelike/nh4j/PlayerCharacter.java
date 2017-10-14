@@ -52,6 +52,7 @@ public class PlayerCharacter {
 	private static long currentXP;
 	private static long currentScore;
 	
+	private static Pantheon currentPantheon;
 	private static int currentAlignmentType;
 	private static int currentAlignmentRecord;
 	
@@ -1509,6 +1510,37 @@ public class PlayerCharacter {
 
 	public static void setHaveAscended(boolean h) {
 		haveAscended = h;
+	}
+
+	public static int currentPantheon()
+	{
+		if (null == currentPantheon)
+		{
+			return -1;
+		}
+		return currentPantheon.ordinal();
+	}
+
+	public static void setCurrentPantheon(int id)
+	{
+		currentPantheon = Pantheon.values()[id];
+	}
+	
+	public static String nameOfAlignedDeityFromCurrentPantheon(int alignment)
+	{
+		Deity alignedDeity = null;
+		alignedDeity = currentPantheon.deityWith(alignment);
+		return alignedDeity.deityName();
+	}
+	
+	
+	public static String titleOfAlignedDeityFromCurrentPantheon(int alignment)
+	{
+		Deity alignedDeity = null;
+		if (currentPantheon != null) {
+			alignedDeity = currentPantheon.deityWith(alignment);
+		}
+		return Deity.title(alignedDeity);
 	}
 	
 }

@@ -1466,16 +1466,28 @@ int final;
        [appending "also Moloch" at the end would allow for straightforward
        trailing "and" on all three aligned entries but looks too verbose] */
     Sprintf(buf, " who %s opposed by", !final ? "is" : "was");
-    if (currentAlignmentType() != A_LAWFUL)
-        Sprintf(eos(buf), " %s (%s) and", align_gname(A_LAWFUL),
+    if (currentAlignmentType() != A_LAWFUL) {
+	javaString lawfulDeity = nameOfAlignedDeityFromYourPantheon(A_LAWFUL);
+        Sprintf(eos(buf), " %s (%s) and", lawfulDeity.c_str,
                 align_str(A_LAWFUL));
+	releaseJavaString(lawfulDeity);
+    }
     if (currentAlignmentType() != A_NEUTRAL)
-        Sprintf(eos(buf), " %s (%s)%s", align_gname(A_NEUTRAL),
+    {
+	javaString neutralDeity = nameOfAlignedDeityFromYourPantheon(A_NEUTRAL);
+        Sprintf(eos(buf), " %s (%s)%s", neutralDeity.c_str,
                 align_str(A_NEUTRAL),
                 (currentAlignmentType() != A_CHAOTIC) ? " and" : "");
+	releaseJavaString(neutralDeity);
+    }
     if (currentAlignmentType() != A_CHAOTIC)
-        Sprintf(eos(buf), " %s (%s)", align_gname(A_CHAOTIC),
+    {
+	javaString chaoticDeity = nameOfAlignedDeityFromYourPantheon(A_CHAOTIC);
+        Sprintf(eos(buf), " %s (%s)", chaoticDeity.c_str,
                 align_str(A_CHAOTIC));
+	releaseJavaString(chaoticDeity);
+    }
+
     Strcat(buf, "."); /* terminate sentence */
     putstr(en_win, 0, buf);
 

@@ -200,10 +200,15 @@ boolean talk;
     }
     if (mon) {
         if (talk) {
-            pline_The("voice of %s booms:", align_gname(alignment));
+	    javaString deity = nameOfAlignedDeityFromYourPantheon(alignment);
+            pline_The("voice of %s booms:", deity.c_str);
+	    releaseJavaString(deity);
+
             verbalize("Thou shalt pay for thine indiscretion!");
             if (youCanSee())
+	    {
                 pline("%s appears before you.", Amonnam(mon));
+	    }
             mon->mstrategy &= ~STRAT_APPEARMSG;
         }
         mon->mpeaceful = FALSE;

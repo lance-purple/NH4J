@@ -1,6 +1,7 @@
 package rec.games.roguelike.nh4j;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class AdventurerRole {
@@ -10,6 +11,7 @@ public class AdventurerRole {
 	private final int roleID;
 	private GenderedName roleName;
 	private ArrayList<GenderedName> rankNames = new ArrayList<>();
+	private Pantheon pantheon = null;
 
 	private AdventurerRole(int id) {
 		roleID = id;
@@ -32,6 +34,12 @@ public class AdventurerRole {
 
 	private AdventurerRole withRank(String maleVersion, String femaleVersion) {
 		rankNames.add(GenderedName.of(maleVersion, femaleVersion));
+		return this;
+	}
+	
+	private AdventurerRole with(Pantheon pantheon)
+	{
+		this.pantheon = pantheon;
 		return this;
 	}
 
@@ -81,7 +89,7 @@ public class AdventurerRole {
 		{
 			return role.roleName.asMale();
 		}
-		return "???";
+		return "(UNKNOWN ROLE)";
 	}
 	
 	public static boolean roleNameHasFemaleVersion(int id) {
@@ -100,7 +108,7 @@ public class AdventurerRole {
 		{
 			return role.roleName.asFemale();
 		}
-		return "???";
+		return "(UNKNOWN ROLE)";
 	}
 
 	
@@ -124,7 +132,7 @@ public class AdventurerRole {
 				return rankName.asMale();
 			}
 		}
-		return "???";
+		return "(UNKNOWN RANK)";
 	}
 
 	
@@ -148,7 +156,35 @@ public class AdventurerRole {
 				return rankName.asFemale();
 			}
 		}
-		return "???";
+		return "(UNKNOWN RANK)";
+	}
+	
+
+	public static boolean hasDefaultPantheon(int id) {
+		return (-1 != defaultPantheon(id));
+	}
+		
+	
+	public static int defaultPantheon(int id) {
+		AdventurerRole role = getRole(id);
+		if (null != role)
+		{
+			if (null != role.pantheon)
+			{
+				return role.pantheon.ordinal();
+			}
+		}
+		return -1;
+	}
+	
+	
+	public static AdventurerRole random() {
+		if (rolesByID.isEmpty()) {
+			initialize();
+		}
+		ArrayList<AdventurerRole> roles = new ArrayList<>(rolesByID.values());
+		Collections.shuffle(roles);
+		return roles.get(0);
 	}
 
 
@@ -164,6 +200,7 @@ public class AdventurerRole {
 			.withRank("Speleologist")
 			.withRank("Collector")
 			.withRank("Curator")
+			.with(Pantheon.CENTRAL_AMERICAN)
 			.add();
 
 		AdventurerRole.id(1).named("Barbarian").withRank("Plunderer", "Plunderess")
@@ -175,6 +212,7 @@ public class AdventurerRole {
 			.withRank("Slayer")
 			.withRank("Chieftain", "Chieftainess")
 			.withRank("Conqueror", "Conqueress")
+			.with(Pantheon.HYBORIAN)
 			.add();
 
 		AdventurerRole.id(2).named("Caveman", "Cavewoman")
@@ -187,6 +225,7 @@ public class AdventurerRole {
 			.withRank("Nomad")
 			.withRank("Rover")
 			.withRank("Pioneer")
+			.with(Pantheon.BABYLONIAN)
 			.add();
 
 		AdventurerRole.id(3).named("Healer")
@@ -199,6 +238,7 @@ public class AdventurerRole {
 			.withRank("Magister", "Magistra")
 			.withRank("Physician")
 			.withRank("Chirurgeon")
+			.with(Pantheon.GREEK)
 			.add();
 
 		AdventurerRole.id(4).named("Knight")
@@ -211,6 +251,7 @@ public class AdventurerRole {
 			.withRank("Chevalier", "Chevaliere")
 			.withRank("Seignieur", "Dame")
 			.withRank("Paladin")
+			.with(Pantheon.CELTIC)
 			.add();
 
 		AdventurerRole.id(5).named("Monk")
@@ -223,6 +264,7 @@ public class AdventurerRole {
 			.withRank("Student of Winds")
 			.withRank("Student of Fire")
 			.withRank("Master")
+			.with(Pantheon.CHINESE)
 			.add();
 
 		AdventurerRole.id(6).named("Priest", "Priestess")
@@ -247,6 +289,7 @@ public class AdventurerRole {
 			.withRank("Filcher")
 			.withRank("Magsman", "Magswoman")
 			.withRank("Thief")
+			.with(Pantheon.NEHWON)
 			.add();
 
 		AdventurerRole.id(8).named("Ranger")
@@ -259,6 +302,7 @@ public class AdventurerRole {
 			.withRank("Archer")
 			.withRank("Sharpshooter")
 			.withRank("Marksman", "Markswoman")
+			.with(Pantheon.ROMAN)
 			.add();
 
 		AdventurerRole.id(9).named("Samurai")
@@ -271,6 +315,7 @@ public class AdventurerRole {
 			.withRank("Daimyo") /* a samurai lord */
 			.withRank("Kuge") /* Noble of the Court */
 			.withRank("Shogun") /* supreme commander, warlord */
+			.with(Pantheon.JAPANESE)
 			.add();
 
 		AdventurerRole.id(10).named("Tourist")
@@ -283,6 +328,7 @@ public class AdventurerRole {
 			.withRank("Voyager")
 			.withRank("Explorer")
 			.withRank("Adventurer")
+			.with(Pantheon.DISCWORLD)
 			.add();
 
 		AdventurerRole.id(11).named("Valkyrie")
@@ -295,6 +341,7 @@ public class AdventurerRole {
 			.withRank("Hero", "Heroine")
 			.withRank("Champion")
 			.withRank("Lord", "Lady")
+			.with(Pantheon.NORSE)
 			.add();
 
 		AdventurerRole.id(12).named("Wizard")
@@ -307,6 +354,7 @@ public class AdventurerRole {
 			.withRank("Necromancer")
 			.withRank("Wizard")
 			.withRank("Mage")
+			.with(Pantheon.EGYPTIAN)
 			.add();
 
 	}

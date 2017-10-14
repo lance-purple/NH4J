@@ -267,7 +267,14 @@ dosounds()
             while (!letter(*msg))
                 ++msg; /* skip control flags */
             if (index(msg, '%'))
-                You_hear(msg, halu_gname(EPRI(mtmp)->shralign));
+	    {
+		int align = EPRI(mtmp)->shralign;
+                javaString deityName = (hallu)
+			? randomHallucinatoryDeityName()
+			: nameOfAlignedDeityFromYourPantheon(align);
+                You_hear(msg, deityName.c_str);
+		releaseJavaString(deityName);
+	    }
             else
                 You_hear1(msg);
             return;

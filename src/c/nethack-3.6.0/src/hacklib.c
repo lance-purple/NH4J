@@ -149,6 +149,13 @@ boolean javaGetBooleanFromIntAndLong(const char* classname, const char* methodna
 }
 
 
+jstring javaGetString(const char* classname, const char* methodname) {
+    jclass you_class = getJavaClass(classname);
+    jmethodID method = getStaticMethod(you_class, methodname, "()Ljava/lang/String;");
+    return (*jni_env)->CallStaticObjectMethod(jni_env, you_class, method);
+}
+
+
 jstring javaGetStringFromInt(const char* classname, const char* methodname, int i) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "(I)Ljava/lang/String;");
@@ -2894,6 +2901,36 @@ extern boolean rankNameHasFemaleVersion(int whichRole, int whichRank) {
 
 extern javaString rankNameAsFemale(int whichRole, int whichRank) {
   jstring j_str = javaGetStringFromIntAndInt(ADVENTURER_ROLE_CLASS, "rankNameAsFemale", whichRole, whichRank);
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
+}
+
+extern int yourCurrentPantheon() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "currentPantheon");
+}
+
+extern void setYourCurrentPantheon(int pid) {
+  javaSetInt(PLAYER_CHARACTER_CLASS, "setCurrentPantheon", pid);
+}
+
+extern javaString nameOfAlignedDeityFromYourPantheon(int alignment) {
+  jstring j_str = javaGetStringFromInt(PLAYER_CHARACTER_CLASS, "nameOfAlignedDeityFromCurrentPantheon", alignment);
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
+}
+
+
+extern javaString titleOfAlignedDeityFromYourPantheon(int alignment) {
+  jstring j_str = javaGetStringFromInt(PLAYER_CHARACTER_CLASS, "titleOfAlignedDeityFromCurrentPantheon", alignment);
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
+}
+
+extern javaString randomHallucinatoryDeityName(int alignment) {
+  jstring j_str = javaGetString(HALLUCINATORY_DEITY_CLASS, "randomName");
   const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
   javaString result = { j_str, c_str };
   return result;

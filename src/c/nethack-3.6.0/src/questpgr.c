@@ -333,7 +333,7 @@ char c;
         jstr = javaStringFromC(guardname());
         break;
     case 'G':
-        jstr = javaStringFromC(align_gtitle(originalAlignmentBase()));
+        jstr = titleOfAlignedDeityFromYourPantheon(originalAlignmentBase());
         break;
     case 'H':
         jstr = javaStringFromC(homebase());
@@ -345,10 +345,10 @@ char c;
         jstr = javaStringFromC(align_str(currentAlignmentType()));
         break;
     case 'd':
-        jstr = javaStringFromC(align_gname(originalAlignmentBase()));
+        jstr = nameOfAlignedDeityFromYourPantheon(originalAlignmentBase());
         break;
     case 'D':
-        jstr = javaStringFromC(align_gname(A_LAWFUL));
+        jstr = nameOfAlignedDeityFromYourPantheon(A_LAWFUL);
         break;
     case 'C':
         jstr = javaStringFromC("chaotic");

@@ -362,7 +362,15 @@ char *pname; /* caller-supplied output buffer */
     if (do_hallu || !high_priest || !areYouOnAstralLevel()
         || distanceSquaredToYou(mon->mx, mon->my) <= 2 || program_state.gameover) {
         Strcat(pname, " of ");
-        Strcat(pname, halu_gname(mon_aligntyp(mon)));
+
+	javaString deityName;
+	if (do_hallu) {
+	    deityName = randomHallucinatoryDeityName();
+	} else {
+	    deityName = nameOfAlignedDeityFromYourPantheon(mon_aligntyp(mon));
+	}
+        Strcat(pname, deityName.c_str);
+	releaseJavaString(deityName);
     }
     return pname;
 }

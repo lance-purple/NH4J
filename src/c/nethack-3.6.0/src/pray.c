@@ -560,7 +560,10 @@ aligntyp resp_god;
             fry_by_god(resp_god, FALSE);
     }
 
-    pline("%s is not deterred...", align_gname(resp_god));
+    javaString deity = nameOfAlignedDeityFromYourPantheon(resp_god);
+    pline("%s is not deterred...", deity.c_str);
+    releaseJavaString(deity);
+
     if (swallowed()) {
         pline("A wide-angle disintegration beam aimed at you hits %s!",
               mon_nam(u.ustuck));
@@ -612,7 +615,11 @@ boolean via_disintegration;
     You("%s!", !via_disintegration ? "fry to a crisp"
                                    : "disintegrate into a pile of dust");
     killer.format = KILLED_BY;
-    Sprintf(killer.name, "the wrath of %s", align_gname(resp_god));
+
+    javaString deity = nameOfAlignedDeityFromYourPantheon(resp_god);
+    Sprintf(killer.name, "the wrath of %s", deity.c_str);
+    releaseJavaString(deity);
+
     done(DIED);
 }
 
@@ -642,8 +649,12 @@ aligntyp resp_god;
     switch (rn2(maxanger)) {
     case 0:
     case 1:
-        You_feel("that %s is %s.", align_gname(resp_god),
+	{
+	    javaString deity = nameOfAlignedDeityFromYourPantheon(resp_god);
+            You_feel("that %s is %s.", deity.c_str,
                  youAreHallucinating() ? "bummed" : "displeased");
+	    releaseJavaString(deity);
+	}
         break;
     case 2:
     case 3:
@@ -874,12 +885,14 @@ aligntyp g_align;
     int trouble = in_trouble(); /* what's your worst difficulty? */
     int pat_on_head = 0, kick_on_butt;
 
-    You_feel("that %s is %s.", align_gname(g_align),
+    javaString deity = nameOfAlignedDeityFromYourPantheon(g_align);
+    You_feel("that %s is %s.", deity.c_str,
              (currentAlignmentRecord() >= DEVOUT)
                  ? youAreHallucinating() ? "pleased as punch" : "well-pleased"
                  : (currentAlignmentRecord() >= STRIDENT)
                        ? youAreHallucinating() ? "ticklish" : "pleased"
                        : youAreHallucinating() ? "full" : "satisfied");
+    releaseJavaString(deity);
 
     /* not your deity */
     if (on_altar() && p_aligntyp != currentAlignmentType()) {
@@ -1206,8 +1219,10 @@ const char *words;
     else
         words = "";
 
-    pline_The("voice of %s %s: %s%s%s", align_gname(g_align),
+    javaString deity = nameOfAlignedDeityFromYourPantheon(g_align);
+    pline_The("voice of %s %s: %s%s%s", deity.c_str,
               godvoices[rn2(SIZE(godvoices))], quot, words, quot);
+    releaseJavaString(deity);
 }
 
 STATIC_OVL void
@@ -1741,7 +1756,11 @@ boolean praying; /* false means no messages should be given */
     }
 
     if (praying)
-        You("begin praying to %s.", align_gname(p_aligntyp));
+    {
+	javaString deity = nameOfAlignedDeityFromYourPantheon(p_aligntyp);
+        You("begin praying to %s.", deity.c_str);
+	releaseJavaString(deity);
+    }
 
     if (currentAlignmentType() && currentAlignmentType() == -p_aligntyp)
         alignment = -currentAlignmentRecord(); /* Opposite alignment altar */
@@ -1834,8 +1853,11 @@ prayer_done() /* M. Stephenson (1.0.3b) */
         return 1;
     }
     if (areYouInHell()) {
+	javaString deity = nameOfAlignedDeityFromYourPantheon(alignment);
         pline("Since you are in Gehennom, %s won't help you.",
-              align_gname(alignment));
+              deity.c_str);
+	releaseJavaString(deity);
+
         /* haltingly aligned is least likely to anger */
         if (currentAlignmentRecord() <= 0 || rnl(currentAlignmentRecord()))
             angrygods(currentAlignmentType());
@@ -2028,113 +2050,25 @@ aligntyp alignment;
     return gnam;
 }
 
-static const char *hallu_gods[] = {
-    "the Flying Spaghetti Monster", /* Church of the FSM */
-    "Eris",                         /* Discordianism */
-    "the Martians",                 /* every science fiction ever */
-    "Xom",                          /* Crawl */
-    "AnDoR dRaKoN",                 /* ADOM */
-    "the Central Bank of Yendor",   /* economics */
-    "Tooth Fairy",                  /* real world(?) */
-    "Om",                           /* Discworld */
-    "Yawgmoth",                     /* Magic: the Gathering */
-    "Morgoth",                      /* LoTR */
-    "Cthulhu",                      /* Lovecraft */
-    "the Ori",                      /* Stargate */
-    "destiny",                      /* why not? */
-    "your Friend the Computer",     /* Paranoia */
-};
-
-/* hallucination handling for priest/minion names: select a random god
-   iff character is hallucinating */
-const char *
-halu_gname(alignment)
-aligntyp alignment;
-{
-    const char *gnam = NULL;
-    int which;
-
-    if (!youAreHallucinating())
-        return align_gname(alignment);
-
-    /* The priest may not have initialized god names. If this is the
-     * case, and we roll priest, we need to try again. */
-    do
-        which = randrole();
-    while (!roles[which].lgod);
-
-    switch (rn2(9)) {
-    case 0:
-    case 1:
-        gnam = roles[which].lgod;
-        break;
-    case 2:
-    case 3:
-        gnam = roles[which].ngod;
-        break;
-    case 4:
-    case 5:
-        gnam = roles[which].cgod;
-        break;
-    case 6:
-    case 7:
-        gnam = hallu_gods[rn2(sizeof hallu_gods / sizeof *hallu_gods)];
-        break;
-    case 8:
-        gnam = Moloch;
-        break;
-    default:
-        impossible("rn2 broken in halu_gname?!?");
-    }
-    if (!gnam) {
-        impossible("No random god name?");
-        gnam = "your Friend the Computer"; /* Paranoia */
-    }
-    if (*gnam == '_')
-        ++gnam;
-    return gnam;
-}
-
-/* deity's title */
-const char *
-align_gtitle(alignment)
-aligntyp alignment;
-{
-    const char *gnam, *result = "god";
-
-    switch (alignment) {
-    case A_LAWFUL:
-        gnam = urole.lgod;
-        break;
-    case A_NEUTRAL:
-        gnam = urole.ngod;
-        break;
-    case A_CHAOTIC:
-        gnam = urole.cgod;
-        break;
-    default:
-        gnam = 0;
-        break;
-    }
-    if (gnam && *gnam == '_')
-        result = "goddess";
-    return result;
-}
-
 void
 altar_wrath(x, y)
 register int x, y;
 {
     aligntyp altaralign = a_align(x, y);
 
-    if (!strcmp(align_gname(altaralign), u_gname())) {
+    javaString altarDeity = nameOfAlignedDeityFromYourPantheon(altaralign);
+    javaString yourDeity  = javaStringFromC(u_gname);
+
+    if (!strcmp(altarDeity.c_str, yourDeity.c_str)) {
         godvoice(altaralign, "How darest thou desecrate my altar!");
         (void) adjattrib(A_WIS, -1, FALSE);
     } else {
-        pline("A voice (could it be %s?) whispers:", align_gname(altaralign));
+        pline("A voice (could it be %s?) whispers:", altarDeity.c_str);
         verbalize("Thou shalt pay, infidel!");
         change_luck(-1);
     }
+    releaseJavaString(altarDeity);
+    releaseJavaString(yourDeity);
 }
 
 /* assumes isok() at one space away, but not necessarily at two */

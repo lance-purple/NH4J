@@ -2978,8 +2978,13 @@ boolean printdun;
                 ADDNTOBUF("temple", mptr->feat.ntemple);
 
             /* only print out altar's god if they are all to your god */
-            if (Amask2align(Msa2amask(mptr->feat.msalign)) == currentAlignmentType())
-                Sprintf(eos(buf), " to %s", align_gname(currentAlignmentType()));
+	    int align = currentAlignmentType();
+            if (Amask2align(Msa2amask(mptr->feat.msalign)) == align)
+	    {
+		javaString deity = nameOfAlignedDeityFromYourPantheon(align);
+                Sprintf(eos(buf), " to %s", deity.c_str);
+		releaseJavaString(deity);
+	    }
         }
         ADDNTOBUF("throne", mptr->feat.nthrone);
         ADDNTOBUF("fountain", mptr->feat.nfount);
