@@ -12,6 +12,7 @@ public class AdventurerRole {
 	private GenderedName roleName;
 	private ArrayList<GenderedName> rankNames = new ArrayList<>();
 	private Pantheon pantheon = null;
+	private String fileCode;
 
 	private AdventurerRole(int id) {
 		roleID = id;
@@ -40,6 +41,12 @@ public class AdventurerRole {
 	private AdventurerRole with(Pantheon pantheon)
 	{
 		this.pantheon = pantheon;
+		return this;
+	}
+	
+	private AdventurerRole withFileCode(String fileCode)
+	{
+		this.fileCode = fileCode;
 		return this;
 	}
 
@@ -177,6 +184,15 @@ public class AdventurerRole {
 		return -1;
 	}
 	
+	public static String fileCode(int id) {
+		AdventurerRole role = getRole(id);
+		if (null != role)
+		{
+			return role.fileCode;
+		}
+		return "UNKNOWN";
+	}	
+	
 	
 	public static AdventurerRole random() {
 		if (rolesByID.isEmpty()) {
@@ -201,6 +217,7 @@ public class AdventurerRole {
 			.withRank("Collector")
 			.withRank("Curator")
 			.with(Pantheon.CENTRAL_AMERICAN)
+			.withFileCode("Arc")
 			.add();
 
 		AdventurerRole.id(1).named("Barbarian").withRank("Plunderer", "Plunderess")
@@ -213,6 +230,7 @@ public class AdventurerRole {
 			.withRank("Chieftain", "Chieftainess")
 			.withRank("Conqueror", "Conqueress")
 			.with(Pantheon.HYBORIAN)
+			.withFileCode("Bar")
 			.add();
 
 		AdventurerRole.id(2).named("Caveman", "Cavewoman")
@@ -226,6 +244,7 @@ public class AdventurerRole {
 			.withRank("Rover")
 			.withRank("Pioneer")
 			.with(Pantheon.BABYLONIAN)
+			.withFileCode("Cav")
 			.add();
 
 		AdventurerRole.id(3).named("Healer")
@@ -239,6 +258,7 @@ public class AdventurerRole {
 			.withRank("Physician")
 			.withRank("Chirurgeon")
 			.with(Pantheon.GREEK)
+			.withFileCode("Hea")
 			.add();
 
 		AdventurerRole.id(4).named("Knight")
@@ -252,6 +272,7 @@ public class AdventurerRole {
 			.withRank("Seignieur", "Dame")
 			.withRank("Paladin")
 			.with(Pantheon.CELTIC)
+			.withFileCode("Kni")
 			.add();
 
 		AdventurerRole.id(5).named("Monk")
@@ -265,6 +286,7 @@ public class AdventurerRole {
 			.withRank("Student of Fire")
 			.withRank("Master")
 			.with(Pantheon.CHINESE)
+			.withFileCode("Mon")
 			.add();
 
 		AdventurerRole.id(6).named("Priest", "Priestess")
@@ -277,6 +299,7 @@ public class AdventurerRole {
 			.withRank("Lama")
 			.withRank("Patriarch", "Matriarch")
 			.withRank("High Priest", "High Priestess")
+			.withFileCode("Pri")
 			.add();
 
 		AdventurerRole.id(7).named("Rogue")
@@ -290,6 +313,7 @@ public class AdventurerRole {
 			.withRank("Magsman", "Magswoman")
 			.withRank("Thief")
 			.with(Pantheon.NEHWON)
+			.withFileCode("Rog")
 			.add();
 
 		AdventurerRole.id(8).named("Ranger")
@@ -303,6 +327,7 @@ public class AdventurerRole {
 			.withRank("Sharpshooter")
 			.withRank("Marksman", "Markswoman")
 			.with(Pantheon.ROMAN)
+			.withFileCode("Ran")
 			.add();
 
 		AdventurerRole.id(9).named("Samurai")
@@ -316,6 +341,7 @@ public class AdventurerRole {
 			.withRank("Kuge") /* Noble of the Court */
 			.withRank("Shogun") /* supreme commander, warlord */
 			.with(Pantheon.JAPANESE)
+			.withFileCode("Sam")
 			.add();
 
 		AdventurerRole.id(10).named("Tourist")
@@ -329,6 +355,7 @@ public class AdventurerRole {
 			.withRank("Explorer")
 			.withRank("Adventurer")
 			.with(Pantheon.DISCWORLD)
+			.withFileCode("Tou")
 			.add();
 
 		AdventurerRole.id(11).named("Valkyrie")
@@ -342,6 +369,7 @@ public class AdventurerRole {
 			.withRank("Champion")
 			.withRank("Lord", "Lady")
 			.with(Pantheon.NORSE)
+			.withFileCode("Val")
 			.add();
 
 		AdventurerRole.id(12).named("Wizard")
@@ -355,6 +383,7 @@ public class AdventurerRole {
 			.withRank("Wizard")
 			.withRank("Mage")
 			.with(Pantheon.EGYPTIAN)
+			.withFileCode("Wiz")
 			.add();
 
 	}

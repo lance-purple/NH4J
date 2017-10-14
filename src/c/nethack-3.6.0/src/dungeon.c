@@ -924,8 +924,11 @@ init_dungeons()
                 /* This is where the name substitution on the
                  * levels of the quest dungeon occur.
                  */
-                Sprintf(x->proto, "%s%s", urole.filecode,
+		javaString filecode = yourRoleFileCode();
+                Sprintf(x->proto, "%s%s", filecode.c_str,
                         &lev_map->lev_name[1]);
+		releaseJavaString(filecode);
+
             } else if (lev_map->lev_spec == &knox_level) {
                 branch *br;
                 /*

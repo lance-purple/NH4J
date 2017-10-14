@@ -2866,6 +2866,10 @@ extern boolean roleHasDefaultPantheon(int whichRole) {
     return javaGetBooleanFromInt(ADVENTURER_ROLE_CLASS, "hasDefaultPantheon", whichRole);
 }
 
+extern int defaultPantheonForRole(int whichRole) {
+    return javaGetIntFromInt(ADVENTURER_ROLE_CLASS, "defaultPantheon", whichRole);
+}
+
 extern boolean roleNameHasMaleVersion(int whichRole) {
     return javaGetBooleanFromInt(ADVENTURER_ROLE_CLASS, "roleNameHasMaleVersion", whichRole);
 }
@@ -2945,5 +2949,28 @@ extern javaString randomHallucinatoryDeityName(int alignment) {
   javaString result = { j_str, c_str };
   return result;
 }
+
+extern int yourCurrentRoleID() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "currentRoleID");
+}
+
+extern void setYourCurrentRoleID(int whichRole) {
+  javaSetInt(PLAYER_CHARACTER_CLASS, "setCurrentRoleID", whichRole);
+}
+
+extern javaString fileCodeForRole(int whichRole) {
+  jstring j_str = javaGetStringFromInt(ADVENTURER_ROLE_CLASS, "fileCode", whichRole);
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
+}
+
+extern javaString yourRoleFileCode() {
+  jstring j_str = javaGetString(PLAYER_CHARACTER_CLASS, "roleFileCode");
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
+}
+
 
 /*hacklib.c*/

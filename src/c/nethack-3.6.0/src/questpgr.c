@@ -123,10 +123,14 @@ load_qtlist()
     qt_list.common = qt_list.chrole = (struct qtmsg *) 0;
 
     for (i = 0; i < n_classes; i++) {
+	javaString filecode = yourRoleFileCode();
+
         if (!strncmp(COMMON_ID, qt_classes[i], LEN_HDR))
             qt_list.common = construct_qtlist(qt_offsets[i]);
-        else if (!strncmp(urole.filecode, qt_classes[i], LEN_HDR))
+        else if (!strncmp(filecode.c_str, qt_classes[i], LEN_HDR))
             qt_list.chrole = construct_qtlist(qt_offsets[i]);
+
+	releaseJavaString(filecode);
 #if 0 /* UNUSED but available */
         else if (!strncmp(urace.filecode, qt_classes[i], LEN_HDR))
             qt_list.chrace = construct_qtlist(qt_offsets[i]);

@@ -843,7 +843,10 @@ const char *str;
         }
 
         /* Or the filecode? */
-        if (!strcmpi(str, roles[i].filecode))
+	javaString filecode = yourRoleFileCode();
+        matches = (!strcmpi(str, filecode.c_str));
+        releaseJavaString(filecode);
+        if (matches)
 	{
             return i;
 	}
@@ -2068,6 +2071,7 @@ role_init()
 
     /* Initialize urole and urace */
     urole = roles[flags.initrole];
+    setYourCurrentRoleID(urole.id);
     urace = races[flags.initrace];
 
     /* Fix up the quest leader */
@@ -2109,13 +2113,15 @@ role_init()
     /* Fix up the god names */
     if (flags.pantheon == -1) {             /* new game */
         flags.pantheon = flags.initrole;    /* use own gods */
-        while (!roleHasDefaultPantheon(flags.pantheon)) /* unless they're missing */
-	{
-            flags.pantheon = randrole();
-	}
     }
+
+    while (!roleHasDefaultPantheon(flags.pantheon)) /* make sure they're present */
+    {
+            flags.pantheon = randrole();
+    }
+
     if (-1 == yourCurrentPantheon()) {
-        setYourCurrentPantheon(flags.pantheon);
+        setYourCurrentPantheon(defaultPantheonForRole(flags.pantheon));
     }
 
     /* 0 or 1; no gods are neuter, nor is gender randomized */

@@ -672,12 +672,15 @@ makelevel()
             char fillname[9];
             s_level *loc_lev;
 
-            Sprintf(fillname, "%s-loca", urole.filecode);
+	    javaString filecode = yourRoleFileCode();
+            Sprintf(fillname, "%s-loca", filecode.c_str);
             loc_lev = find_level(fillname);
 
-            Sprintf(fillname, "%s-fil", urole.filecode);
+            Sprintf(fillname, "%s-fil", filecode.c_str);
             Strcat(fillname,
                    (currentDungeonLevel() < loc_lev->dlevel.dlevel) ? "a" : "b");
+	    releaseJavaString(filecode);
+
             makemaz(fillname);
             return;
         } else if (areYouInHell()

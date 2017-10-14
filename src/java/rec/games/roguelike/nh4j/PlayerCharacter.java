@@ -7,6 +7,8 @@ public class PlayerCharacter {
 	
 	private static final int MAXULEVEL = 30;
 
+	private static int currentRoleID;
+	
 	private static int currentDungeonNumber;
 	private static int currentDungeonLevel;
 
@@ -1545,6 +1547,21 @@ public class PlayerCharacter {
 			alignedDeity = currentPantheon.deityWith(alignment);
 		}
 		return Deity.title(alignedDeity);
+	}
+	
+	public static int currentRoleID()
+	{
+		return currentRoleID;
+	}
+
+	public static void setCurrentRoleID(int id)
+	{
+		currentRoleID = id;
+	}
+	
+	public static String roleFileCode()
+	{
+		return AdventurerRole.fileCode(currentRoleID);
 	}
 	
 }

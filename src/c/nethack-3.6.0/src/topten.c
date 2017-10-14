@@ -228,8 +228,11 @@ struct toptenentry *tt;
             } else
                 tt->points = 0;
             tt->plrole[1] = '\0';
-            if ((i = str2role(tt->plrole)) >= 0)
-                Strcpy(tt->plrole, roles[i].filecode);
+            if ((i = str2role(tt->plrole)) >= 0) {
+		javaString filecode = fileCodeForRole(i);
+                Strcpy(tt->plrole, filecode.c_str);
+		releaseJavaString(filecode);
+	    }
             Strcpy(tt->plrace, "?");
             Strcpy(tt->plgend, (tt->plgend[0] == 'M') ? "Mal" : "Fem");
             Strcpy(tt->plalign, "?");
@@ -506,7 +509,11 @@ time_t when;
     t0->maxhp = maximumHitPoints();
     t0->deaths = deathCount();
     t0->uid = uid;
-    copynchars(t0->plrole, urole.filecode, ROLESZ);
+
+    javaString filecode = yourRoleFileCode();
+    copynchars(t0->plrole, filecode.c_str, ROLESZ);
+    releaseJavaString(filecode);
+
     copynchars(t0->plrace, urace.filecode, ROLESZ);
     copynchars(t0->plgend, genders[flags.female].filecode, ROLESZ);
     copynchars(t0->plalign, aligns[1 - currentAlignmentType()].filecode, ROLESZ);
@@ -1114,13 +1121,23 @@ boolean fem;
     /* Look for this role in the role table */
     for (int i = 0, n = numberOfKnownRoles(); i < n; i++)
     {
-        if (!strncmp(plch, roles[i].filecode, ROLESZ)) {
+	javaString filecode = fileCodeForRole(i);
+	boolean matches = (!strncmp(plch, filecode.c_str, ROLESZ));
+	releaseJavaString(filecode);
+
+        if (matches) {
             if (fem && roles[i].femalenum != NON_PM)
+	    {
                 return roles[i].femalenum;
+	    }
             else if (roles[i].malenum != NON_PM)
+	    {
                 return roles[i].malenum;
+	    }
             else
+	    {
                 return PM_HUMAN;
+	    }
         }
     }
 

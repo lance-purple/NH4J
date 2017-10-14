@@ -2814,6 +2814,8 @@ E int FDECL(rnz, (int));
 E int FDECL(numberOfKnownRoles, ());
 
 E boolean FDECL(roleHasDefaultPantheon, (int));
+E int FDECL(defaultPantheonForRole, (int));
+
 E boolean FDECL(roleNameHasMaleVersion, (int));
 E javaString FDECL(roleNameAsMale, (int));
 E boolean FDECL(roleNameHasFemaleVersion, (int));
@@ -2826,6 +2828,12 @@ E javaString FDECL(rankNameAsFemale, (int, int));
 
 E int FDECL(yourCurrentPantheon, ());
 E void FDECL(setYourCurrentPantheon, (int));
+
+E int FDECL(yourCurrentRoleID, ());
+E void FDECL(setYourCurrentRoleID, (int));
+
+E javaString FDECL(fileCodeForRole, (int));
+E javaString FDECL(yourRoleFileCode, ());
 
 E boolean FDECL(validrole, (int));
 E boolean FDECL(validrace, (int, int));

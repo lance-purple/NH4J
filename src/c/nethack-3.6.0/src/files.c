@@ -694,8 +694,11 @@ char *file;
     s_level *sptr;
     char *dptr;
 
+    javaString filecode = yourRoleFileCode();
     Sprintf(file, "bon%c%s", dungeons[currentDungeonNumber()].boneid,
-            areYouInTheQuestDungeon() ? urole.filecode : "0");
+            areYouInTheQuestDungeon() ? filecode.c_str : "0");
+    releaseJavaString(filecode);
+
     dptr = eos(file);
     if ((sptr = areYouOnASpecialLevel()) != 0)
         Sprintf(dptr, ".%c", sptr->boneid);
