@@ -768,7 +768,7 @@ gcrownu()
     class_gift = STRANGE_OBJECT;
     /* 3.3.[01] had this in the A_NEUTRAL case below,
        preventing chaotic wizards from receiving a spellbook */
-    if (Role_if(PM_WIZARD)
+    if (yourRoleHasPMID(PM_WIZARD)
         && (!uwep || (uwep->oartifact != ART_VORPAL_BLADE
                       && uwep->oartifact != ART_STORMBRINGER))
         && !carrying(SPE_FINGER_OF_DEATH)) {
@@ -788,7 +788,7 @@ gcrownu()
                     obj = uwep; /* to be blessed,&c */
                 break;
             }
-    } else if (Role_if(PM_MONK) && (!uwep || !uwep->oartifact)
+    } else if (yourRoleHasPMID(PM_MONK) && (!uwep || !uwep->oartifact)
                && !carrying(SPE_RESTORE_ABILITY)) {
         /* monks rarely wield a weapon */
         class_gift = SPE_RESTORE_ABILITY;
@@ -1944,7 +1944,7 @@ doturn()
     struct monst *mtmp, *mtmp2;
     int once, range, xlev;
 
-    if (!Role_if(PM_PRIEST) && !Role_if(PM_KNIGHT)) {
+    if (!yourRoleHasPMID(PM_PRIEST) && !yourRoleHasPMID(PM_KNIGHT)) {
         /* Try to use the "turn undead" spell.
          *
          * This used to be based on whether hero knows the name of the

@@ -2722,10 +2722,10 @@ maybe_wail()
         return;
 
     wailmsg = moves;
-    if (Role_if(PM_WIZARD) || Race_if(PM_ELF) || Role_if(PM_VALKYRIE)) {
+    if (yourRoleHasPMID(PM_WIZARD) || Race_if(PM_ELF) || yourRoleHasPMID(PM_VALKYRIE)) {
         int i, powercnt;
 
-        javaString who = (Role_if(PM_WIZARD) || Role_if(PM_VALKYRIE)) ?
+        javaString who = (yourRoleHasPMID(PM_WIZARD) || yourRoleHasPMID(PM_VALKYRIE)) ?
 		            roleNameAsMale(urole.id) : javaStringFromC("Elf");
 
         if (currentHitPoints() == 1) {

@@ -40,7 +40,7 @@ STATIC_DCL boolean FDECL(maybe_cannibal, (int, BOOLEAN_P));
 char msgbuf[BUFSZ];
 
 /* also used to see if you're allowed to eat cats and dogs */
-#define CANNIBAL_ALLOWED() (Role_if(PM_CAVEMAN) || Race_if(PM_ORC))
+#define CANNIBAL_ALLOWED() (yourRoleHasPMID(PM_CAVEMAN) || Race_if(PM_ORC))
 
 /* Rider corpses are treated as non-rotting so that attempting to eat one
    will be sure to reach the stage of eating where that meal is fatal */
@@ -224,7 +224,7 @@ struct obj *food;
     if (currentHungerState() != SATIATED) {
         if (!food || food->otyp != AMULET_OF_STRANGULATION)
             return;
-    } else if (Role_if(PM_KNIGHT) && currentAlignmentType() == A_LAWFUL) {
+    } else if (yourRoleHasPMID(PM_KNIGHT) && currentAlignmentType() == A_LAWFUL) {
         adjalign(-1); /* gluttony is unchivalrous */
         You_feel("like a glutton!");
     }
@@ -1123,7 +1123,7 @@ void
 violated_vegetarian()
 {
     setVegetarianConduct(FALSE);
-    if (Role_if(PM_MONK)) {
+    if (yourRoleHasPMID(PM_MONK)) {
         You_feel("guilty.");
         adjalign(-1);
     }
@@ -2292,7 +2292,7 @@ struct obj *otmp;
         return (yn_function(buf, ynchars, 'n') == 'n') ? 1 : 2;
     }
     if (cadaver && !isVegetarianOption(mnum) && vegetarianConduct()
-        && Role_if(PM_MONK)) {
+        && yourRoleHasPMID(PM_MONK)) {
         Sprintf(buf, "%s unhealthy. %s", foodsmell, eat_it_anyway);
         if (yn_function(buf, ynchars, 'n') == 'n')
             return 1;
@@ -2899,7 +2899,7 @@ boolean incr;
                 pline((!incr) ? "You still have the munchies."
               : "The munchies are interfering with your motor capabilities.");
 	    }
-	    else if (incr && (Role_if(PM_WIZARD) || Role_if(PM_VALKYRIE)))
+	    else if (incr && (yourRoleHasPMID(PM_WIZARD) || yourRoleHasPMID(PM_VALKYRIE)))
 	    {
                 javaString roleName = roleNameAsMale(urole.id);
                 pline("%s needs food, badly!", roleName.c_str);

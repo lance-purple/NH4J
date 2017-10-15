@@ -554,7 +554,7 @@ dotele()
         boolean castit = FALSE;
         register int sp_no = 0, energy = 0;
 
-        if (!youCanTeleport() || (currentExperienceLevel() < (Role_if(PM_WIZARD) ? 8 : 12)
+        if (!youCanTeleport() || (currentExperienceLevel() < (yourRoleHasPMID(PM_WIZARD) ? 8 : 12)
                                && !canTeleport(pmid4you()))) {
             /* Try to use teleport away spell. */
             if (objects[SPE_TELEPORT_AWAY].oc_name_known && !youAreConfused())

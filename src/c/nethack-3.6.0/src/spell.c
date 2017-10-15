@@ -522,7 +522,7 @@ register struct obj *spellbook;
                     - 2 * objects[booktype].oc_level
                     + ((ublindf && ublindf->otyp == LENSES) ? 2 : 0);
                 /* only wizards know if a spell is too difficult */
-                if (Role_if(PM_WIZARD) && read_ability < 20 && !confused) {
+                if (yourRoleHasPMID(PM_WIZARD) && read_ability < 20 && !confused) {
                     char qbuf[QBUFSZ];
                     Sprintf(qbuf,
                      "This spellbook is %sdifficult to comprehend. Continue?",
@@ -945,7 +945,7 @@ boolean atme;
              * understand quite well how to cast spells.
              */
             intell = acurr(A_INT);
-            if (!Role_if(PM_WIZARD))
+            if (!yourRoleHasPMID(PM_WIZARD))
                 intell = 10;
             switch (intell) {
             case 25:

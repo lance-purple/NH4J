@@ -1434,7 +1434,7 @@ register const struct Attack mattk;
             }
             dmg = 0;
         } else {
-            if (Role_if(PM_HEALER)) {
+            if (yourRoleHasPMID(PM_HEALER)) {
                 if (!youAreDeaf() && !(moves % 5))
                     verbalize("Doc, I can't help you unless you cooperate.");
                 dmg = 0;
@@ -1603,7 +1603,7 @@ register const struct Attack mattk;
     if (dmg) {
         if (youTakeHalfDamageFromPhysicalAttacks()
             /* Mitre of Holiness */
-            || (Role_if(PM_PRIEST) && uarmh && is_quest_artifact(uarmh)
+            || (yourRoleHasPMID(PM_PRIEST) && uarmh && is_quest_artifact(uarmh)
                 && (isUndead(pmid4mon(mtmp)) || isDemon(pmid4mon(mtmp))
                     || is_vampshifter(mtmp))))
             dmg = (dmg + 1) / 2;

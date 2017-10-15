@@ -953,7 +953,7 @@ boolean artif;
             if (artif && !rn2(40))
                 otmp = mk_artifact(otmp, (aligntyp) A_NONE);
             /* simulate lacquered armor for samurai */
-            if (Role_if(PM_SAMURAI) && otmp->otyp == SPLINT_MAIL
+            if (yourRoleHasPMID(PM_SAMURAI) && otmp->otyp == SPLINT_MAIL
                 && (moves <= 1 || areYouInTheQuestDungeon())) {
 #ifdef UNIXPC
                 /* optimizer bitfield bug */

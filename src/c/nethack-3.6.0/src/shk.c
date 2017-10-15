@@ -473,7 +473,7 @@ struct monst *shkp;
     /* by this point, we know an actual robbery has taken place */
     eshkp->robbed += total;
     You("stole %ld %s worth of merchandise.", total, currency(total));
-    if (!Role_if(PM_ROGUE)) /* stealing is unlawful */
+    if (!yourRoleHasPMID(PM_ROGUE)) /* stealing is unlawful */
         adjalign(-sgn(currentAlignmentType()));
 
     hot_pursuit(shkp);
@@ -1032,7 +1032,7 @@ register boolean silentkops;
     pacify_shk(shkp);
     eshkp->following = 0;
     eshkp->robbed = 0L;
-    if (!Role_if(PM_ROGUE))
+    if (!yourRoleHasPMID(PM_ROGUE))
         adjalign(sgn(currentAlignmentType()));
     if (!inhishop(shkp)) {
         char shk_nam[BUFSZ];
@@ -1961,7 +1961,7 @@ register struct monst *shkp; /* if angry, impose a surcharge */
     }
     if (uarmh && uarmh->otyp == DUNCE_CAP)
         multiplier *= 4L, divisor *= 3L;
-    else if ((Role_if(PM_TOURIST) && currentExperienceLevel() < (MAXULEV / 2))
+    else if ((yourRoleHasPMID(PM_TOURIST) && currentExperienceLevel() < (MAXULEV / 2))
              || (uarmu && !uarm && !uarmc)) /* touristy shirt visible */
         multiplier *= 4L, divisor *= 3L;
 
@@ -2134,7 +2134,7 @@ register struct monst *shkp;
 
     if (uarmh && uarmh->otyp == DUNCE_CAP)
         divisor *= 3L;
-    else if ((Role_if(PM_TOURIST) && currentExperienceLevel() < (MAXULEV / 2))
+    else if ((yourRoleHasPMID(PM_TOURIST) && currentExperienceLevel() < (MAXULEV / 2))
              || (uarmu && !uarm && !uarmc)) /* touristy shirt visible */
         divisor *= 3L;
     else
@@ -3633,7 +3633,7 @@ register int fall;
         lang = 2;
 
     if (!inhishop(shkp)) {
-        if (Role_if(PM_KNIGHT)) {
+        if (yourRoleHasPMID(PM_KNIGHT)) {
             You_feel("like a common thief.");
             adjalign(-sgn(currentAlignmentType()));
         }
@@ -3650,7 +3650,7 @@ register int fall;
                 verbalize("%s, do not damage the floor here!",
                           flags.female ? "Madam" : "Sir");
         }
-        if (Role_if(PM_KNIGHT)) {
+        if (yourRoleHasPMID(PM_KNIGHT)) {
             You_feel("like a common thief.");
             adjalign(-sgn(currentAlignmentType()));
         }

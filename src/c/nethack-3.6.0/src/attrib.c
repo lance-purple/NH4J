@@ -409,7 +409,7 @@ exerper()
         switch (hs) {
         case SATIATED:
             exercise(A_DEX, FALSE);
-            if (Role_if(PM_MONK))
+            if (yourRoleHasPMID(PM_MONK))
                 exercise(A_WIS, FALSE);
             break;
         case NOT_HUNGRY:
@@ -417,7 +417,7 @@ exerper()
             break;
         case WEAK:
             exercise(A_STR, FALSE);
-            if (Role_if(PM_MONK)) /* fasting */
+            if (yourRoleHasPMID(PM_MONK)) /* fasting */
                 exercise(A_WIS, TRUE);
             break;
         case FAINTING:

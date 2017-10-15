@@ -386,7 +386,7 @@ Helmet_on(VOID_ARGS)
          * about, but it takes trained arrogance to pull it off,
          * and the actual enchantment of the hat is irrelevant.
          */
-        increaseYourAttrBonus(A_CHA, (Role_if(PM_WIZARD) ? 1 : -1));
+        increaseYourAttrBonus(A_CHA, (yourRoleHasPMID(PM_WIZARD) ? 1 : -1));
         context.botl = 1;
         makeknown(uarmh->otyp);
         break;
@@ -447,7 +447,7 @@ Helmet_off(VOID_ARGS)
         break;
     case CORNUTHAUM:
         if (!context.takeoff.cancelled_don) {
-            increaseYourAttrBonus(A_CHA, (Role_if(PM_WIZARD) ? -1 : 1));
+            increaseYourAttrBonus(A_CHA, (yourRoleHasPMID(PM_WIZARD) ? -1 : 1));
             context.botl = 1;
         }
         break;

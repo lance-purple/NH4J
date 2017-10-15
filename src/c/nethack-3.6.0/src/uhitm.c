@@ -220,12 +220,12 @@ struct monst *mtmp;
     if (currentAlignmentRecord() <= -10)
         return;
 
-    if (Role_if(PM_KNIGHT) && currentAlignmentType() == A_LAWFUL
+    if (yourRoleHasPMID(PM_KNIGHT) && currentAlignmentType() == A_LAWFUL
         && (!mtmp->mcanmove || mtmp->msleeping
             || (mtmp->mflee && !mtmp->mavenge))) {
         You("caitiff!");
         adjalign(-1);
-    } else if (Role_if(PM_SAMURAI) && mtmp->mpeaceful) {
+    } else if (yourRoleHasPMID(PM_SAMURAI) && mtmp->mpeaceful) {
         /* attacking peaceful creatures is bad for the samurai's giri */
         You("dishonorably attack the innocent!");
         adjalign(-1);
@@ -293,7 +293,7 @@ int *attk_count, *role_roll_penalty;
     }
 
     /* role/race adjustments */
-    if (Role_if(PM_MONK) && !areYouPolymorphed()) {
+    if (yourRoleHasPMID(PM_MONK) && !areYouPolymorphed()) {
         if (uarm)
             tmp -= (*role_roll_penalty = urole.spelarmr);
         else if (!uwep && !uarms)
@@ -414,7 +414,7 @@ register struct monst *mtmp;
                     yobjnam(uwep, (char *) 0));
             else if (!cannotWieldThings(pmid4you()))
                 You("begin %sing monsters with your %s %s.",
-                    Role_if(PM_MONK) ? "strik" : "bash",
+                    yourRoleHasPMID(PM_MONK) ? "strik" : "bash",
                     uarmg ? "gloved" : "bare", /* Del Lamb */
                     makeplural(body_part(HAND)));
         }
@@ -669,7 +669,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                 valid_weapon_attack = (tmp > 1);
                 if (!valid_weapon_attack || mon == u.ustuck || usingTwoWeapons()) {
                     ; /* no special bonuses */
-                } else if (mon->mflee && Role_if(PM_ROGUE) && !areYouPolymorphed()
+                } else if (mon->mflee && yourRoleHasPMID(PM_ROGUE) && !areYouPolymorphed()
                            /* multi-shot throwing is too powerful here */
                            && hand_to_hand) {
                     You("strike %s from behind!", mon_nam(mon));
@@ -678,7 +678,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                 } else if (dieroll == 2 && obj == uwep
                            && obj->oclass == WEAPON_CLASS
                            && (bimanual(obj)
-                               || (Role_if(PM_SAMURAI) && obj->otyp == KATANA
+                               || (yourRoleHasPMID(PM_SAMURAI) && obj->otyp == KATANA
                                    && !uarms))
                            && ((wtype = uwep_skill_type()) != P_NONE
                                && weaponSkill(wtype) >= P_SKILLED)
@@ -732,7 +732,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                         /* Elves and Samurai do extra damage using
                          * their bows&arrows; they're highly trained.
                          */
-                        if (Role_if(PM_SAMURAI) && obj->otyp == YA
+                        if (yourRoleHasPMID(PM_SAMURAI) && obj->otyp == YA
                             && uwep->otyp == YUMI)
                             tmp++;
                         else if (Race_if(PM_ELF) && obj->otyp == ELVEN_ARROW
@@ -1012,7 +1012,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
 
         if (nopoison < 2)
             nopoison = 2;
-        if (Role_if(PM_SAMURAI)) {
+        if (yourRoleHasPMID(PM_SAMURAI)) {
             You("dishonorably use a poisoned weapon!");
             adjalign(-sgn(currentAlignmentType()));
         } else if (currentAlignmentType() == A_LAWFUL && currentAlignmentRecord() > -10) {
@@ -1125,7 +1125,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
         else if (!flags.verbose)
             You("hit it.");
         else
-            You("%s %s%s", Role_if(PM_BARBARIAN) ? "smite" : "hit",
+            You("%s %s%s", yourRoleHasPMID(PM_BARBARIAN) ? "smite" : "hit",
                 mon_nam(mon), canseemon(mon) ? exclam(tmp) : ".");
     }
 

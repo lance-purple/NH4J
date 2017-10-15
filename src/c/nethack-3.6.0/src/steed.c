@@ -95,7 +95,7 @@ struct obj *otmp;
     chance += currentExperienceLevel() * (mtmp->mtame ? 20 : 5);
     if (!mtmp->mtame)
         chance -= 10 * mtmp->m_lev;
-    if (Role_if(PM_KNIGHT))
+    if (yourRoleHasPMID(PM_KNIGHT))
         chance += 20;
     switch (weaponSkill(P_RIDING)) {
     case P_ISRESTRICTED:
@@ -276,7 +276,7 @@ boolean force;      /* Quietly force this animal */
         return (FALSE);
     }
 
-    if (!force && !Role_if(PM_KNIGHT) && !(--mtmp->mtame)) {
+    if (!force && !yourRoleHasPMID(PM_KNIGHT) && !(--mtmp->mtame)) {
         /* no longer tame */
         newsym(mtmp->mx, mtmp->my);
         pline("%s resists%s!", Monnam(mtmp),

@@ -113,9 +113,9 @@ int shotlimit;
                          : obj->oclass == WEAPON_CLASS)
         && !(youAreConfused() || youAreStunned())) {
         /* some roles don't get a volley bonus until becoming expert */
-        weakmultishot = (Role_if(PM_WIZARD) || Role_if(PM_PRIEST)
-                         || (Role_if(PM_HEALER) && skill != P_KNIFE)
-                         || (Role_if(PM_TOURIST) && skill != -P_DART)
+        weakmultishot = (yourRoleHasPMID(PM_WIZARD) || yourRoleHasPMID(PM_PRIEST)
+                         || (yourRoleHasPMID(PM_HEALER) && skill != P_KNIFE)
+                         || (yourRoleHasPMID(PM_TOURIST) && skill != -P_DART)
                          /* poor dexterity also inhibits multishot */
                          || youKeepFumbling() || ACURR(A_DEX) <= 6);
 
@@ -1035,7 +1035,7 @@ boolean
         bhitpos.x = mon->mx;
         bhitpos.y = mon->my;
     } else if (directionZ()) {
-        if (directionZ() < 0 && Role_if(PM_VALKYRIE) && obj->oartifact == ART_MJOLLNIR
+        if (directionZ() < 0 && yourRoleHasPMID(PM_VALKYRIE) && obj->oartifact == ART_MJOLLNIR
             && !impaired) {
             pline("%s the %s and returns to your hand!", Tobjnam(obj, "hit"),
                   ceiling(currentX(), currentY()));
@@ -1169,7 +1169,7 @@ boolean
         thrownobj = (struct obj *) 0;
     } else {
         /* the code following might become part of dropy() */
-        if (obj->oartifact == ART_MJOLLNIR && Role_if(PM_VALKYRIE)
+        if (obj->oartifact == ART_MJOLLNIR && yourRoleHasPMID(PM_VALKYRIE)
             && rn2(100)) {
             /* we must be wearing Gauntlets of Power to get here */
             sho_obj_return_to_u(obj); /* display its flight */
@@ -1479,13 +1479,13 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
                  * especially their own special types of bow.
                  * Polymorphing won't make you a bow expert.
                  */
-                if ((Race_if(PM_ELF) || Role_if(PM_SAMURAI))
+                if ((Race_if(PM_ELF) || yourRoleHasPMID(PM_SAMURAI))
                     && (!areYouPolymorphed() || isOfYourRace(pmid4you(), urace.selfmask))
                     && objects[uwep->otyp].oc_skill == P_BOW) {
                     tmp++;
                     if (Race_if(PM_ELF) && uwep->otyp == ELVEN_BOW)
                         tmp++;
-                    else if (Role_if(PM_SAMURAI) && uwep->otyp == YUMI)
+                    else if (yourRoleHasPMID(PM_SAMURAI) && uwep->otyp == YUMI)
                         tmp++;
                 }
             }

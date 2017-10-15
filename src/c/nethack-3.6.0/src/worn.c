@@ -34,7 +34,7 @@ const struct worn {
 #define w_blocks(o, m)                                                     \
     ((o->otyp == MUMMY_WRAPPING && ((m) &W_ARMC))                          \
          ? INVIS                                                           \
-         : (o->otyp == CORNUTHAUM && ((m) &W_ARMH) && !Role_if(PM_WIZARD)) \
+         : (o->otyp == CORNUTHAUM && ((m) &W_ARMH) && !yourRoleHasPMID(PM_WIZARD)) \
                ? CLAIRVOYANT                                               \
                : 0)
 /* note: monsters don't have clairvoyance, so your role

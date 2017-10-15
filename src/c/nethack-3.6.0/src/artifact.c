@@ -63,7 +63,7 @@ hack_artifacts()
             art->alignment = alignmnt;
 
     /* Excalibur can be used by any lawful character, not just knights */
-    if (!Role_if(PM_KNIGHT))
+    if (!yourRoleHasPMID(PM_KNIGHT))
         artilist[ART_EXCALIBUR].role = NON_PM;
 
     /* Fix up the quest artifact */
@@ -155,7 +155,7 @@ aligntyp alignment; /* target alignment, or A_NONE */
             /* avoid enemies' equipment */
             && (a->race == NON_PM || !racialHostility(a->race, urace.hatemask))) {
             /* when a role-specific first choice is available, use it */
-            if (Role_if(a->role)) {
+            if (yourRoleHasPMID(a->role)) {
                 /* make this be the only possibility in the list */
                 eligible[0] = m;
                 n = 1;
@@ -661,7 +661,7 @@ struct monst *mon;
     self_willed = ((oart->spfx & SPFX_INTEL) != 0);
     if (yours) {
         badclass = self_willed
-                   && ((oart->role != NON_PM && !Role_if(oart->role))
+                   && ((oart->role != NON_PM && !yourRoleHasPMID(oart->role))
                        || (oart->race != NON_PM && !Race_if(oart->race)));
         badalign =
             (oart->spfx & SPFX_RESTR) && oart->alignment != A_NONE

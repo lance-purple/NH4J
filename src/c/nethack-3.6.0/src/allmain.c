@@ -262,7 +262,7 @@ boolean resuming;
                     if ((currentMagicalEnergy() < maximumMagicalEnergy())
                         && ((wtcap < MOD_ENCUMBER
                              && (!(moves % ((MAXULEV + 8 - currentExperienceLevel())
-                                            * (Role_if(PM_WIZARD) ? 3 : 4)
+                                            * (yourRoleHasPMID(PM_WIZARD) ? 3 : 4)
                                             / 6)))) || yourEnergyRegenerates())) {
                         increaseCurrentMagicalEnergy(rn1(
                             (int) (ACURR(A_WIS) + ACURR(A_INT)) / 15 + 1, 1));

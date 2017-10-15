@@ -137,7 +137,7 @@ struct obj *otmp;
 {
     boolean wake = TRUE; /* Most 'zaps' should wake monster */
     boolean reveal_invis = FALSE, learn_it = FALSE;
-    boolean dbldam = Role_if(PM_KNIGHT) && haveSpecialItem(SPECIAL_ITEM_QUEST_ARTIFACT);
+    boolean dbldam = yourRoleHasPMID(PM_KNIGHT) && haveSpecialItem(SPECIAL_ITEM_QUEST_ARTIFACT);
     int dmg, otyp = otmp->otyp;
     const char *zap_type_text = "spell";
     struct obj *obj;
@@ -331,7 +331,7 @@ struct obj *otmp;
                           otyp == SPE_EXTRA_HEALING ? " much" : "");
             }
             if (mtmp->mtame || mtmp->mpeaceful) {
-                adjalign(Role_if(PM_HEALER) ? 1 : sgn(currentAlignmentType()));
+                adjalign(yourRoleHasPMID(PM_HEALER) ? 1 : sgn(currentAlignmentType()));
             }
         } else { /* Pestilence */
             /* Pestilence will always resist; damage is half of 3d{4,8} */
@@ -1691,7 +1691,7 @@ struct obj *obj;
            vegetarian conduct yet (or if poly'd into non-carnivorous/
            non-omnivorous form, regardless of whether it's herbivorous,
            non-eating, or something stranger) */
-        if (Role_if(PM_MONK) || vegetarianConduct()
+        if (yourRoleHasPMID(PM_MONK) || vegetarianConduct()
             || !isCarnivorous(pmid4you()))
             Norep("You smell the odor of meat.");
         else
@@ -1888,7 +1888,7 @@ struct obj *obj, *otmp;
                 int corpsenm = corpse_revive_type(obj);
 
                 res = !!revive(obj, TRUE);
-                if (res && Role_if(PM_HEALER)) {
+                if (res && yourRoleHasPMID(PM_HEALER)) {
                     if (youAreHallucinating() && !youAreDeaf()) {
                         You_hear("the sound of a defibrillator.");
                         learn_it = TRUE;
@@ -3526,7 +3526,7 @@ struct obj **ootmp; /* to return worn armor for caller to disintegrate */
     }
     if (sho_shieldeff)
         shieldeff(mon->mx, mon->my);
-    if (is_hero_spell(type) && (Role_if(PM_KNIGHT) && haveSpecialItem(SPECIAL_ITEM_QUEST_ARTIFACT)))
+    if (is_hero_spell(type) && (yourRoleHasPMID(PM_KNIGHT) && haveSpecialItem(SPECIAL_ITEM_QUEST_ARTIFACT)))
         tmp *= 2;
     if (tmp > 0 && type >= 0
         && resist(mon, type < ZT_SPELL(0) ? WAND_CLASS : '\0', 0, NOTELL))
@@ -4506,7 +4506,7 @@ register struct obj *obj;
         obj_extract_self(item);
         place_object(item, obj->ox, obj->oy);
     }
-    if (by_you && Role_if(PM_ARCHEOLOGIST) && (obj->spe & STATUE_HISTORIC)) {
+    if (by_you && yourRoleHasPMID(PM_ARCHEOLOGIST) && (obj->spe & STATUE_HISTORIC)) {
         You_feel("guilty about damaging such a historic statue.");
         adjalign(-1);
     }

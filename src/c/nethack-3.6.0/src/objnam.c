@@ -104,7 +104,7 @@ register int otyp;
     register const char *un = ocl->oc_uname;
     register int nn = ocl->oc_name_known;
 
-    if (Role_if(PM_SAMURAI) && Japanese_item_name(otyp))
+    if (yourRoleHasPMID(PM_SAMURAI) && Japanese_item_name(otyp))
         actualn = Japanese_item_name(otyp);
     switch (ocl->oc_class) {
     case COIN_CLASS:
@@ -259,7 +259,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
     boolean known, dknown, bknown;
 
     buf = nextobuf() + PREFIX; /* leave room for "17 -3 " */
-    if (Role_if(PM_SAMURAI) && Japanese_item_name(typ))
+    if (yourRoleHasPMID(PM_SAMURAI) && Japanese_item_name(typ))
         actualn = Japanese_item_name(typ);
 
     buf[0] = '\0';
@@ -273,7 +273,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
         obj->known = 0;
     if (youCanSee())
         obj->dknown = TRUE;
-    if (Role_if(PM_PRIEST))
+    if (yourRoleHasPMID(PM_PRIEST))
         obj->bknown = TRUE;
 
     if (iflags.override_ID) {
@@ -420,7 +420,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
         if (typ == STATUE && omndx != NON_PM) {
 	    javaString monsterName = monsterTypeName(omndx);
             Sprintf(buf, "%s%s of %s%s",
-                    (Role_if(PM_ARCHEOLOGIST) && (obj->spe & STATUE_HISTORIC))
+                    (yourRoleHasPMID(PM_ARCHEOLOGIST) && (obj->spe & STATUE_HISTORIC))
                        ? "historic "
                        : "",
                     actualn,
@@ -609,7 +609,7 @@ struct obj *obj;
 
     bufp = distant_name(&bareobj, xname); /* xname(&bareobj) */
     if (!strncmp(bufp, "uncursed ", 9))
-        bufp += 9; /* Role_if(PM_PRIEST) */
+        bufp += 9; /* yourRoleHasPMID(PM_PRIEST) */
 
     objects[otyp].oc_uname = saveobcls.oc_uname;
     objects[otyp].oc_name_known = saveobcls.oc_name_known;
@@ -818,7 +818,7 @@ boolean with_price;
 #endif
                      && obj->otyp != FAKE_AMULET_OF_YENDOR
                      && obj->otyp != AMULET_OF_YENDOR
-                     && !Role_if(PM_PRIEST)))
+                     && !yourRoleHasPMID(PM_PRIEST)))
             Strcat(prefix, "uncursed ");
     }
 

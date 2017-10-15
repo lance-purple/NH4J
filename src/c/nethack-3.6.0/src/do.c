@@ -1499,7 +1499,7 @@ boolean at_stairs, falling, portal;
                 setCalledByQuestLeader(TRUE);
                 com_pager(2); /* main "leader needs help" message */
             } else {          /* reminder message */
-                com_pager(Role_if(PM_ROGUE) ? 4 : 3);
+                com_pager(yourRoleHasPMID(PM_ROGUE) ? 4 : 3);
             }
         }
     }

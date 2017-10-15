@@ -2838,6 +2838,9 @@ E javaString FDECL(yourRoleFileCode, ());
 E javaString FDECL(yourQuestHomeBase, ());
 E javaString FDECL(yourIntermediateQuestLevel, ());
 
+E int FDECL(yourRolePMID, ());
+E boolean FDECL(yourRoleHasPMID, (int));
+
 E boolean FDECL(validrole, (int));
 E boolean FDECL(validrace, (int, int));
 E boolean FDECL(validgend, (int, int, int));

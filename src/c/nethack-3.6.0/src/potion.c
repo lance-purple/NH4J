@@ -788,7 +788,7 @@ register struct obj *otmp;
         pline("Yecch!  This stuff tastes like poison.");
         if (otmp->blessed) {
             pline("(But in fact it was mildly stale %s.)", fruitname(TRUE));
-            if (!Role_if(PM_HEALER)) {
+            if (!yourRoleHasPMID(PM_HEALER)) {
                 /* NB: blessed otmp->fromsink is not possible */
                 losehp(1, "mildly contaminated potion", KILLED_BY_AN);
             }
@@ -796,7 +796,7 @@ register struct obj *otmp;
             if (youResistPoison())
                 pline("(But in fact it was biologically contaminated %s.)",
                       fruitname(TRUE));
-            if (Role_if(PM_HEALER)) {
+            if (yourRoleHasPMID(PM_HEALER)) {
                 pline("Fortunately, you have been immunized.");
             } else {
                 char contaminant[BUFSZ];
@@ -1550,7 +1550,7 @@ register struct obj *obj;
         exercise(A_CON, TRUE);
         break;
     case POT_SICKNESS:
-        if (!Role_if(PM_HEALER)) {
+        if (!yourRoleHasPMID(PM_HEALER)) {
             if (areYouPolymorphed()) {
                 if (currentHitPointsAsMonster() <= 5)
                     setCurrentHitPointsAsMonster(1);

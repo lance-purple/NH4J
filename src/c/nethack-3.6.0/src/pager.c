@@ -280,7 +280,7 @@ char *buf, *monbuf;
         /* file lookup can't distinguish between "gnomish wizard" monster
            and correspondingly named player character, always picking the
            former; force it to find the general "wizard" entry instead */
-        if (Role_if(PM_WIZARD) && Race_if(PM_GNOME) && !areYouPolymorphed())
+        if (yourRoleHasPMID(PM_WIZARD) && Race_if(PM_GNOME) && !areYouPolymorphed())
 	{
             pmid = PM_WIZARD;
 	}

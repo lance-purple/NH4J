@@ -2986,4 +2986,12 @@ extern javaString yourIntermediateQuestLevel() {
   return result;
 }
 
+extern int yourRolePMID() {
+  return urole.malenum;
+}
+
+extern boolean yourRoleHasPMID(int pmid) {
+  return (urole.malenum == pmid);
+}
+
 /*hacklib.c*/

@@ -497,7 +497,7 @@ const char *const *nlp;
     int name_wanted;
     s_level *sptr;
 
-    if (nlp == shkfoods && areYouInTheMines() && Role_if(PM_MONK)
+    if (nlp == shkfoods && areYouInTheMines() && yourRoleHasPMID(PM_MONK)
         && (sptr = areYouOnASpecialLevel()) != 0 && sptr->flags.town) {
         /* special-case override for minetown food store for monks */
         nlp = shkhealthfoods;

@@ -289,7 +289,7 @@ found:
         /* else if named, then only by-descr works */
         && !(by_descr && label_known(new_obj->otyp, invent))
         /* and Luck might override after both checks have failed */
-        && rnl(Role_if(PM_WIZARD) ? 5 : 15)) {
+        && rnl(yourRoleHasPMID(PM_WIZARD) ? 5 : 15)) {
         You("%s to write that.", by_descr ? "fail" : "don't know how");
         /* scrolls disappear, spellbooks don't */
         if (paper->oclass == SPBOOK_CLASS) {

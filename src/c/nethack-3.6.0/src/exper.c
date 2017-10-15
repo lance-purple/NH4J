@@ -176,7 +176,7 @@ register int addXP, addScore;
 #endif
         )
         context.botl = 1;
-    if (currentScore() >= (Role_if(PM_WIZARD) ? 1000 : 2000))
+    if (currentScore() >= (yourRoleHasPMID(PM_WIZARD) ? 1000 : 2000))
         flags.beginner = 0;
 }
 

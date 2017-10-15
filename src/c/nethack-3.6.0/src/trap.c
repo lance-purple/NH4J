@@ -573,7 +573,7 @@ int *fail_reason;
     struct monst *mon = 0, *shkp;
     struct obj *item;
     coord cc;
-    boolean historic = (Role_if(PM_ARCHEOLOGIST)
+    boolean historic = (yourRoleHasPMID(PM_ARCHEOLOGIST)
                         && (statue->spe & STATUE_HISTORIC) != 0),
             golem_xform = FALSE, use_saved_traits;
     const char *comes_to_life;
@@ -1125,7 +1125,7 @@ unsigned trflags;
             }
         }
         /* wumpus reference */
-        if (Role_if(PM_RANGER) && !trap->madeby_u && !trap->once
+        if (yourRoleHasPMID(PM_RANGER) && !trap->madeby_u && !trap->once
             && areYouInTheQuestDungeon() && areYouOnQuestLocationLevel()) {
             pline("Fortunately it has a bottom after all...");
             trap->once = 1;
@@ -3759,12 +3759,12 @@ struct trap *ttmp;
     /* Your own traps are better known than others. */
     if (ttmp && ttmp->madeby_u)
         chance--;
-    if (Role_if(PM_ROGUE)) {
+    if (yourRoleHasPMID(PM_ROGUE)) {
         if (rn2(2 * MAXULEV) < currentExperienceLevel())
             chance--;
         if (haveSpecialItem(SPECIAL_ITEM_QUEST_ARTIFACT) && chance > 1)
             chance--;
-    } else if (Role_if(PM_RANGER) && chance > 1)
+    } else if (yourRoleHasPMID(PM_RANGER) && chance > 1)
         chance--;
     return rn2(chance);
 }
@@ -4319,7 +4319,7 @@ boolean force;
                         if (otmp->otrapped) {
                             exercise(A_DEX, TRUE);
                             ch = ACURR(A_DEX) + currentExperienceLevel();
-                            if (Role_if(PM_ROGUE))
+                            if (yourRoleHasPMID(PM_ROGUE))
                                 ch *= 2;
                             if (!force && (confused || youKeepFumbling()
                                            || rnd(75 + level_difficulty() / 2)
@@ -4375,7 +4375,7 @@ boolean force;
         if (ynq("Disarm it?") != 'y')
             return 1;
         if (levl[x][y].doormask & D_TRAPPED) {
-            ch = 15 + (Role_if(PM_ROGUE) ? currentExperienceLevel() * 3 : currentExperienceLevel());
+            ch = 15 + (yourRoleHasPMID(PM_ROGUE) ? currentExperienceLevel() * 3 : currentExperienceLevel());
             exercise(A_DEX, TRUE);
             if (!force && (confused || youKeepFumbling()
                            || rnd(75 + level_difficulty() / 2) > ch)) {

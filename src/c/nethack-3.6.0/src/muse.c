@@ -196,7 +196,7 @@ struct obj *otmp;
     saverole = Role_switch;
     if (!vismon) {
         otmp->bknown = 0;
-        if (Role_if(PM_PRIEST))
+        if (yourRoleHasPMID(PM_PRIEST))
             Role_switch = 0;
     }
     Strcpy(onambuf, singular(otmp, doname));

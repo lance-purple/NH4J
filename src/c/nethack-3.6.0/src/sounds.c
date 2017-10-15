@@ -948,7 +948,7 @@ register struct monst *mtmp;
         if (uwep && (uwep->oclass == WEAPON_CLASS || is_weptool(uwep)))
             verbl_msg = "Put that weapon away before you hurt someone!";
         else if (uarmc || uarm || uarmh || uarms || uarmg || uarmf)
-            verbl_msg = Role_if(PM_HEALER)
+            verbl_msg = yourRoleHasPMID(PM_HEALER)
                             ? "Doc, I can't help you unless you cooperate."
                             : "Please undress so I can examine you.";
         else if (uarmu)

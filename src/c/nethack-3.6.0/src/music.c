@@ -397,7 +397,7 @@ int force;
                         } else if (currentlyTrapped() && currentTrapType() == TT_PIT) {
                             boolean keepfooting =
                                 ((youKeepFumbling() && !rn2(5))
-                                 || (!rnl(Role_if(PM_ARCHEOLOGIST) ? 3 : 9))
+                                 || (!rnl(yourRoleHasPMID(PM_ARCHEOLOGIST) ? 3 : 9))
                                  || ((ACURR(A_DEX) > 7) && rn2(5)));
                             You("are jostled around violently!");
                             setCurrentTrapTimeout(rn1(6, 2));

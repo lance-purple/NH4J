@@ -6,6 +6,20 @@ import java.util.HashMap;
 
 public class AdventurerRole {
 
+	private static final int ARCHAEOLOGIST_ID = 0;
+	private static final int BARBARIAN_ID = 1;
+	private static final int CAVEMAN_ID = 2;
+	private static final int HEALER_ID = 3;
+	private static final int KNIGHT_ID = 4;
+	private static final int MONK_ID = 5;
+	private static final int PRIEST_ID = 6;
+	private static final int ROGUE_ID = 7;
+	private static final int RANGER_ID = 8;
+	private static final int SAMURAI_ID = 9;
+	private static final int TOURIST_ID = 10;
+	private static final int VALKYRIE_ID = 11;
+	private static final int WIZARD_ID = 12;
+
 	private static HashMap<Integer, AdventurerRole> rolesByID = new HashMap<>();
 
 	private final int roleID;
@@ -17,27 +31,27 @@ public class AdventurerRole {
 	private String questHomeBase;
 	private String intermediateQuestLevel;
 
-	private AdventurerRole(int id) {
-		roleID = id;
+	private AdventurerRole(int roleID) {
+		this.roleID = roleID;
 	}
 
 	private AdventurerRole named(String genericVersion) {
-		roleName = GenderedName.of(genericVersion);
+		this.roleName = GenderedName.of(genericVersion);
 		return this;
 	}
 
 	private AdventurerRole named(String maleVersion, String femaleVersion) {
-		roleName = GenderedName.of(maleVersion, femaleVersion);
+		this.roleName = GenderedName.of(maleVersion, femaleVersion);
 		return this;
 	}
 
 	private AdventurerRole withRank(String genericVersion) {
-		rankNames.add(GenderedName.of(genericVersion));
+		this.rankNames.add(GenderedName.of(genericVersion));
 		return this;
 	}
 
 	private AdventurerRole withRank(String maleVersion, String femaleVersion) {
-		rankNames.add(GenderedName.of(maleVersion, femaleVersion));
+		this.rankNames.add(GenderedName.of(maleVersion, femaleVersion));
 		return this;
 	}
 	
@@ -66,25 +80,25 @@ public class AdventurerRole {
 	}
 
 	private void add() {
-		rolesByID.put(this.roleID, this);
+		AdventurerRole.rolesByID.put(this.roleID, this);
 	}
 	
 	private GenderedName rankName(int rank)
 	{
-		return rankNames.get(rank);
+		return this.rankNames.get(rank);
 	}
 	
 
-	private static AdventurerRole id(int id) {
-		return new AdventurerRole(id);
+	private static AdventurerRole withID(int roleID) {
+		return new AdventurerRole(roleID);
 	}
 
-	private static AdventurerRole getRole(int id) {
+	private static AdventurerRole getRole(int roleID) {
 		if (rolesByID.isEmpty()) {
 			initialize();
 		}
-		if (rolesByID.containsKey(id)) {
-			return rolesByID.get(id);
+		if (rolesByID.containsKey(roleID)) {
+			return rolesByID.get(roleID);
 		}
 		return null;
 	}
@@ -96,8 +110,8 @@ public class AdventurerRole {
 		return rolesByID.size();
 	}
 
-	public static boolean roleNameHasMaleVersion(int id) {
-		AdventurerRole role = getRole(id);
+	public static boolean roleNameHasMaleVersion(int roleID) {
+		AdventurerRole role = getRole(roleID);
 		if ((null != role) && (null != role.roleName))
 		{
 			return role.roleName.hasMaleVersion();
@@ -105,8 +119,8 @@ public class AdventurerRole {
 		return false;
 	}
 	
-	public static String roleNameAsMale(int id) {
-		AdventurerRole role = getRole(id);
+	public static String roleNameAsMale(int roleID) {
+		AdventurerRole role = getRole(roleID);
 		if ((null != role) && (null != role.roleName))
 		{
 			return role.roleName.asMale();
@@ -114,8 +128,8 @@ public class AdventurerRole {
 		return "(UNKNOWN ROLE)";
 	}
 	
-	public static boolean roleNameHasFemaleVersion(int id) {
-		AdventurerRole role = getRole(id);
+	public static boolean roleNameHasFemaleVersion(int roleID) {
+		AdventurerRole role = getRole(roleID);
 		if ((null != role) && (null != role.roleName))
 		{
 			return role.roleName.hasFemaleVersion();
@@ -124,8 +138,8 @@ public class AdventurerRole {
 	}
 
 	
-	public static String roleNameAsFemale(int id) {
-		AdventurerRole role = getRole(id);
+	public static String roleNameAsFemale(int roleID) {
+		AdventurerRole role = getRole(roleID);
 		if ((null != role) && (null != role.roleName))
 		{
 			return role.roleName.asFemale();
@@ -134,8 +148,8 @@ public class AdventurerRole {
 	}
 
 	
-	public static boolean rankNameHasMaleVersion(int id, int rank) {
-		AdventurerRole role = getRole(id);
+	public static boolean rankNameHasMaleVersion(int roleID, int rank) {
+		AdventurerRole role = getRole(roleID);
 		if (null != role)
 		{
 			GenderedName rankName = role.rankName(rank);
@@ -144,8 +158,8 @@ public class AdventurerRole {
 		return false;
 	}
 
-	public static String rankNameAsMale(int id, int rank) {
-		AdventurerRole role = getRole(id);
+	public static String rankNameAsMale(int roleID, int rank) {
+		AdventurerRole role = getRole(roleID);
 		if (null != role)
 		{
 			GenderedName rankName = role.rankName(rank);
@@ -158,8 +172,8 @@ public class AdventurerRole {
 	}
 
 	
-	public static boolean rankNameHasFemaleVersion(int id, int rank) {
-		AdventurerRole role = getRole(id);
+	public static boolean rankNameHasFemaleVersion(int roleID, int rank) {
+		AdventurerRole role = getRole(roleID);
 		if (null != role)
 		{
 			GenderedName rankName = role.rankName(rank);
@@ -168,8 +182,8 @@ public class AdventurerRole {
 		return false;
 	}
 
-	public static String rankNameAsFemale(int id, int rank) {
-		AdventurerRole role = getRole(id);
+	public static String rankNameAsFemale(int roleID, int rank) {
+		AdventurerRole role = getRole(roleID);
 		if (null != role)
 		{
 			GenderedName rankName = role.rankName(rank);
@@ -182,13 +196,13 @@ public class AdventurerRole {
 	}
 	
 
-	public static boolean hasDefaultPantheon(int id) {
-		return (-1 != defaultPantheon(id));
+	public static boolean hasDefaultPantheon(int roleID) {
+		return (-1 != defaultPantheon(roleID));
 	}
 		
 	
-	public static int defaultPantheon(int id) {
-		AdventurerRole role = getRole(id);
+	public static int defaultPantheon(int roleID) {
+		AdventurerRole role = getRole(roleID);
 		if (null != role)
 		{
 			if (null != role.pantheon)
@@ -199,8 +213,8 @@ public class AdventurerRole {
 		return -1;
 	}
 	
-	public static String fileCode(int id) {
-		AdventurerRole role = getRole(id);
+	public static String fileCode(int roleID) {
+		AdventurerRole role = getRole(roleID);
 		if (null != role)
 		{
 			return role.fileCode;
@@ -208,8 +222,8 @@ public class AdventurerRole {
 		return "UNK";
 	}
 	
-	public static String questHomeBase(int id) {
-		AdventurerRole role = getRole(id);
+	public static String questHomeBase(int roleID) {
+		AdventurerRole role = getRole(roleID);
 		if (null != role)
 		{
 			return role.questHomeBase;
@@ -217,8 +231,8 @@ public class AdventurerRole {
 		return "(UNKNOWN LOCATION)";
 	}	
 	
-	public static String intermediateQuestLevel(int id) {
-		AdventurerRole role = getRole(id);
+	public static String intermediateQuestLevel(int roleID) {
+		AdventurerRole role = getRole(roleID);
 		if (null != role)
 		{
 			return role.intermediateQuestLevel;
@@ -238,7 +252,8 @@ public class AdventurerRole {
 
 	private static void initialize() {
 
-		AdventurerRole.id(0).named("Archaeologist")
+		AdventurerRole.withID(ARCHAEOLOGIST_ID)
+		    .named("Archaeologist")
 		    .withRank("Digger")
 		    .withRank("Field Worker")
 			.withRank("Investigator")
@@ -254,7 +269,8 @@ public class AdventurerRole {
 			.withIntermediateQuestLevel( "the Tomb of the Toltec Kings")
 			.add();
 
-		AdventurerRole.id(1).named("Barbarian").withRank("Plunderer", "Plunderess")
+		AdventurerRole.withID(BARBARIAN_ID)
+		    .named("Barbarian").withRank("Plunderer", "Plunderess")
 			.withRank("Pillager")
 			.withRank("Bandit")
 			.withRank("Brigand")
@@ -269,7 +285,8 @@ public class AdventurerRole {
 			.withIntermediateQuestLevel("the Duali Oasis")
 			.add();
 
-		AdventurerRole.id(2).named("Caveman", "Cavewoman")
+		AdventurerRole.withID(CAVEMAN_ID)
+		    .named("Caveman", "Cavewoman")
 		    .withRank("Troglodyte")
 		    .withRank("Aborigine")
 			.withRank("Wanderer")
@@ -285,7 +302,8 @@ public class AdventurerRole {
 			.withIntermediateQuestLevel("the Dragon's Lair")
 			.add();
 
-		AdventurerRole.id(3).named("Healer")
+		AdventurerRole.withID(HEALER_ID)
+		    .named("Healer")
 		    .withRank("Rhizotomist")
 		    .withRank("Empiric")
 			.withRank("Embalmer")
@@ -301,7 +319,8 @@ public class AdventurerRole {
 			.withIntermediateQuestLevel("the Temple of Coeus")
 			.add();
 
-		AdventurerRole.id(4).named("Knight")
+		AdventurerRole.withID(KNIGHT_ID)
+		    .named("Knight")
 		    .withRank("Gallant")
 		    .withRank("Esquire")
 			.withRank("Bachelor")
@@ -317,7 +336,8 @@ public class AdventurerRole {
 			.withIntermediateQuestLevel("the Isle of Glass")
 			.add();
 
-		AdventurerRole.id(5).named("Monk")
+		AdventurerRole.withID(MONK_ID)
+		    .named("Monk")
 		    .withRank("Candidate")
 		    .withRank("Novice")
 		    .withRank("Initiate")
@@ -333,7 +353,8 @@ public class AdventurerRole {
 			.withIntermediateQuestLevel("the Monastery of the Earth-Lord")
 			.add();
 
-		AdventurerRole.id(6).named("Priest", "Priestess")
+		AdventurerRole.withID(PRIEST_ID)
+		    .named("Priest", "Priestess")
 		    .withRank("Aspirant")
 		    .withRank("Acolyte")
 			.withRank("Adept")
@@ -348,7 +369,8 @@ public class AdventurerRole {
 			.withIntermediateQuestLevel("the Temple of Nalzok")
 			.add();
 
-		AdventurerRole.id(7).named("Rogue")
+		AdventurerRole.withID(ROGUE_ID)
+		    .named("Rogue")
 		    .withRank("Footpad")
 		    .withRank("Cutpurse")
 		    .withRank("Rogue")
@@ -364,7 +386,8 @@ public class AdventurerRole {
 			.withIntermediateQuestLevel("the Assassins' Guild Hall")
 			.add();
 
-		AdventurerRole.id(8).named("Ranger")
+		AdventurerRole.withID(RANGER_ID)
+		    .named("Ranger")
 		    .withRank("Tenderfoot")
 		    .withRank("Lookout")
 			.withRank("Trailblazer")
@@ -380,7 +403,8 @@ public class AdventurerRole {
 			.withIntermediateQuestLevel("the cave of the wumpus")
 			.add();
 
-		AdventurerRole.id(9).named("Samurai")
+		AdventurerRole.withID(SAMURAI_ID)
+		    .named("Samurai")
 			.withRank("Hatamoto") /* Banner Knight */
 			.withRank("Ronin") /* no allegiance */
 			.withRank("Ninja", "Kunoichi") /* secret society */
@@ -396,7 +420,8 @@ public class AdventurerRole {
 			.withIntermediateQuestLevel("the Shogun's Castle")
 			.add();
 
-		AdventurerRole.id(10).named("Tourist")
+		AdventurerRole.withID(TOURIST_ID)
+		    .named("Tourist")
 		    .withRank("Rambler")
 		    .withRank("Sightseer")
 			.withRank("Excursionist")
@@ -412,7 +437,8 @@ public class AdventurerRole {
 			.withIntermediateQuestLevel("the Thieves' Guild Hall")
 			.add();
 
-		AdventurerRole.id(11).named("Valkyrie")
+		AdventurerRole.withID(VALKYRIE_ID)
+		    .named("Valkyrie")
 		    .withRank("Stripling")
 		    .withRank("Skirmisher")
 			.withRank("Fighter")
@@ -428,7 +454,8 @@ public class AdventurerRole {
 			.withIntermediateQuestLevel("the cave of Surtur")
 			.add();
 
-		AdventurerRole.id(12).named("Wizard")
+		AdventurerRole.withID(WIZARD_ID)
+		    .named("Wizard")
 		    .withRank("Evoker")
 		    .withRank("Conjurer")
 			.withRank("Thaumaturge")

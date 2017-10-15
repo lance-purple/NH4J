@@ -907,10 +907,10 @@ coord *cc;
 
     /* Grave-robbing is frowned upon... */
     exercise(A_WIS, FALSE);
-    if (Role_if(PM_ARCHEOLOGIST)) {
+    if (yourRoleHasPMID(PM_ARCHEOLOGIST)) {
         adjalign(-sgn(currentAlignmentType()) * 3);
         You_feel("like a despicable grave-robber!");
-    } else if (Role_if(PM_SAMURAI)) {
+    } else if (yourRoleHasPMID(PM_SAMURAI)) {
         adjalign(-sgn(currentAlignmentType()));
         You("disturb the honorable dead!");
     } else if ((currentAlignmentType() == A_LAWFUL) && (currentAlignmentRecord() > -10)) {

@@ -1095,7 +1095,7 @@ dokick()
             if (rn2(4))
                 goto ouch;
             exercise(A_WIS, FALSE);
-            if (Role_if(PM_ARCHEOLOGIST) || Role_if(PM_SAMURAI)
+            if (yourRoleHasPMID(PM_ARCHEOLOGIST) || yourRoleHasPMID(PM_SAMURAI)
                 || ((currentAlignmentType() == A_LAWFUL) && (currentAlignmentRecord() > -10))) {
                 adjalign(-sgn(currentAlignmentType()));
             }

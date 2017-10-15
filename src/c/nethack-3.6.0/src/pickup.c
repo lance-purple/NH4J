@@ -378,7 +378,7 @@ struct obj *obj;
     if (obj->oclass == COIN_CLASS)
         return index(valid_menu_classes, COIN_CLASS) ? TRUE : FALSE;
 
-    if (Role_if(PM_PRIEST))
+    if (yourRoleHasPMID(PM_PRIEST))
         obj->bknown = TRUE;
     /*
      * There are three types of filters possible and the first and

@@ -239,7 +239,7 @@ int rx, ry, *resp;
         boolean here = (rx == currentX() && ry == currentY()),
                 one = (corpse->quan == 1L && !more_corpses), reviver = FALSE;
 
-        if (Role_if(PM_HEALER)) {
+        if (yourRoleHasPMID(PM_HEALER)) {
             /* ok to reset `corpse' here; we're done with it */
             do {
                 if (obj_has_timer(corpse, REVIVE_MON))
@@ -270,7 +270,7 @@ int rx, ry, *resp;
                 what = The(what);
         }
         how = "fine";
-        if (Role_if(PM_HEALER)) {
+        if (yourRoleHasPMID(PM_HEALER)) {
             struct trap *ttmp = t_at(rx, ry);
 
             if (ttmp && ttmp->ttyp == STATUE_TRAP)
@@ -301,7 +301,7 @@ register struct obj *obj;
     struct rm *lev;
     int rx, ry, res;
     boolean interference = (swallowed() && isWhirly(pmid4mon(u.ustuck))
-                            && !rn2(Role_if(PM_HEALER) ? 10 : 3));
+                            && !rn2(yourRoleHasPMID(PM_HEALER) ? 10 : 3));
 
     if (hasNoHands(pmid4you())) {
         You("have no hands!"); /* not `body_part(HAND)' */
@@ -2245,7 +2245,7 @@ struct obj *tstone;
             do_scratch = TRUE;
         } else if (obj->oclass == GEM_CLASS
                    && (tstone->blessed
-                       || (!tstone->cursed && (Role_if(PM_ARCHEOLOGIST)
+                       || (!tstone->cursed && (yourRoleHasPMID(PM_ARCHEOLOGIST)
                                                || Race_if(PM_GNOME))))) {
             makeknown(TOUCHSTONE);
             makeknown(obj->otyp);
@@ -2490,7 +2490,7 @@ struct obj *obj;
 
     /* fake some proficiency checks */
     proficient = 0;
-    if (Role_if(PM_ARCHEOLOGIST))
+    if (yourRoleHasPMID(PM_ARCHEOLOGIST))
         ++proficient;
     if (ACURR(A_DEX) < 6)
         proficient--;

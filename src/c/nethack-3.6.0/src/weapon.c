@@ -1463,11 +1463,11 @@ const struct def_skill *class_skill;
     }
 
     /* set skills for magic */
-    if (Role_if(PM_HEALER) || Role_if(PM_MONK)) {
+    if (yourRoleHasPMID(PM_HEALER) || yourRoleHasPMID(PM_MONK)) {
         setWeaponSkill(P_HEALING_SPELL, P_BASIC);
-    } else if (Role_if(PM_PRIEST)) {
+    } else if (yourRoleHasPMID(PM_PRIEST)) {
         setWeaponSkill(P_CLERIC_SPELL, P_BASIC);
-    } else if (Role_if(PM_WIZARD)) {
+    } else if (yourRoleHasPMID(PM_WIZARD)) {
         setWeaponSkill(P_ATTACK_SPELL, P_BASIC);
         setWeaponSkill(P_ENCHANTMENT_SPELL, P_BASIC);
     }

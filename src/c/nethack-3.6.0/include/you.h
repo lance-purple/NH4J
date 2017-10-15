@@ -118,7 +118,6 @@ struct Role {
 
 extern const struct Role roles[]; /* table of available roles */
 extern struct Role urole;
-#define Role_if(X) (urole.malenum == (X))
 #define Role_switch (urole.malenum)
 
 /* used during initialization for race, gender, and alignment

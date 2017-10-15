@@ -832,7 +832,7 @@ u_init()
          * Non-warriors get an instrument.  We use a kludge to
          * get only non-magic instruments.
          */
-        if (Role_if(PM_PRIEST) || Role_if(PM_WIZARD)) {
+        if (yourRoleHasPMID(PM_PRIEST) || yourRoleHasPMID(PM_WIZARD)) {
             static int trotyp[] = { WOODEN_FLUTE, TOOLED_HORN, WOODEN_HARP,
                                     BELL,         BUGLE,       LEATHER_DRUM };
             Instrument[0].trotyp = trotyp[rn2(SIZE(trotyp))];
@@ -869,7 +869,7 @@ u_init()
 
     case PM_ORC:
         /* compensate for generally inferior equipment */
-        if (!Role_if(PM_WIZARD))
+        if (!yourRoleHasPMID(PM_WIZARD))
             ini_inv(Xtra_food);
         /* Orcs can recognize all orcish objects */
         knows_object(ORCISH_SHORT_SWORD);
@@ -1039,9 +1039,9 @@ register struct trobj *trop;
                    || otyp == RIN_HUNGER
                    || otyp == WAN_NOTHING
                    /* Monks don't use weapons */
-                   || (otyp == SCR_ENCHANT_WEAPON && Role_if(PM_MONK))
+                   || (otyp == SCR_ENCHANT_WEAPON && yourRoleHasPMID(PM_MONK))
                    /* wizard patch -- they already have one */
-                   || (otyp == SPE_FORCE_BOLT && Role_if(PM_WIZARD))
+                   || (otyp == SPE_FORCE_BOLT && yourRoleHasPMID(PM_WIZARD))
                    /* powerful spells are either useless to
                       low level players or unbalancing; also
                       spells in restricted skill categories */

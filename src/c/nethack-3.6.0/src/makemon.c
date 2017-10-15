@@ -13,7 +13,7 @@ STATIC_VAR NEARDATA struct monst zeromonst;
    for instance) but is for the priests and monks we use it for... */
 static boolean quest_mon_represents_role(int pmid, int role_pm) {
     int msound = monsterSound(pmid);
-    return (monsterClass(pmid) == S_HUMAN && Role_if(role_pm)   
+    return (monsterClass(pmid) == S_HUMAN && yourRoleHasPMID(role_pm)   
      && (msound == MS_LEADER || msound == MS_NEMESIS));
 }
 

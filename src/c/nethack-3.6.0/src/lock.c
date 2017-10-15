@@ -354,10 +354,10 @@ struct obj *pick;
                 }
                 switch (picktyp) {
                 case CREDIT_CARD:
-                    ch = ACURR(A_DEX) + 20 * Role_if(PM_ROGUE);
+                    ch = ACURR(A_DEX) + 20 * yourRoleHasPMID(PM_ROGUE);
                     break;
                 case LOCK_PICK:
-                    ch = 4 * ACURR(A_DEX) + 25 * Role_if(PM_ROGUE);
+                    ch = 4 * ACURR(A_DEX) + 25 * yourRoleHasPMID(PM_ROGUE);
                     break;
                 case SKELETON_KEY:
                     ch = 75 + ACURR(A_DEX);
@@ -437,10 +437,10 @@ struct obj *pick;
 
             switch (picktyp) {
             case CREDIT_CARD:
-                ch = 2 * ACURR(A_DEX) + 20 * Role_if(PM_ROGUE);
+                ch = 2 * ACURR(A_DEX) + 20 * yourRoleHasPMID(PM_ROGUE);
                 break;
             case LOCK_PICK:
-                ch = 3 * ACURR(A_DEX) + 30 * Role_if(PM_ROGUE);
+                ch = 3 * ACURR(A_DEX) + 30 * yourRoleHasPMID(PM_ROGUE);
                 break;
             case SKELETON_KEY:
                 ch = 70 + ACURR(A_DEX);
@@ -808,7 +808,7 @@ struct obj *obj, *otmp; /* obj *is* a box */
             pline("Klunk!");
             obj->olocked = 1;
             obj->obroken = 0;
-            if (Role_if(PM_WIZARD))
+            if (yourRoleHasPMID(PM_WIZARD))
                 obj->lknown = 1;
             else
                 obj->lknown = 0;
@@ -821,7 +821,7 @@ struct obj *obj, *otmp; /* obj *is* a box */
             pline("Klick!");
             obj->olocked = 0;
             res = 1;
-            if (Role_if(PM_WIZARD))
+            if (yourRoleHasPMID(PM_WIZARD))
                 obj->lknown = 1;
             else
                 obj->lknown = 0;

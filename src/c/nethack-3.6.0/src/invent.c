@@ -2242,7 +2242,7 @@ int type;
         if (list->oclass == COIN_CLASS)
             continue;
         /* priests always know bless/curse state */
-        if (Role_if(PM_PRIEST))
+        if (yourRoleHasPMID(PM_PRIEST))
             list->bknown = 1;
 
         /* check whether this object matches the requested type */
@@ -2270,7 +2270,7 @@ int *bcp, *ucp, *ccp, *xcp, *ocp;
             continue;
         }
         /* priests always know bless/curse state */
-        if (Role_if(PM_PRIEST))
+        if (yourRoleHasPMID(PM_PRIEST))
             list->bknown = 1;
 
         if (!list->bknown)
@@ -2901,7 +2901,7 @@ register struct obj *otmp, *obj;
         return TRUE;
     if (obj->unpaid != otmp->unpaid || obj->spe != otmp->spe
         || obj->dknown != otmp->dknown
-        || (obj->bknown != otmp->bknown && !Role_if(PM_PRIEST))
+        || (obj->bknown != otmp->bknown && !yourRoleHasPMID(PM_PRIEST))
         || obj->cursed != otmp->cursed || obj->blessed != otmp->blessed
         || obj->no_charge != otmp->no_charge || obj->obroken != otmp->obroken
         || obj->otrapped != otmp->otrapped || obj->lamplit != otmp->lamplit

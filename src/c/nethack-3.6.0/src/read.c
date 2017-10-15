@@ -1027,7 +1027,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
         }
         /* elven armor vibrates warningly when enchanted beyond a limit */
         special_armor = is_elven_armor(otmp)
-                        || (Role_if(PM_WIZARD) && otmp->otyp == CORNUTHAUM);
+                        || (yourRoleHasPMID(PM_WIZARD) && otmp->otyp == CORNUTHAUM);
         if (scursed)
             same_color = (otmp->otyp == BLACK_DRAGON_SCALE_MAIL
                           || otmp->otyp == BLACK_DRAGON_SCALES);
@@ -2066,7 +2066,7 @@ do_class_genocide()
                         /* non-leader/nemesis/guardian role-specific monster
                            */
                         && (i != PM_NINJA /* nuisance */
-                            || Role_if(PM_SAMURAI))) {
+                            || yourRoleHasPMID(PM_SAMURAI))) {
                         boolean named, uniq;
 
                         named = typeIsProperName(i) ? TRUE : FALSE;
