@@ -2156,7 +2156,7 @@ const char *
 Hello(mtmp)
 struct monst *mtmp;
 {
-    switch (Role_switch) {
+    switch (yourRolePMID()) {
     case PM_KNIGHT:
         return "Salutations"; /* Olde English */
     case PM_SAMURAI:
@@ -2175,7 +2175,7 @@ struct monst *mtmp;
 const char *
 Goodbye()
 {
-    switch (Role_switch) {
+    switch (yourRolePMID()) {
     case PM_KNIGHT:
         return "Fare thee well"; /* Olde English */
     case PM_SAMURAI:

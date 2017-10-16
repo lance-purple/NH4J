@@ -23,7 +23,7 @@ STATIC_OVL int
 enermod(en)
 int en;
 {
-    switch (Role_switch) {
+    switch (yourRolePMID()) {
     case PM_PRIEST:
     case PM_WIZARD:
         return (2 * en);

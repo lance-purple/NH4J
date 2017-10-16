@@ -193,14 +193,16 @@ struct obj *otmp;
     /* shouldn't be able to hear curse/bless status of unseen scrolls;
        for priest characters, bknown will always be set during naming */
     savebknown = otmp->bknown;
-    saverole = Role_switch;
+    saverole = yourRolePMID();
     if (!vismon) {
         otmp->bknown = 0;
         if (yourRoleHasPMID(PM_PRIEST))
-            Role_switch = 0;
+        {
+            setYourRolePMID(NON_PM);
+        }
     }
     Strcpy(onambuf, singular(otmp, doname));
-    Role_switch = saverole;
+    setYourRolePMID(saverole);
     otmp->bknown = savebknown;
 
     if (vismon)

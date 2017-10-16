@@ -132,7 +132,7 @@ int shotlimit;
             break;
         }
         /* ...or is using a special weapon for their role... */
-        switch (Role_switch) {
+        switch (yourRolePMID()) {
         case PM_CAVEMAN:
             /* give bonus for low-tech gear */
             if (skill == -P_SLING || skill == P_SPEAR)

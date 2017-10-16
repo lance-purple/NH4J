@@ -652,7 +652,7 @@ long frommask;
     const struct innate *abil = 0;
 
     if (frommask == FROMEXPER)
-        switch (Role_switch) {
+        switch (yourRolePMID()) {
         case PM_ARCHEOLOGIST:
             abil = arc_abil;
             break;
@@ -817,7 +817,7 @@ int oldlevel, newlevel;
     register const struct innate *abil, *rabil;
     long prevabil, mask = FROMEXPER;
 
-    switch (Role_switch) {
+    switch (yourRolePMID()) {
     case PM_ARCHEOLOGIST:
         abil = arc_abil;
         break;

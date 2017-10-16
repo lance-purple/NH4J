@@ -1434,7 +1434,7 @@ int final;
     javaString role_titl = (innategend && roleNameHasFemaleVersion(urole.id))
 	    ? roleNameAsFemale(urole.id)
 	    : roleNameAsMale(urole.id);
-    javaString rank_titl = rankOf(currentExperienceLevel(), Role_switch, innategend);
+    javaString rank_titl = rankOf(currentExperienceLevel(), yourRolePMID(), innategend);
 
     if (!strcmpi(rank_titl.c_str, role_titl.c_str)) {
         /* omit role when rank title matches it */

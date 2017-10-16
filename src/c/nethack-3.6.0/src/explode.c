@@ -65,7 +65,7 @@ int expltype;
             } else
                 type = 0;
         }
-        switch (Role_switch) {
+        switch (yourRolePMID()) {
         case PM_PRIEST:
         case PM_MONK:
         case PM_WIZARD:

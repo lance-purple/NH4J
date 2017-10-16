@@ -2839,6 +2839,7 @@ E javaString FDECL(yourQuestHomeBase, ());
 E javaString FDECL(yourIntermediateQuestLevel, ());
 
 E int FDECL(yourRolePMID, ());
+E void FDECL(setYourRolePMID, (int));
 E boolean FDECL(yourRoleHasPMID, (int));
 
 E boolean FDECL(validrole, (int));

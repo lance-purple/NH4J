@@ -209,7 +209,7 @@ boolean female;
 STATIC_OVL javaString
 rank()
 {
-    return rankOf(currentExperienceLevel(), Role_switch, flags.female);
+    return rankOf(currentExperienceLevel(), yourRolePMID(), flags.female);
 }
 
 int

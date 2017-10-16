@@ -59,8 +59,10 @@ hack_artifacts()
 
     /* Fix up the alignments of "gift" artifacts */
     for (art = artilist + 1; art->otyp; art++)
-        if (art->role == Role_switch && art->alignment != A_NONE)
+        if ((art->role == yourRolePMID()) && (art->alignment != A_NONE))
+        {
             art->alignment = alignmnt;
+        }
 
     /* Excalibur can be used by any lawful character, not just knights */
     if (!yourRoleHasPMID(PM_KNIGHT))
@@ -69,7 +71,7 @@ hack_artifacts()
     /* Fix up the quest artifact */
     if (urole.questarti) {
         artilist[urole.questarti].alignment = alignmnt;
-        artilist[urole.questarti].role = Role_switch;
+        artilist[urole.questarti].role = yourRolePMID();
     }
     return;
 }
@@ -1498,7 +1500,7 @@ struct obj *obj;
                 return 0;
             }
             b_effect =
-                obj->blessed && (Role_switch == oart->role || !oart->role);
+                obj->blessed && ((yourRolePMID() == oart->role) || !oart->role);
             recharge(otmp, b_effect ? 1 : obj->cursed ? -1 : 0);
             update_inventory();
             break;

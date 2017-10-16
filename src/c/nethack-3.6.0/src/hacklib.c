@@ -2990,6 +2990,10 @@ extern int yourRolePMID() {
   return urole.malenum;
 }
 
+extern void setYourRolePMID(int pmid) {
+  urole.malenum = pmid;
+}
+
 extern boolean yourRoleHasPMID(int pmid) {
   return (urole.malenum == pmid);
 }

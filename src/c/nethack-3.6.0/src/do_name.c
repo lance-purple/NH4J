@@ -783,7 +783,7 @@ namefloorobj()
 		     break;
 
             /* random rank title for hero's role */
-            case 1:  funnyName = rankOf(rnd(30), Role_switch, flags.female);
+            case 1:  funnyName = rankOf(rnd(30), yourRolePMID(), flags.female);
 		     break;
 
             /* random fake monster */

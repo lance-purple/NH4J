@@ -287,10 +287,10 @@ char c;
 		: roleNameAsMale(urole.id);
         break;
     case 'r':
-        jstr = rankOf(currentExperienceLevel(), Role_switch, flags.female);
+        jstr = rankOf(currentExperienceLevel(), yourRolePMID(), flags.female);
         break;
     case 'R':
-        jstr = rankOf(MIN_QUEST_LEVEL, Role_switch, flags.female);
+        jstr = rankOf(MIN_QUEST_LEVEL, yourRolePMID(), flags.female);
         break;
     case 's':
         jstr = (flags.female) ? javaStringFromC("sister") : javaStringFromC("brother");

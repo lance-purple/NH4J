@@ -674,7 +674,7 @@ u_init()
     setXRayVisionRange(-1);
 
     /*** Role-specific initializations ***/
-    switch (Role_switch) {
+    switch (yourRolePMID()) {
     /* rn2(100) > 50 necessary for some choices because some
      * random number generators are bad enough to seriously
      * skew the results if we use rn2(2)...  --KAA
@@ -935,7 +935,7 @@ int otyp;
     const struct def_skill *skills;
     int this_skill = spell_skilltype(otyp);
 
-    switch (Role_switch) {
+    switch (yourRolePMID()) {
     case PM_ARCHEOLOGIST:
         skills = Skill_A;
         break;
