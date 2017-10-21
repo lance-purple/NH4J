@@ -1019,7 +1019,9 @@ boolean artif;
         if (otmp->corpsenm == NON_PM) {
             otmp->corpsenm = undead_to_corpse(rndmonnum());
             if (mvitals[otmp->corpsenm].mvflags & (G_NOCORPSE | G_GONE))
-                otmp->corpsenm = urole.malenum;
+	    {
+                otmp->corpsenm = yourRolePMID();
+	    }
         }
     /*FALLTHRU*/
     case STATUE:

@@ -2140,9 +2140,9 @@ role_init()
          * but since infravision has no effect for NPCs anyway we can
          * ignore this.
          */
-        setMonsterFlag3(urole.malenum, M3_INFRAVISION);
-        if (urole.femalenum != NON_PM) {
-            setMonsterFlag3(urole.femalenum, M3_INFRAVISION);
+        setMonsterFlag3(malePMIDForYourRole(), M3_INFRAVISION);
+        if (yourRoleHasFemalePMID()) {
+            setMonsterFlag3(femalePMIDForYourRole(), M3_INFRAVISION);
 	}
     }
 

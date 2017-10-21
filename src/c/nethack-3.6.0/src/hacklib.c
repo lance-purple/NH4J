@@ -2986,16 +2986,42 @@ extern javaString yourIntermediateQuestLevel() {
   return result;
 }
 
-extern int yourRolePMID() {
-  return urole.malenum;
+extern boolean yourRoleHasMalePMID() {
+  return javaGetBoolean(PLAYER_CHARACTER_CLASS, "hasMalePMIDForCurrentRole");
 }
 
-extern void setYourRolePMID(int pmid) {
+extern int malePMIDForYourRole() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "malePMIDForCurrentRole");
+}
+
+extern void setMalePMIDForYourRole(int pmid) {
+  javaSetInt(PLAYER_CHARACTER_CLASS, "setMalePMIDForCurrentRole", pmid);
   urole.malenum = pmid;
 }
 
+extern boolean yourRoleHasFemalePMID() {
+  return javaGetBoolean(PLAYER_CHARACTER_CLASS, "hasFemalePMIDForCurrentRole");
+}
+
+extern int femalePMIDForYourRole() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "femalePMIDForCurrentRole");
+}
+
+extern void setFemalePMIDForYourRole(int pmid) {
+  javaSetInt(PLAYER_CHARACTER_CLASS, "setFemalePMIDForCurrentRole", pmid);
+  urole.femalenum = pmid;
+}
+
+extern int yourRolePMID() {
+  return malePMIDForYourRole();
+}
+
+extern void setYourRolePMID(int pmid) {
+  setMalePMIDForYourRole(pmid);
+}
+
 extern boolean yourRoleHasPMID(int pmid) {
-  return (urole.malenum == pmid);
+  return (pmid == yourRolePMID());
 }
 
 /*hacklib.c*/

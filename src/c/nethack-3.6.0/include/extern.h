@@ -2842,6 +2842,13 @@ E int FDECL(yourRolePMID, ());
 E void FDECL(setYourRolePMID, (int));
 E boolean FDECL(yourRoleHasPMID, (int));
 
+E boolean FDECL(yourRoleHasFemalePMID, ());
+E int FDECL(femalePMIDForYourRole, ());
+
+E boolean FDECL(yourRoleHasMalePMID, ());
+E int FDECL(malePMIDForYourRole, ());
+
+
 E boolean FDECL(validrole, (int));
 E boolean FDECL(validrace, (int, int));
 E boolean FDECL(validgend, (int, int, int));

@@ -373,8 +373,7 @@ register struct monst *mtmp;
 
     int pmid = pmid4mon(mtmp);
 
-    pline("Talk? -- %s", ((pmid == urole.malenum)
-                          || (pmid == urole.femalenum))
+    pline("Talk? -- %s", (yourRoleHasMalePMID(pmid) || yourRoleHasFemalePMID(pmid))
                              ? same_class_msg[rn2(3)]
                              : other_class_msg[rn2(3)]);
 }

@@ -629,12 +629,10 @@ u_init()
     setDeathCount(0);
     setAriseFromGraveAsMonster(NON_PM);
 
-    setCurrentMonsterNumber((flags.female && urole.femalenum != NON_PM)
-                                 ? urole.femalenum
-                                 : urole.malenum);
-    setOriginalMonsterNumber( (flags.female && urole.femalenum != NON_PM)
-                                 ? urole.femalenum
-                                 : urole.malenum );
+    setCurrentMonsterNumber((flags.female && yourRoleHasFemalePMID())
+                                 ? femalePMIDForYourRole()
+                                 : malePMIDForYourRole());
+    setOriginalMonsterNumber(currentMonsterNumber());
     setLycanthropeType(NON_PM);
     set_uasmon();
 

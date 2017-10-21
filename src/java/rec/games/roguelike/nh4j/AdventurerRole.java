@@ -27,6 +27,8 @@ public class AdventurerRole {
 	private ArrayList<GenderedName> rankNames = new ArrayList<>();
 	private Pantheon pantheon = null;
 	private String fileCode;
+	private PM malePM;
+	private PM femalePM;
 	
 	private String questHomeBase;
 	private String intermediateQuestLevel;
@@ -76,6 +78,20 @@ public class AdventurerRole {
 	private AdventurerRole withIntermediateQuestLevel(String level)
 	{
 		this.intermediateQuestLevel = level;
+		return this;
+	}
+	
+	private AdventurerRole withPM(PM genericPM)
+	{
+		this.malePM = genericPM;
+		this.femalePM = genericPM;
+		return this;
+	}
+
+	private AdventurerRole withPM(PM malePM, PM femalePM)
+	{
+		this.malePM = malePM;
+		this.femalePM = femalePM;
 		return this;
 	}
 
@@ -240,6 +256,40 @@ public class AdventurerRole {
 		return "(UNKNOWN LOCATION)";
 	}	
 	
+	public static int pmidAsMale(int roleID) {
+		AdventurerRole role = getRole(roleID);
+		if (null != role)
+		{
+			return role.malePM.id();
+		}
+		return PM.UNKNOWN.id();
+	}
+
+	public static void setPMIDAsMale(int roleID, int pmid) {
+		AdventurerRole role = getRole(roleID);
+		if (null != role)
+		{
+			role.malePM = PM.withPMID(pmid);
+		}
+	}
+
+	public static int pmidAsFemale(int roleID) {
+		AdventurerRole role = getRole(roleID);
+		if (null != role)
+		{
+			return role.femalePM.id();
+		}
+		return PM.UNKNOWN.id();
+	}
+
+	public static void setPMIDAsFemale(int roleID, int pmid) {
+		AdventurerRole role = getRole(roleID);
+		if (null != role)
+		{
+			role.femalePM = PM.withPMID(pmid);
+		}
+	}
+
 	public static AdventurerRole random() {
 		if (rolesByID.isEmpty()) {
 			initialize();
@@ -254,6 +304,7 @@ public class AdventurerRole {
 
 		AdventurerRole.withID(ARCHAEOLOGIST_ID)
 		    .named("Archaeologist")
+		    .withPM(PM.ARCHEOLOGIST)
 		    .withRank("Digger")
 		    .withRank("Field Worker")
 			.withRank("Investigator")
@@ -270,7 +321,9 @@ public class AdventurerRole {
 			.add();
 
 		AdventurerRole.withID(BARBARIAN_ID)
-		    .named("Barbarian").withRank("Plunderer", "Plunderess")
+		    .named("Barbarian")
+		    .withPM(PM.BARBARIAN)
+		    .withRank("Plunderer", "Plunderess")
 			.withRank("Pillager")
 			.withRank("Bandit")
 			.withRank("Brigand")
@@ -287,6 +340,7 @@ public class AdventurerRole {
 
 		AdventurerRole.withID(CAVEMAN_ID)
 		    .named("Caveman", "Cavewoman")
+		    .withPM(PM.CAVEMAN, PM.CAVEWOMAN)
 		    .withRank("Troglodyte")
 		    .withRank("Aborigine")
 			.withRank("Wanderer")
@@ -304,6 +358,7 @@ public class AdventurerRole {
 
 		AdventurerRole.withID(HEALER_ID)
 		    .named("Healer")
+		    .withPM(PM.HEALER)
 		    .withRank("Rhizotomist")
 		    .withRank("Empiric")
 			.withRank("Embalmer")
@@ -321,6 +376,7 @@ public class AdventurerRole {
 
 		AdventurerRole.withID(KNIGHT_ID)
 		    .named("Knight")
+		    .withPM(PM.KNIGHT)
 		    .withRank("Gallant")
 		    .withRank("Esquire")
 			.withRank("Bachelor")
@@ -338,6 +394,7 @@ public class AdventurerRole {
 
 		AdventurerRole.withID(MONK_ID)
 		    .named("Monk")
+		    .withPM(PM.MONK)
 		    .withRank("Candidate")
 		    .withRank("Novice")
 		    .withRank("Initiate")
@@ -355,6 +412,7 @@ public class AdventurerRole {
 
 		AdventurerRole.withID(PRIEST_ID)
 		    .named("Priest", "Priestess")
+		    .withPM(PM.PRIEST, PM.PRIESTESS)
 		    .withRank("Aspirant")
 		    .withRank("Acolyte")
 			.withRank("Adept")
@@ -371,6 +429,7 @@ public class AdventurerRole {
 
 		AdventurerRole.withID(ROGUE_ID)
 		    .named("Rogue")
+		    .withPM(PM.ROGUE)
 		    .withRank("Footpad")
 		    .withRank("Cutpurse")
 		    .withRank("Rogue")
@@ -388,6 +447,7 @@ public class AdventurerRole {
 
 		AdventurerRole.withID(RANGER_ID)
 		    .named("Ranger")
+		    .withPM(PM.RANGER)
 		    .withRank("Tenderfoot")
 		    .withRank("Lookout")
 			.withRank("Trailblazer")
@@ -405,6 +465,7 @@ public class AdventurerRole {
 
 		AdventurerRole.withID(SAMURAI_ID)
 		    .named("Samurai")
+		    .withPM(PM.SAMURAI)
 			.withRank("Hatamoto") /* Banner Knight */
 			.withRank("Ronin") /* no allegiance */
 			.withRank("Ninja", "Kunoichi") /* secret society */
@@ -422,6 +483,7 @@ public class AdventurerRole {
 
 		AdventurerRole.withID(TOURIST_ID)
 		    .named("Tourist")
+		    .withPM(PM.TOURIST)
 		    .withRank("Rambler")
 		    .withRank("Sightseer")
 			.withRank("Excursionist")
@@ -439,6 +501,7 @@ public class AdventurerRole {
 
 		AdventurerRole.withID(VALKYRIE_ID)
 		    .named("Valkyrie")
+		    .withPM(PM.VALKYRIE)
 		    .withRank("Stripling")
 		    .withRank("Skirmisher")
 			.withRank("Fighter")
@@ -456,6 +519,7 @@ public class AdventurerRole {
 
 		AdventurerRole.withID(WIZARD_ID)
 		    .named("Wizard")
+		    .withPM(PM.WIZARD)
 		    .withRank("Evoker")
 		    .withRank("Conjurer")
 			.withRank("Thaumaturge")

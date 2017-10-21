@@ -1573,4 +1573,35 @@ public class PlayerCharacter {
 	{
 		return AdventurerRole.intermediateQuestLevel(currentRoleID);
 	}
+
+	public static boolean hasMalePMIDForCurrentRole()
+	{
+		return (PM.UNKNOWN.id() != AdventurerRole.pmidAsMale(currentRoleID));
+	}
+
+	public static int malePMIDForCurrentRole()
+	{
+		return AdventurerRole.pmidAsMale(currentRoleID);
+	}
+
+	public static void setMalePMIDForCurrentRole(int pmid)
+	{
+		AdventurerRole.setPMIDAsMale(currentRoleID, pmid);
+	}
+
+	public static boolean hasFemalePMIDForCurrentRole()
+	{
+		return (PM.UNKNOWN.id() != AdventurerRole.pmidAsFemale(currentRoleID));
+	}
+
+	public static int femalePMIDForCurrentRole()
+	{
+		return AdventurerRole.pmidAsFemale(currentRoleID);
+	}
+
+	public static void setFemalePMIDForCurrentRole(int pmid)
+	{
+		AdventurerRole.setPMIDAsFemale(currentRoleID, pmid);
+	}
+
 }

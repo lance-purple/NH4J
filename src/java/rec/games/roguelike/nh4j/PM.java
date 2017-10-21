@@ -405,5 +405,14 @@ public enum PM {
 		}
 		return false;
 	}
+	
+	public PM withPMID(int pmid) {
+		for (PM pm : values()) {
+			if (pm.id() == pmid) {
+				return pm;
+			}
+		}
+		return UNKNOWN;
+	}
     
 }
