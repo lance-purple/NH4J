@@ -2996,7 +2996,6 @@ extern int malePMIDForYourRole() {
 
 extern void setMalePMIDForYourRole(int pmid) {
   javaSetInt(PLAYER_CHARACTER_CLASS, "setMalePMIDForCurrentRole", pmid);
-  urole.malenum = pmid;
 }
 
 extern boolean yourRoleHasFemalePMID() {
@@ -3009,7 +3008,6 @@ extern int femalePMIDForYourRole() {
 
 extern void setFemalePMIDForYourRole(int pmid) {
   javaSetInt(PLAYER_CHARACTER_CLASS, "setFemalePMIDForCurrentRole", pmid);
-  urole.femalenum = pmid;
 }
 
 extern int yourRolePMID() {
@@ -3022,6 +3020,22 @@ extern void setYourRolePMID(int pmid) {
 
 extern boolean yourRoleHasPMID(int pmid) {
   return (pmid == yourRolePMID());
+}
+
+extern boolean roleHasFemalePMID(int roleID) {
+  return (NON_PM != femalePMIDForRole(roleID));
+}
+
+extern int femalePMIDForRole(int roleID) {
+  return javaGetIntFromInt(ADVENTURER_ROLE_CLASS, "pmidAsFemale", roleID);
+}
+
+extern boolean roleHasMalePMID(int roleID) {
+  return (NON_PM != malePMIDForRole(roleID));
+}
+
+extern int malePMIDForRole(int roleID) {
+  return javaGetIntFromInt(ADVENTURER_ROLE_CLASS, "pmidAsMale", roleID);
 }
 
 /*hacklib.c*/

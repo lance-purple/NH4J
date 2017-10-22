@@ -167,7 +167,7 @@ boolean female;
     for (int i = 0, n = numberOfKnownRoles(); i < n; i++)
     {
         role = &roles[i];
-        if (monnum == role->malenum || monnum == role->femalenum)
+        if (monnum == malePMIDForRole(i) || monnum == femalePMIDForRole(i))
 	{
 	    known = TRUE;
             break;
@@ -240,7 +240,7 @@ int *rank_indx, *title_length;
 		    {
                         *title_length = rankNameLen;
 		    }
-                    return role->malenum;
+                    return malePMIDForRole(role->id);
 		}
             }
             if (rankNameHasFemaleVersion(i, j))
@@ -259,8 +259,9 @@ int *rank_indx, *title_length;
 		    {
                         *title_length = rankNameLen;
 		    }
-                    return (role->femalenum != NON_PM) ? role->femalenum
-                                                       : role->malenum;
+                    return (roleHasFemalePMID(role->id))
+			        ? femalePMIDForRole(role->id)
+			        : malePMIDForRole(role->id);
 		}
             }
         }

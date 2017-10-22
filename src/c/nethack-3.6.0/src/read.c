@@ -4,9 +4,12 @@
 
 #include "hack.h"
 
-#define Your_Own_Role(mndx)  \
-    ((mndx) == urole.malenum \
-     || (urole.femalenum != NON_PM && (mndx) == urole.femalenum))
+static boolean Your_Own_Role(int pmid)
+{
+    return (pmid == malePMIDForYourRole())
+     || (yourRoleHasFemalePMID() && (pmid == femalePMIDForYourRole()));
+}
+
 #define Your_Own_Race(mndx)  \
     ((mndx) == urace.malenum \
      || (urace.femalenum != NON_PM && (mndx) == urace.femalenum))
@@ -1978,7 +1981,7 @@ do_class_genocide()
                     goodcnt++;
             }
         }
-        if (!goodcnt && class != monsterClass(urole.malenum)
+        if (!goodcnt && class != monsterClass(yourRolePMID())
             && class != monsterClass(urace.malenum)) {
             if (gonecnt)
                 pline("All such monsters are already nonexistent.");
@@ -2039,7 +2042,7 @@ do_class_genocide()
                     /* Self-genocide if it matches either your race
                        or role.  Assumption:  male and female forms
                        share same monster class. */
-                    if (i == urole.malenum || i == urace.malenum) {
+                    if (i == malePMIDForYourRole() || i == urace.malenum) {
                         setCurrentHitPoints(-1);
                         if (areYouPolymorphed()) {
                             if (!feel_dead++)
@@ -2209,10 +2212,10 @@ int how;
 
         if (killplayer) {
             /* might need to wipe out dual role */
-            if (urole.femalenum != NON_PM && pmid == urole.malenum)
-                mvitals[urole.femalenum].mvflags |= (G_GENOD | G_NOCORPSE);
-            if (urole.femalenum != NON_PM && pmid == urole.femalenum)
-                mvitals[urole.malenum].mvflags |= (G_GENOD | G_NOCORPSE);
+            if (yourRoleHasFemalePMID() && pmid == malePMIDForYourRole())
+                mvitals[femalePMIDForYourRole()].mvflags |= (G_GENOD | G_NOCORPSE);
+            if (yourRoleHasFemalePMID() && pmid == femalePMIDForYourRole())
+                mvitals[malePMIDForYourRole()].mvflags |= (G_GENOD | G_NOCORPSE);
             if (urace.femalenum != NON_PM && pmid == urace.malenum)
                 mvitals[urace.femalenum].mvflags |= (G_GENOD | G_NOCORPSE);
             if (urace.femalenum != NON_PM && pmid == urace.femalenum)
@@ -2381,7 +2384,7 @@ create_particular()
     tryct = 5;
     do {
         monclass = MAXMCLASSES;
-        which = urole.malenum; /* an arbitrary index into mons[] */
+        which = yourRolePMID(); /* an arbitrary ID */
         maketame = makepeaceful = makehostile = FALSE;
         getlin("Create what kind of monster? [type the name or symbol]", buf);
         bufp = mungspaces(buf);
@@ -2411,7 +2414,7 @@ create_particular()
             monclass = MAXMCLASSES; /* matters below */
             break;
         } else if (monclass > 0) {
-            which = urole.malenum; /* reset from NON_PM */
+            which = yourRolePMID(); /* reset from NON_PM */
             break;
         }
         /* no good; try again... */

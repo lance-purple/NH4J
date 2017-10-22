@@ -181,9 +181,9 @@ const char *fmt, *arg;
 
     You(fmt, arg);
     /* check whether player foolishly genocided self while poly'd */
-    if ((mvitals[urole.malenum].mvflags & G_GENOD)
-        || (urole.femalenum != NON_PM
-            && (mvitals[urole.femalenum].mvflags & G_GENOD))
+    if ((mvitals[malePMIDForYourRole()].mvflags & G_GENOD)
+        || (yourRoleHasFemalePMID()
+            && (mvitals[femalePMIDForYourRole()].mvflags & G_GENOD))
         || (mvitals[urace.malenum].mvflags & G_GENOD)
         || (urace.femalenum != NON_PM
             && (mvitals[urace.femalenum].mvflags & G_GENOD))) {
@@ -253,9 +253,9 @@ change_sex()
     releaseJavaString(roleName);
 
     setOriginalMonsterNumber( ((already_polyd ? inherentlyFemale() : flags.female)
-                  && urole.femalenum != NON_PM)
-                     ? urole.femalenum
-                     : urole.malenum );
+                  && yourRoleHasFemalePMID())
+                     ? femalePMIDForYourRole()
+                     : malePMIDForYourRole());
     if (!already_polyd) {
         setCurrentMonsterNumber(originalMonsterNumber());
     } else if (currentMonsterNumber() == PM_SUCCUBUS || currentMonsterNumber() == PM_INCUBUS) {
@@ -466,8 +466,8 @@ int psflags;
                  * want if they specified a human.... */
             } else if (!okToPolymorphInto(mntmp)
                        && !(mntmp == PM_HUMAN || isOfYourRace(mntmp, urace.selfmask)
-                            || mntmp == urole.malenum
-                            || mntmp == urole.femalenum)) {
+                            || mntmp == malePMIDForYourRole()
+                            || mntmp == femalePMIDForYourRole())) {
 
                 /* mkclass_poly() can pick a !okToPolymorphInto()
                    candidate; if so, usually try again */

@@ -406,7 +406,7 @@ public enum PM {
 		return false;
 	}
 	
-	public PM withPMID(int pmid) {
+	public static PM withPMID(int pmid) {
 		for (PM pm : values()) {
 			if (pm.id() == pmid) {
 				return pm;

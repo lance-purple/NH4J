@@ -1126,13 +1126,13 @@ boolean fem;
 	releaseJavaString(filecode);
 
         if (matches) {
-            if (fem && roles[i].femalenum != NON_PM)
+            if (fem && roleHasFemalePMID(i))
 	    {
-                return roles[i].femalenum;
+                return femalePMIDForRole(i);
 	    }
-            else if (roles[i].malenum != NON_PM)
+	    else if (roleHasMalePMID(i))
 	    {
-                return roles[i].malenum;
+                return malePMIDForRole(i);
 	    }
             else
 	    {
