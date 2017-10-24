@@ -2075,8 +2075,8 @@ role_init()
     urace = races[flags.initrace];
 
     /* Fix up the quest leader */
-    if (urole.ldrnum != NON_PM) {
-        pmid = urole.ldrnum;
+    if (yourRoleHasAQuestLeader()) {
+        pmid = pmidOfQuestLeaderForYourRole();
         setMonsterSound(pmid, MS_LEADER);
         setMonsterFlag2(pmid, M2_PEACEFUL);
         setMonsterFlag3(pmid, M3_CLOSE);

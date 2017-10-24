@@ -3046,4 +3046,12 @@ extern int pmidOfPreferredPetForYourRole() {
   return javaGetInt(PLAYER_CHARACTER_CLASS, "pmidOfPreferredPet");
 }
 
+extern boolean yourRoleHasAQuestLeader() {
+  return javaGetBoolean(PLAYER_CHARACTER_CLASS, "hasQuestLeader");
+}
+
+int pmidOfQuestLeaderForYourRole() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "pmidOfQuestLeader");
+}
+
 /*hacklib.c*/

@@ -30,6 +30,7 @@ public class AdventurerRole {
 	private PM malePM;
 	private PM femalePM;
 	private PM preferredPet = PM.UNKNOWN;
+	private PM questLeader = PM.UNKNOWN;
 	
 	private String questHomeBase;
 	private String intermediateQuestLevel;
@@ -99,6 +100,12 @@ public class AdventurerRole {
 	private AdventurerRole withPreferredPet(PM pet)
 	{
 		this.preferredPet = pet;
+		return this;
+	}
+	
+	private AdventurerRole withQuestLeader(PM leader)
+	{
+		this.questLeader = leader;
 		return this;
 	}
 
@@ -319,6 +326,19 @@ public class AdventurerRole {
 		return PM.UNKNOWN.id() != pmidOfPreferredPet(roleID);
 	}
 
+	
+	public static int pmidOfQuestLeader(int roleID) {
+		AdventurerRole role = getRole(roleID);
+		if (null != role)
+		{
+			return role.questLeader.id();
+		}
+		return PM.UNKNOWN.id();
+	}
+	
+	public static boolean hasQuestLeader(int roleID) {
+		return PM.UNKNOWN.id() != pmidOfQuestLeader(roleID);
+	}
 
 	private static void initialize() {
 
@@ -336,6 +356,7 @@ public class AdventurerRole {
 			.withRank("Curator")
 			.with(Pantheon.CENTRAL_AMERICAN)
 			.withFileCode("Arc")
+			.withQuestLeader(PM.LORD_CARNARVON)
 			.withQuestHomeBase("the College of Archeology")
 			.withIntermediateQuestLevel( "the Tomb of the Toltec Kings")
 			.add();
@@ -354,6 +375,7 @@ public class AdventurerRole {
 			.withRank("Conqueror", "Conqueress")
 			.with(Pantheon.HYBORIAN)
 			.withFileCode("Bar")
+			.withQuestLeader(PM.PELIAS)
 			.withQuestHomeBase("the Camp of the Duali Tribe")
 			.withIntermediateQuestLevel("the Duali Oasis")
 			.add();
@@ -373,6 +395,7 @@ public class AdventurerRole {
 			.withPreferredPet(PM.LITTLE_DOG)
 			.with(Pantheon.BABYLONIAN)
 			.withFileCode("Cav")
+			.withQuestLeader(PM.SHAMAN_KARNOV)
 			.withQuestHomeBase("the Caves of the Ancestors")
 			.withIntermediateQuestLevel("the Dragon's Lair")
 			.add();
@@ -391,6 +414,7 @@ public class AdventurerRole {
 			.withRank("Chirurgeon")
 			.with(Pantheon.GREEK)
 			.withFileCode("Hea")
+			.withQuestLeader(PM.HIPPOCRATES)
 			.withQuestHomeBase("the Temple of Epidaurus")
 			.withIntermediateQuestLevel("the Temple of Coeus")
 			.add();
@@ -410,6 +434,7 @@ public class AdventurerRole {
 			.withPreferredPet(PM.PONY)
 			.with(Pantheon.CELTIC)
 			.withFileCode("Kni")
+			.withQuestLeader(PM.KING_ARTHUR)
 			.withQuestHomeBase("Camelot Castle")
 			.withIntermediateQuestLevel("the Isle of Glass")
 			.add();
@@ -428,6 +453,7 @@ public class AdventurerRole {
 			.withRank("Master")
 			.with(Pantheon.CHINESE)
 			.withFileCode("Mon")
+			.withQuestLeader(PM.GRAND_MASTER)
 			.withQuestHomeBase( "the Monastery of Chan-Sune")
 			.withIntermediateQuestLevel("the Monastery of the Earth-Lord")
 			.add();
@@ -445,6 +471,7 @@ public class AdventurerRole {
 			.withRank("Patriarch", "Matriarch")
 			.withRank("High Priest", "High Priestess")
 			.withFileCode("Pri")
+			.withQuestLeader(PM.ARCH_PRIEST)
 			.withQuestHomeBase("the Great Temple")
 			.withIntermediateQuestLevel("the Temple of Nalzok")
 			.add();
@@ -463,6 +490,7 @@ public class AdventurerRole {
 			.withRank("Thief")
 			.with(Pantheon.NEHWON)
 			.withFileCode("Rog")
+			.withQuestLeader(PM.MASTER_OF_THIEVES)
 			.withQuestHomeBase("the Thieves' Guild Hall")
 			.withIntermediateQuestLevel("the Assassins' Guild Hall")
 			.add();
@@ -482,6 +510,7 @@ public class AdventurerRole {
 			.withPreferredPet(PM.LITTLE_DOG)
 			.with(Pantheon.ROMAN)
 			.withFileCode("Ran")
+			.withQuestLeader(PM.ORION)
 			.withQuestHomeBase("Orion's camp")
 			.withIntermediateQuestLevel("the cave of the wumpus")
 			.add();
@@ -501,6 +530,7 @@ public class AdventurerRole {
 			.withPreferredPet(PM.LITTLE_DOG)
 			.with(Pantheon.JAPANESE)
 			.withFileCode("Sam")
+			.withQuestLeader(PM.LORD_SATO)
 			.withQuestHomeBase("the Castle of the Taro Clan")
 			.withIntermediateQuestLevel("the Shogun's Castle")
 			.add();
@@ -519,6 +549,7 @@ public class AdventurerRole {
 			.withRank("Adventurer")
 			.with(Pantheon.DISCWORLD)
 			.withFileCode("Tou")
+			.withQuestLeader(PM.TWOFLOWER)
 			.withQuestHomeBase("Ankh-Morpork")
 			.withIntermediateQuestLevel("the Thieves' Guild Hall")
 			.add();
@@ -537,6 +568,7 @@ public class AdventurerRole {
 			.withRank("Lord", "Lady")
 			.with(Pantheon.NORSE)
 			.withFileCode("Val")
+			.withQuestLeader(PM.NORN)
 			.withQuestHomeBase("the Shrine of Destiny")
 			.withIntermediateQuestLevel("the cave of Surtur")
 			.add();
@@ -556,6 +588,7 @@ public class AdventurerRole {
 			.with(Pantheon.EGYPTIAN)
 			.withPreferredPet(PM.KITTEN)
 			.withFileCode("Wiz")
+			.withQuestLeader(PM.NEFERET_THE_GREEN)
 			.withQuestHomeBase("the Lonely Tower")
 			.withIntermediateQuestLevel("the Tower of Darkness")
 			.add();

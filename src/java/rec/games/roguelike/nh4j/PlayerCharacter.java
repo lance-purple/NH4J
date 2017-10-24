@@ -1614,4 +1614,14 @@ public class PlayerCharacter {
 		return AdventurerRole.pmidOfPreferredPet(currentRoleID);
 	}
 
+	public static boolean hasQuestLeader()
+	{
+		return AdventurerRole.hasQuestLeader(currentRoleID);
+	}
+
+	public static int pmidOfQuestLeader()
+	{
+		return AdventurerRole.pmidOfQuestLeader(currentRoleID);
+	}
+
 }

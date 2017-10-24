@@ -162,7 +162,7 @@ int typ;
     case 0:
         return urole.questarti;
     case MS_LEADER:
-        return urole.ldrnum;
+        return pmidOfQuestLeaderForYourRole();
     case MS_NEMESIS:
         return urole.neminum;
     case MS_GUARDIAN:
@@ -177,7 +177,7 @@ int typ;
 const char *
 ldrname()
 {
-    int i = urole.ldrnum;
+    int i = pmidOfQuestLeaderForYourRole();
 
     javaString leaderName = monsterTypeName(i);
     Sprintf(nambuf, "%s%s", typeIsProperName(i) ? "" : "the ",
