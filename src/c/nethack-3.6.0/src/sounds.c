@@ -535,7 +535,7 @@ register struct monst *mtmp;
         msound = MS_LEADER;
     }
     /* make sure it's your role's quest guardian; adjust if not */
-    else if (msound == MS_GUARDIAN && (pmid != urole.guardnum))
+    else if (msound == MS_GUARDIAN && (pmid != pmidOfQuestGuardiansForYourRole()))
     {
         msound = monsterSound(genus(pmid, 1));
     }

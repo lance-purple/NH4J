@@ -3054,4 +3054,12 @@ int pmidOfQuestLeaderForYourRole() {
   return javaGetInt(PLAYER_CHARACTER_CLASS, "pmidOfQuestLeader");
 }
 
+extern boolean yourRoleHasQuestGuardians() {
+  return javaGetBoolean(PLAYER_CHARACTER_CLASS, "hasQuestGuardians");
+}
+
+int pmidOfQuestGuardiansForYourRole() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "pmidOfQuestGuardians");
+}
+
 /*hacklib.c*/

@@ -166,7 +166,7 @@ int typ;
     case MS_NEMESIS:
         return urole.neminum;
     case MS_GUARDIAN:
-        return urole.guardnum;
+        return pmidOfQuestGuardiansForYourRole();
     default:
         impossible("quest_info(%d)", typ);
     }
@@ -209,9 +209,7 @@ neminame()
 STATIC_OVL const char *
 guardname() /* return your role leader's guard monster name */
 {
-    int i = urole.guardnum;
-
-    javaString guardName = monsterTypeName(i);
+    javaString guardName = monsterTypeName(pmidOfQuestGuardiansForYourRole());
     Sprintf(nambuf, "%s", guardName.c_str);
     releaseJavaString(guardName);
     return nambuf;

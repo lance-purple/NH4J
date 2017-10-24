@@ -66,8 +66,8 @@ struct Role {
     short XXfemalenum; /* ...or as a female (NON_PM == same) */
     short XXpetnum;    /* PM_ of preferred pet (NON_PM == random) */
     short XXldrnum;    /* PM_ of quest leader (questpgr.c) */
-    short guardnum,  /* PM_ of quest guardians (questpgr.c) */
-        neminum,   /* PM_ of quest nemesis (questpgr.c) */
+    short XXguardnum;  /* PM_ of quest guardians (questpgr.c) */
+    short neminum,   /* PM_ of quest nemesis (questpgr.c) */
         enemy1num, /* specific quest enemies (NON_PM == random) */
         enemy2num;
     char enemy1sym, /* quest enemies by class (S_) */

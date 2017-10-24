@@ -1624,4 +1624,13 @@ public class PlayerCharacter {
 		return AdventurerRole.pmidOfQuestLeader(currentRoleID);
 	}
 
+	public static boolean hasQuestGuardians()
+	{
+		return AdventurerRole.hasQuestGuardians(currentRoleID);
+	}
+
+	public static int pmidOfQuestGuardians()
+	{
+		return AdventurerRole.pmidOfQuestGuardians(currentRoleID);
+	}
 }

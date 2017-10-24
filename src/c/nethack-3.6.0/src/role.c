@@ -2090,8 +2090,8 @@ role_init()
     }
 
     /* Fix up the quest guardians */
-    if (urole.guardnum != NON_PM) {
-        pmid = urole.guardnum;
+    if (yourRoleHasQuestGuardians()) {
+        pmid = pmidOfQuestGuardiansForYourRole();
         setMonsterFlag2(pmid, M2_PEACEFUL);
         setMonsterAlignment(pmid, (alignmnt * 3));
     }

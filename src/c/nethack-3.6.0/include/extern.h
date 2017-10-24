@@ -2701,6 +2701,9 @@ E void FDECL(free_epri, (struct monst *));
 E boolean FDECL (yourRoleHasAQuestLeader, ());
 E int FDECL(pmidOfQuestLeaderForYourRole, ());
 
+E boolean FDECL (yourRoleHasQuestGuardians, ());
+E int FDECL(pmidOfQuestGuardiansForYourRole, ());
+
 E void NDECL(onquest);
 E void NDECL(nemdead);
 E void FDECL(artitouch, (struct obj *));
