@@ -29,6 +29,7 @@ public class AdventurerRole {
 	private String fileCode;
 	private PM malePM;
 	private PM femalePM;
+	private PM preferredPet = PM.UNKNOWN;
 	
 	private String questHomeBase;
 	private String intermediateQuestLevel;
@@ -92,6 +93,12 @@ public class AdventurerRole {
 	{
 		this.malePM = malePM;
 		this.femalePM = femalePM;
+		return this;
+	}
+	
+	private AdventurerRole withPreferredPet(PM pet)
+	{
+		this.preferredPet = pet;
 		return this;
 	}
 
@@ -299,6 +306,19 @@ public class AdventurerRole {
 		return roles.get(0);
 	}
 
+	public static int pmidOfPreferredPet(int roleID) {
+		AdventurerRole role = getRole(roleID);
+		if (null != role)
+		{
+			return role.preferredPet.id();
+		}
+		return PM.UNKNOWN.id();
+	}
+	
+	public static boolean hasPreferredPet(int roleID) {
+		return PM.UNKNOWN.id() != pmidOfPreferredPet(roleID);
+	}
+
 
 	private static void initialize() {
 
@@ -350,6 +370,7 @@ public class AdventurerRole {
 			.withRank("Nomad")
 			.withRank("Rover")
 			.withRank("Pioneer")
+			.withPreferredPet(PM.LITTLE_DOG)
 			.with(Pantheon.BABYLONIAN)
 			.withFileCode("Cav")
 			.withQuestHomeBase("the Caves of the Ancestors")
@@ -386,6 +407,7 @@ public class AdventurerRole {
 			.withRank("Chevalier", "Chevaliere")
 			.withRank("Seignieur", "Dame")
 			.withRank("Paladin")
+			.withPreferredPet(PM.PONY)
 			.with(Pantheon.CELTIC)
 			.withFileCode("Kni")
 			.withQuestHomeBase("Camelot Castle")
@@ -457,6 +479,7 @@ public class AdventurerRole {
 			.withRank("Archer")
 			.withRank("Sharpshooter")
 			.withRank("Marksman", "Markswoman")
+			.withPreferredPet(PM.LITTLE_DOG)
 			.with(Pantheon.ROMAN)
 			.withFileCode("Ran")
 			.withQuestHomeBase("Orion's camp")
@@ -475,6 +498,7 @@ public class AdventurerRole {
 			.withRank("Daimyo") /* a samurai lord */
 			.withRank("Kuge") /* Noble of the Court */
 			.withRank("Shogun") /* supreme commander, warlord */
+			.withPreferredPet(PM.LITTLE_DOG)
 			.with(Pantheon.JAPANESE)
 			.withFileCode("Sam")
 			.withQuestHomeBase("the Castle of the Taro Clan")
@@ -530,6 +554,7 @@ public class AdventurerRole {
 			.withRank("Wizard")
 			.withRank("Mage")
 			.with(Pantheon.EGYPTIAN)
+			.withPreferredPet(PM.KITTEN)
 			.withFileCode("Wiz")
 			.withQuestHomeBase("the Lonely Tower")
 			.withIntermediateQuestLevel("the Tower of Darkness")

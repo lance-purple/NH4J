@@ -652,6 +652,9 @@ FDECL(inaccessible_equipment, (struct obj *, const char *, BOOLEAN_P));
 
 /* ### dog.c ### */
 
+E boolean FDECL(yourRoleHasAPreferredPet, ());
+E int FDECL(pmidOfPreferredPetForyourRole, ());
+
 E void FDECL(newedog, (struct monst *));
 E void FDECL(free_edog, (struct monst *));
 E void FDECL(initedog, (struct monst *));

@@ -1603,5 +1603,15 @@ public class PlayerCharacter {
 	{
 		AdventurerRole.setPMIDAsFemale(currentRoleID, pmid);
 	}
+	
+	public static boolean hasPreferredPet()
+	{
+		return AdventurerRole.hasPreferredPet(currentRoleID);
+	}
+
+	public static int pmidOfPreferredPet()
+	{
+		return AdventurerRole.pmidOfPreferredPet(currentRoleID);
+	}
 
 }

@@ -64,8 +64,8 @@ struct Role {
     /*** Indices of important monsters and objects ***/
     short XXmalenum; /* index (PM_) as a male (botl.c) */
     short XXfemalenum; /* ...or as a female (NON_PM == same) */
-    short petnum,    /* PM_ of preferred pet (NON_PM == random) */
-        ldrnum,    /* PM_ of quest leader (questpgr.c) */
+    short XXpetnum;    /* PM_ of preferred pet (NON_PM == random) */
+    short ldrnum,    /* PM_ of quest leader (questpgr.c) */
         guardnum,  /* PM_ of quest guardians (questpgr.c) */
         neminum,   /* PM_ of quest nemesis (questpgr.c) */
         enemy1num, /* specific quest enemies (NON_PM == random) */

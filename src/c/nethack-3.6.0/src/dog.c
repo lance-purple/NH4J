@@ -55,14 +55,22 @@ register struct monst *mtmp;
 STATIC_OVL int
 pet_type()
 {
-    if (urole.petnum != NON_PM)
-        return  urole.petnum;
+    if (yourRoleHasAPreferredPet())
+    {
+        return pmidOfPreferredPetForYourRole();
+    }
     else if (preferred_pet == 'c')
+    {
         return  PM_KITTEN;
+    }
     else if (preferred_pet == 'd')
+    {
         return  PM_LITTLE_DOG;
+    }
     else
+    {
         return  rn2(2) ? PM_KITTEN : PM_LITTLE_DOG;
+    }
 }
 
 struct monst *

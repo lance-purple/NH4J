@@ -1487,8 +1487,10 @@ const struct def_skill *class_skill;
         setWeaponSkill(P_BARE_HANDED_COMBAT, P_BASIC);
 
     /* Roles that start with a horse know how to ride it */
-    if (urole.petnum == PM_PONY)
+    if (pmidOfPreferredPetForYourRole() == PM_PONY)
+    {
         setWeaponSkill(P_RIDING, P_BASIC);
+    }
 
     /*
      * Make sure we haven't missed setting the max on a skill

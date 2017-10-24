@@ -3038,4 +3038,12 @@ extern int malePMIDForRole(int roleID) {
   return javaGetIntFromInt(ADVENTURER_ROLE_CLASS, "pmidAsMale", roleID);
 }
 
+extern boolean yourRoleHasAPreferredPet() {
+  return javaGetBoolean(PLAYER_CHARACTER_CLASS, "hasPreferredPet");
+}
+
+extern int pmidOfPreferredPetForYourRole() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "pmidOfPreferredPet");
+}
+
 /*hacklib.c*/
