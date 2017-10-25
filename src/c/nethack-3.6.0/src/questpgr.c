@@ -164,7 +164,7 @@ int typ;
     case MS_LEADER:
         return pmidOfQuestLeaderForYourRole();
     case MS_NEMESIS:
-        return urole.neminum;
+        return pmidOfQuestNemesisForYourRole();
     case MS_GUARDIAN:
         return pmidOfQuestGuardiansForYourRole();
     default:
@@ -197,7 +197,7 @@ struct obj *otmp;
 STATIC_OVL const char *
 neminame()
 {
-    int i = urole.neminum;
+    int i = pmidOfQuestNemesisForYourRole();
 
     javaString nemesisName = monsterTypeName(i);
     Sprintf(nambuf, "%s%s", typeIsProperName(i) ? "" : "the ",

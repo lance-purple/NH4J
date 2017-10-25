@@ -653,7 +653,7 @@ FDECL(inaccessible_equipment, (struct obj *, const char *, BOOLEAN_P));
 /* ### dog.c ### */
 
 E boolean FDECL(yourRoleHasAPreferredPet, ());
-E int FDECL(pmidOfPreferredPetForyourRole, ());
+E int FDECL(pmidOfPreferredPetForYourRole, ());
 
 E void FDECL(newedog, (struct monst *));
 E void FDECL(free_edog, (struct monst *));
@@ -2698,11 +2698,14 @@ E void FDECL(free_epri, (struct monst *));
 
 /* ### quest.c ### */
 
-E boolean FDECL (yourRoleHasAQuestLeader, ());
+E boolean FDECL (yourRoleHasQuestLeader, ());
 E int FDECL(pmidOfQuestLeaderForYourRole, ());
 
 E boolean FDECL (yourRoleHasQuestGuardians, ());
 E int FDECL(pmidOfQuestGuardiansForYourRole, ());
+
+E boolean FDECL (yourRoleHasQuestNemesis, ());
+E int FDECL(pmidOfQuestNemesisForYourRole, ());
 
 E void NDECL(onquest);
 E void NDECL(nemdead);

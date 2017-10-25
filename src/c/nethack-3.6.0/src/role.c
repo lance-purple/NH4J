@@ -2075,7 +2075,7 @@ role_init()
     urace = races[flags.initrace];
 
     /* Fix up the quest leader */
-    if (yourRoleHasAQuestLeader()) {
+    if (yourRoleHasQuestLeader()) {
         pmid = pmidOfQuestLeaderForYourRole();
         setMonsterSound(pmid, MS_LEADER);
         setMonsterFlag2(pmid, M2_PEACEFUL);
@@ -2097,8 +2097,8 @@ role_init()
     }
 
     /* Fix up the quest nemesis */
-    if (urole.neminum != NON_PM) {
-        pmid = urole.neminum;
+    if (yourRoleHasQuestNemesis()) {
+        pmid = pmidOfQuestNemesisForYourRole();
         setMonsterSound(pmid, MS_NEMESIS);
         unsetMonsterFlag2(pmid, M2_PEACEFUL);
         setMonsterFlag2(pmid, M2_NASTY | M2_STALK | M2_HOSTILE);

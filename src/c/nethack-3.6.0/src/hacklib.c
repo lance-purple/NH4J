@@ -3046,7 +3046,7 @@ extern int pmidOfPreferredPetForYourRole() {
   return javaGetInt(PLAYER_CHARACTER_CLASS, "pmidOfPreferredPet");
 }
 
-extern boolean yourRoleHasAQuestLeader() {
+extern boolean yourRoleHasQuestLeader() {
   return javaGetBoolean(PLAYER_CHARACTER_CLASS, "hasQuestLeader");
 }
 
@@ -3060,6 +3060,14 @@ extern boolean yourRoleHasQuestGuardians() {
 
 int pmidOfQuestGuardiansForYourRole() {
   return javaGetInt(PLAYER_CHARACTER_CLASS, "pmidOfQuestGuardians");
+}
+
+extern boolean yourRoleHasQuestNemesis() {
+  return javaGetBoolean(PLAYER_CHARACTER_CLASS, "hasQuestNemesis");
+}
+
+int pmidOfQuestNemesisForYourRole() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "pmidOfQuestNemesis");
 }
 
 /*hacklib.c*/
