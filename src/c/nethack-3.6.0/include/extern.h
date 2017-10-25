@@ -2712,6 +2712,9 @@ E int FDECL(pmidOfOtherQuestEnemiesForYourRole, ());
 E int FDECL(classOfQuestEnemiesForYourRole, ());
 E int FDECL(classOfOtherQuestEnemiesForYourRole, ());
 
+E boolean FDECL(yourRoleHasQuestArtifact, ());
+E int FDECL(idOfQuestArtifactForYourRole, ());
+
 E void NDECL(onquest);
 E void NDECL(nemdead);
 E void FDECL(artitouch, (struct obj *));

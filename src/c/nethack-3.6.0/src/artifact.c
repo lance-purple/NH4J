@@ -69,9 +69,9 @@ hack_artifacts()
         artilist[ART_EXCALIBUR].role = NON_PM;
 
     /* Fix up the quest artifact */
-    if (urole.questarti) {
-        artilist[urole.questarti].alignment = alignmnt;
-        artilist[urole.questarti].role = yourRolePMID();
+    if (yourRoleHasQuestArtifact()) {
+        artilist[idOfQuestArtifactForYourRole()].alignment = alignmnt;
+        artilist[idOfQuestArtifactForYourRole()].role = yourRolePMID();
     }
     return;
 }

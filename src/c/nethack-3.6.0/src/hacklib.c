@@ -3086,4 +3086,12 @@ int classOfOtherQuestEnemiesForYourRole() {
   return javaGetInt(PLAYER_CHARACTER_CLASS, "classOfOtherQuestEnemies");
 }
 
+boolean yourRoleHasQuestArtifact() {
+  return javaGetBoolean(PLAYER_CHARACTER_CLASS, "hasQuestArtifact");
+}
+
+int idOfQuestArtifactForYourRole() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "idOfQuestArtifact");
+}
+
 /*hacklib.c*/

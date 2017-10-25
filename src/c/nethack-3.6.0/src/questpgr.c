@@ -160,7 +160,7 @@ int typ;
 {
     switch (typ) {
     case 0:
-        return urole.questarti;
+        return idOfQuestArtifactForYourRole();
     case MS_LEADER:
         return pmidOfQuestLeaderForYourRole();
     case MS_NEMESIS:
@@ -190,7 +190,7 @@ boolean
 is_quest_artifact(otmp)
 struct obj *otmp;
 {
-    return (boolean) (otmp->oartifact == urole.questarti);
+    return (boolean) (otmp->oartifact == idOfQuestArtifactForYourRole());
 }
 
 /* return your role nemesis' name */
@@ -304,7 +304,7 @@ char c;
         break;
     case 'O':
     case 'o':
-        jstr = javaStringFromC(the(artiname(urole.questarti)));
+        jstr = javaStringFromC(the(artiname(idOfQuestArtifactForYourRole())));
         if (c == 'O') {
             /* shorten "the Foo of Bar" to "the Foo"
                (buffer returned by the() is modifiable) */

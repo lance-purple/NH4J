@@ -1664,4 +1664,13 @@ public class PlayerCharacter {
 		return AdventurerRole.classOfOtherQuestEnemies(currentRoleID);
 	}
 
+	public static boolean hasQuestArtifact()
+	{
+		return AdventurerRole.hasQuestArtifact(currentRoleID);
+	}
+	
+	public static int idOfQuestArtifact()
+	{
+		return AdventurerRole.idOfQuestArtifact(currentRoleID);
+	}
 }
