@@ -2709,6 +2709,8 @@ E int FDECL(pmidOfQuestNemesisForYourRole, ());
 
 E int FDECL(pmidOfQuestEnemiesForYourRole, ());
 E int FDECL(pmidOfOtherQuestEnemiesForYourRole, ());
+E int FDECL(classOfQuestEnemiesForYourRole, ());
+E int FDECL(classOfOtherQuestEnemiesForYourRole, ());
 
 E void NDECL(onquest);
 E void NDECL(nemdead);

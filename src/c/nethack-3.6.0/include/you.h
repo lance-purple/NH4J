@@ -70,8 +70,9 @@ struct Role {
     short XXneminum;   /* PM_ of quest nemesis (questpgr.c) */
     short XXenemy1num; /* specific quest enemies (NON_PM == random) */
     short XXenemy2num;
-    char enemy1sym, /* quest enemies by class (S_) */
-        enemy2sym;
+    char XXenemy1sym; /* quest enemies by class (S_) */
+    char XXenemy2sym;
+
     short questarti; /* index (ART_) of quest artifact (questpgr.c) */
 
     /*** Bitmasks ***/

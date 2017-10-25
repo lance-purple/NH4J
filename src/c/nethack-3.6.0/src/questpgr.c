@@ -586,20 +586,18 @@ int msgnum;
 
 int questMonsterType()
 {
-    int qpm;
-
     if (rn2(5)) {
-        qpm = pmidOfQuestEnemiesForYourRole();
+        int qpm = pmidOfQuestEnemiesForYourRole();
         if (qpm != NON_PM && rn2(5) && !(mvitals[qpm].mvflags & G_GENOD)) {
             return qpm;
 	}
-        return pickMonsterTypeOfClass(urole.enemy1sym, 0);
+        return pickMonsterTypeOfClass(classOfQuestEnemiesForYourRole(), 0);
     } else {
-        qpm = pmidOfOtherQuestEnemiesForYourRole();
+        int qpm = pmidOfOtherQuestEnemiesForYourRole();
         if (qpm != NON_PM && rn2(5) && !(mvitals[qpm].mvflags & G_GENOD)) {
             return qpm;
         }
-        return pickMonsterTypeOfClass(urole.enemy2sym, 0);
+        return pickMonsterTypeOfClass(classOfOtherQuestEnemiesForYourRole(), 0);
     }
 }
 

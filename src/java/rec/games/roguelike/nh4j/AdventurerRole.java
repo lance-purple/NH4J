@@ -37,6 +37,9 @@ public class AdventurerRole {
 	private PM questNemesis = PM.UNKNOWN;
 	private PM questEnemy1 = PM.UNKNOWN;
 	private PM questEnemy2 = PM.UNKNOWN;
+	private MC questEnemyClass1 = MC.UNKNOWN;
+	private MC questEnemyClass2 = MC.UNKNOWN;
+
 	private String questHomeBase;
 	private String intermediateQuestLevel;
 
@@ -126,19 +129,23 @@ public class AdventurerRole {
 		return this;
 	}
 
-	private AdventurerRole withQuestEnemies(PM enemy1)
+	private AdventurerRole withQuestEnemies(PM enemy1, MC enemyClass1, MC enemyClass2)
 	{
 		this.questEnemy1 = enemy1;
+		this.questEnemyClass1 = enemyClass1;
+		this.questEnemyClass2 = enemyClass2;
 		return this;
 	}
 	
-	private AdventurerRole withQuestEnemies(PM enemy1, PM enemy2)
+	private AdventurerRole withQuestEnemies(PM enemy1, PM enemy2, MC enemyClass1, MC enemyClass2)
 	{
 		this.questEnemy1 = enemy1;
 		this.questEnemy2 = enemy2;
+		this.questEnemyClass1 = enemyClass1;
+		this.questEnemyClass2 = enemyClass2;
 		return this;
 	}
-	
+		
 	private void add() {
 		AdventurerRole.rolesByID.put(this.roleID, this);
 	}
@@ -413,7 +420,25 @@ public class AdventurerRole {
 		}
 		return PM.UNKNOWN.id();
 	}
-	
+
+	public static int classOfQuestEnemies(int roleID) {
+		AdventurerRole role = getRole(roleID);
+		if (null != role)
+		{
+			return role.questEnemyClass1.id();
+		}
+		return MC.UNKNOWN.id();
+	}
+
+	public static int classOfOtherQuestEnemies(int roleID) {
+		AdventurerRole role = getRole(roleID);
+		if (null != role)
+		{
+			return role.questEnemyClass2.id();
+		}
+		return MC.UNKNOWN.id();
+	}
+
 	private static void initialize() {
 
 		AdventurerRole.withID(ARCHAEOLOGIST_ID)
@@ -433,7 +458,7 @@ public class AdventurerRole {
 			.withQuestLeader(PM.LORD_CARNARVON)
 			.withQuestGuardians(PM.STUDENT)
 			.withQuestNemesis(PM.MINION_OF_HUHETOTL)
-			.withQuestEnemies(PM.SNAKE)
+			.withQuestEnemies(PM.HUMAN_MUMMY, MC.SNAKE, MC.MUMMY)
 			.withQuestHomeBase("the College of Archeology")
 			.withIntermediateQuestLevel( "the Tomb of the Toltec Kings")
 			.add();
@@ -455,7 +480,7 @@ public class AdventurerRole {
 			.withQuestLeader(PM.PELIAS)
 			.withQuestGuardians(PM.CHIEFTAIN)
 			.withQuestNemesis(PM.THOTH_AMON)
-			.withQuestEnemies(PM.OGRE, PM.TROLL)
+			.withQuestEnemies(PM.OGRE, PM.TROLL, MC.OGRE, MC.TROLL)
 			.withQuestHomeBase("the Camp of the Duali Tribe")
 			.withIntermediateQuestLevel("the Duali Oasis")
 			.add();
@@ -478,7 +503,7 @@ public class AdventurerRole {
 			.withQuestLeader(PM.SHAMAN_KARNOV)
 			.withQuestGuardians(PM.NEANDERTHAL)
 			.withQuestNemesis(PM.CHROMATIC_DRAGON)
-			.withQuestEnemies(PM.BUGBEAR, PM.HILL_GIANT)
+			.withQuestEnemies(PM.BUGBEAR, PM.HILL_GIANT, MC.HUMANOID, MC.GIANT)
 			.withQuestHomeBase("the Caves of the Ancestors")
 			.withIntermediateQuestLevel("the Dragon's Lair")
 			.add();
@@ -500,7 +525,7 @@ public class AdventurerRole {
 			.withQuestLeader(PM.HIPPOCRATES)
 			.withQuestGuardians(PM.ATTENDANT)
 			.withQuestNemesis(PM.CYCLOPS)
-			.withQuestEnemies(PM.GIANT_RAT, PM.SNAKE)
+			.withQuestEnemies(PM.GIANT_RAT, PM.SNAKE, MC.RODENT, MC.YETI)
 			.withQuestHomeBase("the Temple of Epidaurus")
 			.withIntermediateQuestLevel("the Temple of Coeus")
 			.add();
@@ -523,7 +548,7 @@ public class AdventurerRole {
 			.withQuestLeader(PM.KING_ARTHUR)
 			.withQuestGuardians(PM.PAGE)
 			.withQuestNemesis(PM.IXOTH)
-			.withQuestEnemies(PM.QUASIT, PM.OCHRE_JELLY)
+			.withQuestEnemies(PM.QUASIT, PM.OCHRE_JELLY, MC.IMP, MC.JELLY)
 			.withQuestHomeBase("Camelot Castle")
 			.withIntermediateQuestLevel("the Isle of Glass")
 			.add();
@@ -545,7 +570,7 @@ public class AdventurerRole {
 			.withQuestLeader(PM.GRAND_MASTER)
 			.withQuestGuardians(PM.ABBOT)
 			.withQuestNemesis(PM.MASTER_KAEN)
-			.withQuestEnemies(PM.EARTH_ELEMENTAL, PM.XORN)
+			.withQuestEnemies(PM.EARTH_ELEMENTAL, PM.XORN, MC.ELEMENTAL, MC.XORN)
 			.withQuestHomeBase( "the Monastery of Chan-Sune")
 			.withIntermediateQuestLevel("the Monastery of the Earth-Lord")
 			.add();
@@ -566,7 +591,7 @@ public class AdventurerRole {
 			.withQuestLeader(PM.ARCH_PRIEST)
 			.withQuestGuardians(PM.ACOLYTE)
 			.withQuestNemesis(PM.NALZOK)
-			.withQuestEnemies(PM.HUMAN_ZOMBIE, PM.WRAITH)
+			.withQuestEnemies(PM.HUMAN_ZOMBIE, PM.WRAITH, MC.ZOMBIE, MC.WRAITH)
 			.withQuestHomeBase("the Great Temple")
 			.withIntermediateQuestLevel("the Temple of Nalzok")
 			.add();
@@ -588,7 +613,7 @@ public class AdventurerRole {
 			.withQuestLeader(PM.MASTER_OF_THIEVES)
 			.withQuestGuardians(PM.THUG)
 			.withQuestNemesis(PM.MASTER_ASSASSIN)
-			.withQuestEnemies(PM.LEPRECHAUN, PM.GUARDIAN_NAGA)
+			.withQuestEnemies(PM.LEPRECHAUN, PM.GUARDIAN_NAGA, MC.NYMPH, MC.NAGA)
 			.withQuestHomeBase("the Thieves' Guild Hall")
 			.withIntermediateQuestLevel("the Assassins' Guild Hall")
 			.add();
@@ -611,7 +636,7 @@ public class AdventurerRole {
 			.withQuestLeader(PM.ORION)
 			.withQuestGuardians(PM.HUNTER)
 			.withQuestNemesis(PM.SCORPIUS)
-			.withQuestEnemies(PM.FOREST_CENTAUR, PM.SCORPION)
+			.withQuestEnemies(PM.FOREST_CENTAUR, PM.SCORPION, MC.CENTAUR, MC.SPIDER)
 			.withQuestHomeBase("Orion's camp")
 			.withIntermediateQuestLevel("the cave of the wumpus")
 			.add();
@@ -634,7 +659,7 @@ public class AdventurerRole {
 			.withQuestLeader(PM.LORD_SATO)
 			.withQuestGuardians(PM.ROSHI)
 			.withQuestNemesis(PM.ASHIKAGA_TAKAUJI)
-			.withQuestEnemies(PM.WOLF, PM.STALKER)
+			.withQuestEnemies(PM.WOLF, PM.STALKER, MC.DOG, MC.ELEMENTAL)
 			.withQuestHomeBase("the Castle of the Taro Clan")
 			.withIntermediateQuestLevel("the Shogun's Castle")
 			.add();
@@ -656,7 +681,7 @@ public class AdventurerRole {
 			.withQuestLeader(PM.TWOFLOWER)
 			.withQuestGuardians(PM.GUIDE)
 			.withQuestNemesis(PM.MASTER_OF_THIEVES)
-			.withQuestEnemies(PM.GIANT_SPIDER, PM.FOREST_CENTAUR)
+			.withQuestEnemies(PM.GIANT_SPIDER, PM.FOREST_CENTAUR, MC.SPIDER, MC.CENTAUR)
 			.withQuestHomeBase("Ankh-Morpork")
 			.withIntermediateQuestLevel("the Thieves' Guild Hall")
 			.add();
@@ -678,7 +703,7 @@ public class AdventurerRole {
 			.withQuestLeader(PM.NORN)
 			.withQuestGuardians(PM.WARRIOR)
 			.withQuestNemesis(PM.LORD_SURTUR)
-			.withQuestEnemies(PM.FIRE_ANT, PM.FIRE_GIANT)
+			.withQuestEnemies(PM.FIRE_ANT, PM.FIRE_GIANT, MC.ANT, MC.GIANT)
 			.withQuestHomeBase("the Shrine of Destiny")
 			.withIntermediateQuestLevel("the cave of Surtur")
 			.add();
@@ -701,7 +726,7 @@ public class AdventurerRole {
 			.withQuestLeader(PM.NEFERET_THE_GREEN)
 			.withQuestGuardians(PM.APPRENTICE)
 			.withQuestNemesis(PM.DARK_ONE)
-			.withQuestEnemies(PM.VAMPIRE_BAT, PM.XORN)
+			.withQuestEnemies(PM.VAMPIRE_BAT, PM.XORN, MC.BAT, MC.WRAITH)
 			.withQuestHomeBase("the Lonely Tower")
 			.withIntermediateQuestLevel("the Tower of Darkness")
 			.add();

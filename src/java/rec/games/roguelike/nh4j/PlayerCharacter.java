@@ -1654,4 +1654,14 @@ public class PlayerCharacter {
 		return AdventurerRole.pmidOfOtherQuestEnemies(currentRoleID);
 	}
 
+	public static int classOfQuestEnemies()
+	{
+		return AdventurerRole.classOfQuestEnemies(currentRoleID);
+	}
+
+	public static int classOfOtherQuestEnemies()
+	{
+		return AdventurerRole.classOfOtherQuestEnemies(currentRoleID);
+	}
+
 }
