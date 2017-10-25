@@ -3070,4 +3070,12 @@ int pmidOfQuestNemesisForYourRole() {
   return javaGetInt(PLAYER_CHARACTER_CLASS, "pmidOfQuestNemesis");
 }
 
+int pmidOfQuestEnemiesForYourRole() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "pmidOfQuestEnemies");
+}
+
+int pmidOfOtherQuestEnemiesForYourRole() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "pmidOfOtherQuestEnemies");
+}
+
 /*hacklib.c*/

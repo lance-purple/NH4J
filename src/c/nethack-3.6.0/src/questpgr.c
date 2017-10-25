@@ -589,18 +589,18 @@ int questMonsterType()
     int qpm;
 
     if (rn2(5)) {
-        qpm = urole.enemy1num;
+        qpm = pmidOfQuestEnemiesForYourRole();
         if (qpm != NON_PM && rn2(5) && !(mvitals[qpm].mvflags & G_GENOD)) {
             return qpm;
 	}
         return pickMonsterTypeOfClass(urole.enemy1sym, 0);
+    } else {
+        qpm = pmidOfOtherQuestEnemiesForYourRole();
+        if (qpm != NON_PM && rn2(5) && !(mvitals[qpm].mvflags & G_GENOD)) {
+            return qpm;
+        }
+        return pickMonsterTypeOfClass(urole.enemy2sym, 0);
     }
-    qpm = urole.enemy2num;
-    if (qpm != NON_PM && rn2(5) && !(mvitals[qpm].mvflags & G_GENOD)) {
-        return qpm;
-    }
-
-    return pickMonsterTypeOfClass(urole.enemy2sym, 0);
 }
 
 /* special levels can include a custom arrival message; display it */

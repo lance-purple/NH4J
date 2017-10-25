@@ -2707,6 +2707,9 @@ E int FDECL(pmidOfQuestGuardiansForYourRole, ());
 E boolean FDECL (yourRoleHasQuestNemesis, ());
 E int FDECL(pmidOfQuestNemesisForYourRole, ());
 
+E int FDECL(pmidOfQuestEnemiesForYourRole, ());
+E int FDECL(pmidOfOtherQuestEnemiesForYourRole, ());
+
 E void NDECL(onquest);
 E void NDECL(nemdead);
 E void FDECL(artitouch, (struct obj *));

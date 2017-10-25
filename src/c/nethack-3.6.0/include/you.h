@@ -68,8 +68,8 @@ struct Role {
     short XXldrnum;    /* PM_ of quest leader (questpgr.c) */
     short XXguardnum;  /* PM_ of quest guardians (questpgr.c) */
     short XXneminum;   /* PM_ of quest nemesis (questpgr.c) */
-    short enemy1num, /* specific quest enemies (NON_PM == random) */
-        enemy2num;
+    short XXenemy1num; /* specific quest enemies (NON_PM == random) */
+    short XXenemy2num;
     char enemy1sym, /* quest enemies by class (S_) */
         enemy2sym;
     short questarti; /* index (ART_) of quest artifact (questpgr.c) */
