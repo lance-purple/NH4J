@@ -1,6 +1,6 @@
 package rec.games.roguelike.nh4j;
 
-public enum NHAttribute {
+public enum ATTR {
 
     STR(0),
     INT(1),
@@ -11,7 +11,7 @@ public enum NHAttribute {
 	
 	private int index;
 	
-	NHAttribute(int index) {
+	ATTR(int index) {
 		this.index = index;
 	}
 	
@@ -20,7 +20,7 @@ public enum NHAttribute {
 		return index;
 	}
 	
-	public static NHAttribute[] all() {
+	public static ATTR[] all() {
 		return values();
 	}
 

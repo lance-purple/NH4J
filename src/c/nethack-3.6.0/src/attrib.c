@@ -567,11 +567,12 @@ register int np;
     register int i, x, tryct;
 
     for (i = 0; i < A_MAX; i++) {
-        setYourCurrentAttr(i, urole.attrbase[i]);
-        setYourAttrMax(i,     urole.attrbase[i]);
+	int base = yourRoleAttributeBase(i);
+        setYourCurrentAttr(i, base);
+        setYourAttrMax(i, base);
         setYourTemporaryAttrChange(i, 0);
         setYourAttrChangeTimeout(i, 0);
-        np -= urole.attrbase[i];
+        np -= base;
     }
 
     tryct = 0;

@@ -30,6 +30,8 @@ public class AdventurerRole {
 	private PM malePM;
 	private PM femalePM;
 	
+	private ATTRS baseAttributes;
+	
 	private PM preferredPet = PM.UNKNOWN;
 
 	private PM questLeader = PM.UNKNOWN;
@@ -150,6 +152,12 @@ public class AdventurerRole {
 	private AdventurerRole withQuestArtifact(ART artifact)
 	{
 		this.questArtifact  = artifact;
+		return this;
+	}
+	
+	private AdventurerRole withBase(ATTRS attrs)
+	{
+		this.baseAttributes = attrs;
 		return this;
 	}
 		
@@ -454,6 +462,15 @@ public class AdventurerRole {
 		}
 		return ART.NONE.id();		
 	}
+	
+	public static int attributeBase(int roleID, int whichAttr) {
+		AdventurerRole role = getRole(roleID);
+		if (null != role)
+		{
+			return role.baseAttributes.get(whichAttr);
+		}
+		return 0;		
+	}
 
 	public static boolean hasQuestArtifact(int roleID) {
 		return (0 != idOfQuestArtifact(roleID));
@@ -482,6 +499,7 @@ public class AdventurerRole {
 			.withQuestHomeBase("the College of Archeology")
 			.withIntermediateQuestLevel( "the Tomb of the Toltec Kings")
 			.withQuestArtifact(ART.ORB_OF_DETECTION)
+			.withBase(new ATTRS().STR(7).INT(10).WIS(10).DEX(7).CON(7).CHA(7))
 			.add();
 
 		AdventurerRole.withID(BARBARIAN_ID)
@@ -505,6 +523,7 @@ public class AdventurerRole {
 			.withQuestHomeBase("the Camp of the Duali Tribe")
 			.withIntermediateQuestLevel("the Duali Oasis")
 			.withQuestArtifact(ART.HEART_OF_AHRIMAN)
+			.withBase(new ATTRS().STR(16).INT(7).WIS(7).DEX(15).CON(16).CHA(6))
 			.add();
 
 		AdventurerRole.withID(CAVEMAN_ID)
@@ -529,6 +548,7 @@ public class AdventurerRole {
 			.withQuestHomeBase("the Caves of the Ancestors")
 			.withIntermediateQuestLevel("the Dragon's Lair")
 			.withQuestArtifact(ART.SCEPTRE_OF_MIGHT)
+			.withBase(new ATTRS().STR(10).INT(7).WIS(7).DEX(7).CON(8).CHA(6))
 			.add();
 
 		AdventurerRole.withID(HEALER_ID)
@@ -552,6 +572,7 @@ public class AdventurerRole {
 			.withQuestHomeBase("the Temple of Epidaurus")
 			.withIntermediateQuestLevel("the Temple of Coeus")
 			.withQuestArtifact(ART.STAFF_OF_AESCULAPIUS)
+			.withBase(new ATTRS().STR(7).INT(7).WIS(13).DEX(7).CON(11).CHA(16))
 			.add();
 
 		AdventurerRole.withID(KNIGHT_ID)
@@ -576,6 +597,7 @@ public class AdventurerRole {
 			.withQuestHomeBase("Camelot Castle")
 			.withIntermediateQuestLevel("the Isle of Glass")
 			.withQuestArtifact(ART.MAGIC_MIRROR_OF_MERLIN)
+			.withBase(new ATTRS().STR(13).INT(7).WIS(14).DEX(8).CON(10).CHA(17))
 			.add();
 
 		AdventurerRole.withID(MONK_ID)
@@ -599,6 +621,7 @@ public class AdventurerRole {
 			.withQuestHomeBase( "the Monastery of Chan-Sune")
 			.withIntermediateQuestLevel("the Monastery of the Earth-Lord")
 			.withQuestArtifact(ART.EYES_OF_THE_OVERWORLD)
+			.withBase(new ATTRS().STR(10).INT(7).WIS(8).DEX(8).CON(7).CHA(7))
 			.add();
 
 		AdventurerRole.withID(PRIEST_ID)
@@ -621,6 +644,7 @@ public class AdventurerRole {
 			.withQuestHomeBase("the Great Temple")
 			.withIntermediateQuestLevel("the Temple of Nalzok")
 			.withQuestArtifact(ART.MITRE_OF_HOLINESS)
+			.withBase(new ATTRS().STR(7).INT(7).WIS(10).DEX(7).CON(7).CHA(7))
 			.add();
 
 		AdventurerRole.withID(ROGUE_ID)
@@ -644,6 +668,7 @@ public class AdventurerRole {
 			.withQuestHomeBase("the Thieves' Guild Hall")
 			.withIntermediateQuestLevel("the Assassins' Guild Hall")
 			.withQuestArtifact(ART.MASTER_KEY_OF_THIEVERY)
+			.withBase(new ATTRS().STR(7).INT(7).WIS(7).DEX(10).CON(7).CHA(6))
 			.add();
 
 		AdventurerRole.withID(RANGER_ID)
@@ -668,6 +693,7 @@ public class AdventurerRole {
 			.withQuestHomeBase("Orion's camp")
 			.withIntermediateQuestLevel("the cave of the wumpus")
 			.withQuestArtifact(ART.LONGBOW_OF_DIANA)
+			.withBase(new ATTRS().STR(13).INT(13).WIS(13).DEX(9).CON(13).CHA(7))
 			.add();
 
 		AdventurerRole.withID(SAMURAI_ID)
@@ -692,6 +718,7 @@ public class AdventurerRole {
 			.withQuestHomeBase("the Castle of the Taro Clan")
 			.withIntermediateQuestLevel("the Shogun's Castle")
 			.withQuestArtifact(ART.TSURUGI_OF_MURAMASA)
+			.withBase(new ATTRS().STR(10).INT(8).WIS(7).DEX(10).CON(17).CHA(6))
 			.add();
 
 		AdventurerRole.withID(TOURIST_ID)
@@ -715,6 +742,7 @@ public class AdventurerRole {
 			.withQuestHomeBase("Ankh-Morpork")
 			.withIntermediateQuestLevel("the Thieves' Guild Hall")
 			.withQuestArtifact(ART.YENDORIAN_EXPRESS_CARD)
+			.withBase(new ATTRS().STR(7).INT(10).WIS(6).DEX(7).CON(7).CHA(10))
 			.add();
 
 		AdventurerRole.withID(VALKYRIE_ID)
@@ -738,6 +766,7 @@ public class AdventurerRole {
 			.withQuestHomeBase("the Shrine of Destiny")
 			.withIntermediateQuestLevel("the cave of Surtur")
 			.withQuestArtifact(ART.ORB_OF_FATE)
+			.withBase(new ATTRS().STR(10).INT(7).WIS(7).DEX(7).CON(10).CHA(7))
 			.add();
 
 		AdventurerRole.withID(WIZARD_ID)
@@ -762,6 +791,7 @@ public class AdventurerRole {
 			.withQuestHomeBase("the Lonely Tower")
 			.withIntermediateQuestLevel("the Tower of Darkness")
 			.withQuestArtifact(ART.EYE_OF_THE_AETHIOPICA)
+			.withBase(new ATTRS().STR(7).INT(10).WIS(7).DEX(7).CON(7).CHA(7))
 			.add();
 
 	}

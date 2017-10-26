@@ -88,7 +88,7 @@ struct Role {
 #define ROLE_CHAOTIC AM_CHAOTIC
 
     /*** Attributes (from attrib.c and exper.c) ***/
-    xchar attrbase[A_MAX];    /* lowest initial attributes */
+    xchar XXattrbase[A_MAX];    /* lowest initial attributes */
     xchar attrdist[A_MAX];    /* distribution of initial attributes */
     struct RoleAdvance hpadv; /* hit point advancement */
     struct RoleAdvance enadv; /* energy advancement */

@@ -77,15 +77,15 @@ public class PlayerCharacter {
 	private static int protectionSpellPointDuration;
 	private static int protectionSpellPointCountdown;
 	
-	private static NHAttributeSet currentAttributes = new NHAttributeSet();
-	private static NHAttributeSet maximumAttributes = new NHAttributeSet();
-	private static NHAttributeSet attributeBonuses = new NHAttributeSet();
-	private static NHAttributeSet attributeChangesFromExertion = new NHAttributeSet();
-	private static NHAttributeSet temporaryAttributeChanges = new NHAttributeSet();
-	private static NHAttributeSet attributeChangeTimeouts = new NHAttributeSet();
+	private static ATTRS currentAttributes = new ATTRS();
+	private static ATTRS maximumAttributes = new ATTRS();
+	private static ATTRS attributeBonuses = new ATTRS();
+	private static ATTRS attributeChangesFromExertion = new ATTRS();
+	private static ATTRS temporaryAttributeChanges = new ATTRS();
+	private static ATTRS attributeChangeTimeouts = new ATTRS();
 
-	private static NHAttributeSet attributesAsMonster = new NHAttributeSet();
-	private static NHAttributeSet maximumAttributesAsMonster = new NHAttributeSet();
+	private static ATTRS attributesAsMonster = new ATTRS();
+	private static ATTRS maximumAttributesAsMonster = new ATTRS();
 	
 	private static int currentHitPoints;
 	private static int maximumHitPoints;
@@ -1672,5 +1672,10 @@ public class PlayerCharacter {
 	public static int idOfQuestArtifact()
 	{
 		return AdventurerRole.idOfQuestArtifact(currentRoleID);
+	}
+	
+	public static int attributeBase(int whichAttr)
+	{
+		return AdventurerRole.attributeBase(currentRoleID, whichAttr);
 	}
 }

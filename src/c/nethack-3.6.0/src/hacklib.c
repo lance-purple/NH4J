@@ -3094,4 +3094,8 @@ int idOfQuestArtifactForYourRole() {
   return javaGetInt(PLAYER_CHARACTER_CLASS, "idOfQuestArtifact");
 }
 
+int yourRoleAttributeBase(int whichAttr) {
+  return javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "attributeBase", whichAttr);
+}
+
 /*hacklib.c*/

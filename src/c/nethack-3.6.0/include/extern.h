@@ -2873,6 +2873,8 @@ E int FDECL(femalePMIDForRole, (int));
 E boolean FDECL(roleHasMalePMID, (int));
 E int FDECL(malePMIDForRole, (int));
 
+E int FDECL(yourRoleAttributeBase, (int));
+
 E boolean FDECL(validrole, (int));
 E boolean FDECL(validrace, (int, int));
 E boolean FDECL(validgend, (int, int, int));
