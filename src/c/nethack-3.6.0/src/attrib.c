@@ -567,7 +567,7 @@ register int np;
     register int i, x, tryct;
 
     for (i = 0; i < A_MAX; i++) {
-	int base = yourRoleAttributeBase(i);
+	int base = attributeBaseForYourRole(i);
         setYourCurrentAttr(i, base);
         setYourAttrMax(i, base);
         setYourTemporaryAttrChange(i, 0);
@@ -578,7 +578,7 @@ register int np;
     tryct = 0;
     while (np > 0 && tryct < 100) {
         x = rn2(100);
-        for (i = 0; (i < A_MAX) && ((x -= urole.attrdist[i]) > 0); i++)
+        for (i = 0; (i < A_MAX) && ((x -= attributeDistributionForYourRole(i)) > 0); i++)
             ;
         if (i >= A_MAX)
             continue; /* impossible */
@@ -597,7 +597,7 @@ register int np;
     while (np < 0 && tryct < 100) { /* for redistribution */
 
         x = rn2(100);
-        for (i = 0; (i < A_MAX) && ((x -= urole.attrdist[i]) > 0); i++)
+        for (i = 0; (i < A_MAX) && ((x -= attributeDistributionForYourRole(i)) > 0); i++)
             ;
         if (i >= A_MAX)
             continue; /* impossible */

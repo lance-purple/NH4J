@@ -30,7 +30,8 @@ public class AdventurerRole {
 	private PM malePM;
 	private PM femalePM;
 	
-	private ATTRS baseAttributes;
+	private ATTRS attributeBases;
+	private ATTRS attributeDistributions;
 	
 	private PM preferredPet = PM.UNKNOWN;
 
@@ -157,10 +158,16 @@ public class AdventurerRole {
 	
 	private AdventurerRole withBase(ATTRS attrs)
 	{
-		this.baseAttributes = attrs;
+		this.attributeBases = attrs;
 		return this;
 	}
-		
+	
+	private AdventurerRole withDistribution(ATTRS attrs)
+	{
+		this.attributeDistributions = attrs;
+		return this;
+	}
+	
 	private void add() {
 		AdventurerRole.rolesByID.put(this.roleID, this);
 	}
@@ -467,7 +474,16 @@ public class AdventurerRole {
 		AdventurerRole role = getRole(roleID);
 		if (null != role)
 		{
-			return role.baseAttributes.get(whichAttr);
+			return role.attributeBases.get(whichAttr);
+		}
+		return 0;		
+	}
+	
+	public static int attributeDistribution(int roleID, int whichAttr) {
+		AdventurerRole role = getRole(roleID);
+		if (null != role)
+		{
+			return role.attributeDistributions.get(whichAttr);
 		}
 		return 0;		
 	}
@@ -500,6 +516,7 @@ public class AdventurerRole {
 			.withIntermediateQuestLevel( "the Tomb of the Toltec Kings")
 			.withQuestArtifact(ART.ORB_OF_DETECTION)
 			.withBase(new ATTRS().STR(7).INT(10).WIS(10).DEX(7).CON(7).CHA(7))
+			.withDistribution(new ATTRS().STR(20).INT(20).WIS(20).DEX(10).CON(20).CHA(10))
 			.add();
 
 		AdventurerRole.withID(BARBARIAN_ID)
@@ -524,6 +541,7 @@ public class AdventurerRole {
 			.withIntermediateQuestLevel("the Duali Oasis")
 			.withQuestArtifact(ART.HEART_OF_AHRIMAN)
 			.withBase(new ATTRS().STR(16).INT(7).WIS(7).DEX(15).CON(16).CHA(6))
+			.withDistribution(new ATTRS().STR(30).INT(6).WIS(7).DEX(20).CON(30).CHA(7))
 			.add();
 
 		AdventurerRole.withID(CAVEMAN_ID)
@@ -549,6 +567,7 @@ public class AdventurerRole {
 			.withIntermediateQuestLevel("the Dragon's Lair")
 			.withQuestArtifact(ART.SCEPTRE_OF_MIGHT)
 			.withBase(new ATTRS().STR(10).INT(7).WIS(7).DEX(7).CON(8).CHA(6))
+			.withDistribution(new ATTRS().STR(30).INT(6).WIS(7).DEX(20).CON(30).CHA(7))
 			.add();
 
 		AdventurerRole.withID(HEALER_ID)
@@ -573,6 +592,7 @@ public class AdventurerRole {
 			.withIntermediateQuestLevel("the Temple of Coeus")
 			.withQuestArtifact(ART.STAFF_OF_AESCULAPIUS)
 			.withBase(new ATTRS().STR(7).INT(7).WIS(13).DEX(7).CON(11).CHA(16))
+			.withDistribution(new ATTRS().STR(15).INT(20).WIS(20).DEX(15).CON(25).CHA(5))
 			.add();
 
 		AdventurerRole.withID(KNIGHT_ID)
@@ -598,6 +618,7 @@ public class AdventurerRole {
 			.withIntermediateQuestLevel("the Isle of Glass")
 			.withQuestArtifact(ART.MAGIC_MIRROR_OF_MERLIN)
 			.withBase(new ATTRS().STR(13).INT(7).WIS(14).DEX(8).CON(10).CHA(17))
+			.withDistribution(new ATTRS().STR(30).INT(15).WIS(15).DEX(10).CON(20).CHA(10))
 			.add();
 
 		AdventurerRole.withID(MONK_ID)
@@ -622,6 +643,7 @@ public class AdventurerRole {
 			.withIntermediateQuestLevel("the Monastery of the Earth-Lord")
 			.withQuestArtifact(ART.EYES_OF_THE_OVERWORLD)
 			.withBase(new ATTRS().STR(10).INT(7).WIS(8).DEX(8).CON(7).CHA(7))
+			.withDistribution(new ATTRS().STR(25).INT(10).WIS(20).DEX(20).CON(15).CHA(10))
 			.add();
 
 		AdventurerRole.withID(PRIEST_ID)
@@ -645,6 +667,7 @@ public class AdventurerRole {
 			.withIntermediateQuestLevel("the Temple of Nalzok")
 			.withQuestArtifact(ART.MITRE_OF_HOLINESS)
 			.withBase(new ATTRS().STR(7).INT(7).WIS(10).DEX(7).CON(7).CHA(7))
+			.withDistribution(new ATTRS().STR(15).INT(10).WIS(30).DEX(15).CON(20).CHA(10))
 			.add();
 
 		AdventurerRole.withID(ROGUE_ID)
@@ -669,6 +692,7 @@ public class AdventurerRole {
 			.withIntermediateQuestLevel("the Assassins' Guild Hall")
 			.withQuestArtifact(ART.MASTER_KEY_OF_THIEVERY)
 			.withBase(new ATTRS().STR(7).INT(7).WIS(7).DEX(10).CON(7).CHA(6))
+			.withDistribution(new ATTRS().STR(20).INT(10).WIS(10).DEX(30).CON(20).CHA(10))
 			.add();
 
 		AdventurerRole.withID(RANGER_ID)
@@ -694,6 +718,7 @@ public class AdventurerRole {
 			.withIntermediateQuestLevel("the cave of the wumpus")
 			.withQuestArtifact(ART.LONGBOW_OF_DIANA)
 			.withBase(new ATTRS().STR(13).INT(13).WIS(13).DEX(9).CON(13).CHA(7))
+			.withDistribution(new ATTRS().STR(30).INT(10).WIS(10).DEX(20).CON(20).CHA(10))
 			.add();
 
 		AdventurerRole.withID(SAMURAI_ID)
@@ -719,6 +744,7 @@ public class AdventurerRole {
 			.withIntermediateQuestLevel("the Shogun's Castle")
 			.withQuestArtifact(ART.TSURUGI_OF_MURAMASA)
 			.withBase(new ATTRS().STR(10).INT(8).WIS(7).DEX(10).CON(17).CHA(6))
+			.withDistribution(new ATTRS().STR(30).INT(10).WIS(8).DEX(30).CON(14).CHA(8))
 			.add();
 
 		AdventurerRole.withID(TOURIST_ID)
@@ -743,6 +769,7 @@ public class AdventurerRole {
 			.withIntermediateQuestLevel("the Thieves' Guild Hall")
 			.withQuestArtifact(ART.YENDORIAN_EXPRESS_CARD)
 			.withBase(new ATTRS().STR(7).INT(10).WIS(6).DEX(7).CON(7).CHA(10))
+			.withDistribution(new ATTRS().STR(15).INT(10).WIS(10).DEX(15).CON(30).CHA(20))
 			.add();
 
 		AdventurerRole.withID(VALKYRIE_ID)
@@ -767,6 +794,7 @@ public class AdventurerRole {
 			.withIntermediateQuestLevel("the cave of Surtur")
 			.withQuestArtifact(ART.ORB_OF_FATE)
 			.withBase(new ATTRS().STR(10).INT(7).WIS(7).DEX(7).CON(10).CHA(7))
+			.withDistribution(new ATTRS().STR(30).INT(6).WIS(7).DEX(20).CON(30).CHA(7))
 			.add();
 
 		AdventurerRole.withID(WIZARD_ID)
@@ -792,6 +820,7 @@ public class AdventurerRole {
 			.withIntermediateQuestLevel("the Tower of Darkness")
 			.withQuestArtifact(ART.EYE_OF_THE_AETHIOPICA)
 			.withBase(new ATTRS().STR(7).INT(10).WIS(7).DEX(7).CON(7).CHA(7))
+			.withDistribution(new ATTRS().STR(10).INT(30).WIS(10).DEX(20).CON(20).CHA(10))
 			.add();
 
 	}

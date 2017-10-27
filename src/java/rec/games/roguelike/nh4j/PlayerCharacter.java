@@ -1678,4 +1678,9 @@ public class PlayerCharacter {
 	{
 		return AdventurerRole.attributeBase(currentRoleID, whichAttr);
 	}
+	
+	public static int attributeDistribution(int whichAttr)
+	{
+		return AdventurerRole.attributeDistribution(currentRoleID, whichAttr);
+	}
 }
