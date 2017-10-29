@@ -2530,8 +2530,12 @@ register struct monst *mon;
     if (mon->mtame) /* don't charge */
         ;
     else if (rn2(20) < ACURR(A_CHA)) {
+        int gender = youCannotSee() ? (fem ? 1 : 0) : pronoun_gender(mon);
+	javaString objective = objectivePronoun(gender);
         pline("%s demands that you pay %s, but you refuse...",
-              noit_Monnam(mon), youCannotSee() ? (fem ? "her" : "him") : mhim(mon));
+              noit_Monnam(mon), objective.c_str);
+	releaseJavaString(objective);
+
     } else if (currentMonsterNumber() == PM_LEPRECHAUN)
         pline("%s tries to take your money, but fails...", noit_Monnam(mon));
     else {

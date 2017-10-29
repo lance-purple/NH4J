@@ -777,7 +777,9 @@ boolean polyspot;
     int pmid = pmid4mon(mon);
     boolean vis = cansee(mon->mx, mon->my);
     boolean handless_or_tiny = (hasNoHands(pmid) || isVerySmallMonster(pmid));
-    const char *pronoun = mhim(mon), *ppronoun = mhis(mon);
+
+    javaString objective =  objectivePronoun(pronoun_gender(mon));
+    javaString possessive =  possessivePronoun(pronoun_gender(mon));
 
     if (breaksOutOfArmor(pmid4mon(mon))) {
         if ((otmp = which_armor(mon, W_ARM)) != 0) {
@@ -787,7 +789,7 @@ boolean polyspot;
                      "the dragon merges with his scaly armor" is odd
                      and the monster's previous form is already gone */
             else if (vis)
-                pline("%s breaks out of %s armor!", Monnam(mon), ppronoun);
+                pline("%s breaks out of %s armor!", Monnam(mon), possessive.c_str);
             else
                 You_hear("a cracking sound.");
             m_useup(mon, otmp);
@@ -820,7 +822,7 @@ boolean polyspot;
         if ((otmp = which_armor(mon, W_ARM)) != 0) {
             if (vis)
                 pline("%s armor falls around %s!", s_suffix(Monnam(mon)),
-                      pronoun);
+                      objective.c_str);
             else
                 You_hear("a thud.");
             if (polyspot)
@@ -833,7 +835,7 @@ boolean polyspot;
                     pline("%s %s falls, unsupported!", s_suffix(Monnam(mon)),
                           cloak_simple_name(otmp));
                 else
-                    pline("%s shrinks out of %s %s!", Monnam(mon), ppronoun,
+                    pline("%s shrinks out of %s %s!", Monnam(mon), possessive.c_str,
                           cloak_simple_name(otmp));
             }
             if (polyspot)
@@ -844,10 +846,10 @@ boolean polyspot;
             if (vis) {
                 if (slipsOutOfArmor(pmid4mon(mon)))
                     pline("%s seeps right through %s shirt!", Monnam(mon),
-                          ppronoun);
+                          possessive.c_str);
                 else
                     pline("%s becomes much too small for %s shirt!",
-                          Monnam(mon), ppronoun);
+                          Monnam(mon), possessive.c_str);
             }
             if (polyspot)
                 bypass_obj(otmp);
@@ -858,7 +860,7 @@ boolean polyspot;
         /* [caller needs to handle weapon checks] */
         if ((otmp = which_armor(mon, W_ARMG)) != 0) {
             if (vis)
-                pline("%s drops %s gloves%s!", Monnam(mon), ppronoun,
+                pline("%s drops %s gloves%s!", Monnam(mon), possessive.c_str,
                       MON_WEP(mon) ? " and weapon" : "");
             if (polyspot)
                 bypass_obj(otmp);
@@ -867,7 +869,7 @@ boolean polyspot;
         if ((otmp = which_armor(mon, W_ARMS)) != 0) {
             if (vis)
                 pline("%s can no longer hold %s shield!", Monnam(mon),
-                      ppronoun);
+                      possessive.c_str);
             else
                 You_hear("a clank.");
             if (polyspot)
@@ -896,7 +898,7 @@ boolean polyspot;
                     pline("%s boots fall away!", s_suffix(Monnam(mon)));
                 else
                     pline("%s boots %s off %s feet!", s_suffix(Monnam(mon)),
-                          isVerySmallMonster(pmid) ? "slide" : "are pushed", ppronoun);
+                          isVerySmallMonster(pmid) ? "slide" : "are pushed", possessive.c_str);
             }
             if (polyspot)
                 bypass_obj(otmp);
@@ -927,7 +929,10 @@ boolean polyspot;
         }
         dismount_steed(DISMOUNT_FELL);
     }
-    return;
+
+    releaseJavaString(objective);
+    releaseJavaString(possessive);
+
 }
 
 /* bias a monster's preferences towards armor that has special benefits. */

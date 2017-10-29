@@ -1730,9 +1730,12 @@ boolean confused, byu;
                 if (mdmg > 2)
                     mdmg = 2;
             } else {
-                if (canspotmon(mtmp))
+                if (canspotmon(mtmp)) {
+		    javaString objective = objectivePronoun(pronoun_gender(mtmp));
                     pline("%s's %s does not protect %s.", Monnam(mtmp),
-                          xname(helmet), mhim(mtmp));
+                          xname(helmet), objective.c_str);
+		    releaseJavaString(objective);
+		}
             }
         }
         mtmp->mhp -= mdmg;

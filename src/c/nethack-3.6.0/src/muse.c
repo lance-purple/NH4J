@@ -887,10 +887,13 @@ struct monst *mtmp;
         m_flee(mtmp);
         if (areYouInHell() && mon_has_amulet(mtmp) && !rn2(4)
             && (currentDungeonLevel() < levelsInCurrentDungeon() - 3)) {
-            if (vismon)
+            if (vismon) {
+                javaString objective = objectivePronoun(pronoun_gender(mtmp));
                 pline(
     "As %s climbs the stairs, a mysterious force momentarily surrounds %s...",
-                      mon_nam(mtmp), mhim(mtmp));
+                      mon_nam(mtmp), objective.c_str);
+		releaseJavaString(objective);
+	    }
             /* simpler than for the player; this will usually be
                the Wizard and he'll immediately go right to the
                upstairs, so there's not much point in having any

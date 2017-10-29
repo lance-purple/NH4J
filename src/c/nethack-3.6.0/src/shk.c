@@ -1303,8 +1303,11 @@ proceed:
             if (umoney < ltmp / 2L || (umoney < ltmp && stashed_gold)) {
                 if (!umoney)
                     pline(no_money, stashed_gold ? " seem to" : "");
-                else
-                    pline(not_enough_money, mhim(shkp));
+                else {
+                    javaString objective = objectivePronoun(pronoun_gender(shkp));
+                    pline(not_enough_money, objective.c_str);
+                    releaseJavaString(objective);
+		}
                 return 1;
             }
             pline("But since %s shop has been robbed recently,", mhis(shkp));
@@ -1316,21 +1319,27 @@ proceed:
         } else {
             /* shopkeeper is angry, but has not been robbed --
              * door broken, attacked, etc. */
+
+	    javaString objective = objectivePronoun(pronoun_gender(shkp));
+
             pline("%s is after your hide, not your money!", Monnam(shkp));
             if (umoney < 1000L) {
                 if (!umoney)
                     pline(no_money, stashed_gold ? " seem to" : "");
                 else
-                    pline(not_enough_money, mhim(shkp));
+                    pline(not_enough_money, objective.c_str);
                 return 1;
             }
             You("try to appease %s by giving %s 1000 gold pieces.",
-                x_monnam(shkp, ARTICLE_THE, "angry", 0, FALSE), mhim(shkp));
+                x_monnam(shkp, ARTICLE_THE, "angry", 0, FALSE),
+		objective.c_str);
             pay(1000L, shkp);
             if (strncmp(eshkp->customer, plname, PL_NSIZ) || rn2(3))
                 make_happy_shk(shkp, FALSE);
             else
                 pline("But %s is as angry as ever.", shkname(shkp));
+
+	    releaseJavaString(objective);
         }
         return 1;
     }
@@ -3672,7 +3681,7 @@ register int fall;
              */
             if (lang == 2)
                 pline("%s curses %s inability to grab your backpack!",
-                      shkname(shkp), mhim(shkp));
+                      shkname(shkp), possessive.c_str);
             rile_shk(shkp);
             return;
 #endif
@@ -4087,8 +4096,10 @@ struct monst *shkp;
         pline("%s says that your bill comes to %ld %s.",
               shkname(shkp), total, currency(total));
     } else if (eshk->debit) {
+        javaString objective = objectivePronoun(pronoun_gender(shkp));
         pline("%s reminds you that you owe %s %ld %s.",
-              shkname(shkp), mhim(shkp), eshk->debit, currency(eshk->debit));
+              shkname(shkp), objective.c_str, eshk->debit, currency(eshk->debit));
+        releaseJavaString(objective);
     } else if (eshk->credit) {
         pline("%s encourages you to use your %ld %s of credit.",
               shkname(shkp), eshk->credit, currency(eshk->credit));
