@@ -1018,8 +1018,12 @@ boolean atme;
                     if (!directionX() && !directionY() && !directionZ()) {
                         if ((damage = zapyourself(pseudo, TRUE)) != 0) {
                             char buf[BUFSZ];
-                            Sprintf(buf, "zapped %sself with a spell",
-                                    uhim());
+
+                            int gender = flags.female ? 1 : 0;
+                            javaString reflexive = reflexivePronoun(gender);
+                            Sprintf(buf, "zapped %s with a spell",
+                                    reflexive.c_str);
+			    releaseJavaString(reflexive);
                             losehp(damage, buf, NO_KILLER_PREFIX);
                         }
                     } else {
@@ -1085,7 +1089,11 @@ boolean atme;
                 if ((damage = zapyourself(pseudo, TRUE)) != 0) {
                     char buf[BUFSZ];
 
-                    Sprintf(buf, "zapped %sself with a spell", uhim());
+                    int gender = flags.female ? 1 : 0;
+                    javaString reflexive = reflexivePronoun(gender);
+                    Sprintf(buf, "zapped %s with a spell", reflexive.c_str);
+		    releaseJavaString(reflexive);
+
                     if (physical_damage)
                         damage = Maybe_Half_Phys(damage);
                     losehp(damage, buf, NO_KILLER_PREFIX);

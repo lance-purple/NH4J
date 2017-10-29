@@ -2095,7 +2095,10 @@ dozap()
                && !(objects[obj->otyp].oc_dir == NODIR)) {
         if ((damage = zapyourself(obj, TRUE)) != 0) {
             char buf[BUFSZ];
-            Sprintf(buf, "zapped %sself with a wand", uhim());
+            int gender = flags.female ? 1 : 0;
+	    javaString reflexive = reflexivePronoun(gender);
+            Sprintf(buf, "zapped %s with a wand", reflexive.c_str);
+	    releaseJavaString(reflexive);
             losehp(Maybe_Half_Phys(damage), buf, NO_KILLER_PREFIX);
         }
     } else {
@@ -2304,7 +2307,12 @@ boolean ordinary;
             break;
         }
         learn_it = TRUE;
-        Sprintf(killer.name, "shot %sself with a death ray", uhim());
+
+        int gender = flags.female ? 1 : 0;
+	javaString reflexive = reflexivePronoun(gender);
+        Sprintf(killer.name, "shot %s with a death ray", reflexive.c_str);
+	releaseJavaString(reflexive);
+
         killer.format = NO_KILLER_PREFIX;
         You("irradiate yourself with pure energy!");
         You("die.");
@@ -2461,8 +2469,13 @@ int amt;          /* pseudo-damage used to determine blindness duration */
         how = (obj->oclass != SPBOOK_CLASS)
                   ? (const char *) ansimpleoname(obj)
                   : "spell of light";
-        Sprintf(buf, "%s %sself with %s", ordinary ? "zapped" : "blasted",
-                uhim(), how);
+
+        int gender = flags.female ? 1 : 0;
+	javaString reflexive = reflexivePronoun(gender);
+        Sprintf(buf, "%s %s with %s", ordinary ? "zapped" : "blasted",
+                reflexive.c_str, how);
+	releaseJavaString(reflexive);
+
         /* might rehumanize(); could be fatal, but only for Unchanging */
         losehp(Maybe_Half_Phys(dmg), buf, NO_KILLER_PREFIX);
     }

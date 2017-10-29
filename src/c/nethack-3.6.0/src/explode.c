@@ -476,8 +476,11 @@ int expltype;
                     killer.format = KILLED_BY_AN;
                 } else if (type >= 0 && olet != SCROLL_CLASS) {
                     killer.format = NO_KILLER_PREFIX;
-                    Sprintf(killer.name, "caught %sself in %s own %s", uhim(),
-                            uhis(), str);
+                    int gender = flags.female ? 1 : 0;
+		    javaString reflexive = reflexivePronoun(gender);
+                    Sprintf(killer.name, "caught %s in %s own %s",
+			    reflexive.c_str, uhis(), str);
+		    releaseJavaString(reflexive);
                 } else {
                     killer.format = (!strcmpi(str, "tower of flame")
                                      || !strcmpi(str, "fireball"))

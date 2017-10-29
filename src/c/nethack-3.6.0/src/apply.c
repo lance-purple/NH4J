@@ -881,9 +881,12 @@ struct obj *obj;
             pline("%s fails to notice your %s.", Monnam(mtmp), mirror);
         /* infravision doesn't produce an image in the mirror */
     } else if ((how_seen & SEENMON) == MONSEEN_INFRAVIS) {
-        if (vis) /* (redundant) */
-            pline("%s is too far away to see %sself in the dark.",
-                  Monnam(mtmp), mhim(mtmp));
+        if (vis) { /* (redundant) */
+	    javaString reflexive = reflexivePronoun(pronoun_gender(mtmp));
+            pline("%s is too far away to see %s in the dark.",
+                  Monnam(mtmp), reflexive.c_str);
+	    releaseJavaString(reflexive);
+	}
         /* some monsters do special things */
     } else if (mlet == S_VAMPIRE || mlet == S_GHOST || is_vampshifter(mtmp)) {
         if (vis)
@@ -912,8 +915,10 @@ struct obj *obj;
         if (vis) {
             char buf[BUFSZ]; /* "She" or "He" */
 
-            pline("%s admires %sself in your %s.", Monnam(mtmp), mhim(mtmp),
+	    javaString reflexive = reflexivePronoun(pronoun_gender(mtmp));
+            pline("%s admires %s in your %s.", Monnam(mtmp), reflexive.c_str,
                   mirror);
+	    releaseJavaString(reflexive);
             pline("%s takes it!", upstart(strcpy(buf, mhe(mtmp))));
         } else
             pline("It steals your %s!", mirror);
@@ -2540,7 +2545,12 @@ struct obj *obj;
         if (dam <= 0)
             dam = 1;
         You("hit your %s with your bullwhip.", body_part(FOOT));
-        Sprintf(buf, "killed %sself with %s bullwhip", uhim(), uhis());
+
+        int gender = flags.female ? 1 : 0;
+        javaString reflexive = reflexivePronoun(gender);
+        Sprintf(buf, "killed %s with %s bullwhip", reflexive.c_str, uhis());
+        releaseJavaString(reflexive);
+
         losehp(Maybe_Half_Phys(dam), buf, NO_KILLER_PREFIX);
         context.botl = 1;
         return 1;
@@ -3286,7 +3296,10 @@ struct obj *obj;
             }
             damage = zapyourself(obj, FALSE);
             if (damage) {
-                Sprintf(buf, "killed %sself by breaking a wand", uhim());
+                int gender = flags.female ? 1 : 0;
+                javaString reflexive = reflexivePronoun(gender);
+                Sprintf(buf, "killed %s by breaking a wand", reflexive.c_str);
+                releaseJavaString(reflexive);
                 losehp(Maybe_Half_Phys(damage), buf, NO_KILLER_PREFIX);
             }
             if (context.botl)

@@ -15,6 +15,7 @@ E JavaVM* java_vm;
 
 #define ADVENTURER_ROLE_CLASS "rec/games/roguelike/nh4j/AdventurerRole"
 #define CONTEXT_CLASS "rec/games/roguelike/nh4j/Context"
+#define GENDER_CLASS "rec/games/roguelike/nh4j/Gender"
 #define HALLUCINATORY_DEITY_CLASS "rec/games/roguelike/nh4j/HallucinatoryDeity"
 #define MONSTER_DATA_CLASS "rec/games/roguelike/nh4j/MonsterData"
 #define MONSTER_RANDOMIZER_CLASS "rec/games/roguelike/nh4j/MonsterRandomizer"
@@ -1599,6 +1600,13 @@ E void FDECL(setMonsterRandomizerChoices, (int, int));
 E javaString FDECL(yourDeityName, ());
 E javaString FDECL(nameOfAlignedDeityFromYourPantheon, (int));
 E javaString FDECL(titleOfAlignedDeityFromYourPantheon, (int));
+
+E javaString FDECL(genderAdjective, (int));
+E javaString FDECL(subjectivePronoun, (int));
+E javaString FDECL(objectivePronoun, (int));
+E javaString FDECL(possessivePronoun, (int));
+E javaString FDECL(reflexivePronoun, (int));
+E javaString FDECL(genderAbbreviation, (int));
 
 /* ### invent.c ### */
 

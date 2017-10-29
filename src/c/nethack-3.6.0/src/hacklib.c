@@ -2688,7 +2688,7 @@ extern javaString monsterTypeName(int id) {
   jstring j_str = javaGetStringFromInt(MONSTER_TYPE_CLASS, "name", id);
   const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
   javaString result = { j_str, c_str };
-   return result;
+  return result;
 }
 
 extern javaString javaStringFromC(const char* c) {
@@ -3100,6 +3100,48 @@ int attributeBaseForYourRole(int whichAttr) {
 
 int attributeDistributionForYourRole(int whichAttr) {
   return javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "attributeDistribution", whichAttr);
+}
+
+extern javaString genderAdjective(int genderID) {
+  jstring j_str = javaGetStringFromInt(GENDER_CLASS, "adjective", genderID);
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
+}
+
+extern javaString genderAbbreviation(int genderID) {
+  jstring j_str = javaGetStringFromInt(GENDER_CLASS, "abbreviation", genderID);
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
+}
+
+extern javaString subjectivePronoun(int genderID) {
+  jstring j_str = javaGetStringFromInt(GENDER_CLASS, "subjectivePronoun", genderID);
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
+}
+
+extern javaString objectivePronoun(int genderID) {
+  jstring j_str = javaGetStringFromInt(GENDER_CLASS, "objectivePronoun", genderID);
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
+}
+
+extern javaString possessivePronoun(int genderID) {
+  jstring j_str = javaGetStringFromInt(GENDER_CLASS, "possessivePronoun", genderID);
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
+}
+
+extern javaString reflexivePronoun(int genderID) {
+  jstring j_str = javaGetStringFromInt(GENDER_CLASS, "reflexivePronoun", genderID);
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
 }
 
 /*hacklib.c*/

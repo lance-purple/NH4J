@@ -383,8 +383,11 @@ kick_steed()
             }
             if (u.usteed->msleeping || !u.usteed->mcanmove)
                 pline("%s stirs.", He);
-            else
-                pline("%s rouses %sself!", He, mhim(u.usteed));
+            else {
+                javaString reflexive = reflexivePronoun(pronoun_gender(u.usteed));
+                pline("%s rouses %s!", He, reflexive.c_str);
+		releaseJavaString(reflexive);
+	    }
         } else
             pline("%s does not respond.", He);
         return;

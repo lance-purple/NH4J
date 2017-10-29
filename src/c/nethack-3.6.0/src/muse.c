@@ -168,8 +168,10 @@ boolean self;
                                       ? "nearby"
                                       : "distant");
     } else if (self) {
-        pline("%s zaps %sself with %s!", Monnam(mtmp), mhim(mtmp),
+        javaString reflexive = reflexivePronoun(pronoun_gender(mtmp));
+        pline("%s zaps %s with %s!", Monnam(mtmp), reflexive.c_str,
               doname(otmp));
+        releaseJavaString(reflexive);
     } else {
         pline("%s zaps %s!", Monnam(mtmp), an(xname(otmp)));
         stop_occupation();
@@ -2400,8 +2402,11 @@ boolean by_you; /* true: if mon kills itself, hero gets credit/blame */
 
     if (otyp == STRANGE_OBJECT) {
         /* monster is using fire breath on self */
-        if (vis)
-            pline("%s breathes fire on %sself.", Monnam(mon), mhim(mon));
+        if (vis) {
+            javaString reflexive = reflexivePronoun(pronoun_gender(mon));
+            pline("%s breathes fire on %s.", Monnam(mon), reflexive.c_str);
+            releaseJavaString(reflexive);
+	}
         if (!rn2(3))
             mon->mspec_used = rn1(10, 5);
         /* -21 => monster's fire breath; 1 => # of damage dice */
