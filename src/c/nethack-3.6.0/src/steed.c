@@ -271,8 +271,10 @@ boolean force;      /* Quietly force this animal */
     if (mtmp->mtrapped) {
         struct trap *t = t_at(mtmp->mx, mtmp->my);
 
-        You_cant("mount %s while %s's trapped in %s.", mon_nam(mtmp),
-                 mhe(mtmp), an(defsyms[trap_to_defsym(t->ttyp)].explanation));
+        javaString subjective = subjectivePronoun(pronoun_gender(mtmp));
+        You_cant("mount %s while %s is trapped in %s.", mon_nam(mtmp),
+                 subjective.c_str, an(defsyms[trap_to_defsym(t->ttyp)].explanation));
+	releaseJavaString(subjective);
         return (FALSE);
     }
 
@@ -370,7 +372,10 @@ kick_steed()
         /* We assume a message has just been output of the form
          * "You kick <steed>."
          */
-        Strcpy(He, mhe(u.usteed));
+        javaString subjective = subjectivePronoun(pronoun_gender(u.usteed));
+        Strcpy(He, subjective.c_str);
+	releaseJavaString(subjective);
+
         *He = highc(*He);
         if ((u.usteed->mcanmove || u.usteed->mfrozen) && !rn2(2)) {
             if (u.usteed->mcanmove)

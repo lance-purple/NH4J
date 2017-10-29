@@ -1761,10 +1761,12 @@ struct monst *mtmp, *victim;
         if (mvitals[newtype].mvflags & G_GENOD) { /* allow G_EXTINCT */
             if (canspotmon(mtmp)) {
 		javaString monsterName = monsterTypeName(pmid);
+		javaString subjective = subjectivePronoun(pronoun_gender(mtmp));
                 pline("As %s grows up into %s, %s %s!", mon_nam(mtmp),
-                      an(monsterName.c_str), mhe(mtmp),
+                      an(monsterName.c_str), subjective.c_str,
                       isNonliving(pmid) ? "expires" : "dies");
 		releaseJavaString(monsterName);
+		releaseJavaString(subjective);
 	    }
             setMonsterType(mtmp, pmid, -1); /* keep mvitals[] accurate */
             mondied(mtmp);

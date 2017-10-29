@@ -1267,9 +1267,10 @@ proceed:
             if (stashed_gold)
                 pline("But you have some gold stashed away.");
         } else {
+            javaString subjective = subjectivePronoun(pronoun_gender(shkp));
             if (umoney > ltmp) {
                 You("give %s the %ld gold piece%s %s asked for.",
-                    shkname(shkp), ltmp, plur(ltmp), mhe(shkp));
+                    shkname(shkp), ltmp, plur(ltmp), subjective.c_str);
                 pay(ltmp, shkp);
             } else {
                 You("give %s all your%s gold.", shkname(shkp),
@@ -1278,10 +1279,14 @@ proceed:
                 if (stashed_gold)
                     pline("But you have hidden gold!");
             }
-            if ((umoney < ltmp / 2L) || (umoney < ltmp && stashed_gold))
-                pline("Unfortunately, %s doesn't look satisfied.", mhe(shkp));
-            else
+            if ((umoney < ltmp / 2L) || (umoney < ltmp && stashed_gold)) {
+                pline("Unfortunately, %s doesn't look satisfied.",
+				subjective.c_str);
+	    }
+            else {
                 make_happy_shk(shkp, FALSE);
+	    }
+            releaseJavaString(subjective);
         }
         return 1;
     }
@@ -4062,8 +4067,11 @@ struct monst *shkp;
 
     eshk = ESHK(shkp);
     if (ANGRY(shkp)) {
+        javaString subjective = subjectivePronoun(pronoun_gender(shkp));
         pline("%s mentions how much %s dislikes %s customers.",
-              shkname(shkp), mhe(shkp), eshk->robbed ? "non-paying" : "rude");
+              shkname(shkp), subjective.c_str, eshk->robbed ? "non-paying" : "rude");
+	releaseJavaString(subjective);
+
     } else if (eshk->following) {
         if (strncmp(eshk->customer, plname, PL_NSIZ)) {
             verbalize("%s %s!  I was looking for %s.",

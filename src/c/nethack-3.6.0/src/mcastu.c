@@ -354,7 +354,12 @@ int spellnum;
 
     switch (spellnum) {
     case MGC_DEATH_TOUCH:
-        pline("Oh no, %s's using the touch of death!", mhe(mtmp));
+	{
+	  javaString subjective = subjectivePronoun(pronoun_gender(mtmp));
+          pline("Oh no, %s's using the touch of death!", subjective.c_str);
+	  releaseJavaString(subjective);
+	}
+
         if (isNonliving(pmid4you()) || isDemon(pmid4you())) {
             You("seem no deader than before.");
         } else if (!youResistMagic() && rn2(mtmp->m_lev) > 12) {

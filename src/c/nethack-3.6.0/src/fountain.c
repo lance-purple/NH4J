@@ -67,8 +67,13 @@ dowaterdemon()
             /* Give those on low levels a (slightly) better chance of survival
              */
             if (rnd(100) > (80 + level_difficulty())) {
+                int gender = pronoun_gender(mtmp);
+		javaString subjective = subjectivePronoun(gender);
+		javaString possessive = possessivePronoun(gender);
                 pline("Grateful for %s release, %s grants you a wish!",
-                      mhis(mtmp), mhe(mtmp));
+                      possessive.c_str, subjective.c_str);
+		releaseJavaString(subjective);
+		releaseJavaString(possessive);
                 /* give a wish and discard the monster (mtmp set to null) */
                 mongrantswish(&mtmp);
             } else if (t_at(mtmp->mx, mtmp->my))

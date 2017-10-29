@@ -916,10 +916,12 @@ struct obj *obj;
             char buf[BUFSZ]; /* "She" or "He" */
 
 	    javaString reflexive = reflexivePronoun(pronoun_gender(mtmp));
+	    javaString subjective = subjectivePronoun(pronoun_gender(mtmp));
             pline("%s admires %s in your %s.", Monnam(mtmp), reflexive.c_str,
                   mirror);
+            pline("%s takes it!", upstart(strcpy(buf, subjective.c_str)));
 	    releaseJavaString(reflexive);
-            pline("%s takes it!", upstart(strcpy(buf, mhe(mtmp))));
+	    releaseJavaString(subjective);
         } else
             pline("It steals your %s!", mirror);
         setnotworn(obj); /* in case mirror was wielded */

@@ -1374,9 +1374,12 @@ const struct Attack mattk;
         if (gender(mdef) == (int) inherentlyFemale() && monsterClass(pmid4you()) == S_NYMPH)
             You("charm %s.  She gladly hands over her possessions.",
                 mon_nam(mdef));
-        else
+        else {
+	    javaString subjective = subjectivePronoun(pronoun_gender(mdef));
             You("seduce %s and %s starts to take off %s clothes.",
-                mon_nam(mdef), mhe(mdef), mhis(mdef));
+                mon_nam(mdef), subjective.c_str, mhis(mdef));
+	    releaseJavaString(subjective);
+	}
     }
 
     while ((otmp = mdef->minvent) != 0) {

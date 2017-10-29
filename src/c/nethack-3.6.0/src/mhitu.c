@@ -2308,8 +2308,10 @@ register struct monst *mon;
     char qbuf[QBUFSZ];
 
     if (mon->mcan || mon->mspec_used) {
+	javaString subjective = subjectivePronoun(pronoun_gender(mon));
         pline("%s acts as though %s has got a %sheadache.", Monnam(mon),
-              mhe(mon), mon->mcan ? "severe " : "");
+              subjective.c_str, mon->mcan ? "severe " : "");
+	releaseJavaString(subjective);
         return 0;
     }
 

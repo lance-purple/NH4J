@@ -216,9 +216,12 @@ struct obj *otmp;
                           FALSE),
                  onambuf);
 
-    if (mtmp->mconf)
+    if (mtmp->mconf) {
+	javaString subjective = subjectivePronoun(pronoun_gender(mtmp));
         pline("Being confused, %s mispronounces the magic words...",
-              vismon ? mon_nam(mtmp) : mhe(mtmp));
+              vismon ? mon_nam(mtmp) : subjective.c_str);
+	releaseJavaString(subjective);
+    }
 }
 
 STATIC_OVL void

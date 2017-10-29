@@ -359,7 +359,11 @@ invault()
                 verbalize("Hey! Who left that %s in here?",
                           mimic_obj_name(&youmonst));
             /* You're mimicking some object or you're hidden. */
-            pline("Puzzled, %s turns around and leaves.", mhe(guard));
+
+            javaString possessive = subjectivePronoun(pronoun_gender(guard));
+            pline("Puzzled, %s turns around and leaves.", possessive.c_str);
+            releaseJavaString(possessive);
+
             mongone(guard);
             return;
         }
