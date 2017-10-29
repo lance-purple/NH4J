@@ -331,8 +331,12 @@ dig(VOID_ARGS)
                 else if (uarmf)
                     dmg = (dmg + 1) / 2;
                 You("hit yourself in the %s.", body_part(FOOT));
-                Sprintf(kbuf, "chopping off %s own %s", uhis(),
-                        body_part(FOOT));
+                int gender = flags.female ? 1 : 0;
+        	javaString possessive = possessivePronoun(gender);
+                Sprintf(kbuf, "chopping off %s own %s",
+                        possessive.c_str, body_part(FOOT));
+        	releaseJavaString(possessive);
+
                 losehp(Maybe_Half_Phys(dmg), kbuf, KILLED_BY);
             } else {
                 You("destroy the bear trap with %s.",
@@ -1043,7 +1047,10 @@ struct obj *obj;
         if (dam <= 0)
             dam = 1;
         You("hit yourself with %s.", yname(uwep));
-        Sprintf(buf, "%s own %s", uhis(), OBJ_NAME(objects[obj->otyp]));
+        int gender = flags.female ? 1 : 0;
+	javaString possessive = possessivePronoun(gender);
+        Sprintf(buf, "%s own %s", possessive.c_str, OBJ_NAME(objects[obj->otyp]));
+	releaseJavaString(possessive);
         losehp(Maybe_Half_Phys(dam), buf, KILLED_BY);
         context.botl = 1;
         return 1;

@@ -4,9 +4,9 @@ import java.util.NoSuchElementException;
 
 public enum Gender {
 	
-	MALE(0, "male", "he", "him", "his", "+himself", "Mal"),
-	FEMALE(1, "female", "she", "her", "her", "+herself", "Fem"),
-	NEUTER(2, "neuter", "it", "it", "its", "+itself", "Ntr");
+	MALE(0,   "male",   "he",  "him", "his", "himself", "Mal"),
+	FEMALE(1, "female", "she", "her", "her", "herself", "Fem"),
+	NEUTER(2, "neuter", "it",  "it",  "its", "itself",  "Ntr");
 	
 	private final int id;
 	private final String adjective;

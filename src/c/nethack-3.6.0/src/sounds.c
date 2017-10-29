@@ -68,8 +68,12 @@ dosounds()
 
                 if (which != 2)
                     You_hear1(throne_msg[which]);
-                else
-                    pline(throne_msg[2], uhis());
+                else {
+		    int gender = flags.female ? 1 : 0;
+		    javaString possessive = possessivePronoun(gender);
+                    pline(throne_msg[2], possessive.c_str);
+		    releaseJavaString(possessive);
+		}
                 return;
             }
         }

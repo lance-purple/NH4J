@@ -793,9 +793,13 @@ level_tele()
         } else {
             pline("Unfortunately, you don't know how to fly.");
             You("plummet a few thousand feet to your death.");
+
+	    int gender = flags.female ? 1 : 0;
+	    javaString possessive = possessivePronoun(gender);
             Sprintf(killer.name,
                     "teleported out of the dungeon and fell to %s death",
-                    uhis());
+                    possessive.c_str);
+	    releaseJavaString(possessive);
             killer.format = NO_KILLER_PREFIX;
         }
     }

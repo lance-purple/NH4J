@@ -605,7 +605,11 @@ aligntyp resp_god;
             summon_minion(resp_god, FALSE);
             summon_minion(resp_god, FALSE);
             summon_minion(resp_god, FALSE);
-            verbalize("Destroy %s, my servants!", uhim());
+
+            int gender = flags.female ? 1 : 0;
+            javaString objective = objectivePronoun(gender);
+            verbalize("Destroy %s, my servants!", objective.c_str);
+            releaseJavaString(objective);
         }
     }
 }

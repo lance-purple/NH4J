@@ -2548,8 +2548,11 @@ struct obj *obj;
 
         int gender = flags.female ? 1 : 0;
         javaString reflexive = reflexivePronoun(gender);
-        Sprintf(buf, "killed %s with %s bullwhip", reflexive.c_str, uhis());
+        javaString possessive = possessivePronoun(gender);
+        Sprintf(buf, "killed %s with %s bullwhip",
+			 reflexive.c_str, possessive.c_str);
         releaseJavaString(reflexive);
+        releaseJavaString(possessive);
 
         losehp(Maybe_Half_Phys(dam), buf, NO_KILLER_PREFIX);
         context.botl = 1;

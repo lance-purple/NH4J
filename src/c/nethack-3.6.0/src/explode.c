@@ -478,9 +478,11 @@ int expltype;
                     killer.format = NO_KILLER_PREFIX;
                     int gender = flags.female ? 1 : 0;
 		    javaString reflexive = reflexivePronoun(gender);
+		    javaString possessive = possessivePronoun(gender);
                     Sprintf(killer.name, "caught %s in %s own %s",
-			    reflexive.c_str, uhis(), str);
+			    reflexive.c_str, possessive.c_str, str);
 		    releaseJavaString(reflexive);
+		    releaseJavaString(possessive);
                 } else {
                     killer.format = (!strcmpi(str, "tower of flame")
                                      || !strcmpi(str, "fireball"))
