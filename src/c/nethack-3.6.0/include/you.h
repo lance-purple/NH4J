@@ -185,7 +185,6 @@ struct Gender {
 /* increment to 3 if you allow neuter roles */
 
 extern const struct Gender genders[]; /* table of available genders */
-#define mhe(mtmp) (genders[pronoun_gender(mtmp)].he)
 #define mhim(mtmp) (genders[pronoun_gender(mtmp)].him)
 #define mhis(mtmp) (genders[pronoun_gender(mtmp)].his)
 
