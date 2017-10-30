@@ -185,7 +185,6 @@ struct Gender {
 /* increment to 3 if you allow neuter roles */
 
 extern const struct Gender genders[]; /* table of available genders */
-#define mhis(mtmp) (genders[pronoun_gender(mtmp)].his)
 
 /*** Unified structure specifying alignment information ***/
 struct Align {

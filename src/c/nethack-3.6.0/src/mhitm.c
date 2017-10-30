@@ -258,9 +258,12 @@ boolean quietly;
     remove_monster(tx, ty);
     place_monster(magr, tx, ty); /* put down at target spot */
     place_monster(mdef, fx, fy);
-    if (vis && !quietly)
+    if (vis && !quietly) {
+	javaString possessive = possessivePronoun(pronoun_gender(magr));
         pline("%s moves %s out of %s way!", Monnam(magr), mon_nam(mdef),
-              isRiderOfTheApocalypse(agrPmid) ? "the" : mhis(magr));
+              isRiderOfTheApocalypse(agrPmid) ? "the" : possessive.c_str);
+	releaseJavaString(possessive);
+    }
     newsym(fx, fy);  /* see it */
     newsym(tx, ty);  /*   all happen */
     flush_screen(0); /* make sure it shows up */
@@ -585,9 +588,11 @@ const struct Attack mattk;
             }
             if (mdef->minvis && !perceivesTheInvisible(pmidAgr)) {
                 if (canseemon(magr)) {
+	            javaString possessive = possessivePronoun(pronoun_gender(magr));
                     pline(
                       "%s doesn't seem to notice that %s gaze was reflected.",
-                          Monnam(magr), mhis(magr));
+                          Monnam(magr), possessive.c_str);
+		    releaseJavaString(possessive);
                 }
                 return MM_MISS;
             }
@@ -1272,8 +1277,10 @@ register const struct Attack mattk;
         if ((mdef->misc_worn_check & W_ARMH) && rn2(8)) {
             if (vis) {
                 Strcpy(buf, s_suffix(Monnam(mdef)));
+	        javaString possessive = possessivePronoun(pronoun_gender(mdef));
                 pline("%s helmet blocks %s attack to %s head.", buf,
-                      s_suffix(mon_nam(magr)), mhis(mdef));
+                      s_suffix(mon_nam(magr)), possessive.c_str);
+	        releaseJavaString(possessive);
             }
             break;
         }
@@ -1430,10 +1437,12 @@ struct monst *magr, *mdef;
 struct obj *otemp;
 {
     if (flags.verbose && youCanSee() && mon_visible(magr)) {
+	javaString possessive = possessivePronoun(pronoun_gender(magr));
         pline("%s %s %s%s %s at %s.", Monnam(magr),
               (objects[otemp->otyp].oc_dir & PIERCE) ? "thrusts" : "swings",
-              (otemp->quan > 1L) ? "one of " : "", mhis(magr), xname(otemp),
+              (otemp->quan > 1L) ? "one of " : "", possessive.c_str, xname(otemp),
               mon_nam(mdef));
+	releaseJavaString(possessive);
     }
 }
 

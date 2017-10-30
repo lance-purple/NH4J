@@ -664,9 +664,11 @@ register struct monst *mtmp;
     } break;
     case MS_WERE:
         if (flags.moonphase == FULL_MOON && (night() ^ !rn2(13))) {
+	    javaString possessive = possessivePronoun(pronoun_gender(mtmp));
             pline("%s throws back %s head and lets out a blood curdling %s!",
-                  Monnam(mtmp), mhis(mtmp),
+                  Monnam(mtmp), possessive.c_str,
                   (pmid == PM_HUMAN_WERERAT) ? "shriek" : "howl");
+	    releaseJavaString(possessive);
             wake_nearto(mtmp->mx, mtmp->my, 11 * 11);
         } else
             pline_msg =
@@ -807,8 +809,11 @@ register struct monst *mtmp;
         if (!mtmp->mpeaceful) {
             switch (rn2(4)) {
             case 0:
-                pline("%s boasts about %s gem collection.", Monnam(mtmp),
-                      mhis(mtmp));
+		{ javaString possessive = possessivePronoun(pronoun_gender(mtmp));
+                  pline("%s boasts about %s gem collection.", Monnam(mtmp),
+                      possessive.c_str);
+		  releaseJavaString(possessive);
+		}
                 break;
             case 1:
                 pline_msg = "complains about a diet of mutton.";

@@ -1310,10 +1310,12 @@ proceed:
 		}
                 return 1;
             }
-            pline("But since %s shop has been robbed recently,", mhis(shkp));
+	    javaString possessive = possessivePronoun(pronoun_gender(shkp));
+            pline("But since %s shop has been robbed recently,", possessive.c_str);
             pline("you %scompensate %s for %s losses.",
                   (umoney < ltmp) ? "partially " : "", shkname(shkp),
-                  mhis(shkp));
+                  possessive.c_str);
+	    releaseJavaString(possessive);
             pay(umoney < ltmp ? umoney : ltmp, shkp);
             make_happy_shk(shkp, FALSE);
         } else {
@@ -1700,9 +1702,12 @@ int croaked;
     if (numsk > 1) {
         if (cansee(shkp->mx, shkp->my) && croaked) {
             takes[0] = '\0';
-            if (hasAHead(pmid4mon(shkp)) && !rn2(2))
-                Sprintf(takes, ", shakes %s %s,", mhis(shkp),
+            if (hasAHead(pmid4mon(shkp)) && !rn2(2)) {
+	        javaString possessive = possessivePronoun(pronoun_gender(shkp));
+                Sprintf(takes, ", shakes %s %s,", possessive.c_str,
                         mbodypart(shkp, HEAD));
+	        releaseJavaString(possessive);
+	    }
             pline("%s %slooks at your corpse%s and %s.", Monnam(shkp),
                   (!shkp->mcanmove || shkp->msleeping) ? "wakes up, " : "",
                   takes, !inhishop(shkp) ? "disappears" : "sighs");

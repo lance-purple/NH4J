@@ -589,8 +589,10 @@ register struct monst *priest;
         };
 
         if (!priest->mcanmove || priest->msleeping) {
+            javaString possessive = possessivePronoun(pronoun_gender(priest));
             pline("%s breaks out of %s reverie!", Monnam(priest),
-                  mhis(priest));
+                  possessive.c_str);
+	    releaseJavaString(possessive);
             priest->mfrozen = priest->msleeping = 0;
             priest->mcanmove = 1;
         }

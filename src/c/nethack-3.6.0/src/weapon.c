@@ -686,8 +686,11 @@ register struct monst *mon;
 
                 if (bimanual(mw_tmp))
                     mon_hand = makeplural(mon_hand);
+
+		javaString possessive = possessivePronoun(pronoun_gender(mon));
                 Sprintf(welded_buf, "%s welded to %s %s",
-                        otense(mw_tmp, "are"), mhis(mon), mon_hand);
+                        otense(mw_tmp, "are"), possessive.c_str, mon_hand);
+		releaseJavaString(possessive);
 
                 if (obj->otyp == PICK_AXE) {
                     pline("Since %s weapon%s %s,", s_suffix(mon_nam(mon)),

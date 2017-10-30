@@ -879,8 +879,10 @@ newdogpos:
 
         if (info[chi] & ALLOW_U) {
             if (mtmp->mleashed) { /* play it safe */
+		javaString possessive = possessivePronoun(pronoun_gender(mtmp));
                 pline("%s breaks loose of %s leash!", Monnam(mtmp),
-                      mhis(mtmp));
+                      possessive.c_str);
+		releaseJavaString(possessive);
                 m_unleash(mtmp, FALSE);
             }
             (void) mattacku(mtmp);

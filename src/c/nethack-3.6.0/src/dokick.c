@@ -342,8 +342,10 @@ register struct obj *gold;
                 robbed -= value;
                 if (robbed < 0L)
                     robbed = 0L;
+		javaString possessive = possessivePronoun(pronoun_gender(mtmp));
                 pline_The("amount %scovers %s recent losses.",
-                          !robbed ? "" : "partially ", mhis(mtmp));
+                          !robbed ? "" : "partially ", possessive.c_str);
+		releaseJavaString(possessive);
                 ESHK(mtmp)->robbed = robbed;
                 if (!robbed)
                     make_happy_shk(mtmp, FALSE);

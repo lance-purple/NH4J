@@ -535,9 +535,15 @@ boolean feedback;
 
     if (feedback) {
         if (canseemon(mtmp))
-            pline("%s pulls free of %s leash!", Monnam(mtmp), mhis(mtmp));
+	{
+	    javaString possessive = possessivePronoun(pronoun_gender(mtmp));
+            pline("%s pulls free of %s leash!", Monnam(mtmp), possessive.c_str);
+	    releaseJavaString(possessive);
+	}
         else
+	{
             Your("leash falls slack.");
+	}
     }
     for (otmp = invent; otmp; otmp = otmp->nobj)
         if (otmp->otyp == LEASH && otmp->leashmon == (int) mtmp->m_id)
@@ -935,15 +941,19 @@ struct obj *obj;
             pline("%s is frightened by its reflection.", Monnam(mtmp));
         monflee(mtmp, d(2, 4), FALSE, FALSE);
     } else if (youCanSee()) {
+	javaString possessive = possessivePronoun(pronoun_gender(mtmp));
         if (mtmp->minvis && !youCanSeeInvisible())
             ;
         else if ((mtmp->minvis && !perceivesTheInvisible(pmid))
                  /* redundant: can't get here if these are true */
                  || !hasEyes(pmid) || notonhead || !mtmp->mcansee)
             pline("%s doesn't seem to notice %s reflection.", Monnam(mtmp),
-                  mhis(mtmp));
+                  possessive.c_str);
         else
-            pline("%s ignores %s reflection.", Monnam(mtmp), mhis(mtmp));
+            pline("%s ignores %s reflection.", Monnam(mtmp),
+		  possessive.c_str);
+
+	releaseJavaString(possessive);
     }
     return 1;
 }
@@ -2641,9 +2651,12 @@ struct obj *obj;
 
             You("wrap your bullwhip around %s.", yname(otmp));
             if (gotit && mwelded(otmp)) {
+	        javaString possessive = possessivePronoun(pronoun_gender(mtmp));
                 pline("%s welded to %s %s%c",
-                      (otmp->quan == 1L) ? "It is" : "They are", mhis(mtmp),
+                      (otmp->quan == 1L) ? "It is" : "They are",
+		      possessive.c_str,
                       mon_hand, !otmp->bknown ? '!' : '.');
+	        releaseJavaString(possessive);
                 otmp->bknown = 1;
                 gotit = FALSE; /* can't pull it free */
             }

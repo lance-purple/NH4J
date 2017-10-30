@@ -55,10 +55,14 @@ dosit()
     } else if (u.ustuck && !monsterSticksInCombat(pmid4you())) {
         /* holding monster is next to hero rather than beneath, but
            hero is in no condition to actually sit at has/her own spot */
-        if (isHumanoid(pmid4mon(u.ustuck)))
-            pline("%s won't offer %s lap.", Monnam(u.ustuck), mhis(u.ustuck));
-        else
+        if (isHumanoid(pmid4mon(u.ustuck))) {
+	    javaString possessive = possessivePronoun(pronoun_gender(u.ustuck));
+            pline("%s won't offer %s lap.", Monnam(u.ustuck), possessive.c_str);
+	    releaseJavaString(possessive);
+	}
+        else {
             pline("%s has no lap.", Monnam(u.ustuck));
+	}
         return 0;
     } else if (is_pool(currentX(), currentY()) && !underwater()) { /* water walking */
         goto in_water;

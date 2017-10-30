@@ -1376,9 +1376,11 @@ const struct Attack mattk;
                 mon_nam(mdef));
         else {
 	    javaString subjective = subjectivePronoun(pronoun_gender(mdef));
+	    javaString possessive = possessivePronoun(pronoun_gender(mdef));
             You("seduce %s and %s starts to take off %s clothes.",
-                mon_nam(mdef), subjective.c_str, mhis(mdef));
+                mon_nam(mdef), subjective.c_str, possessive.c_str);
 	    releaseJavaString(subjective);
+	    releaseJavaString(possessive);
 	}
     }
 
@@ -1394,9 +1396,12 @@ const struct Attack mattk;
             otmp->owornmask = 0L;
             update_mon_intrinsics(mdef, otmp, FALSE, FALSE);
 
-            if (otmp == stealoid) /* special message for final item */
+            if (otmp == stealoid) { /* special message for final item */
+	        javaString possessive = possessivePronoun(pronoun_gender(mdef));
                 pline("%s finishes taking off %s suit.", Monnam(mdef),
-                      mhis(mdef));
+                      possessive.c_str);
+	        releaseJavaString(possessive);
+	    }
         }
         /* give the object to the character */
         otmp = hold_another_object(otmp, "You snatched but dropped %s.",
@@ -1693,9 +1698,11 @@ register const struct Attack mattk;
             break;
 
         if ((helmet = which_armor(mdef, W_ARMH)) != 0 && rn2(8)) {
+	    javaString possessive = possessivePronoun(pronoun_gender(mdef));
             pline("%s %s blocks your attack to %s head.",
                   s_suffix(Monnam(mdef)), helm_simple_name(helmet),
-                  mhis(mdef));
+                  possessive.c_str);
+	    releaseJavaString(possessive);
             break;
         }
 

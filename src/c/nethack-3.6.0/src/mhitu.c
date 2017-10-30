@@ -97,9 +97,12 @@ struct monst *mtmp;
 struct obj *otemp;
 {
     if (flags.verbose && youCanSee() && mon_visible(mtmp)) {
+
+        javaString possessive = possessivePronoun(pronoun_gender(mtmp));
         pline("%s %s %s%s %s.", Monnam(mtmp),
               (objects[otemp->otyp].oc_dir & PIERCE) ? "thrusts" : "swings",
-              (otemp->quan > 1L) ? "one of " : "", mhis(mtmp), xname(otemp));
+              (otemp->quan > 1L) ? "one of " : "", possessive.c_str, xname(otemp));
+        releaseJavaString(possessive);
     }
 }
 
@@ -2071,10 +2074,13 @@ register const struct Attack mattk;
                                   : "The gaze is reflected away by %s %s!"))
                 break;
             if (!monsterCanSeeYou(mtmp)) { /* probably you're invisible */
-                if (useeit)
+                if (useeit) {
+                    javaString possessive = possessivePronoun(pronoun_gender(mtmp));
                     pline(
                       "%s doesn't seem to notice that %s gaze was reflected.",
-                          Monnam(mtmp), mhis(mtmp));
+                          Monnam(mtmp), possessive.c_str);
+                    releaseJavaString(possessive);
+		}
                 break;
             }
             if (useeit)
