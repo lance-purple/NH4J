@@ -992,7 +992,7 @@ int role, gend, algn;
 }
 
 const char* genderAdjectives[] = {
-	"mALe", "fEMALe", "nEUTEr"
+	"male", "female", "neuter"
 };
 
 STATIC_DCL void

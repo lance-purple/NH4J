@@ -634,8 +634,11 @@ boolean new_game; /* false => restoring an old game */
     if (!roleNameHasFemaleVersion(urole.id)
         && (new_game
                 ? (urole.allow & ROLE_GENDMASK) == (ROLE_MALE | ROLE_FEMALE)
-                : currentgend != flags.initgend))
-        Sprintf(eos(buf), " %s", genders[currentgend].adj);
+                : currentgend != flags.initgend)) {
+	javaString adjective = genderAdjective(currentgend);
+        Sprintf(eos(buf), " %s", adjective.c_str);
+	releaseJavaString(adjective);
+    }
 
     javaString roleName = (currentgend && roleNameHasFemaleVersion(urole.id))
 	    ? roleNameAsFemale(urole.id) : roleNameAsMale(urole.id);

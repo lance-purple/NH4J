@@ -1409,7 +1409,9 @@ int final;
         tmpbuf[0] = '\0';
         /* here we always use current gender, not saved role gender */
         if (!isMale(pmid4you()) && !isFemale(pmid4you()) && !isNeuter(pmid4you())) {
-            Sprintf(tmpbuf, "%s ", genders[flags.female ? 1 : 0].adj);
+	    javaString adjective = genderAdjective(flags.female ? 1 : 0);
+            Sprintf(tmpbuf, "%s ", adjective.c_str);
+	    releaseJavaString(adjective);
 	}
 	
 	javaString youAsMonsterName = monsterTypeName(pmid4you());
@@ -1424,7 +1426,11 @@ int final;
     if (!roleNameHasFemaleVersion(urole.id)
         && ((urole.allow & ROLE_GENDMASK) == (ROLE_MALE | ROLE_FEMALE)
             || innategend != flags.initgend))
-        Sprintf(tmpbuf, "%s ", genders[innategend].adj);
+    {
+	javaString adjective = genderAdjective(innategend);
+        Sprintf(tmpbuf, "%s ", adjective.c_str);
+	releaseJavaString(adjective);
+    }
     buf[0] = '\0';
     if (areYouPolymorphed())
     {
@@ -1507,10 +1513,12 @@ int final;
         difalgn &= ~1; /* suppress helm from "started out <foo>" message */
     }
     if (difgend || difalgn) { /* sex change or perm align change or both */
+	javaString adjective = genderAdjective(flags.initgend);
         Sprintf(buf, " You started out %s%s%s.",
-                difgend ? genders[flags.initgend].adj : "",
+                difgend ? adjective.c_str : "",
                 (difgend && difalgn) ? " and " : "",
                 difalgn ? align_str(originalAlignmentBase()) : "");
+	releaseJavaString(adjective);
         putstr(en_win, 0, buf);
     }
 }

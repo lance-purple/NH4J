@@ -4580,8 +4580,17 @@ char *buf;
             Strcpy(buf, defopt);
     } else if (!strcmp(optname, "fruit"))
         Sprintf(buf, "%s", pl_fruit);
-    else if (!strcmp(optname, "gender"))
-        Sprintf(buf, "%s", rolestring(flags.initgend, genders, adj));
+    else if (!strcmp(optname, "gender")) {
+        if (flags.initgend >= 0) {
+	    javaString adjective = genderAdjective(flags.initgend);
+            Sprintf(buf, "%s", adjective.c_str);
+            releaseJavaString(adjective);
+	} else if (flags.initgend == ROLE_RANDOM) {
+            Sprintf(buf, "%s", randomrole);
+	} else {
+            Sprintf(buf, "%s", none);
+	}
+    }
     else if (!strcmp(optname, "horsename"))
         Sprintf(buf, "%s", horsename[0] ? horsename : none);
     else if (!strcmp(optname, "map_mode"))
