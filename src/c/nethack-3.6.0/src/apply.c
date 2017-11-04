@@ -225,7 +225,9 @@ int rx, ry, *resp;
                 else if (isMale(pmid))
                     gndr = 0;
             }
-            Sprintf(buf, "%s's dead", genders[gndr].he); /* "he"/"she"/"it" */
+	    javaString subject = subjectivePronoun(gndr);
+            Sprintf(buf, "%s's dead", subject.c_str); /* "he"/"she"/"it" */
+	    releaseJavaString(subject);
             buf[0] = highc(buf[0]);
         } else { /* plural */
             Strcpy(buf, "They're dead");

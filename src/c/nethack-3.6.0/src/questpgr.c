@@ -223,7 +223,7 @@ qtext_pronoun(who, which)
 char who,  /* 'd' => deity, 'l' => leader, 'n' => nemesis, 'o' => artifact */
     which; /* 'h'|'H'|'i'|'I'|'j'|'J' */
 {
-    const char *pnoun;
+    javaString pnoun = NO_JAVA_STRING;
     int g;
     char lwhich = lowc(which); /* H,I,J -> h,i,j */
 
@@ -236,19 +236,23 @@ char who,  /* 'd' => deity, 'l' => leader, 'n' => nemesis, 'o' => artifact */
     if (who == 'o'
         && (strstri(cvt_buf, "Eyes ")
             || strcmpi(cvt_buf, makesingular(cvt_buf)))) {
-        pnoun = (lwhich == 'h') ? "they"
-                : (lwhich == 'i') ? "them"
-                : (lwhich == 'j') ? "their" : "?";
+        pnoun = (lwhich == 'h') ? javaStringFromC("they")
+                : (lwhich == 'i') ? javaStringFromC("them")
+                : (lwhich == 'j') ? javaStringFromC("their")
+		: javaStringFromC("?");
     } else {
         g = (who == 'd') ? quest_status.godgend
             : (who == 'l') ? quest_status.ldrgend
             : (who == 'n') ? quest_status.nemgend
             : 2; /* default to neuter */
-        pnoun = (lwhich == 'h') ? genders[g].he
-                : (lwhich == 'i') ? genders[g].him
-                : (lwhich == 'j') ? genders[g].his : "?";
+        pnoun = (lwhich == 'h') ? subjectivePronoun(g)
+                : (lwhich == 'i') ? objectivePronoun(g)
+                : (lwhich == 'j') ? possessivePronoun(g)
+		: javaStringFromC("?");
     }
-    Strcpy(cvt_buf, pnoun);
+    Strcpy(cvt_buf, pnoun.c_str);
+    releaseJavaString(pnoun);
+
     /* capitalize for H,I,J */
     if (lwhich != which)
         cvt_buf[0] = highc(cvt_buf[0]);

@@ -174,7 +174,6 @@ extern struct Race urace;
 
 /*** Unified structure specifying gender information ***/
 struct Gender {
-    const char *he;       /* he/she/it */
     const char *him;      /* him/her/it */
     const char *his;      /* his/her/its */
     const char *filecode; /* file code */
