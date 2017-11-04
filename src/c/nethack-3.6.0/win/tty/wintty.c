@@ -752,8 +752,11 @@ makepicks:
         any.a_int = 0;
         if (!roleNameHasFemaleVersion(ROLE)
             && (roles[ROLE].allow & ROLE_GENDMASK)
-                   == (ROLE_MALE | ROLE_FEMALE))
-            Sprintf(plbuf, " %s", genders[GEND].adj);
+                   == (ROLE_MALE | ROLE_FEMALE)) {
+	    javaString adjective = genderAdjective(GEND);
+            Sprintf(plbuf, " %s", adjective.c_str);
+	    releaseJavaString(adjective);
+	}
         else
             *plbuf = '\0'; /* omit redundant gender */
 
@@ -988,6 +991,10 @@ int role, gend, algn;
     }
 }
 
+const char* genderAdjectives[] = {
+	"mALe", "fEMALe", "nEUTEr"
+};
+
 STATIC_DCL void
 setup_gendmenu(win, filtering, role, race, algn)
 winid win;
@@ -1007,14 +1014,14 @@ int role, race, algn;
         if (filtering)
             any.a_int = i + 1;
         else
-            any.a_string = genders[i].adj;
-        this_ch = *genders[i].adj;
+            any.a_string = genderAdjectives[i];
+        this_ch = *genderAdjectives[i];
         /* (see setup_racemenu for explanation of selector letters
            and setup_rolemenu for preselection) */
         add_menu(win, NO_GLYPH, &any,
                  filtering ? this_ch : highc(this_ch),
                  filtering ? highc(this_ch) : 0,
-                 ATR_NONE, genders[i].adj,
+                 ATR_NONE, genderAdjectives[i],
                  (!filtering && !gend_ok) ? MENU_SELECTED : MENU_UNSELECTED);
     }
 }

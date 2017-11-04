@@ -976,10 +976,18 @@ const char *str;
 
     /* Match as much of str as is provided */
     len = strlen(str);
+    boolean matched;
     for (i = 0; i < ROLE_GENDERS; i++) {
+
         /* Does it match the adjective? */
-        if (!strncmpi(str, genders[i].adj, len))
+	javaString adjective = genderAdjective(i);
+	matched = (!strncmpi(str, adjective.c_str, len));
+	releaseJavaString(adjective);
+
+	if (matched) {
             return i;
+	}
+
         /* Or the filecode? */
         if (!strcmpi(str, genders[i].filecode))
             return i;
@@ -1541,13 +1549,17 @@ int buflen, rolenum, racenum, gendnum, alignnum;
 		{
                     Strcat(buf, " ");
 		}
-                Strcat(buf, genders[gendnum].adj);
+		javaString adjective = genderAdjective(gendnum);
+                Strcat(buf, adjective.c_str);
+		releaseJavaString(adjective);
                 donefirst = TRUE;
             }
         } else {
             if (donefirst)
                 Strcat(buf, " ");
-            Strcat(buf, genders[gendnum].adj);
+	    javaString adjective = genderAdjective(gendnum);
+            Strcat(buf, adjective.c_str);
+	    releaseJavaString(adjective);
             donefirst = TRUE;
         }
     } else {
@@ -1846,11 +1858,19 @@ winid where;
                                                           : races[c].noun);
     putstr(where, 0, buf);
     Sprintf(buf, "%12s ", "gender:");
-    Strcat(buf, (which == RS_GENDER) ? choosing : (g == ROLE_NONE)
-                                                      ? not_yet
-                                                      : (g == ROLE_RANDOM)
-                                                            ? rand_choice
-                                                            : genders[g].adj);
+
+    if (which == RS_GENDER) {
+        Strcat(buf, choosing);
+    } else if (g == ROLE_NONE) {
+        Strcat(buf, not_yet);
+    } else if (g == ROLE_RANDOM) {
+        Strcat(buf, rand_choice);
+    } else {
+	javaString adjective = genderAdjective(g);
+        Strcat(buf, adjective.c_str);
+	releaseJavaString(adjective);
+    }
+
     putstr(where, 0, buf);
     Sprintf(buf, "%12s ", "alignment:");
     Strcat(buf, (which == RS_ALGNMNT) ? choosing : (a == ROLE_NONE)
@@ -1876,7 +1896,8 @@ winid where;
     };
     anything any;
     char buf[BUFSZ];
-    const char *what = 0, *constrainer = 0, *forcedvalue = 0;
+    const char *what = 0, *constrainer = 0;
+    javaString forcedValue = NO_JAVA_STRING;
     int f = 0, r, c, g, a, i, allowmask;
 
     r = flags.initrole;
@@ -1893,7 +1914,7 @@ winid where;
                 break;
         if (i == SIZE(roles)) {
             constrainer = "filter";
-            forcedvalue = "role";
+            forcedValue = javaStringFromC("role");
         }
         break;
     case RS_RACE:
@@ -1906,13 +1927,13 @@ winid where;
                 c = 0; /* races[human] */
             if (c >= 0) {
                 constrainer = "role";
-                forcedvalue = races[c].noun;
+                forcedValue = javaStringFromC(races[c].noun);
             } else if (f >= 0
                        && (allowmask & ~filter.mask) == races[f].selfmask) {
                 /* if there is only one race choice available due to user
                    options disallowing others, race menu entry is disabled */
                 constrainer = "filter";
-                forcedvalue = "race";
+                forcedValue = javaStringFromC("race");
             }
         }
         break;
@@ -1928,13 +1949,13 @@ winid where;
                 g = 1; /* genders[female] */
             if (g >= 0) {
                 constrainer = "role";
-                forcedvalue = genders[g].adj;
+                forcedValue = genderAdjective(g);
             } else if (f >= 0
                        && (allowmask & ~filter.mask) == genders[f].allow) {
                 /* if there is only one gender choice available due to user
                    options disallowing other, gender menu entry is disabled */
                 constrainer = "filter";
-                forcedvalue = "gender";
+                forcedValue = javaStringFromC("gender");
             }
         }
         break;
@@ -1969,10 +1990,10 @@ winid where;
             /* if there is only one alignment choice available due to user
                options disallowing others, algn menu entry is disabled */
             constrainer = "filter";
-            forcedvalue = "alignment";
+            forcedValue = javaStringFromC("alignment");
         }
         if (a >= 0)
-            forcedvalue = aligns[a].adj;
+            forcedValue = javaStringFromC(aligns[a].adj);
         break;
     }
 
@@ -1980,7 +2001,7 @@ winid where;
     if (constrainer) {
         any.a_int = 0;
         /* use four spaces of padding to fake a grayed out menu choice */
-        Sprintf(buf, "%4s%s forces %s", "", constrainer, forcedvalue);
+        Sprintf(buf, "%4s%s forces %s", "", constrainer, forcedValue.c_str);
         add_menu(where, NO_GLYPH, &any, ' ', 0, ATR_NONE, buf,
                  MENU_UNSELECTED);
     } else if (what) {
@@ -2003,6 +2024,8 @@ winid where;
     } else {
         impossible("role_menu_extra: bad arg (%d)", which);
     }
+
+    releaseJavaString(forcedValue);
 }
 
 /*
