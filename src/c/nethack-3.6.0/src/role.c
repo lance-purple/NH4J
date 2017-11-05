@@ -27,13 +27,9 @@ const struct Role roles[] = {
     { 0, { "Archeologist", 0 },
       MH_HUMAN | MH_DWARF | MH_GNOME | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL
           | ROLE_NEUTRAL,
-      /* Str Int Wis Dex Con Cha */
-      { 7, 10, 10, 7, 7, 7 },
-      { 20, 20, 20, 10, 20, 10 },
       /* Init   Lower  Higher */
       { 11, 0, 0, 8, 1, 0 }, /* Hit points */
       { 1, 0, 0, 1, 0, 1 },
-      14, /* Energy */
       10,
       5,
       0,
@@ -43,16 +39,11 @@ const struct Role roles[] = {
       SPE_MAGIC_MAPPING,
       -4 },
     { 1, { "Barbarian", 0 },
-      PM_BARBARIAN,
       MH_HUMAN | MH_ORC | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTRAL
           | ROLE_CHAOTIC,
-      /* Str Int Wis Dex Con Cha */
-      { 16, 7, 7, 15, 16, 6 },
-      { 30, 6, 7, 20, 30, 7 },
       /* Init   Lower  Higher */
       { 14, 0, 0, 10, 2, 0 }, /* Hit points */
       { 1, 0, 0, 1, 0, 1 },
-      10, /* Energy */
       10,
       14,
       0,
@@ -64,13 +55,9 @@ const struct Role roles[] = {
     { 2, { "Caveman", "Cavewoman" },
       MH_HUMAN | MH_DWARF | MH_GNOME | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL
           | ROLE_NEUTRAL,
-      /* Str Int Wis Dex Con Cha */
-      { 10, 7, 7, 7, 8, 6 },
-      { 30, 6, 7, 20, 30, 7 },
       /* Init   Lower  Higher */
       { 14, 0, 0, 8, 2, 0 }, /* Hit points */
       { 1, 0, 0, 1, 0, 1 },
-      10, /* Energy */
       0,
       12,
       0,
@@ -81,13 +68,9 @@ const struct Role roles[] = {
       -4 },
     { 3, { "Healer", 0 },
       MH_HUMAN | MH_GNOME | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTRAL,
-      /* Str Int Wis Dex Con Cha */
-      { 7, 7, 13, 7, 11, 16 },
-      { 15, 20, 20, 15, 25, 5 },
       /* Init   Lower  Higher */
       { 11, 0, 0, 8, 1, 0 }, /* Hit points */
       { 1, 4, 0, 1, 0, 2 },
-      20, /* Energy */
       10,
       3,
       -3,
@@ -98,13 +81,9 @@ const struct Role roles[] = {
       -4 },
     { 4, { "Knight", 0 },
       MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL,
-      /* Str Int Wis Dex Con Cha */
-      { 13, 7, 14, 8, 10, 17 },
-      { 30, 15, 15, 10, 20, 10 },
       /* Init   Lower  Higher */
       { 14, 0, 0, 8, 2, 0 }, /* Hit points */
       { 1, 4, 0, 1, 0, 2 },
-      10, /* Energy */
       10,
       8,
       -2,
@@ -116,13 +95,9 @@ const struct Role roles[] = {
     { 5, { "Monk", 0 },
       MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL | ROLE_NEUTRAL
           | ROLE_CHAOTIC,
-      /* Str Int Wis Dex Con Cha */
-      { 10, 7, 8, 8, 7, 7 },
-      { 25, 10, 20, 20, 15, 10 },
       /* Init   Lower  Higher */
       { 12, 0, 0, 8, 1, 0 }, /* Hit points */
       { 2, 2, 0, 2, 0, 2 },
-      10, /* Energy */
       10,
       8,
       -2,
@@ -134,13 +109,9 @@ const struct Role roles[] = {
     { 6, { "Priest", "Priestess" },
       MH_HUMAN | MH_ELF | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL | ROLE_NEUTRAL
           | ROLE_CHAOTIC,
-      /* Str Int Wis Dex Con Cha */
-      { 7, 7, 10, 7, 7, 7 },
-      { 15, 10, 30, 15, 20, 10 },
       /* Init   Lower  Higher */
       { 12, 0, 0, 8, 1, 0 }, /* Hit points */
       { 4, 3, 0, 2, 0, 2 },
-      10, /* Energy */
       0,
       3,
       -2,
@@ -153,13 +124,9 @@ const struct Role roles[] = {
        retains its traditional meaning. */
     { 7, { "Rogue", 0 },
       MH_HUMAN | MH_ORC | ROLE_MALE | ROLE_FEMALE | ROLE_CHAOTIC,
-      /* Str Int Wis Dex Con Cha */
-      { 7, 7, 7, 10, 7, 6 },
-      { 20, 10, 10, 30, 20, 10 },
       /* Init   Lower  Higher */
       { 10, 0, 0, 8, 1, 0 }, /* Hit points */
       { 1, 0, 0, 1, 0, 1 },
-      11, /* Energy */
       10,
       8,
       0,
@@ -171,13 +138,9 @@ const struct Role roles[] = {
     { 8, { "Ranger", 0 },
       MH_HUMAN | MH_ELF | MH_GNOME | MH_ORC | ROLE_MALE | ROLE_FEMALE
           | ROLE_NEUTRAL | ROLE_CHAOTIC,
-      /* Str Int Wis Dex Con Cha */
-      { 13, 13, 13, 9, 13, 7 },
-      { 30, 10, 10, 20, 20, 10 },
       /* Init   Lower  Higher */
       { 13, 0, 0, 6, 1, 0 }, /* Hit points */
       { 1, 0, 0, 1, 0, 1 },
-      12, /* Energy */
       10,
       9,
       2,
@@ -188,13 +151,9 @@ const struct Role roles[] = {
       -4 },
     { 9, { "Samurai", 0 },
       MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL,
-      /* Str Int Wis Dex Con Cha */
-      { 10, 8, 7, 10, 17, 6 },
-      { 30, 10, 8, 30, 14, 8 },
       /* Init   Lower  Higher */
       { 13, 0, 0, 8, 1, 0 }, /* Hit points */
       { 1, 0, 0, 1, 0, 1 },
-      11, /* Energy */
       10,
       10,
       0,
@@ -205,13 +164,9 @@ const struct Role roles[] = {
       -4 },
     { 10, { "Tourist", 0 },
       MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTRAL,
-      /* Str Int Wis Dex Con Cha */
-      { 7, 10, 6, 7, 7, 10 },
-      { 15, 10, 10, 15, 30, 20 },
       /* Init   Lower  Higher */
       { 8, 0, 0, 8, 0, 0 }, /* Hit points */
       { 1, 0, 0, 1, 0, 1 },
-      14, /* Energy */
       0,
       5,
       1,
@@ -222,13 +177,9 @@ const struct Role roles[] = {
       -4 },
     { 11, { "Valkyrie", 0 },
       MH_HUMAN | MH_DWARF | ROLE_FEMALE | ROLE_LAWFUL | ROLE_NEUTRAL,
-      /* Str Int Wis Dex Con Cha */
-      { 10, 7, 7, 7, 10, 7 },
-      { 30, 6, 7, 20, 30, 7 },
       /* Init   Lower  Higher */
       { 14, 0, 0, 8, 2, 0 }, /* Hit points */
       { 1, 0, 0, 1, 0, 1 },
-      10, /* Energy */
       0,
       10,
       -2,
@@ -240,13 +191,9 @@ const struct Role roles[] = {
     { 12, { "Wizard", 0 },
       MH_HUMAN | MH_ELF | MH_GNOME | MH_ORC | ROLE_MALE | ROLE_FEMALE
           | ROLE_NEUTRAL | ROLE_CHAOTIC,
-      /* Str Int Wis Dex Con Cha */
-      { 7, 10, 7, 7, 7, 7 },
-      { 10, 30, 10, 20, 20, 10 },
       /* Init   Lower  Higher */
       { 10, 0, 0, 8, 1, 0 }, /* Hit points */
       { 4, 3, 0, 2, 0, 3 },
-      12, /* Energy */
       0,
       1,
       0,
@@ -265,13 +212,9 @@ const struct Role roles[] = {
 struct Role urole = {
     -1, { "Undefined", 0 },
     0,
-    /* Str Int Wis Dex Con Cha */
-    { 7, 7, 7, 7, 7, 7 },
-    { 20, 15, 15, 20, 20, 10 },
     /* Init   Lower  Higher */
     { 10, 0, 0, 8, 1, 0 }, /* Hit points */
     { 2, 0, 0, 2, 0, 3 },
-    14, /* Energy */
      0,
     10,
      0,

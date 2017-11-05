@@ -52,7 +52,7 @@ newpw()
             en += rnd(urace.enadv.inrnd);
     } else {
         enrnd = (int) ACURR(A_WIS) / 2;
-        if (currentExperienceLevel() < urole.xlev) {
+        if (currentExperienceLevel() < cutoffLevelForYourRole()) {
             enrnd += urole.enadv.lornd + urace.enadv.lornd;
             enfix = urole.enadv.lofix + urace.enadv.lofix;
         } else {

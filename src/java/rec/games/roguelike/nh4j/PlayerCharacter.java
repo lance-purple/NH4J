@@ -1683,4 +1683,9 @@ public class PlayerCharacter {
 	{
 		return AdventurerRole.attributeDistribution(currentRoleID, whichAttr);
 	}
+	
+	public static int cutoffLevel()
+	{
+		return AdventurerRole.cutoffLevel(currentRoleID);
+	}
 }

@@ -947,7 +947,7 @@ newhp()
         }
         /* no Con adjustment for initial hit points */
     } else {
-        if (currentExperienceLevel() < urole.xlev) {
+        if (currentExperienceLevel() < cutoffLevelForYourRole()) {
             hp = urole.hpadv.lofix + urace.hpadv.lofix;
             if (urole.hpadv.lornd > 0)
                 hp += rnd(urole.hpadv.lornd);

@@ -3152,4 +3152,8 @@ extern int adventurerGenders() {
   return javaGetInt(GENDER_CLASS, "adventurerGenders");
 }
 
+extern int cutoffLevelForYourRole() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "cutoffLevel");
+}
+
 /*hacklib.c*/
