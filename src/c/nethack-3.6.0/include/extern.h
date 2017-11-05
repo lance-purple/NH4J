@@ -1609,6 +1609,7 @@ E javaString FDECL(objectivePronoun, (int));
 E javaString FDECL(possessivePronoun, (int));
 E javaString FDECL(reflexivePronoun, (int));
 E javaString FDECL(genderAbbreviation, (int));
+E int FDECL(genderMask, (int));
 
 /* ### invent.c ### */
 

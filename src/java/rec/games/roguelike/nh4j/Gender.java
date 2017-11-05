@@ -4,9 +4,9 @@ import java.util.NoSuchElementException;
 
 public enum Gender {
 	
-	MALE(0,   "male",   "he",  "him", "his", "himself", "Mal"),
-	FEMALE(1, "female", "she", "her", "her", "herself", "Fem"),
-	NEUTER(2, "neuter", "it",  "it",  "its", "itself",  "Ntr");
+	MALE(0,   "male",   "he",  "him", "his", "himself", "Mal", 0x1000),
+	FEMALE(1, "female", "she", "her", "her", "herself", "Fem", 0x2000),
+	NEUTER(2, "neuter", "it",  "it",  "its", "itself",  "Ntr", 0x4000);
 	
 	private final int id;
 	private final String adjective;
@@ -15,8 +15,9 @@ public enum Gender {
 	private final String possessivePronoun;
 	private final String reflexivePronoun;
 	private final String abbreviation;
+	private final int mask;
 	
-	Gender(int id, String adjective, String subjectivePronoun, String objectivePronoun, String possesivePronoun, String reflexivePronoun, String abbreviation)
+	Gender(int id, String adjective, String subjectivePronoun, String objectivePronoun, String possesivePronoun, String reflexivePronoun, String abbreviation, int mask)
 	{
 		this.id = id;
 		this.adjective = adjective;
@@ -25,6 +26,7 @@ public enum Gender {
 		this.possessivePronoun = possesivePronoun;
 		this.reflexivePronoun = reflexivePronoun;
 		this.abbreviation = abbreviation;
+		this.mask = mask;
 	}
 	
 	public int id()
@@ -61,7 +63,12 @@ public enum Gender {
 	{
 		return this.abbreviation;
 	}
-	
+
+	public int mask()
+	{
+		return this.mask;
+	}
+
 	public static int adventurerGenders()
 	{
 		return 2; // don't support NEUTER;
@@ -107,6 +114,11 @@ public enum Gender {
 	public static String abbreviation(int genderID)
 	{
 		return Gender.withID(genderID).abbreviation();
+	}
+
+	public static int mask(int genderID)
+	{
+		return Gender.withID(genderID).mask();
 	}
 
 }

@@ -3144,6 +3144,10 @@ extern javaString reflexivePronoun(int genderID) {
   return result;
 }
 
+extern int genderMask(int genderID) {
+  return javaGetIntFromInt(GENDER_CLASS, "mask", genderID);
+}
+
 extern int adventurerGenders() {
   return javaGetInt(GENDER_CLASS, "adventurerGenders");
 }
