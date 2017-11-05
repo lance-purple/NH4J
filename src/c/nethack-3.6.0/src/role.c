@@ -751,9 +751,9 @@ struct Race urace = {
 
 /* Table of all genders */
 const struct Gender genders[] = {
-    { /*"male", "he",*/ "him", "his", "Mal", ROLE_MALE },
-    { /*"female", "she",*/ "her", "her", "Fem", ROLE_FEMALE },
-    { /*"neuter", "it",*/ "it", "its", "Ntr", ROLE_NEUTER }
+    { /*"male", "he", "him", "his", "Mal",*/ ROLE_MALE },
+    { /*"female", "she", "her", "her", "Fem",*/ ROLE_FEMALE },
+    { /*"neuter", "it", "it", "its", "Ntr",*/ ROLE_NEUTER }
 };
 
 /* Table of all alignments */
@@ -989,8 +989,13 @@ const char *str;
 	}
 
         /* Or the filecode? */
-        if (!strcmpi(str, genders[i].filecode))
+	javaString filecode = genderAbbreviation(i);
+        matched = (!strcmpi(str, filecode.c_str));
+	releaseJavaString(filecode);
+
+	if (matched) {
             return i;
+	}
     }
     if ((len == 1 && (*str == '*' || *str == '@'))
         || !strncmpi(str, randomstr, len))

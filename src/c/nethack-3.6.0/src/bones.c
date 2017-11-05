@@ -475,11 +475,13 @@ make_bones:
        gender and alignment reflect final values rather than what the
        character started out as, same as topten and logfile entries */
 
-    javaString filecode = yourRoleFileCode();
-    Sprintf(newbones->who, "%s-%.3s-%.3s-%.3s-%.3s", plname, filecode.c_str,
-            urace.filecode, genders[flags.female].filecode,
+    javaString rolecode   = yourRoleFileCode();
+    javaString gendercode = genderAbbreviation(flags.female);
+    Sprintf(newbones->who, "%s-%.3s-%.3s-%.3s-%.3s", plname, rolecode.c_str,
+            urace.filecode, gendercode.c_str,
             aligns[1 - currentAlignmentType()].filecode);
-    releaseJavaString(filecode);
+    releaseJavaString(rolecode);
+    releaseJavaString(gendercode);
 
     formatkiller(newbones->how, sizeof newbones->how, how);
     Strcpy(newbones->when, yyyymmddhhmmss(when));
