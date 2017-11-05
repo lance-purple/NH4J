@@ -749,6 +749,11 @@ struct Race urace = {
     { 1, 0, 2, 0, 2, 0 }  /* Energy */
 };
 
+
+struct Gender {
+    short allow;          /* equivalent ROLE_ mask */
+};
+
 /* Table of all genders */
 const struct Gender genders[] = {
     { /*"male", "he", "him", "his", "Mal",*/ ROLE_MALE },
@@ -931,7 +936,7 @@ validgend(rolenum, racenum, gendnum)
 int rolenum, racenum, gendnum;
 {
     /* Assumes validrole and validrace */
-    return (boolean) (gendnum >= 0 && gendnum < ROLE_GENDERS
+    return (boolean) (gendnum >= 0 && gendnum < adventurerGenders()
                       && (roles[rolenum].allow & races[racenum].allow
                           & genders[gendnum].allow & ROLE_GENDMASK));
 }
@@ -943,7 +948,7 @@ int rolenum, racenum;
     int i, n = 0;
 
     /* Count the number of valid genders */
-    for (i = 0; i < ROLE_GENDERS; i++)
+    for (i = 0; i < adventurerGenders(); i++)
         if (roles[rolenum].allow & races[racenum].allow & genders[i].allow
             & ROLE_GENDMASK)
             n++;
@@ -951,7 +956,7 @@ int rolenum, racenum;
     /* Pick a random gender */
     if (n)
         n = rn2(n);
-    for (i = 0; i < ROLE_GENDERS; i++)
+    for (i = 0; i < adventurerGenders(); i++)
         if (roles[rolenum].allow & races[racenum].allow & genders[i].allow
             & ROLE_GENDMASK) {
             if (n)
@@ -961,7 +966,7 @@ int rolenum, racenum;
         }
 
     /* This role/race has no permitted genders? */
-    return rn2(ROLE_GENDERS);
+    return rn2(adventurerGenders());
 }
 
 int
@@ -977,7 +982,7 @@ const char *str;
     /* Match as much of str as is provided */
     len = strlen(str);
     boolean matched;
-    for (i = 0; i < ROLE_GENDERS; i++) {
+    for (i = 0; i < adventurerGenders(); i++) {
 
         /* Does it match the adjective? */
 	javaString adjective = genderAdjective(i);
@@ -1086,7 +1091,7 @@ int rolenum, racenum, gendnum, alignnum;
         if (racenum >= 0 && racenum < SIZE(races) - 1
             && !(allow & races[racenum].allow & ROLE_RACEMASK))
             return FALSE;
-        if (gendnum >= 0 && gendnum < ROLE_GENDERS
+        if (gendnum >= 0 && gendnum < adventurerGenders()
             && !(allow & genders[gendnum].allow & ROLE_GENDMASK))
             return FALSE;
         if (alignnum >= 0 && alignnum < ROLE_ALIGNS
@@ -1102,7 +1107,7 @@ int rolenum, racenum, gendnum, alignnum;
             if (racenum >= 0 && racenum < SIZE(races) - 1
                 && !(allow & races[racenum].allow & ROLE_RACEMASK))
                 continue;
-            if (gendnum >= 0 && gendnum < ROLE_GENDERS
+            if (gendnum >= 0 && gendnum < adventurerGenders()
                 && !(allow & genders[gendnum].allow & ROLE_GENDMASK))
                 continue;
             if (alignnum >= 0 && alignnum < ROLE_ALIGNS
@@ -1154,7 +1159,7 @@ int rolenum, racenum, gendnum, alignnum;
         if (rolenum >= 0 && rolenum < SIZE(roles) - 1
             && !(allow & roles[rolenum].allow & ROLE_RACEMASK))
             return FALSE;
-        if (gendnum >= 0 && gendnum < ROLE_GENDERS
+        if (gendnum >= 0 && gendnum < adventurerGenders()
             && !(allow & genders[gendnum].allow & ROLE_GENDMASK))
             return FALSE;
         if (alignnum >= 0 && alignnum < ROLE_ALIGNS
@@ -1170,7 +1175,7 @@ int rolenum, racenum, gendnum, alignnum;
             if (rolenum >= 0 && rolenum < SIZE(roles) - 1
                 && !(allow & roles[rolenum].allow & ROLE_RACEMASK))
                 continue;
-            if (gendnum >= 0 && gendnum < ROLE_GENDERS
+            if (gendnum >= 0 && gendnum < adventurerGenders()
                 && !(allow & genders[gendnum].allow & ROLE_GENDMASK))
                 continue;
             if (alignnum >= 0 && alignnum < ROLE_ALIGNS
@@ -1220,7 +1225,7 @@ int alignnum UNUSED;
     int i;
     short allow;
 
-    if (gendnum >= 0 && gendnum < ROLE_GENDERS) {
+    if (gendnum >= 0 && gendnum < adventurerGenders()) {
         if (filter.mask & genders[gendnum].allow)
             return FALSE;
         allow = genders[gendnum].allow;
@@ -1233,7 +1238,7 @@ int alignnum UNUSED;
         return TRUE;
     } else {
         /* random; check whether any selection is possible */
-        for (i = 0; i < ROLE_GENDERS; i++) {
+        for (i = 0; i < adventurerGenders(); i++) {
             if (filter.mask & genders[i].allow)
                 continue;
             allow = genders[i].allow;
@@ -1260,14 +1265,14 @@ int rolenum, racenum, alignnum, pickhow;
     int i;
     int gends_ok = 0;
 
-    for (i = 0; i < ROLE_GENDERS; i++) {
+    for (i = 0; i < adventurerGenders(); i++) {
         if (ok_gend(rolenum, racenum, i, alignnum))
             gends_ok++;
     }
     if (gends_ok == 0 || (gends_ok > 1 && pickhow == PICK_RIGID))
         return ROLE_NONE;
     gends_ok = rn2(gends_ok);
-    for (i = 0; i < ROLE_GENDERS; i++) {
+    for (i = 0; i < adventurerGenders(); i++) {
         if (ok_gend(rolenum, racenum, i, alignnum)) {
             if (gends_ok == 0)
                 return i;

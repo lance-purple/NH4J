@@ -3144,4 +3144,8 @@ extern javaString reflexivePronoun(int genderID) {
   return result;
 }
 
+extern int adventurerGenders() {
+  return javaGetInt(GENDER_CLASS, "adventurerGenders");
+}
+
 /*hacklib.c*/

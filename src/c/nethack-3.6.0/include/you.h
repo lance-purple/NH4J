@@ -172,15 +172,6 @@ extern struct Race urace;
 #define Race_if(X) (urace.malenum == (X))
 #define Race_switch (urace.malenum)
 
-/*** Unified structure specifying gender information ***/
-struct Gender {
-    short allow;          /* equivalent ROLE_ mask */
-};
-#define ROLE_GENDERS 2 /* number of permitted player genders */
-/* increment to 3 if you allow neuter roles */
-
-extern const struct Gender genders[]; /* table of available genders */
-
 /*** Unified structure specifying alignment information ***/
 struct Align {
     const char *noun;     /* law/balance/chaos */

@@ -567,13 +567,13 @@ makepicks:
                     /* Count the number of valid genders */
                     n = 0; /* number valid */
                     k = 0; /* valid gender */
-                    for (i = 0; i < ROLE_GENDERS; i++)
+                    for (i = 0; i < adventurerGenders(); i++)
                         if (ok_gend(ROLE, RACE, i, ALGN)) {
                             n++;
                             k = i;
                         }
                     if (n == 0) {
-                        for (i = 0; i < ROLE_GENDERS; i++)
+                        for (i = 0; i < adventurerGenders(); i++)
                             if (validgend(ROLE, RACE, i)) {
                                 n++;
                                 k = i;
@@ -1007,7 +1007,7 @@ int role, race, algn;
     char this_ch;
 
     any = zeroany;
-    for (i = 0; i < ROLE_GENDERS; i++) {
+    for (i = 0; i < adventurerGenders(); i++) {
         gend_ok = ok_gend(role, race, i, algn);
         if (filtering && !gend_ok)
             continue;

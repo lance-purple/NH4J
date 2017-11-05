@@ -231,7 +231,7 @@ char who,  /* 'd' => deity, 'l' => leader, 'n' => nemesis, 'o' => artifact */
      * Invalid subject (not d,l,n,o) yields neuter, singular result.
      *
      * For %o, treat all artifacts as neuter; some have plural names,
-     * which genders[] doesn't handle; cvt_buf[] already contains name.
+     * which we don't handle; cvt_buf[] already contains name.
      */
     if (who == 'o'
         && (strstri(cvt_buf, "Eyes ")

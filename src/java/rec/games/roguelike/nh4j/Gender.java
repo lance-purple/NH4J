@@ -62,6 +62,11 @@ public enum Gender {
 		return this.abbreviation;
 	}
 	
+	public static int adventurerGenders()
+	{
+		return 2; // don't support NEUTER;
+	}
+	
 	public static Gender withID(int id)
 	{
 		for (Gender gender : values())

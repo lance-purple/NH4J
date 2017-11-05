@@ -1601,6 +1601,8 @@ E javaString FDECL(yourDeityName, ());
 E javaString FDECL(nameOfAlignedDeityFromYourPantheon, (int));
 E javaString FDECL(titleOfAlignedDeityFromYourPantheon, (int));
 
+E int FDECL(adventurerGenders, ());
+
 E javaString FDECL(genderAdjective, (int));
 E javaString FDECL(subjectivePronoun, (int));
 E javaString FDECL(objectivePronoun, (int));
