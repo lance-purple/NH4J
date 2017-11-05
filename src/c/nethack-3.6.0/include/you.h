@@ -174,9 +174,6 @@ extern struct Race urace;
 
 /*** Unified structure specifying gender information ***/
 struct Gender {
-    const char *him;      /* him/her/it */
-    const char *his;      /* his/her/its */
-    const char *filecode; /* file code */
     short allow;          /* equivalent ROLE_ mask */
 };
 #define ROLE_GENDERS 2 /* number of permitted player genders */
