@@ -55,25 +55,6 @@ struct Role {
     int id;
     /*** Strings that name various things ***/
     struct RoleName XXname;    /* the role's name (from u_init.c) */
-    struct RoleName XXrank[9]; /* names for experience levels (from botl.c) */
-    const char *XXlgod, *XXngod, *XXcgod; /* god names (from pray.c) */
-    const char *XXfilecode;           /* abbreviation for use in file names */
-    const char *XXhomebase; /* quest leader's location (from questpgr.c) */
-    const char *XXintermed; /* quest intermediate goal (from questpgr.c) */
-
-    /*** Indices of important monsters and objects ***/
-    short XXmalenum; /* index (PM_) as a male (botl.c) */
-    short XXfemalenum; /* ...or as a female (NON_PM == same) */
-    short XXpetnum;    /* PM_ of preferred pet (NON_PM == random) */
-    short XXldrnum;    /* PM_ of quest leader (questpgr.c) */
-    short XXguardnum;  /* PM_ of quest guardians (questpgr.c) */
-    short XXneminum;   /* PM_ of quest nemesis (questpgr.c) */
-    short XXenemy1num; /* specific quest enemies (NON_PM == random) */
-    short XXenemy2num;
-    char XXenemy1sym; /* quest enemies by class (S_) */
-    char XXenemy2sym;
-
-    short XXquestarti; /* index (ART_) of quest artifact (questpgr.c) */
 
     /*** Bitmasks ***/
     short allow;             /* bit mask of allowed variations */
