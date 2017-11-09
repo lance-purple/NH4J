@@ -37,11 +37,11 @@ public abstract class Advancement {
 	{
 		if (0 == level)
 		{
-			return initialConstant + Randomizer.nextInt(initialVariable);
+			return initialConstant + Randomizer.rndIfNonzero(initialVariable);
 		} else if (level < cutoffLevel) {
-			return lowLevelConstant + Randomizer.nextInt(lowLevelVariable);
+			return lowLevelConstant + Randomizer.rndIfNonzero(lowLevelVariable);
 		} else {
-			return highLevelConstant + Randomizer.nextInt(highLevelVariable);
+			return highLevelConstant + Randomizer.rndIfNonzero(highLevelVariable);
 		}
 	}
 

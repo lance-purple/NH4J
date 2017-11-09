@@ -73,7 +73,7 @@ public enum Deity {
 	}
 	
 	public static Deity random() {
-		int index = Randomizer.nextInt(values().length);
+		int index = Randomizer.rn2(values().length);
 		return values()[index];
 	}
 

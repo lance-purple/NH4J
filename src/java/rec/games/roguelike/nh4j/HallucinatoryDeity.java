@@ -31,13 +31,13 @@ public enum HallucinatoryDeity {
 
 	
 	public static HallucinatoryDeity random() {
-		int index = Randomizer.nextInt(values().length);
+		int index = Randomizer.rn2(values().length);
 		return values()[index];
 	}
 	
 	public static String randomName()
 	{
-	    switch (Randomizer.nextInt(9))
+	    switch (Randomizer.rn2(9))
 	    {
 	    case 0:
 	    case 1:
