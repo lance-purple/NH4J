@@ -1688,4 +1688,9 @@ public class PlayerCharacter {
 	{
 		return AdventurerRole.cutoffLevel(currentRoleID);
 	}
+	
+	public static int hitPointAdvancement()
+	{
+		return AdventurerRole.hitPointAdvancement(currentRoleID, currentExperienceLevel);
+	}
 }

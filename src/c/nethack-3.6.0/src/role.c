@@ -28,7 +28,6 @@ const struct Role roles[] = {
       MH_HUMAN | MH_DWARF | MH_GNOME | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL
           | ROLE_NEUTRAL,
       /* Init   Lower  Higher */
-      { 11, 0, 0, 8, 1, 0 }, /* Hit points */
       { 1, 0, 0, 1, 0, 1 },
       10,
       5,
@@ -42,7 +41,6 @@ const struct Role roles[] = {
       MH_HUMAN | MH_ORC | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTRAL
           | ROLE_CHAOTIC,
       /* Init   Lower  Higher */
-      { 14, 0, 0, 10, 2, 0 }, /* Hit points */
       { 1, 0, 0, 1, 0, 1 },
       10,
       14,
@@ -56,7 +54,6 @@ const struct Role roles[] = {
       MH_HUMAN | MH_DWARF | MH_GNOME | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL
           | ROLE_NEUTRAL,
       /* Init   Lower  Higher */
-      { 14, 0, 0, 8, 2, 0 }, /* Hit points */
       { 1, 0, 0, 1, 0, 1 },
       0,
       12,
@@ -69,7 +66,6 @@ const struct Role roles[] = {
     { 3, { "Healer", 0 },
       MH_HUMAN | MH_GNOME | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTRAL,
       /* Init   Lower  Higher */
-      { 11, 0, 0, 8, 1, 0 }, /* Hit points */
       { 1, 4, 0, 1, 0, 2 },
       10,
       3,
@@ -82,7 +78,6 @@ const struct Role roles[] = {
     { 4, { "Knight", 0 },
       MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL,
       /* Init   Lower  Higher */
-      { 14, 0, 0, 8, 2, 0 }, /* Hit points */
       { 1, 4, 0, 1, 0, 2 },
       10,
       8,
@@ -96,7 +91,6 @@ const struct Role roles[] = {
       MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL | ROLE_NEUTRAL
           | ROLE_CHAOTIC,
       /* Init   Lower  Higher */
-      { 12, 0, 0, 8, 1, 0 }, /* Hit points */
       { 2, 2, 0, 2, 0, 2 },
       10,
       8,
@@ -110,7 +104,6 @@ const struct Role roles[] = {
       MH_HUMAN | MH_ELF | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL | ROLE_NEUTRAL
           | ROLE_CHAOTIC,
       /* Init   Lower  Higher */
-      { 12, 0, 0, 8, 1, 0 }, /* Hit points */
       { 4, 3, 0, 2, 0, 2 },
       0,
       3,
@@ -125,7 +118,6 @@ const struct Role roles[] = {
     { 7, { "Rogue", 0 },
       MH_HUMAN | MH_ORC | ROLE_MALE | ROLE_FEMALE | ROLE_CHAOTIC,
       /* Init   Lower  Higher */
-      { 10, 0, 0, 8, 1, 0 }, /* Hit points */
       { 1, 0, 0, 1, 0, 1 },
       10,
       8,
@@ -139,7 +131,6 @@ const struct Role roles[] = {
       MH_HUMAN | MH_ELF | MH_GNOME | MH_ORC | ROLE_MALE | ROLE_FEMALE
           | ROLE_NEUTRAL | ROLE_CHAOTIC,
       /* Init   Lower  Higher */
-      { 13, 0, 0, 6, 1, 0 }, /* Hit points */
       { 1, 0, 0, 1, 0, 1 },
       10,
       9,
@@ -152,7 +143,6 @@ const struct Role roles[] = {
     { 9, { "Samurai", 0 },
       MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL,
       /* Init   Lower  Higher */
-      { 13, 0, 0, 8, 1, 0 }, /* Hit points */
       { 1, 0, 0, 1, 0, 1 },
       10,
       10,
@@ -165,7 +155,6 @@ const struct Role roles[] = {
     { 10, { "Tourist", 0 },
       MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTRAL,
       /* Init   Lower  Higher */
-      { 8, 0, 0, 8, 0, 0 }, /* Hit points */
       { 1, 0, 0, 1, 0, 1 },
       0,
       5,
@@ -178,7 +167,6 @@ const struct Role roles[] = {
     { 11, { "Valkyrie", 0 },
       MH_HUMAN | MH_DWARF | ROLE_FEMALE | ROLE_LAWFUL | ROLE_NEUTRAL,
       /* Init   Lower  Higher */
-      { 14, 0, 0, 8, 2, 0 }, /* Hit points */
       { 1, 0, 0, 1, 0, 1 },
       0,
       10,
@@ -192,7 +180,6 @@ const struct Role roles[] = {
       MH_HUMAN | MH_ELF | MH_GNOME | MH_ORC | ROLE_MALE | ROLE_FEMALE
           | ROLE_NEUTRAL | ROLE_CHAOTIC,
       /* Init   Lower  Higher */
-      { 10, 0, 0, 8, 1, 0 }, /* Hit points */
       { 4, 3, 0, 2, 0, 3 },
       0,
       1,
@@ -213,7 +200,6 @@ struct Role urole = {
     -1, { "Undefined", 0 },
     0,
     /* Init   Lower  Higher */
-    { 10, 0, 0, 8, 1, 0 }, /* Hit points */
     { 2, 0, 0, 2, 0, 3 },
      0,
     10,

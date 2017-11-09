@@ -931,15 +931,17 @@ int oldlevel, newlevel;
 int
 newhp()
 {
-    int hp, conplus;
+    int hp = 0;
+    int conplus;
+
+    hp += hitPointAdvancementForYourRole();
 
     if (currentExperienceLevel() == 0) {
         /* Initialize hit points */
-        hp = urole.hpadv.infix + urace.hpadv.infix;
-        if (urole.hpadv.inrnd > 0)
-            hp += rnd(urole.hpadv.inrnd);
+        hp += urace.hpadv.infix;
         if (urace.hpadv.inrnd > 0)
             hp += rnd(urace.hpadv.inrnd);
+
         if (moves <= 1L) { /* initial hero; skip for polyself to new man */
             /* Initialize alignment stuff */
             setCurrentAlignmentType(aligns[flags.initalign].value);
@@ -948,15 +950,11 @@ newhp()
         /* no Con adjustment for initial hit points */
     } else {
         if (currentExperienceLevel() < cutoffLevelForYourRole()) {
-            hp = urole.hpadv.lofix + urace.hpadv.lofix;
-            if (urole.hpadv.lornd > 0)
-                hp += rnd(urole.hpadv.lornd);
+            hp += urace.hpadv.lofix;
             if (urace.hpadv.lornd > 0)
                 hp += rnd(urace.hpadv.lornd);
         } else {
-            hp = urole.hpadv.hifix + urace.hpadv.hifix;
-            if (urole.hpadv.hirnd > 0)
-                hp += rnd(urole.hpadv.hirnd);
+	    hp += urace.hpadv.hifix;
             if (urace.hpadv.hirnd > 0)
                 hp += rnd(urace.hpadv.hirnd);
         }

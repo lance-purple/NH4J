@@ -69,7 +69,6 @@ struct Role {
 #define ROLE_CHAOTIC AM_CHAOTIC
 
     /*** Attributes (from attrib.c and exper.c) ***/
-    struct RoleAdvance hpadv; /* hit point advancement */
     struct RoleAdvance enadv; /* energy advancement */
     xchar initrecord;         /* initial alignment record */
 

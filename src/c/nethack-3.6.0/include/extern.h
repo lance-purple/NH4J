@@ -2888,6 +2888,7 @@ E int FDECL(attributeBaseForYourRole, (int));
 E int FDECL(attributeDistributionForYourRole, (int));
 
 E int FDECL(cutoffLevelForYourRole, ());
+E int FDECL(hitPointAdvancementForYourRole, ());
 
 E boolean FDECL(validrole, (int));
 E boolean FDECL(validrace, (int, int));

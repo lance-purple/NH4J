@@ -34,6 +34,7 @@ public class AdventurerRole {
 	private ATTRS attributeDistributions;
 	
 	private int cutoffLevel;
+	private HitPointAdvancement hitPointAdvancement;
 	
 	private PM preferredPet = PM.UNKNOWN;
 
@@ -173,6 +174,12 @@ public class AdventurerRole {
 	private AdventurerRole withCutoffLevel(int level)
 	{
 		this.cutoffLevel = level;
+		return this;
+	}
+	
+	private AdventurerRole with(HitPointAdvancement advancement)
+	{
+		this.hitPointAdvancement = advancement;
 		return this;
 	}
 	
@@ -505,6 +512,14 @@ public class AdventurerRole {
 		return 0;		
 	}
 
+	public static int hitPointAdvancement(int roleID, int experienceLevel) {
+		AdventurerRole role = getRole(roleID);
+		if (null != role) {
+			return role.hitPointAdvancement.forLevel(experienceLevel, role.cutoffLevel);
+		}
+		return 0;
+	}
+	
 	public static boolean hasQuestArtifact(int roleID) {
 		return (0 != idOfQuestArtifact(roleID));
 	}
@@ -535,6 +550,7 @@ public class AdventurerRole {
 			.withBase(new ATTRS().STR(7).INT(10).WIS(10).DEX(7).CON(7).CHA(7))
 			.withDistribution(new ATTRS().STR(20).INT(20).WIS(20).DEX(10).CON(20).CHA(10))
 			.withCutoffLevel(14)
+			.with(HitPointAdvancement.of().init(11, 0).low(0, 8).high(1, 0))
 			.add();
 
 		AdventurerRole.withID(BARBARIAN_ID)
@@ -561,6 +577,7 @@ public class AdventurerRole {
 			.withBase(new ATTRS().STR(16).INT(7).WIS(7).DEX(15).CON(16).CHA(6))
 			.withDistribution(new ATTRS().STR(30).INT(6).WIS(7).DEX(20).CON(30).CHA(7))
 			.withCutoffLevel(10)
+			.with(HitPointAdvancement.of().init(14, 0).low(0, 10).high(2, 0))
 			.add();
 
 		AdventurerRole.withID(CAVEMAN_ID)
@@ -588,6 +605,7 @@ public class AdventurerRole {
 			.withBase(new ATTRS().STR(10).INT(7).WIS(7).DEX(7).CON(8).CHA(6))
 			.withDistribution(new ATTRS().STR(30).INT(6).WIS(7).DEX(20).CON(30).CHA(7))
 			.withCutoffLevel(10)
+			.with(HitPointAdvancement.of().init(14, 0).low(0, 8).high(2, 0))
 			.add();
 
 		AdventurerRole.withID(HEALER_ID)
@@ -614,6 +632,7 @@ public class AdventurerRole {
 			.withBase(new ATTRS().STR(7).INT(7).WIS(13).DEX(7).CON(11).CHA(16))
 			.withDistribution(new ATTRS().STR(15).INT(20).WIS(20).DEX(15).CON(25).CHA(5))
 			.withCutoffLevel(20)
+			.with(HitPointAdvancement.of().init(11, 0).low(0, 8).high(1, 0))
 			.add();
 
 		AdventurerRole.withID(KNIGHT_ID)
@@ -641,6 +660,7 @@ public class AdventurerRole {
 			.withBase(new ATTRS().STR(13).INT(7).WIS(14).DEX(8).CON(10).CHA(17))
 			.withDistribution(new ATTRS().STR(30).INT(15).WIS(15).DEX(10).CON(20).CHA(10))
 			.withCutoffLevel(10)
+			.with(HitPointAdvancement.of().init(14, 0).low(0, 8).high(2, 0))
 			.add();
 
 		AdventurerRole.withID(MONK_ID)
@@ -667,6 +687,7 @@ public class AdventurerRole {
 			.withBase(new ATTRS().STR(10).INT(7).WIS(8).DEX(8).CON(7).CHA(7))
 			.withDistribution(new ATTRS().STR(25).INT(10).WIS(20).DEX(20).CON(15).CHA(10))
 			.withCutoffLevel(10)
+			.with(HitPointAdvancement.of().init(12, 0).low(0, 8).high(1, 0))
 			.add();
 
 		AdventurerRole.withID(PRIEST_ID)
@@ -692,6 +713,7 @@ public class AdventurerRole {
 			.withBase(new ATTRS().STR(7).INT(7).WIS(10).DEX(7).CON(7).CHA(7))
 			.withDistribution(new ATTRS().STR(15).INT(10).WIS(30).DEX(15).CON(20).CHA(10))
 			.withCutoffLevel(10)
+			.with(HitPointAdvancement.of().init(12, 0).low(0, 8).high(1, 0))
 			.add();
 
 		AdventurerRole.withID(ROGUE_ID)
@@ -718,6 +740,7 @@ public class AdventurerRole {
 			.withBase(new ATTRS().STR(7).INT(7).WIS(7).DEX(10).CON(7).CHA(6))
 			.withDistribution(new ATTRS().STR(20).INT(10).WIS(10).DEX(30).CON(20).CHA(10))
 			.withCutoffLevel(11)
+			.with(HitPointAdvancement.of().init(10, 0).low(0, 8).high(1, 0))
 			.add();
 
 		AdventurerRole.withID(RANGER_ID)
@@ -745,6 +768,7 @@ public class AdventurerRole {
 			.withBase(new ATTRS().STR(13).INT(13).WIS(13).DEX(9).CON(13).CHA(7))
 			.withDistribution(new ATTRS().STR(30).INT(10).WIS(10).DEX(20).CON(20).CHA(10))
 			.withCutoffLevel(12)
+			.with(HitPointAdvancement.of().init(13, 0).low(0, 6).high(1, 0))
 			.add();
 
 		AdventurerRole.withID(SAMURAI_ID)
@@ -772,6 +796,7 @@ public class AdventurerRole {
 			.withBase(new ATTRS().STR(10).INT(8).WIS(7).DEX(10).CON(17).CHA(6))
 			.withDistribution(new ATTRS().STR(30).INT(10).WIS(8).DEX(30).CON(14).CHA(8))
 			.withCutoffLevel(11)
+			.with(HitPointAdvancement.of().init(13, 0).low(0, 8).high(1, 0))
 			.add();
 
 		AdventurerRole.withID(TOURIST_ID)
@@ -798,6 +823,7 @@ public class AdventurerRole {
 			.withBase(new ATTRS().STR(7).INT(10).WIS(6).DEX(7).CON(7).CHA(10))
 			.withDistribution(new ATTRS().STR(15).INT(10).WIS(10).DEX(15).CON(30).CHA(20))
 			.withCutoffLevel(14)
+			.with(HitPointAdvancement.of().init(8, 0).low(0, 8).high(0, 0))
 			.add();
 
 		AdventurerRole.withID(VALKYRIE_ID)
@@ -824,6 +850,7 @@ public class AdventurerRole {
 			.withBase(new ATTRS().STR(10).INT(7).WIS(7).DEX(7).CON(10).CHA(7))
 			.withDistribution(new ATTRS().STR(30).INT(6).WIS(7).DEX(20).CON(30).CHA(7))
 			.withCutoffLevel(10)
+			.with(HitPointAdvancement.of().init(14, 0).low(0, 8).high(2, 0))
 			.add();
 
 		AdventurerRole.withID(WIZARD_ID)
@@ -851,6 +878,7 @@ public class AdventurerRole {
 			.withBase(new ATTRS().STR(7).INT(10).WIS(7).DEX(7).CON(7).CHA(7))
 			.withDistribution(new ATTRS().STR(10).INT(30).WIS(10).DEX(20).CON(20).CHA(10))
 			.withCutoffLevel(12)
+			.with(HitPointAdvancement.of().init(10, 8).low(0, 8).high(1, 0))
 			.add();
 
 	}

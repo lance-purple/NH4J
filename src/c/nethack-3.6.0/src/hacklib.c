@@ -3156,4 +3156,8 @@ extern int cutoffLevelForYourRole() {
   return javaGetInt(PLAYER_CHARACTER_CLASS, "cutoffLevel");
 }
 
+extern int hitPointAdvancementForYourRole() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "hitPointAdvancement");
+}
+
 /*hacklib.c*/
