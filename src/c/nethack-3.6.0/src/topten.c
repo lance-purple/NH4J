@@ -513,11 +513,13 @@ time_t when;
     t0->deaths = deathCount();
     t0->uid = uid;
 
-    javaString filecode = yourRoleFileCode();
-    copynchars(t0->plrole, filecode.c_str, ROLESZ);
-    releaseJavaString(filecode);
+    javaString rolecode = yourRoleFileCode();
+    copynchars(t0->plrole, rolecode.c_str, ROLESZ);
+    releaseJavaString(rolecode);
 
-    copynchars(t0->plrace, urace.filecode, ROLESZ);
+    javaString speciescode = yourSpeciesFileCode();
+    copynchars(t0->plrace, speciescode.c_str, ROLESZ);
+    releaseJavaString(speciescode);
 
     javaString gendercode = genderAbbreviation(flags.female);
     copynchars(t0->plgend, gendercode.c_str, ROLESZ);

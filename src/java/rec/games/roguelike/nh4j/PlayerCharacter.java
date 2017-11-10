@@ -1579,7 +1579,12 @@ public class PlayerCharacter {
 	{
 		return AdventurerSpecies.speciesAdjective(speciesID);
 	}
-	
+
+	public static String speciesFileCode()
+	{
+		return AdventurerSpecies.speciesFileCode(speciesID);
+	}
+
 	public static String roleFileCode()
 	{
 		return AdventurerRole.fileCode(currentRoleID);

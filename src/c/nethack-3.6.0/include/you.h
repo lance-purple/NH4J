@@ -108,8 +108,8 @@ struct Race {
     /*** Strings that name various things ***/
     const char *XXnoun;         /* noun ("human", "elf") */
     const char *XXadj;          /* adjective ("human", "elven") */
-    const char *coll;           /* collective ("humanity", "elvenkind") */
-    const char *filecode;       /* code for filenames */
+    const char *XXcoll;           /* collective ("humanity", "elvenkind") */
+    const char *XXfilecode;       /* code for filenames */
     struct RoleName individual; /* individual as a noun ("man", "elf") */
 
     /*** Indices of important monsters and objects ***/

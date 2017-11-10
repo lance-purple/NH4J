@@ -516,8 +516,13 @@ const char *str;
 	}
 
         /* Does it match the filecode? */
-        if (!strcmpi(str, races[i].filecode))
+	javaString filecode = fileCodeForSpecies(i);
+        matches = (!strcmpi(str, filecode.c_str));
+	releaseJavaString(filecode);
+
+	if (matches) {
             return i;
+	}
     }
 
     if ((len == 1 && (*str == '*' || *str == '@'))

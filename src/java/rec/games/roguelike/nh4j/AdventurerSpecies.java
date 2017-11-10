@@ -135,7 +135,16 @@ public class AdventurerSpecies {
 		}
 		return "(unknown)";
 	}
-	
+
+	public static String speciesFileCode(int speciesID) {
+		AdventurerSpecies species = getSpecies(speciesID);
+		if (null != species)
+		{
+			return species.fileCode;
+		}
+		return "(unknown)";
+	}
+
 	private static void initialize() {
 
 		AdventurerSpecies.withID(HUMAN_ID)

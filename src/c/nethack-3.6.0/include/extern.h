@@ -2896,8 +2896,11 @@ E int FDECL(yourSpeciesID, ());
 E int FDECL(numberOfPlayableSpecies, ());
 E javaString FDECL(nounForSpecies, (int));
 E javaString FDECL(adjectiveForSpecies, (int));
+E javaString FDECL(fileCodeForSpecies, (int));
+
 E javaString FDECL(yourSpeciesNoun, ());
 E javaString FDECL(yourSpeciesAdjective, ());
+E javaString FDECL(yourSpeciesFileCode, ());
 
 E boolean FDECL(validrole, (int));
 E boolean FDECL(validrace, (int, int));

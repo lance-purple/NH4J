@@ -3182,6 +3182,13 @@ extern javaString yourSpeciesAdjective() {
   return result;
 }
 
+extern javaString yourSpeciesFileCode() {
+  jstring j_str = javaGetString(PLAYER_CHARACTER_CLASS, "speciesFileCode");
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
+}
+
 extern int numberOfPlayableSpecies() {
   return javaGetInt(ADVENTURER_SPECIES_CLASS, "numberOfPlayableSpecies");
 }
@@ -3195,6 +3202,13 @@ extern javaString nounForSpecies(int speciesID) {
 
 extern javaString adjectiveForSpecies(int speciesID) {
   jstring j_str = javaGetStringFromInt(ADVENTURER_SPECIES_CLASS, "speciesAdjective", speciesID);
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
+}
+
+extern javaString fileCodeForSpecies(int speciesID) {
+  jstring j_str = javaGetStringFromInt(ADVENTURER_SPECIES_CLASS, "speciesFileCode", speciesID);
   const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
   javaString result = { j_str, c_str };
   return result;
