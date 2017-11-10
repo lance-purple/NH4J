@@ -4721,7 +4721,17 @@ char *buf;
     } else if (!strcmp(optname, "playmode")) {
         Strcpy(buf, wizard ? "debug" : discover ? "explore" : "normal");
     } else if (!strcmp(optname, "race")) {
-        Sprintf(buf, "%s", rolestring(flags.initrace, races, noun));
+
+	if (flags.initrace >= 0) {
+	    javaString noun = nounForSpecies(flags.initrace);
+	    sprintf(buf, "%s", noun.c_str);
+	    releaseJavaString(noun);
+	} else if (flags.initrace == ROLE_RANDOM) {
+            sprintf(buf, "%s", randomrole);
+	} else {
+            sprintf(buf, "%s", none);
+	}
+
     } else if (!strcmp(optname, "roguesymset")) {
         Sprintf(buf, "%s",
                 symset[ROGUESET].name ? symset[ROGUESET].name : "default");

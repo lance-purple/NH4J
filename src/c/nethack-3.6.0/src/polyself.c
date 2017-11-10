@@ -374,11 +374,14 @@ newman()
         }
     }
     newuhs(FALSE);
+    javaString speciesNoun = yourSpeciesNoun();
     polyman("feel like a new %s!",
             /* use saved gender we're about to revert to, not current */
             (inherentlyFemale() && urace.individual.f)
                 ? urace.individual.f
-                : (urace.individual.m) ? urace.individual.m : urace.noun);
+                : (urace.individual.m) ? urace.individual.m : speciesNoun.c_str);
+    releaseJavaString(speciesNoun);
+
     if (youAreTurningToSlime()) {
         Your("body transforms, but there is still slime on you.");
         make_slimed(10L, (const char *) 0);
@@ -1065,16 +1068,19 @@ rehumanize()
 
     if (emitsLightWithRange(pmid4you()))
         del_light_source(LS_MONSTER, monst_to_any(&youmonst));
-    polyman("return to %s form!", urace.adj);
+
+    javaString speciesAdjective = yourSpeciesAdjective();
+    polyman("return to %s form!", speciesAdjective.c_str);
 
     if (currentHitPoints() < 1) {
         /* can only happen if some bit of code reduces u.uhp
            instead of currentHitPointsAsMonster() while poly'd */
         Your("old form was not healthy enough to survive.");
-        Sprintf(killer.name, "reverting to unhealthy %s form", urace.adj);
+        Sprintf(killer.name, "reverting to unhealthy %s form", speciesAdjective.c_str);
         killer.format = KILLED_BY;
         done(DIED);
     }
+    releaseJavaString(speciesAdjective);
     nomul(0);
 
     context.botl = 1;

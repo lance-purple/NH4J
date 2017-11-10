@@ -470,7 +470,9 @@ int rolenum;
     int i, n = 0;
 
     /* Count the number of valid races */
-    for (i = 0; races[i].noun; i++)
+    int playableSpecies = numberOfPlayableSpecies();
+
+    for (i = 0; i < playableSpecies; i++)
         if (roles[rolenum].allow & races[i].allow & ROLE_RACEMASK)
             n++;
 
@@ -478,7 +480,7 @@ int rolenum;
     /* Use a factor of 100 in case of bad random number generators */
     if (n)
         n = rn2(n * 100) / 100;
-    for (i = 0; races[i].noun; i++)
+    for (i = 0; i < playableSpecies; i++)
         if (roles[rolenum].allow & races[i].allow & ROLE_RACEMASK) {
             if (n)
                 n--;
@@ -502,11 +504,18 @@ const char *str;
 
     /* Match as much of str as is provided */
     len = strlen(str);
-    for (i = 0; races[i].noun; i++) {
+    int playableSpecies = numberOfPlayableSpecies();
+    for (i = 0; i < playableSpecies; i++) {
         /* Does it match the noun? */
-        if (!strncmpi(str, races[i].noun, len))
+	javaString noun = nounForSpecies(i);
+        boolean matches = (!strncmpi(str, noun.c_str, len));
+	releaseJavaString(noun);
+
+	if (matches) {
             return i;
-        /* Or the filecode? */
+	}
+
+        /* Does it match the filecode? */
         if (!strcmpi(str, races[i].filecode))
             return i;
     }
@@ -1177,13 +1186,21 @@ int buflen, rolenum, racenum, gendnum, alignnum;
             && ok_race(rolenum, racenum, gendnum, alignnum)) {
             if (donefirst)
                 Strcat(buf, " ");
-            Strcat(buf, (rolenum == ROLE_NONE) ? races[racenum].noun
-                                               : races[racenum].adj);
+	    javaString noun = nounForSpecies(racenum);
+	    javaString adjective = adjectiveForSpecies(racenum);
+
+            Strcat(buf, (rolenum == ROLE_NONE) ? noun.c_str
+                                               : adjective.c_str);
+	    releaseJavaString(noun);
+	    releaseJavaString(adjective);
+
             donefirst = TRUE;
         } else if (!validrole(rolenum)) {
             if (donefirst)
                 Strcat(buf, " ");
-            Strcat(buf, races[racenum].noun);
+	    javaString noun = nounForSpecies(racenum);
+            Strcat(buf, noun.c_str);
+	    releaseJavaString(noun);
             donefirst = TRUE;
         } else {
             pa[BP_RACE] = 1;
@@ -1449,11 +1466,13 @@ winid where;
 
     putstr(where, 0, buf);
     Sprintf(buf, "%12s ", "race:");
+    javaString speciesNoun = nounForSpecies(c);
     Strcat(buf, (which == RS_RACE) ? choosing : (c == ROLE_NONE)
                                                     ? not_yet
                                                     : (c == ROLE_RANDOM)
                                                           ? rand_choice
-                                                          : races[c].noun);
+                                                          : speciesNoun.c_str);
+    releaseJavaString(speciesNoun);
     putstr(where, 0, buf);
     Sprintf(buf, "%12s ", "gender:");
 
@@ -1525,7 +1544,7 @@ winid where;
                 c = 0; /* races[human] */
             if (c >= 0) {
                 constrainer = "role";
-                forcedValue = javaStringFromC(races[c].noun);
+                forcedValue = nounForSpecies(c);
             } else if (f >= 0
                        && (allowmask & ~filter.mask) == races[f].selfmask) {
                 /* if there is only one race choice available due to user
@@ -1694,6 +1713,7 @@ role_init()
     urole = roles[flags.initrole];
     setYourCurrentRoleID(urole.id);
     urace = races[flags.initrace];
+    setYourSpeciesID(flags.initrace);
 
     /* Fix up the quest leader */
     if (yourRoleHasQuestLeader()) {

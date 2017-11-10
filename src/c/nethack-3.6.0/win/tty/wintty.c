@@ -476,15 +476,16 @@ makepicks:
                     }
                 } else { /* pick4u == 'n' */
                     /* Count the number of valid races */
+		    int playableSpecies = numberOfPlayableSpecies();
                     n = 0; /* number valid */
                     k = 0; /* valid race */
-                    for (i = 0; races[i].noun; i++)
+                    for (i = 0; i < playableSpecies; i++)
                         if (ok_race(ROLE, i, GEND, ALGN)) {
                             n++;
                             k = i;
                         }
                     if (n == 0) {
-                        for (i = 0; races[i].noun; i++)
+                        for (i = 0; i < playableSpecies; i++)
                             if (validrace(ROLE, i)) {
                                 n++;
                                 k = i;
@@ -763,9 +764,11 @@ makepicks:
 	javaString roleName = (GEND == 1 && roleNameHasFemaleVersion(ROLE))
 	            ? roleNameAsFemale(ROLE)
 		    : roleNameAsMale(ROLE);
+	javaString speciesAdjective = adjectiveForSpecies(RACE);
         Sprintf(pbuf, "%s, %s%s %s %s", plname, aligns[ALGN].adj, plbuf,
-                races[RACE].adj, roleName.c_str);
+                speciesAdjective.c_str, roleName.c_str);
         releaseJavaString(roleName);
+        releaseJavaString(speciesAdjective);
 
         add_menu(win, NO_GLYPH, &any, ' ', 0, ATR_NONE, pbuf,
                  MENU_UNSELECTED);
@@ -958,6 +961,10 @@ int race, gend, algn; /* all ROLE_NONE for !filtering case */
     }
 }
 
+const char* speciesNouns[] = {
+	"human", "elf", "dwarf", "gnome", "orc"
+};
+
 STATIC_OVL void
 setup_racemenu(win, filtering, role, gend, algn)
 winid win;
@@ -967,18 +974,19 @@ int role, gend, algn;
     anything any;
     boolean race_ok;
     int i;
+    int playableSpecies = numberOfPlayableSpecies();
     char this_ch;
 
     any = zeroany;
-    for (i = 0; races[i].noun; i++) {
+    for (i = 0; i < playableSpecies; i++) {
         race_ok = ok_race(role, i, gend, algn);
         if (filtering && !race_ok)
             continue;
         if (filtering)
             any.a_int = i + 1;
         else
-            any.a_string = races[i].noun;
-        this_ch = *races[i].noun;
+            any.a_string = speciesNouns[i];
+        this_ch = *speciesNouns[i];
         /* filtering: picking race, so choose by first letter, with
            capital letter as unseen accelerator;
            !filtering: resetting filter rather than picking, choose by
@@ -986,7 +994,7 @@ int role, gend, algn;
         add_menu(win, NO_GLYPH, &any,
                  filtering ? this_ch : highc(this_ch),
                  filtering ? highc(this_ch) : 0,
-                 ATR_NONE, races[i].noun,
+                 ATR_NONE, speciesNouns[i],
                  (!filtering && !race_ok) ? MENU_SELECTED : MENU_UNSELECTED);
     }
 }

@@ -1444,11 +1444,15 @@ int final;
 
     if (!strcmpi(rank_titl.c_str, role_titl.c_str)) {
         /* omit role when rank title matches it */
+        javaString speciesNoun = yourSpeciesNoun();
         Sprintf(eos(buf), "%s, level %d %s%s", an(rank_titl.c_str), currentExperienceLevel(),
-                tmpbuf, urace.noun);
+                tmpbuf, speciesNoun.c_str);
+        releaseJavaString(speciesNoun);
     } else {
+        javaString speciesAdjective = yourSpeciesAdjective();
         Sprintf(eos(buf), "%s, a level %d %s%s %s", an(rank_titl.c_str), currentExperienceLevel(),
-                tmpbuf, urace.adj, role_titl.c_str);
+                tmpbuf, speciesAdjective.c_str, role_titl.c_str);
+        releaseJavaString(speciesAdjective);
     }
     you_are(buf, "");
     releaseJavaString(role_titl);

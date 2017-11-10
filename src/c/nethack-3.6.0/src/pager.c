@@ -67,7 +67,9 @@ char *outbuf;
     /* include race with role unless polymorphed */
     race[0] = '\0';
     if (!areYouPolymorphed()) {
-        Sprintf(race, "%s ", urace.adj);
+        javaString speciesAdjective = yourSpeciesAdjective();
+        Sprintf(race, "%s ", speciesAdjective.c_str);
+        releaseJavaString(speciesAdjective);
     }
 
     javaString currentMonsterName = monsterTypeName(currentMonsterNumber());

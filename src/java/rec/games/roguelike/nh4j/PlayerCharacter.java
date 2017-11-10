@@ -8,6 +8,7 @@ public class PlayerCharacter {
 	private static final int MAXULEVEL = 30;
 
 	private static int currentRoleID;
+	private static int speciesID;
 	
 	private static int currentDungeonNumber;
 	private static int currentDungeonLevel;
@@ -1557,6 +1558,26 @@ public class PlayerCharacter {
 	public static void setCurrentRoleID(int id)
 	{
 		currentRoleID = id;
+	}
+	
+	public static int speciesID()
+	{
+		return speciesID;
+	}
+
+	public static void setSpeciesID(int id)
+	{
+		speciesID = id;
+	}
+
+	public static String speciesNoun()
+	{
+		return AdventurerSpecies.speciesNoun(speciesID);
+	}
+
+	public static String speciesAdjective()
+	{
+		return AdventurerSpecies.speciesAdjective(speciesID);
 	}
 	
 	public static String roleFileCode()

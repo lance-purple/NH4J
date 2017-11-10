@@ -1354,7 +1354,9 @@ dosacrifice()
                 goto desecrate_high_altar;
             } else if (altaralign != A_CHAOTIC && altaralign != A_NONE) {
                 /* curse the lawful/neutral altar */
-                pline_The("altar is stained with %s blood.", urace.adj);
+                javaString speciesAdjective = yourSpeciesAdjective();
+                pline_The("altar is stained with %s blood.", speciesAdjective.c_str);
+                releaseJavaString(speciesAdjective);
                 levl[currentX()][currentY()].altarmask = AM_CHAOTIC;
                 angry_priest();
             } else {

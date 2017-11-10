@@ -642,10 +642,12 @@ boolean new_game; /* false => restoring an old game */
 
     javaString roleName = (currentgend && roleNameHasFemaleVersion(urole.id))
 	    ? roleNameAsFemale(urole.id) : roleNameAsMale(urole.id);
+    javaString speciesAdjective = yourSpeciesAdjective();
     pline(new_game ? "%s %s, welcome to NetHack!  You are a%s %s %s."
                    : "%s %s, the%s %s %s, welcome back to NetHack!",
-          Hello((struct monst *) 0), plname, buf, urace.adj, roleName.c_str);
+          Hello((struct monst *) 0), plname, buf, speciesAdjective.c_str, roleName.c_str);
     releaseJavaString(roleName);
+    releaseJavaString(speciesAdjective);
 }
 
 #ifdef POSITIONBAR

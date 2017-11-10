@@ -14,6 +14,7 @@ E JNIEnv* jni_env;
 E JavaVM* java_vm;
 
 #define ADVENTURER_ROLE_CLASS "rec/games/roguelike/nh4j/AdventurerRole"
+#define ADVENTURER_SPECIES_CLASS "rec/games/roguelike/nh4j/AdventurerSpecies"
 #define CONTEXT_CLASS "rec/games/roguelike/nh4j/Context"
 #define GENDER_CLASS "rec/games/roguelike/nh4j/Gender"
 #define HALLUCINATORY_DEITY_CLASS "rec/games/roguelike/nh4j/HallucinatoryDeity"
@@ -2889,6 +2890,14 @@ E int FDECL(attributeDistributionForYourRole, (int));
 
 E int FDECL(cutoffLevelForYourRole, ());
 E int FDECL(hitPointAdvancementForYourRole, ());
+
+E void FDECL(setYourSpeciesID, (int));
+E int FDECL(yourSpeciesID, ());
+E int FDECL(numberOfPlayableSpecies, ());
+E javaString FDECL(nounForSpecies, (int));
+E javaString FDECL(adjectiveForSpecies, (int));
+E javaString FDECL(yourSpeciesNoun, ());
+E javaString FDECL(yourSpeciesAdjective, ());
 
 E boolean FDECL(validrole, (int));
 E boolean FDECL(validrace, (int, int));

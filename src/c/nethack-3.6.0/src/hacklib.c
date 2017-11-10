@@ -3160,4 +3160,44 @@ extern int hitPointAdvancementForYourRole() {
   return javaGetInt(PLAYER_CHARACTER_CLASS, "hitPointAdvancement");
 }
 
+extern int yourSpeciesID() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "speciesID");
+}
+
+extern void setYourSpeciesID(int speciesID) {
+  javaSetInt(PLAYER_CHARACTER_CLASS, "setSpeciesID", speciesID);
+}
+
+extern javaString yourSpeciesNoun() {
+  jstring j_str = javaGetString(PLAYER_CHARACTER_CLASS, "speciesNoun");
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
+}
+
+extern javaString yourSpeciesAdjective() {
+  jstring j_str = javaGetString(PLAYER_CHARACTER_CLASS, "speciesAdjective");
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
+}
+
+extern int numberOfPlayableSpecies() {
+  return javaGetInt(ADVENTURER_SPECIES_CLASS, "numberOfPlayableSpecies");
+}
+
+extern javaString nounForSpecies(int speciesID) {
+  jstring j_str = javaGetStringFromInt(ADVENTURER_SPECIES_CLASS, "speciesNoun", speciesID);
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
+}
+
+extern javaString adjectiveForSpecies(int speciesID) {
+  jstring j_str = javaGetStringFromInt(ADVENTURER_SPECIES_CLASS, "speciesAdjective", speciesID);
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
+}
+
 /*hacklib.c*/

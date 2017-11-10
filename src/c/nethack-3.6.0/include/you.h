@@ -106,8 +106,8 @@ extern struct Role urole;
 
 struct Race {
     /*** Strings that name various things ***/
-    const char *noun;           /* noun ("human", "elf") */
-    const char *adj;            /* adjective ("human", "elven") */
+    const char *XXnoun;         /* noun ("human", "elf") */
+    const char *XXadj;          /* adjective ("human", "elven") */
     const char *coll;           /* collective ("humanity", "elvenkind") */
     const char *filecode;       /* code for filenames */
     struct RoleName individual; /* individual as a noun ("man", "elf") */

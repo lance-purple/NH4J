@@ -1001,12 +1001,14 @@ register int pm;
             nomul(-tmp);
             multi_reason = "pretending to be a pile of gold";
 	    javaString youAsMonsterName = monsterTypeName(pmid4you());
+	    javaString speciesNoun = yourSpeciesNoun();
             Sprintf(buf,
                     youAreHallucinating()
                        ? "You suddenly dread being peeled and mimic %s again!"
                        : "You now prefer mimicking %s again.",
-                    an(areYouPolymorphed() ? youAsMonsterName.c_str : urace.noun));
+                    an(areYouPolymorphed() ? youAsMonsterName.c_str : speciesNoun.c_str));
 	    releaseJavaString(youAsMonsterName);
+	    releaseJavaString(speciesNoun);
             eatmbuf = dupstr(buf);
             nomovemsg = eatmbuf;
             afternmv = eatmdone;

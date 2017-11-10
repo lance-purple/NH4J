@@ -595,10 +595,11 @@ register struct monst *mtmp;
         boolean nightchild =
             (areYouPolymorphed() && (currentMonsterNumber() == PM_WOLF || currentMonsterNumber() == PM_WINTER_WOLF
                         || currentMonsterNumber() == PM_WINTER_WOLF_CUB));
-        const char *racenoun =
+
+        javaString racenoun =
             (flags.female && urace.individual.f)
-                ? urace.individual.f
-                : (urace.individual.m) ? urace.individual.m : urace.noun;
+                ? javaStringFromC(urace.individual.f)
+                : (urace.individual.m) ? javaStringFromC(urace.individual.m) : yourSpeciesNoun();
 
         if (mtmp->mtame) {
             if (kindred) {
@@ -654,13 +655,14 @@ register struct monst *mtmp;
 		    javaString currentMonsterName = monsterTypeName(currentMonsterNumber());
                     Sprintf(verbuf, vampmsg[vampindex],
                             areYouPolymorphed() ? an(currentMonsterName.c_str)
-                                   : an(racenoun));
+                                   : an(racenoun.c_str));
 		    releaseJavaString(currentMonsterName);
                     verbl_msg = verbuf;
                 } else
                     verbl_msg = vampmsg[vampindex];
             }
         }
+	releaseJavaString(racenoun);
     } break;
     case MS_WERE:
         if (flags.moonphase == FULL_MOON && (night() ^ !rn2(13))) {
