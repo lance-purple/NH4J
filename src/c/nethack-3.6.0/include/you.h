@@ -115,8 +115,8 @@ struct Race {
     /*** Indices of important monsters and objects ***/
     short XXmalenum, /* PM_ as a male monster */
         XXfemalenum, /* ...or as a female (NON_PM == same) */
-        mummynum,  /* PM_ as a mummy */
-        zombienum; /* PM_ as a zombie */
+        XXmummynum,  /* PM_ as a mummy */
+        XXzombienum; /* PM_ as a zombie */
 
     /*** Bitmasks ***/
     short allow;    /* bit mask of allowed variations */

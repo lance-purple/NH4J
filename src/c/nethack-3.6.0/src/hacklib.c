@@ -3256,4 +3256,20 @@ extern int yourSpeciesPMIDAsMale() {
   return javaGetInt(PLAYER_CHARACTER_CLASS, "speciesPMIDAsMale");
 }
 
+extern boolean yourSpeciesPMIDHasMummyVersion() {
+  return javaGetBoolean(PLAYER_CHARACTER_CLASS, "speciesPMIDHasMummyVersion");
+}
+
+extern int yourSpeciesPMIDAsMummy() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "speciesPMIDAsMummy");
+}
+
+extern boolean yourSpeciesPMIDHasZombieVersion() {
+  return javaGetBoolean(PLAYER_CHARACTER_CLASS, "speciesPMIDHasZombieVersion");
+}
+
+extern int yourSpeciesPMIDAsZombie() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "speciesPMIDAsZombie");
+}
+
 /*hacklib.c*/

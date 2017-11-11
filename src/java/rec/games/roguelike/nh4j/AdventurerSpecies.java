@@ -207,6 +207,32 @@ public class AdventurerSpecies {
 		return PM.UNKNOWN.id();
 	}
 
+	public static boolean pmidHasMummyVersion(int speciesID) {
+		return PM.UNKNOWN.id() != pmidAsMummy(speciesID);
+	}
+	
+	public static int pmidAsMummy(int speciesID) {
+		AdventurerSpecies species = getSpecies(speciesID);
+		if ((null != species) && (null != species.mummyPM))
+		{
+			return species.mummyPM.id();
+		}
+		return PM.UNKNOWN.id();
+	}
+
+	public static boolean pmidHasZombieVersion(int speciesID) {
+		return PM.UNKNOWN.id() != pmidAsZombie(speciesID);
+	}
+	
+	public static int pmidAsZombie(int speciesID) {
+		AdventurerSpecies species = getSpecies(speciesID);
+		if ((null != species) && (null != species.zombiePM))
+		{
+			return species.zombiePM.id();
+		}
+		return PM.UNKNOWN.id();
+	}
+
 	private static void initialize() {
 
 		AdventurerSpecies.withID(HUMAN_ID)

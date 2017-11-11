@@ -2911,6 +2911,10 @@ E boolean FDECL(yourSpeciesPMIDHasFemaleVersion, ());
 E int FDECL(yourSpeciesPMIDAsFemale, ());
 E boolean FDECL(yourSpeciesPMIDHasMaleVersion, ());
 E int FDECL(yourSpeciesPMIDAsMale, ());
+E boolean FDECL(yourSpeciesPMIDHasMummyVersion, ());
+E int FDECL(yourSpeciesPMIDAsMummy, ());
+E boolean FDECL(yourSpeciesPMIDHasZombieVersion, ());
+E int FDECL(yourSpeciesPMIDAsZombie, ());
 
 E boolean FDECL(validrole, (int));
 E boolean FDECL(validrace, (int, int));

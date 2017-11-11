@@ -489,8 +489,8 @@ int how;
     Strcpy(killer.name, buf);
     if (monsterClass(pmid) == S_WRAITH)
         setAriseFromGraveAsMonster(PM_WRAITH);
-    else if (monsterClass(pmid) == S_MUMMY && urace.mummynum != NON_PM)
-        setAriseFromGraveAsMonster(urace.mummynum);
+    else if (monsterClass(pmid) == S_MUMMY && yourSpeciesPMIDHasMummyVersion())
+        setAriseFromGraveAsMonster(yourSpeciesPMIDAsMummy());
     else if (monsterClass(pmid) == S_VAMPIRE && yourSpeciesIs(PM_HUMAN))
         setAriseFromGraveAsMonster(PM_VAMPIRE);
     else if (pmid == PM_GHOUL)

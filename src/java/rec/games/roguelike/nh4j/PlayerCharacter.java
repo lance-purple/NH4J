@@ -1610,7 +1610,7 @@ public class PlayerCharacter {
 		return (AdventurerSpecies.pmidAsMale(speciesID) == pmid);
 	}
 
-	public static boolean speciesPMIDHasFemaleVersion(int pmid)
+	public static boolean speciesPMIDHasFemaleVersion()
 	{
 		return AdventurerSpecies.pmidHasFemaleVersion(speciesID);
 	}
@@ -1620,9 +1620,29 @@ public class PlayerCharacter {
 		return AdventurerSpecies.pmidAsFemale(speciesID);
 	}
 
-	public static boolean speciesPMIDHasMaleVersion(int pmid)
+	public static boolean speciesPMIDHasMaleVersion()
 	{
 		return AdventurerSpecies.pmidHasMaleVersion(speciesID);
+	}
+
+	public static int speciesPMIDAsMummy()
+	{
+		return AdventurerSpecies.pmidAsMummy(speciesID);
+	}
+
+	public static boolean speciesPMIDHasMummyVersion()
+	{
+		return AdventurerSpecies.pmidHasMummyVersion(speciesID);
+	}
+
+	public static int speciesPMIDAsZombie()
+	{
+		return AdventurerSpecies.pmidAsZombie(speciesID);
+	}
+
+	public static boolean speciesPMIDHasZombieVersion()
+	{
+		return AdventurerSpecies.pmidHasZombieVersion(speciesID);
 	}
 
 	public static int speciesPMIDAsMale()
