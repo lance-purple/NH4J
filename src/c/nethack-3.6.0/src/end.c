@@ -1037,9 +1037,9 @@ int how;
              * currentMonsterNumber() is based on role, and all role monsters
              * are human.
              */
-            mnum = (flags.female && urace.femalenum != NON_PM)
-                       ? urace.femalenum
-                       : urace.malenum;
+            mnum = (flags.female && yourSpeciesPMIDHasFemaleVersion())
+                       ? yourSpeciesPMIDAsFemale()
+                       : yourSpeciesPMIDAsMale();
         }
         corpse = makeNamedObject(CORPSE, mnum, currentX(), currentY(), plname);
         Sprintf(pbuf, "%s, ", plname);

@@ -3240,4 +3240,20 @@ extern boolean yourSpeciesIs(int pmid) {
   return javaGetBooleanFromInt(PLAYER_CHARACTER_CLASS, "speciesIs", pmid);
 }
 
+extern boolean yourSpeciesPMIDHasFemaleVersion() {
+  return javaGetBoolean(PLAYER_CHARACTER_CLASS, "speciesPMIDHasFemaleVersion");
+}
+
+extern int yourSpeciesPMIDAsFemale() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "speciesPMIDAsFemale");
+}
+
+extern boolean yourSpeciesPMIDHasMaleVersion() {
+  return javaGetBoolean(PLAYER_CHARACTER_CLASS, "speciesPMIDHasMaleVersion");
+}
+
+extern int yourSpeciesPMIDAsMale() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "speciesPMIDAsMale");
+}
+
 /*hacklib.c*/

@@ -819,7 +819,7 @@ u_init()
     }
 
     /*** Race-specific initializations ***/
-    switch (Race_switch) {
+    switch (yourSpeciesPMIDAsMale()) {
     case PM_HUMAN:
         /* Nothing special */
         break;
@@ -996,10 +996,10 @@ register struct trobj *trop;
     while (trop->trclass) {
         if (trop->trotyp != UNDEF_TYP) {
             otyp = (int) trop->trotyp;
-            if (urace.malenum != PM_HUMAN) {
+            if (yourSpeciesPMIDAsMale() != PM_HUMAN) {
                 /* substitute specific items for generic ones */
                 for (i = 0; inv_subs[i].race_pm != NON_PM; ++i)
-                    if (inv_subs[i].race_pm == urace.malenum
+                    if (inv_subs[i].race_pm == yourSpeciesPMIDAsMale()
                         && otyp == inv_subs[i].item_otyp) {
                         otyp = inv_subs[i].subs_otyp;
                         break;

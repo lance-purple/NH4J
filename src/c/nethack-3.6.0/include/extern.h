@@ -2907,6 +2907,11 @@ E javaString FDECL(yourSpeciesIndividualNameAsMale, ());
 E javaString FDECL(yourSpeciesIndividualNameAsFemale, ());
 E boolean FDECL(yourSpeciesIs, (int));
 
+E boolean FDECL(yourSpeciesPMIDHasFemaleVersion, ());
+E int FDECL(yourSpeciesPMIDAsFemale, ());
+E boolean FDECL(yourSpeciesPMIDHasMaleVersion, ());
+E int FDECL(yourSpeciesPMIDAsMale, ());
+
 E boolean FDECL(validrole, (int));
 E boolean FDECL(validrace, (int, int));
 E boolean FDECL(validgend, (int, int, int));

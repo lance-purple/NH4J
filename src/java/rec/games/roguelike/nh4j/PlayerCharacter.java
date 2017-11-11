@@ -1610,7 +1610,22 @@ public class PlayerCharacter {
 		return (AdventurerSpecies.pmidAsMale(speciesID) == pmid);
 	}
 
-	public static int speciesPMIDAsMale(int pmid)
+	public static boolean speciesPMIDHasFemaleVersion(int pmid)
+	{
+		return AdventurerSpecies.pmidHasFemaleVersion(speciesID);
+	}
+
+	public static int speciesPMIDAsFemale()
+	{
+		return AdventurerSpecies.pmidAsFemale(speciesID);
+	}
+
+	public static boolean speciesPMIDHasMaleVersion(int pmid)
+	{
+		return AdventurerSpecies.pmidHasMaleVersion(speciesID);
+	}
+
+	public static int speciesPMIDAsMale()
 	{
 		return AdventurerSpecies.pmidAsMale(speciesID);
 	}

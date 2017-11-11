@@ -1776,7 +1776,7 @@ role_init()
     releaseJavaString(deityTitle);
 
     /* Fix up infravision */
-    if (hasInfravision(urace.malenum)) {
+    if (hasInfravision(yourSpeciesPMIDAsMale())) {
         /* although an infravision intrinsic is possible, infravision
          * is purely a property of the physical race.  This means that we
          * must put the infravision flag in the player's current race

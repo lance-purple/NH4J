@@ -1033,10 +1033,11 @@ int montype;
 int raceType(mtmp)
 struct monst *mtmp;
 {
-    if (mtmp == &youmonst && !areYouPolymorphed())
-        return urace.malenum;
-    else
+    if (mtmp == &youmonst && !areYouPolymorphed()) {
+        return yourSpeciesPMIDAsMale();
+    } else {
         return pmid4mon(mtmp);
+    }
 }
 
 static const char *levitate[4] = { "float", "Float", "wobble", "Wobble" };

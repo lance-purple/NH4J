@@ -181,13 +181,8 @@ public class AdventurerSpecies {
 		return "(unknown)";
 	}
 	
-	public static int pmidAsMale(int speciesID) {
-		AdventurerSpecies species = getSpecies(speciesID);
-		if ((null != species) && (null != species.malePM))
-		{
-			return species.malePM.id();
-		}
-		return PM.UNKNOWN.id();
+	public static boolean pmidHasFemaleVersion(int speciesID) {
+		return PM.UNKNOWN.id() != pmidAsFemale(speciesID);
 	}
 	
 	public static int pmidAsFemale(int speciesID) {
@@ -198,7 +193,20 @@ public class AdventurerSpecies {
 		}
 		return PM.UNKNOWN.id();
 	}
+
+	public static boolean pmidHasMaleVersion(int speciesID) {
+		return PM.UNKNOWN.id() != pmidAsMale(speciesID);
+	}
 	
+	public static int pmidAsMale(int speciesID) {
+		AdventurerSpecies species = getSpecies(speciesID);
+		if ((null != species) && (null != species.malePM))
+		{
+			return species.malePM.id();
+		}
+		return PM.UNKNOWN.id();
+	}
+
 	private static void initialize() {
 
 		AdventurerSpecies.withID(HUMAN_ID)

@@ -113,8 +113,8 @@ struct Race {
     struct RoleName XXindividual; /* individual as a noun ("man", "elf") */
 
     /*** Indices of important monsters and objects ***/
-    short malenum, /* PM_ as a male monster */
-        femalenum, /* ...or as a female (NON_PM == same) */
+    short XXmalenum, /* PM_ as a male monster */
+        XXfemalenum, /* ...or as a female (NON_PM == same) */
         mummynum,  /* PM_ as a mummy */
         zombienum; /* PM_ as a zombie */
 
@@ -142,7 +142,6 @@ struct Race {
 
 extern const struct Race races[]; /* Table of available races */
 extern struct Race urace;
-#define Race_switch (urace.malenum)
 
 /*** Unified structure specifying alignment information ***/
 struct Align {

@@ -546,7 +546,7 @@ register struct monst *mtmp;
     /* some normally non-speaking types can/will speak if hero is similar */
     else if (msound == MS_ORC         /* note: MS_ORC is same as MS_GRUNT */
              && (sameMonsterType(pmid, pmid4you())           /* current form, */
-                 || sameMonsterType(pmid, Race_switch))) /* unpoly'd form */
+                 || sameMonsterType(pmid, yourSpeciesPMIDAsMale()))) /* unpoly'd form */
     {
         msound = MS_HUMANOID;
     }

@@ -163,7 +163,7 @@ int shotlimit;
         }
         /* ...or using their race's special bow; no bonus for spears */
         if (!weakmultishot)
-            switch (Race_switch) {
+            switch (yourSpeciesPMIDAsMale()) {
             case PM_ELF:
                 if (obj->otyp == ELVEN_ARROW && uwep
                     && uwep->otyp == ELVEN_BOW)

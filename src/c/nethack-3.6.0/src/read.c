@@ -11,8 +11,8 @@ static boolean Your_Own_Role(int pmid)
 }
 
 #define Your_Own_Race(mndx)  \
-    ((mndx) == urace.malenum \
-     || (urace.femalenum != NON_PM && (mndx) == urace.femalenum))
+    ((mndx) == yourSpeciesPMIDAsMale() \
+     || (yourSpeciesPMIDHasFemaleVersion() && (mndx) == yourSpeciesPMIDAsFemale()))
 
 boolean known;
 
@@ -1985,7 +1985,7 @@ do_class_genocide()
             }
         }
         if (!goodcnt && class != monsterClass(yourRolePMID())
-            && class != monsterClass(urace.malenum)) {
+            && class != monsterClass(yourSpeciesPMIDAsMale())) {
             if (gonecnt)
                 pline("All such monsters are already nonexistent.");
             else if (immunecnt || class == S_invisible)
@@ -2045,7 +2045,7 @@ do_class_genocide()
                     /* Self-genocide if it matches either your race
                        or role.  Assumption:  male and female forms
                        share same monster class. */
-                    if (i == malePMIDForYourRole() || i == urace.malenum) {
+                    if (i == malePMIDForYourRole() || i == yourSpeciesPMIDAsMale()) {
                         setCurrentHitPoints(-1);
                         if (areYouPolymorphed()) {
                             if (!feel_dead++)
@@ -2219,10 +2219,10 @@ int how;
                 mvitals[femalePMIDForYourRole()].mvflags |= (G_GENOD | G_NOCORPSE);
             if (yourRoleHasFemalePMID() && pmid == femalePMIDForYourRole())
                 mvitals[malePMIDForYourRole()].mvflags |= (G_GENOD | G_NOCORPSE);
-            if (urace.femalenum != NON_PM && pmid == urace.malenum)
-                mvitals[urace.femalenum].mvflags |= (G_GENOD | G_NOCORPSE);
-            if (urace.femalenum != NON_PM && pmid == urace.femalenum)
-                mvitals[urace.malenum].mvflags |= (G_GENOD | G_NOCORPSE);
+            if (yourSpeciesPMIDHasFemaleVersion() && pmid == yourSpeciesPMIDAsMale())
+                mvitals[yourSpeciesPMIDAsFemale()].mvflags |= (G_GENOD | G_NOCORPSE);
+            if (yourSpeciesPMIDHasFemaleVersion() && pmid == yourSpeciesPMIDAsFemale())
+                mvitals[yourSpeciesPMIDAsMale()].mvflags |= (G_GENOD | G_NOCORPSE);
 
             setCurrentHitPoints(-1);
             if (how & PLAYER) {

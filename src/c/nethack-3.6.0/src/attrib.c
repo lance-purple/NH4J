@@ -697,7 +697,7 @@ long frommask;
             break;
         }
     else if (frommask == FROMRACE)
-        switch (Race_switch) {
+        switch (yourSpeciesPMIDAsMale()) {
         case PM_ELF:
             abil = elf_abil;
             break;
@@ -863,7 +863,7 @@ int oldlevel, newlevel;
         break;
     }
 
-    switch (Race_switch) {
+    switch (yourSpeciesPMIDAsMale()) {
     case PM_ELF:
         rabil = elf_abil;
         break;

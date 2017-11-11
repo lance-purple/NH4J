@@ -184,9 +184,9 @@ const char *fmt, *arg;
     if ((mvitals[malePMIDForYourRole()].mvflags & G_GENOD)
         || (yourRoleHasFemalePMID()
             && (mvitals[femalePMIDForYourRole()].mvflags & G_GENOD))
-        || (mvitals[urace.malenum].mvflags & G_GENOD)
-        || (urace.femalenum != NON_PM
-            && (mvitals[urace.femalenum].mvflags & G_GENOD))) {
+        || (mvitals[yourSpeciesPMIDAsMale()].mvflags & G_GENOD)
+        || (yourSpeciesPMIDHasFemaleVersion()
+            && (mvitals[yourSpeciesPMIDAsFemale()].mvflags & G_GENOD))) {
         /* intervening activity might have clobbered genocide info */
         struct kinfo *kptr = find_delayed_killer(POLYMORPH);
 

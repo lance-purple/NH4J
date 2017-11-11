@@ -292,9 +292,9 @@ extern void display_self();
 #define hero_glyph                                                    \
     monnum_to_glyph((areYouPolymorphed() || !flags.showrace)          \
                         ? currentMonsterNumber()                      \
-                        : (flags.female && urace.femalenum != NON_PM) \
-                              ? urace.femalenum                       \
-                              : urace.malenum)
+                        : (flags.female && yourSpeciesPMIDHasFemaleVersion()) \
+                              ? yourSpeciesPMIDAsFemale()                       \
+                              : yourSpeciesPMIDAsMale())
 
 /*
  * Change the given glyph into it's given type.  Note:
