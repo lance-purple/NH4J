@@ -296,7 +296,7 @@ dig(VOID_ARGS)
 
     context.digging.effort +=
         10 + rn2(5) + abon() + uwep->spe - greatest_erosion(uwep) + damageBonus();
-    if (Race_if(PM_DWARF))
+    if (yourSpeciesIs(PM_DWARF))
         context.digging.effort *= 2;
     if (context.digging.down) {
         struct trap *ttmp = t_at(dpx, dpy);

@@ -3236,4 +3236,8 @@ extern javaString yourSpeciesIndividualNameAsFemale() {
   return result;
 }
 
+extern boolean yourSpeciesIs(int pmid) {
+  return javaGetBooleanFromInt(PLAYER_CHARACTER_CLASS, "speciesIs", pmid);
+}
+
 /*hacklib.c*/

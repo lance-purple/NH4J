@@ -664,7 +664,7 @@ struct monst *mon;
     if (yours) {
         badclass = self_willed
                    && ((oart->role != NON_PM && !yourRoleHasPMID(oart->role))
-                       || (oart->race != NON_PM && !Race_if(oart->race)));
+                       || (oart->race != NON_PM && !yourSpeciesIs(oart->race)));
         badalign =
             (oart->spfx & SPFX_RESTR) && oart->alignment != A_NONE
             && (oart->alignment != currentAlignmentType() || currentAlignmentRecord() < 0);

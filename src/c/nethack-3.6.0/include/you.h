@@ -129,10 +129,6 @@ struct Race {
     xchar attrmax[A_MAX];     /* maximum allowable attribute */
     struct RoleAdvance hpadv; /* hit point advancement */
     struct RoleAdvance enadv; /* energy advancement */
-#if 0                         /* DEFERRED */
-	int   nv_range;		/* night vision range */
-	int   xray_range;	/* X-ray vision range */
-#endif
 
     /*** Properties in variable-length arrays ***/
     /* intrinsics (see attrib.c) */
@@ -146,7 +142,6 @@ struct Race {
 
 extern const struct Race races[]; /* Table of available races */
 extern struct Race urace;
-#define Race_if(X) (urace.malenum == (X))
 #define Race_switch (urace.malenum)
 
 /*** Unified structure specifying alignment information ***/

@@ -40,7 +40,7 @@ STATIC_DCL boolean FDECL(maybe_cannibal, (int, BOOLEAN_P));
 char msgbuf[BUFSZ];
 
 /* also used to see if you're allowed to eat cats and dogs */
-#define CANNIBAL_ALLOWED() (yourRoleHasPMID(PM_CAVEMAN) || Race_if(PM_ORC))
+#define CANNIBAL_ALLOWED() (yourRoleHasPMID(PM_CAVEMAN) || yourSpeciesIs(PM_ORC))
 
 /* Rider corpses are treated as non-rotting so that attempting to eat one
    will be sure to reach the stage of eating where that meal is fatal */
@@ -2171,7 +2171,7 @@ struct obj *otmp;
             /* Snow White; 'poisoned' applies to [a subset of] weapons,
                not food, so we substitute cursed; fortunately our hero
                won't have to wait for a prince to be rescued/revived */
-            if (Race_if(PM_DWARF) && youAreHallucinating())
+            if (yourSpeciesIs(PM_DWARF) && youAreHallucinating())
                 verbalize("Heigh-ho, ho-hum, I think I'll skip work today.");
             else if (youAreDeaf() || !flags.acoustics)
                 You("fall asleep.");
@@ -2907,7 +2907,7 @@ boolean incr;
                 pline("%s needs food, badly!", roleName.c_str);
 		releaseJavaString(roleName);
 	    }
-            else if (incr && Race_if(PM_ELF))
+            else if (incr && yourSpeciesIs(PM_ELF))
 	    {
                 pline("Elf needs food, badly!");
             }

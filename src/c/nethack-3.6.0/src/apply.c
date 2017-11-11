@@ -2265,7 +2265,7 @@ struct obj *tstone;
         } else if (obj->oclass == GEM_CLASS
                    && (tstone->blessed
                        || (!tstone->cursed && (yourRoleHasPMID(PM_ARCHEOLOGIST)
-                                               || Race_if(PM_GNOME))))) {
+                                               || yourSpeciesIs(PM_GNOME))))) {
             makeknown(TOUCHSTONE);
             makeknown(obj->otyp);
             prinv((char *) 0, obj, 0L);

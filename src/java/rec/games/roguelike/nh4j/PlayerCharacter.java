@@ -1604,6 +1604,16 @@ public class PlayerCharacter {
 	{
 		return AdventurerSpecies.individualNameAsFemale(speciesID);
 	}
+	
+	public static boolean speciesIs(int pmid)
+	{
+		return (AdventurerSpecies.pmidAsMale(speciesID) == pmid);
+	}
+
+	public static int speciesPMIDAsMale(int pmid)
+	{
+		return AdventurerSpecies.pmidAsMale(speciesID);
+	}
 
 	public static String roleFileCode()
 	{

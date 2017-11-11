@@ -282,7 +282,7 @@ char *buf, *monbuf;
         /* file lookup can't distinguish between "gnomish wizard" monster
            and correspondingly named player character, always picking the
            former; force it to find the general "wizard" entry instead */
-        if (yourRoleHasPMID(PM_WIZARD) && Race_if(PM_GNOME) && !areYouPolymorphed())
+        if (yourRoleHasPMID(PM_WIZARD) && yourSpeciesIs(PM_GNOME) && !areYouPolymorphed())
 	{
             pmid = PM_WIZARD;
 	}
@@ -628,7 +628,7 @@ const char **firstmatch;
     if ((looked ? (sym == showsyms[S_HUMAN + SYM_OFF_M]
                    && cc.x == currentX() && cc.y == currentY())
                 : (sym == def_monsyms[S_HUMAN].sym && !flags.showrace))
-        && !(Race_if(PM_HUMAN) || Race_if(PM_ELF)) && !areYouPolymorphed())
+        && !(yourSpeciesIs(PM_HUMAN) || yourSpeciesIs(PM_ELF)) && !areYouPolymorphed())
         found += append_str(out_str, "you"); /* tack on "or you" */
 
     /* Now check for objects */

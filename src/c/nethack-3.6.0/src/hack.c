@@ -2722,7 +2722,7 @@ maybe_wail()
         return;
 
     wailmsg = moves;
-    if (yourRoleHasPMID(PM_WIZARD) || Race_if(PM_ELF) || yourRoleHasPMID(PM_VALKYRIE)) {
+    if (yourRoleHasPMID(PM_WIZARD) || yourSpeciesIs(PM_ELF) || yourRoleHasPMID(PM_VALKYRIE)) {
         int i, powercnt;
 
         javaString who = (yourRoleHasPMID(PM_WIZARD) || yourRoleHasPMID(PM_VALKYRIE)) ?

@@ -1188,7 +1188,7 @@ int mmflags;
             mtmp->msleeping = 1;
         break;
     case S_ORC:
-        if (Race_if(PM_ELF))
+        if (yourSpeciesIs(PM_ELF))
             mtmp->mpeaceful = FALSE;
         break;
     case S_UNICORN:

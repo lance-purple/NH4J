@@ -237,7 +237,7 @@ boolean areYouElvish() {
     if (areYouPolymorphed()) {
         return isElf(pmid4you());
     } else {
-       	return Race_if(PM_ELF);
+       	return yourSpeciesIs(PM_ELF);
     }
 }
 
@@ -245,7 +245,7 @@ boolean areYouOrcish() {
     if (areYouPolymorphed()) {
         return isOrc(pmid4you());
     } else {
-       	return Race_if(PM_ORC);
+       	return yourSpeciesIs(PM_ORC);
     }
 }
 
@@ -735,7 +735,7 @@ int thrown; /* HMON_xxx (0 => hand-to-hand, other => ranged) */
                         if (yourRoleHasPMID(PM_SAMURAI) && obj->otyp == YA
                             && uwep->otyp == YUMI)
                             tmp++;
-                        else if (Race_if(PM_ELF) && obj->otyp == ELVEN_ARROW
+                        else if (yourSpeciesIs(PM_ELF) && obj->otyp == ELVEN_ARROW
                                  && uwep->otyp == ELVEN_BOW)
                             tmp++;
                     }
