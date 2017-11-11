@@ -110,7 +110,7 @@ struct Race {
     const char *XXadj;          /* adjective ("human", "elven") */
     const char *XXcoll;           /* collective ("humanity", "elvenkind") */
     const char *XXfilecode;       /* code for filenames */
-    struct RoleName individual; /* individual as a noun ("man", "elf") */
+    struct RoleName XXindividual; /* individual as a noun ("man", "elf") */
 
     /*** Indices of important monsters and objects ***/
     short malenum, /* PM_ as a male monster */

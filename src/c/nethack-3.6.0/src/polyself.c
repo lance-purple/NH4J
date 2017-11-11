@@ -374,13 +374,15 @@ newman()
         }
     }
     newuhs(FALSE);
-    javaString speciesNoun = yourSpeciesNoun();
-    polyman("feel like a new %s!",
-            /* use saved gender we're about to revert to, not current */
-            (inherentlyFemale() && urace.individual.f)
-                ? urace.individual.f
-                : (urace.individual.m) ? urace.individual.m : speciesNoun.c_str);
-    releaseJavaString(speciesNoun);
+
+    /* use saved gender we're about to revert to, not current */
+    javaString noun = (inherentlyFemale() && yourSpeciesIndividualNameHasFemaleVersion())
+	    ? yourSpeciesIndividualNameAsFemale()
+            : (yourSpeciesIndividualNameHasMaleVersion())
+		? yourSpeciesIndividualNameAsMale()
+		: yourSpeciesNoun();
+    polyman("feel like a new %s!", noun.c_str);
+    releaseJavaString(noun);
 
     if (youAreTurningToSlime()) {
         Your("body transforms, but there is still slime on you.");

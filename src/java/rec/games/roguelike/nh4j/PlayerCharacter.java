@@ -1584,6 +1584,26 @@ public class PlayerCharacter {
 	{
 		return AdventurerSpecies.speciesFileCode(speciesID);
 	}
+	
+	public static boolean speciesIndividualNameHasMaleVersion()
+	{
+		return AdventurerSpecies.individualNameHasMaleVersion(speciesID);
+	}
+	
+	public static boolean speciesIndividualNameHasFemaleVersion()
+	{
+		return AdventurerSpecies.individualNameHasFemaleVersion(speciesID);
+	}
+	
+	public static String speciesIndividualNameAsMale()
+	{
+		return AdventurerSpecies.individualNameAsMale(speciesID);
+	}
+	
+	public static String speciesIndividualNameAsFemale()
+	{
+		return AdventurerSpecies.individualNameAsFemale(speciesID);
+	}
 
 	public static String roleFileCode()
 	{

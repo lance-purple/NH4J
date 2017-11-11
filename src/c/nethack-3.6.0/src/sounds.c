@@ -597,9 +597,10 @@ register struct monst *mtmp;
                         || currentMonsterNumber() == PM_WINTER_WOLF_CUB));
 
         javaString racenoun =
-            (flags.female && urace.individual.f)
-                ? javaStringFromC(urace.individual.f)
-                : (urace.individual.m) ? javaStringFromC(urace.individual.m) : yourSpeciesNoun();
+            (flags.female && yourSpeciesIndividualNameHasFemaleVersion())
+                ? yourSpeciesIndividualNameAsFemale()
+                : (yourSpeciesIndividualNameHasMaleVersion())
+		    ? yourSpeciesIndividualNameAsMale() : yourSpeciesNoun();
 
         if (mtmp->mtame) {
             if (kindred) {

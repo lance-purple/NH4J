@@ -3214,4 +3214,26 @@ extern javaString fileCodeForSpecies(int speciesID) {
   return result;
 }
 
+extern boolean yourSpeciesIndividualNameHasMaleVersion() {
+  return javaGetBoolean(PLAYER_CHARACTER_CLASS, "speciesIndividualNameHasMaleVersion");
+}
+
+extern boolean yourSpeciesIndividualNameHasFemaleVersion() {
+  return javaGetBoolean(PLAYER_CHARACTER_CLASS, "speciesIndividualNameHasFemaleVersion");
+}
+
+extern javaString yourSpeciesIndividualNameAsMale() {
+  jstring j_str = javaGetString(PLAYER_CHARACTER_CLASS, "speciesIndividualNameAsMale");
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
+}
+
+extern javaString yourSpeciesIndividualNameAsFemale() {
+  jstring j_str = javaGetString(PLAYER_CHARACTER_CLASS, "speciesIndividualNameAsFemale");
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
+}
+
 /*hacklib.c*/

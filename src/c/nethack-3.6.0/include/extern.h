@@ -2901,6 +2901,10 @@ E javaString FDECL(fileCodeForSpecies, (int));
 E javaString FDECL(yourSpeciesNoun, ());
 E javaString FDECL(yourSpeciesAdjective, ());
 E javaString FDECL(yourSpeciesFileCode, ());
+E boolean FDECL(yourSpeciesIndividualNameHasMaleVersion, ());
+E boolean FDECL(yourSpeciesIndividualNameHasFemaleVersion, ());
+E javaString FDECL(yourSpeciesIndividualNameAsMale, ());
+E javaString FDECL(yourSpeciesIndividualNameAsFemale, ());
 
 E boolean FDECL(validrole, (int));
 E boolean FDECL(validrace, (int, int));

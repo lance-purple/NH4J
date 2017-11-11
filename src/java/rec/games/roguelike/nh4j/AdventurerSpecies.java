@@ -145,6 +145,42 @@ public class AdventurerSpecies {
 		return "(unknown)";
 	}
 
+	public static boolean individualNameHasMaleVersion(int speciesID) {
+		AdventurerSpecies species = getSpecies(speciesID);
+		if ((null != species) && (null != species.individualName))
+		{
+			return species.individualName.hasMaleVersion();
+		}
+		return false;
+	}
+	
+	public static String individualNameAsMale(int speciesID) {
+		AdventurerSpecies species = getSpecies(speciesID);
+		if ((null != species) && (null != species.individualName))
+		{
+			return species.individualName.asMale();
+		}
+		return "(unknown)";
+	}
+	
+	public static boolean individualNameHasFemaleVersion(int speciesID) {
+		AdventurerSpecies species = getSpecies(speciesID);
+		if ((null != species) && (null != species.individualName))
+		{
+			return species.individualName.hasFemaleVersion();
+		}
+		return false;
+	}
+
+	public static String individualNameAsFemale(int speciesID) {
+		AdventurerSpecies species = getSpecies(speciesID);
+		if ((null != species) && (null != species.individualName))
+		{
+			return species.individualName.asFemale();
+		}
+		return "(unknown)";
+	}
+	
 	private static void initialize() {
 
 		AdventurerSpecies.withID(HUMAN_ID)
