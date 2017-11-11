@@ -190,7 +190,7 @@ int shotlimit;
            instead, high strength is necessary to load and shoot quickly */
         if (multishot > 1 && skill == -P_CROSSBOW
             && ammo_and_launcher(obj, uwep)
-            && (int) ACURRSTR < (Race_if(PM_GNOME) ? 16 : 18))
+            && (int) ACURRSTR < (yourSpeciesIs(PM_GNOME) ? 16 : 18))
             multishot = rnd(multishot);
 
         multishot = rnd(multishot);
@@ -1479,11 +1479,11 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
                  * especially their own special types of bow.
                  * Polymorphing won't make you a bow expert.
                  */
-                if ((Race_if(PM_ELF) || yourRoleHasPMID(PM_SAMURAI))
+                if ((yourSpeciesIs(PM_ELF) || yourRoleHasPMID(PM_SAMURAI))
                     && (!areYouPolymorphed() || isOfYourRace(pmid4you(), urace.selfmask))
                     && objects[uwep->otyp].oc_skill == P_BOW) {
                     tmp++;
-                    if (Race_if(PM_ELF) && uwep->otyp == ELVEN_BOW)
+                    if (yourSpeciesIs(PM_ELF) && uwep->otyp == ELVEN_BOW)
                         tmp++;
                     else if (yourRoleHasPMID(PM_SAMURAI) && uwep->otyp == YUMI)
                         tmp++;
