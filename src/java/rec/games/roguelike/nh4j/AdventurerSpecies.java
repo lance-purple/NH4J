@@ -232,6 +232,8 @@ public class AdventurerSpecies {
 		}
 		return PM.UNKNOWN.id();
 	}
+	
+	public static final int MASK = 0x0ff8;
 
 	private static void initialize() {
 

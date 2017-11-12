@@ -459,7 +459,7 @@ int rolenum, racenum;
 {
     /* Assumes validrole */
     return (boolean) (racenum >= 0 && racenum < SIZE(races) - 1
-                      && (roles[rolenum].allow & races[racenum].allow
+                      && (startingMaskForRole(rolenum) & races[racenum].allow
                           & ROLE_RACEMASK));
 }
 
@@ -473,7 +473,7 @@ int rolenum;
     int playableSpecies = numberOfPlayableSpecies();
 
     for (i = 0; i < playableSpecies; i++)
-        if (roles[rolenum].allow & races[i].allow & ROLE_RACEMASK)
+        if (startingMaskForRole(rolenum) & races[i].allow & ROLE_RACEMASK)
             n++;
 
     /* Pick a random race */
@@ -481,7 +481,7 @@ int rolenum;
     if (n)
         n = rn2(n * 100) / 100;
     for (i = 0; i < playableSpecies; i++)
-        if (roles[rolenum].allow & races[i].allow & ROLE_RACEMASK) {
+        if (startingMaskForRole(rolenum) & races[i].allow & ROLE_RACEMASK) {
             if (n)
                 n--;
             else
@@ -539,7 +539,7 @@ int rolenum, racenum, gendnum;
 {
     /* Assumes validrole and validrace */
     return (boolean) (gendnum >= 0 && gendnum < adventurerGenders()
-                      && (roles[rolenum].allow & races[racenum].allow
+                      && (startingMaskForRole(rolenum) & races[racenum].allow
                           & genderMask(gendnum) & ROLE_GENDMASK));
 }
 
@@ -551,7 +551,7 @@ int rolenum, racenum;
 
     /* Count the number of valid genders */
     for (i = 0; i < adventurerGenders(); i++)
-        if (roles[rolenum].allow & races[racenum].allow & genderMask(i)
+        if (startingMaskForRole(rolenum) & races[racenum].allow & genderMask(i)
             & ROLE_GENDMASK)
             n++;
 
@@ -559,7 +559,7 @@ int rolenum, racenum;
     if (n)
         n = rn2(n);
     for (i = 0; i < adventurerGenders(); i++)
-        if (roles[rolenum].allow & races[racenum].allow & genderMask(i)
+        if (startingMaskForRole(rolenum) & races[racenum].allow & genderMask(i)
             & ROLE_GENDMASK) {
             if (n)
                 n--;
@@ -618,7 +618,7 @@ int rolenum, racenum, alignnum;
 {
     /* Assumes validrole and validrace */
     return (boolean) (alignnum >= 0 && alignnum < ROLE_ALIGNS
-                      && (roles[rolenum].allow & races[racenum].allow
+                      && (startingMaskForRole(rolenum) & races[racenum].allow
                           & aligns[alignnum].allow & ROLE_ALIGNMASK));
 }
 
@@ -630,7 +630,7 @@ int rolenum, racenum;
 
     /* Count the number of valid alignments */
     for (i = 0; i < ROLE_ALIGNS; i++)
-        if (roles[rolenum].allow & races[racenum].allow & aligns[i].allow
+        if (startingMaskForRole(rolenum) & races[racenum].allow & aligns[i].allow
             & ROLE_ALIGNMASK)
             n++;
 
@@ -638,7 +638,7 @@ int rolenum, racenum;
     if (n)
         n = rn2(n);
     for (i = 0; i < ROLE_ALIGNS; i++)
-        if (roles[rolenum].allow & races[racenum].allow & aligns[i].allow
+        if (startingMaskForRole(rolenum) & races[racenum].allow & aligns[i].allow
             & ROLE_ALIGNMASK) {
             if (n)
                 n--;
@@ -689,7 +689,7 @@ int rolenum, racenum, gendnum, alignnum;
     if (rolenum >= 0 && rolenum < SIZE(roles) - 1) {
         if (filter.roles[rolenum])
             return FALSE;
-        allow = roles[rolenum].allow;
+        allow = startingMaskForRole(rolenum);
         if (racenum >= 0 && racenum < SIZE(races) - 1
             && !(allow & races[racenum].allow & ROLE_RACEMASK))
             return FALSE;
@@ -705,7 +705,7 @@ int rolenum, racenum, gendnum, alignnum;
         for (i = 0; i < SIZE(roles) - 1; i++) {
             if (filter.roles[i])
                 continue;
-            allow = roles[i].allow;
+            allow = startingMaskForRole(i);
             if (racenum >= 0 && racenum < SIZE(races) - 1
                 && !(allow & races[racenum].allow & ROLE_RACEMASK))
                 continue;
@@ -759,7 +759,7 @@ int rolenum, racenum, gendnum, alignnum;
             return FALSE;
         allow = races[racenum].allow;
         if (rolenum >= 0 && rolenum < SIZE(roles) - 1
-            && !(allow & roles[rolenum].allow & ROLE_RACEMASK))
+            && !(allow & startingSpeciesMaskForRole(rolenum)))
             return FALSE;
         if (gendnum >= 0 && gendnum < adventurerGenders()
             && !(allow & genderMask(gendnum) & ROLE_GENDMASK))
@@ -775,7 +775,7 @@ int rolenum, racenum, gendnum, alignnum;
                 continue;
             allow = races[i].allow;
             if (rolenum >= 0 && rolenum < SIZE(roles) - 1
-                && !(allow & roles[rolenum].allow & ROLE_RACEMASK))
+                && !(allow & startingSpeciesMaskForRole(rolenum)))
                 continue;
             if (gendnum >= 0 && gendnum < adventurerGenders()
                 && !(allow & genderMask(gendnum) & ROLE_GENDMASK))
@@ -832,7 +832,7 @@ int alignnum UNUSED;
             return FALSE;
         allow = genderMask(gendnum);
         if (rolenum >= 0 && rolenum < SIZE(roles) - 1
-            && !(allow & roles[rolenum].allow & ROLE_GENDMASK))
+            && !(allow & startingGenderMaskForRole(rolenum)))
             return FALSE;
         if (racenum >= 0 && racenum < SIZE(races) - 1
             && !(allow & races[racenum].allow & ROLE_GENDMASK))
@@ -845,7 +845,7 @@ int alignnum UNUSED;
                 continue;
             allow = genderMask(i);
             if (rolenum >= 0 && rolenum < SIZE(roles) - 1
-                && !(allow & roles[rolenum].allow & ROLE_GENDMASK))
+                && !(allow & startingGenderMaskForRole(rolenum)))
                 continue;
             if (racenum >= 0 && racenum < SIZE(races) - 1
                 && !(allow & races[racenum].allow & ROLE_GENDMASK))
@@ -901,7 +901,7 @@ int alignnum;
             return FALSE;
         allow = aligns[alignnum].allow;
         if (rolenum >= 0 && rolenum < SIZE(roles) - 1
-            && !(allow & roles[rolenum].allow & ROLE_ALIGNMASK))
+            && !(allow & startingAlignmentMaskForRole(rolenum)))
             return FALSE;
         if (racenum >= 0 && racenum < SIZE(races) - 1
             && !(allow & races[racenum].allow & ROLE_ALIGNMASK))
@@ -914,7 +914,7 @@ int alignnum;
                 return FALSE;
             allow = aligns[i].allow;
             if (rolenum >= 0 && rolenum < SIZE(roles) - 1
-                && !(allow & roles[rolenum].allow & ROLE_ALIGNMASK))
+                && !(allow & startingAlignmentMaskForRole(rolenum)))
                 continue;
             if (racenum >= 0 && racenum < SIZE(races) - 1
                 && !(allow & races[racenum].allow & ROLE_ALIGNMASK))
@@ -1064,11 +1064,12 @@ int rolenum;
     int gendcount = 0;
 
     if (validrole(rolenum)) {
-        if (roles[rolenum].allow & ROLE_MALE)
+        long mask = startingMaskForRole(rolenum);	     
+        if (mask & ROLE_MALE)
             ++gendcount;
-        if (roles[rolenum].allow & ROLE_FEMALE)
+        if (mask & ROLE_FEMALE)
             ++gendcount;
-        if (roles[rolenum].allow & ROLE_NEUTER)
+        if (mask & ROLE_NEUTER)
             ++gendcount;
     }
     return gendcount;
@@ -1399,7 +1400,7 @@ winid where;
     g = flags.initgend;
     a = flags.initalign;
     if (r >= 0) {
-        allowmask = roles[r].allow;
+        allowmask = startingMaskForRole(r);
         if ((allowmask & ROLE_RACEMASK) == MH_HUMAN)
             c = 0; /* races[human] */
         else if (c >= 0 && !(allowmask & ROLE_RACEMASK & races[c].allow))
@@ -1544,7 +1545,7 @@ winid where;
         f = flags.initrace;
         c = ROLE_NONE; /* override player's setting */
         if (r >= 0) {
-            allowmask = roles[r].allow & ROLE_RACEMASK;
+            allowmask = startingSpeciesMaskForRole(r);
             if (allowmask == MH_HUMAN)
                 c = 0; /* races[human] */
             if (c >= 0) {
@@ -1564,7 +1565,7 @@ winid where;
         f = flags.initgend;
         g = ROLE_NONE;
         if (r >= 0) {
-            allowmask = roles[r].allow & ROLE_GENDMASK;
+            allowmask = startingGenderMaskForRole(r);
             if (allowmask == ROLE_MALE)
                 g = 0; /* male */
             else if (allowmask == ROLE_FEMALE)
@@ -1586,7 +1587,7 @@ winid where;
         f = flags.initalign;
         a = ROLE_NONE;
         if (r >= 0) {
-            allowmask = roles[r].allow & ROLE_ALIGNMASK;
+            allowmask = startingAlignmentMaskForRole(r);
             if (allowmask == AM_LAWFUL)
                 a = 0; /* aligns[lawful] */
             else if (allowmask == AM_NEUTRAL)

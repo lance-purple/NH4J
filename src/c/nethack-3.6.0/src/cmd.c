@@ -1424,8 +1424,7 @@ int final;
     /* report role; omit gender if it's redundant (eg, "female priestess") */
     tmpbuf[0] = '\0';
     if (!roleNameHasFemaleVersion(urole.id)
-        && ((urole.allow & ROLE_GENDMASK) == (ROLE_MALE | ROLE_FEMALE)
-            || innategend != flags.initgend))
+        && (yourRoleCanStartAsMaleOrFemale() || innategend != flags.initgend))
     {
 	javaString adjective = genderAdjective(innategend);
         Sprintf(tmpbuf, "%s ", adjective.c_str);

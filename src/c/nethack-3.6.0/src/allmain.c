@@ -633,7 +633,7 @@ boolean new_game; /* false => restoring an old game */
         Sprintf(eos(buf), " %s", align_str(originalAlignmentBase()));
     if (!roleNameHasFemaleVersion(urole.id)
         && (new_game
-                ? (urole.allow & ROLE_GENDMASK) == (ROLE_MALE | ROLE_FEMALE)
+                ? (yourRoleCanStartAsMaleOrFemale())
                 : currentgend != flags.initgend)) {
 	javaString adjective = genderAdjective(currentgend);
         Sprintf(eos(buf), " %s", adjective.c_str);

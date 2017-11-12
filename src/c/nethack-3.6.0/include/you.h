@@ -57,7 +57,7 @@ struct Role {
     struct RoleName XXname;    /* the role's name (from u_init.c) */
 
     /*** Bitmasks ***/
-    short allow;             /* bit mask of allowed variations */
+    short XXallow;             /* bit mask of allowed variations */
 #define ROLE_RACEMASK 0x0ff8 /* allowable races */
 #define ROLE_GENDMASK 0xf000 /* allowable genders */
 #define ROLE_MALE 0x1000

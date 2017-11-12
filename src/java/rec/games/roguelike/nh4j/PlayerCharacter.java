@@ -1665,6 +1665,11 @@ public class PlayerCharacter {
 		return AdventurerRole.intermediateQuestLevel(currentRoleID);
 	}
 
+	public static boolean roleCanStartAsMaleOrFemale()
+	{
+	    return AdventurerRole.canStartAsMaleOrFemale(currentRoleID);	
+	}
+	
 	public static boolean hasMalePMIDForCurrentRole()
 	{
 		return (PM.UNKNOWN.id() != AdventurerRole.pmidAsMale(currentRoleID));

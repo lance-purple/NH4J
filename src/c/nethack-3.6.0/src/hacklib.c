@@ -2986,6 +2986,14 @@ extern javaString yourIntermediateQuestLevel() {
   return result;
 }
 
+extern boolean yourRoleCanStartAsMaleOrFemale() {
+  return javaGetBoolean(PLAYER_CHARACTER_CLASS, "roleCanStartAsMaleOrFemale");
+}
+
+extern boolean roleCanStartAsMaleOrFemale(int roleID) {
+  return javaGetBooleanFromInt(ADVENTURER_ROLE_CLASS, "canStartAsMaleOrFemale", roleID);
+}
+
 extern boolean yourRoleHasMalePMID() {
   return javaGetBoolean(PLAYER_CHARACTER_CLASS, "hasMalePMIDForCurrentRole");
 }
@@ -3270,6 +3278,22 @@ extern boolean yourSpeciesPMIDHasZombieVersion() {
 
 extern int yourSpeciesPMIDAsZombie() {
   return javaGetInt(PLAYER_CHARACTER_CLASS, "speciesPMIDAsZombie");
+}
+
+extern long startingMaskForRole(int roleID) {
+  return javaGetLongFromInt(ADVENTURER_ROLE_CLASS, "startingMask", roleID);
+}
+
+extern long startingAlignmentMaskForRole(int roleID) {
+  return javaGetLongFromInt(ADVENTURER_ROLE_CLASS, "startingAlignmentMask", roleID);
+}
+
+extern long startingGenderMaskForRole(int roleID) {
+  return javaGetLongFromInt(ADVENTURER_ROLE_CLASS, "startingGenderMask", roleID);
+}
+
+extern long startingSpeciesMaskForRole(int roleID) {
+  return javaGetLongFromInt(ADVENTURER_ROLE_CLASS, "startingSpeciesMask", roleID);
 }
 
 /*hacklib.c*/

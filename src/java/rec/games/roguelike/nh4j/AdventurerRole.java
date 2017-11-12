@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import javax.swing.GroupLayout.Alignment;
+
 public class AdventurerRole {
 
 	private static final int ARCHAEOLOGIST_ID = 0;
@@ -32,6 +34,8 @@ public class AdventurerRole {
 	
 	private ATTRS attributeBases;
 	private ATTRS attributeDistributions;
+	
+	private long canStartAs;
 	
 	private int cutoffLevel;
 	private HitPointAdvancement hitPointAdvancement;
@@ -174,6 +178,12 @@ public class AdventurerRole {
 	private AdventurerRole withCutoffLevel(int level)
 	{
 		this.cutoffLevel = level;
+		return this;
+	}
+	
+	private AdventurerRole canStartAs(long canStartAs)
+	{
+		this.canStartAs = canStartAs;
 		return this;
 	}
 	
@@ -485,6 +495,51 @@ public class AdventurerRole {
 		return ART.NONE.id();		
 	}
 	
+	public static boolean canStartAsMaleOrFemale(int roleID) {
+		AdventurerRole role = getRole(roleID);
+		if (null != role)
+		{
+			return (role.canStartAs & Gender.MASK) == (Gender.MALE.mask() | Gender.FEMALE.mask());
+		}
+		return false;		
+	}
+
+	public static long startingMask(int roleID) {
+		AdventurerRole role = getRole(roleID);
+		if (null != role)
+		{
+			return role.canStartAs;
+		}
+		return 0L;				
+	}
+
+	public static long startingAlignmentMask(int roleID) {
+		AdventurerRole role = getRole(roleID);
+		if (null != role)
+		{
+			return role.canStartAs & AM.MASK;
+		}
+		return 0L;				
+	}
+
+	public static long startingGenderMask(int roleID) {
+		AdventurerRole role = getRole(roleID);
+		if (null != role)
+		{
+			return role.canStartAs & Gender.MASK;
+		}
+		return 0L;				
+	}
+
+	public static long startingSpeciesMask(int roleID) {
+		AdventurerRole role = getRole(roleID);
+		if (null != role)
+		{
+			return role.canStartAs & AdventurerSpecies.MASK;
+		}
+		return 0L;				
+	}
+
 	public static int attributeBase(int roleID, int whichAttr) {
 		AdventurerRole role = getRole(roleID);
 		if (null != role)
@@ -547,6 +602,9 @@ public class AdventurerRole {
 			.withQuestHomeBase("the College of Archeology")
 			.withIntermediateQuestLevel( "the Tomb of the Toltec Kings")
 			.withQuestArtifact(ART.ORB_OF_DETECTION)
+			.canStartAs(M2.HUMAN | M2.DWARF | M2.GNOME |
+					    Gender.MALE.mask() | Gender.FEMALE.mask() |
+					    AM.LAWFUL | AM.NEUTRAL)
 			.withBase(new ATTRS().STR(7).INT(10).WIS(10).DEX(7).CON(7).CHA(7))
 			.withDistribution(new ATTRS().STR(20).INT(20).WIS(20).DEX(10).CON(20).CHA(10))
 			.withCutoffLevel(14)
@@ -574,6 +632,9 @@ public class AdventurerRole {
 			.withQuestHomeBase("the Camp of the Duali Tribe")
 			.withIntermediateQuestLevel("the Duali Oasis")
 			.withQuestArtifact(ART.HEART_OF_AHRIMAN)
+			.canStartAs(M2.HUMAN | M2.ORC |
+				    Gender.MALE.mask() | Gender.FEMALE.mask() |
+				    AM.NEUTRAL | AM.CHAOTIC)
 			.withBase(new ATTRS().STR(16).INT(7).WIS(7).DEX(15).CON(16).CHA(6))
 			.withDistribution(new ATTRS().STR(30).INT(6).WIS(7).DEX(20).CON(30).CHA(7))
 			.withCutoffLevel(10)
@@ -602,6 +663,9 @@ public class AdventurerRole {
 			.withQuestHomeBase("the Caves of the Ancestors")
 			.withIntermediateQuestLevel("the Dragon's Lair")
 			.withQuestArtifact(ART.SCEPTRE_OF_MIGHT)
+			.canStartAs(M2.HUMAN | M2.DWARF | M2.GNOME |
+				    Gender.MALE.mask() | Gender.FEMALE.mask() |
+				    AM.LAWFUL | AM.NEUTRAL)
 			.withBase(new ATTRS().STR(10).INT(7).WIS(7).DEX(7).CON(8).CHA(6))
 			.withDistribution(new ATTRS().STR(30).INT(6).WIS(7).DEX(20).CON(30).CHA(7))
 			.withCutoffLevel(10)
@@ -629,6 +693,9 @@ public class AdventurerRole {
 			.withQuestHomeBase("the Temple of Epidaurus")
 			.withIntermediateQuestLevel("the Temple of Coeus")
 			.withQuestArtifact(ART.STAFF_OF_AESCULAPIUS)
+			.canStartAs(M2.HUMAN | M2.GNOME |
+				    Gender.MALE.mask() | Gender.FEMALE.mask() |
+				    AM.NEUTRAL)
 			.withBase(new ATTRS().STR(7).INT(7).WIS(13).DEX(7).CON(11).CHA(16))
 			.withDistribution(new ATTRS().STR(15).INT(20).WIS(20).DEX(15).CON(25).CHA(5))
 			.withCutoffLevel(20)
@@ -657,6 +724,9 @@ public class AdventurerRole {
 			.withQuestHomeBase("Camelot Castle")
 			.withIntermediateQuestLevel("the Isle of Glass")
 			.withQuestArtifact(ART.MAGIC_MIRROR_OF_MERLIN)
+			.canStartAs(M2.HUMAN |
+				    Gender.MALE.mask() | Gender.FEMALE.mask() |
+				    AM.LAWFUL)
 			.withBase(new ATTRS().STR(13).INT(7).WIS(14).DEX(8).CON(10).CHA(17))
 			.withDistribution(new ATTRS().STR(30).INT(15).WIS(15).DEX(10).CON(20).CHA(10))
 			.withCutoffLevel(10)
@@ -684,6 +754,9 @@ public class AdventurerRole {
 			.withQuestHomeBase( "the Monastery of Chan-Sune")
 			.withIntermediateQuestLevel("the Monastery of the Earth-Lord")
 			.withQuestArtifact(ART.EYES_OF_THE_OVERWORLD)
+			.canStartAs(M2.HUMAN |
+				    Gender.MALE.mask() | Gender.FEMALE.mask() |
+				    AM.LAWFUL | AM.NEUTRAL | AM.CHAOTIC)
 			.withBase(new ATTRS().STR(10).INT(7).WIS(8).DEX(8).CON(7).CHA(7))
 			.withDistribution(new ATTRS().STR(25).INT(10).WIS(20).DEX(20).CON(15).CHA(10))
 			.withCutoffLevel(10)
@@ -710,6 +783,9 @@ public class AdventurerRole {
 			.withQuestHomeBase("the Great Temple")
 			.withIntermediateQuestLevel("the Temple of Nalzok")
 			.withQuestArtifact(ART.MITRE_OF_HOLINESS)
+			.canStartAs(M2.HUMAN | M2.ELF |
+				    Gender.MALE.mask() | Gender.FEMALE.mask() |
+				    AM.LAWFUL | AM.NEUTRAL | AM.CHAOTIC)
 			.withBase(new ATTRS().STR(7).INT(7).WIS(10).DEX(7).CON(7).CHA(7))
 			.withDistribution(new ATTRS().STR(15).INT(10).WIS(30).DEX(15).CON(20).CHA(10))
 			.withCutoffLevel(10)
@@ -737,6 +813,9 @@ public class AdventurerRole {
 			.withQuestHomeBase("the Thieves' Guild Hall")
 			.withIntermediateQuestLevel("the Assassins' Guild Hall")
 			.withQuestArtifact(ART.MASTER_KEY_OF_THIEVERY)
+			.canStartAs(M2.HUMAN | M2.ORC |
+				    Gender.MALE.mask() | Gender.FEMALE.mask() |
+				    AM.CHAOTIC)
 			.withBase(new ATTRS().STR(7).INT(7).WIS(7).DEX(10).CON(7).CHA(6))
 			.withDistribution(new ATTRS().STR(20).INT(10).WIS(10).DEX(30).CON(20).CHA(10))
 			.withCutoffLevel(11)
@@ -765,6 +844,9 @@ public class AdventurerRole {
 			.withQuestHomeBase("Orion's camp")
 			.withIntermediateQuestLevel("the cave of the wumpus")
 			.withQuestArtifact(ART.LONGBOW_OF_DIANA)
+			.canStartAs(M2.HUMAN | M2.ELF | M2.ORC | M2.GNOME |
+				    Gender.MALE.mask() | Gender.FEMALE.mask() |
+				    AM.NEUTRAL | AM.CHAOTIC)
 			.withBase(new ATTRS().STR(13).INT(13).WIS(13).DEX(9).CON(13).CHA(7))
 			.withDistribution(new ATTRS().STR(30).INT(10).WIS(10).DEX(20).CON(20).CHA(10))
 			.withCutoffLevel(12)
@@ -793,6 +875,9 @@ public class AdventurerRole {
 			.withQuestHomeBase("the Castle of the Taro Clan")
 			.withIntermediateQuestLevel("the Shogun's Castle")
 			.withQuestArtifact(ART.TSURUGI_OF_MURAMASA)
+			.canStartAs(M2.HUMAN |
+				    Gender.MALE.mask() | Gender.FEMALE.mask() |
+				    AM.LAWFUL)
 			.withBase(new ATTRS().STR(10).INT(8).WIS(7).DEX(10).CON(17).CHA(6))
 			.withDistribution(new ATTRS().STR(30).INT(10).WIS(8).DEX(30).CON(14).CHA(8))
 			.withCutoffLevel(11)
@@ -820,6 +905,9 @@ public class AdventurerRole {
 			.withQuestHomeBase("Ankh-Morpork")
 			.withIntermediateQuestLevel("the Thieves' Guild Hall")
 			.withQuestArtifact(ART.YENDORIAN_EXPRESS_CARD)
+			.canStartAs(M2.HUMAN |
+				    Gender.MALE.mask() | Gender.FEMALE.mask() |
+				    AM.NEUTRAL)
 			.withBase(new ATTRS().STR(7).INT(10).WIS(6).DEX(7).CON(7).CHA(10))
 			.withDistribution(new ATTRS().STR(15).INT(10).WIS(10).DEX(15).CON(30).CHA(20))
 			.withCutoffLevel(14)
@@ -847,6 +935,9 @@ public class AdventurerRole {
 			.withQuestHomeBase("the Shrine of Destiny")
 			.withIntermediateQuestLevel("the cave of Surtur")
 			.withQuestArtifact(ART.ORB_OF_FATE)
+			.canStartAs(M2.HUMAN | M2.DWARF |
+				    Gender.FEMALE.mask() |
+				    AM.LAWFUL | AM.NEUTRAL)
 			.withBase(new ATTRS().STR(10).INT(7).WIS(7).DEX(7).CON(10).CHA(7))
 			.withDistribution(new ATTRS().STR(30).INT(6).WIS(7).DEX(20).CON(30).CHA(7))
 			.withCutoffLevel(10)
@@ -875,6 +966,9 @@ public class AdventurerRole {
 			.withQuestHomeBase("the Lonely Tower")
 			.withIntermediateQuestLevel("the Tower of Darkness")
 			.withQuestArtifact(ART.EYE_OF_THE_AETHIOPICA)
+			.canStartAs(M2.HUMAN | M2.ELF | M2.ORC | M2.GNOME |
+				    Gender.MALE.mask() | Gender.FEMALE.mask() |
+				    AM.NEUTRAL | AM.CHAOTIC)
 			.withBase(new ATTRS().STR(7).INT(10).WIS(7).DEX(7).CON(7).CHA(7))
 			.withDistribution(new ATTRS().STR(10).INT(30).WIS(10).DEX(20).CON(20).CHA(10))
 			.withCutoffLevel(12)

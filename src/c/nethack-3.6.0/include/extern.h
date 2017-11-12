@@ -2880,6 +2880,14 @@ E int FDECL(femalePMIDForYourRole, ());
 E boolean FDECL(yourRoleHasMalePMID, ());
 E int FDECL(malePMIDForYourRole, ());
 
+E boolean FDECL(yourRoleCanStartAsMaleOrFemale, ());
+E boolean FDECL(roleCanStartAsMaleOrFemale, (int));
+
+E long FDECL(startingMaskForRole, (int));
+E long FDECL(startingAlignmentMaskForRole, (int));
+E long FDECL(startingGenderMaskForRole, (int));
+E long FDECL(startingSpeciesMaskForRole, (int));
+
 E boolean FDECL(roleHasFemalePMID, (int));
 E int FDECL(femalePMIDForRole, (int));
 E boolean FDECL(roleHasMalePMID, (int));

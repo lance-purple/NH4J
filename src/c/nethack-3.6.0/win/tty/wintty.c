@@ -752,8 +752,7 @@ makepicks:
         any = zeroany; /* zero out all bits */
         any.a_int = 0;
         if (!roleNameHasFemaleVersion(ROLE)
-            && (roles[ROLE].allow & ROLE_GENDMASK)
-                   == (ROLE_MALE | ROLE_FEMALE)) {
+            && roleCanStartAsMaleOrFemale(ROLE)) {
 	    javaString adjective = genderAdjective(GEND);
             Sprintf(plbuf, " %s", adjective.c_str);
 	    releaseJavaString(adjective);

@@ -120,5 +120,7 @@ public enum Gender {
 	{
 		return Gender.withID(genderID).mask();
 	}
+	
+	public static final long MASK = 0xf000;
 
 }
