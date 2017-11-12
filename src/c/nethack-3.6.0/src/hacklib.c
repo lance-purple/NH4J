@@ -3296,4 +3296,32 @@ extern long startingSpeciesMaskForRole(int roleID) {
   return javaGetLongFromInt(ADVENTURER_ROLE_CLASS, "startingSpeciesMask", roleID);
 }
 
+extern long startingMaskForSpecies(int speciesID) {
+  return javaGetLongFromInt(ADVENTURER_SPECIES_CLASS, "startingMask", speciesID);
+}
+
+extern long startingAlignmentMaskForSpecies(int speciesID) {
+  return javaGetLongFromInt(ADVENTURER_SPECIES_CLASS, "startingAlignmentMask", speciesID);
+}
+
+extern boolean speciesCanStartAsChaotic(int speciesID) {
+  return javaGetLongFromInt(ADVENTURER_SPECIES_CLASS, "canStartAsChaotic", speciesID);
+}
+
+extern boolean speciesCanStartAsLawful(int speciesID) {
+  return javaGetLongFromInt(ADVENTURER_SPECIES_CLASS, "canStartAsLawful", speciesID);
+}
+
+extern boolean speciesCanStartAsNeutral(int speciesID) {
+  return javaGetLongFromInt(ADVENTURER_SPECIES_CLASS, "canStartAsNeutral", speciesID);
+}
+
+extern long startingGenderMaskForSpecies(int speciesID) {
+  return javaGetLongFromInt(ADVENTURER_SPECIES_CLASS, "startingGenderMask", speciesID);
+}
+
+extern long startingSpeciesMaskForSpecies(int speciesID) {
+  return javaGetLongFromInt(ADVENTURER_SPECIES_CLASS, "startingSpeciesMask", speciesID);
+}
+
 /*hacklib.c*/

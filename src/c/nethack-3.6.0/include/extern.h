@@ -2924,6 +2924,15 @@ E int FDECL(yourSpeciesPMIDAsMummy, ());
 E boolean FDECL(yourSpeciesPMIDHasZombieVersion, ());
 E int FDECL(yourSpeciesPMIDAsZombie, ());
 
+E long FDECL(startingMaskForSpecies, (int));
+E long FDECL(startingAlignmentMaskForSpecies, (int));
+E boolean FDECL(speciesCanStartAsChaotic, (int));
+E boolean FDECL(speciesCanStartAsNeutral, (int));
+E boolean FDECL(speciesCanStartAsLawful, (int));
+E long FDECL(startingGenderMaskForSpecies, (int));
+
+E long FDECL(startingSpeciesMaskForSpecies, (int));
+
 E boolean FDECL(validrole, (int));
 E boolean FDECL(validrace, (int, int));
 E boolean FDECL(validgend, (int, int, int));

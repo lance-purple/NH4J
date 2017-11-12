@@ -14,11 +14,6 @@
 
 /*** Substructures ***/
 
-struct RoleName {
-    const char *m; /* name when character is male */
-    const char *f; /* when female; null if same as male */
-};
-
 struct RoleAdvance {
     /* "fix" is the fixed amount, "rnd" is the random amount */
     xchar infix, inrnd; /* at character initialization */
@@ -54,7 +49,6 @@ struct u_realtime {
 struct Role {
     int id;
     /*** Strings that name various things ***/
-    struct RoleName XXname;    /* the role's name (from u_init.c) */
 
     /*** Bitmasks ***/
     short XXallow;             /* bit mask of allowed variations */
@@ -110,7 +104,6 @@ struct Race {
     const char *XXadj;          /* adjective ("human", "elven") */
     const char *XXcoll;           /* collective ("humanity", "elvenkind") */
     const char *XXfilecode;       /* code for filenames */
-    struct RoleName XXindividual; /* individual as a noun ("man", "elf") */
 
     /*** Indices of important monsters and objects ***/
     short XXmalenum, /* PM_ as a male monster */
@@ -119,7 +112,7 @@ struct Race {
         XXzombienum; /* PM_ as a zombie */
 
     /*** Bitmasks ***/
-    short allow;    /* bit mask of allowed variations */
+    short XXallow;    /* bit mask of allowed variations */
     short selfmask, /* your own race's bit mask */
         lovemask,   /* bit mask of always peaceful */
         hatemask;   /* bit mask of always hostile */

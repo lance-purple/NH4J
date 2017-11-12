@@ -514,30 +514,15 @@ public class AdventurerRole {
 	}
 
 	public static long startingAlignmentMask(int roleID) {
-		AdventurerRole role = getRole(roleID);
-		if (null != role)
-		{
-			return role.canStartAs & AM.MASK;
-		}
-		return 0L;				
+		return startingMask(roleID) & AM.MASK;
 	}
 
 	public static long startingGenderMask(int roleID) {
-		AdventurerRole role = getRole(roleID);
-		if (null != role)
-		{
-			return role.canStartAs & Gender.MASK;
-		}
-		return 0L;				
+		return startingMask(roleID) & Gender.MASK;
 	}
 
 	public static long startingSpeciesMask(int roleID) {
-		AdventurerRole role = getRole(roleID);
-		if (null != role)
-		{
-			return role.canStartAs & AdventurerSpecies.MASK;
-		}
-		return 0L;				
+		return startingMask(roleID) & AdventurerSpecies.MASK;
 	}
 
 	public static int attributeBase(int roleID, int whichAttr) {
