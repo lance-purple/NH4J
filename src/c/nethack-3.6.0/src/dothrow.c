@@ -1480,7 +1480,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
                  * Polymorphing won't make you a bow expert.
                  */
                 if ((yourSpeciesIs(PM_ELF) || yourRoleHasPMID(PM_SAMURAI))
-                    && (!areYouPolymorphed() || isOfYourRace(pmid4you(), urace.selfmask))
+                    && (!areYouPolymorphed() || isOfYourRace(pmid4you()))
                     && objects[uwep->otyp].oc_skill == P_BOW) {
                     tmp++;
                     if (yourSpeciesIs(PM_ELF) && uwep->otyp == ELVEN_BOW)

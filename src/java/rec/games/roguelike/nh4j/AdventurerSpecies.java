@@ -1,7 +1,5 @@
 package rec.games.roguelike.nh4j;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 public class AdventurerSpecies {
@@ -27,11 +25,18 @@ public class AdventurerSpecies {
 	private PM zombiePM;
 	
 	private long canStartAs;
+	private long selfMask;
 
 	private AdventurerSpecies(int speciesID) {
 		this.speciesID = speciesID;
 	}
 
+	private AdventurerSpecies withSelf(long selfMask)
+	{
+		this.selfMask = selfMask;
+		return this;
+	}
+	
 	private AdventurerSpecies withNoun(String speciesNoun)
 	{
 		this.speciesNoun = speciesNoun;
@@ -124,7 +129,16 @@ public class AdventurerSpecies {
 		}
 		return speciesByID.size();
 	}
-	
+
+	public static long selfMask(int speciesID) {
+		AdventurerSpecies species = getSpecies(speciesID);
+		if (null != species)
+		{
+			return species.selfMask;
+		}
+		return 0L;				
+	}
+
 	public static String speciesNoun(int speciesID) {
 		AdventurerSpecies species = getSpecies(speciesID);
 		if (null != species)
@@ -257,10 +271,6 @@ public class AdventurerSpecies {
         return startingMask(speciesID) & Gender.MASK;
 	}
 
-	public static long startingSpeciesMask(int speciesID) {
-        return startingMask(speciesID) & MASK;
-	}
-
 	public static boolean canStartAsChaotic(int speciesID) {
 		return (startingAlignmentMask(speciesID) & AM.CHAOTIC) != 0L;
 	}
@@ -278,6 +288,7 @@ public class AdventurerSpecies {
 	private static void initialize() {
 
 		AdventurerSpecies.withID(HUMAN_ID)
+		    .withSelf(M2.HUMAN)
 		    .withNoun("human")
 		    .withAdjective("human")
 		    .withCollectiveNoun("humanity")
@@ -286,12 +297,12 @@ public class AdventurerSpecies {
 			.withPM(PM.HUMAN)
 			.withMummyPM(PM.HUMAN_MUMMY)
 			.withZombiePM(PM.HUMAN_ZOMBIE)
-			.canStartAs(M2.HUMAN |
-					Gender.MALE.mask() | Gender.FEMALE.mask() |
+			.canStartAs(Gender.MALE.mask() | Gender.FEMALE.mask() |
 				    AM.LAWFUL | AM.NEUTRAL | AM.CHAOTIC)
 			.add();
 
 		AdventurerSpecies.withID(ELF_ID)
+		.withSelf(M2.ELF)
 	    .withNoun("elf")
 	    .withAdjective("elven")
 	    .withCollectiveNoun("elvenkind")
@@ -300,12 +311,12 @@ public class AdventurerSpecies {
 		.withPM(PM.ELF)
 		.withMummyPM(PM.ELF_MUMMY)
 		.withZombiePM(PM.ELF_ZOMBIE)
-		.canStartAs(M2.ELF|
-				Gender.MALE.mask() | Gender.FEMALE.mask() |
+		.canStartAs(Gender.MALE.mask() | Gender.FEMALE.mask() |
 			    AM.CHAOTIC)
 		.add();
 
 		AdventurerSpecies.withID(DWARF_ID)
+		.withSelf(M2.DWARF)
 	    .withNoun("dwarf")
 	    .withAdjective("dwarven")
 	    .withCollectiveNoun("dwarvenkind")
@@ -314,12 +325,12 @@ public class AdventurerSpecies {
 		.withPM(PM.DWARF)
 		.withMummyPM(PM.DWARF_MUMMY)
 		.withZombiePM(PM.DWARF_ZOMBIE)
-		.canStartAs(M2.DWARF |
-				Gender.MALE.mask() | Gender.FEMALE.mask() |
+		.canStartAs(Gender.MALE.mask() | Gender.FEMALE.mask() |
 			    AM.LAWFUL)
 		.add();
 		
 		AdventurerSpecies.withID(GNOME_ID)
+		.withSelf(M2.GNOME)
 	    .withNoun("gnome")
 	    .withAdjective("gnomish")
 	    .withCollectiveNoun("gnomehood")
@@ -328,12 +339,12 @@ public class AdventurerSpecies {
 		.withPM(PM.GNOME)
 		.withMummyPM(PM.GNOME_MUMMY)
 		.withZombiePM(PM.GNOME_ZOMBIE)
-		.canStartAs(M2.GNOME |
-				Gender.MALE.mask() | Gender.FEMALE.mask() |
+		.canStartAs(Gender.MALE.mask() | Gender.FEMALE.mask() |
 			    AM.NEUTRAL)
 		.add();
 
 		AdventurerSpecies.withID(ORC_ID)
+		.withSelf(M2.ORC)
 	    .withNoun("orc")
 	    .withAdjective("orcish")
 	    .withCollectiveNoun("orcdom")
@@ -342,8 +353,7 @@ public class AdventurerSpecies {
 		.withPM(PM.ORC)
 		.withMummyPM(PM.ORC_MUMMY)
 		.withZombiePM(PM.ORC_ZOMBIE)
-		.canStartAs(M2.ORC |
-				Gender.MALE.mask() | Gender.FEMALE.mask() |
+		.canStartAs(Gender.MALE.mask() | Gender.FEMALE.mask() |
 			    AM.CHAOTIC)
 		.add();
 	}

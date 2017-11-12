@@ -772,7 +772,7 @@ struct monst *mtmp;
     } else if (weap->spfx & SPFX_DFLAG2) {
         return (isAffectedByWeaponFlag2(pmid, weap->mtype)
                 || (yours
-                    && ((!areYouPolymorphed() && (urace.selfmask & weap->mtype))
+                    && ((!areYouPolymorphed() && (yourSpeciesSelfMask() & weap->mtype))
                         || ((weap->mtype & M2_WERE) && lycanthropeType() >= LOW_PM))));
     } else if (weap->spfx & SPFX_DALIGN) {
 	int malign = monsterAlignment(pmid);

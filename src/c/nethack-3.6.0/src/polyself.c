@@ -470,7 +470,7 @@ int psflags;
                  * illegal monster forces newman(), which is what we
                  * want if they specified a human.... */
             } else if (!okToPolymorphInto(mntmp)
-                       && !(mntmp == PM_HUMAN || isOfYourRace(mntmp, urace.selfmask)
+                       && !(mntmp == PM_HUMAN || isOfYourRace(mntmp)
                             || mntmp == malePMIDForYourRole()
                             || mntmp == femalePMIDForYourRole())) {
 
@@ -588,7 +588,7 @@ int psflags;
      */
     sex_change_ok++;
     if (!okToPolymorphInto(mntmp) || (!forcecontrol && !rn2(5))
-        || isOfYourRace(mntmp, urace.selfmask)) {
+        || isOfYourRace(mntmp)) {
         newman();
     } else {
         (void) polymon(mntmp);

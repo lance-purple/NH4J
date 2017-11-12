@@ -25,8 +25,6 @@
  */
 const struct Role roles[] = {
     { 0, // "Archeologist"
-      MH_HUMAN | MH_DWARF | MH_GNOME | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL
-          | ROLE_NEUTRAL,
       /* Init   Lower  Higher */
       { 1, 0, 0, 1, 0, 1 },
       10,
@@ -38,8 +36,6 @@ const struct Role roles[] = {
       SPE_MAGIC_MAPPING,
       -4 },
     { 1, // "Barbarian"
-      MH_HUMAN | MH_ORC | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTRAL
-          | ROLE_CHAOTIC,
       /* Init   Lower  Higher */
       { 1, 0, 0, 1, 0, 1 },
       10,
@@ -51,8 +47,6 @@ const struct Role roles[] = {
       SPE_HASTE_SELF,
       -4 },
     { 2, // "Caveman", "Cavewoman"
-      MH_HUMAN | MH_DWARF | MH_GNOME | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL
-          | ROLE_NEUTRAL,
       /* Init   Lower  Higher */
       { 1, 0, 0, 1, 0, 1 },
       0,
@@ -64,7 +58,6 @@ const struct Role roles[] = {
       SPE_DIG,
       -4 },
     { 3, // "Healer"
-      MH_HUMAN | MH_GNOME | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTRAL,
       /* Init   Lower  Higher */
       { 1, 4, 0, 1, 0, 2 },
       10,
@@ -76,7 +69,6 @@ const struct Role roles[] = {
       SPE_CURE_SICKNESS,
       -4 },
     { 4, // "Knight"
-      MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL,
       /* Init   Lower  Higher */
       { 1, 4, 0, 1, 0, 2 },
       10,
@@ -88,8 +80,6 @@ const struct Role roles[] = {
       SPE_TURN_UNDEAD,
       -4 },
     { 5, // "Monk"
-      MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL | ROLE_NEUTRAL
-          | ROLE_CHAOTIC,
       /* Init   Lower  Higher */
       { 2, 2, 0, 2, 0, 2 },
       10,
@@ -101,8 +91,6 @@ const struct Role roles[] = {
       SPE_RESTORE_ABILITY,
       -4 },
     { 6, // "Priest", "Priestess"
-      MH_HUMAN | MH_ELF | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL | ROLE_NEUTRAL
-          | ROLE_CHAOTIC,
       /* Init   Lower  Higher */
       { 4, 3, 0, 2, 0, 2 },
       0,
@@ -116,7 +104,6 @@ const struct Role roles[] = {
     /* Note:  Rogue precedes Ranger so that use of `-R' on the command line
        retains its traditional meaning. */
     { 7, // "Rogue"
-      MH_HUMAN | MH_ORC | ROLE_MALE | ROLE_FEMALE | ROLE_CHAOTIC,
       /* Init   Lower  Higher */
       { 1, 0, 0, 1, 0, 1 },
       10,
@@ -128,8 +115,6 @@ const struct Role roles[] = {
       SPE_DETECT_TREASURE,
       -4 },
     { 8, // "Ranger"
-      MH_HUMAN | MH_ELF | MH_GNOME | MH_ORC | ROLE_MALE | ROLE_FEMALE
-          | ROLE_NEUTRAL | ROLE_CHAOTIC,
       /* Init   Lower  Higher */
       { 1, 0, 0, 1, 0, 1 },
       10,
@@ -141,7 +126,6 @@ const struct Role roles[] = {
       SPE_INVISIBILITY,
       -4 },
     { 9, // "Samurai"
-      MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL,
       /* Init   Lower  Higher */
       { 1, 0, 0, 1, 0, 1 },
       10,
@@ -153,7 +137,6 @@ const struct Role roles[] = {
       SPE_CLAIRVOYANCE,
       -4 },
     { 10, // "Tourist"
-      MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTRAL,
       /* Init   Lower  Higher */
       { 1, 0, 0, 1, 0, 1 },
       0,
@@ -165,7 +148,6 @@ const struct Role roles[] = {
       SPE_CHARM_MONSTER,
       -4 },
     { 11, // "Valkyrie"
-      MH_HUMAN | MH_DWARF | ROLE_FEMALE | ROLE_LAWFUL | ROLE_NEUTRAL,
       /* Init   Lower  Higher */
       { 1, 0, 0, 1, 0, 1 },
       0,
@@ -177,8 +159,6 @@ const struct Role roles[] = {
       SPE_CONE_OF_COLD,
       -4 },
     { 12, // "Wizard"
-      MH_HUMAN | MH_ELF | MH_GNOME | MH_ORC | ROLE_MALE | ROLE_FEMALE
-          | ROLE_NEUTRAL | ROLE_CHAOTIC,
       /* Init   Lower  Higher */
       { 4, 3, 0, 2, 0, 3 },
       0,
@@ -198,7 +178,6 @@ const struct Role roles[] = {
  */
 struct Role urole = {
     -1,
-    0,
     /* Init   Lower  Higher */
     { 2, 0, 0, 2, 0, 3 },
      0,
@@ -214,16 +193,6 @@ struct Role urole = {
 /* Table of all races */
 const struct Race races[] = {
     {
-        "human",
-        "human",
-        "humanity",
-        "Hum",
-        PM_HUMAN,
-        NON_PM,
-        PM_HUMAN_MUMMY,
-        PM_HUMAN_ZOMBIE,
-        MH_HUMAN | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL | ROLE_NEUTRAL
-            | ROLE_CHAOTIC,
         MH_HUMAN,
         0,
         MH_GNOME | MH_ORC,
@@ -235,15 +204,6 @@ const struct Race races[] = {
         { 1, 0, 2, 0, 2, 0 }  /* Energy */
     },
     {
-        "elf",
-        "elven",
-        "elvenkind",
-        "Elf",
-        PM_ELF,
-        NON_PM,
-        PM_ELF_MUMMY,
-        PM_ELF_ZOMBIE,
-        MH_ELF | ROLE_MALE | ROLE_FEMALE | ROLE_CHAOTIC,
         MH_ELF,
         MH_ELF,
         MH_ORC,
@@ -255,15 +215,6 @@ const struct Race races[] = {
         { 2, 0, 3, 0, 3, 0 }  /* Energy */
     },
     {
-        "dwarf",
-        "dwarven",
-        "dwarvenkind",
-        "Dwa",
-        PM_DWARF,
-        NON_PM,
-        PM_DWARF_MUMMY,
-        PM_DWARF_ZOMBIE,
-        MH_DWARF | ROLE_MALE | ROLE_FEMALE | ROLE_LAWFUL,
         MH_DWARF,
         MH_DWARF | MH_GNOME,
         MH_ORC,
@@ -275,15 +226,6 @@ const struct Race races[] = {
         { 0, 0, 0, 0, 0, 0 }  /* Energy */
     },
     {
-        "gnome",
-        "gnomish",
-        "gnomehood",
-        "Gno",
-        PM_GNOME,
-        NON_PM,
-        PM_GNOME_MUMMY,
-        PM_GNOME_ZOMBIE,
-        MH_GNOME | ROLE_MALE | ROLE_FEMALE | ROLE_NEUTRAL,
         MH_GNOME,
         MH_DWARF | MH_GNOME,
         MH_HUMAN,
@@ -295,15 +237,6 @@ const struct Race races[] = {
         { 2, 0, 2, 0, 2, 0 }  /* Energy */
     },
     {
-        "orc",
-        "orcish",
-        "orcdom",
-        "Orc",
-        PM_ORC,
-        NON_PM,
-        PM_ORC_MUMMY,
-        PM_ORC_ZOMBIE,
-        MH_ORC | ROLE_MALE | ROLE_FEMALE | ROLE_CHAOTIC,
         MH_ORC,
         0,
         MH_HUMAN | MH_ELF | MH_DWARF,
@@ -322,15 +255,6 @@ const struct Race races[] = {
  * choices.  This may be munged in role_init().
  */
 struct Race urace = {
-    "something",
-    "undefined",
-    "something",
-    "Xxx",
-    NON_PM,
-    NON_PM,
-    NON_PM,
-    NON_PM,
-    0,
     0,
     0,
     0,
@@ -466,7 +390,7 @@ int rolenum;
     int playableSpecies = numberOfPlayableSpecies();
 
     for (i = 0; i < playableSpecies; i++)
-        if (startingMaskForRole(rolenum) & startingSpeciesMaskForSpecies(i))
+        if (startingSpeciesMaskForRole(rolenum) & selfMaskForSpecies(i))
             n++;
 
     /* Pick a random race */
@@ -474,7 +398,7 @@ int rolenum;
     if (n)
         n = rn2(n * 100) / 100;
     for (i = 0; i < playableSpecies; i++)
-        if (startingMaskForRole(rolenum) & startingSpeciesMaskForSpecies(i)) {
+        if (startingSpeciesMaskForRole(rolenum) & selfMaskForSpecies(i)) {
             if (n)
                 n--;
             else
@@ -682,7 +606,7 @@ int rolenum, racenum, gendnum, alignnum;
             return FALSE;
         allow = startingMaskForRole(rolenum);
         if (racenum >= 0 && racenum < SIZE(races) - 1
-            && !(allow & startingSpeciesMaskForSpecies(racenum)))
+            && !(allow & selfMaskForSpecies(racenum)))
             return FALSE;
         if (gendnum >= 0 && gendnum < adventurerGenders()
             && !(allow & genderMask(gendnum) & ROLE_GENDMASK))
@@ -698,7 +622,7 @@ int rolenum, racenum, gendnum, alignnum;
                 continue;
             allow = startingMaskForRole(i);
             if (racenum >= 0 && racenum < SIZE(races) - 1
-                && !(allow & startingSpeciesMaskForSpecies(racenum)))
+                && !(allow & selfMaskForSpecies(racenum)))
                 continue;
             if (gendnum >= 0 && gendnum < adventurerGenders()
                 && !(allow & genderMask(gendnum) & ROLE_GENDMASK))
@@ -746,7 +670,7 @@ int rolenum, racenum, gendnum, alignnum;
     short allow;
 
     if (racenum >= 0 && racenum < SIZE(races) - 1) {
-        if (filter.mask & races[racenum].selfmask)
+        if (filter.mask & selfMaskForSpecies(racenum))
             return FALSE;
         allow = startingMaskForSpecies(racenum);
         if (rolenum >= 0 && rolenum < SIZE(roles) - 1
@@ -762,7 +686,7 @@ int rolenum, racenum, gendnum, alignnum;
     } else {
         /* random; check whether any selection is possible */
         for (i = 0; i < SIZE(races) - 1; i++) {
-            if (filter.mask & races[i].selfmask)
+            if (filter.mask & selfMaskForSpecies(i))
                 continue;
             allow = startingMaskForSpecies(i);
             if (rolenum >= 0 && rolenum < SIZE(roles) - 1
@@ -990,7 +914,7 @@ const char *bufp;
     if ((i = str2role(bufp)) != ROLE_NONE && i != ROLE_RANDOM)
         filter.roles[i] = TRUE;
     else if ((i = str2race(bufp)) != ROLE_NONE && i != ROLE_RANDOM)
-        filter.mask |= races[i].selfmask;
+        filter.mask |= selfMaskForSpecies(i);
     else if ((i = str2gend(bufp)) != ROLE_NONE && i != ROLE_RANDOM)
         filter.mask |= genderMask(i);
     else if ((i = str2align(bufp)) != ROLE_NONE && i != ROLE_RANDOM)
@@ -1394,7 +1318,7 @@ winid where;
         allowmask = startingMaskForRole(r);
         if ((allowmask & ROLE_RACEMASK) == MH_HUMAN)
             c = 0; /* races[human] */
-        else if (c >= 0 && !(allowmask & startingSpeciesMaskForSpecies(c)))
+        else if (c >= 0 && !(allowmask & selfMaskForSpecies(c)))
             c = ROLE_RANDOM;
         if ((allowmask & ROLE_GENDMASK) == ROLE_MALE)
             g = 0; /* role forces male (hypothetical) */
@@ -1543,7 +1467,7 @@ winid where;
                 constrainer = "role";
                 forcedValue = nounForSpecies(c);
             } else if (f >= 0
-                       && (allowmask & ~filter.mask) == races[f].selfmask) {
+                       && (allowmask & ~filter.mask) == selfMaskForSpecies(f)) {
                 /* if there is only one race choice available due to user
                    options disallowing others, race menu entry is disabled */
                 constrainer = "filter";

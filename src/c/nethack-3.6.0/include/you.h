@@ -51,7 +51,6 @@ struct Role {
     /*** Strings that name various things ***/
 
     /*** Bitmasks ***/
-    short XXallow;             /* bit mask of allowed variations */
 #define ROLE_RACEMASK 0x0ff8 /* allowable races */
 #define ROLE_GENDMASK 0xf000 /* allowable genders */
 #define ROLE_MALE 0x1000
@@ -99,23 +98,11 @@ extern struct Role urole;
 /*** Unified structure specifying race information ***/
 
 struct Race {
-    /*** Strings that name various things ***/
-    const char *XXnoun;         /* noun ("human", "elf") */
-    const char *XXadj;          /* adjective ("human", "elven") */
-    const char *XXcoll;           /* collective ("humanity", "elvenkind") */
-    const char *XXfilecode;       /* code for filenames */
-
-    /*** Indices of important monsters and objects ***/
-    short XXmalenum, /* PM_ as a male monster */
-        XXfemalenum, /* ...or as a female (NON_PM == same) */
-        XXmummynum,  /* PM_ as a mummy */
-        XXzombienum; /* PM_ as a zombie */
 
     /*** Bitmasks ***/
-    short XXallow;    /* bit mask of allowed variations */
-    short selfmask, /* your own race's bit mask */
-        lovemask,   /* bit mask of always peaceful */
-        hatemask;   /* bit mask of always hostile */
+    short XXselfmask; /* your own race's bit mask */
+    short lovemask;   /* bit mask of always peaceful */
+    short hatemask;   /* bit mask of always hostile */
 
     /*** Attributes ***/
     xchar attrmin[A_MAX];     /* minimum allowable attribute */

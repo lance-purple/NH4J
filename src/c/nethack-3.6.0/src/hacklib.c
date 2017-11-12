@@ -3320,8 +3320,12 @@ extern long startingGenderMaskForSpecies(int speciesID) {
   return javaGetLongFromInt(ADVENTURER_SPECIES_CLASS, "startingGenderMask", speciesID);
 }
 
-extern long startingSpeciesMaskForSpecies(int speciesID) {
-  return javaGetLongFromInt(ADVENTURER_SPECIES_CLASS, "startingSpeciesMask", speciesID);
+extern long selfMaskForSpecies(int speciesID) {
+  return javaGetLongFromInt(ADVENTURER_SPECIES_CLASS, "selfMask", speciesID);
+}
+
+extern long yourSpeciesSelfMask() {
+  return javaGetLong(PLAYER_CHARACTER_CLASS, "speciesSelfMask");
 }
 
 /*hacklib.c*/

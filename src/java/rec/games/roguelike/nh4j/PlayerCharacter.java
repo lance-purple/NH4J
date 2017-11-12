@@ -1789,4 +1789,9 @@ public class PlayerCharacter {
 	{
 		return AdventurerRole.hitPointAdvancement(currentRoleID, currentExperienceLevel);
 	}
+	
+	public static long speciesSelfMask()
+	{
+		return AdventurerSpecies.selfMask(speciesID);
+	}
 }

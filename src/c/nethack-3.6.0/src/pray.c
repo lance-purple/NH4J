@@ -1340,7 +1340,7 @@ dosacrifice()
                 value = eaten_stat(value, otmp);
         }
 
-        if (isOfYourRace(pmid, urace.selfmask)) {
+        if (isOfYourRace(pmid)) {
             if (isDemon(pmid4you())) {
                 You("find the idea very satisfying.");
                 exercise(A_WIS, TRUE);

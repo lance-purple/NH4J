@@ -2181,7 +2181,7 @@ E boolean FDECL(isDwarf, (int));
 E boolean FDECL(isGnome, (int));
 E boolean FDECL(isOrc, (int));
 E boolean FDECL(isHuman, (int));
-E boolean FDECL(isOfYourRace, (int, long));
+E boolean FDECL(isOfYourRace, (int));
 E boolean FDECL(isBat, (int));
 
 E boolean FDECL(isGiant, (int));
@@ -2931,7 +2931,8 @@ E boolean FDECL(speciesCanStartAsNeutral, (int));
 E boolean FDECL(speciesCanStartAsLawful, (int));
 E long FDECL(startingGenderMaskForSpecies, (int));
 
-E long FDECL(startingSpeciesMaskForSpecies, (int));
+E long FDECL(selfMaskForSpecies, (int));
+E long FDECL(yourSpeciesSelfMask, ());
 
 E boolean FDECL(validrole, (int));
 E boolean FDECL(validrace, (int, int));

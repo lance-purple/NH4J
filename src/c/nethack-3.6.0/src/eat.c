@@ -621,9 +621,9 @@ boolean allowmsg;
            and also shouldn't eat current species when polymorphed
            (even if having the form of something which doesn't care
            about cannibalism--hero's innate traits aren't altered) */
-        && (isOfYourRace(pm, urace.selfmask) || (areYouPolymorphed() && sameMonsterType(pmid4you(), pm)))) {
+        && (isOfYourRace(pm) || (areYouPolymorphed() && sameMonsterType(pmid4you(), pm)))) {
         if (allowmsg) {
-            if (areYouPolymorphed() && isOfYourRace(pm, urace.selfmask))
+            if (areYouPolymorphed() && isOfYourRace(pm))
                 You("have a bad feeling deep inside.");
             You("cannibal!  You will regret this!");
         }

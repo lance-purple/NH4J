@@ -1544,7 +1544,7 @@ struct mkroom *croom;
         /* if we can't get a specific monster type (pm == 0) then the
            class has been genocided, so settle for a random monster */
     }
-    if (areYouInTheMines() && (pmid != NON_PM) && isOfYourRace(pmid, urace.selfmask)
+    if (areYouInTheMines() && (pmid != NON_PM) && isOfYourRace(pmid)
         && (yourSpeciesIs(PM_DWARF) || yourSpeciesIs(PM_GNOME)) && rn2(3))
     {
         pmid = NON_PM;

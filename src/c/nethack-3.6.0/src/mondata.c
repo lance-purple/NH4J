@@ -1395,8 +1395,8 @@ boolean isHuman(int pmid) {
     return javaGetBooleanFromInt(MONSTER_DATA_CLASS, "isHuman", pmid);
 }
 
-boolean isOfYourRace(int pmid, long race) {
-    return javaGetBooleanFromIntAndLong(MONSTER_DATA_CLASS, "isOfYourRace", pmid, race);
+boolean isOfYourRace(int pmid) {
+    return javaGetBooleanFromIntAndLong(MONSTER_DATA_CLASS, "isOfYourRace", pmid, yourSpeciesSelfMask());
 }
 
 boolean isBat(int pmid) {
