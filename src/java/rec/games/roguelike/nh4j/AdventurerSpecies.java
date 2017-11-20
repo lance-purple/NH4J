@@ -272,7 +272,7 @@ public class AdventurerSpecies {
 		AdventurerSpecies species = getSpecies(speciesID);
 		if (null != species)
 		{
-			return species.canStartAs;
+			return species.canStartAs | species.selfMask;
 		}
 		return 0L;				
 	}

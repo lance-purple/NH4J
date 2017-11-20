@@ -979,8 +979,9 @@ int role, gend, algn;
     any = zeroany;
     for (i = 0; i < playableSpecies; i++) {
         race_ok = ok_race(role, i, gend, algn);
-        if (filtering && !race_ok)
+        if (filtering && !race_ok) {
             continue;
+	}
         if (filtering)
             any.a_int = i + 1;
         else

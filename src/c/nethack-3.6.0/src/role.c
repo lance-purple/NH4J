@@ -246,8 +246,6 @@ const struct Race races[] = {
  */
 struct Race urace = {
     0,
-    0,
-    0,
     /*    Str     Int Wis Dex Con Cha */
     { 3, 3, 3, 3, 3, 3 },
     { STR18(100), 18, 18, 18, 18, 18 },
@@ -659,35 +657,43 @@ int rolenum, racenum, gendnum, alignnum;
     int i;
     short allow;
 
-    if (racenum >= 0 && racenum < SIZE(races) - 1) {
-        if (filter.mask & selfMaskForSpecies(racenum))
+    if (racenum >= 0 && (racenum < numberOfPlayableSpecies())) {
+        if (filter.mask & selfMaskForSpecies(racenum)) {
             return FALSE;
+	}
         allow = startingMaskForSpecies(racenum);
-        if (rolenum >= 0 && rolenum < SIZE(roles) - 1
-            && !(allow & startingSpeciesMaskForRole(rolenum)))
+        if (rolenum >= 0 && (rolenum < numberOfKnownRoles())
+            && !(allow & startingSpeciesMaskForRole(rolenum))) {
             return FALSE;
-        if (gendnum >= 0 && gendnum < adventurerGenders()
-            && !(allow & genderMask(gendnum) & ROLE_GENDMASK))
+	}
+        if (gendnum >= 0 && (gendnum < adventurerGenders())
+            && !(allow & genderMask(gendnum) & ROLE_GENDMASK)) {
             return FALSE;
+	}
         if (alignnum >= 0 && alignnum < ROLE_ALIGNS
-            && !(allow & aligns[alignnum].allow & ROLE_ALIGNMASK))
+            && !(allow & aligns[alignnum].allow & ROLE_ALIGNMASK)) {
             return FALSE;
+	}
         return TRUE;
     } else {
         /* random; check whether any selection is possible */
         for (i = 0; i < SIZE(races) - 1; i++) {
-            if (filter.mask & selfMaskForSpecies(i))
+            if (filter.mask & selfMaskForSpecies(i)) {
                 continue;
+	    }
             allow = startingMaskForSpecies(i);
             if (rolenum >= 0 && rolenum < SIZE(roles) - 1
-                && !(allow & startingSpeciesMaskForRole(rolenum)))
+                && !(allow & startingSpeciesMaskForRole(rolenum))) {
                 continue;
+	    }
             if (gendnum >= 0 && gendnum < adventurerGenders()
-                && !(allow & genderMask(gendnum) & ROLE_GENDMASK))
+                && !(allow & genderMask(gendnum) & ROLE_GENDMASK)) {
                 continue;
+	    }
             if (alignnum >= 0 && alignnum < ROLE_ALIGNS
-                && !(allow & aligns[alignnum].allow & ROLE_ALIGNMASK))
+                && !(allow & aligns[alignnum].allow & ROLE_ALIGNMASK)) {
                 continue;
+	    }
             return TRUE;
         }
         return FALSE;
