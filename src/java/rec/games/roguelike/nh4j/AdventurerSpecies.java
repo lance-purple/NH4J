@@ -26,6 +26,8 @@ public class AdventurerSpecies {
 	
 	private long canStartAs;
 	private long selfMask;
+	private long friendshipMask = 0L;
+	private long hostilityMask = 0L;
 
 	private AdventurerSpecies(int speciesID) {
 		this.speciesID = speciesID;
@@ -102,6 +104,18 @@ public class AdventurerSpecies {
 	private AdventurerSpecies canStartAs(long canStartAs)
 	{
 		this.canStartAs = canStartAs;
+		return this;
+	}
+	
+	private AdventurerSpecies friendship(long friendshipMask)
+	{
+		this.friendshipMask = friendshipMask;
+		return this;
+	}
+	
+	private AdventurerSpecies hostility(long hostilityMask)
+	{
+		this.hostilityMask = hostilityMask;
 		return this;
 	}
 		
@@ -282,6 +296,24 @@ public class AdventurerSpecies {
 	public static boolean canStartAsLawful(int speciesID) {
 		return (startingAlignmentMask(speciesID) & AM.LAWFUL) != 0L;
 	}
+	
+	public static long friendshipMask(int speciesID) {
+		AdventurerSpecies species = getSpecies(speciesID);
+		if (null != species)
+		{
+			return species.friendshipMask;
+		}
+		return 0L;
+	}
+
+	public static long hostilityMask(int speciesID) {
+		AdventurerSpecies species = getSpecies(speciesID);
+		if (null != species)
+		{
+			return species.hostilityMask;
+		}
+		return 0L;
+	}
 
 	public static final int MASK = 0x0ff8;
 
@@ -299,6 +331,7 @@ public class AdventurerSpecies {
 			.withZombiePM(PM.HUMAN_ZOMBIE)
 			.canStartAs(Gender.MALE.mask() | Gender.FEMALE.mask() |
 				    AM.LAWFUL | AM.NEUTRAL | AM.CHAOTIC)
+			.hostility(M2.GNOME | M2.ORC)
 			.add();
 
 		AdventurerSpecies.withID(ELF_ID)
@@ -313,6 +346,8 @@ public class AdventurerSpecies {
 		.withZombiePM(PM.ELF_ZOMBIE)
 		.canStartAs(Gender.MALE.mask() | Gender.FEMALE.mask() |
 			    AM.CHAOTIC)
+		.friendship(M2.ELF)
+		.hostility(M2.ORC)
 		.add();
 
 		AdventurerSpecies.withID(DWARF_ID)
@@ -327,6 +362,8 @@ public class AdventurerSpecies {
 		.withZombiePM(PM.DWARF_ZOMBIE)
 		.canStartAs(Gender.MALE.mask() | Gender.FEMALE.mask() |
 			    AM.LAWFUL)
+		.friendship(M2.DWARF | M2.GNOME)
+		.hostility(M2.ORC)
 		.add();
 		
 		AdventurerSpecies.withID(GNOME_ID)
@@ -341,6 +378,8 @@ public class AdventurerSpecies {
 		.withZombiePM(PM.GNOME_ZOMBIE)
 		.canStartAs(Gender.MALE.mask() | Gender.FEMALE.mask() |
 			    AM.NEUTRAL)
+		.friendship(M2.DWARF | M2.GNOME)
+		.hostility(M2.HUMAN)
 		.add();
 
 		AdventurerSpecies.withID(ORC_ID)
@@ -355,6 +394,7 @@ public class AdventurerSpecies {
 		.withZombiePM(PM.ORC_ZOMBIE)
 		.canStartAs(Gender.MALE.mask() | Gender.FEMALE.mask() |
 			    AM.CHAOTIC)
+		.hostility(M2.HUMAN | M2.ELF | M2.DWARF)
 		.add();
 	}
 }

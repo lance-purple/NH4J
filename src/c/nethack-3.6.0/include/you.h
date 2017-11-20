@@ -101,8 +101,6 @@ struct Race {
 
     /*** Bitmasks ***/
     short XXselfmask; /* your own race's bit mask */
-    short lovemask;   /* bit mask of always peaceful */
-    short hatemask;   /* bit mask of always hostile */
 
     /*** Attributes ***/
     xchar attrmin[A_MAX];     /* minimum allowable attribute */

@@ -194,8 +194,6 @@ struct Role urole = {
 const struct Race races[] = {
     {
         MH_HUMAN,
-        0,
-        MH_GNOME | MH_ORC,
         /*    Str     Int Wis Dex Con Cha */
         { 3, 3, 3, 3, 3, 3 },
         { STR18(100), 18, 18, 18, 18, 18 },
@@ -205,8 +203,6 @@ const struct Race races[] = {
     },
     {
         MH_ELF,
-        MH_ELF,
-        MH_ORC,
         /*  Str    Int Wis Dex Con Cha */
         { 3, 3, 3, 3, 3, 3 },
         { 18, 20, 20, 18, 16, 18 },
@@ -216,8 +212,6 @@ const struct Race races[] = {
     },
     {
         MH_DWARF,
-        MH_DWARF | MH_GNOME,
-        MH_ORC,
         /*    Str     Int Wis Dex Con Cha */
         { 3, 3, 3, 3, 3, 3 },
         { STR18(100), 16, 16, 20, 20, 16 },
@@ -227,8 +221,6 @@ const struct Race races[] = {
     },
     {
         MH_GNOME,
-        MH_DWARF | MH_GNOME,
-        MH_HUMAN,
         /*  Str    Int Wis Dex Con Cha */
         { 3, 3, 3, 3, 3, 3 },
         { STR18(50), 19, 18, 18, 18, 18 },
@@ -238,8 +230,6 @@ const struct Race races[] = {
     },
     {
         MH_ORC,
-        0,
-        MH_HUMAN | MH_ELF | MH_DWARF,
         /*  Str    Int Wis Dex Con Cha */
         { 3, 3, 3, 3, 3, 3 },
         { STR18(50), 16, 16, 18, 18, 16 },

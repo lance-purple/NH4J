@@ -1903,9 +1903,9 @@ int pmid;
     if (msound == MS_NEMESIS)
         return FALSE;
 
-    if (racialFriendship(pmid, urace.lovemask))
+    if (racialFriendship(pmid, yourSpeciesFriendshipMask()))
         return TRUE;
-    if (racialHostility(pmid, urace.hatemask))
+    if (racialHostility(pmid, yourSpeciesHostilityMask()))
         return FALSE;
 
     /* the monster is hostile if its alignment is different from the

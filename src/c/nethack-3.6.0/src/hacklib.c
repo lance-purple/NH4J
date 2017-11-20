@@ -3328,4 +3328,12 @@ extern long yourSpeciesSelfMask() {
   return javaGetLong(PLAYER_CHARACTER_CLASS, "speciesSelfMask");
 }
 
+extern long yourSpeciesFriendshipMask() {
+  return javaGetLong(PLAYER_CHARACTER_CLASS, "speciesFriendshipMask");
+}
+
+extern long yourSpeciesHostilityMask() {
+  return javaGetLong(PLAYER_CHARACTER_CLASS, "speciesHostilityMask");
+}
+
 /*hacklib.c*/

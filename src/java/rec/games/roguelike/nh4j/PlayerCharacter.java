@@ -1794,4 +1794,14 @@ public class PlayerCharacter {
 	{
 		return AdventurerSpecies.selfMask(speciesID);
 	}
+	
+	public static long speciesFriendshipMask()
+	{
+		return AdventurerSpecies.friendshipMask(speciesID);
+	}
+	
+	public static long speciesHostilityMask()
+	{
+		return AdventurerSpecies.hostilityMask(speciesID);
+	}
 }

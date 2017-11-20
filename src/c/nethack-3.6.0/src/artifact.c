@@ -155,7 +155,7 @@ aligntyp alignment; /* target alignment, or A_NONE */
            suitable for hero's role+race */
         if ((a->alignment == alignment || a->alignment == A_NONE)
             /* avoid enemies' equipment */
-            && (a->race == NON_PM || !racialHostility(a->race, urace.hatemask))) {
+            && (a->race == NON_PM || !racialHostility(a->race, yourSpeciesHostilityMask()))) {
             /* when a role-specific first choice is available, use it */
             if (yourRoleHasPMID(a->role)) {
                 /* make this be the only possibility in the list */

@@ -2933,6 +2933,8 @@ E long FDECL(startingGenderMaskForSpecies, (int));
 
 E long FDECL(selfMaskForSpecies, (int));
 E long FDECL(yourSpeciesSelfMask, ());
+E long FDECL(yourSpeciesFriendshipMask, ());
+E long FDECL(yourSpeciesHostilityMask, ());
 
 E boolean FDECL(validrole, (int));
 E boolean FDECL(validrace, (int, int));
