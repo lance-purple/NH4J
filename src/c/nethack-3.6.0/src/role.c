@@ -194,45 +194,30 @@ struct Role urole = {
 const struct Race races[] = {
     {
         MH_HUMAN,
-        /*    Str     Int Wis Dex Con Cha */
-        { 3, 3, 3, 3, 3, 3 },
-        { STR18(100), 18, 18, 18, 18, 18 },
         /* Init   Lower  Higher */
         { 2, 0, 0, 2, 1, 0 }, /* Hit points */
         { 1, 0, 2, 0, 2, 0 }  /* Energy */
     },
     {
         MH_ELF,
-        /*  Str    Int Wis Dex Con Cha */
-        { 3, 3, 3, 3, 3, 3 },
-        { 18, 20, 20, 18, 16, 18 },
         /* Init   Lower  Higher */
         { 1, 0, 0, 1, 1, 0 }, /* Hit points */
         { 2, 0, 3, 0, 3, 0 }  /* Energy */
     },
     {
         MH_DWARF,
-        /*    Str     Int Wis Dex Con Cha */
-        { 3, 3, 3, 3, 3, 3 },
-        { STR18(100), 16, 16, 20, 20, 16 },
         /* Init   Lower  Higher */
         { 4, 0, 0, 3, 2, 0 }, /* Hit points */
         { 0, 0, 0, 0, 0, 0 }  /* Energy */
     },
     {
         MH_GNOME,
-        /*  Str    Int Wis Dex Con Cha */
-        { 3, 3, 3, 3, 3, 3 },
-        { STR18(50), 19, 18, 18, 18, 18 },
         /* Init   Lower  Higher */
         { 1, 0, 0, 1, 0, 0 }, /* Hit points */
         { 2, 0, 2, 0, 2, 0 }  /* Energy */
     },
     {
         MH_ORC,
-        /*  Str    Int Wis Dex Con Cha */
-        { 3, 3, 3, 3, 3, 3 },
-        { STR18(50), 16, 16, 18, 18, 16 },
         /* Init   Lower  Higher */
         { 1, 0, 0, 1, 0, 0 }, /* Hit points */
         { 1, 0, 1, 0, 1, 0 }  /* Energy */
@@ -246,9 +231,6 @@ const struct Race races[] = {
  */
 struct Race urace = {
     0,
-    /*    Str     Int Wis Dex Con Cha */
-    { 3, 3, 3, 3, 3, 3 },
-    { STR18(100), 18, 18, 18, 18, 18 },
     /* Init   Lower  Higher */
     { 2, 0, 0, 2, 1, 0 }, /* Hit points */
     { 1, 0, 2, 0, 2, 0 }  /* Energy */

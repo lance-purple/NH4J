@@ -1741,12 +1741,12 @@ extern int attributeMaximum(int index) {
     if ((index == A_STR) && areYouPolymorphed() && isStrongMonster(pmid4you())) {
         return STR18(100);
     } else {
-        return urace.attrmax[index];
+        return yourSpeciesAttributeMaximum(index);
     }
 }
 
 extern int attributeMinimum(int index) {
-    return urace.attrmin[index];
+    return yourSpeciesAttributeMinimum(index);
 }
 
 /*attrib.c*/

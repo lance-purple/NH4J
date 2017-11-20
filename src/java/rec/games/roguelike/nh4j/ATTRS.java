@@ -38,6 +38,13 @@ public class ATTRS {
 		set(STR, value);
 		return this;
 	}
+	
+	public ATTRS STR_18(int value)
+	{
+		set(STR, ATTRS.STR18(value));
+		return this;
+	}
+
 
 	public ATTRS INT(int value)
 	{
@@ -67,6 +74,11 @@ public class ATTRS {
 	{
 		set(CHA, value);
 		return this;
+	}
+	
+	public static int STR18(int percentile)
+	{
+		return 18 + percentile;
 	}
 
 }

@@ -28,6 +28,9 @@ public class AdventurerSpecies {
 	private long selfMask;
 	private long friendshipMask = 0L;
 	private long hostilityMask = 0L;
+	
+	private ATTRS minimumAttributes;
+	private ATTRS maximumAttributes;
 
 	private AdventurerSpecies(int speciesID) {
 		this.speciesID = speciesID;
@@ -118,7 +121,19 @@ public class AdventurerSpecies {
 		this.hostilityMask = hostilityMask;
 		return this;
 	}
-		
+	
+	private AdventurerSpecies minimums(ATTRS minimums)
+	{
+		this.minimumAttributes = minimums;
+		return this;
+	}
+	
+	private AdventurerSpecies maximums(ATTRS maximums)
+	{
+		this.maximumAttributes = maximums;
+		return this;
+	}
+	
 	private void add() {
 		AdventurerSpecies.speciesByID.put(this.speciesID, this);
 	}
@@ -314,6 +329,24 @@ public class AdventurerSpecies {
 		}
 		return 0L;
 	}
+	
+	public static int maximum(int speciesID, int whichAttr) {
+		AdventurerSpecies species = getSpecies(speciesID);
+		if (null != species)
+		{
+			return species.maximumAttributes.get(whichAttr);
+		}
+		return 0;
+	}
+	
+	public static int minimum(int speciesID, int whichAttr) {
+		AdventurerSpecies species = getSpecies(speciesID);
+		if (null != species)
+		{
+			return species.minimumAttributes.get(whichAttr);
+		}
+		return 0;
+	}
 
 	public static final int MASK = 0x0ff8;
 
@@ -332,6 +365,8 @@ public class AdventurerSpecies {
 			.canStartAs(Gender.MALE.mask() | Gender.FEMALE.mask() |
 				    AM.LAWFUL | AM.NEUTRAL | AM.CHAOTIC)
 			.hostility(M2.GNOME | M2.ORC)
+			.minimums(new ATTRS().STR(3).INT(3).WIS(3).DEX(3).CON(3).CHA(3))
+			.maximums(new ATTRS().STR_18(100).INT(18).WIS(18).DEX(18).CON(18).CHA(18))
 			.add();
 
 		AdventurerSpecies.withID(ELF_ID)
@@ -348,6 +383,8 @@ public class AdventurerSpecies {
 			    AM.CHAOTIC)
 		.friendship(M2.ELF)
 		.hostility(M2.ORC)
+		.minimums(new ATTRS().STR(3).INT(3).WIS(3).DEX(3).CON(3).CHA(3))
+		.maximums(new ATTRS().STR(18).INT(20).WIS(20).DEX(18).CON(16).CHA(18))
 		.add();
 
 		AdventurerSpecies.withID(DWARF_ID)
@@ -364,6 +401,8 @@ public class AdventurerSpecies {
 			    AM.LAWFUL)
 		.friendship(M2.DWARF | M2.GNOME)
 		.hostility(M2.ORC)
+		.minimums(new ATTRS().STR(3).INT(3).WIS(3).DEX(3).CON(3).CHA(3))
+		.maximums(new ATTRS().STR_18(100).INT(16).WIS(16).DEX(20).CON(20).CHA(16))
 		.add();
 		
 		AdventurerSpecies.withID(GNOME_ID)
@@ -380,6 +419,8 @@ public class AdventurerSpecies {
 			    AM.NEUTRAL)
 		.friendship(M2.DWARF | M2.GNOME)
 		.hostility(M2.HUMAN)
+		.minimums(new ATTRS().STR(3).INT(3).WIS(3).DEX(3).CON(3).CHA(3))
+		.maximums(new ATTRS().STR_18(50).INT(19).WIS(18).DEX(18).CON(18).CHA(18))
 		.add();
 
 		AdventurerSpecies.withID(ORC_ID)
@@ -395,6 +436,8 @@ public class AdventurerSpecies {
 		.canStartAs(Gender.MALE.mask() | Gender.FEMALE.mask() |
 			    AM.CHAOTIC)
 		.hostility(M2.HUMAN | M2.ELF | M2.DWARF)
+		.minimums(new ATTRS().STR(3).INT(3).WIS(3).DEX(3).CON(3).CHA(3))
+		.maximums(new ATTRS().STR_18(20).INT(16).WIS(16).DEX(18).CON(18).CHA(16))
 		.add();
 	}
 }

@@ -103,8 +103,6 @@ struct Race {
     short XXselfmask; /* your own race's bit mask */
 
     /*** Attributes ***/
-    xchar attrmin[A_MAX];     /* minimum allowable attribute */
-    xchar attrmax[A_MAX];     /* maximum allowable attribute */
     struct RoleAdvance hpadv; /* hit point advancement */
     struct RoleAdvance enadv; /* energy advancement */
 

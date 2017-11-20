@@ -3336,4 +3336,12 @@ extern long yourSpeciesHostilityMask() {
   return javaGetLong(PLAYER_CHARACTER_CLASS, "speciesHostilityMask");
 }
 
+extern int yourSpeciesAttributeMaximum(int whichAttr) {
+  return javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "speciesAttributeMaximum", whichAttr);
+}
+
+extern int yourSpeciesAttributeMinimum(int whichAttr) {
+  return javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "speciesAttributeMinimum", whichAttr);
+}
+
 /*hacklib.c*/

@@ -1804,4 +1804,15 @@ public class PlayerCharacter {
 	{
 		return AdventurerSpecies.hostilityMask(speciesID);
 	}
+	
+	public static int speciesAttributeMaximum(int whichAttr)
+	{
+		return AdventurerSpecies.maximum(speciesID, whichAttr);
+	}
+
+	public static int speciesAttributeMinimum(int whichAttr)
+	{
+		return AdventurerSpecies.minimum(speciesID, whichAttr);
+	}
+
 }

@@ -2935,6 +2935,8 @@ E long FDECL(selfMaskForSpecies, (int));
 E long FDECL(yourSpeciesSelfMask, ());
 E long FDECL(yourSpeciesFriendshipMask, ());
 E long FDECL(yourSpeciesHostilityMask, ());
+E int FDECL(yourSpeciesAttributeMaximum, (int));
+E int FDECL(yourSpeciesAttributeMinimum, (int));
 
 E boolean FDECL(validrole, (int));
 E boolean FDECL(validrace, (int, int));
