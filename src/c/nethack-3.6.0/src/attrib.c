@@ -935,13 +935,10 @@ newhp()
     int conplus;
 
     hp += hitPointAdvancementForYourRole();
+    hp += hitPointAdvancementForYourSpecies();
 
     if (currentExperienceLevel() == 0) {
         /* Initialize hit points */
-        hp += urace.hpadv.infix;
-        if (urace.hpadv.inrnd > 0)
-            hp += rnd(urace.hpadv.inrnd);
-
         if (moves <= 1L) { /* initial hero; skip for polyself to new man */
             /* Initialize alignment stuff */
             setCurrentAlignmentType(aligns[flags.initalign].value);
@@ -949,15 +946,6 @@ newhp()
         }
         /* no Con adjustment for initial hit points */
     } else {
-        if (currentExperienceLevel() < cutoffLevelForYourRole()) {
-            hp += urace.hpadv.lofix;
-            if (urace.hpadv.lornd > 0)
-                hp += rnd(urace.hpadv.lornd);
-        } else {
-	    hp += urace.hpadv.hifix;
-            if (urace.hpadv.hirnd > 0)
-                hp += rnd(urace.hpadv.hirnd);
-        }
         if (ACURR(A_CON) <= 3)
             conplus = -2;
         else if (ACURR(A_CON) <= 6)

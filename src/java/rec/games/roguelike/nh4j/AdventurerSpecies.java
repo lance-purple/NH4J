@@ -31,6 +31,8 @@ public class AdventurerSpecies {
 	
 	private ATTRS minimumAttributes;
 	private ATTRS maximumAttributes;
+	
+	private HitPointAdvancement hitPointAdvancement;
 
 	private AdventurerSpecies(int speciesID) {
 		this.speciesID = speciesID;
@@ -84,13 +86,6 @@ public class AdventurerSpecies {
 		this.femalePM = genericPM;
 		return this;
 	}
-
-	private AdventurerSpecies withPM(PM malePM, PM femalePM)
-	{
-		this.malePM = malePM;
-		this.femalePM = femalePM;
-		return this;
-	}
 	
 	private AdventurerSpecies withMummyPM(PM mummyPM)
 	{
@@ -131,6 +126,12 @@ public class AdventurerSpecies {
 	private AdventurerSpecies maximums(ATTRS maximums)
 	{
 		this.maximumAttributes = maximums;
+		return this;
+	}
+
+	private AdventurerSpecies with(HitPointAdvancement advancement)
+	{
+		this.hitPointAdvancement = advancement;
 		return this;
 	}
 	
@@ -176,7 +177,16 @@ public class AdventurerSpecies {
 		}
 		return "(unknown)";
 	}
-	
+
+	public static String speciesCollectiveNoun(int speciesID) {
+		AdventurerSpecies species = getSpecies(speciesID);
+		if (null != species)
+		{
+			return species.speciesCollectiveNoun;
+		}
+		return "(unknown)";
+	}
+
 	public static String speciesAdjective(int speciesID) {
 		AdventurerSpecies species = getSpecies(speciesID);
 		if (null != species)
@@ -347,27 +357,37 @@ public class AdventurerSpecies {
 		}
 		return 0;
 	}
+	
+	public static int hitPointAdvancement(int speciesID, int experienceLevel, int cutoffLevel) {
+		AdventurerSpecies species = getSpecies(speciesID);
+		if (null != species)
+		{
+			return species.hitPointAdvancement.forLevel(experienceLevel, cutoffLevel);
+		}
+		return 0;
+	}
 
 	public static final int MASK = 0x0ff8;
 
 	private static void initialize() {
 
 		AdventurerSpecies.withID(HUMAN_ID)
-		    .withSelf(M2.HUMAN)
-		    .withNoun("human")
-		    .withAdjective("human")
-		    .withCollectiveNoun("humanity")
-			.withFileCode("Hum")
-			.withIndividualName("man", "woman")
-			.withPM(PM.HUMAN)
-			.withMummyPM(PM.HUMAN_MUMMY)
-			.withZombiePM(PM.HUMAN_ZOMBIE)
-			.canStartAs(Gender.MALE.mask() | Gender.FEMALE.mask() |
-				    AM.LAWFUL | AM.NEUTRAL | AM.CHAOTIC)
-			.hostility(M2.GNOME | M2.ORC)
-			.minimums(new ATTRS().STR(3).INT(3).WIS(3).DEX(3).CON(3).CHA(3))
-			.maximums(new ATTRS().STR_18(100).INT(18).WIS(18).DEX(18).CON(18).CHA(18))
-			.add();
+		.withSelf(M2.HUMAN)
+		.withNoun("human")
+		.withAdjective("human")
+		.withCollectiveNoun("humanity")
+		.withFileCode("Hum")
+		.withIndividualName("man", "woman")
+		.withPM(PM.HUMAN)
+		.withMummyPM(PM.HUMAN_MUMMY)
+		.withZombiePM(PM.HUMAN_ZOMBIE)
+		.canStartAs(Gender.MALE.mask() | Gender.FEMALE.mask() |
+				AM.LAWFUL | AM.NEUTRAL | AM.CHAOTIC)
+		.hostility(M2.GNOME | M2.ORC)
+		.minimums(new ATTRS().STR(3).INT(3).WIS(3).DEX(3).CON(3).CHA(3))
+		.maximums(new ATTRS().STR_18(100).INT(18).WIS(18).DEX(18).CON(18).CHA(18))
+		.with(HitPointAdvancement.of().init(2, 0).low(0, 2).high(1, 0))
+		.add();
 
 		AdventurerSpecies.withID(ELF_ID)
 		.withSelf(M2.ELF)
@@ -385,6 +405,7 @@ public class AdventurerSpecies {
 		.hostility(M2.ORC)
 		.minimums(new ATTRS().STR(3).INT(3).WIS(3).DEX(3).CON(3).CHA(3))
 		.maximums(new ATTRS().STR(18).INT(20).WIS(20).DEX(18).CON(16).CHA(18))
+		.with(HitPointAdvancement.of().init(1, 0).low(0, 1).high(1, 0))
 		.add();
 
 		AdventurerSpecies.withID(DWARF_ID)
@@ -403,6 +424,7 @@ public class AdventurerSpecies {
 		.hostility(M2.ORC)
 		.minimums(new ATTRS().STR(3).INT(3).WIS(3).DEX(3).CON(3).CHA(3))
 		.maximums(new ATTRS().STR_18(100).INT(16).WIS(16).DEX(20).CON(20).CHA(16))
+		.with(HitPointAdvancement.of().init(4, 0).low(0, 3).high(2, 0))
 		.add();
 		
 		AdventurerSpecies.withID(GNOME_ID)
@@ -421,6 +443,7 @@ public class AdventurerSpecies {
 		.hostility(M2.HUMAN)
 		.minimums(new ATTRS().STR(3).INT(3).WIS(3).DEX(3).CON(3).CHA(3))
 		.maximums(new ATTRS().STR_18(50).INT(19).WIS(18).DEX(18).CON(18).CHA(18))
+		.with(HitPointAdvancement.of().init(1, 0).low(0, 1).high(0, 0))
 		.add();
 
 		AdventurerSpecies.withID(ORC_ID)
@@ -438,6 +461,7 @@ public class AdventurerSpecies {
 		.hostility(M2.HUMAN | M2.ELF | M2.DWARF)
 		.minimums(new ATTRS().STR(3).INT(3).WIS(3).DEX(3).CON(3).CHA(3))
 		.maximums(new ATTRS().STR_18(20).INT(16).WIS(16).DEX(18).CON(18).CHA(16))
+		.with(HitPointAdvancement.of().init(1, 0).low(0, 1).high(0, 0))
 		.add();
 	}
 }

@@ -2898,6 +2898,7 @@ E int FDECL(attributeDistributionForYourRole, (int));
 
 E int FDECL(cutoffLevelForYourRole, ());
 E int FDECL(hitPointAdvancementForYourRole, ());
+E int FDECL(hitPointAdvancementForYourSpecies, ());
 
 E void FDECL(setYourSpeciesID, (int));
 E int FDECL(yourSpeciesID, ());

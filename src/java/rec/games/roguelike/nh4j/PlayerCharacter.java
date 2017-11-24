@@ -1785,11 +1785,17 @@ public class PlayerCharacter {
 		return AdventurerRole.cutoffLevel(currentRoleID);
 	}
 	
-	public static int hitPointAdvancement()
+	public static int hitPointAdvancementForRole()
 	{
 		return AdventurerRole.hitPointAdvancement(currentRoleID, currentExperienceLevel);
 	}
-	
+
+	public static int hitPointAdvancementForSpecies()
+	{
+		int cutoff = AdventurerRole.cutoffLevel(currentRoleID);
+		return AdventurerSpecies.hitPointAdvancement(speciesID, currentExperienceLevel, cutoff);
+	}
+
 	public static long speciesSelfMask()
 	{
 		return AdventurerSpecies.selfMask(speciesID);

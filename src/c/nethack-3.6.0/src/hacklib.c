@@ -3165,7 +3165,11 @@ extern int cutoffLevelForYourRole() {
 }
 
 extern int hitPointAdvancementForYourRole() {
-  return javaGetInt(PLAYER_CHARACTER_CLASS, "hitPointAdvancement");
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "hitPointAdvancementForRole");
+}
+
+extern int hitPointAdvancementForYourSpecies() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "hitPointAdvancementForSpecies");
 }
 
 extern int yourSpeciesID() {

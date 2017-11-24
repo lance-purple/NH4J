@@ -195,31 +195,26 @@ const struct Race races[] = {
     {
         MH_HUMAN,
         /* Init   Lower  Higher */
-        { 2, 0, 0, 2, 1, 0 }, /* Hit points */
         { 1, 0, 2, 0, 2, 0 }  /* Energy */
     },
     {
         MH_ELF,
         /* Init   Lower  Higher */
-        { 1, 0, 0, 1, 1, 0 }, /* Hit points */
         { 2, 0, 3, 0, 3, 0 }  /* Energy */
     },
     {
         MH_DWARF,
         /* Init   Lower  Higher */
-        { 4, 0, 0, 3, 2, 0 }, /* Hit points */
         { 0, 0, 0, 0, 0, 0 }  /* Energy */
     },
     {
         MH_GNOME,
         /* Init   Lower  Higher */
-        { 1, 0, 0, 1, 0, 0 }, /* Hit points */
         { 2, 0, 2, 0, 2, 0 }  /* Energy */
     },
     {
         MH_ORC,
         /* Init   Lower  Higher */
-        { 1, 0, 0, 1, 0, 0 }, /* Hit points */
         { 1, 0, 1, 0, 1, 0 }  /* Energy */
     },
     /* Array terminator */
@@ -232,7 +227,6 @@ const struct Race races[] = {
 struct Race urace = {
     0,
     /* Init   Lower  Higher */
-    { 2, 0, 0, 2, 1, 0 }, /* Hit points */
     { 1, 0, 2, 0, 2, 0 }  /* Energy */
 };
 

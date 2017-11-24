@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-import javax.swing.GroupLayout.Alignment;
-
 public class AdventurerRole {
 
 	private static final int ARCHAEOLOGIST_ID = 0;

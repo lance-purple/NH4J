@@ -103,7 +103,6 @@ struct Race {
     short XXselfmask; /* your own race's bit mask */
 
     /*** Attributes ***/
-    struct RoleAdvance hpadv; /* hit point advancement */
     struct RoleAdvance enadv; /* energy advancement */
 
     /*** Properties in variable-length arrays ***/
