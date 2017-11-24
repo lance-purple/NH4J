@@ -39,6 +39,8 @@ public class AdventurerRole {
 	private HitPointAdvancement hitPointAdvancement;
 	private EnergyAdvancement energyAdvancement;
 	
+	private int initialAlignmentRecord;
+	
 	private PM preferredPet = PM.UNKNOWN;
 
 	private PM questLeader = PM.UNKNOWN;
@@ -195,6 +197,12 @@ public class AdventurerRole {
 	private AdventurerRole with(EnergyAdvancement advancement)
 	{
 		this.energyAdvancement = advancement;
+		return this;
+	}
+
+	private AdventurerRole withInitialAlignmentRecord(int initialAlignmentRecord)
+	{
+		this.initialAlignmentRecord = initialAlignmentRecord;
 		return this;
 	}
 
@@ -577,6 +585,14 @@ public class AdventurerRole {
 		return (0 != idOfQuestArtifact(roleID));
 	}
 
+	public static int initialAlignmentRecord(int roleID) {
+		AdventurerRole role = getRole(roleID);
+		if (null != role) {
+			return role.initialAlignmentRecord;
+		}
+		return 0;
+	}
+
 	private static void initialize() {
 
 		AdventurerRole.withID(ARCHAEOLOGIST_ID)
@@ -608,6 +624,7 @@ public class AdventurerRole {
 			.withCutoffLevel(14)
 			.with(HitPointAdvancement.of().init(11, 0).low(0, 8).high(1, 0))
 			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
+			.withInitialAlignmentRecord(10)
 			.add();
 
 		AdventurerRole.withID(BARBARIAN_ID)
@@ -639,6 +656,7 @@ public class AdventurerRole {
 			.withCutoffLevel(10)
 			.with(HitPointAdvancement.of().init(14, 0).low(0, 10).high(2, 0))
 			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
+			.withInitialAlignmentRecord(10)
 			.add();
 
 		AdventurerRole.withID(CAVEMAN_ID)
@@ -671,6 +689,7 @@ public class AdventurerRole {
 			.withCutoffLevel(10)
 			.with(HitPointAdvancement.of().init(14, 0).low(0, 8).high(2, 0))
 			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
+			.withInitialAlignmentRecord(0)
 			.add();
 
 		AdventurerRole.withID(HEALER_ID)
@@ -702,6 +721,7 @@ public class AdventurerRole {
 			.withCutoffLevel(20)
 			.with(HitPointAdvancement.of().init(11, 0).low(0, 8).high(1, 0))
 			.with(EnergyAdvancement.of().init(1, 4).low(0, 1).high(0, 2))
+			.withInitialAlignmentRecord(10)
 			.add();
 
 		AdventurerRole.withID(KNIGHT_ID)
@@ -734,6 +754,7 @@ public class AdventurerRole {
 			.withCutoffLevel(10)
 			.with(HitPointAdvancement.of().init(14, 0).low(0, 8).high(2, 0))
 			.with(EnergyAdvancement.of().init(1, 4).low(0, 1).high(0, 2))
+			.withInitialAlignmentRecord(10)
 			.add();
 
 		AdventurerRole.withID(MONK_ID)
@@ -765,6 +786,7 @@ public class AdventurerRole {
 			.withCutoffLevel(10)
 			.with(HitPointAdvancement.of().init(12, 0).low(0, 8).high(1, 0))
 			.with(EnergyAdvancement.of().init(2, 2).low(0, 2).high(0, 2))
+			.withInitialAlignmentRecord(10)
 			.add();
 
 		AdventurerRole.withID(PRIEST_ID)
@@ -795,6 +817,7 @@ public class AdventurerRole {
 			.withCutoffLevel(10)
 			.with(HitPointAdvancement.of().init(12, 0).low(0, 8).high(1, 0))
 			.with(EnergyAdvancement.of().init(4, 3).low(0, 2).high(0, 2))
+			.withInitialAlignmentRecord(0)
 			.add();
 
 		AdventurerRole.withID(ROGUE_ID)
@@ -826,6 +849,7 @@ public class AdventurerRole {
 			.withCutoffLevel(11)
 			.with(HitPointAdvancement.of().init(10, 0).low(0, 8).high(1, 0))
 			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
+			.withInitialAlignmentRecord(10)
 			.add();
 
 		AdventurerRole.withID(RANGER_ID)
@@ -858,6 +882,7 @@ public class AdventurerRole {
 			.withCutoffLevel(12)
 			.with(HitPointAdvancement.of().init(13, 0).low(0, 6).high(1, 0))
 			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
+			.withInitialAlignmentRecord(10)
 			.add();
 
 		AdventurerRole.withID(SAMURAI_ID)
@@ -890,6 +915,7 @@ public class AdventurerRole {
 			.withCutoffLevel(11)
 			.with(HitPointAdvancement.of().init(13, 0).low(0, 8).high(1, 0))
 			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
+			.withInitialAlignmentRecord(10)
 			.add();
 
 		AdventurerRole.withID(TOURIST_ID)
@@ -921,6 +947,7 @@ public class AdventurerRole {
 			.withCutoffLevel(14)
 			.with(HitPointAdvancement.of().init(8, 0).low(0, 8).high(0, 0))
 			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
+			.withInitialAlignmentRecord(0)
 			.add();
 
 		AdventurerRole.withID(VALKYRIE_ID)
@@ -952,6 +979,7 @@ public class AdventurerRole {
 			.withCutoffLevel(10)
 			.with(HitPointAdvancement.of().init(14, 0).low(0, 8).high(2, 0))
 			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
+			.withInitialAlignmentRecord(0)
 			.add();
 
 		AdventurerRole.withID(WIZARD_ID)
@@ -984,6 +1012,7 @@ public class AdventurerRole {
 			.withCutoffLevel(12)
 			.with(HitPointAdvancement.of().init(10, 8).low(0, 8).high(1, 0))
 			.with(EnergyAdvancement.of().init(4, 3).low(0, 2).high(0, 3))
+			.withInitialAlignmentRecord(0)
 			.add();
 
 	}

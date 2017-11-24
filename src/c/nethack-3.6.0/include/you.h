@@ -61,10 +61,6 @@ struct Role {
 #define ROLE_NEUTRAL AM_NEUTRAL
 #define ROLE_CHAOTIC AM_CHAOTIC
 
-    /*** Attributes (from attrib.c and exper.c) ***/
-    struct RoleAdvance enadv; /* energy advancement */
-    xchar initrecord;         /* initial alignment record */
-
     /*** Spell statistics (from spell.c) ***/
     int spelbase; /* base spellcasting penalty */
     int spelheal; /* penalty (-bonus) for healing spells */

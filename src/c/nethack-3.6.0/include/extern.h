@@ -2899,6 +2899,8 @@ E int FDECL(attributeDistributionForYourRole, (int));
 
 E int FDECL(cutoffLevelForYourRole, ());
 E int FDECL(hitPointAdvancementForYourRole, ());
+E int FDECL(initialAlignmentRecordForYourRole, ());
+
 E int FDECL(hitPointAdvancementForYourSpecies, ());
 
 E boolean FDECL(validSpeciesID, (int));

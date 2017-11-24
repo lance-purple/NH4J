@@ -25,9 +25,6 @@
  */
 const struct Role roles[] = {
     { 0, // "Archeologist"
-      /* Init   Lower  Higher */
-      { 1, 0, 0, 1, 0, 1 },
-      10,
       5,
       0,
       2,
@@ -36,9 +33,6 @@ const struct Role roles[] = {
       SPE_MAGIC_MAPPING,
       -4 },
     { 1, // "Barbarian"
-      /* Init   Lower  Higher */
-      { 1, 0, 0, 1, 0, 1 },
-      10,
       14,
       0,
       0,
@@ -47,9 +41,6 @@ const struct Role roles[] = {
       SPE_HASTE_SELF,
       -4 },
     { 2, // "Caveman", "Cavewoman"
-      /* Init   Lower  Higher */
-      { 1, 0, 0, 1, 0, 1 },
-      0,
       12,
       0,
       1,
@@ -58,9 +49,6 @@ const struct Role roles[] = {
       SPE_DIG,
       -4 },
     { 3, // "Healer"
-      /* Init   Lower  Higher */
-      { 1, 4, 0, 1, 0, 2 },
-      10,
       3,
       -3,
       2,
@@ -69,9 +57,6 @@ const struct Role roles[] = {
       SPE_CURE_SICKNESS,
       -4 },
     { 4, // "Knight"
-      /* Init   Lower  Higher */
-      { 1, 4, 0, 1, 0, 2 },
-      10,
       8,
       -2,
       0,
@@ -80,9 +65,6 @@ const struct Role roles[] = {
       SPE_TURN_UNDEAD,
       -4 },
     { 5, // "Monk"
-      /* Init   Lower  Higher */
-      { 2, 2, 0, 2, 0, 2 },
-      10,
       8,
       -2,
       2,
@@ -91,9 +73,6 @@ const struct Role roles[] = {
       SPE_RESTORE_ABILITY,
       -4 },
     { 6, // "Priest", "Priestess"
-      /* Init   Lower  Higher */
-      { 4, 3, 0, 2, 0, 2 },
-      0,
       3,
       -2,
       2,
@@ -104,9 +83,6 @@ const struct Role roles[] = {
     /* Note:  Rogue precedes Ranger so that use of `-R' on the command line
        retains its traditional meaning. */
     { 7, // "Rogue"
-      /* Init   Lower  Higher */
-      { 1, 0, 0, 1, 0, 1 },
-      10,
       8,
       0,
       1,
@@ -115,9 +91,6 @@ const struct Role roles[] = {
       SPE_DETECT_TREASURE,
       -4 },
     { 8, // "Ranger"
-      /* Init   Lower  Higher */
-      { 1, 0, 0, 1, 0, 1 },
-      10,
       9,
       2,
       1,
@@ -126,9 +99,6 @@ const struct Role roles[] = {
       SPE_INVISIBILITY,
       -4 },
     { 9, // "Samurai"
-      /* Init   Lower  Higher */
-      { 1, 0, 0, 1, 0, 1 },
-      10,
       10,
       0,
       0,
@@ -137,9 +107,6 @@ const struct Role roles[] = {
       SPE_CLAIRVOYANCE,
       -4 },
     { 10, // "Tourist"
-      /* Init   Lower  Higher */
-      { 1, 0, 0, 1, 0, 1 },
-      0,
       5,
       1,
       2,
@@ -148,9 +115,6 @@ const struct Role roles[] = {
       SPE_CHARM_MONSTER,
       -4 },
     { 11, // "Valkyrie"
-      /* Init   Lower  Higher */
-      { 1, 0, 0, 1, 0, 1 },
-      0,
       10,
       -2,
       0,
@@ -159,9 +123,6 @@ const struct Role roles[] = {
       SPE_CONE_OF_COLD,
       -4 },
     { 12, // "Wizard"
-      /* Init   Lower  Higher */
-      { 4, 3, 0, 2, 0, 3 },
-      0,
       1,
       0,
       3,
@@ -178,9 +139,6 @@ const struct Role roles[] = {
  */
 struct Role urole = {
     -1,
-    /* Init   Lower  Higher */
-    { 2, 0, 0, 2, 0, 3 },
-     0,
     10,
      0,
      0,

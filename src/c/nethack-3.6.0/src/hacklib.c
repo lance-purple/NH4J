@@ -3357,4 +3357,8 @@ extern int yourSpeciesAttributeMinimum(int whichAttr) {
   return javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "speciesAttributeMinimum", whichAttr);
 }
 
+extern int initialAlignmentRecordForYourRole() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "initialAlignmentRecordForRole");
+}
+
 /*hacklib.c*/

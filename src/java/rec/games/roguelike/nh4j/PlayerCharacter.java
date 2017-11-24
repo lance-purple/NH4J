@@ -1821,4 +1821,9 @@ public class PlayerCharacter {
 		return AdventurerSpecies.minimum(speciesID, whichAttr);
 	}
 
+	public static int initialAlignmentRecordForRole()
+	{
+		return AdventurerRole.initialAlignmentRecord(currentRoleID);
+	}
+
 }

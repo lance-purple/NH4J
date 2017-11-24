@@ -942,7 +942,7 @@ newhp()
         if (moves <= 1L) { /* initial hero; skip for polyself to new man */
             /* Initialize alignment stuff */
             setCurrentAlignmentType(aligns[flags.initalign].value);
-            setCurrentAlignmentRecord(urole.initrecord);
+            setCurrentAlignmentRecord(initialAlignmentRecordForYourRole());
         }
         /* no Con adjustment for initial hit points */
     } else {
