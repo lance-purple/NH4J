@@ -3177,6 +3177,10 @@ extern int energyAdvancementForRoleAndSpecies(int wisdomModifier)
   return javaGetIntFromInt(EXPERIENCE_CLASS, "energyAdvancementForRoleAndSpecies", wisdomModifier);
 }
 
+extern boolean validSpeciesID(int speciesID) {
+  return javaGetBooleanFromInt(ADVENTURER_SPECIES_CLASS, "validSpeciesID", speciesID);
+}
+
 extern int yourSpeciesID() {
   return javaGetInt(PLAYER_CHARACTER_CLASS, "speciesID");
 }

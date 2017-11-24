@@ -381,6 +381,10 @@ public class AdventurerSpecies {
 		}
 		return EnergyAdvancement.NONE;
 	}
+	
+	public static boolean validSpeciesID(int speciesID) {
+	    return (speciesID > 0) && (speciesID < numberOfPlayableSpecies());
+	}
 
 
 	public static final int MASK = 0x0ff8;

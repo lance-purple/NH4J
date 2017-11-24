@@ -2901,6 +2901,7 @@ E int FDECL(cutoffLevelForYourRole, ());
 E int FDECL(hitPointAdvancementForYourRole, ());
 E int FDECL(hitPointAdvancementForYourSpecies, ());
 
+E boolean FDECL(validSpeciesID, (int));
 E void FDECL(setYourSpeciesID, (int));
 E int FDECL(yourSpeciesID, ());
 E int FDECL(numberOfPlayableSpecies, ());

@@ -16,7 +16,7 @@
  * brought closer into line with AD&D. This forces wizards to use magic more
  * and distance themselves from their attackers. --LSZ
  *
- * With the introduction of races, some hit points and energy
+ * With the introduction of species, some hit points and energy
  * has been reallocated for each race.  The values assigned
  * to the roles has been reduced by the amount allocated to
  * humans.  --KMH
@@ -190,47 +190,6 @@ struct Role urole = {
     -3
 };
 
-/* Table of all races */
-const struct Race races[] = {
-    {
-        MH_HUMAN,
-        /* Init   Lower  Higher */
-        { 1, 0, 2, 0, 2, 0 }  /* Energy */
-    },
-    {
-        MH_ELF,
-        /* Init   Lower  Higher */
-        { 2, 0, 3, 0, 3, 0 }  /* Energy */
-    },
-    {
-        MH_DWARF,
-        /* Init   Lower  Higher */
-        { 0, 0, 0, 0, 0, 0 }  /* Energy */
-    },
-    {
-        MH_GNOME,
-        /* Init   Lower  Higher */
-        { 2, 0, 2, 0, 2, 0 }  /* Energy */
-    },
-    {
-        MH_ORC,
-        /* Init   Lower  Higher */
-        { 1, 0, 1, 0, 1, 0 }  /* Energy */
-    },
-    /* Array terminator */
-    { 0, 0, 0, 0 }
-};
-
-/* The player's race, created at runtime from initial
- * choices.  This may be munged in role_init().
- */
-struct Race urace = {
-    0,
-    /* Init   Lower  Higher */
-    { 1, 0, 2, 0, 2, 0 }  /* Energy */
-};
-
-
 /* Table of all alignments */
 const struct Align aligns[] = {
     { "law", "lawful", "Law", ROLE_LAWFUL, A_LAWFUL },
@@ -340,7 +299,7 @@ validrace(rolenum, racenum)
 int rolenum, racenum;
 {
     /* Assumes validrole */
-    return (boolean) (racenum >= 0 && racenum < SIZE(races) - 1
+    return (boolean) (validSpeciesID(racenum)
                       && (startingMaskForRole(rolenum) & startingMaskForSpecies(racenum)));
 }
 
@@ -350,7 +309,7 @@ int rolenum;
 {
     int i, n = 0;
 
-    /* Count the number of valid races */
+    /* Count the number of valid species */
     int playableSpecies = numberOfPlayableSpecies();
 
     for (i = 0; i < playableSpecies; i++)
@@ -369,8 +328,8 @@ int rolenum;
                 return i;
         }
 
-    /* This role has no permitted races? */
-    return rn2(SIZE(races) - 1);
+    /* This role has no permitted species? */
+    return rn2(numberOfPlayableSpecies());
 }
 
 int
@@ -569,7 +528,7 @@ int rolenum, racenum, gendnum, alignnum;
         if (filter.roles[rolenum])
             return FALSE;
         allow = startingMaskForRole(rolenum);
-        if (racenum >= 0 && racenum < SIZE(races) - 1
+        if (validSpeciesID(racenum)
             && !(allow & selfMaskForSpecies(racenum)))
             return FALSE;
         if (gendnum >= 0 && gendnum < adventurerGenders()
@@ -585,7 +544,7 @@ int rolenum, racenum, gendnum, alignnum;
             if (filter.roles[i])
                 continue;
             allow = startingMaskForRole(i);
-            if (racenum >= 0 && racenum < SIZE(races) - 1
+            if (validSpeciesID(racenum)
                 && !(allow & selfMaskForSpecies(racenum)))
                 continue;
             if (gendnum >= 0 && gendnum < adventurerGenders()
@@ -653,7 +612,7 @@ int rolenum, racenum, gendnum, alignnum;
         return TRUE;
     } else {
         /* random; check whether any selection is possible */
-        for (i = 0; i < SIZE(races) - 1; i++) {
+        for (i = 0; i < numberOfPlayableSpecies(); i++) {
             if (filter.mask & selfMaskForSpecies(i)) {
                 continue;
 	    }
@@ -684,21 +643,21 @@ pick_race(rolenum, gendnum, alignnum, pickhow)
 int rolenum, gendnum, alignnum, pickhow;
 {
     int i;
-    int races_ok = 0;
+    int species_ok = 0;
 
-    for (i = 0; i < SIZE(races) - 1; i++) {
+    for (i = 0; i < numberOfPlayableSpecies(); i++) {
         if (ok_race(rolenum, i, gendnum, alignnum))
-            races_ok++;
+            species_ok++;
     }
-    if (races_ok == 0 || (races_ok > 1 && pickhow == PICK_RIGID))
+    if (species_ok == 0 || (species_ok > 1 && pickhow == PICK_RIGID))
         return ROLE_NONE;
-    races_ok = rn2(races_ok);
-    for (i = 0; i < SIZE(races) - 1; i++) {
+    species_ok = rn2(species_ok);
+    for (i = 0; i < numberOfPlayableSpecies(); i++) {
         if (ok_race(rolenum, i, gendnum, alignnum)) {
-            if (races_ok == 0)
+            if (species_ok == 0)
                 return i;
             else
-                races_ok--;
+                species_ok--;
         }
     }
     return ROLE_NONE;
@@ -721,7 +680,7 @@ int alignnum UNUSED;
         if (rolenum >= 0 && rolenum < SIZE(roles) - 1
             && !(allow & startingGenderMaskForRole(rolenum)))
             return FALSE;
-        if (racenum >= 0 && racenum < SIZE(races) - 1
+        if (validSpeciesID(racenum)
             && !(allow & startingGenderMaskForSpecies(racenum)))
             return FALSE;
         return TRUE;
@@ -734,7 +693,7 @@ int alignnum UNUSED;
             if (rolenum >= 0 && rolenum < SIZE(roles) - 1
                 && !(allow & startingGenderMaskForRole(rolenum)))
                 continue;
-            if (racenum >= 0 && racenum < SIZE(races) - 1
+            if (validSpeciesID(racenum)
                 && !(allow & startingGenderMaskForSpecies(racenum)))
                 continue;
             return TRUE;
@@ -790,7 +749,7 @@ int alignnum;
         if (rolenum >= 0 && rolenum < SIZE(roles) - 1
             && !(allow & startingAlignmentMaskForRole(rolenum)))
             return FALSE;
-        if (racenum >= 0 && racenum < SIZE(races) - 1
+        if (validSpeciesID(racenum)
             && !(allow & startingAlignmentMaskForSpecies(racenum)))
             return FALSE;
         return TRUE;
@@ -803,7 +762,7 @@ int alignnum;
             if (rolenum >= 0 && rolenum < SIZE(roles) - 1
                 && !(allow & startingAlignmentMaskForRole(rolenum)))
                 continue;
-            if (racenum >= 0 && racenum < SIZE(races) - 1
+            if (validSpeciesID(racenum)
                 && !(allow & startingAlignmentMaskForSpecies(racenum)))
                 continue;
             return TRUE;
@@ -1289,7 +1248,7 @@ winid where;
     if (r >= 0) {
         allowmask = startingMaskForRole(r);
         if ((allowmask & ROLE_RACEMASK) == MH_HUMAN)
-            c = 0; /* races[human] */
+            c = 0; /* HUMAN_ID */
         else if (c >= 0 && !(allowmask & selfMaskForSpecies(c)))
             c = ROLE_RANDOM;
         if ((allowmask & ROLE_GENDMASK) == ROLE_MALE)
@@ -1434,7 +1393,7 @@ winid where;
         if (r >= 0) {
             allowmask = startingSpeciesMaskForRole(r);
             if (allowmask == MH_HUMAN)
-                c = 0; /* races[human] */
+                c = 0; /* HUMAN_ID */
             if (c >= 0) {
                 constrainer = "role";
                 forcedValue = nounForSpecies(c);
@@ -1602,10 +1561,9 @@ role_init()
         flags.initalign = randalign(flags.initrole, flags.initrace);
     alignmnt = aligns[flags.initalign].value;
 
-    /* Initialize urole and urace */
+    /* Initialize urole and species */
     urole = roles[flags.initrole];
     setYourCurrentRoleID(urole.id);
-    urace = races[flags.initrace];
     setYourSpeciesID(flags.initrace);
 
     /* Fix up the quest leader */

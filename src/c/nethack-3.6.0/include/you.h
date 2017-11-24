@@ -95,29 +95,6 @@ extern struct Role urole;
 #define ROLE_NONE (-1)
 #define ROLE_RANDOM (-2)
 
-/*** Unified structure specifying race information ***/
-
-struct Race {
-
-    /*** Bitmasks ***/
-    short XXselfmask; /* your own race's bit mask */
-
-    /*** Attributes ***/
-    struct RoleAdvance XXenadv; /* energy advancement */
-
-    /*** Properties in variable-length arrays ***/
-    /* intrinsics (see attrib.c) */
-
-    /*** Don't forget to add... ***/
-    /* quest leader, guardians, nemesis (monst.c) */
-    /* quest dungeon definition (dat/Xyz.dat) */
-    /* quest text (dat/quest.txt) */
-    /* dictionary entries (dat/data.bas) */
-};
-
-extern const struct Race races[]; /* Table of available races */
-extern struct Race urace;
-
 /*** Unified structure specifying alignment information ***/
 struct Align {
     const char *noun;     /* law/balance/chaos */
