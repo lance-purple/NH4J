@@ -3377,4 +3377,8 @@ extern int spellPenaltyWithArmorForYourRole() {
   return javaGetInt(PLAYER_CHARACTER_CLASS, "spellPenaltyWithArmorForRole");
 }
 
+extern int spellcastingAttributeIDForYourRole() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "spellcastingAttributeIDForRole");
+}
+
 /*hacklib.c*/

@@ -61,7 +61,6 @@ struct Role {
     int id;
     /*** Spell statistics (from spell.c) ***/
 
-    int spelstat; /* which stat (A_) is used */
     int spelspec; /* spell (SPE_) the class excels at */
     int spelsbon; /* penalty (-bonus) for that spell */
 

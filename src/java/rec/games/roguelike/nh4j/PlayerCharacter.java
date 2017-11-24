@@ -1846,4 +1846,9 @@ public class PlayerCharacter {
 		return AdventurerRole.spellPenaltyWithArmor(currentRoleID);
 	}
 
+	public static int spellcastingAttributeIDForRole()
+	{
+		return AdventurerRole.spellcastingAttributeID(currentRoleID);
+	}
+
 }

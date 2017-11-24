@@ -1607,7 +1607,7 @@ int spell;
 
     splcaster = baseSpellcastingPenaltyForYourRole();
     special = healingSpellPenaltyForYourRole();
-    statused = ACURR(urole.spelstat);
+    statused = ACURR(spellcastingAttributeIDForYourRole());
 
     if (uarm && is_metallic(uarm))
         splcaster += (uarmc && uarmc->otyp == ROBE) ? spellPenaltyWithArmorForYourRole() / 2
