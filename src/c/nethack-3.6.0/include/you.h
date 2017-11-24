@@ -61,9 +61,6 @@ struct Role {
     int id;
     /*** Spell statistics (from spell.c) ***/
 
-    int spelspec; /* spell (SPE_) the class excels at */
-    int spelsbon; /* penalty (-bonus) for that spell */
-
     /*** Properties in variable-length arrays ***/
     /* intrinsics (see attrib.c) */
     /* initial inventory (see u_init.c) */

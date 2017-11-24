@@ -1624,8 +1624,8 @@ int spell;
     if (uarmf && is_metallic(uarmf))
         splcaster += uarmfbon;
 
-    if (spellid(spell) == urole.spelspec)
-        splcaster += urole.spelsbon;
+    if (spellid(spell) == specialtySpellIDForYourRole())
+        splcaster += specialtySpellPenaltyForYourRole();
 
     /* `healing spell' bonus */
     if (spellid(spell) == SPE_HEALING || spellid(spell) == SPE_EXTRA_HEALING
@@ -1683,7 +1683,7 @@ int spell;
      * player's role-specific spell.
      */
     if (uarms && weight(uarms) > (int) objects[SMALL_SHIELD].oc_weight) {
-        if (spellid(spell) == urole.spelspec) {
+        if (spellid(spell) == specialtySpellIDForYourRole()) {
             chance /= 2;
         } else {
             chance /= 4;

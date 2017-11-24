@@ -25,46 +25,33 @@
  */
 const struct Role roles[] = {
     { 0, // "Archeologist"
-      SPE_MAGIC_MAPPING,
-      -4 },
+      },
     { 1, // "Barbarian"
-      SPE_HASTE_SELF,
-      -4 },
+      },
     { 2, // "Caveman", "Cavewoman"
-      SPE_DIG,
-      -4 },
+      },
     { 3, // "Healer"
-      SPE_CURE_SICKNESS,
-      -4 },
+      },
     { 4, // "Knight"
-      SPE_TURN_UNDEAD,
-      -4 },
+      },
     { 5, // "Monk"
-      SPE_RESTORE_ABILITY,
-      -4 },
+      },
     { 6, // "Priest", "Priestess"
-      SPE_REMOVE_CURSE,
-      -4 },
+      },
     /* Note:  Rogue precedes Ranger so that use of `-R' on the command line
        retains its traditional meaning. */
     { 7, // "Rogue"
-      SPE_DETECT_TREASURE,
-      -4 },
+      },
     { 8, // "Ranger"
-      SPE_INVISIBILITY,
-      -4 },
+      },
     { 9, // "Samurai"
-      SPE_CLAIRVOYANCE,
-      -4 },
+      },
     { 10, // "Tourist"
-      SPE_CHARM_MONSTER,
-      -4 },
+      },
     { 11, // "Valkyrie"
-      SPE_CONE_OF_COLD,
-      -4 },
+      },
     { 12, // "Wizard"
-      SPE_MAGIC_MISSILE,
-      -4 },
+      },
     /* Array terminator */
     { -1 }
 };
@@ -74,8 +61,6 @@ const struct Role roles[] = {
  */
 struct Role urole = {
     -1,
-     0,
-    -3
 };
 
 /* Table of all alignments */

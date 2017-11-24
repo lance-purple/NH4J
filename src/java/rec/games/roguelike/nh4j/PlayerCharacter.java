@@ -1851,4 +1851,14 @@ public class PlayerCharacter {
 		return AdventurerRole.spellcastingAttributeID(currentRoleID);
 	}
 
+	public static int specialtySpellIDForRole()
+	{
+		return AdventurerRole.specialtySpellID(currentRoleID);
+	}
+
+	public static int specialtySpellPenaltyForRole()
+	{
+		return AdventurerRole.specialtySpellPenalty(currentRoleID);
+	}
+
 }

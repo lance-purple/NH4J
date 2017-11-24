@@ -43,6 +43,7 @@ public class AdventurerRole {
 	
 	private SpellcastingPenalties spellcastingPenalties;
 	private ATTR spellcastingAttribute;
+	private SpellcastingSpecialty spellcastingSpecialty;
 	
 	private PM preferredPet = PM.UNKNOWN;
 
@@ -218,6 +219,12 @@ public class AdventurerRole {
 	private AdventurerRole withSpellcastingAttribute(ATTR attribute)
 	{
 		this.spellcastingAttribute = attribute;
+		return this;
+	}
+
+	private AdventurerRole with(SpellcastingSpecialty specialty)
+	{
+		this.spellcastingSpecialty = specialty;
 		return this;
 	}
 
@@ -645,6 +652,22 @@ public class AdventurerRole {
 		if (null != role) {
 			return role.spellcastingAttribute.index();
 		}
+		return -1;
+	}
+
+	public static int specialtySpellID(int roleID) {
+		AdventurerRole role = getRole(roleID);
+		if (null != role) {
+			return role.spellcastingSpecialty.spell().id();
+		}
+		return 0;
+	}
+
+	public static int specialtySpellPenalty(int roleID) {
+		AdventurerRole role = getRole(roleID);
+		if (null != role) {
+			return role.spellcastingSpecialty.penalty();
+		}
 		return 0;
 	}
 
@@ -682,6 +705,7 @@ public class AdventurerRole {
 			.withInitialAlignmentRecord(10)
 			.with(SpellcastingPenalties.of().base(5).healing(0).withShield(2).withArmor(10))
 			.withSpellcastingAttribute(ATTR.INT)
+			.with(SpellcastingSpecialty.of(Spell.MAGIC_MAPPING, -4))
 			.add();
 
 		AdventurerRole.withID(BARBARIAN_ID)
@@ -716,6 +740,7 @@ public class AdventurerRole {
 			.withInitialAlignmentRecord(10)
 			.with(SpellcastingPenalties.of().base(14).healing(0).withShield(0).withArmor(8))
 			.withSpellcastingAttribute(ATTR.INT)
+			.with(SpellcastingSpecialty.of(Spell.HASTE_SELF, -4))
 			.add();
 
 		AdventurerRole.withID(CAVEMAN_ID)
@@ -751,6 +776,7 @@ public class AdventurerRole {
 			.withInitialAlignmentRecord(0)
 			.with(SpellcastingPenalties.of().base(12).healing(0).withShield(1).withArmor(8))
 			.withSpellcastingAttribute(ATTR.INT)
+			.with(SpellcastingSpecialty.of(Spell.DIG, -4))
 			.add();
 
 		AdventurerRole.withID(HEALER_ID)
@@ -785,6 +811,7 @@ public class AdventurerRole {
 			.withInitialAlignmentRecord(10)
 			.with(SpellcastingPenalties.of().base(3).healing(-3).withShield(2).withArmor(10))
 			.withSpellcastingAttribute(ATTR.WIS)
+			.with(SpellcastingSpecialty.of(Spell.CURE_SICKNESS, -4))
 			.add();
 
 		AdventurerRole.withID(KNIGHT_ID)
@@ -820,6 +847,7 @@ public class AdventurerRole {
 			.withInitialAlignmentRecord(10)
 			.with(SpellcastingPenalties.of().base(8).healing(-2).withShield(0).withArmor(9))
 			.withSpellcastingAttribute(ATTR.WIS)
+			.with(SpellcastingSpecialty.of(Spell.TURN_UNDEAD, -4))
 			.add();
 
 		AdventurerRole.withID(MONK_ID)
@@ -854,6 +882,7 @@ public class AdventurerRole {
 			.withInitialAlignmentRecord(10)
 			.with(SpellcastingPenalties.of().base(8).healing(-2).withShield(2).withArmor(20))
 			.withSpellcastingAttribute(ATTR.WIS)
+			.with(SpellcastingSpecialty.of(Spell.RESTORE_ABILITY, -4))
 			.add();
 
 		AdventurerRole.withID(PRIEST_ID)
@@ -887,6 +916,7 @@ public class AdventurerRole {
 			.withInitialAlignmentRecord(0)
 			.with(SpellcastingPenalties.of().base(3).healing(-2).withShield(2).withArmor(10))
 			.withSpellcastingAttribute(ATTR.WIS)
+			.with(SpellcastingSpecialty.of(Spell.REMOVE_CURSE, -4))
 			.add();
 
 		AdventurerRole.withID(ROGUE_ID)
@@ -921,6 +951,7 @@ public class AdventurerRole {
 			.withInitialAlignmentRecord(10)
 			.with(SpellcastingPenalties.of().base(8).healing(0).withShield(1).withArmor(9))
 			.withSpellcastingAttribute(ATTR.INT)
+			.with(SpellcastingSpecialty.of(Spell.DETECT_TREASURE, -4))
 			.add();
 
 		AdventurerRole.withID(RANGER_ID)
@@ -956,6 +987,8 @@ public class AdventurerRole {
 			.withInitialAlignmentRecord(10)
 			.with(SpellcastingPenalties.of().base(9).healing(2).withShield(1).withArmor(10))
 			.withSpellcastingAttribute(ATTR.INT)
+			.with(SpellcastingSpecialty.of(Spell.MAGIC_MAPPING, -4))
+			.with(SpellcastingSpecialty.of(Spell.INVISIBILITY, -4))
 			.add();
 
 		AdventurerRole.withID(SAMURAI_ID)
@@ -991,6 +1024,7 @@ public class AdventurerRole {
 			.withInitialAlignmentRecord(10)
 			.with(SpellcastingPenalties.of().base(10).healing(0).withShield(0).withArmor(8))
 			.withSpellcastingAttribute(ATTR.INT)
+			.with(SpellcastingSpecialty.of(Spell.CLAIRVOYANCE, -4))
 			.add();
 
 		AdventurerRole.withID(TOURIST_ID)
@@ -1025,6 +1059,7 @@ public class AdventurerRole {
 			.withInitialAlignmentRecord(0)
 			.with(SpellcastingPenalties.of().base(5).healing(1).withShield(2).withArmor(10))
 			.withSpellcastingAttribute(ATTR.INT)
+			.with(SpellcastingSpecialty.of(Spell.CHARM_MONSTER, -4))
 			.add();
 
 		AdventurerRole.withID(VALKYRIE_ID)
@@ -1059,6 +1094,7 @@ public class AdventurerRole {
 			.withInitialAlignmentRecord(0)
 			.with(SpellcastingPenalties.of().base(10).healing(-2).withShield(0).withArmor(9))
 			.withSpellcastingAttribute(ATTR.WIS)
+			.with(SpellcastingSpecialty.of(Spell.CONE_OF_COLD, -4))
 			.add();
 
 		AdventurerRole.withID(WIZARD_ID)
@@ -1094,6 +1130,7 @@ public class AdventurerRole {
 			.withInitialAlignmentRecord(0)
 			.with(SpellcastingPenalties.of().base(1).healing(0).withShield(3).withArmor(10))
 			.withSpellcastingAttribute(ATTR.INT)
+			.with(SpellcastingSpecialty.of(Spell.MAGIC_MISSILE, -4))
 			.add();
 
 	}

@@ -1,0 +1,57 @@
+package rec.games.roguelike.nh4j;
+
+public enum Spell {
+
+    DIG(340),
+    MAGIC_MISSILE(341),
+    FIREBALL(342),
+    CONE_OF_COLD(343),
+    SLEEP(344),
+    FINGER_OF_DEATH(345),
+    LIGHT(346),
+    DETECT_MONSTERS(347),
+    HEALING(348),
+    KNOCK(349),
+    FORCE_BOLT(350),
+    CONFUSE_MONSTER(351),
+    CURE_BLINDNESS(352),
+    DRAIN_LIFE(353),
+    SLOW_MONSTER(354),
+    WIZARD_LOCK(355),
+    CREATE_MONSTER(356),
+    DETECT_FOOD(357),
+    CAUSE_FEAR(358),
+    CLAIRVOYANCE(359),
+    CURE_SICKNESS(360),
+    CHARM_MONSTER(361),
+    HASTE_SELF(362),
+    DETECT_UNSEEN(363),
+    LEVITATION(364),
+    EXTRA_HEALING(365),
+    RESTORE_ABILITY(366),
+    INVISIBILITY(367),
+    DETECT_TREASURE(368),
+    REMOVE_CURSE(369),
+    MAGIC_MAPPING(370),
+    IDENTIFY(371),
+    TURN_UNDEAD(372),
+    POLYMORPH(373),
+    TELEPORT_AWAY(374),
+    CREATE_FAMILIAR(375),
+    CANCELLATION(376),
+    PROTECTION(377),
+    JUMPING(378),
+    STONE_TO_FLESH(379);
+	
+	private int id;
+	
+	Spell(int id) {
+		this.id = id;
+	}
+	
+	public int id()
+	{
+		return this.id;
+	}
+
+};

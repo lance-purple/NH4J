@@ -3381,4 +3381,12 @@ extern int spellcastingAttributeIDForYourRole() {
   return javaGetInt(PLAYER_CHARACTER_CLASS, "spellcastingAttributeIDForRole");
 }
 
+extern int specialtySpellIDForYourRole() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "specialtySpellIDForRole");
+}
+
+extern int specialtySpellPenaltyForYourRole() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "specialtySpellPenaltyForRole");
+}
+
 /*hacklib.c*/
