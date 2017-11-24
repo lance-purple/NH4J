@@ -1836,4 +1836,14 @@ public class PlayerCharacter {
 		return AdventurerRole.healingSpellPenalty(currentRoleID);
 	}
 
+	public static int spellPenaltyWithShieldForRole()
+	{
+		return AdventurerRole.spellPenaltyWithShield(currentRoleID);
+	}
+
+	public static int spellPenaltyWithArmorForRole()
+	{
+		return AdventurerRole.spellPenaltyWithArmor(currentRoleID);
+	}
+
 }

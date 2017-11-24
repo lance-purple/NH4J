@@ -3369,4 +3369,12 @@ extern int healingSpellPenaltyForYourRole() {
   return javaGetInt(PLAYER_CHARACTER_CLASS, "healingSpellPenaltyForRole");
 }
 
+extern int spellPenaltyWithShieldForYourRole() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "spellPenaltyWithShieldForRole");
+}
+
+extern int spellPenaltyWithArmorForYourRole() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "spellPenaltyWithArmorForRole");
+}
+
 /*hacklib.c*/

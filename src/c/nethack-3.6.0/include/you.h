@@ -45,12 +45,6 @@ struct u_realtime {
     time_t endtime;
 };
 
-/*** Unified structure containing role information ***/
-struct Role {
-    int id;
-    /*** Strings that name various things ***/
-
-    /*** Bitmasks ***/
 #define ROLE_RACEMASK 0x0ff8 /* allowable races */
 #define ROLE_GENDMASK 0xf000 /* allowable genders */
 #define ROLE_MALE 0x1000
@@ -61,9 +55,11 @@ struct Role {
 #define ROLE_NEUTRAL AM_NEUTRAL
 #define ROLE_CHAOTIC AM_CHAOTIC
 
+
+/*** Unified structure containing role information ***/
+struct Role {
+    int id;
     /*** Spell statistics (from spell.c) ***/
-    int spelshld; /* penalty for wearing any shield */
-    int spelarmr; /* penalty for wearing metal armour */
 
     int spelstat; /* which stat (A_) is used */
     int spelspec; /* spell (SPE_) the class excels at */

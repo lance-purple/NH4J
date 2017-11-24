@@ -1610,12 +1610,12 @@ int spell;
     statused = ACURR(urole.spelstat);
 
     if (uarm && is_metallic(uarm))
-        splcaster += (uarmc && uarmc->otyp == ROBE) ? urole.spelarmr / 2
-                                                    : urole.spelarmr;
+        splcaster += (uarmc && uarmc->otyp == ROBE) ? spellPenaltyWithArmorForYourRole() / 2
+                                                    : spellPenaltyWithArmorForYourRole();
     else if (uarmc && uarmc->otyp == ROBE)
-        splcaster -= urole.spelarmr;
+        splcaster -= spellPenaltyWithArmorForYourRole();
     if (uarms)
-        splcaster += urole.spelshld;
+        splcaster += spellPenaltyWithShieldForYourRole();
 
     if (uarmh && is_metallic(uarmh) && uarmh->otyp != HELM_OF_BRILLIANCE)
         splcaster += uarmhbon;

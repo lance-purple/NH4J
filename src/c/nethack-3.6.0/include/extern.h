@@ -2902,6 +2902,8 @@ E int FDECL(hitPointAdvancementForYourRole, ());
 E int FDECL(initialAlignmentRecordForYourRole, ());
 E int FDECL(baseSpellcastingPenaltyForYourRole, ());
 E int FDECL(healingSpellPenaltyForYourRole, ());
+E int FDECL(spellPenaltyWithShieldForYourRole, ());
+E int FDECL(spellPenaltyWithArmorForYourRole, ());
 
 E int FDECL(hitPointAdvancementForYourSpecies, ());
 

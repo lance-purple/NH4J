@@ -295,7 +295,7 @@ int *attk_count, *role_roll_penalty;
     /* role/race adjustments */
     if (yourRoleHasPMID(PM_MONK) && !areYouPolymorphed()) {
         if (uarm)
-            tmp -= (*role_roll_penalty = urole.spelarmr);
+            tmp -= (*role_roll_penalty = spellPenaltyWithArmorForYourRole());
         else if (!uwep && !uarms)
             tmp += (currentExperienceLevel() / 3) + 2;
     }
