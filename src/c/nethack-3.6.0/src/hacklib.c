@@ -3172,6 +3172,11 @@ extern int hitPointAdvancementForYourSpecies() {
   return javaGetInt(PLAYER_CHARACTER_CLASS, "hitPointAdvancementForSpecies");
 }
 
+extern int energyAdvancementForRoleAndSpecies(int wisdomModifier)
+{
+  return javaGetIntFromInt(EXPERIENCE_CLASS, "energyAdvancementForRoleAndSpecies", wisdomModifier);
+}
+
 extern int yourSpeciesID() {
   return javaGetInt(PLAYER_CHARACTER_CLASS, "speciesID");
 }

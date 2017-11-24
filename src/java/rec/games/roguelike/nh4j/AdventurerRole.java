@@ -6,19 +6,19 @@ import java.util.HashMap;
 
 public class AdventurerRole {
 
-	private static final int ARCHAEOLOGIST_ID = 0;
-	private static final int BARBARIAN_ID = 1;
-	private static final int CAVEMAN_ID = 2;
-	private static final int HEALER_ID = 3;
-	private static final int KNIGHT_ID = 4;
-	private static final int MONK_ID = 5;
-	private static final int PRIEST_ID = 6;
-	private static final int ROGUE_ID = 7;
-	private static final int RANGER_ID = 8;
-	private static final int SAMURAI_ID = 9;
-	private static final int TOURIST_ID = 10;
-	private static final int VALKYRIE_ID = 11;
-	private static final int WIZARD_ID = 12;
+	public static final int ARCHAEOLOGIST_ID = 0;
+	public static final int BARBARIAN_ID = 1;
+	public static final int CAVEMAN_ID = 2;
+	public static final int HEALER_ID = 3;
+	public static final int KNIGHT_ID = 4;
+	public static final int MONK_ID = 5;
+	public static final int PRIEST_ID = 6;
+	public static final int ROGUE_ID = 7;
+	public static final int RANGER_ID = 8;
+	public static final int SAMURAI_ID = 9;
+	public static final int TOURIST_ID = 10;
+	public static final int VALKYRIE_ID = 11;
+	public static final int WIZARD_ID = 12;
 
 	private static HashMap<Integer, AdventurerRole> rolesByID = new HashMap<>();
 
@@ -37,6 +37,7 @@ public class AdventurerRole {
 	
 	private int cutoffLevel;
 	private HitPointAdvancement hitPointAdvancement;
+	private EnergyAdvancement energyAdvancement;
 	
 	private PM preferredPet = PM.UNKNOWN;
 
@@ -190,7 +191,13 @@ public class AdventurerRole {
 		this.hitPointAdvancement = advancement;
 		return this;
 	}
-	
+
+	private AdventurerRole with(EnergyAdvancement advancement)
+	{
+		this.energyAdvancement = advancement;
+		return this;
+	}
+
 	private void add() {
 		AdventurerRole.rolesByID.put(this.roleID, this);
 	}
@@ -557,7 +564,15 @@ public class AdventurerRole {
 		}
 		return 0;
 	}
-	
+
+	public static EnergyAdvancement energyAdvancement(int roleID) {
+		AdventurerRole role = getRole(roleID);
+		if (null != role) {
+			return role.energyAdvancement;
+		}
+		return EnergyAdvancement.NONE;
+	}
+
 	public static boolean hasQuestArtifact(int roleID) {
 		return (0 != idOfQuestArtifact(roleID));
 	}
@@ -592,6 +607,7 @@ public class AdventurerRole {
 			.withDistribution(new ATTRS().STR(20).INT(20).WIS(20).DEX(10).CON(20).CHA(10))
 			.withCutoffLevel(14)
 			.with(HitPointAdvancement.of().init(11, 0).low(0, 8).high(1, 0))
+			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
 			.add();
 
 		AdventurerRole.withID(BARBARIAN_ID)
@@ -622,6 +638,7 @@ public class AdventurerRole {
 			.withDistribution(new ATTRS().STR(30).INT(6).WIS(7).DEX(20).CON(30).CHA(7))
 			.withCutoffLevel(10)
 			.with(HitPointAdvancement.of().init(14, 0).low(0, 10).high(2, 0))
+			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
 			.add();
 
 		AdventurerRole.withID(CAVEMAN_ID)
@@ -653,6 +670,7 @@ public class AdventurerRole {
 			.withDistribution(new ATTRS().STR(30).INT(6).WIS(7).DEX(20).CON(30).CHA(7))
 			.withCutoffLevel(10)
 			.with(HitPointAdvancement.of().init(14, 0).low(0, 8).high(2, 0))
+			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
 			.add();
 
 		AdventurerRole.withID(HEALER_ID)
@@ -683,6 +701,7 @@ public class AdventurerRole {
 			.withDistribution(new ATTRS().STR(15).INT(20).WIS(20).DEX(15).CON(25).CHA(5))
 			.withCutoffLevel(20)
 			.with(HitPointAdvancement.of().init(11, 0).low(0, 8).high(1, 0))
+			.with(EnergyAdvancement.of().init(1, 4).low(0, 1).high(0, 2))
 			.add();
 
 		AdventurerRole.withID(KNIGHT_ID)
@@ -714,6 +733,7 @@ public class AdventurerRole {
 			.withDistribution(new ATTRS().STR(30).INT(15).WIS(15).DEX(10).CON(20).CHA(10))
 			.withCutoffLevel(10)
 			.with(HitPointAdvancement.of().init(14, 0).low(0, 8).high(2, 0))
+			.with(EnergyAdvancement.of().init(1, 4).low(0, 1).high(0, 2))
 			.add();
 
 		AdventurerRole.withID(MONK_ID)
@@ -744,6 +764,7 @@ public class AdventurerRole {
 			.withDistribution(new ATTRS().STR(25).INT(10).WIS(20).DEX(20).CON(15).CHA(10))
 			.withCutoffLevel(10)
 			.with(HitPointAdvancement.of().init(12, 0).low(0, 8).high(1, 0))
+			.with(EnergyAdvancement.of().init(2, 2).low(0, 2).high(0, 2))
 			.add();
 
 		AdventurerRole.withID(PRIEST_ID)
@@ -773,6 +794,7 @@ public class AdventurerRole {
 			.withDistribution(new ATTRS().STR(15).INT(10).WIS(30).DEX(15).CON(20).CHA(10))
 			.withCutoffLevel(10)
 			.with(HitPointAdvancement.of().init(12, 0).low(0, 8).high(1, 0))
+			.with(EnergyAdvancement.of().init(4, 3).low(0, 2).high(0, 2))
 			.add();
 
 		AdventurerRole.withID(ROGUE_ID)
@@ -803,6 +825,7 @@ public class AdventurerRole {
 			.withDistribution(new ATTRS().STR(20).INT(10).WIS(10).DEX(30).CON(20).CHA(10))
 			.withCutoffLevel(11)
 			.with(HitPointAdvancement.of().init(10, 0).low(0, 8).high(1, 0))
+			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
 			.add();
 
 		AdventurerRole.withID(RANGER_ID)
@@ -834,6 +857,7 @@ public class AdventurerRole {
 			.withDistribution(new ATTRS().STR(30).INT(10).WIS(10).DEX(20).CON(20).CHA(10))
 			.withCutoffLevel(12)
 			.with(HitPointAdvancement.of().init(13, 0).low(0, 6).high(1, 0))
+			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
 			.add();
 
 		AdventurerRole.withID(SAMURAI_ID)
@@ -865,6 +889,7 @@ public class AdventurerRole {
 			.withDistribution(new ATTRS().STR(30).INT(10).WIS(8).DEX(30).CON(14).CHA(8))
 			.withCutoffLevel(11)
 			.with(HitPointAdvancement.of().init(13, 0).low(0, 8).high(1, 0))
+			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
 			.add();
 
 		AdventurerRole.withID(TOURIST_ID)
@@ -895,6 +920,7 @@ public class AdventurerRole {
 			.withDistribution(new ATTRS().STR(15).INT(10).WIS(10).DEX(15).CON(30).CHA(20))
 			.withCutoffLevel(14)
 			.with(HitPointAdvancement.of().init(8, 0).low(0, 8).high(0, 0))
+			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
 			.add();
 
 		AdventurerRole.withID(VALKYRIE_ID)
@@ -925,6 +951,7 @@ public class AdventurerRole {
 			.withDistribution(new ATTRS().STR(30).INT(6).WIS(7).DEX(20).CON(30).CHA(7))
 			.withCutoffLevel(10)
 			.with(HitPointAdvancement.of().init(14, 0).low(0, 8).high(2, 0))
+			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
 			.add();
 
 		AdventurerRole.withID(WIZARD_ID)
@@ -956,6 +983,7 @@ public class AdventurerRole {
 			.withDistribution(new ATTRS().STR(10).INT(30).WIS(10).DEX(20).CON(20).CHA(10))
 			.withCutoffLevel(12)
 			.with(HitPointAdvancement.of().init(10, 8).low(0, 8).high(1, 0))
+			.with(EnergyAdvancement.of().init(4, 3).low(0, 2).high(0, 3))
 			.add();
 
 	}

@@ -16,6 +16,7 @@ E JavaVM* java_vm;
 #define ADVENTURER_ROLE_CLASS "rec/games/roguelike/nh4j/AdventurerRole"
 #define ADVENTURER_SPECIES_CLASS "rec/games/roguelike/nh4j/AdventurerSpecies"
 #define CONTEXT_CLASS "rec/games/roguelike/nh4j/Context"
+#define EXPERIENCE_CLASS "rec/games/roguelike/nh4j/Experience"
 #define GENDER_CLASS "rec/games/roguelike/nh4j/Gender"
 #define HALLUCINATORY_DEITY_CLASS "rec/games/roguelike/nh4j/HallucinatoryDeity"
 #define MONSTER_DATA_CLASS "rec/games/roguelike/nh4j/MonsterData"
@@ -904,7 +905,7 @@ E void FDECL(make_grave, (int, int, const char *));
 
 /* ### exper.c ### */
 
-E int NDECL(newpw);
+E int FDECL(energyAdvancementForRoleAndSpecies, (int));
 E int FDECL(experience, (struct monst *, int));
 E void FDECL(more_experienced, (int, int));
 E void FDECL(losexp, (const char *));

@@ -642,7 +642,8 @@ u_init()
     setCurrentHitPoints(hp);
     setMaximumHitPoints(hp);
 
-    int power = newpw();
+    int wisdomModifier = ACURR(A_WIS) / 2;
+    int power = energyAdvancementForRoleAndSpecies(wisdomModifier);
     setCurrentMagicalEnergy(power);
     setMaximumMagicalEnergy(power);
     setArmorBonusFromProtectionSpell(0);

@@ -341,8 +341,9 @@ newman()
         enmax -= magicalEnergyIncreasePerLevel(i);
     }
     enmax = rounddiv((long) enmax * (long) rn1(4, 8), 10);
+    int wisdomModifier = ACURR(A_WIS) / 2;
     for (i = 0; (setCurrentExperienceLevel(i), i < newlvl); i++) {
-        enmax += newpw();
+        enmax += energyAdvancementForRoleAndSpecies(wisdomModifier);
     }
     if (enmax < currentExperienceLevel()) {
         enmax = currentExperienceLevel();

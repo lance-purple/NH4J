@@ -33,6 +33,7 @@ public class AdventurerSpecies {
 	private ATTRS maximumAttributes;
 	
 	private HitPointAdvancement hitPointAdvancement;
+	private EnergyAdvancement energyAdvancement;
 
 	private AdventurerSpecies(int speciesID) {
 		this.speciesID = speciesID;
@@ -134,7 +135,13 @@ public class AdventurerSpecies {
 		this.hitPointAdvancement = advancement;
 		return this;
 	}
-	
+
+	private AdventurerSpecies with(EnergyAdvancement advancement)
+	{
+		this.energyAdvancement = advancement;
+		return this;
+	}
+
 	private void add() {
 		AdventurerSpecies.speciesByID.put(this.speciesID, this);
 	}
@@ -366,6 +373,15 @@ public class AdventurerSpecies {
 		}
 		return 0;
 	}
+	
+	public static EnergyAdvancement energyAdvancement(int speciesID) {
+		AdventurerSpecies species = getSpecies(speciesID);
+		if (null != species) {
+			return species.energyAdvancement;
+		}
+		return EnergyAdvancement.NONE;
+	}
+
 
 	public static final int MASK = 0x0ff8;
 
@@ -387,6 +403,7 @@ public class AdventurerSpecies {
 		.minimums(new ATTRS().STR(3).INT(3).WIS(3).DEX(3).CON(3).CHA(3))
 		.maximums(new ATTRS().STR_18(100).INT(18).WIS(18).DEX(18).CON(18).CHA(18))
 		.with(HitPointAdvancement.of().init(2, 0).low(0, 2).high(1, 0))
+		.with(EnergyAdvancement.of().init(1, 0).low(2, 0).high(2, 0))		
 		.add();
 
 		AdventurerSpecies.withID(ELF_ID)
@@ -406,6 +423,7 @@ public class AdventurerSpecies {
 		.minimums(new ATTRS().STR(3).INT(3).WIS(3).DEX(3).CON(3).CHA(3))
 		.maximums(new ATTRS().STR(18).INT(20).WIS(20).DEX(18).CON(16).CHA(18))
 		.with(HitPointAdvancement.of().init(1, 0).low(0, 1).high(1, 0))
+		.with(EnergyAdvancement.of().init(2, 0).low(3, 0).high(3, 0))		
 		.add();
 
 		AdventurerSpecies.withID(DWARF_ID)
@@ -425,6 +443,7 @@ public class AdventurerSpecies {
 		.minimums(new ATTRS().STR(3).INT(3).WIS(3).DEX(3).CON(3).CHA(3))
 		.maximums(new ATTRS().STR_18(100).INT(16).WIS(16).DEX(20).CON(20).CHA(16))
 		.with(HitPointAdvancement.of().init(4, 0).low(0, 3).high(2, 0))
+		.with(EnergyAdvancement.of().init(0, 0).low(0, 0).high(0, 0))		
 		.add();
 		
 		AdventurerSpecies.withID(GNOME_ID)
@@ -444,6 +463,7 @@ public class AdventurerSpecies {
 		.minimums(new ATTRS().STR(3).INT(3).WIS(3).DEX(3).CON(3).CHA(3))
 		.maximums(new ATTRS().STR_18(50).INT(19).WIS(18).DEX(18).CON(18).CHA(18))
 		.with(HitPointAdvancement.of().init(1, 0).low(0, 1).high(0, 0))
+		.with(EnergyAdvancement.of().init(2, 0).low(2, 0).high(2, 0))		
 		.add();
 
 		AdventurerSpecies.withID(ORC_ID)
@@ -462,6 +482,7 @@ public class AdventurerSpecies {
 		.minimums(new ATTRS().STR(3).INT(3).WIS(3).DEX(3).CON(3).CHA(3))
 		.maximums(new ATTRS().STR_18(20).INT(16).WIS(16).DEX(18).CON(18).CHA(16))
 		.with(HitPointAdvancement.of().init(1, 0).low(0, 1).high(0, 0))
+		.with(EnergyAdvancement.of().init(1, 0).low(1, 0).high(1, 0))		
 		.add();
 	}
 }

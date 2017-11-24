@@ -6,6 +6,10 @@ public class Randomizer {
 
 	public static final Random randomizer = new Random();
 
+	public static int rn1(int x, int y) {
+		return rn2(x) + y;
+	}
+
 	public static int rn2(int i) {
 		return randomizer.nextInt(i);
 	}

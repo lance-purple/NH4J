@@ -6,7 +6,6 @@
 #include <limits.h>
 
 STATIC_DCL long FDECL(xpToReachNextLevel, (int));
-STATIC_DCL int FDECL(enermod, (int));
 
 STATIC_OVL long
 xpToReachNextLevel(currentLevel)
@@ -17,56 +16,6 @@ int currentLevel;
     if (currentLevel < 20)
         return (10000L * (1L << (currentLevel - 10)));
     return (10000000L * ((long) (currentLevel - 19)));
-}
-
-STATIC_OVL int
-enermod(en)
-int en;
-{
-    switch (yourRolePMID()) {
-    case PM_PRIEST:
-    case PM_WIZARD:
-        return (2 * en);
-    case PM_HEALER:
-    case PM_KNIGHT:
-        return ((3 * en) / 2);
-    case PM_BARBARIAN:
-    case PM_VALKYRIE:
-        return ((3 * en) / 4);
-    default:
-        return en;
-    }
-}
-
-/* calculate spell power/energy points for new level */
-int
-newpw()
-{
-    int en = 0, enrnd, enfix;
-
-    if (currentExperienceLevel() == 0) {
-        en = urole.enadv.infix + urace.enadv.infix;
-        if (urole.enadv.inrnd > 0)
-            en += rnd(urole.enadv.inrnd);
-        if (urace.enadv.inrnd > 0)
-            en += rnd(urace.enadv.inrnd);
-    } else {
-        enrnd = (int) ACURR(A_WIS) / 2;
-        if (currentExperienceLevel() < cutoffLevelForYourRole()) {
-            enrnd += urole.enadv.lornd + urace.enadv.lornd;
-            enfix = urole.enadv.lofix + urace.enadv.lofix;
-        } else {
-            enrnd += urole.enadv.hirnd + urace.enadv.hirnd;
-            enfix = urole.enadv.hifix + urace.enadv.hifix;
-        }
-        en = enermod(rn1(enrnd, enfix));
-    }
-    if (en <= 0)
-        en = 1;
-    if (currentExperienceLevel() < MAXULEV) {
-        setMagicalEnergyIncreasePerLevel(currentExperienceLevel(), en);
-    }
-    return en;
 }
 
 /* return # of exp points for mtmp after nk killed */
@@ -279,7 +228,8 @@ boolean incr; /* true iff via incremental experience growth */
     increaseCurrentHitPoints(hpinc);
 
     /* increase spell power/energy points */
-    eninc = newpw();
+    int wisdomModifier = ACURR(A_WIS) / 2;
+    eninc = energyAdvancementForRoleAndSpecies(wisdomModifier);
     increaseMaximumMagicalEnergy(eninc);
     increaseCurrentMagicalEnergy(eninc);
 
