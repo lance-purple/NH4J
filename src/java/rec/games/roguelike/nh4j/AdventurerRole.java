@@ -40,6 +40,7 @@ public class AdventurerRole {
 	private EnergyAdvancement energyAdvancement;
 	
 	private int initialAlignmentRecord;
+	private int baseSpellcastingPenalty;
 	
 	private PM preferredPet = PM.UNKNOWN;
 
@@ -203,6 +204,12 @@ public class AdventurerRole {
 	private AdventurerRole withInitialAlignmentRecord(int initialAlignmentRecord)
 	{
 		this.initialAlignmentRecord = initialAlignmentRecord;
+		return this;
+	}
+
+	private AdventurerRole withBaseSpellcastingPenalty(int penalty)
+	{
+		this.baseSpellcastingPenalty = penalty;
 		return this;
 	}
 
@@ -593,6 +600,14 @@ public class AdventurerRole {
 		return 0;
 	}
 
+	public static int baseSpellcastingPenalty(int roleID) {
+		AdventurerRole role = getRole(roleID);
+		if (null != role) {
+			return role.baseSpellcastingPenalty;
+		}
+		return 0;
+	}
+
 	private static void initialize() {
 
 		AdventurerRole.withID(ARCHAEOLOGIST_ID)
@@ -625,6 +640,7 @@ public class AdventurerRole {
 			.with(HitPointAdvancement.of().init(11, 0).low(0, 8).high(1, 0))
 			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
 			.withInitialAlignmentRecord(10)
+			.withBaseSpellcastingPenalty(5)
 			.add();
 
 		AdventurerRole.withID(BARBARIAN_ID)
@@ -657,6 +673,7 @@ public class AdventurerRole {
 			.with(HitPointAdvancement.of().init(14, 0).low(0, 10).high(2, 0))
 			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
 			.withInitialAlignmentRecord(10)
+			.withBaseSpellcastingPenalty(14)
 			.add();
 
 		AdventurerRole.withID(CAVEMAN_ID)
@@ -690,6 +707,7 @@ public class AdventurerRole {
 			.with(HitPointAdvancement.of().init(14, 0).low(0, 8).high(2, 0))
 			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
 			.withInitialAlignmentRecord(0)
+			.withBaseSpellcastingPenalty(12)
 			.add();
 
 		AdventurerRole.withID(HEALER_ID)
@@ -722,6 +740,7 @@ public class AdventurerRole {
 			.with(HitPointAdvancement.of().init(11, 0).low(0, 8).high(1, 0))
 			.with(EnergyAdvancement.of().init(1, 4).low(0, 1).high(0, 2))
 			.withInitialAlignmentRecord(10)
+			.withBaseSpellcastingPenalty(3)
 			.add();
 
 		AdventurerRole.withID(KNIGHT_ID)
@@ -755,6 +774,7 @@ public class AdventurerRole {
 			.with(HitPointAdvancement.of().init(14, 0).low(0, 8).high(2, 0))
 			.with(EnergyAdvancement.of().init(1, 4).low(0, 1).high(0, 2))
 			.withInitialAlignmentRecord(10)
+			.withBaseSpellcastingPenalty(8)
 			.add();
 
 		AdventurerRole.withID(MONK_ID)

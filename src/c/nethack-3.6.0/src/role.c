@@ -25,7 +25,6 @@
  */
 const struct Role roles[] = {
     { 0, // "Archeologist"
-      5,
       0,
       2,
       10,
@@ -33,7 +32,6 @@ const struct Role roles[] = {
       SPE_MAGIC_MAPPING,
       -4 },
     { 1, // "Barbarian"
-      14,
       0,
       0,
       8,
@@ -41,7 +39,6 @@ const struct Role roles[] = {
       SPE_HASTE_SELF,
       -4 },
     { 2, // "Caveman", "Cavewoman"
-      12,
       0,
       1,
       8,
@@ -49,7 +46,6 @@ const struct Role roles[] = {
       SPE_DIG,
       -4 },
     { 3, // "Healer"
-      3,
       -3,
       2,
       10,
@@ -57,7 +53,6 @@ const struct Role roles[] = {
       SPE_CURE_SICKNESS,
       -4 },
     { 4, // "Knight"
-      8,
       -2,
       0,
       9,
@@ -65,7 +60,6 @@ const struct Role roles[] = {
       SPE_TURN_UNDEAD,
       -4 },
     { 5, // "Monk"
-      8,
       -2,
       2,
       20,
@@ -73,7 +67,6 @@ const struct Role roles[] = {
       SPE_RESTORE_ABILITY,
       -4 },
     { 6, // "Priest", "Priestess"
-      3,
       -2,
       2,
       10,
@@ -83,7 +76,6 @@ const struct Role roles[] = {
     /* Note:  Rogue precedes Ranger so that use of `-R' on the command line
        retains its traditional meaning. */
     { 7, // "Rogue"
-      8,
       0,
       1,
       9,
@@ -91,7 +83,6 @@ const struct Role roles[] = {
       SPE_DETECT_TREASURE,
       -4 },
     { 8, // "Ranger"
-      9,
       2,
       1,
       10,
@@ -99,7 +90,6 @@ const struct Role roles[] = {
       SPE_INVISIBILITY,
       -4 },
     { 9, // "Samurai"
-      10,
       0,
       0,
       8,
@@ -107,7 +97,6 @@ const struct Role roles[] = {
       SPE_CLAIRVOYANCE,
       -4 },
     { 10, // "Tourist"
-      5,
       1,
       2,
       10,
@@ -115,7 +104,6 @@ const struct Role roles[] = {
       SPE_CHARM_MONSTER,
       -4 },
     { 11, // "Valkyrie"
-      10,
       -2,
       0,
       9,
@@ -123,7 +111,6 @@ const struct Role roles[] = {
       SPE_CONE_OF_COLD,
       -4 },
     { 12, // "Wizard"
-      1,
       0,
       3,
       10,
@@ -139,7 +126,6 @@ const struct Role roles[] = {
  */
 struct Role urole = {
     -1,
-    10,
      0,
      0,
      4,

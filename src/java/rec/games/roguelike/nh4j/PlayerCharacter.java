@@ -1826,4 +1826,9 @@ public class PlayerCharacter {
 		return AdventurerRole.initialAlignmentRecord(currentRoleID);
 	}
 
+	public static int baseSpellcastingPenaltyForRole()
+	{
+		return AdventurerRole.baseSpellcastingPenalty(currentRoleID);
+	}
+
 }

@@ -3361,4 +3361,8 @@ extern int initialAlignmentRecordForYourRole() {
   return javaGetInt(PLAYER_CHARACTER_CLASS, "initialAlignmentRecordForRole");
 }
 
+extern int baseSpellcastingPenaltyForYourRole() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "baseSpellcastingPenaltyForRole");
+}
+
 /*hacklib.c*/

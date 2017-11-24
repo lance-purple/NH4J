@@ -1605,7 +1605,7 @@ int spell;
 
     /* Calculate intrinsic ability (splcaster) */
 
-    splcaster = urole.spelbase;
+    splcaster = baseSpellcastingPenaltyForYourRole();
     special = urole.spelheal;
     statused = ACURR(urole.spelstat);
 

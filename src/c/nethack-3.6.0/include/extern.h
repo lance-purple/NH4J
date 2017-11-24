@@ -2900,6 +2900,7 @@ E int FDECL(attributeDistributionForYourRole, (int));
 E int FDECL(cutoffLevelForYourRole, ());
 E int FDECL(hitPointAdvancementForYourRole, ());
 E int FDECL(initialAlignmentRecordForYourRole, ());
+E int FDECL(baseSpellcastingPenaltyForYourRole, ());
 
 E int FDECL(hitPointAdvancementForYourSpecies, ());
 
