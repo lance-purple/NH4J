@@ -40,7 +40,8 @@ public class AdventurerRole {
 	private EnergyAdvancement energyAdvancement;
 	
 	private int initialAlignmentRecord;
-	private int baseSpellcastingPenalty;
+	
+	private SpellcastingPenalties spellcastingPenalties;
 	
 	private PM preferredPet = PM.UNKNOWN;
 
@@ -207,9 +208,9 @@ public class AdventurerRole {
 		return this;
 	}
 
-	private AdventurerRole withBaseSpellcastingPenalty(int penalty)
+	private AdventurerRole with(SpellcastingPenalties penalties)
 	{
-		this.baseSpellcastingPenalty = penalty;
+		this.spellcastingPenalties = penalties;
 		return this;
 	}
 
@@ -603,7 +604,15 @@ public class AdventurerRole {
 	public static int baseSpellcastingPenalty(int roleID) {
 		AdventurerRole role = getRole(roleID);
 		if (null != role) {
-			return role.baseSpellcastingPenalty;
+			return role.spellcastingPenalties.base();
+		}
+		return 0;
+	}
+
+	public static int healingSpellPenalty(int roleID) {
+		AdventurerRole role = getRole(roleID);
+		if (null != role) {
+			return role.spellcastingPenalties.healing();
 		}
 		return 0;
 	}
@@ -640,7 +649,7 @@ public class AdventurerRole {
 			.with(HitPointAdvancement.of().init(11, 0).low(0, 8).high(1, 0))
 			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
 			.withInitialAlignmentRecord(10)
-			.withBaseSpellcastingPenalty(5)
+			.with(SpellcastingPenalties.of().base(5).healing(0))
 			.add();
 
 		AdventurerRole.withID(BARBARIAN_ID)
@@ -673,7 +682,7 @@ public class AdventurerRole {
 			.with(HitPointAdvancement.of().init(14, 0).low(0, 10).high(2, 0))
 			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
 			.withInitialAlignmentRecord(10)
-			.withBaseSpellcastingPenalty(14)
+			.with(SpellcastingPenalties.of().base(14).healing(0))
 			.add();
 
 		AdventurerRole.withID(CAVEMAN_ID)
@@ -707,7 +716,7 @@ public class AdventurerRole {
 			.with(HitPointAdvancement.of().init(14, 0).low(0, 8).high(2, 0))
 			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
 			.withInitialAlignmentRecord(0)
-			.withBaseSpellcastingPenalty(12)
+			.with(SpellcastingPenalties.of().base(12).healing(0))
 			.add();
 
 		AdventurerRole.withID(HEALER_ID)
@@ -740,7 +749,7 @@ public class AdventurerRole {
 			.with(HitPointAdvancement.of().init(11, 0).low(0, 8).high(1, 0))
 			.with(EnergyAdvancement.of().init(1, 4).low(0, 1).high(0, 2))
 			.withInitialAlignmentRecord(10)
-			.withBaseSpellcastingPenalty(3)
+			.with(SpellcastingPenalties.of().base(3).healing(-3))
 			.add();
 
 		AdventurerRole.withID(KNIGHT_ID)
@@ -774,7 +783,7 @@ public class AdventurerRole {
 			.with(HitPointAdvancement.of().init(14, 0).low(0, 8).high(2, 0))
 			.with(EnergyAdvancement.of().init(1, 4).low(0, 1).high(0, 2))
 			.withInitialAlignmentRecord(10)
-			.withBaseSpellcastingPenalty(8)
+			.with(SpellcastingPenalties.of().base(8).healing(-2))
 			.add();
 
 		AdventurerRole.withID(MONK_ID)
@@ -807,6 +816,7 @@ public class AdventurerRole {
 			.with(HitPointAdvancement.of().init(12, 0).low(0, 8).high(1, 0))
 			.with(EnergyAdvancement.of().init(2, 2).low(0, 2).high(0, 2))
 			.withInitialAlignmentRecord(10)
+			.with(SpellcastingPenalties.of().base(8).healing(-2))
 			.add();
 
 		AdventurerRole.withID(PRIEST_ID)
@@ -838,6 +848,7 @@ public class AdventurerRole {
 			.with(HitPointAdvancement.of().init(12, 0).low(0, 8).high(1, 0))
 			.with(EnergyAdvancement.of().init(4, 3).low(0, 2).high(0, 2))
 			.withInitialAlignmentRecord(0)
+			.with(SpellcastingPenalties.of().base(3).healing(-2))
 			.add();
 
 		AdventurerRole.withID(ROGUE_ID)
@@ -870,6 +881,7 @@ public class AdventurerRole {
 			.with(HitPointAdvancement.of().init(10, 0).low(0, 8).high(1, 0))
 			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
 			.withInitialAlignmentRecord(10)
+			.with(SpellcastingPenalties.of().base(8).healing(0))
 			.add();
 
 		AdventurerRole.withID(RANGER_ID)
@@ -903,6 +915,7 @@ public class AdventurerRole {
 			.with(HitPointAdvancement.of().init(13, 0).low(0, 6).high(1, 0))
 			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
 			.withInitialAlignmentRecord(10)
+			.with(SpellcastingPenalties.of().base(9).healing(2))
 			.add();
 
 		AdventurerRole.withID(SAMURAI_ID)
@@ -936,6 +949,7 @@ public class AdventurerRole {
 			.with(HitPointAdvancement.of().init(13, 0).low(0, 8).high(1, 0))
 			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
 			.withInitialAlignmentRecord(10)
+			.with(SpellcastingPenalties.of().base(10).healing(0))
 			.add();
 
 		AdventurerRole.withID(TOURIST_ID)
@@ -968,6 +982,7 @@ public class AdventurerRole {
 			.with(HitPointAdvancement.of().init(8, 0).low(0, 8).high(0, 0))
 			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
 			.withInitialAlignmentRecord(0)
+			.with(SpellcastingPenalties.of().base(5).healing(1))
 			.add();
 
 		AdventurerRole.withID(VALKYRIE_ID)
@@ -1000,6 +1015,7 @@ public class AdventurerRole {
 			.with(HitPointAdvancement.of().init(14, 0).low(0, 8).high(2, 0))
 			.with(EnergyAdvancement.of().init(1, 0).low(0, 1).high(0, 1))
 			.withInitialAlignmentRecord(0)
+			.with(SpellcastingPenalties.of().base(10).healing(-2))
 			.add();
 
 		AdventurerRole.withID(WIZARD_ID)
@@ -1033,6 +1049,7 @@ public class AdventurerRole {
 			.with(HitPointAdvancement.of().init(10, 8).low(0, 8).high(1, 0))
 			.with(EnergyAdvancement.of().init(4, 3).low(0, 2).high(0, 3))
 			.withInitialAlignmentRecord(0)
+			.with(SpellcastingPenalties.of().base(1).healing(0))
 			.add();
 
 	}

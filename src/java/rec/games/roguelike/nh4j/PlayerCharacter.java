@@ -1831,4 +1831,9 @@ public class PlayerCharacter {
 		return AdventurerRole.baseSpellcastingPenalty(currentRoleID);
 	}
 
+	public static int healingSpellPenaltyForRole()
+	{
+		return AdventurerRole.healingSpellPenalty(currentRoleID);
+	}
+
 }

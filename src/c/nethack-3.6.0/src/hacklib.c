@@ -3365,4 +3365,8 @@ extern int baseSpellcastingPenaltyForYourRole() {
   return javaGetInt(PLAYER_CHARACTER_CLASS, "baseSpellcastingPenaltyForRole");
 }
 
+extern int healingSpellPenaltyForYourRole() {
+  return javaGetInt(PLAYER_CHARACTER_CLASS, "healingSpellPenaltyForRole");
+}
+
 /*hacklib.c*/

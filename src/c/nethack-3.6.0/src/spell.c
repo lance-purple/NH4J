@@ -1606,7 +1606,7 @@ int spell;
     /* Calculate intrinsic ability (splcaster) */
 
     splcaster = baseSpellcastingPenaltyForYourRole();
-    special = urole.spelheal;
+    special = healingSpellPenaltyForYourRole();
     statused = ACURR(urole.spelstat);
 
     if (uarm && is_metallic(uarm))

@@ -25,7 +25,6 @@
  */
 const struct Role roles[] = {
     { 0, // "Archeologist"
-      0,
       2,
       10,
       A_INT,
@@ -33,41 +32,35 @@ const struct Role roles[] = {
       -4 },
     { 1, // "Barbarian"
       0,
-      0,
       8,
       A_INT,
       SPE_HASTE_SELF,
       -4 },
     { 2, // "Caveman", "Cavewoman"
-      0,
       1,
       8,
       A_INT,
       SPE_DIG,
       -4 },
     { 3, // "Healer"
-      -3,
       2,
       10,
       A_WIS,
       SPE_CURE_SICKNESS,
       -4 },
     { 4, // "Knight"
-      -2,
       0,
       9,
       A_WIS,
       SPE_TURN_UNDEAD,
       -4 },
     { 5, // "Monk"
-      -2,
       2,
       20,
       A_WIS,
       SPE_RESTORE_ABILITY,
       -4 },
     { 6, // "Priest", "Priestess"
-      -2,
       2,
       10,
       A_WIS,
@@ -76,14 +69,12 @@ const struct Role roles[] = {
     /* Note:  Rogue precedes Ranger so that use of `-R' on the command line
        retains its traditional meaning. */
     { 7, // "Rogue"
-      0,
       1,
       9,
       A_INT,
       SPE_DETECT_TREASURE,
       -4 },
     { 8, // "Ranger"
-      2,
       1,
       10,
       A_INT,
@@ -91,27 +82,23 @@ const struct Role roles[] = {
       -4 },
     { 9, // "Samurai"
       0,
-      0,
       8,
       A_INT,
       SPE_CLAIRVOYANCE,
       -4 },
     { 10, // "Tourist"
-      1,
       2,
       10,
       A_INT,
       SPE_CHARM_MONSTER,
       -4 },
     { 11, // "Valkyrie"
-      -2,
       0,
       9,
       A_WIS,
       SPE_CONE_OF_COLD,
       -4 },
     { 12, // "Wizard"
-      0,
       3,
       10,
       A_INT,
@@ -126,7 +113,6 @@ const struct Role roles[] = {
  */
 struct Role urole = {
     -1,
-     0,
      0,
      4,
     A_INT,

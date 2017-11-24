@@ -62,9 +62,9 @@ struct Role {
 #define ROLE_CHAOTIC AM_CHAOTIC
 
     /*** Spell statistics (from spell.c) ***/
-    int spelheal; /* penalty (-bonus) for healing spells */
     int spelshld; /* penalty for wearing any shield */
     int spelarmr; /* penalty for wearing metal armour */
+
     int spelstat; /* which stat (A_) is used */
     int spelspec; /* spell (SPE_) the class excels at */
     int spelsbon; /* penalty (-bonus) for that spell */
