@@ -383,7 +383,7 @@ public class AdventurerSpecies {
 	}
 	
 	public static boolean validSpeciesID(int speciesID) {
-	    return (speciesID > 0) && (speciesID < numberOfPlayableSpecies());
+	    return (speciesID >= 0) && (speciesID < numberOfPlayableSpecies());
 	}
 
 

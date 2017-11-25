@@ -2903,7 +2903,7 @@ boolean incr;
 	    }
 	    else if (incr && (yourRoleHasPMID(PM_WIZARD) || yourRoleHasPMID(PM_VALKYRIE)))
 	    {
-                javaString roleName = roleNameAsMale(urole.id);
+                javaString roleName = roleNameAsMale(yourCurrentRoleID());
                 pline("%s needs food, badly!", roleName.c_str);
 		releaseJavaString(roleName);
 	    }

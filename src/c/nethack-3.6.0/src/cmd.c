@@ -1348,9 +1348,9 @@ int final; /* ENL_GAMEINPROGRESS:0, ENL_GAMEOVERALIVE, ENL_GAMEOVERDEAD */
        gender in inherentlyFemale rather than the current you-as-monster gender */
 
     javaString uroleName =
-            ((areYouPolymorphed() ? inherentlyFemale() : flags.female) && roleNameHasFemaleVersion(urole.id))
-                ? roleNameAsFemale(urole.id)
-                : roleNameAsMale(urole.id);
+            ((areYouPolymorphed() ? inherentlyFemale() : flags.female) && roleNameHasFemaleVersion(yourCurrentRoleID()))
+                ? roleNameAsFemale(yourCurrentRoleID())
+                : roleNameAsMale(yourCurrentRoleID());
     Sprintf(buf, "%s the %s's attributes:", tmpbuf, uroleName.c_str);
     releaseJavaString(uroleName);
 
@@ -1423,7 +1423,7 @@ int final;
 
     /* report role; omit gender if it's redundant (eg, "female priestess") */
     tmpbuf[0] = '\0';
-    if (!roleNameHasFemaleVersion(urole.id)
+    if (!roleNameHasFemaleVersion(yourCurrentRoleID())
         && (yourRoleCanStartAsMaleOrFemale() || innategend != flags.initgend))
     {
 	javaString adjective = genderAdjective(innategend);
@@ -1436,9 +1436,9 @@ int final;
         Strcpy(buf, "actually "); /* "You are actually a ..." */
     }
 
-    javaString role_titl = (innategend && roleNameHasFemaleVersion(urole.id))
-	    ? roleNameAsFemale(urole.id)
-	    : roleNameAsMale(urole.id);
+    javaString role_titl = (innategend && roleNameHasFemaleVersion(yourCurrentRoleID()))
+	    ? roleNameAsFemale(yourCurrentRoleID())
+	    : roleNameAsMale(yourCurrentRoleID());
     javaString rank_titl = rankOf(currentExperienceLevel(), yourRolePMID(), innategend);
 
     if (!strcmpi(rank_titl.c_str, role_titl.c_str)) {

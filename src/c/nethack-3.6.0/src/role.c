@@ -1435,8 +1435,7 @@ role_init()
     alignmnt = aligns[flags.initalign].value;
 
     /* Initialize urole and species */
-    urole = roles[flags.initrole];
-    setYourCurrentRoleID(urole.id);
+    setYourCurrentRoleID(flags.initrole);
     setYourSpeciesID(flags.initrace);
 
     /* Fix up the quest leader */

@@ -631,7 +631,7 @@ boolean new_game; /* false => restoring an old game */
     *buf = '\0';
     if (new_game || originalAlignmentBase() != currentAlignmentBase())
         Sprintf(eos(buf), " %s", align_str(originalAlignmentBase()));
-    if (!roleNameHasFemaleVersion(urole.id)
+    if (!roleNameHasFemaleVersion(yourCurrentRoleID())
         && (new_game
                 ? (yourRoleCanStartAsMaleOrFemale())
                 : currentgend != flags.initgend)) {
@@ -640,8 +640,8 @@ boolean new_game; /* false => restoring an old game */
 	releaseJavaString(adjective);
     }
 
-    javaString roleName = (currentgend && roleNameHasFemaleVersion(urole.id))
-	    ? roleNameAsFemale(urole.id) : roleNameAsMale(urole.id);
+    javaString roleName = (currentgend && roleNameHasFemaleVersion(yourCurrentRoleID()))
+	    ? roleNameAsFemale(yourCurrentRoleID()) : roleNameAsMale(yourCurrentRoleID());
     javaString speciesAdjective = yourSpeciesAdjective();
     pline(new_game ? "%s %s, welcome to NetHack!  You are a%s %s %s."
                    : "%s %s, the%s %s %s, welcome back to NetHack!",

@@ -1,0 +1,1 @@
+vi src/allmain.c src/botl.c src/cmd.c src/do_name.c src/eat.c src/end.c src/hack.c src/polyself.c src/questpgr.c src/read.c src/role.c src/wield.c

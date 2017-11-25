@@ -14,13 +14,6 @@
 
 /*** Substructures ***/
 
-struct RoleAdvance {
-    /* "fix" is the fixed amount, "rnd" is the random amount */
-    xchar infix, inrnd; /* at character initialization */
-    xchar lofix, lornd; /* gained per level <  urole.xlev */
-    xchar hifix, hirnd; /* gained per level >= urole.xlev */
-};
-
 #define ACHIEVEMENT_GOT_AMULET 0
 #define ACHIEVEMENT_GOT_BELL 1
 #define ACHIEVEMENT_GOT_BOOK 2

@@ -280,9 +280,9 @@ char c;
         jstr = javaStringFromC(plname);
         break;
     case 'c':
-        jstr = (flags.female && roleNameHasFemaleVersion(urole.id))
-		? roleNameAsFemale(urole.id)
-		: roleNameAsMale(urole.id);
+        jstr = (flags.female && roleNameHasFemaleVersion(yourCurrentRoleID()))
+		? roleNameAsFemale(yourCurrentRoleID())
+		: roleNameAsMale(yourCurrentRoleID());
         break;
     case 'r':
         jstr = rankOf(currentExperienceLevel(), yourRolePMID(), flags.female);

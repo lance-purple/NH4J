@@ -1138,9 +1138,9 @@ int how;
             yourRoleName = (flags.female)
                 ? javaStringFromC("Demigoddess") : javaStringFromC("Demigod");
 	} else {
-            yourRoleName = (flags.female && roleNameHasFemaleVersion(urole.id))
-                ? roleNameAsFemale(urole.id)
-		: roleNameAsMale(urole.id);
+            yourRoleName = (flags.female && roleNameHasFemaleVersion(yourCurrentRoleID()))
+                ? roleNameAsFemale(yourCurrentRoleID())
+		: roleNameAsMale(yourCurrentRoleID());
 	}
 
         Sprintf(pbuf, "%s %s the %s...", Goodbye(), plname, yourRoleName.c_str);

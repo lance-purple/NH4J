@@ -274,9 +274,9 @@ max_rank_sz()
 {
     int maxr = 0;
     for (int i = 0; i < 9; i++) {
-        if (rankNameHasMaleVersion(urole.id, i))
+        if (rankNameHasMaleVersion(yourCurrentRoleID(), i))
 	{
-            javaString rankName = rankNameAsMale(urole.id, i);
+            javaString rankName = rankNameAsMale(yourCurrentRoleID(), i);
 	    int r = strlen(rankName.c_str);
 	    releaseJavaString(rankName);
 	    if (r > maxr)
@@ -284,9 +284,9 @@ max_rank_sz()
 	        maxr = r;
 	    }
 	}
-        if (rankNameHasFemaleVersion(urole.id, i))
+        if (rankNameHasFemaleVersion(yourCurrentRoleID(), i))
 	{
-            javaString rankName = rankNameAsFemale(urole.id, i);
+            javaString rankName = rankNameAsFemale(yourCurrentRoleID(), i);
 	    int r = strlen(rankName.c_str);
 	    releaseJavaString(rankName);
 	    if (r > maxr)

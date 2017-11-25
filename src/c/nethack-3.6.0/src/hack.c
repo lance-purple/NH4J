@@ -2726,7 +2726,7 @@ maybe_wail()
         int i, powercnt;
 
         javaString who = (yourRoleHasPMID(PM_WIZARD) || yourRoleHasPMID(PM_VALKYRIE)) ?
-		            roleNameAsMale(urole.id) : javaStringFromC("Elf");
+		            roleNameAsMale(yourCurrentRoleID()) : javaStringFromC("Elf");
 
         if (currentHitPoints() == 1) {
             pline("%s is about to die.", who.c_str);
