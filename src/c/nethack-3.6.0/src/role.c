@@ -56,13 +56,6 @@ const struct Role roles[] = {
     { -1 }
 };
 
-/* The player's role, created at runtime from initial
- * choices.  This may be munged in role_init().
- */
-struct Role urole = {
-    -1,
-};
-
 /* Table of all alignments */
 const struct Align aligns[] = {
     { "law", "lawful", "Law", ROLE_LAWFUL, A_LAWFUL },
@@ -1434,7 +1427,7 @@ role_init()
         flags.initalign = randalign(flags.initrole, flags.initrace);
     alignmnt = aligns[flags.initalign].value;
 
-    /* Initialize urole and species */
+    /* Initialize role and species */
     setYourCurrentRoleID(flags.initrole);
     setYourSpeciesID(flags.initrace);
 

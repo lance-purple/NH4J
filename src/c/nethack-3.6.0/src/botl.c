@@ -160,14 +160,13 @@ int lev;
 short monnum;
 boolean female;
 {
-    register const struct Role *role;
+    int roleID;
     boolean known = FALSE;
 
     /* Find the role */
-    for (int i = 0, n = numberOfKnownRoles(); i < n; i++)
+    for (roleID = 0; roleID < numberOfKnownRoles(); roleID++)
     {
-        role = &roles[i];
-        if (monnum == malePMIDForRole(i) || monnum == femalePMIDForRole(i))
+        if (monnum == malePMIDForRole(roleID) || monnum == femalePMIDForRole(roleID))
 	{
 	    known = TRUE;
             break;
@@ -176,29 +175,29 @@ boolean female;
 
     if (!known)
     {
-        role = &urole;
+        roleID = yourCurrentRoleID();
     }
 
     /* Find the rank */
     for (int i = xlev_to_rank((int) lev); i >= 0; i--) {
-        if (female && rankNameHasFemaleVersion(role->id, i))
+        if (female && rankNameHasFemaleVersion(roleID, i))
 	{
-            return rankNameAsFemale(role->id, i);
+            return rankNameAsFemale(roleID, i);
 	}
-        if (rankNameHasMaleVersion(role->id, i))
+        if (rankNameHasMaleVersion(roleID, i))
 	{
-            return rankNameAsMale(role->id, i);
+            return rankNameAsMale(roleID, i);
 	}
     }
 
     /* Try the role name, instead */
-    if (female && roleNameHasFemaleVersion(role->id))
+    if (female && roleNameHasFemaleVersion(roleID))
     {
-        return roleNameAsFemale(role->id);
+        return roleNameAsFemale(roleID);
     }
-    else if (roleNameHasMaleVersion(role->id))
+    else if (roleNameHasMaleVersion(roleID))
     {
-        return roleNameAsMale(role->id);
+        return roleNameAsMale(roleID);
     }
     else
     {

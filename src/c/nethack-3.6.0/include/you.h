@@ -68,7 +68,6 @@ struct Role {
 };
 
 extern const struct Role roles[]; /* table of available roles */
-extern struct Role urole;
 
 /* used during initialization for race, gender, and alignment
    as well as for character class */

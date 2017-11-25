@@ -1347,12 +1347,12 @@ int final; /* ENL_GAMEINPROGRESS:0, ENL_GAMEOVERALIVE, ENL_GAMEOVERDEAD */
     /* as in background_enlightenment, when poly'd we need to use the saved
        gender in inherentlyFemale rather than the current you-as-monster gender */
 
-    javaString uroleName =
+    javaString yourRoleName =
             ((areYouPolymorphed() ? inherentlyFemale() : flags.female) && roleNameHasFemaleVersion(yourCurrentRoleID()))
                 ? roleNameAsFemale(yourCurrentRoleID())
                 : roleNameAsMale(yourCurrentRoleID());
-    Sprintf(buf, "%s the %s's attributes:", tmpbuf, uroleName.c_str);
-    releaseJavaString(uroleName);
+    Sprintf(buf, "%s the %s's attributes:", tmpbuf, yourRoleName.c_str);
+    releaseJavaString(yourRoleName);
 
     en_win = create_nhwindow(NHW_MENU);
     /* title */
