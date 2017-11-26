@@ -12,7 +12,7 @@ public class GenderedName {
 
 	private GenderedName(String genericVersion) {
 		this.maleVersion = genericVersion;
-		this.femaleVersion = null;
+		this.femaleVersion = genericVersion;
 	}
 
 	public boolean hasMaleVersion() {
@@ -24,7 +24,7 @@ public class GenderedName {
 	}
 
 	public boolean hasFemaleVersion() {
-		return (null != femaleVersion);
+		return (! femaleVersion.equals(maleVersion));
 	}
 
 	public String asFemale() {
