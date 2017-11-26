@@ -68,7 +68,7 @@ const struct Align aligns[] = {
 static struct {
     boolean roles[SIZE(roles)];
     short mask;
-} filter;
+} XXfilter;
 
 STATIC_DCL int NDECL(randrole_filtered);
 STATIC_DCL char *FDECL(promptsep, (char *, int));
@@ -391,7 +391,7 @@ int rolenum, racenum, gendnum, alignnum;
     short allow;
 
     if (validrole(rolenum)) {
-        if (filter.roles[rolenum])
+        if (roleFilter(rolenum))
             return FALSE;
         allow = startingMaskForRole(rolenum);
         if (validSpeciesID(racenum)
@@ -406,8 +406,8 @@ int rolenum, racenum, gendnum, alignnum;
         return TRUE;
     } else {
         /* random; check whether any selection is possible */
-        for (i = 0; i < SIZE(roles) - 1; i++) {
-            if (filter.roles[i])
+        for (i = 0; i < numberOfKnownRoles(); i++) {
+            if (roleFilter(i))
                 continue;
             allow = startingMaskForRole(i);
             if (validSpeciesID(racenum)
@@ -435,7 +435,7 @@ int racenum, gendnum, alignnum, pickhow;
     int i;
     int roles_ok = 0, set[SIZE(roles)];
 
-    for (i = 0; i < SIZE(roles) - 1; i++) {
+    for (i = 0; i < numberOfKnownRoles(); i++) {
         if (ok_role(i, racenum, gendnum, alignnum)
             && ok_race(i, (racenum >= 0) ? racenum : ROLE_RANDOM,
                        gendnum, alignnum)
@@ -459,7 +459,7 @@ int rolenum, racenum, gendnum, alignnum;
     short allow;
 
     if (racenum >= 0 && (racenum < numberOfPlayableSpecies())) {
-        if (filter.mask & selfMaskForSpecies(racenum)) {
+        if (roleFilterMask() & selfMaskForSpecies(racenum)) {
             return FALSE;
 	}
         allow = startingMaskForSpecies(racenum);
@@ -479,7 +479,7 @@ int rolenum, racenum, gendnum, alignnum;
     } else {
         /* random; check whether any selection is possible */
         for (i = 0; i < numberOfPlayableSpecies(); i++) {
-            if (filter.mask & selfMaskForSpecies(i)) {
+            if (roleFilterMask() & selfMaskForSpecies(i)) {
                 continue;
 	    }
             allow = startingMaskForSpecies(i);
@@ -540,7 +540,7 @@ int alignnum UNUSED;
     short allow;
 
     if (gendnum >= 0 && gendnum < adventurerGenders()) {
-        if (filter.mask & genderMask(gendnum))
+        if (roleFilterMask() & genderMask(gendnum))
             return FALSE;
         allow = genderMask(gendnum);
         if (validrole(rolenum)
@@ -553,7 +553,7 @@ int alignnum UNUSED;
     } else {
         /* random; check whether any selection is possible */
         for (i = 0; i < adventurerGenders(); i++) {
-            if (filter.mask & genderMask(i))
+            if (roleFilterMask() & genderMask(i))
                 continue;
             allow = genderMask(i);
             if (validrole(rolenum)
@@ -609,7 +609,7 @@ int alignnum;
     short allow;
 
     if (alignnum >= 0 && alignnum < ROLE_ALIGNS) {
-        if (filter.mask & aligns[alignnum].allow)
+        if (roleFilterMask() & aligns[alignnum].allow)
             return FALSE;
         allow = aligns[alignnum].allow;
         if (validrole(rolenum)
@@ -622,7 +622,7 @@ int alignnum;
     } else {
         /* random; check whether any selection is possible */
         for (i = 0; i < ROLE_ALIGNS; i++) {
-            if (filter.mask & aligns[i].allow)
+            if (roleFilterMask() & aligns[i].allow)
                 return FALSE;
             allow = aligns[i].allow;
             if (validrole(rolenum)
@@ -708,16 +708,22 @@ const char *bufp;
     int i;
     boolean reslt = TRUE;
 
-    if ((i = str2role(bufp)) != ROLE_NONE && i != ROLE_RANDOM)
-        filter.roles[i] = TRUE;
-    else if ((i = str2race(bufp)) != ROLE_NONE && i != ROLE_RANDOM)
-        filter.mask |= selfMaskForSpecies(i);
-    else if ((i = str2gend(bufp)) != ROLE_NONE && i != ROLE_RANDOM)
-        filter.mask |= genderMask(i);
-    else if ((i = str2align(bufp)) != ROLE_NONE && i != ROLE_RANDOM)
-        filter.mask |= aligns[i].allow;
-    else
+    if ((i = str2role(bufp)) != ROLE_NONE && i != ROLE_RANDOM) {
+        setRoleFilter(i, TRUE);
+    }
+    else if ((i = str2race(bufp)) != ROLE_NONE && i != ROLE_RANDOM) {
+        addRoleFilterMask(selfMaskForSpecies(i));
+    }
+    else if ((i = str2gend(bufp)) != ROLE_NONE && i != ROLE_RANDOM) {
+        addRoleFilterMask(genderMask(i));
+    }
+    else if ((i = str2align(bufp)) != ROLE_NONE && i != ROLE_RANDOM) {
+        addRoleFilterMask(aligns[i].allow);
+    }
+    else {
         reslt = FALSE;
+    }
+
     return reslt;
 }
 
@@ -726,22 +732,18 @@ gotrolefilter()
 {
     int i;
 
-    if (filter.mask)
+    if (roleFilterMask() > 0) {
         return TRUE;
-    for (i = 0; i < SIZE(roles); ++i)
-        if (filter.roles[i])
-            return TRUE;
-    return FALSE;
+    } else {
+        return anyRoleFilters();
+    }
 }
 
 void
 clearrolefilter()
 {
-    int i;
-
-    for (i = 0; i < SIZE(roles); ++i)
-        filter.roles[i] = FALSE;
-    filter.mask = 0;
+    resetRoleFilters();
+    resetRoleFilterMask();
 }
 
 #define BP_ALIGN 0
@@ -1245,7 +1247,7 @@ winid where;
         what = "role";
         f = r;
         for (i = 0; i < SIZE(roles); ++i)
-            if (i != f && !filter.roles[i])
+            if (i != f && !roleFilter(i))
                 break;
         if (i == SIZE(roles)) {
             constrainer = "filter";
@@ -1264,7 +1266,7 @@ winid where;
                 constrainer = "role";
                 forcedValue = nounForSpecies(c);
             } else if (f >= 0
-                       && (allowmask & ~filter.mask) == selfMaskForSpecies(f)) {
+                       && (allowmask & ~roleFilterMask()) == selfMaskForSpecies(f)) {
                 /* if there is only one race choice available due to user
                    options disallowing others, race menu entry is disabled */
                 constrainer = "filter";
@@ -1286,7 +1288,7 @@ winid where;
                 constrainer = "role";
                 forcedValue = genderAdjective(g);
             } else if (f >= 0
-                       && (allowmask & ~filter.mask) == genderMask(f)) {
+                       && (allowmask & ~roleFilterMask()) == genderMask(f)) {
                 /* if there is only one gender choice available due to user
                    options disallowing other, gender menu entry is disabled */
                 constrainer = "filter";
@@ -1321,7 +1323,7 @@ winid where;
                 constrainer = "race";
         }
         if (f >= 0 && !constrainer
-            && (ROLE_ALIGNMASK & ~filter.mask) == aligns[f].allow) {
+            && (ROLE_ALIGNMASK & ~roleFilterMask()) == aligns[f].allow) {
             /* if there is only one alignment choice available due to user
                options disallowing others, algn menu entry is disabled */
             constrainer = "filter";

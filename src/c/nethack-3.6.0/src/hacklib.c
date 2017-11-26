@@ -77,13 +77,20 @@ void setPmid4you(int pmid) {
     youmonst.pmid = pmid;
 }
 
-
 jclass getJavaClass(const char* className) {
     jclass javaClass = (*jni_env)->FindClass(jni_env, className);
     if ((*jni_env)->ExceptionCheck(jni_env)) {
         (*jni_env)->ExceptionDescribe(jni_env);
     }
     return javaClass;
+}
+
+jmethodID getObjectMethod(jclass javaClass, const char* methodName, const char* typeSignature) {
+    jmethodID method = (*jni_env)->GetMethodID(jni_env, javaClass, methodName, typeSignature);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        (*jni_env)->ExceptionDescribe(jni_env);
+    }
+    return method;
 }
 
 jmethodID getStaticMethod(jclass javaClass, const char* methodName, const char* typeSignature) {
@@ -94,114 +101,248 @@ jmethodID getStaticMethod(jclass javaClass, const char* methodName, const char* 
     return method;
 }
 
+void logException() {
+    int core = 0 / 0;  // this will give us a 'C' stacktrace 
+
+#if 0
+    jthrowable exception = (*jni_env)->ExceptionOccurred(jni_env);
+    (*jni_env)->ExceptionClear(jni_env);
+
+    jclass throwableClass = getJavaClass("java/lang/Throwable");
+
+    jmethodID toStringMethod = getObjectMethod(throwableClass, "toString", "()Ljava/lang/String;");
+    jstring str = (*jni_env)->CallObjectMethod(jni_env, exception, toStringMethod);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        (*jni_env)->ExceptionDescribe(jni_env);
+    }
+
+    jboolean isCopy = FALSE;
+    const char* utf = (*jni_env)->GetStringUTFChars(jni_env, str, &isCopy);
+    FILE* log = fopen("/tmp/java_exceptions.log", "a");
+    fprintf(log, "%s\n", utf);
+    (*jni_env)->ReleaseStringUTFChars(jni_env, str, utf);
+
+    jmethodID getStackTraceMethod = getObjectMethod(throwableClass, "getStackTrace", "()[Ljava/lang/StackTraceElement;");
+
+    jclass stackTraceElementClass = getJavaClass("java/lang/StackTraceElement");
+    
+    toStringMethod = getObjectMethod(stackTraceElementClass, "toString", "()Ljava/lang/String;");
+
+    jobjectArray frames = (*jni_env)->CallObjectMethod(jni_env, exception, getStackTraceMethod);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        (*jni_env)->ExceptionDescribe(jni_env);
+    }
+
+    jsize framesLength = (*jni_env)->GetArrayLength(jni_env, frames);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        (*jni_env)->ExceptionDescribe(jni_env);
+    }
+
+    for (int i = 0; i < framesLength; i++) {
+        jobject frame = (*jni_env)->GetObjectArrayElement(jni_env, frames, i);
+        if ((*jni_env)->ExceptionCheck(jni_env)) {
+            (*jni_env)->ExceptionDescribe(jni_env);
+        }
+	jstring msg = (*jni_env)->CallObjectMethod(jni_env, frame, toStringMethod);
+        if ((*jni_env)->ExceptionCheck(jni_env)) {
+            (*jni_env)->ExceptionDescribe(jni_env);
+        }
+        const char* utf = (*jni_env)->GetStringUTFChars(jni_env, str, &isCopy);
+        log = fopen("/tmp/java_exceptions.log", "a");
+        fprintf(log, "%s\n", utf);
+        (*jni_env)->ReleaseStringUTFChars(jni_env, str, utf);
+        (*jni_env)->DeleteLocalRef(jni_env, frame);
+    }
+
+    fprintf(log, "\n");
+    fflush(log);
+    fclose(log);
+#endif
+}
+
 int javaGetInt(const char* classname, const char* methodname) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "()I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    int result = (*jni_env)->CallStaticIntMethod(jni_env, you_class, method);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        logException();
+    }
+    return result;
 }
 
 int javaGetIntFromInt(const char* classname, const char* methodname, int i) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "(I)I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method, i);
+    int result = (*jni_env)->CallStaticIntMethod(jni_env, you_class, method, i);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        logException();
+    }
+    return result;
 }
 
 int javaGetIntFromIntAndInt(const char* classname, const char* methodname, int i, int j) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "(II)I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method, i, j);
+    int result = (*jni_env)->CallStaticIntMethod(jni_env, you_class, method, i, j);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        logException();
+    }
+    return result;
 }
 
 long javaGetLong(const char* classname, const char* methodname) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "()J");
-    return (*jni_env)->CallStaticLongMethod(jni_env, you_class, method);
+    long result = (*jni_env)->CallStaticLongMethod(jni_env, you_class, method);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        logException();
+    }
+    return result;
 }
 
 long javaGetLongFromInt(const char* classname, const char* methodname, int i) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "(I)J");
-    return (*jni_env)->CallStaticLongMethod(jni_env, you_class, method, i);
+    long result = (*jni_env)->CallStaticLongMethod(jni_env, you_class, method, i);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        logException();
+    }
+    return result;
 }
 
 boolean javaGetBoolean(const char* classname, const char* methodname) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "()Z");
-    return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method);
+    boolean result = (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        logException();
+    }
+    return result;
 }
 
 boolean javaGetBooleanFromInt(const char* classname, const char* methodname, int i) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "(I)Z");
-    return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method, i);
+    boolean result = (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method, i);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        logException();
+    }
+    return result;
 }
 
 boolean javaGetBooleanFromIntAndInt(const char* classname, const char* methodname, int i, int j) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "(II)Z");
-    return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method, i, j);
+    boolean result = (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method, i, j);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        logException();
+    }
+    return result;
 }
 
 boolean javaGetBooleanFromIntAndLong(const char* classname, const char* methodname, int i, long j) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "(IJ)Z");
-    return (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method, i, j);
+    boolean result = (*jni_env)->CallStaticBooleanMethod(jni_env, you_class, method, i, j);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        logException();
+    }
+    return result;
 }
 
 
 jstring javaGetString(const char* classname, const char* methodname) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "()Ljava/lang/String;");
-    return (*jni_env)->CallStaticObjectMethod(jni_env, you_class, method);
+    jstring result = (*jni_env)->CallStaticObjectMethod(jni_env, you_class, method);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        logException();
+    }
+    return result;
 }
 
 
 jstring javaGetStringFromInt(const char* classname, const char* methodname, int i) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "(I)Ljava/lang/String;");
-    return (*jni_env)->CallStaticObjectMethod(jni_env, you_class, method, i);
+    jstring result = (*jni_env)->CallStaticObjectMethod(jni_env, you_class, method, i);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        logException();
+    }
+    return result;
 }
 
 jstring javaGetStringFromIntAndInt(const char* classname, const char* methodname, int i, int j) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "(II)Ljava/lang/String;");
-    return (*jni_env)->CallStaticObjectMethod(jni_env, you_class, method, i, j);
+    jstring result = (*jni_env)->CallStaticObjectMethod(jni_env, you_class, method, i, j);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        logException();
+    }
+    return result;
+}
+
+void javaSetVoid(const char* classname, const char* methodname) {
+    jclass you_class = getJavaClass(classname);
+    jmethodID method = getStaticMethod(you_class, methodname, "()V");
+    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        logException();
+    }
 }
 
 void javaSetInt(const char* classname, const char* methodname, int v) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "(I)V");
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, v);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        logException();
+    }
 }
 
 void javaSetIntFromInt(const char* classname, const char* methodname, int i, int v) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "(II)V");
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, i, v);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        logException();
+    }
 }
 
 void javaSetLong(const char* classname, const char* methodname, long v) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "(J)V");
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, v);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        logException();
+    }
 }
 
 void javaSetLongFromInt(const char* classname, const char* methodname, int i, long v) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "(IJ)V");
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, i, v);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        logException();
+    }
 }
 
 void javaSetBoolean(const char* classname, const char* methodname, boolean v) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "(Z)V");
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, v);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        logException();
+    }
 }
 
 void javaSetBooleanFromInt(const char* classname, const char* methodname, int i, boolean v) {
     jclass you_class = getJavaClass(classname);
     jmethodID method = getStaticMethod(you_class, methodname, "(IZ)V");
     (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, i, v);
+    if ((*jni_env)->ExceptionCheck(jni_env)) {
+        logException();
+    }
 }
 
 
@@ -3387,6 +3528,34 @@ extern int specialtySpellIDForYourRole() {
 
 extern int specialtySpellPenaltyForYourRole() {
   return javaGetInt(PLAYER_CHARACTER_CLASS, "specialtySpellPenaltyForRole");
+}
+
+extern int roleFilterMask() {
+  return javaGetInt(ROLE_FILTER_CLASS, "mask");
+}
+
+extern void addRoleFilterMask(int mask) {
+  javaSetInt(ROLE_FILTER_CLASS, "addMask", mask);
+}
+
+extern void resetRoleFilterMask() {
+  javaSetVoid(ROLE_FILTER_CLASS, "resetMask");
+}
+
+extern boolean roleFilter(int roleID) {
+  return javaGetBooleanFromInt(ROLE_FILTER_CLASS, "roleFilter", roleID);
+}
+
+extern void setRoleFilter(int roleID, boolean set) {
+  javaSetBooleanFromInt(ROLE_FILTER_CLASS, "setRoleFilter", roleID, set);
+}
+
+extern boolean anyRoleFilters() {
+  return javaGetBoolean(ROLE_FILTER_CLASS, "anyRoleFilters");
+}
+
+extern void resetRoleFilters() {
+  javaSetVoid(ROLE_FILTER_CLASS, "resetRoleFilters");
 }
 
 /*hacklib.c*/

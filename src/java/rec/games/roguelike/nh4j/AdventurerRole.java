@@ -58,7 +58,7 @@ public class AdventurerRole {
 	private String questHomeBase;
 	private String intermediateQuestLevel;
 	private ART questArtifact = ART.NONE;
-
+	
 	private AdventurerRole(int roleID) {
 		this.roleID = roleID;
 	}
@@ -670,7 +670,7 @@ public class AdventurerRole {
 		}
 		return 0;
 	}
-
+	
 	private static void initialize() {
 
 		AdventurerRole.withID(ARCHAEOLOGIST_ID)

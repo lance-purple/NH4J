@@ -1101,195 +1101,131 @@ int reason; /* 0==conversion, 1==helm-of-OA on, 2==helm-of-OA off */
 }
 
 xchar yourCurrentAttr(int index) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "currentAttribute", "(I)I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method, index);
+    return javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "currentAttribute", index);
 }
 
 void setYourCurrentAttr(int index, xchar value) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setCurrentAttribute", "(II)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, value);
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setCurrentAttribute", index, value);
 }
 
 void increaseYourCurrentAttr(int index, xchar delta) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "increaseCurrentAttribute", "(II)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, delta);
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "increaseCurrentAttribute", index, delta);
 }
 
 void decreaseYourCurrentAttr(int index, xchar delta) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "decreaseCurrentAttribute", "(II)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, delta);
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "decreaseCurrentAttribute", index, delta);
 }
 
 xchar yourAttrMax(int index) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "maximumAttribute", "(I)I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method, index);
+    return javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "maximumAttribute", index);
 }
 
 void setYourAttrMax(int index, xchar value) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setMaximumAttribute", "(II)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, value);
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setMaximumAttribute", index, value);
 }
 
 void increaseYourAttrMax(int index, xchar delta) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "increaseMaximumAttribute", "(II)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, delta);
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "increaseMaximumAttribute", index, delta);
 }
 
 void decreaseYourAttrMax(int index, xchar delta) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "decreaseMaximumAttribute", "(II)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, delta);
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "decreaseMaximumAttribute", index, delta);
 }
 
 xchar yourAttrBonus(int index) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "attributeBonus", "(I)I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method, index);
+    return javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "attributeBonus", index);
 }
 
 void setYourAttrBonus(int index, xchar value) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setAttributeBonus", "(II)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, value);
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setAttributeBonus", index, value);
 }
 
 void increaseYourAttrBonus(int index, xchar delta) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "increaseAttributeBonus", "(II)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, delta);
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "increaseAttributeBonus", index, delta);
 }
 
 void decreaseYourAttrBonus(int index, xchar delta) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "decreaseAttributeBonus", "(II)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, delta);
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "decreaseAttributeBonus", index, delta);
 }
 
 xchar yourAttrChangeFromExercise(int index) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "attributeChangeFromExertion", "(I)I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method, index);
+    return javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "attributeChangeFromExertion", index);
 }
 
 void setYourAttrChangeFromExercise(int index, xchar value) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setAttributeChangeFromExertion", "(II)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, value);
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setAttributeChangeFromExertion", index, value);
 }
 
 void increaseYourAttrChangeFromExercise(int index, xchar delta) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "increaseAttributeChangeFromExertion", "(II)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, delta);
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "increaseAttributeChangeFromExertion", index, delta);
 }
 
 void decreaseYourAttrChangeFromExercise(int index, xchar delta) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "decreaseAttributeChangeFromExertion", "(II)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, delta);
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "decreaseAttributeChangeFromExertion", index, delta);
 }
 
 xchar yourAttrAsMonster(int index) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "attributeAsMonster", "(I)I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method, index);
+    return javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "attributeAsMonster", index);
 }
 
 void setYourAttrAsMonster(int index, xchar value) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setAttributeAsMonster", "(II)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, value);
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setAttributeAsMonster", index, value);
 }
 
 void increaseYourAttrAsMonster(int index, xchar delta) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "increaseAttributeAsMonster", "(II)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, delta);
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "increaseAttributeAsMonster", index, delta);
 }
 
 void decreaseYourAttrAsMonster(int index, xchar delta) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "decreaseAttributeAsMonster", "(II)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, delta);
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "decreaseAttributeAsMonster", index, delta);
 }
 
 xchar yourAttrMaxAsMonster(int index) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "maximumAttributeAsMonster", "(I)I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method, index);
+    return javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "maximumAttributeAsMonster", index);
 }
 
 void setYourAttrMaxAsMonster(int index, xchar value) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setMaximumAttributeAsMonster", "(II)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, value);
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setMaximumAttributeAsMonster", index, value);
 }
 
 void increaseYourAttrMaxAsMonster(int index, xchar delta) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "increaseMaximumAttributeAsMonster", "(II)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, delta);
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "increaseMaximumAttributeAsMonster", index, delta);
 }
 
 void decreaseYourAttrMaxAsMonster(int index, xchar delta) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "decreaseMaximumAttributeAsMonster", "(II)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, delta);
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "decreaseMaximumAttributeAsMonster", index, delta);
 }
 
 xchar yourTemporaryAttrChange(int index) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "temporaryAttributeChange", "(I)I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method, index);
+    return javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "temporaryAttributeChange", index);
 }
 
 void setYourTemporaryAttrChange(int index, xchar value) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setTemporaryAttributeChange", "(II)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, value);
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setTemporaryAttributeChange", index, value);
 }
 
 void increaseYourTemporaryAttrChange(int index, xchar delta) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "increaseTemporaryAttributeChange", "(II)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, delta);
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "increaseTemporaryAttributeChange", index, delta);
 }
 
 void decreaseYourTemporaryAttrChange(int index, xchar delta) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "decreaseTemporaryAttributeChange", "(II)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, delta);
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "decreaseTemporaryAttributeChange", index, delta);
 }
 
 xchar yourAttrChangeTimeout(int index) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "attributeChangeTimeout", "(I)I");
-    return (*jni_env)->CallStaticIntMethod(jni_env, you_class, method, index);
+    return javaGetIntFromInt(PLAYER_CHARACTER_CLASS, "attributeChangeTimeout", index);
 }
 
 void setYourAttrChangeTimeout(int index, xchar value) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "setAttributeChangeTimeout", "(II)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, value);
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "setAttributeChangeTimeout", index, value);
 }
 
 void increaseYourAttrChangeTimeout(int index, xchar delta) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "increaseAttributeChangeTimeout", "(II)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, delta);
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "increaseAttributeChangeTimeout", index, delta);
 }
 
 void decreaseYourAttrChangeTimeout(int index, xchar delta) {
-    jclass you_class = getJavaClass("rec/games/roguelike/nh4j/PlayerCharacter");
-    jmethodID method = getStaticMethod(you_class, "decreaseAttributeChangeTimeout", "(II)V");
-    (*jni_env)->CallStaticVoidMethod(jni_env, you_class, method, index, delta);
+    javaSetIntFromInt(PLAYER_CHARACTER_CLASS, "decreaseAttributeChangeTimeout", index, delta);
 }
 
 /* unconscious() includes u.usleep but not is_fainted(); the multi test is

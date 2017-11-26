@@ -1159,10 +1159,6 @@ boolean validAttack(const struct Attack attack)
 	    (attack.diceSides  != NO_ATTACK.diceSides));
 }
 
-extern boolean javaGetBooleanFromInt(const char* classname, const char* methodname, int i);
-extern boolean javaGetBooleanFromIntAndLong(const char* classname, const char* methodname, int i, long j);
-extern boolean javaGetIntFromInt(const char* classname, const char* methodname, int i);
-
 int emitsLightWithRange(int pmid) {
     return javaGetIntFromInt(MONSTER_DATA_CLASS, "emitsLightWithRange", pmid);
 }

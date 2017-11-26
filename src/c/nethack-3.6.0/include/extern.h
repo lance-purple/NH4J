@@ -25,6 +25,7 @@ E JavaVM* java_vm;
 #define NOVEL_CLASS "rec/games/roguelike/nh4j/TributeNovel"
 #define OCCUPIED_ROOMS_CLASS "rec/games/roguelike/nh4j/OccupiedRooms"
 #define PLAYER_CHARACTER_CLASS "rec/games/roguelike/nh4j/PlayerCharacter"
+#define ROLE_FILTER_CLASS "rec/games/roguelike/nh4j/RoleFilter"
 #define QUALITIES_CLASS "rec/games/roguelike/nh4j/Qualities"
 #define SYS_OPT_CLASS "rec/games/roguelike/nh4j/SysOpt"
 #define WEAPON_SKILL_CLASS "rec/games/roguelike/nh4j/WeaponSkill"
@@ -1085,6 +1086,26 @@ E void FDECL(exit_java, ());
 
 /* ### hacklib.c ### */
 
+extern int javaGetInt(const char* classname, const char* methodname);
+extern int javaGetIntFromInt(const char* classname, const char* methodname, int i);
+extern int javaGetIntFromIntAndInt(const char* classname, const char* methodname, int i, int j);
+extern long javaGetLong(const char* classname, const char* methodname);
+extern long javaGetLongFromInt(const char* classname, const char* methodname, int i);
+extern boolean javaGetBoolean(const char* classname, const char* methodname);
+extern boolean javaGetBooleanFromInt(const char* classname, const char* methodname, int i);
+extern boolean javaGetBooleanFromIntAndInt(const char* classname, const char* methodname, int i, int j);
+extern boolean javaGetBooleanFromIntAndLong(const char* classname, const char* methodname, int i, long j);
+extern jstring javaGetString(const char* classname, const char* methodname);
+extern jstring javaGetStringFromInt(const char* classname, const char* methodname, int i);
+extern jstring javaGetStringFromIntAndInt(const char* classname, const char* methodname, int i, int j);
+extern void javaSetVoid(const char* classname, const char* methodname);
+extern void javaSetInt(const char* classname, const char* methodname, int v);
+extern void javaSetIntFromInt(const char* classname, const char* methodname, int i, int v);
+extern void javaSetLong(const char* classname, const char* methodname, long v);
+extern void javaSetLongFromInt(const char* classname, const char* methodname, int i, long v);
+extern void javaSetBoolean(const char* classname, const char* methodname, boolean v);
+extern void javaSetBooleanFromInt(const char* classname, const char* methodname, int i, boolean v);
+
 E boolean FDECL(digit, (CHAR_P));
 E boolean FDECL(letter, (CHAR_P));
 E char FDECL(highc, (CHAR_P));
@@ -1612,6 +1633,14 @@ E javaString FDECL(possessivePronoun, (int));
 E javaString FDECL(reflexivePronoun, (int));
 E javaString FDECL(genderAbbreviation, (int));
 E int FDECL(genderMask, (int));
+
+extern int roleFilterMask();
+extern void addRoleFilterMask(int mask);
+extern void resetRoleFilterMask();
+extern boolean roleFilter(int roleID);
+extern void setRoleFilter(int roleID, boolean set);
+extern boolean anyRoleFilters();
+extern void resetRoleFilters();
 
 /* ### invent.c ### */
 
