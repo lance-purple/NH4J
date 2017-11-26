@@ -2738,7 +2738,7 @@ struct obj *no_wish;
                             int mntmptoo,
                                 mntmplen; /* double check for rank title */
                             char *obp = bp;
-                            mntmptoo = title_to_mon(bp, (int *) 0, &mntmplen);
+                            mntmptoo = title_to_mon(bp, &mntmplen);
 			    javaString monsterName = monsterTypeName(mntmp);
                             bp += mntmp != mntmptoo
                                       ? (int) strlen(monsterName.c_str)

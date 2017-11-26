@@ -212,55 +212,44 @@ rank()
 }
 
 int
-title_to_mon(str, rank_indx, title_length)
+title_to_mon(str, title_length)
 const char *str;
-int *rank_indx, *title_length;
+int *title_length;
 {
-    int j;
-
     /* Loop through each of the roles */
-    for (int i = 0, n = numberOfKnownRoles(); i < n; i++)
+    for (int roleID = 0; roleID < numberOfKnownRoles(); roleID++)
     {
-        for (j = 0; j < 9; j++) {
-	    const struct Role *role = &(roles[i]);
+        for (int rank = 0; rank < 9; rank++) {
 
-            if (rankNameHasMaleVersion(i, j))
+            if (rankNameHasMaleVersion(roleID, rank))
 	    {
-		javaString rankName = rankNameAsMale(i, j);
+		javaString rankName = rankNameAsMale(roleID, rank);
 		int rankNameLen = strlen(rankName.c_str);
 		boolean matched = (!strncmpi(str, rankName.c_str, rankNameLen));
 	        releaseJavaString(rankName);
 		if (matched) {
-                    if (rank_indx)
-		    {
-                        *rank_indx = j;
-		    }
                     if (title_length)
 		    {
                         *title_length = rankNameLen;
 		    }
-                    return malePMIDForRole(role->id);
+                    return malePMIDForRole(roleID);
 		}
             }
-            if (rankNameHasFemaleVersion(i, j))
+            if (rankNameHasFemaleVersion(roleID, rank))
 	    {
-		javaString rankName = rankNameAsFemale(i, j);
+		javaString rankName = rankNameAsFemale(roleID, rank);
 		int rankNameLen = strlen(rankName.c_str);
 		boolean matched = (!strncmpi(str, rankName.c_str, rankNameLen));
 		releaseJavaString(rankName);
 
                 if (matched) {
-                    if (rank_indx)
-		    {
-                        *rank_indx = j;
-		    }
                     if (title_length)
 		    {
                         *title_length = rankNameLen;
 		    }
-                    return (roleHasFemalePMID(role->id))
-			        ? femalePMIDForRole(role->id)
-			        : malePMIDForRole(role->id);
+                    return (roleHasFemalePMID(roleID))
+			        ? femalePMIDForRole(roleID)
+			        : malePMIDForRole(roleID);
 		}
             }
         }

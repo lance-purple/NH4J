@@ -82,13 +82,13 @@ boolean
 validrole(rolenum)
 int rolenum;
 {
-    return (boolean) (rolenum >= 0 && rolenum < SIZE(roles) - 1);
+    return (boolean) (rolenum >= 0 && rolenum < numberOfKnownRoles());
 }
 
 int
 randrole()
 {
-    return rn2(SIZE(roles) - 1);
+    return rn2(numberOfKnownRoles());
 }
 
 STATIC_OVL int
@@ -390,7 +390,7 @@ int rolenum, racenum, gendnum, alignnum;
     int i;
     short allow;
 
-    if (rolenum >= 0 && rolenum < SIZE(roles) - 1) {
+    if (validrole(rolenum)) {
         if (filter.roles[rolenum])
             return FALSE;
         allow = startingMaskForRole(rolenum);
@@ -483,7 +483,7 @@ int rolenum, racenum, gendnum, alignnum;
                 continue;
 	    }
             allow = startingMaskForSpecies(i);
-            if (rolenum >= 0 && rolenum < SIZE(roles) - 1
+            if (validrole(rolenum)
                 && !(allow & startingSpeciesMaskForRole(rolenum))) {
                 continue;
 	    }
@@ -543,7 +543,7 @@ int alignnum UNUSED;
         if (filter.mask & genderMask(gendnum))
             return FALSE;
         allow = genderMask(gendnum);
-        if (rolenum >= 0 && rolenum < SIZE(roles) - 1
+        if (validrole(rolenum)
             && !(allow & startingGenderMaskForRole(rolenum)))
             return FALSE;
         if (validSpeciesID(racenum)
@@ -556,7 +556,7 @@ int alignnum UNUSED;
             if (filter.mask & genderMask(i))
                 continue;
             allow = genderMask(i);
-            if (rolenum >= 0 && rolenum < SIZE(roles) - 1
+            if (validrole(rolenum)
                 && !(allow & startingGenderMaskForRole(rolenum)))
                 continue;
             if (validSpeciesID(racenum)
@@ -612,7 +612,7 @@ int alignnum;
         if (filter.mask & aligns[alignnum].allow)
             return FALSE;
         allow = aligns[alignnum].allow;
-        if (rolenum >= 0 && rolenum < SIZE(roles) - 1
+        if (validrole(rolenum)
             && !(allow & startingAlignmentMaskForRole(rolenum)))
             return FALSE;
         if (validSpeciesID(racenum)
@@ -625,7 +625,7 @@ int alignnum;
             if (filter.mask & aligns[i].allow)
                 return FALSE;
             allow = aligns[i].allow;
-            if (rolenum >= 0 && rolenum < SIZE(roles) - 1
+            if (validrole(rolenum)
                 && !(allow & startingAlignmentMaskForRole(rolenum)))
                 continue;
             if (validSpeciesID(racenum)

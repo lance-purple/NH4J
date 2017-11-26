@@ -780,7 +780,7 @@ const char *in_str;
 	releaseJavaString(monsterName);
     }
     if (mntmp == NON_PM) {
-        mntmp = title_to_mon(str, (int *) 0, (int *) 0);
+        mntmp = title_to_mon(str, (int *) 0);
     }
     return mntmp;
 }
