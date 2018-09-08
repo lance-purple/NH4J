@@ -673,8 +673,10 @@ initoptions_init()
     iflags.menu_headings = ATR_INVERSE;
 
     /* hero's role, race, &c haven't been chosen yet */
-    flags.initrole = flags.initrace = flags.initgend = flags.initalign =
-        ROLE_NONE;
+    flags.initrole = roleNone();
+    flags.initrace = roleNone();
+    flags.initgend = roleNone();
+    flags.initalign = roleNone();
 
     /* Set the default monster and object class symbols. */
     init_symbols();
@@ -1756,7 +1758,7 @@ boolean tinitial, tfrom_file;
             } else {
                 if (duplicate_opt_detection(opts, 1))
                     complain_about_duplicate(opts, 1);
-                if ((flags.initalign = str2align(op)) == ROLE_NONE)
+                if ((flags.initalign = str2align(op)) == roleNone())
                     badoption(opts, __LINE__);
             }
         }
@@ -1784,7 +1786,7 @@ boolean tinitial, tfrom_file;
             } else {
                 if (duplicate_opt_detection(opts, 1))
                     complain_about_duplicate(opts, 1);
-                if ((flags.initrole = str2role(op)) == ROLE_NONE)
+                if ((flags.initrole = str2role(op)) == roleNone())
                     badoption(opts, __LINE__);
                 else /* Backwards compatibility */
                     nmcpy(pl_character, op, PL_NSIZ);
@@ -1813,7 +1815,7 @@ boolean tinitial, tfrom_file;
             } else {
                 if (duplicate_opt_detection(opts, 1))
                     complain_about_duplicate(opts, 1);
-                if ((flags.initrace = str2race(op)) == ROLE_NONE)
+                if ((flags.initrace = str2race(op)) == roleNone())
                     badoption(opts, __LINE__);
                 else /* Backwards compatibility */
                     pl_race = *op;
@@ -1842,7 +1844,7 @@ boolean tinitial, tfrom_file;
             } else {
                 if (duplicate_opt_detection(opts, 1))
                     complain_about_duplicate(opts, 1);
-                if ((flags.initgend = str2gend(op)) == ROLE_NONE)
+                if ((flags.initgend = str2gend(op)) == roleNone())
                     badoption(opts, __LINE__);
                 else
                     flags.female = flags.initgend;
@@ -4472,7 +4474,7 @@ boolean setinitial, setfromfile;
 }
 
 #define rolestring(val, array, field) \
-    ((val >= 0) ? array[val].field : (val == ROLE_RANDOM) ? randomrole : none)
+    ((val >= 0) ? array[val].field : (val == roleRandom()) ? randomrole : none)
 
 /* This is ugly. We have all the option names in the compopt[] array,
    but we need to look at each option individually to get the value. */
@@ -4585,7 +4587,7 @@ char *buf;
 	    javaString adjective = genderAdjective(flags.initgend);
             Sprintf(buf, "%s", adjective.c_str);
             releaseJavaString(adjective);
-	} else if (flags.initgend == ROLE_RANDOM) {
+	} else if (flags.initgend == roleRandom()) {
             Sprintf(buf, "%s", randomrole);
 	} else {
             Sprintf(buf, "%s", none);
@@ -4726,7 +4728,7 @@ char *buf;
 	    javaString noun = nounForSpecies(flags.initrace);
 	    sprintf(buf, "%s", noun.c_str);
 	    releaseJavaString(noun);
-	} else if (flags.initrace == ROLE_RANDOM) {
+	} else if (flags.initrace == roleRandom()) {
             sprintf(buf, "%s", randomrole);
 	} else {
             sprintf(buf, "%s", none);
@@ -4743,7 +4745,7 @@ char *buf;
 		javaString roleName = roleNameAsMale(flags.initrole);
 		sprintf(buf, "%s", roleName.c_str);
 		releaseJavaString(roleName);
-	    } else if (flags.initrole == ROLE_RANDOM) {
+	    } else if (flags.initrole == roleRandom()) {
                 sprintf(buf, "%s", randomrole);
 	    } else {
                 sprintf(buf, "%s", none);

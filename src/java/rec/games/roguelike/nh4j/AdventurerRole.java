@@ -5,6 +5,9 @@ import java.util.Collections;
 import java.util.HashMap;
 
 public class AdventurerRole {
+	
+	public static final int ROLE_NONE = -1;
+	public static final int ROLE_RANDOM = -2;
 
 	public static final int ARCHAEOLOGIST_ID = 0;
 	public static final int BARBARIAN_ID = 1;
@@ -250,6 +253,14 @@ public class AdventurerRole {
 			return rolesByID.get(roleID);
 		}
 		return null;
+	}
+	
+	public static int roleNone() {
+		return ROLE_NONE;
+	}
+
+	public static int roleRandom() {
+		return ROLE_RANDOM;
 	}
 
 	public static int numberOfKnownRoles() {

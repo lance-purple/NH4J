@@ -3003,6 +3003,14 @@ extern int numberOfKnownRoles() {
     return javaGetInt(ADVENTURER_ROLE_CLASS, "numberOfKnownRoles");
 }
 
+extern int roleNone() {
+    return javaGetInt(ADVENTURER_ROLE_CLASS, "roleNone");
+}
+
+extern int roleRandom() {
+    return javaGetInt(ADVENTURER_ROLE_CLASS, "roleRandom");
+}
+
 extern boolean roleHasDefaultPantheon(int whichRole) {
     return javaGetBooleanFromInt(ADVENTURER_ROLE_CLASS, "hasDefaultPantheon", whichRole);
 }

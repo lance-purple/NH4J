@@ -49,11 +49,6 @@ struct u_realtime {
 #define ROLE_CHAOTIC AM_CHAOTIC
 
 
-/* used during initialization for race, gender, and alignment
-   as well as for character class */
-#define ROLE_NONE (-1)
-#define ROLE_RANDOM (-2)
-
 /*** Unified structure specifying alignment information ***/
 struct Align {
     const char *noun;     /* law/balance/chaos */

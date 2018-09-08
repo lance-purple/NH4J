@@ -290,7 +290,7 @@ struct wc_Opt {
 #define RS_GENDER 3
 #define RS_ALGNMNT 4
 #define RS_filter 5
-#define RS_menu_arg(x) (ROLE_RANDOM - ((x) + 1)) /* 0..5 -> -3..-8 */
+#define RS_menu_arg(x) (roleRandom() - ((x) + 1)) /* 0..5 -> -3..-8 */
 
 /* Choose_windows() may be called multiple times; these constants tell the
  * init function whether the window system is coming or going. */

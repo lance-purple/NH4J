@@ -2873,6 +2873,8 @@ E int FDECL(rnz, (int));
 
 /* ### role.c ### */
 
+E int FDECL(roleNone, ());
+E int FDECL(roleRandom, ());
 E int FDECL(numberOfKnownRoles, ());
 
 E boolean FDECL(roleHasDefaultPantheon, (int));

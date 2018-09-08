@@ -339,22 +339,22 @@ tty_player_selection()
     menu_item *selected = 0;
 
     if (flags.randomall) {
-        if (ROLE == ROLE_NONE)
-            ROLE = ROLE_RANDOM;
-        if (RACE == ROLE_NONE)
-            RACE = ROLE_RANDOM;
-        if (GEND == ROLE_NONE)
-            GEND = ROLE_RANDOM;
-        if (ALGN == ROLE_NONE)
-            ALGN = ROLE_RANDOM;
+        if (ROLE == roleNone())
+            ROLE = roleRandom();
+        if (RACE == roleNone())
+            RACE = roleRandom();
+        if (GEND == roleNone())
+            GEND = roleRandom();
+        if (ALGN == roleNone())
+            ALGN = roleRandom();
     }
 
     /* prevent an unnecessary prompt */
     rigid_role_checks();
 
     /* Should we randomly pick for the player? */
-    if (ROLE == ROLE_NONE || RACE == ROLE_NONE || GEND == ROLE_NONE
-        || ALGN == ROLE_NONE) {
+    if (ROLE == roleNone() || RACE == roleNone() || GEND == roleNone()
+        || ALGN == roleNone()) {
         int echoline;
         char *prompt = build_plselection_prompt(pbuf, QBUFSZ,
                                                 ROLE, RACE, GEND, ALGN);
@@ -400,7 +400,7 @@ makepicks:
                race/gender/alignment, but may not succeed. */
             if (ROLE < 0) {
                 /* Process the choice */
-                if (pick4u == 'y' || pick4u == 'a' || ROLE == ROLE_RANDOM) {
+                if (pick4u == 'y' || pick4u == 'a' || ROLE == roleRandom()) {
                     /* Pick a random role */
                     k = pick_role(RACE, GEND, ALGN, PICK_RANDOM);
                     if (k < 0) {
@@ -416,7 +416,7 @@ makepicks:
                     /* populate the menu with role choices */
                     setup_rolemenu(win, TRUE, RACE, GEND, ALGN);
                     /* add miscellaneous menu entries */
-                    role_menu_extra(ROLE_RANDOM, win);
+                    role_menu_extra(roleRandom(), win);
                     any.a_int = 0; /* separator, not a choice */
                     add_menu(win, NO_GLYPH, &any, ' ', 0, ATR_NONE, "",
                              MENU_UNSELECTED);
@@ -425,31 +425,31 @@ makepicks:
                     role_menu_extra(RS_ALGNMNT, win);
                     if (gotrolefilter())
                         role_menu_extra(RS_filter, win);
-                    role_menu_extra(ROLE_NONE, win); /* quit */
+                    role_menu_extra(roleNone(), win); /* quit */
                     Strcpy(pbuf, "Pick a role or profession");
                     end_menu(win, pbuf);
                     n = select_menu(win, PICK_ONE, &selected);
-                    choice = (n == 1) ? selected[0].item.a_int : ROLE_NONE;
+                    choice = (n == 1) ? selected[0].item.a_int : roleNone();
                     if (selected)
                         free((genericptr_t) selected), selected = 0;
                     destroy_nhwindow(win);
 
-                    if (choice == ROLE_NONE) {
+                    if (choice == roleNone()) {
                         goto give_up; /* Selected quit */
                     } else if (choice == RS_menu_arg(RS_ALGNMNT)) {
-                        ALGN = k = ROLE_NONE;
+                        ALGN = k = roleNone();
                         nextpick = RS_ALGNMNT;
                     } else if (choice == RS_menu_arg(RS_GENDER)) {
-                        GEND = k = ROLE_NONE;
+                        GEND = k = roleNone();
                         nextpick = RS_GENDER;
                     } else if (choice == RS_menu_arg(RS_RACE)) {
-                        RACE = k = ROLE_NONE;
+                        RACE = k = roleNone();
                         nextpick = RS_RACE;
                     } else if (choice == RS_menu_arg(RS_filter)) {
-                        ROLE = k = ROLE_NONE;
+                        ROLE = k = roleNone();
                         (void) reset_role_filtering();
                         nextpick = RS_ROLE;
-                    } else if (choice == ROLE_RANDOM) {
+                    } else if (choice == roleRandom()) {
                         k = pick_role(RACE, GEND, ALGN, PICK_RANDOM);
                         if (k < 0)
                             k = randrole();
@@ -468,7 +468,7 @@ makepicks:
                with pre-selected gender/alignment. */
             if (RACE < 0 || !validrace(ROLE, RACE)) {
                 /* no race yet, or pre-selected race not valid */
-                if (pick4u == 'y' || pick4u == 'a' || RACE == ROLE_RANDOM) {
+                if (pick4u == 'y' || pick4u == 'a' || RACE == roleRandom()) {
                     k = pick_race(ROLE, GEND, ALGN, PICK_RANDOM);
                     if (k < 0) {
                         tty_putstr(BASE_WINDOW, 0, "Incompatible race!");
@@ -501,7 +501,7 @@ makepicks:
                         /* populate the menu with role choices */
                         setup_racemenu(win, TRUE, ROLE, GEND, ALGN);
                         /* add miscellaneous menu entries */
-                        role_menu_extra(ROLE_RANDOM, win);
+                        role_menu_extra(roleRandom(), win);
                         any.a_int = 0; /* separator, not a choice */
                         add_menu(win, NO_GLYPH, &any, ' ', 0, ATR_NONE, "",
                                  MENU_UNSELECTED);
@@ -510,34 +510,34 @@ makepicks:
                         role_menu_extra(RS_ALGNMNT, win);
                         if (gotrolefilter())
                             role_menu_extra(RS_filter, win);
-                        role_menu_extra(ROLE_NONE, win); /* quit */
+                        role_menu_extra(roleNone(), win); /* quit */
                         Strcpy(pbuf, "Pick a race or species");
                         end_menu(win, pbuf);
                         n = select_menu(win, PICK_ONE, &selected);
                         choice = (n == 1) ? selected[0].item.a_int
-                                          : ROLE_NONE;
+                                          : roleNone();
                         if (selected)
                             free((genericptr_t) selected), selected = 0;
                         destroy_nhwindow(win);
 
-                        if (choice == ROLE_NONE) {
+                        if (choice == roleNone()) {
                             goto give_up; /* Selected quit */
                         } else if (choice == RS_menu_arg(RS_ALGNMNT)) {
-                            ALGN = k = ROLE_NONE;
+                            ALGN = k = roleNone();
                             nextpick = RS_ALGNMNT;
                         } else if (choice == RS_menu_arg(RS_GENDER)) {
-                            GEND = k = ROLE_NONE;
+                            GEND = k = roleNone();
                             nextpick = RS_GENDER;
                         } else if (choice == RS_menu_arg(RS_ROLE)) {
-                            ROLE = k = ROLE_NONE;
+                            ROLE = k = roleNone();
                             nextpick = RS_ROLE;
                         } else if (choice == RS_menu_arg(RS_filter)) {
-                            RACE = k = ROLE_NONE;
+                            RACE = k = roleNone();
                             if (reset_role_filtering())
                                 nextpick = RS_ROLE;
                             else
                                 nextpick = RS_RACE;
-                        } else if (choice == ROLE_RANDOM) {
+                        } else if (choice == roleRandom()) {
                             k = pick_race(ROLE, GEND, ALGN, PICK_RANDOM);
                             if (k < 0)
                                 k = randrace(ROLE);
@@ -558,7 +558,7 @@ makepicks:
                with pre-selected alignment. */
             if (GEND < 0 || !validgend(ROLE, RACE, GEND)) {
                 /* no gender yet, or pre-selected gender not valid */
-                if (pick4u == 'y' || pick4u == 'a' || GEND == ROLE_RANDOM) {
+                if (pick4u == 'y' || pick4u == 'a' || GEND == roleRandom()) {
                     k = pick_gend(ROLE, RACE, ALGN, PICK_RANDOM);
                     if (k < 0) {
                         tty_putstr(BASE_WINDOW, 0, "Incompatible gender!");
@@ -590,7 +590,7 @@ makepicks:
                         /* populate the menu with gender choices */
                         setup_gendmenu(win, TRUE, ROLE, RACE, ALGN);
                         /* add miscellaneous menu entries */
-                        role_menu_extra(ROLE_RANDOM, win);
+                        role_menu_extra(roleRandom(), win);
                         any.a_int = 0; /* separator, not a choice */
                         add_menu(win, NO_GLYPH, &any, ' ', 0, ATR_NONE, "",
                                  MENU_UNSELECTED);
@@ -599,34 +599,34 @@ makepicks:
                         role_menu_extra(RS_ALGNMNT, win);
                         if (gotrolefilter())
                             role_menu_extra(RS_filter, win);
-                        role_menu_extra(ROLE_NONE, win); /* quit */
+                        role_menu_extra(roleNone(), win); /* quit */
                         Strcpy(pbuf, "Pick a gender or sex");
                         end_menu(win, pbuf);
                         n = select_menu(win, PICK_ONE, &selected);
                         choice = (n == 1) ? selected[0].item.a_int
-                                          : ROLE_NONE;
+                                          : roleNone();
                         if (selected)
                             free((genericptr_t) selected), selected = 0;
                         destroy_nhwindow(win);
 
-                        if (choice == ROLE_NONE) {
+                        if (choice == roleNone()) {
                             goto give_up; /* Selected quit */
                         } else if (choice == RS_menu_arg(RS_ALGNMNT)) {
-                            ALGN = k = ROLE_NONE;
+                            ALGN = k = roleNone();
                             nextpick = RS_ALGNMNT;
                         } else if (choice == RS_menu_arg(RS_RACE)) {
-                            RACE = k = ROLE_NONE;
+                            RACE = k = roleNone();
                             nextpick = RS_RACE;
                         } else if (choice == RS_menu_arg(RS_ROLE)) {
-                            ROLE = k = ROLE_NONE;
+                            ROLE = k = roleNone();
                             nextpick = RS_ROLE;
                         } else if (choice == RS_menu_arg(RS_filter)) {
-                            GEND = k = ROLE_NONE;
+                            GEND = k = roleNone();
                             if (reset_role_filtering())
                                 nextpick = RS_ROLE;
                             else
                                 nextpick = RS_GENDER;
-                        } else if (choice == ROLE_RANDOM) {
+                        } else if (choice == roleRandom()) {
                             k = pick_gend(ROLE, RACE, ALGN, PICK_RANDOM);
                             if (k < 0)
                                 k = randgend(ROLE, RACE);
@@ -645,7 +645,7 @@ makepicks:
                force compatibility with role/race/gender. */
             if (ALGN < 0 || !validalign(ROLE, RACE, ALGN)) {
                 /* no alignment yet, or pre-selected alignment not valid */
-                if (pick4u == 'y' || pick4u == 'a' || ALGN == ROLE_RANDOM) {
+                if (pick4u == 'y' || pick4u == 'a' || ALGN == roleRandom()) {
                     k = pick_align(ROLE, RACE, GEND, PICK_RANDOM);
                     if (k < 0) {
                         tty_putstr(BASE_WINDOW, 0, "Incompatible alignment!");
@@ -675,7 +675,7 @@ makepicks:
                         start_menu(win);
                         any = zeroany; /* zero out all bits */
                         setup_algnmenu(win, TRUE, ROLE, RACE, GEND);
-                        role_menu_extra(ROLE_RANDOM, win);
+                        role_menu_extra(roleRandom(), win);
                         any.a_int = 0; /* separator, not a choice */
                         add_menu(win, NO_GLYPH, &any, ' ', 0, ATR_NONE, "",
                                  MENU_UNSELECTED);
@@ -684,34 +684,34 @@ makepicks:
                         role_menu_extra(RS_GENDER, win);
                         if (gotrolefilter())
                             role_menu_extra(RS_filter, win);
-                        role_menu_extra(ROLE_NONE, win); /* quit */
+                        role_menu_extra(roleNone(), win); /* quit */
                         Strcpy(pbuf, "Pick an alignment or creed");
                         end_menu(win, pbuf);
                         n = select_menu(win, PICK_ONE, &selected);
                         choice = (n == 1) ? selected[0].item.a_int
-                                          : ROLE_NONE;
+                                          : roleNone();
                         if (selected)
                             free((genericptr_t) selected), selected = 0;
                         destroy_nhwindow(win);
 
-                        if (choice == ROLE_NONE) {
+                        if (choice == roleNone()) {
                             goto give_up; /* Selected quit */
                         } else if (choice == RS_menu_arg(RS_GENDER)) {
-                            GEND = k = ROLE_NONE;
+                            GEND = k = roleNone();
                             nextpick = RS_GENDER;
                         } else if (choice == RS_menu_arg(RS_RACE)) {
-                            RACE = k = ROLE_NONE;
+                            RACE = k = roleNone();
                             nextpick = RS_RACE;
                         } else if (choice == RS_menu_arg(RS_ROLE)) {
-                            ROLE = k = ROLE_NONE;
+                            ROLE = k = roleNone();
                             nextpick = RS_ROLE;
                         } else if (choice == RS_menu_arg(RS_filter)) {
-                            ALGN = k = ROLE_NONE;
+                            ALGN = k = roleNone();
                             if (reset_role_filtering())
                                 nextpick = RS_ROLE;
                             else
                                 nextpick = RS_ALGNMNT;
-                        } else if (choice == ROLE_RANDOM) {
+                        } else if (choice == roleRandom()) {
                             k = pick_align(ROLE, RACE, GEND, PICK_RANDOM);
                             if (k < 0)
                                 k = randalign(ROLE, RACE);
@@ -746,7 +746,7 @@ makepicks:
     getconfirmation = (pick4u != 'a' && !flags.randomall);
     while (getconfirmation) {
         tty_clear_nhwindow(BASE_WINDOW);
-        role_selection_prolog(ROLE_NONE, BASE_WINDOW);
+        role_selection_prolog(roleNone(), BASE_WINDOW);
         win = create_nhwindow(NHW_MENU);
         start_menu(win);
         any = zeroany; /* zero out all bits */
@@ -826,7 +826,7 @@ makepicks:
                step; any partial role selection via config file, command
                line, or name suffix is discarded this time */
             pick4u = 'n';
-            ROLE = RACE = GEND = ALGN = ROLE_NONE;
+            ROLE = RACE = GEND = ALGN = roleNone();
             goto makepicks;
             break;
         case 1: /* 'y' or Space or Return/Enter */
@@ -864,22 +864,22 @@ reset_role_filtering()
     /* no extra blank line preceding this entry; end_menu supplies one */
     add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE,
              "Unacceptable roles", MENU_UNSELECTED);
-    setup_rolemenu(win, FALSE, ROLE_NONE, ROLE_NONE, ROLE_NONE);
+    setup_rolemenu(win, FALSE, roleNone(), roleNone(), roleNone());
 
     add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE, "", MENU_UNSELECTED);
     add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE,
              "Unacceptable races", MENU_UNSELECTED);
-    setup_racemenu(win, FALSE, ROLE_NONE, ROLE_NONE, ROLE_NONE);
+    setup_racemenu(win, FALSE, roleNone(), roleNone(), roleNone());
 
     add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE, "", MENU_UNSELECTED);
     add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE,
              "Unacceptable genders", MENU_UNSELECTED);
-    setup_gendmenu(win, FALSE, ROLE_NONE, ROLE_NONE, ROLE_NONE);
+    setup_gendmenu(win, FALSE, roleNone(), roleNone(), roleNone());
 
     add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE, "", MENU_UNSELECTED);
     add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE,
              "Uncceptable alignments", MENU_UNSELECTED);
-    setup_algnmenu(win, FALSE, ROLE_NONE, ROLE_NONE, ROLE_NONE);
+    setup_algnmenu(win, FALSE, roleNone(), roleNone(), roleNone());
 
     end_menu(win, "Pick all that apply");
     n = select_menu(win, PICK_ANY, &selected);
@@ -889,7 +889,7 @@ reset_role_filtering()
         for (i = 0; i < n; i++)
             setrolefilter(selected[i].item.a_string);
 
-        ROLE = RACE = GEND = ALGN = ROLE_NONE;
+        ROLE = RACE = GEND = ALGN = roleNone();
     }
     if (selected)
         free((genericptr_t) selected), selected = 0;
@@ -907,7 +907,7 @@ STATIC_OVL void
 setup_rolemenu(win, filtering, race, gend, algn)
 winid win;
 boolean filtering; /* True => exclude filtered roles; False => filter reset */
-int race, gend, algn; /* all ROLE_NONE for !filtering case */
+int race, gend, algn; /* all roleNone() for !filtering case */
 {
     anything any;
     boolean role_ok;

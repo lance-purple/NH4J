@@ -86,10 +86,10 @@ randrole_filtered()
     /* this doesn't rule out impossible combinations but attempts to
        honor all the filter masks */
     for (i = 0; i < SIZE(roleIDs); ++i)
-        if (ok_role(i, ROLE_NONE, ROLE_NONE, ROLE_NONE)
-            && ok_race(i, ROLE_RANDOM, ROLE_NONE, ROLE_NONE)
-            && ok_gend(i, ROLE_NONE, ROLE_RANDOM, ROLE_NONE)
-            && ok_align(i, ROLE_NONE, ROLE_NONE, ROLE_RANDOM))
+        if (ok_role(i, roleNone(), roleNone(), roleNone())
+            && ok_race(i, roleRandom(), roleNone(), roleNone())
+            && ok_gend(i, roleNone(), roleRandom(), roleNone())
+            && ok_align(i, roleNone(), roleNone(), roleRandom()))
             set[n++] = i;
     return n ? set[rn2(n)] : randrole();
 }
@@ -100,7 +100,7 @@ const char *str;
 {
     /* Is str valid? */
     if (!str || !str[0])
-        return ROLE_NONE;
+        return roleNone();
 
     /* Match as much of str as is provided */
     int len = strlen(str);
@@ -141,10 +141,10 @@ const char *str;
 
     if ((len == 1 && (*str == '*' || *str == '@'))
         || !strncmpi(str, randomstr, len))
-        return ROLE_RANDOM;
+        return roleRandom();
 
     /* Couldn't find anything appropriate */
-    return ROLE_NONE;
+    return roleNone();
 }
 
 boolean
@@ -193,7 +193,7 @@ const char *str;
 
     /* Is str valid? */
     if (!str || !str[0])
-        return ROLE_NONE;
+        return roleNone();
 
     /* Match as much of str as is provided */
     len = strlen(str);
@@ -220,10 +220,10 @@ const char *str;
 
     if ((len == 1 && (*str == '*' || *str == '@'))
         || !strncmpi(str, randomstr, len))
-        return ROLE_RANDOM;
+        return roleRandom();
 
     /* Couldn't find anything appropriate */
-    return ROLE_NONE;
+    return roleNone();
 }
 
 boolean
@@ -270,7 +270,7 @@ const char *str;
 
     /* Is str valid? */
     if (!str || !str[0])
-        return ROLE_NONE;
+        return roleNone();
 
     /* Match as much of str as is provided */
     len = strlen(str);
@@ -297,10 +297,10 @@ const char *str;
     }
     if ((len == 1 && (*str == '*' || *str == '@'))
         || !strncmpi(str, randomstr, len))
-        return ROLE_RANDOM;
+        return roleRandom();
 
     /* Couldn't find anything appropriate */
-    return ROLE_NONE;
+    return roleNone();
 }
 
 boolean
@@ -349,7 +349,7 @@ const char *str;
 
     /* Is str valid? */
     if (!str || !str[0])
-        return ROLE_NONE;
+        return roleNone();
 
     /* Match as much of str as is provided */
     len = strlen(str);
@@ -363,10 +363,10 @@ const char *str;
     }
     if ((len == 1 && (*str == '*' || *str == '@'))
         || !strncmpi(str, randomstr, len))
-        return ROLE_RANDOM;
+        return roleRandom();
 
     /* Couldn't find anything appropriate */
-    return ROLE_NONE;
+    return roleNone();
 }
 
 /* is rolenum compatible with any racenum/gendnum/alignnum constraints? */
@@ -424,16 +424,16 @@ int racenum, gendnum, alignnum, pickhow;
 
     for (i = 0; i < numberOfKnownRoles(); i++) {
         if (ok_role(i, racenum, gendnum, alignnum)
-            && ok_race(i, (racenum >= 0) ? racenum : ROLE_RANDOM,
+            && ok_race(i, (racenum >= 0) ? racenum : roleRandom(),
                        gendnum, alignnum)
             && ok_gend(i, racenum,
-                       (gendnum >= 0) ? gendnum : ROLE_RANDOM, alignnum)
+                       (gendnum >= 0) ? gendnum : roleRandom(), alignnum)
             && ok_race(i, racenum,
-                       gendnum, (alignnum >= 0) ? alignnum : ROLE_RANDOM))
+                       gendnum, (alignnum >= 0) ? alignnum : roleRandom()))
             set[roles_ok++] = i;
     }
     if (roles_ok == 0 || (roles_ok > 1 && pickhow == PICK_RIGID))
-        return ROLE_NONE;
+        return roleNone();
     return set[rn2(roles_ok)];
 }
 
@@ -503,7 +503,7 @@ int rolenum, gendnum, alignnum, pickhow;
             species_ok++;
     }
     if (species_ok == 0 || (species_ok > 1 && pickhow == PICK_RIGID))
-        return ROLE_NONE;
+        return roleNone();
     species_ok = rn2(species_ok);
     for (i = 0; i < numberOfPlayableSpecies(); i++) {
         if (ok_race(rolenum, i, gendnum, alignnum)) {
@@ -513,7 +513,7 @@ int rolenum, gendnum, alignnum, pickhow;
                 species_ok--;
         }
     }
-    return ROLE_NONE;
+    return roleNone();
 }
 
 /* is gendnum compatible with any rolenum/racenum/alignnum constraints? */
@@ -571,7 +571,7 @@ int rolenum, racenum, alignnum, pickhow;
             gends_ok++;
     }
     if (gends_ok == 0 || (gends_ok > 1 && pickhow == PICK_RIGID))
-        return ROLE_NONE;
+        return roleNone();
     gends_ok = rn2(gends_ok);
     for (i = 0; i < adventurerGenders(); i++) {
         if (ok_gend(rolenum, racenum, i, alignnum)) {
@@ -581,7 +581,7 @@ int rolenum, racenum, alignnum, pickhow;
                 gends_ok--;
         }
     }
-    return ROLE_NONE;
+    return roleNone();
 }
 
 /* is alignnum compatible with any rolenum/racenum/gendnum constraints? */
@@ -641,7 +641,7 @@ int rolenum, racenum, gendnum, pickhow;
             aligns_ok++;
     }
     if (aligns_ok == 0 || (aligns_ok > 1 && pickhow == PICK_RIGID))
-        return ROLE_NONE;
+        return roleNone();
     aligns_ok = rn2(aligns_ok);
     for (i = 0; i < ROLE_ALIGNS; i++) {
         if (ok_align(rolenum, racenum, gendnum, i)) {
@@ -651,7 +651,7 @@ int rolenum, racenum, gendnum, pickhow;
                 aligns_ok--;
         }
     }
-    return ROLE_NONE;
+    return roleNone();
 }
 
 void
@@ -662,11 +662,11 @@ rigid_role_checks()
      * prevent an extraneous prompt that actually doesn't allow
      * you to choose anything further. Note the use of PICK_RIGID which
      * causes the pick_XX() routine to return a value only if there is one
-     * single possible selection, otherwise it returns ROLE_NONE.
+     * single possible selection, otherwise it returns roleNone().
      *
      */
-    if (flags.initrole == ROLE_RANDOM) {
-        /* If the role was explicitly specified as ROLE_RANDOM
+    if (flags.initrole == roleRandom()) {
+        /* If the role was explicitly specified as roleRandom()
          * via -uXXXX-@ then choose the role in here to narrow down
          * later choices. Pick a random role in this case.
          */
@@ -675,14 +675,14 @@ rigid_role_checks()
         if (flags.initrole < 0)
             flags.initrole = randrole_filtered();
     }
-    if (flags.initrole != ROLE_NONE) {
-        if (flags.initrace == ROLE_NONE)
+    if (flags.initrole != roleNone()) {
+        if (flags.initrace == roleNone())
             flags.initrace = pick_race(flags.initrole, flags.initgend,
                                        flags.initalign, PICK_RIGID);
-        if (flags.initalign == ROLE_NONE)
+        if (flags.initalign == roleNone())
             flags.initalign = pick_align(flags.initrole, flags.initrace,
                                          flags.initgend, PICK_RIGID);
-        if (flags.initgend == ROLE_NONE)
+        if (flags.initgend == roleNone())
             flags.initgend = pick_gend(flags.initrole, flags.initrace,
                                        flags.initalign, PICK_RIGID);
     }
@@ -695,16 +695,16 @@ const char *bufp;
     int i;
     boolean reslt = TRUE;
 
-    if ((i = str2role(bufp)) != ROLE_NONE && i != ROLE_RANDOM) {
+    if ((i = str2role(bufp)) != roleNone() && i != roleRandom()) {
         setRoleFilter(i, TRUE);
     }
-    else if ((i = str2race(bufp)) != ROLE_NONE && i != ROLE_RANDOM) {
+    else if ((i = str2race(bufp)) != roleNone() && i != roleRandom()) {
         addRoleFilterMask(selfMaskForSpecies(i));
     }
-    else if ((i = str2gend(bufp)) != ROLE_NONE && i != ROLE_RANDOM) {
+    else if ((i = str2gend(bufp)) != roleNone() && i != roleRandom()) {
         addRoleFilterMask(genderMask(i));
     }
-    else if ((i = str2align(bufp)) != ROLE_NONE && i != ROLE_RANDOM) {
+    else if ((i = str2align(bufp)) != roleNone() && i != roleRandom()) {
         addRoleFilterMask(aligns[i].allow);
     }
     else {
@@ -782,7 +782,7 @@ int racenum;
 {
     int aligncount = 0;
 
-    if (racenum != ROLE_NONE && racenum != ROLE_RANDOM) {
+    if (racenum != roleNone() && racenum != roleRandom()) {
         if (speciesCanStartAsChaotic(racenum))
             ++aligncount;
         if (speciesCanStartAsLawful(racenum))
@@ -815,10 +815,10 @@ int buflen, rolenum, racenum, gendnum, alignnum;
     *suppliedbuf = '\0';
 
     /* How many alignments are allowed for the desired race? */
-    if (racenum != ROLE_NONE && racenum != ROLE_RANDOM)
+    if (racenum != roleNone() && racenum != roleRandom())
         aligncount = race_alignmentcount(racenum);
 
-    if (alignnum != ROLE_NONE && alignnum != ROLE_RANDOM
+    if (alignnum != roleNone() && alignnum != roleRandom()
         && ok_align(rolenum, racenum, gendnum, alignnum)) {
         /* if race specified, and multiple choice of alignments for it */
         if ((racenum >= 0) && (aligncount > 1)) {
@@ -834,15 +834,15 @@ int buflen, rolenum, racenum, gendnum, alignnum;
         }
     } else {
         /* in case we got here by failing the ok_align() test */
-        if (alignnum != ROLE_RANDOM)
-            alignnum = ROLE_NONE;
+        if (alignnum != roleRandom())
+            alignnum = roleNone();
         /* if alignment not specified, but race is specified
            and only one choice of alignment for that race then
            don't include it in the later list */
-        if ((((racenum != ROLE_NONE && racenum != ROLE_RANDOM)
+        if ((((racenum != roleNone() && racenum != roleRandom())
               && ok_race(rolenum, racenum, gendnum, alignnum))
              && (aligncount > 1))
-            || (racenum == ROLE_NONE || racenum == ROLE_RANDOM)) {
+            || (racenum == roleNone() || racenum == roleRandom())) {
             pa[BP_ALIGN] = 1;
             post_attribs++;
         }
@@ -853,11 +853,11 @@ int buflen, rolenum, racenum, gendnum, alignnum;
     if (validrole(rolenum))
         gendercount = role_gendercount(rolenum);
 
-    if (gendnum != ROLE_NONE && gendnum != ROLE_RANDOM) {
+    if (gendnum != roleNone() && gendnum != roleRandom()) {
         if (validrole(rolenum)) {
             /* if role specified, and multiple choice of genders for it,
                and name of role itself does not distinguish gender */
-            if ((rolenum != ROLE_NONE) && (gendercount > 1)
+            if ((rolenum != roleNone()) && (gendercount > 1)
                 && !roleNameHasFemaleVersion(rolenum)) {
                 if (donefirst)
 		{
@@ -888,7 +888,7 @@ int buflen, rolenum, racenum, gendnum, alignnum;
     }
     /* <your lawful female> */
 
-    if (racenum != ROLE_NONE && racenum != ROLE_RANDOM) {
+    if (racenum != roleNone() && racenum != roleRandom()) {
         if (validrole(rolenum)
             && ok_race(rolenum, racenum, gendnum, alignnum)) {
             if (donefirst)
@@ -896,7 +896,7 @@ int buflen, rolenum, racenum, gendnum, alignnum;
 	    javaString noun = nounForSpecies(racenum);
 	    javaString adjective = adjectiveForSpecies(racenum);
 
-            Strcat(buf, (rolenum == ROLE_NONE) ? noun.c_str
+            Strcat(buf, (rolenum == roleNone()) ? noun.c_str
                                                : adjective.c_str);
 	    releaseJavaString(noun);
 	    releaseJavaString(adjective);
@@ -926,7 +926,7 @@ int buflen, rolenum, racenum, gendnum, alignnum;
         javaString femaleRoleName = roleNameAsFemale(rolenum);
         javaString maleRoleName   = roleNameAsMale(rolenum);
 
-        if (gendnum != ROLE_NONE) {
+        if (gendnum != roleNone()) {
             if (gendnum == 1 && roleNameHasFemaleVersion(rolenum))
 	    {
                 Strcat(buf, femaleRoleName.c_str);
@@ -944,12 +944,12 @@ int buflen, rolenum, racenum, gendnum, alignnum;
                 Strcat(buf, maleRoleName.c_str);
         }
         donefirst = TRUE;
-    } else if (rolenum == ROLE_NONE) {
+    } else if (rolenum == roleNone()) {
         pa[BP_ROLE] = 1;
         post_attribs++;
     }
 
-    if ((racenum == ROLE_NONE || racenum == ROLE_RANDOM)
+    if ((racenum == roleNone() || racenum == roleRandom())
         && !validrole(rolenum)) {
         if (donefirst)
             Strcat(buf, " ");
@@ -979,7 +979,7 @@ int buflen, rolenum, racenum, gendnum, alignnum;
         return (char *) defprompt;
 
     Strcpy(tmpbuf, "Shall I pick ");
-    if (racenum != ROLE_NONE || validrole(rolenum))
+    if (racenum != roleNone() || validrole(rolenum))
         Strcat(tmpbuf, "your ");
     else {
         Strcat(tmpbuf, "a ");
@@ -1065,13 +1065,13 @@ plnamesuffix()
                 *eptr++ = '\0';
 
             /* Try to match it to something */
-            if ((i = str2role(sptr)) != ROLE_NONE)
+            if ((i = str2role(sptr)) != roleNone())
                 flags.initrole = i;
-            else if ((i = str2race(sptr)) != ROLE_NONE)
+            else if ((i = str2race(sptr)) != roleNone())
                 flags.initrace = i;
-            else if ((i = str2gend(sptr)) != ROLE_NONE)
+            else if ((i = str2gend(sptr)) != roleNone())
                 flags.initgend = i;
-            else if ((i = str2align(sptr)) != ROLE_NONE)
+            else if ((i = str2align(sptr)) != roleNone())
                 flags.initalign = i;
         }
     } while (!*plname);
@@ -1105,7 +1105,7 @@ winid where;
         if ((allowmask & ROLE_RACEMASK) == MH_HUMAN)
             c = 0; /* HUMAN_ID */
         else if (c >= 0 && !(allowmask & selfMaskForSpecies(c)))
-            c = ROLE_RANDOM;
+            c = roleRandom();
         if ((allowmask & ROLE_GENDMASK) == ROLE_MALE)
             g = 0; /* role forces male (hypothetical) */
         else if ((allowmask & ROLE_GENDMASK) == ROLE_FEMALE)
@@ -1138,11 +1138,11 @@ winid where;
     if (which == RS_ROLE) {
         Strcat(buf, choosing);
     }
-    else if (r == ROLE_NONE)
+    else if (r == roleNone())
     {
         Strcat(buf, not_yet);
     }
-    else if (r == ROLE_RANDOM)
+    else if (r == roleRandom())
     {
         Strcat(buf, rand_choice);
     }
@@ -1174,9 +1174,9 @@ winid where;
     putstr(where, 0, buf);
     Sprintf(buf, "%12s ", "race:");
     javaString speciesNoun = nounForSpecies(c);
-    Strcat(buf, (which == RS_RACE) ? choosing : (c == ROLE_NONE)
+    Strcat(buf, (which == RS_RACE) ? choosing : (c == roleNone())
                                                     ? not_yet
-                                                    : (c == ROLE_RANDOM)
+                                                    : (c == roleRandom())
                                                           ? rand_choice
                                                           : speciesNoun.c_str);
     releaseJavaString(speciesNoun);
@@ -1185,9 +1185,9 @@ winid where;
 
     if (which == RS_GENDER) {
         Strcat(buf, choosing);
-    } else if (g == ROLE_NONE) {
+    } else if (g == roleNone()) {
         Strcat(buf, not_yet);
-    } else if (g == ROLE_RANDOM) {
+    } else if (g == roleRandom()) {
         Strcat(buf, rand_choice);
     } else {
 	javaString adjective = genderAdjective(g);
@@ -1197,9 +1197,9 @@ winid where;
 
     putstr(where, 0, buf);
     Sprintf(buf, "%12s ", "alignment:");
-    Strcat(buf, (which == RS_ALGNMNT) ? choosing : (a == ROLE_NONE)
+    Strcat(buf, (which == RS_ALGNMNT) ? choosing : (a == roleNone())
                                                        ? not_yet
-                                                       : (a == ROLE_RANDOM)
+                                                       : (a == roleRandom())
                                                              ? rand_choice
                                                              : aligns[a].adj);
     putstr(where, 0, buf);
@@ -1244,7 +1244,7 @@ winid where;
     case RS_RACE:
         what = "race";
         f = flags.initrace;
-        c = ROLE_NONE; /* override player's setting */
+        c = roleNone(); /* override player's setting */
         if (r >= 0) {
             allowmask = startingSpeciesMaskForRole(r);
             if (allowmask == MH_HUMAN)
@@ -1264,7 +1264,7 @@ winid where;
     case RS_GENDER:
         what = "gender";
         f = flags.initgend;
-        g = ROLE_NONE;
+        g = roleNone();
         if (r >= 0) {
             allowmask = startingGenderMaskForRole(r);
             if (allowmask == ROLE_MALE)
@@ -1286,7 +1286,7 @@ winid where;
     case RS_ALGNMNT:
         what = "alignment";
         f = flags.initalign;
-        a = ROLE_NONE;
+        a = roleNone();
         if (r >= 0) {
             allowmask = startingAlignmentMaskForRole(r);
             if (allowmask == AM_LAWFUL)
@@ -1337,12 +1337,12 @@ winid where;
         any.a_int = RS_menu_arg(RS_filter);
         add_menu(where, NO_GLYPH, &any, '~', 0, ATR_NONE,
                  "Reset role/race/&c filtering", MENU_UNSELECTED);
-    } else if (which == ROLE_RANDOM) {
-        any.a_int = ROLE_RANDOM;
+    } else if (which == roleRandom()) {
+        any.a_int = roleRandom();
         add_menu(where, NO_GLYPH, &any, '*', 0, ATR_NONE, "Random",
                  MENU_UNSELECTED);
-    } else if (which == ROLE_NONE) {
-        any.a_int = ROLE_NONE;
+    } else if (which == roleNone()) {
+        any.a_int = roleNone();
         add_menu(where, NO_GLYPH, &any, 'q', 0, ATR_NONE, "Quit",
                  MENU_UNSELECTED);
     } else {
