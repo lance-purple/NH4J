@@ -49,26 +49,6 @@ struct u_realtime {
 #define ROLE_CHAOTIC AM_CHAOTIC
 
 
-/*** Unified structure containing role information ***/
-struct Role {
-    int id;
-    /*** Spell statistics (from spell.c) ***/
-
-    /*** Properties in variable-length arrays ***/
-    /* intrinsics (see attrib.c) */
-    /* initial inventory (see u_init.c) */
-    /* skills (see u_init.c) */
-
-    /*** Don't forget to add... ***/
-    /* quest leader, guardians, nemesis (monst.c) */
-    /* quest artifact (artilist.h) */
-    /* quest dungeon definition (dat/Xyz.dat) */
-    /* quest text (dat/quest.txt) */
-    /* dictionary entries (dat/data.bas) */
-};
-
-extern const struct Role roles[]; /* table of available roles */
-
 /* used during initialization for race, gender, and alignment
    as well as for character class */
 #define ROLE_NONE (-1)

@@ -23,37 +23,24 @@
  *
  * God names use a leading underscore to flag goddesses.
  */
-const struct Role roles[] = {
-    { 0, // "Archeologist"
-      },
-    { 1, // "Barbarian"
-      },
-    { 2, // "Caveman", "Cavewoman"
-      },
-    { 3, // "Healer"
-      },
-    { 4, // "Knight"
-      },
-    { 5, // "Monk"
-      },
-    { 6, // "Priest", "Priestess"
-      },
+const int roleIDs[] = {
+    0, // "Archeologist"
+    1, // "Barbarian"
+    2, // "Caveman", "Cavewoman"
+    3, // "Healer"
+    4, // "Knight"
+    5, // "Monk"
+    6, // "Priest", "Priestess"
     /* Note:  Rogue precedes Ranger so that use of `-R' on the command line
        retains its traditional meaning. */
-    { 7, // "Rogue"
-      },
-    { 8, // "Ranger"
-      },
-    { 9, // "Samurai"
-      },
-    { 10, // "Tourist"
-      },
-    { 11, // "Valkyrie"
-      },
-    { 12, // "Wizard"
-      },
+    7, // "Rogue"
+    8, // "Ranger"
+    9, // "Samurai"
+    10, // "Tourist"
+    11, // "Valkyrie"
+    12, // "Wizard"
     /* Array terminator */
-    { -1 }
+    -1
 };
 
 /* Table of all alignments */
@@ -66,7 +53,7 @@ const struct Align aligns[] = {
 
 /* Filters */
 static struct {
-    boolean roles[SIZE(roles)];
+    boolean roles[SIZE(roleIDs)];
     short mask;
 } XXfilter;
 
@@ -94,11 +81,11 @@ randrole()
 STATIC_OVL int
 randrole_filtered()
 {
-    int i, n = 0, set[SIZE(roles)];
+    int i, n = 0, set[SIZE(roleIDs)];
 
     /* this doesn't rule out impossible combinations but attempts to
        honor all the filter masks */
-    for (i = 0; i < SIZE(roles); ++i)
+    for (i = 0; i < SIZE(roleIDs); ++i)
         if (ok_role(i, ROLE_NONE, ROLE_NONE, ROLE_NONE)
             && ok_race(i, ROLE_RANDOM, ROLE_NONE, ROLE_NONE)
             && ok_gend(i, ROLE_NONE, ROLE_RANDOM, ROLE_NONE)
@@ -433,7 +420,7 @@ pick_role(racenum, gendnum, alignnum, pickhow)
 int racenum, gendnum, alignnum, pickhow;
 {
     int i;
-    int roles_ok = 0, set[SIZE(roles)];
+    int roles_ok = 0, set[SIZE(roleIDs)];
 
     for (i = 0; i < numberOfKnownRoles(); i++) {
         if (ok_role(i, racenum, gendnum, alignnum)
@@ -1246,10 +1233,10 @@ winid where;
     case RS_ROLE:
         what = "role";
         f = r;
-        for (i = 0; i < SIZE(roles); ++i)
+        for (i = 0; i < SIZE(roleIDs); ++i)
             if (i != f && !roleFilter(i))
                 break;
-        if (i == SIZE(roles)) {
+        if (i == SIZE(roleIDs)) {
             constrainer = "filter";
             forcedValue = javaStringFromC("role");
         }
