@@ -191,7 +191,7 @@ dosit()
                     increaseMaximumHitPoints(4);
                 setCurrentHitPoints(maximumHitPoints());
                 make_blinded(0L, TRUE);
-                make_sick(0L, (char *) 0, FALSE, SICK_ALL);
+                make_sick(0L, (char *) 0, FALSE, sickAll());
                 heal_legs();
                 context.botl = 1;
                 break;

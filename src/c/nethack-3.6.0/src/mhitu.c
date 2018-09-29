@@ -773,7 +773,7 @@ int pmid;
     } else {
 	javaString monsterName = monsterTypeName(pmid);
         make_sick(youAreSick() ? yourIntrinsic(SICK) / 3L + 1L : (long) rn1(ACURR(A_CON), 20),
-                  monsterName.c_str, TRUE, SICK_NONVOMITABLE);
+                  monsterName.c_str, TRUE, sickNonVomitable());
 	releaseJavaString(monsterName);
         return TRUE;
     }
@@ -1424,7 +1424,7 @@ register const struct Attack mattk;
             if (!rn2(3))
                 exercise(A_CON, TRUE);
             if (youAreSick())
-                make_sick(0L, (char *) 0, FALSE, SICK_ALL);
+                make_sick(0L, (char *) 0, FALSE, sickAll());
             context.botl = 1;
             if (goaway) {
                 mongone(mtmp);

@@ -356,7 +356,7 @@ int trouble;
         break;
     case TROUBLE_SICK:
         You_feel("better.");
-        make_sick(0L, (char *) 0, FALSE, SICK_ALL);
+        make_sick(0L, (char *) 0, FALSE, sickAll());
         break;
     case TROUBLE_REGION:
         /* stinking cloud, with hero vulnerable to HP loss */
@@ -1531,7 +1531,7 @@ dosacrifice()
                 done(ESCAPED);
             } else { /* super big win */
                 adjalign(10);
-                setAchieved(ACHIEVEMENT_ASCENDED, TRUE);
+                setAchieved(ACHIEVEMENT_ASCENDED(), TRUE);
                 pline(
                "An invisible choir sings, and you are bathed in radiance...");
                 godvoice(altaralign, "Congratulations, mortal!");

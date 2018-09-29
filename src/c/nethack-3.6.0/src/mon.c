@@ -1913,7 +1913,7 @@ register struct monst *mtmp;
 
     if (pmid4mon(mtmp) == PM_MEDUSA)
     {
-        setAchieved(ACHIEVEMENT_KILLED_MEDUSA, TRUE);
+        setAchieved(ACHIEVEMENT_KILLED_MEDUSA(), TRUE);
     }
 
     if (glyph_is_invisible(levl[mtmp->mx][mtmp->my].glyph))

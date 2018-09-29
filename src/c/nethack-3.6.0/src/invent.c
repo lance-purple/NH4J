@@ -368,22 +368,22 @@ struct obj *obj;
         if (haveSpecialItem(SPECIAL_ITEM_AMULET))
             impossible("already have amulet?");
         setHaveSpecialItem(SPECIAL_ITEM_AMULET, TRUE);
-        setAchieved(ACHIEVEMENT_GOT_AMULET, TRUE);
+        setAchieved(ACHIEVEMENT_GOT_AMULET(), TRUE);
     } else if (obj->otyp == CANDELABRUM_OF_INVOCATION) {
         if (haveSpecialItem(SPECIAL_ITEM_CANDELABRUM))
             impossible("already have candelabrum?");
         setHaveSpecialItem(SPECIAL_ITEM_CANDELABRUM, TRUE);
-        setAchieved(ACHIEVEMENT_GOT_CANDELABRUM, TRUE);
+        setAchieved(ACHIEVEMENT_GOT_CANDELABRUM(), TRUE);
     } else if (obj->otyp == BELL_OF_OPENING) {
         if (haveSpecialItem(SPECIAL_ITEM_BELL))
             impossible("already have silver bell?");
         setHaveSpecialItem(SPECIAL_ITEM_BELL, TRUE);
-        setAchieved(ACHIEVEMENT_GOT_BELL, TRUE);
+        setAchieved(ACHIEVEMENT_GOT_BELL(), TRUE);
     } else if (obj->otyp == SPE_BOOK_OF_THE_DEAD) {
         if (haveSpecialItem(SPECIAL_ITEM_BOOK))
             impossible("already have the book?");
         setHaveSpecialItem(SPECIAL_ITEM_BOOK, TRUE);
-        setAchieved(ACHIEVEMENT_GOT_BOOK, TRUE);
+        setAchieved(ACHIEVEMENT_GOT_BOOK(), TRUE);
     } else if (obj->oartifact) {
         if (is_quest_artifact(obj)) {
             if (haveSpecialItem(SPECIAL_ITEM_QUEST_ARTIFACT))
@@ -394,12 +394,12 @@ struct obj *obj;
         set_artifact_intrinsic(obj, 1, W_ART);
     }
     if (obj->otyp == LUCKSTONE && obj->record_achieve_special) {
-        setAchieved(ACHIEVEMENT_FOUND_LUCKSTONE_IN_MINES, TRUE);
+        setAchieved(ACHIEVEMENT_FOUND_LUCKSTONE_IN_MINES(), TRUE);
         obj->record_achieve_special = 0;
     } else if ((obj->otyp == AMULET_OF_REFLECTION
                 || obj->otyp == BAG_OF_HOLDING)
                && obj->record_achieve_special) {
-        setAchieved(ACHIEVEMENT_FINISHED_SOKOBAN_LEVEL, TRUE);
+        setAchieved(ACHIEVEMENT_FINISHED_SOKOBAN_LEVEL(), TRUE);
         obj->record_achieve_special = 0;
     }
 }

@@ -83,8 +83,8 @@ const char *cause; /* sickness cause */
 boolean talk;
 int mask;
 {
-    boolean foodPoisoning = (mask & SICK_VOMITABLE);
-    boolean illness       = (mask & SICK_NONVOMITABLE);
+    boolean foodPoisoning = (mask & sickVomitable());
+    boolean illness       = (mask & sickNonVomitable());
     long old = yourIntrinsic(SICK);
 
 #if 0
@@ -604,7 +604,7 @@ register struct obj *otmp;
         } else {
             if (otmp->blessed) {
                 You_feel("full of awe.");
-                make_sick(0L, (char *) 0, TRUE, SICK_ALL);
+                make_sick(0L, (char *) 0, TRUE, sickAll());
                 exercise(A_WIS, TRUE);
                 exercise(A_CON, TRUE);
                 if (lycanthropeType() >= LOW_PM)
@@ -1094,7 +1094,7 @@ register boolean curesick, cureblind;
         make_blinded(0L, TRUE);
     if (curesick) {
         make_vomiting(0L, TRUE);
-        make_sick(0L, (char *) 0, TRUE, SICK_ALL);
+        make_sick(0L, (char *) 0, TRUE, sickAll());
     }
     context.botl = 1;
     return;

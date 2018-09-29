@@ -1675,6 +1675,18 @@ void setSickWithIllness(boolean i) {
     javaSetBoolean(PLAYER_CHARACTER_CLASS, "setSickWithIllness", i);
 }
 
+int sickNonVomitable() {
+    javaGetInt(PLAYER_CHARACTER_CLASS, "sickNonVomitable");
+}
+
+int sickVomitable() {
+    javaGetInt(PLAYER_CHARACTER_CLASS, "sickVomitable");
+}
+
+int sickAll() {
+    javaGetInt(PLAYER_CHARACTER_CLASS, "sickAll");
+}
+
 int giftsBestowed() {
     return javaGetInt(PLAYER_CHARACTER_CLASS, "giftsBestowed");
 }
@@ -3565,5 +3577,42 @@ extern boolean anyRoleFilters() {
 extern void resetRoleFilters() {
   javaSetVoid(ROLE_FILTER_CLASS, "resetRoleFilters");
 }
+
+extern int ACHIEVEMENT_GOT_AMULET() {
+  return javaGetInt(ACHIEVEMENT_TYPE_CLASS, "ACHIEVEMENT_GOT_AMULET");
+}
+
+extern int ACHIEVEMENT_GOT_BELL() {
+  return javaGetInt(ACHIEVEMENT_TYPE_CLASS, "ACHIEVEMENT_GOT_BELL");
+}
+
+extern int ACHIEVEMENT_GOT_BOOK() {
+  return javaGetInt(ACHIEVEMENT_TYPE_CLASS, "ACHIEVEMENT_GOT_BOOK");
+}
+
+extern int ACHIEVEMENT_GOT_CANDELABRUM() {
+  return javaGetInt(ACHIEVEMENT_TYPE_CLASS, "ACHIEVEMENT_GOT_CANDELABRUM");
+}
+
+extern int ACHIEVEMENT_ENTERED_GEHENNOM() {
+  return javaGetInt(ACHIEVEMENT_TYPE_CLASS, "ACHIEVEMENT_ENTERED_GEHENNOM");
+}
+
+extern int ACHIEVEMENT_ASCENDED() {
+  return javaGetInt(ACHIEVEMENT_TYPE_CLASS, "ACHIEVEMENT_ASCENDED");
+}
+
+extern int ACHIEVEMENT_FOUND_LUCKSTONE_IN_MINES() {
+  return javaGetInt(ACHIEVEMENT_TYPE_CLASS, "ACHIEVEMENT_FOUND_LUCKSTONE_IN_MINES");
+}
+
+extern int ACHIEVEMENT_FINISHED_SOKOBAN_LEVEL() {
+  return javaGetInt(ACHIEVEMENT_TYPE_CLASS, "ACHIEVEMENT_FINISHED_SOKOBAN_LEVEL");
+}
+
+extern int ACHIEVEMENT_KILLED_MEDUSA() {
+  return javaGetInt(ACHIEVEMENT_TYPE_CLASS, "ACHIEVEMENT_KILLED_MEDUSA");
+}
+
 
 /*hacklib.c*/

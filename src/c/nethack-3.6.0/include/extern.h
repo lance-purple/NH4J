@@ -13,6 +13,7 @@
 E JNIEnv* jni_env;
 E JavaVM* java_vm;
 
+#define ACHIEVEMENT_TYPE_CLASS "rec/games/roguelike/nh4j/AchievementType"
 #define ADVENTURER_ROLE_CLASS "rec/games/roguelike/nh4j/AdventurerRole"
 #define ADVENTURER_SPECIES_CLASS "rec/games/roguelike/nh4j/AdventurerSpecies"
 #define CONTEXT_CLASS "rec/games/roguelike/nh4j/Context"
@@ -2680,6 +2681,11 @@ E void FDECL(make_confused, (long, BOOLEAN_P));
 E void FDECL(make_stunned, (long, BOOLEAN_P));
 E void FDECL(make_blinded, (long, BOOLEAN_P));
 E void FDECL(make_sick, (long, const char *, BOOLEAN_P, int));
+
+E int FDECL(sickNonVomitable, ());
+E int FDECL(sickVomitable, ());
+E int FDECL(sickAll, ());
+
 E void FDECL(make_slimed, (long, const char *));
 E void FDECL(make_stoned, (long, const char *, int, const char *));
 E void FDECL(make_vomiting, (long, BOOLEAN_P));
@@ -3771,6 +3777,19 @@ E void FDECL(destroy_item, (int, int));
 E int FDECL(destroy_mitem, (struct monst *, int, int));
 E int FDECL(resist, (struct monst *, CHAR_P, int, int));
 E void NDECL(makewish);
+
+E int NDECL(ACHIEVEMENT_GOT_AMULET);
+E int NDECL(ACHIEVEMENT_GOT_BELL);
+E int NDECL(ACHIEVEMENT_GOT_BOOK);
+E int NDECL(ACHIEVEMENT_GOT_CANDELABRUM);
+E int NDECL(ACHIEVEMENT_ENTERED_GEHENNOM);
+E int NDECL(ACHIEVEMENT_ASCENDED);
+E int NDECL(ACHIEVEMENT_FOUND_LUCKSTONE_IN_MINES);
+E int NDECL(ACHIEVEMENT_FINISHED_SOKOBAN_LEVEL);
+E int NDECL(ACHIEVEMENT_KILLED_MEDUSA);
+
+
+/*hacklib.c*/
 
 #endif /* !MAKEDEFS_C && !LEV_LEX_C */
 

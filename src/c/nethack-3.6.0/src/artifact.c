@@ -1462,7 +1462,7 @@ struct obj *obj;
                     increaseCurrentHitPoints(healamt);
             }
             if (youAreSick())
-                make_sick(0L, (char *) 0, FALSE, SICK_ALL);
+                make_sick(0L, (char *) 0, FALSE, sickAll());
             if (youAreTurningToSlime())
                 make_slimed(0L, (char *) 0);
             if (yourIntrinsic(BLINDED) > creamed())

@@ -7,6 +7,10 @@ public class PlayerCharacter {
 	
 	private static final int MAXULEVEL = 30;
 
+	private static final int SICK_VOMITABLE = 0x01;
+	private static final int SICK_NON_VOMITABLE = 0x02;
+	private static final int SICK_ALL = 0x03;
+
 	private static int currentRoleID;
 	private static int speciesID;
 	
@@ -1173,6 +1177,18 @@ public class PlayerCharacter {
 		sickWithIllness = i;
 	}
 
+	public static final int sickNonVomitable() {
+		return SICK_NON_VOMITABLE;
+	}
+	
+	public static final int sickVomitable() {
+		return SICK_VOMITABLE;
+	}
+	
+	public static final int sickAll() {
+		return SICK_ALL;
+	}
+	
 	public static final int giftsBestowed() {
 		return giftsBestowed;
 	}

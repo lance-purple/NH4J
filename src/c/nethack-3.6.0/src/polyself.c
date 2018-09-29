@@ -355,7 +355,7 @@ newman()
 
     setCurrentNutrition(rn1(500, 500));
     if (youAreSick())
-        make_sick(0L, (char *) 0, FALSE, SICK_ALL);
+        make_sick(0L, (char *) 0, FALSE, sickAll());
     if (youAreTurningToStone())
         make_stoned(0L, (char *) 0, 0, (char *) 0);
     if (currentHitPoints() <= 0) {
@@ -715,7 +715,7 @@ int mntmp;
                     (char *) 0);
     }
     if (youResistSickness() && youAreSick()) {
-        make_sick(0L, (char *) 0, FALSE, SICK_ALL);
+        make_sick(0L, (char *) 0, FALSE, sickAll());
         You("no longer feel sick.");
     }
     if (youAreTurningToSlime()) {

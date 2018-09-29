@@ -14,16 +14,6 @@
 
 /*** Substructures ***/
 
-#define ACHIEVEMENT_GOT_AMULET 0
-#define ACHIEVEMENT_GOT_BELL 1
-#define ACHIEVEMENT_GOT_BOOK 2
-#define ACHIEVEMENT_GOT_CANDELABRUM 3
-#define ACHIEVEMENT_ENTERED_GEHENNOM 4
-#define ACHIEVEMENT_ASCENDED 5
-#define ACHIEVEMENT_FOUND_LUCKSTONE_IN_MINES 6
-#define ACHIEVEMENT_FINISHED_SOKOBAN_LEVEL 7
-#define ACHIEVEMENT_KILLED_MEDUSA 8
-
 #define SPECIAL_ITEM_AMULET 0
 #define SPECIAL_ITEM_BELL 1
 #define SPECIAL_ITEM_BOOK 2
@@ -60,10 +50,6 @@ struct Align {
 #define ROLE_ALIGNS 3 /* number of permitted player alignments */
 
 extern const struct Align aligns[]; /* table of available alignments */
-
-#define SICK_VOMITABLE 0x01
-#define SICK_NONVOMITABLE 0x02
-#define SICK_ALL 0x03
 
 /*** Information about the player ***/
 struct you {

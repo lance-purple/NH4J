@@ -1597,7 +1597,7 @@ struct obj *otmp;
                 }
 	    }
             make_sick(sick_time, corpse_xname(otmp, "rotted", CXN_NORMAL),
-                      TRUE, SICK_VOMITABLE);
+                      TRUE, sickVomitable());
         }
         if (carried(otmp))
             useup(otmp);
@@ -2162,7 +2162,7 @@ struct obj *otmp;
         break;
     case EUCALYPTUS_LEAF:
         if (youAreSick() && !otmp->cursed)
-            make_sick(0L, (char *) 0, TRUE, SICK_ALL);
+            make_sick(0L, (char *) 0, TRUE, sickAll());
         if (youAreVomiting() && !otmp->cursed)
             make_vomiting(0L, TRUE);
         break;
@@ -3043,7 +3043,7 @@ vomit() /* A good idea from David Neves */
            dealing with some esoteric body_part() */
         Your("jaw gapes convulsively.");
     else
-        make_sick(0L, (char *) 0, TRUE, SICK_VOMITABLE);
+        make_sick(0L, (char *) 0, TRUE, sickVomitable());
     nomul(-2);
     multi_reason = "vomiting";
     nomovemsg = You_can_move_again;

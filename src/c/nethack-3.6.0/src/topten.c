@@ -398,29 +398,29 @@ encodeachieve()
 {
     long r = 0L;
 
-    if (achieved(ACHIEVEMENT_GOT_BELL))
+    if (achieved(ACHIEVEMENT_GOT_BELL()))
         r |= 1L << 0;
-    if (achieved(ACHIEVEMENT_ENTERED_GEHENNOM))
+    if (achieved(ACHIEVEMENT_ENTERED_GEHENNOM()))
         r |= 1L << 1;
-    if (achieved(ACHIEVEMENT_GOT_CANDELABRUM))
+    if (achieved(ACHIEVEMENT_GOT_CANDELABRUM()))
         r |= 1L << 2;
-    if (achieved(ACHIEVEMENT_GOT_BOOK))
+    if (achieved(ACHIEVEMENT_GOT_BOOK()))
         r |= 1L << 3;
     if (haveInvokedGateToSanctum())
         r |= 1L << 4;
-    if (achieved(ACHIEVEMENT_GOT_AMULET))
+    if (achieved(ACHIEVEMENT_GOT_AMULET()))
         r |= 1L << 5;
     if (areYouInEndgame())
         r |= 1L << 6;
     if (areYouOnAstralLevel())
         r |= 1L << 7;
-    if (achieved(ACHIEVEMENT_ASCENDED))
+    if (achieved(ACHIEVEMENT_ASCENDED()))
         r |= 1L << 8;
-    if (achieved(ACHIEVEMENT_FOUND_LUCKSTONE_IN_MINES))
+    if (achieved(ACHIEVEMENT_FOUND_LUCKSTONE_IN_MINES()))
         r |= 1L << 9;
-    if (achieved(ACHIEVEMENT_FINISHED_SOKOBAN_LEVEL))
+    if (achieved(ACHIEVEMENT_FINISHED_SOKOBAN_LEVEL()))
         r |= 1L << 10;
-    if (achieved(ACHIEVEMENT_KILLED_MEDUSA))
+    if (achieved(ACHIEVEMENT_KILLED_MEDUSA()))
         r |= 1L << 11;
     if (permanentlyBlind())
         r |= 1L << 12;

@@ -1779,7 +1779,7 @@ struct obj *obj;
         case 0:
             make_sick(yourIntrinsicTimeout(SICK) ? yourIntrinsicTimeout(SICK) / 3L + 1L
                                        : (long) rn1(ACURR(A_CON), 20),
-                      xname(obj), TRUE, SICK_NONVOMITABLE);
+                      xname(obj), TRUE, sickNonVomitable());
             break;
         case 1:
             make_blinded(yourIntrinsicTimeout(BLINDED) + lcount, TRUE);
@@ -1893,7 +1893,7 @@ struct obj *obj;
 
         switch (idx) {
         case prop2trbl(SICK):
-            make_sick(0L, (char *) 0, TRUE, SICK_ALL);
+            make_sick(0L, (char *) 0, TRUE, sickAll());
             did_prop++;
             break;
         case prop2trbl(BLINDED):
