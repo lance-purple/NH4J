@@ -308,7 +308,7 @@ validalign(rolenum, racenum, alignnum)
 int rolenum, racenum, alignnum;
 {
     /* Assumes validrole and validrace */
-    return (boolean) (alignnum >= 0 && alignnum < ROLE_ALIGNS
+    return (boolean) (alignnum >= 0 && alignnum < numberOfRoleAlignments()
                       && (startingAlignmentMaskForRole(rolenum) & startingAlignmentMaskForSpecies(racenum)
                           & aligns[alignnum].allow & ROLE_ALIGNMASK));
 }
@@ -320,7 +320,7 @@ int rolenum, racenum;
     int i, n = 0;
 
     /* Count the number of valid alignments */
-    for (i = 0; i < ROLE_ALIGNS; i++)
+    for (i = 0; i < numberOfRoleAlignments(); i++)
         if (startingAlignmentMaskForRole(rolenum) & startingAlignmentMaskForSpecies(racenum)
             & aligns[i].allow & ROLE_ALIGNMASK)
             n++;
@@ -328,7 +328,7 @@ int rolenum, racenum;
     /* Pick a random alignment */
     if (n)
         n = rn2(n);
-    for (i = 0; i < ROLE_ALIGNS; i++)
+    for (i = 0; i < numberOfRoleAlignments(); i++)
         if (startingAlignmentMaskForRole(rolenum) & startingAlignmentMaskForSpecies(racenum)
             & aligns[i].allow & ROLE_ALIGNMASK) {
             if (n)
@@ -338,7 +338,7 @@ int rolenum, racenum;
         }
 
     /* This role/race has no permitted alignments? */
-    return rn2(ROLE_ALIGNS);
+    return rn2(numberOfRoleAlignments());
 }
 
 int
@@ -353,7 +353,7 @@ const char *str;
 
     /* Match as much of str as is provided */
     len = strlen(str);
-    for (i = 0; i < ROLE_ALIGNS; i++) {
+    for (i = 0; i < numberOfRoleAlignments(); i++) {
         /* Does it match the adjective? */
         if (!strncmpi(str, aligns[i].adj, len))
             return i;
@@ -387,7 +387,7 @@ int rolenum, racenum, gendnum, alignnum;
         if (gendnum >= 0 && gendnum < adventurerGenders()
             && !(allow & genderMask(gendnum) & ROLE_GENDMASK))
             return FALSE;
-        if (alignnum >= 0 && alignnum < ROLE_ALIGNS
+        if (alignnum >= 0 && alignnum < numberOfRoleAlignments()
             && !(allow & aligns[alignnum].allow & ROLE_ALIGNMASK))
             return FALSE;
         return TRUE;
@@ -403,7 +403,7 @@ int rolenum, racenum, gendnum, alignnum;
             if (gendnum >= 0 && gendnum < adventurerGenders()
                 && !(allow & genderMask(gendnum) & ROLE_GENDMASK))
                 continue;
-            if (alignnum >= 0 && alignnum < ROLE_ALIGNS
+            if (alignnum >= 0 && alignnum < numberOfRoleAlignments()
                 && !(allow & aligns[alignnum].allow & ROLE_ALIGNMASK))
                 continue;
             return TRUE;
@@ -458,7 +458,7 @@ int rolenum, racenum, gendnum, alignnum;
             && !(allow & genderMask(gendnum) & ROLE_GENDMASK)) {
             return FALSE;
 	}
-        if (alignnum >= 0 && alignnum < ROLE_ALIGNS
+        if (alignnum >= 0 && alignnum < numberOfRoleAlignments()
             && !(allow & aligns[alignnum].allow & ROLE_ALIGNMASK)) {
             return FALSE;
 	}
@@ -478,7 +478,7 @@ int rolenum, racenum, gendnum, alignnum;
                 && !(allow & genderMask(gendnum) & ROLE_GENDMASK)) {
                 continue;
 	    }
-            if (alignnum >= 0 && alignnum < ROLE_ALIGNS
+            if (alignnum >= 0 && alignnum < numberOfRoleAlignments()
                 && !(allow & aligns[alignnum].allow & ROLE_ALIGNMASK)) {
                 continue;
 	    }
@@ -595,7 +595,7 @@ int alignnum;
     int i;
     short allow;
 
-    if (alignnum >= 0 && alignnum < ROLE_ALIGNS) {
+    if (alignnum >= 0 && alignnum < numberOfRoleAlignments()) {
         if (roleFilterMask() & aligns[alignnum].allow)
             return FALSE;
         allow = aligns[alignnum].allow;
@@ -608,7 +608,7 @@ int alignnum;
         return TRUE;
     } else {
         /* random; check whether any selection is possible */
-        for (i = 0; i < ROLE_ALIGNS; i++) {
+        for (i = 0; i < numberOfRoleAlignments(); i++) {
             if (roleFilterMask() & aligns[i].allow)
                 return FALSE;
             allow = aligns[i].allow;
@@ -636,14 +636,14 @@ int rolenum, racenum, gendnum, pickhow;
     int i;
     int aligns_ok = 0;
 
-    for (i = 0; i < ROLE_ALIGNS; i++) {
+    for (i = 0; i < numberOfRoleAlignments(); i++) {
         if (ok_align(rolenum, racenum, gendnum, i))
             aligns_ok++;
     }
     if (aligns_ok == 0 || (aligns_ok > 1 && pickhow == PICK_RIGID))
         return roleNone();
     aligns_ok = rn2(aligns_ok);
-    for (i = 0; i < ROLE_ALIGNS; i++) {
+    for (i = 0; i < numberOfRoleAlignments(); i++) {
         if (ok_align(rolenum, racenum, gendnum, i)) {
             if (aligns_ok == 0)
                 return i;

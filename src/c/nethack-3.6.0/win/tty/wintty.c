@@ -655,13 +655,13 @@ makepicks:
                     /* Count the number of valid alignments */
                     n = 0; /* number valid */
                     k = 0; /* valid alignment */
-                    for (i = 0; i < ROLE_ALIGNS; i++)
+                    for (i = 0; i < numberOfRoleAlignments(); i++)
                         if (ok_align(ROLE, RACE, GEND, i)) {
                             n++;
                             k = i;
                         }
                     if (n == 0) {
-                        for (i = 0; i < ROLE_ALIGNS; i++)
+                        for (i = 0; i < numberOfRoleAlignments(); i++)
                             if (validalign(ROLE, RACE, i)) {
                                 n++;
                                 k = i;
@@ -1046,7 +1046,7 @@ int role, race, gend;
     char this_ch;
 
     any = zeroany;
-    for (i = 0; i < ROLE_ALIGNS; i++) {
+    for (i = 0; i < numberOfRoleAlignments(); i++) {
         algn_ok = ok_align(role, race, gend, i);
         if (filtering && !algn_ok)
             continue;

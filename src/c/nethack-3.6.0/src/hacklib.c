@@ -3011,6 +3011,10 @@ extern void setMonsterRandomizerChoices(int pmid, int c) {
     return javaSetIntFromInt(MONSTER_RANDOMIZER_CLASS, "setChoices", pmid, c);
 }
 
+extern int numberOfRoleAlignments() {
+    return javaGetInt(ROLE_ALIGNMENT_CLASS, "numberOfRoleAlignments");
+}
+
 extern int numberOfKnownRoles() {
     return javaGetInt(ADVENTURER_ROLE_CLASS, "numberOfKnownRoles");
 }

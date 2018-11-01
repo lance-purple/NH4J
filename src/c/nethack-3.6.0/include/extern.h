@@ -26,6 +26,7 @@ E JavaVM* java_vm;
 #define NOVEL_CLASS "rec/games/roguelike/nh4j/TributeNovel"
 #define OCCUPIED_ROOMS_CLASS "rec/games/roguelike/nh4j/OccupiedRooms"
 #define PLAYER_CHARACTER_CLASS "rec/games/roguelike/nh4j/PlayerCharacter"
+#define ROLE_ALIGNMENT_CLASS "rec/games/roguelike/nh4j/RoleAlignment"
 #define ROLE_FILTER_CLASS "rec/games/roguelike/nh4j/RoleFilter"
 #define QUALITIES_CLASS "rec/games/roguelike/nh4j/Qualities"
 #define SYS_OPT_CLASS "rec/games/roguelike/nh4j/SysOpt"
@@ -2878,6 +2879,8 @@ E int FDECL(rne, (int));
 E int FDECL(rnz, (int));
 
 /* ### role.c ### */
+
+E int FDECL(numberOfRoleAlignments, ());
 
 E int FDECL(roleNone, ());
 E int FDECL(roleRandom, ());

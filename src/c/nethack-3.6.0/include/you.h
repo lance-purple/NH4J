@@ -47,7 +47,6 @@ struct Align {
     short allow;          /* equivalent ROLE_ mask */
     aligntyp value;       /* equivalent A_ value */
 };
-#define ROLE_ALIGNS 3 /* number of permitted player alignments */
 
 extern const struct Align aligns[]; /* table of available alignments */
 
