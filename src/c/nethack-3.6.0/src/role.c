@@ -1414,7 +1414,7 @@ role_init()
     if (!validalign(flags.initrole, flags.initrace, flags.initalign))
         /* Pick a random alignment */
         flags.initalign = randalign(flags.initrole, flags.initrace);
-    alignmnt = aligns[flags.initalign].value;
+    alignmnt = roleAlignmentType(flags.initalign);
 
     /* Initialize role and species */
     setYourCurrentRoleID(flags.initrole);

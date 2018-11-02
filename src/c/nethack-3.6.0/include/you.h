@@ -41,11 +41,11 @@ struct u_realtime {
 
 /*** Unified structure specifying alignment information ***/
 struct Align {
-    const char *noun;     /* law/balance/chaos */
+    const char *xnoun;     /* law/balance/chaos */
     const char *adj;      /* lawful/neutral/chaotic */
     const char *filecode; /* file code */
-    short allow;          /* equivalent ROLE_ mask */
-    aligntyp value;       /* equivalent A_ value */
+    short xallow;          /* equivalent ROLE_ mask */
+    aligntyp xvalue;       /* equivalent A_ value */
 };
 
 extern const struct Align aligns[]; /* table of available alignments */
