@@ -310,7 +310,7 @@ int rolenum, racenum, alignnum;
     /* Assumes validrole and validrace */
     return (boolean) (alignnum >= 0 && alignnum < numberOfRoleAlignments()
                       && (startingAlignmentMaskForRole(rolenum) & startingAlignmentMaskForSpecies(racenum)
-                          & aligns[alignnum].allow & ROLE_ALIGNMASK));
+                          & roleAlignmentMask(alignnum) & ROLE_ALIGNMASK));
 }
 
 int
@@ -322,7 +322,7 @@ int rolenum, racenum;
     /* Count the number of valid alignments */
     for (i = 0; i < numberOfRoleAlignments(); i++)
         if (startingAlignmentMaskForRole(rolenum) & startingAlignmentMaskForSpecies(racenum)
-            & aligns[i].allow & ROLE_ALIGNMASK)
+            & roleAlignmentMask(i) & ROLE_ALIGNMASK)
             n++;
 
     /* Pick a random alignment */
@@ -330,7 +330,7 @@ int rolenum, racenum;
         n = rn2(n);
     for (i = 0; i < numberOfRoleAlignments(); i++)
         if (startingAlignmentMaskForRole(rolenum) & startingAlignmentMaskForSpecies(racenum)
-            & aligns[i].allow & ROLE_ALIGNMASK) {
+            & roleAlignmentMask(i) & ROLE_ALIGNMASK) {
             if (n)
                 n--;
             else
@@ -388,7 +388,7 @@ int rolenum, racenum, gendnum, alignnum;
             && !(allow & genderMask(gendnum) & ROLE_GENDMASK))
             return FALSE;
         if (alignnum >= 0 && alignnum < numberOfRoleAlignments()
-            && !(allow & aligns[alignnum].allow & ROLE_ALIGNMASK))
+            && !(allow & roleAlignmentMask(alignnum) & ROLE_ALIGNMASK))
             return FALSE;
         return TRUE;
     } else {
@@ -404,7 +404,7 @@ int rolenum, racenum, gendnum, alignnum;
                 && !(allow & genderMask(gendnum) & ROLE_GENDMASK))
                 continue;
             if (alignnum >= 0 && alignnum < numberOfRoleAlignments()
-                && !(allow & aligns[alignnum].allow & ROLE_ALIGNMASK))
+                && !(allow & roleAlignmentMask(alignnum) & ROLE_ALIGNMASK))
                 continue;
             return TRUE;
         }
@@ -459,7 +459,7 @@ int rolenum, racenum, gendnum, alignnum;
             return FALSE;
 	}
         if (alignnum >= 0 && alignnum < numberOfRoleAlignments()
-            && !(allow & aligns[alignnum].allow & ROLE_ALIGNMASK)) {
+            && !(allow & roleAlignmentMask(alignnum) & ROLE_ALIGNMASK)) {
             return FALSE;
 	}
         return TRUE;
@@ -479,7 +479,7 @@ int rolenum, racenum, gendnum, alignnum;
                 continue;
 	    }
             if (alignnum >= 0 && alignnum < numberOfRoleAlignments()
-                && !(allow & aligns[alignnum].allow & ROLE_ALIGNMASK)) {
+                && !(allow & roleAlignmentMask(alignnum) & ROLE_ALIGNMASK)) {
                 continue;
 	    }
             return TRUE;
@@ -596,9 +596,9 @@ int alignnum;
     short allow;
 
     if (alignnum >= 0 && alignnum < numberOfRoleAlignments()) {
-        if (roleFilterMask() & aligns[alignnum].allow)
+        if (roleFilterMask() & roleAlignmentMask(alignnum))
             return FALSE;
-        allow = aligns[alignnum].allow;
+        allow = roleAlignmentMask(alignnum);
         if (validrole(rolenum)
             && !(allow & startingAlignmentMaskForRole(rolenum)))
             return FALSE;
@@ -609,9 +609,9 @@ int alignnum;
     } else {
         /* random; check whether any selection is possible */
         for (i = 0; i < numberOfRoleAlignments(); i++) {
-            if (roleFilterMask() & aligns[i].allow)
+            if (roleFilterMask() & roleAlignmentMask(i))
                 return FALSE;
-            allow = aligns[i].allow;
+            allow = roleAlignmentMask(i);
             if (validrole(rolenum)
                 && !(allow & startingAlignmentMaskForRole(rolenum)))
                 continue;
@@ -705,7 +705,7 @@ const char *bufp;
         addRoleFilterMask(genderMask(i));
     }
     else if ((i = str2align(bufp)) != roleNone() && i != roleRandom()) {
-        addRoleFilterMask(aligns[i].allow);
+        addRoleFilterMask(roleAlignmentMask(i));
     }
     else {
         reslt = FALSE;
@@ -1310,7 +1310,7 @@ winid where;
                 constrainer = "race";
         }
         if (f >= 0 && !constrainer
-            && (ROLE_ALIGNMASK & ~roleFilterMask()) == aligns[f].allow) {
+            && (ROLE_ALIGNMASK & ~roleFilterMask()) == roleAlignmentMask(f)) {
             /* if there is only one alignment choice available due to user
                options disallowing others, algn menu entry is disabled */
             constrainer = "filter";

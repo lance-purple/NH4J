@@ -1,7 +1,5 @@
 package rec.games.roguelike.nh4j;
 
-import java.util.NoSuchElementException;
-
 public enum RoleAlignment {
     
 	LAWFUL(1, "law", "lawful", "Law", 0x4),
@@ -23,38 +21,39 @@ public enum RoleAlignment {
 		this.fileCode = fileCode;
 		this.mask = mask;
 	}
+
+	private static RoleAlignment roleAlignment(int index)
+	{
+		return values()[index];
+	}	
 	
 	public static int numberOfRoleAlignments()
 	{
 		return values().length;
 	}
 	
-	static RoleAlignment roleAlignment(int index)
-	{
-		return values()[index];
-	}	
 
-	static int type(int type)
+	public static int type(int type)
 	{
 		return roleAlignment(type).type;
 	}
 
-	static String noun(int index)
+	public static String noun(int index)
 	{
 		return roleAlignment(index).noun;
 	}
 	
-	static String adjective(int type)
+	public static String adjective(int type)
 	{
 		return roleAlignment(type).adjective;
 	}
 	
-	static String fileCode(int type)
+	public static String fileCode(int type)
 	{
 		return roleAlignment(type).fileCode;
 	}
 
-	static int mask(int type)
+	public static int mask(int type)
 	{
 		return roleAlignment(type).mask;
 	}

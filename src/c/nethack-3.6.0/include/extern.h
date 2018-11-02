@@ -2881,6 +2881,7 @@ E int FDECL(rnz, (int));
 /* ### role.c ### */
 
 E int FDECL(numberOfRoleAlignments, ());
+E int FDECL(roleAlignmentMask, (int));
 
 E int FDECL(roleNone, ());
 E int FDECL(roleRandom, ());

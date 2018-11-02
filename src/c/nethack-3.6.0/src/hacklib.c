@@ -3015,6 +3015,10 @@ extern int numberOfRoleAlignments() {
     return javaGetInt(ROLE_ALIGNMENT_CLASS, "numberOfRoleAlignments");
 }
 
+extern int roleAlignmentMask(int i) {
+    return javaGetIntFromInt(ROLE_ALIGNMENT_CLASS, "mask", i);
+}
+
 extern int numberOfKnownRoles() {
     return javaGetInt(ADVENTURER_ROLE_CLASS, "numberOfKnownRoles");
 }
