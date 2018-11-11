@@ -336,10 +336,14 @@ struct toptenentry *tt;
             (long) urealtime.endtime);
 
     javaString gendercode = genderAbbreviation(flags.initgend);
+    int alignmentIndex = (1 - originalAlignmentBase());
+    javaString fileCode = roleAlignmentFileCode(alignmentIndex);
+
     Fprintf(rfile, "%cgender0=%s%calign0=%s", XLOG_SEP,
-            gendercode.c_str, XLOG_SEP,
-            aligns[1 - originalAlignmentBase()].filecode);
+            gendercode.c_str, XLOG_SEP, fileCode.c_str);
     releaseJavaString(gendercode);
+    releaseJavaString(fileCode);
+
     Fprintf(rfile, "%cflags=0x%lx", XLOG_SEP, encodexlogflags());
     Fprintf(rfile, "\n");
 #undef XLOG_SEP
@@ -525,7 +529,11 @@ time_t when;
     copynchars(t0->plgend, gendercode.c_str, ROLESZ);
     releaseJavaString(gendercode);
 
-    copynchars(t0->plalign, aligns[1 - currentAlignmentType()].filecode, ROLESZ);
+    int alignmentIndex = (1 - currentAlignmentType());
+    javaString fileCode = roleAlignmentFileCode(alignmentIndex);
+    copynchars(t0->plalign, fileCode.c_str, ROLESZ);
+    releaseJavaString(fileCode);
+
     copynchars(t0->name, plname, NAMSZ);
     formatkiller(t0->death, sizeof t0->death, how);
     t0->birthdate = yyyymmdd(ubirthday);

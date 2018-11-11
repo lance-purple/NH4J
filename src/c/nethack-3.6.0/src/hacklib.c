@@ -3015,6 +3015,13 @@ extern int numberOfRoleAlignments() {
     return javaGetInt(ROLE_ALIGNMENT_CLASS, "numberOfRoleAlignments");
 }
 
+extern javaString roleAlignmentFileCode(int i) {
+  jstring j_str = javaGetStringFromInt(ROLE_ALIGNMENT_CLASS, "fileCode", i);
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
+}
+
 extern int roleAlignmentMask(int i) {
     return javaGetIntFromInt(ROLE_ALIGNMENT_CLASS, "mask", i);
 }

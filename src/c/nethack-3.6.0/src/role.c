@@ -358,8 +358,14 @@ const char *str;
         if (!strncmpi(str, aligns[i].adj, len))
             return i;
         /* Or the filecode? */
-        if (!strcmpi(str, aligns[i].filecode))
+
+	javaString fileCode = roleAlignmentFileCode(i);
+	int caseSensitiveMatch = strcmpi(str, fileCode.c_str);
+	releaseJavaString(fileCode);
+
+        if (!caseSensitiveMatch) {
             return i;
+	}
     }
     if ((len == 1 && (*str == '*' || *str == '@'))
         || !strncmpi(str, randomstr, len))

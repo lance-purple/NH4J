@@ -2881,6 +2881,7 @@ E int FDECL(rnz, (int));
 /* ### role.c ### */
 
 E int FDECL(numberOfRoleAlignments, ());
+E javaString FDECL(roleAlignmentFileCode, (int));
 E int FDECL(roleAlignmentMask, (int));
 E int FDECL(roleAlignmentType, (int));
 

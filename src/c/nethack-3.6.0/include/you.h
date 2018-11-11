@@ -43,7 +43,7 @@ struct u_realtime {
 struct Align {
     const char *xnoun;     /* law/balance/chaos */
     const char *adj;      /* lawful/neutral/chaotic */
-    const char *filecode; /* file code */
+    const char *xfilecode; /* file code */
     short xallow;          /* equivalent ROLE_ mask */
     aligntyp xvalue;       /* equivalent A_ value */
 };
