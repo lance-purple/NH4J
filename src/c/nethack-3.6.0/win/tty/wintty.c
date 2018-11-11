@@ -764,7 +764,7 @@ makepicks:
 	            ? roleNameAsFemale(ROLE)
 		    : roleNameAsMale(ROLE);
 	javaString speciesAdjective = adjectiveForSpecies(RACE);
-        Sprintf(pbuf, "%s, %s%s %s %s", plname, aligns[ALGN].adj, plbuf,
+        Sprintf(pbuf, "%s, %s%s %s %s", plname, aligns[ALGN], plbuf,
                 speciesAdjective.c_str, roleName.c_str);
         releaseJavaString(roleName);
         releaseJavaString(speciesAdjective);
@@ -1053,14 +1053,14 @@ int role, race, gend;
         if (filtering)
             any.a_int = i + 1;
         else
-            any.a_string = aligns[i].adj;
-        this_ch = *aligns[i].adj;
+            any.a_string = aligns[i];
+        this_ch = *aligns[i];
         /* (see setup_racemenu for explanation of selector letters
            and setup_rolemenu for preselection) */
         add_menu(win, NO_GLYPH, &any,
                  filtering ? this_ch : highc(this_ch),
                  filtering ? highc(this_ch) : 0,
-                 ATR_NONE, aligns[i].adj,
+                 ATR_NONE, aligns[i],
                  (!filtering && !algn_ok) ? MENU_SELECTED : MENU_UNSELECTED);
     }
 }

@@ -44,11 +44,11 @@ const int roleIDs[] = {
 };
 
 /* Table of all alignments */
-const struct Align aligns[] = {
-    { "law", "lawful", "Law", ROLE_LAWFUL, A_LAWFUL },
-    { "balance", "neutral", "Neu", ROLE_NEUTRAL, A_NEUTRAL },
-    { "chaos", "chaotic", "Cha", ROLE_CHAOTIC, A_CHAOTIC },
-    { "evil", "unaligned", "Una", 0, A_NONE }
+const char* aligns[] = {
+    "lawful",
+    "neutral",
+    "chaotic",
+    "unaligned" 
 };
 
 /* Filters */
@@ -355,7 +355,7 @@ const char *str;
     len = strlen(str);
     for (i = 0; i < numberOfRoleAlignments(); i++) {
         /* Does it match the adjective? */
-        if (!strncmpi(str, aligns[i].adj, len))
+        if (!strncmpi(str, aligns[i], len))
             return i;
         /* Or the filecode? */
 
@@ -830,12 +830,12 @@ int buflen, rolenum, racenum, gendnum, alignnum;
         if ((racenum >= 0) && (aligncount > 1)) {
             if (donefirst)
                 Strcat(buf, " ");
-            Strcat(buf, aligns[alignnum].adj);
+            Strcat(buf, aligns[alignnum]);
             donefirst = TRUE;
         } else {
             if (donefirst)
                 Strcat(buf, " ");
-            Strcat(buf, aligns[alignnum].adj);
+            Strcat(buf, aligns[alignnum]);
             donefirst = TRUE;
         }
     } else {
@@ -1207,7 +1207,7 @@ winid where;
                                                        ? not_yet
                                                        : (a == roleRandom())
                                                              ? rand_choice
-                                                             : aligns[a].adj);
+                                                             : aligns[a]);
     putstr(where, 0, buf);
 }
 
@@ -1323,7 +1323,7 @@ winid where;
             forcedValue = javaStringFromC("alignment");
         }
         if (a >= 0)
-            forcedValue = javaStringFromC(aligns[a].adj);
+            forcedValue = javaStringFromC(aligns[a]);
         break;
     }
 

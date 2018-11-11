@@ -40,15 +40,7 @@ struct u_realtime {
 
 
 /*** Unified structure specifying alignment information ***/
-struct Align {
-    const char *xnoun;     /* law/balance/chaos */
-    const char *adj;      /* lawful/neutral/chaotic */
-    const char *xfilecode; /* file code */
-    short xallow;          /* equivalent ROLE_ mask */
-    aligntyp xvalue;       /* equivalent A_ value */
-};
-
-extern const struct Align aligns[]; /* table of available alignments */
+extern const char* aligns[]; /* names of available alignments */
 
 /*** Information about the player ***/
 struct you {

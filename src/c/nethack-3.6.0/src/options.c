@@ -4473,8 +4473,17 @@ boolean setinitial, setfromfile;
     return TRUE;
 }
 
-#define rolestring(val, array, field) \
-    ((val >= 0) ? array[val].field : (val == roleRandom()) ? randomrole : none)
+const char* rolestring(int val)
+{
+    if (val >= 0) {
+        return aligns[val];
+    }
+    else if (val == roleRandom()) {
+        return "random";
+    } else {
+        return "(none)";
+    }
+}
 
 /* This is ugly. We have all the option names in the compopt[] array,
    but we need to look at each option individually to get the value. */
@@ -4513,7 +4522,7 @@ char *buf;
                                       ? "right"
                                       : defopt);
     else if (!strcmp(optname, "align"))
-        Sprintf(buf, "%s", rolestring(flags.initalign, aligns, adj));
+        Sprintf(buf, "%s", rolestring(flags.initalign));
 #ifdef WIN32
     else if (!strcmp(optname, "altkeyhandler"))
         Sprintf(buf, "%s",
