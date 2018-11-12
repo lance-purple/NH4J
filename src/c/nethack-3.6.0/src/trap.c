@@ -3762,7 +3762,7 @@ struct trap *ttmp;
     if (yourRoleHasPMID(PM_ROGUE)) {
         if (rn2(2 * MAXULEV) < currentExperienceLevel())
             chance--;
-        if (haveSpecialItem(SPECIAL_ITEM_QUEST_ARTIFACT) && chance > 1)
+        if (haveSpecialItem(SPECIAL_ITEM_QUEST_ARTIFACT()) && chance > 1)
             chance--;
     } else if (yourRoleHasPMID(PM_RANGER) && chance > 1)
         chance--;

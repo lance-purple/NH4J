@@ -220,12 +220,12 @@ struct obj *book2;
             return;
         }
 
-        if (!haveSpecialItem(SPECIAL_ITEM_BELL) ||
-            !haveSpecialItem(SPECIAL_ITEM_CANDELABRUM)) {
+        if (!haveSpecialItem(SPECIAL_ITEM_BELL()) ||
+            !haveSpecialItem(SPECIAL_ITEM_CANDELABRUM())) {
             pline("A chill runs down your %s.", body_part(SPINE));
-            if (!haveSpecialItem(SPECIAL_ITEM_BELL))
+            if (!haveSpecialItem(SPECIAL_ITEM_BELL()))
                 You_hear("a faint chime...");
-            if (!haveSpecialItem(SPECIAL_ITEM_CANDELABRUM))
+            if (!haveSpecialItem(SPECIAL_ITEM_CANDELABRUM()))
                 pline("Vlad's doppelganger is amused.");
             return;
         }
@@ -920,7 +920,7 @@ boolean atme;
         return 1;
     }
 
-    if (haveSpecialItem(SPECIAL_ITEM_AMULET)) {
+    if (haveSpecialItem(SPECIAL_ITEM_AMULET())) {
         You_feel("the amulet draining your energy away.");
         energy += rnd(2 * energy);
     }

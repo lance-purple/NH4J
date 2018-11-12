@@ -514,21 +514,21 @@ struct monst *mtmp;
     int real = 0, fake = 0;
 
     /* select the artifact to steal */
-    if (haveSpecialItem(SPECIAL_ITEM_AMULET)) {
+    if (haveSpecialItem(SPECIAL_ITEM_AMULET())) {
         real = AMULET_OF_YENDOR;
         fake = FAKE_AMULET_OF_YENDOR;
-    } else if (haveSpecialItem(SPECIAL_ITEM_QUEST_ARTIFACT)) {
+    } else if (haveSpecialItem(SPECIAL_ITEM_QUEST_ARTIFACT())) {
         for (otmp = invent; otmp; otmp = otmp->nobj)
             if (is_quest_artifact(otmp))
                 break;
         if (!otmp)
             return; /* should we panic instead? */
-    } else if (haveSpecialItem(SPECIAL_ITEM_BELL)) {
+    } else if (haveSpecialItem(SPECIAL_ITEM_BELL())) {
         real = BELL_OF_OPENING;
         fake = BELL;
-    } else if (haveSpecialItem(SPECIAL_ITEM_BOOK)) {
+    } else if (haveSpecialItem(SPECIAL_ITEM_BOOK())) {
         real = SPE_BOOK_OF_THE_DEAD;
-    } else if (haveSpecialItem(SPECIAL_ITEM_CANDELABRUM)) {
+    } else if (haveSpecialItem(SPECIAL_ITEM_CANDELABRUM())) {
         real = CANDELABRUM_OF_INVOCATION;
     } else
         return; /* you have nothing of special interest */

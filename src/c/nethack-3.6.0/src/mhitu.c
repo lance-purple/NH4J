@@ -1338,11 +1338,11 @@ register const struct Attack mattk;
     case AD_SAMU:
         hitmsg(mtmp, mattk);
         /* when the Wiz hits, 1/20 steals the amulet */
-        if (haveSpecialItem(SPECIAL_ITEM_AMULET) ||
-            haveSpecialItem(SPECIAL_ITEM_BELL)   ||
-            haveSpecialItem(SPECIAL_ITEM_BOOK)   ||
-            haveSpecialItem(SPECIAL_ITEM_CANDELABRUM) ||
-            haveSpecialItem(SPECIAL_ITEM_QUEST_ARTIFACT)) {
+        if (haveSpecialItem(SPECIAL_ITEM_AMULET()) ||
+            haveSpecialItem(SPECIAL_ITEM_BELL())   ||
+            haveSpecialItem(SPECIAL_ITEM_BOOK())   ||
+            haveSpecialItem(SPECIAL_ITEM_CANDELABRUM()) ||
+            haveSpecialItem(SPECIAL_ITEM_QUEST_ARTIFACT())) {
             if (!rn2(20))
                 stealamulet(mtmp);
 	}

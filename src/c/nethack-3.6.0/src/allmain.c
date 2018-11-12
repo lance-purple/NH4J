@@ -317,7 +317,7 @@ boolean resuming;
                     age_spells();
                     exerchk();
                     invault();
-                    if (haveSpecialItem(SPECIAL_ITEM_AMULET))
+                    if (haveSpecialItem(SPECIAL_ITEM_AMULET()))
                         amulet();
                     if (!rn2(40 + (int) (ACURR(A_DEX) * 3)))
                         u_wipe_engr(rnd(3));
@@ -362,7 +362,7 @@ boolean resuming;
             if (context.bypasses) {
                 clear_bypasses();
             }
-            if ((haveSpecialItem(SPECIAL_ITEM_AMULET) || youAreClairvoyant()) && !areYouInEndgame()
+            if ((haveSpecialItem(SPECIAL_ITEM_AMULET()) || youAreClairvoyant()) && !areYouInEndgame()
                 && !youAreBlockedFrom(CLAIRVOYANT) && !(moves % 15) && !rn2(2)) {
                 do_vicinity_map();
             }

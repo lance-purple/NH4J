@@ -2695,7 +2695,7 @@ gethungry()
             }
             break;
         case 16:
-            if (haveSpecialItem(SPECIAL_ITEM_AMULET)) {
+            if (haveSpecialItem(SPECIAL_ITEM_AMULET())) {
                 decreaseCurrentNutrition(1);
             }
             break;

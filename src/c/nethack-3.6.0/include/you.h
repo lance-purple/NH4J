@@ -14,12 +14,6 @@
 
 /*** Substructures ***/
 
-#define SPECIAL_ITEM_AMULET 0
-#define SPECIAL_ITEM_BELL 1
-#define SPECIAL_ITEM_BOOK 2
-#define SPECIAL_ITEM_CANDELABRUM 3
-#define SPECIAL_ITEM_QUEST_ARTIFACT 4
-
 
 struct u_realtime {
     long

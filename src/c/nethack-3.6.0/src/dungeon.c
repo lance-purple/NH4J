@@ -1254,7 +1254,7 @@ boolean at_stairs;
         /* Taking an up dungeon branch. */
         /* KMH -- Upwards branches are okay if not level 1 */
         /* (Just make sure it doesn't go above depth 1) */
-        if (!currentDungeonNumber() && currentDungeonLevel() == 1 && !haveSpecialItem(SPECIAL_ITEM_AMULET))
+        if (!currentDungeonNumber() && currentDungeonLevel() == 1 && !haveSpecialItem(SPECIAL_ITEM_AMULET()))
             done(ESCAPED);
         else
             goto_level(&sstairs.tolev, at_stairs, FALSE, FALSE);
@@ -1751,7 +1751,7 @@ level_difficulty()
 
     if (areYouInEndgame()) {
         res = depth(&sanctum_level) + currentExperienceLevel() / 2;
-    } else if (haveSpecialItem(SPECIAL_ITEM_AMULET)) {
+    } else if (haveSpecialItem(SPECIAL_ITEM_AMULET())) {
         res = deepest_lev_reached(FALSE);
     } else {
         res = currentDepth();

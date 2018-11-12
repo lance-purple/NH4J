@@ -803,7 +803,7 @@ skip0:
            while a monster was on the stairs. Conclusion:
            we have to check for monsters on the stairs anyway. */
 
-        if (haveSpecialItem(SPECIAL_ITEM_AMULET) || !rn2(3)) {
+        if (haveSpecialItem(SPECIAL_ITEM_AMULET()) || !rn2(3)) {
             x = somex(croom);
             y = somey(croom);
             tmonst = makeMonsterOfType(NON_PM, x, y, NO_MM_FLAGS);

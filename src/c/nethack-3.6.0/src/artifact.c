@@ -1556,7 +1556,7 @@ struct obj *obj;
             else
                 newlev.dlevel = dungeons[i].dunlev_ureached;
 
-            if (haveSpecialItem(SPECIAL_ITEM_AMULET) || areYouInEndgame() || In_endgame(&newlev)
+            if (haveSpecialItem(SPECIAL_ITEM_AMULET()) || areYouInEndgame() || In_endgame(&newlev)
                 || newlev.dnum == currentDungeonNumber() || !next_to_u()) {
                 You_feel("very disoriented for a moment.");
             } else {

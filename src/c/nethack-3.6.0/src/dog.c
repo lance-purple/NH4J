@@ -603,7 +603,7 @@ boolean pets_only; /* true for ascension or final escape */
              /* the wiz will level t-port from anywhere to chase
                 the amulet; if you don't have it, will chase you
                 only if in range. -3. */
-             || (haveSpecialItem(SPECIAL_ITEM_AMULET) && mtmp->iswiz))
+             || (haveSpecialItem(SPECIAL_ITEM_AMULET()) && mtmp->iswiz))
             && ((!mtmp->msleeping && mtmp->mcanmove)
                 /* eg if level teleport or new trap, steed has no control
                    to avoid following */

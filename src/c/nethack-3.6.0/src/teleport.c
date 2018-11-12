@@ -477,7 +477,7 @@ struct obj *scroll;
     if (!youAreTemporarilyBlinded())
         make_blinded(0L, FALSE);
 
-    if ((haveSpecialItem(SPECIAL_ITEM_AMULET) || areYouOnAWizardTowerLevel()) && !rn2(3)) {
+    if ((haveSpecialItem(SPECIAL_ITEM_AMULET()) || areYouOnAWizardTowerLevel()) && !rn2(3)) {
         You_feel("disoriented for a moment.");
         if (!wizard || yn("Override?") != 'y')
             return FALSE;
@@ -633,7 +633,7 @@ level_tele()
     char buf[BUFSZ];
     boolean force_dest = FALSE;
 
-    if ((haveSpecialItem(SPECIAL_ITEM_AMULET) || areYouInEndgame() || areYouOnASokobanLevel())
+    if ((haveSpecialItem(SPECIAL_ITEM_AMULET()) || areYouInEndgame() || areYouOnASokobanLevel())
         && !wizard) {
         You_feel("very disoriented for a moment.");
         return;
@@ -676,7 +676,7 @@ level_tele()
                 if (In_endgame(&newlevel) && !areYouInEndgame()) {
                     struct obj *amu;
 
-                    if (!haveSpecialItem(SPECIAL_ITEM_AMULET)
+                    if (!haveSpecialItem(SPECIAL_ITEM_AMULET())
                         && (amu = mksobj(AMULET_OF_YENDOR, TRUE, FALSE))
                                != 0) {
                         /* ordinarily we'd use hold_another_object()
@@ -886,7 +886,7 @@ register struct trap *ttmp;
      * the endgame, from accidently triggering the portal to the
      * next level, and thus losing the game
      */
-    if (areYouInEndgame() && !haveSpecialItem(SPECIAL_ITEM_AMULET)) {
+    if (areYouInEndgame() && !haveSpecialItem(SPECIAL_ITEM_AMULET())) {
         You_feel("dizzy for a moment, but nothing happens...");
         return;
     }

@@ -15,39 +15,39 @@ public enum AchievementType {
 		return id;
 	}
 
-	public static int ACHIEVEMENT_GOT_AMULET() {
+	public static int GOT_AMULET() {
 		return GOT_AMULET.id();
 	}
 
-	public static int ACHIEVEMENT_GOT_BELL() {
+	public static int GOT_BELL() {
 		return GOT_BELL.id();
 	}
 
-	public static int ACHIEVEMENT_GOT_BOOK() {
+	public static int GOT_BOOK() {
 		return GOT_BOOK.id();
 	}
 
-	public static int ACHIEVEMENT_GOT_CANDELABRUM() {
+	public static int GOT_CANDELABRUM() {
 		return GOT_CANDELABRUM.id();
 	}
 
-	public static int ACHIEVEMENT_ENTERED_GEHENNOM() {
+	public static int ENTERED_GEHENNOM() {
 		return ENTERED_GEHENNOM.id();
 	}
 
-	public static int ACHIEVEMENT_ASCENDED() {
+	public static int ASCENDED() {
 		return ASCENDED.id();
 	}
 
-	public static int ACHIEVEMENT_FOUND_LUCKSTONE_IN_MINES() {
+	public static int FOUND_LUCKSTONE_IN_MINES() {
 		return FOUND_LUCKSTONE_IN_MINES.id();
 	}
 
-	public static int ACHIEVEMENT_FINISHED_SOKOBAN_LEVEL() {
+	public static int FINISHED_SOKOBAN_LEVEL() {
 		return FINISHED_SOKOBAN_LEVEL.id();
 	}
 
-	public static int ACHIEVEMENT_KILLED_MEDUSA() {
+	public static int KILLED_MEDUSA() {
 		return KILLED_MEDUSA.id();
 	}
 

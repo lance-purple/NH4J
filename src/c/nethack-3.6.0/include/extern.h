@@ -30,6 +30,7 @@ E JavaVM* java_vm;
 #define ROLE_FILTER_CLASS "rec/games/roguelike/nh4j/RoleFilter"
 #define QUALITIES_CLASS "rec/games/roguelike/nh4j/Qualities"
 #define SYS_OPT_CLASS "rec/games/roguelike/nh4j/SysOpt"
+#define SPECIAL_ITEM_CLASS "rec/games/roguelike/nh4j/SpecialItem"
 #define WEAPON_SKILL_CLASS "rec/games/roguelike/nh4j/WeaponSkill"
 
 typedef struct {
@@ -3794,6 +3795,11 @@ E int NDECL(ACHIEVEMENT_FOUND_LUCKSTONE_IN_MINES);
 E int NDECL(ACHIEVEMENT_FINISHED_SOKOBAN_LEVEL);
 E int NDECL(ACHIEVEMENT_KILLED_MEDUSA);
 
+E int NDECL(SPECIAL_ITEM_AMULET);
+E int NDECL(SPECIAL_ITEM_BELL);
+E int NDECL(SPECIAL_ITEM_BOOK);
+E int NDECL(SPECIAL_ITEM_CANDELABRUM);
+E int NDECL(SPECIAL_ITEM_QUEST_ARTIFACT);
 
 /*hacklib.c*/
 

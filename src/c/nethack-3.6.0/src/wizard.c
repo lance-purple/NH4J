@@ -45,7 +45,7 @@ amulet()
     struct obj *amu;
 
 #if 0 /* caller takes care of this check */
-    if (!haveSpecialItem(SPECIAL_ITEM_AMULET))
+    if (!haveSpecialItem(SPECIAL_ITEM_AMULET()))
         return;
 #endif
     if ((((amu = uamul) != 0 && amu->otyp == AMULET_OF_YENDOR)
@@ -199,15 +199,15 @@ register int mask;
 {
     switch (mask) {
     case M3_WANTSAMUL:
-        return (boolean) haveSpecialItem(SPECIAL_ITEM_AMULET);
+        return (boolean) haveSpecialItem(SPECIAL_ITEM_AMULET());
     case M3_WANTSBELL:
-        return (boolean) haveSpecialItem(SPECIAL_ITEM_BELL);
+        return (boolean) haveSpecialItem(SPECIAL_ITEM_BELL());
     case M3_WANTSCAND:
-        return (boolean) haveSpecialItem(SPECIAL_ITEM_CANDELABRUM);
+        return (boolean) haveSpecialItem(SPECIAL_ITEM_CANDELABRUM());
     case M3_WANTSBOOK:
-        return (boolean) haveSpecialItem(SPECIAL_ITEM_BOOK);
+        return (boolean) haveSpecialItem(SPECIAL_ITEM_BOOK());
     case M3_WANTSARTI:
-        return (boolean) haveSpecialItem(SPECIAL_ITEM_QUEST_ARTIFACT);
+        return (boolean) haveSpecialItem(SPECIAL_ITEM_QUEST_ARTIFACT());
     default:
         break;
     }
@@ -414,7 +414,7 @@ clonewiz()
     if ((mtmp2 = makeMonsterOfType(PM_WIZARD_OF_YENDOR, currentX(), currentY(), NO_MM_FLAGS))
         != 0) {
         mtmp2->msleeping = mtmp2->mtame = mtmp2->mpeaceful = 0;
-        if (!haveSpecialItem(SPECIAL_ITEM_AMULET) && rn2(2)) { /* give clone a fake */
+        if (!haveSpecialItem(SPECIAL_ITEM_AMULET()) && rn2(2)) { /* give clone a fake */
             (void) add_to_minv(mtmp2,
                                mksobj(FAKE_AMULET_OF_YENDOR, TRUE, FALSE));
         }
@@ -629,7 +629,7 @@ register struct monst *mtmp;
     if (mtmp->iswiz) {
         if (!rn2(5)) /* typical bad guy action */
             pline("%s laughs fiendishly.", Monnam(mtmp));
-        else if (haveSpecialItem(SPECIAL_ITEM_AMULET) && !rn2(SIZE(random_insult)))
+        else if (haveSpecialItem(SPECIAL_ITEM_AMULET()) && !rn2(SIZE(random_insult)))
             verbalize("Relinquish the amulet, %s!",
                       random_insult[rn2(SIZE(random_insult))]);
         else if (currentHitPoints() < 5 && !rn2(2)) /* Panic */

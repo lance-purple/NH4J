@@ -921,7 +921,7 @@ struct monst *mtmp;
     /* stalking types follow, but won't when fleeing unless you hold
        the Amulet */
     return (boolean) (monsterHasFlag2(pmid4mon(mtmp), M2_STALK)
-                      && (!mtmp->mflee || haveSpecialItem(SPECIAL_ITEM_AMULET)));
+                      && (!mtmp->mflee || haveSpecialItem(SPECIAL_ITEM_AMULET())));
 }
 
 static const short grownups[][2] = {
