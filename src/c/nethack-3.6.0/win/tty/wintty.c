@@ -764,10 +764,12 @@ makepicks:
 	            ? roleNameAsFemale(ROLE)
 		    : roleNameAsMale(ROLE);
 	javaString speciesAdjective = adjectiveForSpecies(RACE);
-        Sprintf(pbuf, "%s, %s%s %s %s", plname, aligns[ALGN], plbuf,
+	javaString alignAdjective = alignmentString(ALGN);
+        Sprintf(pbuf, "%s, %s%s %s %s", plname, alignAdjective.c_str, plbuf,
                 speciesAdjective.c_str, roleName.c_str);
         releaseJavaString(roleName);
         releaseJavaString(speciesAdjective);
+        releaseJavaString(alignAdjective);
 
         add_menu(win, NO_GLYPH, &any, ' ', 0, ATR_NONE, pbuf,
                  MENU_UNSELECTED);
@@ -1034,6 +1036,16 @@ int role, race, algn;
     }
 }
 
+
+/* Table of all alignments */
+javaString alignStrings[] = {
+    NO_JAVA_STRING, /* "lawful"    */
+    NO_JAVA_STRING, /* "neutral"   */
+    NO_JAVA_STRING, /* "chaotic"   */
+    NO_JAVA_STRING, /* "unaligned" */
+};
+
+
 STATIC_DCL void
 setup_algnmenu(win, filtering, role, race, gend)
 winid win;
@@ -1047,20 +1059,25 @@ int role, race, gend;
 
     any = zeroany;
     for (i = 0; i < numberOfRoleAlignments(); i++) {
+
+	if (NULL == alignStrings[i].c_str) {
+	    alignStrings[i] = alignmentString(i);
+	}
+
         algn_ok = ok_align(role, race, gend, i);
         if (filtering && !algn_ok)
             continue;
         if (filtering)
             any.a_int = i + 1;
         else
-            any.a_string = aligns[i];
-        this_ch = *aligns[i];
+            any.a_string = alignStrings[i].c_str;
+        this_ch = *alignStrings[i].c_str;
         /* (see setup_racemenu for explanation of selector letters
            and setup_rolemenu for preselection) */
         add_menu(win, NO_GLYPH, &any,
                  filtering ? this_ch : highc(this_ch),
                  filtering ? highc(this_ch) : 0,
-                 ATR_NONE, aligns[i],
+                 ATR_NONE, alignStrings[i].c_str,
                  (!filtering && !algn_ok) ? MENU_SELECTED : MENU_UNSELECTED);
     }
 }

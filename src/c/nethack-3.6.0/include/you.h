@@ -33,9 +33,6 @@ struct u_realtime {
 #define ROLE_CHAOTIC AM_CHAOTIC
 
 
-/*** Unified structure specifying alignment information ***/
-extern const char* aligns[]; /* names of available alignments */
-
 /*** Information about the player ***/
 struct you {
 

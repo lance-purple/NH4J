@@ -2536,7 +2536,7 @@ E void NDECL(free_menu_coloring);
 E boolean FDECL(msgtype_parse_add, (char *));
 E int FDECL(msgtype_type, (const char *));
 E void NDECL(msgtype_free);
-E javaString FDECL(alignString, (int));
+E javaString FDECL(alignmentString, (int));
 
 /* ### pager.c ### */
 

@@ -43,14 +43,6 @@ const int roleIDs[] = {
     -1
 };
 
-/* Table of all alignments */
-const char* aligns[] = {
-    "lawful",
-    "neutral",
-    "chaotic",
-    "unaligned" 
-};
-
 /* Filters */
 static struct {
     boolean roles[SIZE(roleIDs)];
@@ -355,8 +347,12 @@ const char *str;
     len = strlen(str);
     for (i = 0; i < numberOfRoleAlignments(); i++) {
         /* Does it match the adjective? */
-        if (!strncmpi(str, aligns[i], len))
+	javaString alignAdj = alignmentString(i);
+        boolean matches = (!strncmpi(str, alignAdj.c_str, len));
+	releaseJavaString(alignAdj);
+	if (matches) {
             return i;
+	}
         /* Or the filecode? */
 
 	javaString fileCode = roleAlignmentFileCode(i);
@@ -827,17 +823,20 @@ int buflen, rolenum, racenum, gendnum, alignnum;
     if (alignnum != roleNone() && alignnum != roleRandom()
         && ok_align(rolenum, racenum, gendnum, alignnum)) {
         /* if race specified, and multiple choice of alignments for it */
+	javaString alignAdj = alignmentString(alignnum);
         if ((racenum >= 0) && (aligncount > 1)) {
-            if (donefirst)
+            if (donefirst) {
                 Strcat(buf, " ");
-            Strcat(buf, aligns[alignnum]);
+	    }
+            Strcat(buf, alignAdj.c_str);
             donefirst = TRUE;
         } else {
             if (donefirst)
                 Strcat(buf, " ");
-            Strcat(buf, aligns[alignnum]);
+            Strcat(buf, alignAdj.c_str);
             donefirst = TRUE;
         }
+	releaseJavaString(alignAdj);
     } else {
         /* in case we got here by failing the ok_align() test */
         if (alignnum != roleRandom())
@@ -1203,11 +1202,13 @@ winid where;
 
     putstr(where, 0, buf);
     Sprintf(buf, "%12s ", "alignment:");
+    javaString alignAdj = alignmentString(a);
     Strcat(buf, (which == RS_ALGNMNT) ? choosing : (a == roleNone())
                                                        ? not_yet
                                                        : (a == roleRandom())
                                                              ? rand_choice
-                                                             : aligns[a]);
+                                                             : alignAdj.c_str);
+    releaseJavaString(alignAdj);
     putstr(where, 0, buf);
 }
 
@@ -1323,7 +1324,7 @@ winid where;
             forcedValue = javaStringFromC("alignment");
         }
         if (a >= 0)
-            forcedValue = javaStringFromC(aligns[a]);
+            forcedValue = alignmentString(a);
         break;
     }
 

@@ -4510,7 +4510,7 @@ char *buf;
                                       ? "right"
                                       : defopt);
     else if (!strcmp(optname, "align")) {
-	javaString alignStr = alignString(flags.initalign);
+	javaString alignStr = alignmentString(flags.initalign);
         Sprintf(buf, "%s", alignStr.c_str);
 	releaseJavaString(alignStr);
     }

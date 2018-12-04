@@ -58,7 +58,7 @@ public enum RoleAlignment {
 		return roleAlignment(type).mask;
 	}
 	
-	public static String alignString(int index)
+	public static String alignmentString(int index)
 	{
 		if ((index >= 0) && (index < numberOfRoleAlignments())) {
 			return roleAlignment(index).adjective;
