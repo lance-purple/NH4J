@@ -3660,4 +3660,8 @@ extern javaString alignmentString(int index) {
   return result;
 }
 
+extern int roleSpeciesMask() {
+  return javaGetInt(ADVENTURER_SPECIES_CLASS, "roleMask");
+}
+
 /*hacklib.c*/

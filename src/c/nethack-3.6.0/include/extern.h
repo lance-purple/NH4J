@@ -3027,6 +3027,7 @@ E void FDECL(role_menu_extra, (int, winid));
 E void NDECL(role_init);
 E const char *FDECL(Hello, (struct monst *));
 E const char *NDECL(Goodbye);
+E int FDECL(roleSpeciesMask, ());
 
 /* ### rumors.c ### */
 

@@ -1107,7 +1107,7 @@ winid where;
     a = flags.initalign;
     if (r >= 0) {
         allowmask = startingMaskForRole(r);
-        if ((allowmask & ROLE_RACEMASK) == MH_HUMAN)
+        if ((allowmask & roleSpeciesMask()) == MH_HUMAN)
             c = 0; /* HUMAN_ID */
         else if (c >= 0 && !(allowmask & selfMaskForSpecies(c)))
             c = roleRandom();

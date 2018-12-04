@@ -386,9 +386,13 @@ public class AdventurerSpecies {
 	    return (speciesID >= 0) && (speciesID < numberOfPlayableSpecies());
 	}
 
-
 	public static final int MASK = 0x0ff8;
 
+	public static final int roleMask()
+	{
+		return MASK;
+	}
+	
 	private static void initialize() {
 
 		AdventurerSpecies.withID(HUMAN_ID)
