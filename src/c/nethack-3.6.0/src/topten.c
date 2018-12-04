@@ -337,7 +337,7 @@ struct toptenentry *tt;
 
     javaString gendercode = genderAbbreviation(flags.initgend);
     int alignmentIndex = (1 - originalAlignmentBase());
-    javaString fileCode = roleAlignmentFileCode(alignmentIndex);
+    javaString fileCode = alignmentFileCode(alignmentIndex);
 
     Fprintf(rfile, "%cgender0=%s%calign0=%s", XLOG_SEP,
             gendercode.c_str, XLOG_SEP, fileCode.c_str);
@@ -530,7 +530,7 @@ time_t when;
     releaseJavaString(gendercode);
 
     int alignmentIndex = (1 - currentAlignmentType());
-    javaString fileCode = roleAlignmentFileCode(alignmentIndex);
+    javaString fileCode = alignmentFileCode(alignmentIndex);
     copynchars(t0->plalign, fileCode.c_str, ROLESZ);
     releaseJavaString(fileCode);
 

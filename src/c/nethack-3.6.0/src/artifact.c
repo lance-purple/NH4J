@@ -55,7 +55,7 @@ STATIC_OVL void
 hack_artifacts()
 {
     struct artifact *art;
-    int alignmnt = roleAlignmentType(flags.initalign);
+    int alignmnt = alignmentType(flags.initalign);
 
     /* Fix up the alignments of "gift" artifacts */
     for (art = artilist + 1; art->otyp; art++)

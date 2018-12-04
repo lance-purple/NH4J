@@ -302,7 +302,7 @@ int rolenum, racenum, alignnum;
     /* Assumes validrole and validrace */
     return (boolean) (alignnum >= 0 && alignnum < numberOfRoleAlignments()
                       && (startingAlignmentMaskForRole(rolenum) & startingAlignmentMaskForSpecies(racenum)
-                          & roleAlignmentMask(alignnum) & ROLE_ALIGNMASK));
+                          & alignmentMask(alignnum) & roleAlignmentMask()));
 }
 
 int
@@ -314,7 +314,7 @@ int rolenum, racenum;
     /* Count the number of valid alignments */
     for (i = 0; i < numberOfRoleAlignments(); i++)
         if (startingAlignmentMaskForRole(rolenum) & startingAlignmentMaskForSpecies(racenum)
-            & roleAlignmentMask(i) & ROLE_ALIGNMASK)
+            & alignmentMask(i) & roleAlignmentMask())
             n++;
 
     /* Pick a random alignment */
@@ -322,7 +322,7 @@ int rolenum, racenum;
         n = rn2(n);
     for (i = 0; i < numberOfRoleAlignments(); i++)
         if (startingAlignmentMaskForRole(rolenum) & startingAlignmentMaskForSpecies(racenum)
-            & roleAlignmentMask(i) & ROLE_ALIGNMASK) {
+            & alignmentMask(i) & roleAlignmentMask()) {
             if (n)
                 n--;
             else
@@ -355,7 +355,7 @@ const char *str;
 	}
         /* Or the filecode? */
 
-	javaString fileCode = roleAlignmentFileCode(i);
+	javaString fileCode = alignmentFileCode(i);
 	int caseSensitiveMatch = strcmpi(str, fileCode.c_str);
 	releaseJavaString(fileCode);
 
@@ -390,7 +390,7 @@ int rolenum, racenum, gendnum, alignnum;
             && !(allow & genderMask(gendnum) & roleGenderMask()))
             return FALSE;
         if (alignnum >= 0 && alignnum < numberOfRoleAlignments()
-            && !(allow & roleAlignmentMask(alignnum) & ROLE_ALIGNMASK))
+            && !(allow & alignmentMask(alignnum) & roleAlignmentMask()))
             return FALSE;
         return TRUE;
     } else {
@@ -406,7 +406,7 @@ int rolenum, racenum, gendnum, alignnum;
                 && !(allow & genderMask(gendnum) & roleGenderMask()))
                 continue;
             if (alignnum >= 0 && alignnum < numberOfRoleAlignments()
-                && !(allow & roleAlignmentMask(alignnum) & ROLE_ALIGNMASK))
+                && !(allow & alignmentMask(alignnum) & roleAlignmentMask()))
                 continue;
             return TRUE;
         }
@@ -461,7 +461,7 @@ int rolenum, racenum, gendnum, alignnum;
             return FALSE;
 	}
         if (alignnum >= 0 && alignnum < numberOfRoleAlignments()
-            && !(allow & roleAlignmentMask(alignnum) & ROLE_ALIGNMASK)) {
+            && !(allow & alignmentMask(alignnum) & roleAlignmentMask())) {
             return FALSE;
 	}
         return TRUE;
@@ -481,7 +481,7 @@ int rolenum, racenum, gendnum, alignnum;
                 continue;
 	    }
             if (alignnum >= 0 && alignnum < numberOfRoleAlignments()
-                && !(allow & roleAlignmentMask(alignnum) & ROLE_ALIGNMASK)) {
+                && !(allow & alignmentMask(alignnum) & roleAlignmentMask())) {
                 continue;
 	    }
             return TRUE;
@@ -598,9 +598,9 @@ int alignnum;
     short allow;
 
     if (alignnum >= 0 && alignnum < numberOfRoleAlignments()) {
-        if (roleFilterMask() & roleAlignmentMask(alignnum))
+        if (roleFilterMask() & alignmentMask(alignnum))
             return FALSE;
-        allow = roleAlignmentMask(alignnum);
+        allow = alignmentMask(alignnum);
         if (validrole(rolenum)
             && !(allow & startingAlignmentMaskForRole(rolenum)))
             return FALSE;
@@ -611,9 +611,9 @@ int alignnum;
     } else {
         /* random; check whether any selection is possible */
         for (i = 0; i < numberOfRoleAlignments(); i++) {
-            if (roleFilterMask() & roleAlignmentMask(i))
+            if (roleFilterMask() & alignmentMask(i))
                 return FALSE;
-            allow = roleAlignmentMask(i);
+            allow = alignmentMask(i);
             if (validrole(rolenum)
                 && !(allow & startingAlignmentMaskForRole(rolenum)))
                 continue;
@@ -707,7 +707,7 @@ const char *bufp;
         addRoleFilterMask(genderMask(i));
     }
     else if ((i = str2align(bufp)) != roleNone() && i != roleRandom()) {
-        addRoleFilterMask(roleAlignmentMask(i));
+        addRoleFilterMask(alignmentMask(i));
     }
     else {
         reslt = FALSE;
@@ -1115,20 +1115,20 @@ winid where;
             g = 0; /* role forces male (hypothetical) */
         else if ((allowmask & roleGenderMask()) == ROLE_FEMALE)
             g = 1; /* role forces female (valkyrie) */
-        if ((allowmask & ROLE_ALIGNMASK) == AM_LAWFUL)
+        if ((allowmask & roleAlignmentMask()) == AM_LAWFUL)
             a = 0; /* aligns[lawful] */
-        else if ((allowmask & ROLE_ALIGNMASK) == AM_NEUTRAL)
+        else if ((allowmask & roleAlignmentMask()) == AM_NEUTRAL)
             a = 1; /* aligns[neutral] */
-        else if ((allowmask & ROLE_ALIGNMASK) == AM_CHAOTIC)
+        else if ((allowmask & roleAlignmentMask()) == AM_CHAOTIC)
             a = 2; /* alings[chaotic] */
     }
     if (c >= 0) {
         allowmask = startingMaskForSpecies(c);
-        if ((allowmask & ROLE_ALIGNMASK) == AM_LAWFUL)
+        if ((allowmask & roleAlignmentMask()) == AM_LAWFUL)
             a = 0; /* aligns[lawful] */
-        else if ((allowmask & ROLE_ALIGNMASK) == AM_NEUTRAL)
+        else if ((allowmask & roleAlignmentMask()) == AM_NEUTRAL)
             a = 1; /* aligns[neutral] */
-        else if ((allowmask & ROLE_ALIGNMASK) == AM_CHAOTIC)
+        else if ((allowmask & roleAlignmentMask()) == AM_CHAOTIC)
             a = 2; /* alings[chaotic] */
         /* [c never forces gender] */
     }
@@ -1317,7 +1317,7 @@ winid where;
                 constrainer = "race";
         }
         if (f >= 0 && !constrainer
-            && (ROLE_ALIGNMASK & ~roleFilterMask()) == roleAlignmentMask(f)) {
+            && (roleAlignmentMask() & ~roleFilterMask()) == alignmentMask(f)) {
             /* if there is only one alignment choice available due to user
                options disallowing others, algn menu entry is disabled */
             constrainer = "filter";
@@ -1421,7 +1421,7 @@ role_init()
     if (!validalign(flags.initrole, flags.initrace, flags.initalign))
         /* Pick a random alignment */
         flags.initalign = randalign(flags.initrole, flags.initrace);
-    alignmnt = roleAlignmentType(flags.initalign);
+    alignmnt = alignmentType(flags.initalign);
 
     /* Initialize role and species */
     setYourCurrentRoleID(flags.initrole);

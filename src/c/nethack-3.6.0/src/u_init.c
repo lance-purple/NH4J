@@ -655,7 +655,7 @@ u_init()
     for (i = 0; i <= MAXSPELL; i++)
         spl_book[i].sp_id = NO_SPELL;
     setTimeToNextBlessing(300); /* no prayers just yet */
-    setCurrentAlignmentType(roleAlignmentType(flags.initalign));
+    setCurrentAlignmentType(alignmentType(flags.initalign));
     setOriginalAlignmentBase(currentAlignmentType());
     setCurrentAlignmentBase(currentAlignmentType());
 

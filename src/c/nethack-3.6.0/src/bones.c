@@ -479,7 +479,7 @@ make_bones:
     javaString gendercode = genderAbbreviation(flags.female);
     javaString speciescode = yourSpeciesFileCode();
     int alignmentIndex = (1 - currentAlignmentType());
-    javaString aligncode = roleAlignmentFileCode(alignmentIndex);
+    javaString aligncode = alignmentFileCode(alignmentIndex);
     Sprintf(newbones->who, "%s-%.3s-%.3s-%.3s-%.3s", plname, rolecode.c_str,
             speciescode.c_str, gendercode.c_str,
             aligncode.c_str);

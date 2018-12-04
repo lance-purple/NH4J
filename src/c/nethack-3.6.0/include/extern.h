@@ -2883,9 +2883,9 @@ E int FDECL(rnz, (int));
 /* ### role.c ### */
 
 E int FDECL(numberOfRoleAlignments, ());
-E javaString FDECL(roleAlignmentFileCode, (int));
-E int FDECL(roleAlignmentMask, (int));
-E int FDECL(roleAlignmentType, (int));
+E javaString FDECL(alignmentFileCode, (int));
+E int FDECL(alignmentMask, (int));
+E int FDECL(alignmentType, (int));
 
 E int FDECL(roleNone, ());
 E int FDECL(roleRandom, ());
@@ -3027,6 +3027,7 @@ E void FDECL(role_menu_extra, (int, winid));
 E void NDECL(role_init);
 E const char *FDECL(Hello, (struct monst *));
 E const char *NDECL(Goodbye);
+E int FDECL(roleAlignmentMask, ());
 E int FDECL(roleGenderMask, ());
 E int FDECL(roleSpeciesMask, ());
 

@@ -3015,18 +3015,18 @@ extern int numberOfRoleAlignments() {
     return javaGetInt(ROLE_ALIGNMENT_CLASS, "numberOfRoleAlignments");
 }
 
-extern javaString roleAlignmentFileCode(int i) {
+extern javaString alignmentFileCode(int i) {
   jstring j_str = javaGetStringFromInt(ROLE_ALIGNMENT_CLASS, "fileCode", i);
   const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
   javaString result = { j_str, c_str };
   return result;
 }
 
-extern int roleAlignmentMask(int i) {
+extern int alignmentMask(int i) {
     return javaGetIntFromInt(ROLE_ALIGNMENT_CLASS, "mask", i);
 }
 
-extern int roleAlignmentType(int i) {
+extern int alignmentType(int i) {
     return javaGetIntFromInt(ROLE_ALIGNMENT_CLASS, "type", i);
 }
 
@@ -3660,12 +3660,16 @@ extern javaString alignmentString(int index) {
   return result;
 }
 
-extern int roleSpeciesMask() {
-  return javaGetInt(ADVENTURER_SPECIES_CLASS, "roleMask");
+extern int roleAlignmentMask() {
+  return javaGetInt(ROLE_ALIGNMENT_CLASS, "roleMask");
 }
 
 extern int roleGenderMask() {
   return javaGetInt(GENDER_CLASS, "roleMask");
+}
+
+extern int roleSpeciesMask() {
+  return javaGetInt(ADVENTURER_SPECIES_CLASS, "roleMask");
 }
 
 /*hacklib.c*/
