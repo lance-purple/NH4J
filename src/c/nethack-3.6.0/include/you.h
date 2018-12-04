@@ -22,7 +22,6 @@ struct u_realtime {
     time_t endtime;
 };
 
-#define ROLE_GENDMASK 0xf000 /* allowable genders */
 #define ROLE_MALE 0x1000
 #define ROLE_FEMALE 0x2000
 #define ROLE_NEUTER 0x4000

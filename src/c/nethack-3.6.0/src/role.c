@@ -387,7 +387,7 @@ int rolenum, racenum, gendnum, alignnum;
             && !(allow & selfMaskForSpecies(racenum)))
             return FALSE;
         if (gendnum >= 0 && gendnum < adventurerGenders()
-            && !(allow & genderMask(gendnum) & ROLE_GENDMASK))
+            && !(allow & genderMask(gendnum) & roleGenderMask()))
             return FALSE;
         if (alignnum >= 0 && alignnum < numberOfRoleAlignments()
             && !(allow & roleAlignmentMask(alignnum) & ROLE_ALIGNMASK))
@@ -403,7 +403,7 @@ int rolenum, racenum, gendnum, alignnum;
                 && !(allow & selfMaskForSpecies(racenum)))
                 continue;
             if (gendnum >= 0 && gendnum < adventurerGenders()
-                && !(allow & genderMask(gendnum) & ROLE_GENDMASK))
+                && !(allow & genderMask(gendnum) & roleGenderMask()))
                 continue;
             if (alignnum >= 0 && alignnum < numberOfRoleAlignments()
                 && !(allow & roleAlignmentMask(alignnum) & ROLE_ALIGNMASK))
@@ -457,7 +457,7 @@ int rolenum, racenum, gendnum, alignnum;
             return FALSE;
 	}
         if (gendnum >= 0 && (gendnum < adventurerGenders())
-            && !(allow & genderMask(gendnum) & ROLE_GENDMASK)) {
+            && !(allow & genderMask(gendnum) & roleGenderMask())) {
             return FALSE;
 	}
         if (alignnum >= 0 && alignnum < numberOfRoleAlignments()
@@ -477,7 +477,7 @@ int rolenum, racenum, gendnum, alignnum;
                 continue;
 	    }
             if (gendnum >= 0 && gendnum < adventurerGenders()
-                && !(allow & genderMask(gendnum) & ROLE_GENDMASK)) {
+                && !(allow & genderMask(gendnum) & roleGenderMask())) {
                 continue;
 	    }
             if (alignnum >= 0 && alignnum < numberOfRoleAlignments()
@@ -1111,9 +1111,9 @@ winid where;
             c = 0; /* HUMAN_ID */
         else if (c >= 0 && !(allowmask & selfMaskForSpecies(c)))
             c = roleRandom();
-        if ((allowmask & ROLE_GENDMASK) == ROLE_MALE)
+        if ((allowmask & roleGenderMask()) == ROLE_MALE)
             g = 0; /* role forces male (hypothetical) */
-        else if ((allowmask & ROLE_GENDMASK) == ROLE_FEMALE)
+        else if ((allowmask & roleGenderMask()) == ROLE_FEMALE)
             g = 1; /* role forces female (valkyrie) */
         if ((allowmask & ROLE_ALIGNMASK) == AM_LAWFUL)
             a = 0; /* aligns[lawful] */

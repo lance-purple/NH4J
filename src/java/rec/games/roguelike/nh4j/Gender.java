@@ -121,6 +121,11 @@ public enum Gender {
 		return Gender.withID(genderID).mask();
 	}
 	
-	public static final long MASK = 0xf000;
+	public static final int MASK = 0xf000;
+	
+	public static int roleMask()
+	{
+		return MASK;
+	}
 
 }
