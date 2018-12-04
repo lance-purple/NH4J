@@ -29,7 +29,7 @@ public enum RoleAlignment {
 	
 	public static int numberOfRoleAlignments()
 	{
-		return values().length;
+		return values().length - 1; /* Evil should not normally be counted */
 	}
 	
 
@@ -56,5 +56,23 @@ public enum RoleAlignment {
 	public static int mask(int type)
 	{
 		return roleAlignment(type).mask;
+	}
+	
+	public static String alignString(int index)
+	{
+		if ((index >= 0) && (index < numberOfRoleAlignments())) {
+			return roleAlignment(index).adjective;
+		}
+		else if (AdventurerRole.ROLE_RANDOM == index)
+		{
+		    return "random";	
+		}
+		else if (AdventurerRole.ROLE_NONE == index)
+		{
+			return "(none)";
+		}
+		else {
+			throw new IllegalArgumentException("INVALID " + Integer.toString(index));
+		}
 	}
 }

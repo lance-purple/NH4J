@@ -3653,5 +3653,11 @@ extern int SPECIAL_ITEM_QUEST_ARTIFACT() {
   return javaGetInt(SPECIAL_ITEM_CLASS, "QUEST_ARTIFACT");
 }
 
+extern javaString alignString(int index) {
+  jstring j_str = javaGetStringFromInt(ROLE_ALIGNMENT_CLASS, "alignString", index);
+  const char* c_str = (*jni_env)->GetStringUTFChars(jni_env, j_str, NULL);
+  javaString result = { j_str, c_str };
+  return result;
+}
 
 /*hacklib.c*/

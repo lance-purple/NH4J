@@ -4473,18 +4473,6 @@ boolean setinitial, setfromfile;
     return TRUE;
 }
 
-const char* rolestring(int val)
-{
-    if (val >= 0) {
-        return aligns[val];
-    }
-    else if (val == roleRandom()) {
-        return "random";
-    } else {
-        return "(none)";
-    }
-}
-
 /* This is ugly. We have all the option names in the compopt[] array,
    but we need to look at each option individually to get the value. */
 STATIC_OVL const char *
@@ -4521,8 +4509,11 @@ char *buf;
                                 : iflags.wc_align_status == ALIGN_RIGHT
                                       ? "right"
                                       : defopt);
-    else if (!strcmp(optname, "align"))
-        Sprintf(buf, "%s", rolestring(flags.initalign));
+    else if (!strcmp(optname, "align")) {
+	javaString alignStr = alignString(flags.initalign);
+        Sprintf(buf, "%s", alignStr.c_str);
+	releaseJavaString(alignStr);
+    }
 #ifdef WIN32
     else if (!strcmp(optname, "altkeyhandler"))
         Sprintf(buf, "%s",
