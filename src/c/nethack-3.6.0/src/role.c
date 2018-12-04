@@ -768,11 +768,11 @@ int rolenum;
 
     if (validrole(rolenum)) {
         long mask = startingMaskForRole(rolenum);	     
-        if (mask & ROLE_MALE)
+        if (mask & maleMask())
             ++gendcount;
-        if (mask & ROLE_FEMALE)
+        if (mask & femaleMask())
             ++gendcount;
-        if (mask & ROLE_NEUTER)
+        if (mask & neuterMask())
             ++gendcount;
     }
     return gendcount;
@@ -1111,9 +1111,9 @@ winid where;
             c = 0; /* HUMAN_ID */
         else if (c >= 0 && !(allowmask & selfMaskForSpecies(c)))
             c = roleRandom();
-        if ((allowmask & roleGenderMask()) == ROLE_MALE)
+        if ((allowmask & roleGenderMask()) == maleMask())
             g = 0; /* role forces male (hypothetical) */
-        else if ((allowmask & roleGenderMask()) == ROLE_FEMALE)
+        else if ((allowmask & roleGenderMask()) == femaleMask())
             g = 1; /* role forces female (valkyrie) */
         if ((allowmask & roleAlignmentMask()) == AM_LAWFUL)
             a = 0; /* aligns[lawful] */
@@ -1274,9 +1274,9 @@ winid where;
         g = roleNone();
         if (r >= 0) {
             allowmask = startingGenderMaskForRole(r);
-            if (allowmask == ROLE_MALE)
+            if (allowmask == maleMask())
                 g = 0; /* male */
-            else if (allowmask == ROLE_FEMALE)
+            else if (allowmask == femaleMask())
                 g = 1; /* female */
             if (g >= 0) {
                 constrainer = "role";

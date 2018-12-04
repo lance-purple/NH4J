@@ -22,10 +22,6 @@ struct u_realtime {
     time_t endtime;
 };
 
-#define ROLE_MALE 0x1000
-#define ROLE_FEMALE 0x2000
-#define ROLE_NEUTER 0x4000
-
 #define ROLE_LAWFUL AM_LAWFUL
 #define ROLE_NEUTRAL AM_NEUTRAL
 #define ROLE_CHAOTIC AM_CHAOTIC

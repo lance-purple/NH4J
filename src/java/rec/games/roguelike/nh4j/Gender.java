@@ -127,5 +127,21 @@ public enum Gender {
 	{
 		return MASK;
 	}
+	
+	public static final int maleMask()
+	{
+		return MALE.mask;
+	}
+
+	public static final int femaleMask()
+	{
+		return FEMALE.mask;
+	}
+	
+	public static final int neuterMask()
+	{
+		return NEUTER.mask;
+	}
+	
 
 }

@@ -3031,6 +3031,10 @@ E int FDECL(roleAlignmentMask, ());
 E int FDECL(roleGenderMask, ());
 E int FDECL(roleSpeciesMask, ());
 
+E int FDECL(maleMask, ());
+E int FDECL(femaleMask, ());
+E int FDECL(neuterMask, ());
+
 /* ### rumors.c ### */
 
 E char *FDECL(getrumor, (int, char *, BOOLEAN_P));

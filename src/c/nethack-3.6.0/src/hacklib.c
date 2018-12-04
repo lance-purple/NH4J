@@ -3672,4 +3672,16 @@ extern int roleSpeciesMask() {
   return javaGetInt(ADVENTURER_SPECIES_CLASS, "roleMask");
 }
 
+extern int maleMask() {
+  return javaGetInt(GENDER_CLASS, "maleMask");
+}
+
+extern int femaleMask() {
+  return javaGetInt(GENDER_CLASS, "femaleMask");
+}
+
+extern int neuterMask() {
+  return javaGetInt(GENDER_CLASS, "neuterMask");
+}
+
 /*hacklib.c*/
