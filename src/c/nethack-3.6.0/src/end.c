@@ -956,7 +956,7 @@ int how;
        topten figure it out separately and possibly getting different
        time or even day if player is slow responding to --More-- */
     endtime = getnow();
-    urealtime.realtime += (long) (endtime - urealtime.restored);
+    setElapsedPlayingTimeSeconds(elapsedPlayingTimeSeconds() + (long) (endtime - urealtime.restored));
 
     /* Sometimes you die on the first move.  Life's not fair.
      * On those rare occasions you get hosed immediately, go out

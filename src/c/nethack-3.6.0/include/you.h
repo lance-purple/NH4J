@@ -16,8 +16,7 @@
 
 
 struct u_realtime {
-    long
-        realtime; /* actual playing time up until the last restore, seconds */
+    /* long realtime;  actual playing time up until the last restore, seconds */
     time_t restored; /* time the game was started or restored */
     time_t endtime;
 };

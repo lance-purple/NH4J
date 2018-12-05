@@ -3696,4 +3696,12 @@ extern int chaoticMask() {
   return javaGetInt(ROLE_ALIGNMENT_CLASS, "chaoticMask");
 }
 
+extern long elapsedPlayingTimeSeconds() {
+  return javaGetLong(CLOCK_CLASS, "elapsedPlayingTimeSeconds");
+}
+
+extern void setElapsedPlayingTimeSeconds(long seconds) {
+  return javaSetLong(CLOCK_CLASS, "setElapsedPlayingTimeSeconds", seconds);
+}
+
 /*hacklib.c*/

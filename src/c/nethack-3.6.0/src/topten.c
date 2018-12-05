@@ -332,7 +332,7 @@ struct toptenentry *tt;
     Fprintf(rfile, "%cconduct=0x%lx%cturns=%ld%cachieve=0x%lx", XLOG_SEP,
             encodeconduct(), XLOG_SEP, moves, XLOG_SEP, encodeachieve());
     Fprintf(rfile, "%crealtime=%ld%cstarttime=%ld%cendtime=%ld", XLOG_SEP,
-            (long) urealtime.realtime, XLOG_SEP, (long) ubirthday, XLOG_SEP,
+            elapsedPlayingTimeSeconds(), XLOG_SEP, (long) ubirthday, XLOG_SEP,
             (long) urealtime.endtime);
 
     javaString gendercode = genderAbbreviation(flags.initgend);

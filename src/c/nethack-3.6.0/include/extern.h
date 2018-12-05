@@ -16,6 +16,7 @@ E JavaVM* java_vm;
 #define ACHIEVEMENT_TYPE_CLASS "rec/games/roguelike/nh4j/AchievementType"
 #define ADVENTURER_ROLE_CLASS "rec/games/roguelike/nh4j/AdventurerRole"
 #define ADVENTURER_SPECIES_CLASS "rec/games/roguelike/nh4j/AdventurerSpecies"
+#define CLOCK_CLASS "rec/games/roguelike/nh4j/Clock"
 #define CONTEXT_CLASS "rec/games/roguelike/nh4j/Context"
 #define EXPERIENCE_CLASS "rec/games/roguelike/nh4j/Experience"
 #define GENDER_CLASS "rec/games/roguelike/nh4j/Gender"
@@ -3812,6 +3813,9 @@ E int NDECL(SPECIAL_ITEM_BELL);
 E int NDECL(SPECIAL_ITEM_BOOK);
 E int NDECL(SPECIAL_ITEM_CANDELABRUM);
 E int NDECL(SPECIAL_ITEM_QUEST_ARTIFACT);
+
+E long FDECL(elapsedPlayingTimeSeconds, ());
+E void FDECL(setElapsedPlayingTimeSeconds, (long));
 
 /*hacklib.c*/
 

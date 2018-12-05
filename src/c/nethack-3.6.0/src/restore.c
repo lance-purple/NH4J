@@ -523,7 +523,7 @@ register int fd;
     return value;
 }
 
-static int read_long(fd)
+static long read_long(fd)
 register int fd;
 {
     long value;
@@ -823,7 +823,7 @@ unsigned int *stuckid, *steedid;
     foo = time_from_yyyymmddhhmmss(timebuf);
 
     ReadTimebuf(ubirthday);
-    mread(fd, &urealtime.realtime, sizeof(urealtime.realtime));
+    setElapsedPlayingTimeSeconds(read_long(fd));
     ReadTimebuf(urealtime.restored);
 #if defined(BSD) && !defined(POSIX_TYPES)
     (void) time((long *) &urealtime.restored);

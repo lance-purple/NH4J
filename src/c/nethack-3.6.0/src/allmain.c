@@ -600,7 +600,7 @@ newgame()
 #endif
     program_state.something_worth_saving++; /* useful data now exists */
 
-    urealtime.realtime = 0L;
+    setElapsedPlayingTimeSeconds(0L);
 #if defined(BSD) && !defined(POSIX_TYPES)
     (void) time((long *) &urealtime.restored);
 #else
