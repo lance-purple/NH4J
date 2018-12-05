@@ -22,11 +22,6 @@ struct u_realtime {
     time_t endtime;
 };
 
-#define ROLE_LAWFUL AM_LAWFUL
-#define ROLE_NEUTRAL AM_NEUTRAL
-#define ROLE_CHAOTIC AM_CHAOTIC
-
-
 /*** Information about the player ***/
 struct you {
 

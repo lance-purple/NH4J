@@ -3684,4 +3684,16 @@ extern int neuterMask() {
   return javaGetInt(GENDER_CLASS, "neuterMask");
 }
 
+extern int lawfulMask() {
+  return javaGetInt(ROLE_ALIGNMENT_CLASS, "lawfulMask");
+}
+
+extern int neutralMask() {
+  return javaGetInt(ROLE_ALIGNMENT_CLASS, "neutralMask");
+}
+
+extern int chaoticMask() {
+  return javaGetInt(ROLE_ALIGNMENT_CLASS, "chaoticMask");
+}
+
 /*hacklib.c*/

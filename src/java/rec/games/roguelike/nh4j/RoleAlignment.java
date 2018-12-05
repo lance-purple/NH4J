@@ -63,6 +63,21 @@ public enum RoleAlignment {
 		return AM.MASK;
 	}
 	
+	public static final int lawfulMask()
+	{
+		return AM.LAWFUL;
+	}
+
+	public static final int neutralMask()
+	{
+		return AM.NEUTRAL;
+	}
+
+	public static final int chaoticMask()
+	{
+		return AM.CHAOTIC;
+	}
+	
 	public static String alignmentString(int index)
 	{
 		if ((index >= 0) && (index < numberOfRoleAlignments())) {
