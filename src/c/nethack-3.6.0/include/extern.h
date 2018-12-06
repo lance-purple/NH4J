@@ -3817,6 +3817,13 @@ E int NDECL(SPECIAL_ITEM_QUEST_ARTIFACT);
 E long FDECL(elapsedPlayingTimeSeconds, ());
 E void FDECL(setElapsedPlayingTimeSeconds, (long));
 
+E long FDECL(epochSeconds, ());
+E long FDECL(epochSecondsOfMostRecentRestore, ());
+E void FDECL(setEpochSecondsOfMostRecentRestore, (long));
+
+E long FDECL(epochSecondsOfGameEnd, ());
+E void FDECL(setEpochSecondsOfGameEnd, (long));
+
 /*hacklib.c*/
 
 #endif /* !MAKEDEFS_C && !LEV_LEX_C */

@@ -601,11 +601,8 @@ newgame()
     program_state.something_worth_saving++; /* useful data now exists */
 
     setElapsedPlayingTimeSeconds(0L);
-#if defined(BSD) && !defined(POSIX_TYPES)
-    (void) time((long *) &urealtime.restored);
-#else
-    (void) time(&urealtime.restored);
-#endif
+
+    setEpochSecondsOfMostRecentRestore(epochSeconds());
 
     /* Success! */
     welcome(TRUE);

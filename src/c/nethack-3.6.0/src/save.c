@@ -339,7 +339,7 @@ register int fd, mode;
 #ifdef SYSFLAGS
     bwrite(fd, (genericptr_t) &sysflags, sizeof(struct sysflag));
 #endif
-    setElapsedPlayingTimeSeconds(elapsedPlayingTimeSeconds() + (long) (getnow() - urealtime.restored));
+    setElapsedPlayingTimeSeconds(elapsedPlayingTimeSeconds() + (long) (getnow() - epochSecondsOfMostRecentRestore()));
     bwrite(fd, (genericptr_t) &u, sizeof(struct you));
 
     /* save former 'you' fields that are now stored in Java */
@@ -557,7 +557,7 @@ register int fd, mode;
 
     bwrite(fd, yyyymmddhhmmss(ubirthday), 14);
     write_long(fd, elapsedPlayingTimeSeconds());
-    bwrite(fd, yyyymmddhhmmss(urealtime.restored), 14);
+    write_long(fd, epochSecondsOfMostRecentRestore());
     save_killers(fd, mode);
 
     /* must come before migrating_objs and migrating_mons are freed */

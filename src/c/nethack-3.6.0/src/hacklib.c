@@ -3704,4 +3704,24 @@ extern void setElapsedPlayingTimeSeconds(long seconds) {
   return javaSetLong(CLOCK_CLASS, "setElapsedPlayingTimeSeconds", seconds);
 }
 
+extern long epochSeconds() {
+  return javaGetLong(CLOCK_CLASS, "epochSeconds");
+}
+
+extern long epochSecondsOfMostRecentRestore() {
+  return javaGetLong(CLOCK_CLASS, "epochSecondsOfMostRecentRestore");
+}
+
+extern void setEpochSecondsOfMostRecentRestore(long epochSeconds) {
+  return javaSetLong(CLOCK_CLASS, "setEpochSecondsOfMostRecentRestore", epochSeconds);
+}
+
+extern long epochSecondsOfGameEnd() {
+  return javaGetLong(CLOCK_CLASS, "epochSecondsOfGameEnd");
+}
+
+extern void setEpochSecondsOfGameEnd(long epochSeconds) {
+  return javaSetLong(CLOCK_CLASS, "setEpochSecondsOfGameEnd", epochSeconds);
+}
+
 /*hacklib.c*/

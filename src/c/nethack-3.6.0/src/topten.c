@@ -333,7 +333,7 @@ struct toptenentry *tt;
             encodeconduct(), XLOG_SEP, moves, XLOG_SEP, encodeachieve());
     Fprintf(rfile, "%crealtime=%ld%cstarttime=%ld%cendtime=%ld", XLOG_SEP,
             elapsedPlayingTimeSeconds(), XLOG_SEP, (long) ubirthday, XLOG_SEP,
-            (long) urealtime.endtime);
+            epochSecondsOfGameEnd());
 
     javaString gendercode = genderAbbreviation(flags.initgend);
     int alignmentIndex = (1 - originalAlignmentBase());
@@ -539,7 +539,7 @@ time_t when;
     t0->birthdate = yyyymmdd(ubirthday);
     t0->deathdate = yyyymmdd(when);
     t0->tt_next = 0;
-    urealtime.endtime = when;
+    setEpochSecondsOfGameEnd((long) when);
 #ifdef UPDATE_RECORD_IN_PLACE
     t0->fpos = -1L;
 #endif

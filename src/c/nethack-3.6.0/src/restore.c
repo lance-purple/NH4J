@@ -824,12 +824,7 @@ unsigned int *stuckid, *steedid;
 
     ReadTimebuf(ubirthday);
     setElapsedPlayingTimeSeconds(read_long(fd));
-    ReadTimebuf(urealtime.restored);
-#if defined(BSD) && !defined(POSIX_TYPES)
-    (void) time((long *) &urealtime.restored);
-#else
-    (void) time(&urealtime.restored);
-#endif
+    setEpochSecondsOfMostRecentRestore(read_long(fd));
 
     set_uasmon();
 #ifdef CLIPPING
