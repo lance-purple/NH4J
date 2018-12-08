@@ -7,9 +7,7 @@
 #define MAKEDEFS_C /* use to conditionally include file sections */
 
 #include "config.h"
-#ifdef MONITOR_HEAP
-#undef free /* makedefs doesn't use the alloc and free in src/alloc.c */
-#endif
+
 #include "permonst.h"
 #include "objclass.h"
 #include "monsym.h"
@@ -23,45 +21,27 @@
 #include "dlb.h"
 
 /* version information */
-#ifdef SHORT_FILENAMES
-#include "patchlev.h"
-#else
 #include "patchlevel.h"
-#endif
 
 #include <ctype.h>
-#ifdef MAC
-#if defined(__SC__) || defined(__MRC__) /* MPW compilers */
-#define MPWTOOL
-#include <CursorCtl.h>
-#include <string.h>
-#else /* MAC without MPWTOOL */
-#define MACsansMPWTOOL
-#endif
-#endif /* MAC */
 
-#ifndef MPWTOOL
 #define SpinCursor(x)
-#endif
 
 #define Fprintf (void) fprintf
 #define Fclose (void) fclose
 #define Unlink (void) unlink
-#if !defined(AMIGA) || defined(AZTEC_C)
 #define rewind(fp) fseek((fp), 0L, SEEK_SET) /* guarantee a return value */
-#endif
 
-#if defined(UNIX) && !defined(LINT) && !defined(GCC_WARN)
 static const char SCCS_Id[] = "@(#)makedefs.c\t3.5\t2004/02/01";
-#endif
+
 
 /* names of files to be generated */
 #define DATE_FILE "date.h"
 #define MONST_FILE "pm.h"
 #define ONAME_FILE "onames.h"
-#ifndef OPTIONS_FILE
+
 #define OPTIONS_FILE "options"
-#endif
+
 #define ORACLE_FILE "oracles"
 #define DATA_FILE "data"
 #define RUMOR_FILE "rumors"
@@ -73,41 +53,12 @@ static const char SCCS_Id[] = "@(#)makedefs.c\t3.5\t2004/02/01";
 #define VIS_TAB_H "vis_tab.h"
 #define VIS_TAB_C "vis_tab.c"
 /* locations for those files */
-#ifdef AMIGA
-#define FILE_PREFIX
-#define INCLUDE_TEMPLATE "NH:include/t.%s"
-#define SOURCE_TEMPLATE "NH:src/%s"
-#define DGN_TEMPLATE "NH:dat/%s" /* where dungeon.pdf file goes */
-#define DATA_TEMPLATE "NH:slib/%s"
-#define DATA_IN_TEMPLATE "NH:dat/%s"
-#else /* not AMIGA */
-#if defined(MAC) && !defined(__MACH__)
-/* MacOS 9 or earlier */
-#define INCLUDE_TEMPLATE ":include:%s"
-#define SOURCE_TEMPLATE ":src:%s"
-#define DGN_TEMPLATE ":dat:%s" /* where dungeon.pdf file goes */
-#if __SC__ || __MRC__
-#define DATA_TEMPLATE ":Dungeon:%s"
-#else
-#define DATA_TEMPLATE ":lib:%s"
-#endif /* __SC__ || __MRC__ */
-#define DATA_IN_TEMPLATE ":dat:%s"
-#else /* neither AMIGA nor MAC */
-#ifdef OS2
-#define INCLUDE_TEMPLATE "..\\include\\%s"
-#define SOURCE_TEMPLATE "..\\src\\%s"
-#define DGN_TEMPLATE "..\\dat\\%s" /* where dungeon.pdf file goes */
-#define DATA_TEMPLATE "..\\dat\\%s"
-#define DATA_IN_TEMPLATE "..\\dat\\%s"
-#else /* not AMIGA, MAC, or OS2 */
+
 #define INCLUDE_TEMPLATE "../include/%s"
 #define SOURCE_TEMPLATE "../src/%s"
 #define DGN_TEMPLATE "../dat/%s" /* where dungeon.pdf file goes */
 #define DATA_TEMPLATE "../dat/%s"
 #define DATA_IN_TEMPLATE "../dat/%s"
-#endif /* else !OS2 */
-#endif /* else !MAC */
-#endif /* else !AMIGA */
 
 static const char
     *Dont_Edit_Code =
@@ -129,35 +80,18 @@ static struct version_info version;
 #define FAR_OFF_TABLE_STRING "0xff" /* for the far table */
 
 #define sign(z) ((z) < 0 ? -1 : ((z) ? 1 : 0))
-#ifdef VISION_TABLES
-static char xclear[MAX_ROW][MAX_COL];
-#endif
+
 /*-end of vision defs-*/
 
 static char filename[600];
 
-#ifdef FILE_PREFIX
-/* if defined, a first argument not starting with - is
- * taken as a text string to be prepended to any
- * output filename generated */
-char *file_prefix = "";
-#endif
-
-#ifdef MACsansMPWTOOL
-int FDECL(main, (void));
-#else
 int FDECL(main, (int, char **));
-#endif
 void FDECL(do_makedefs, (char *));
 void NDECL(do_objs);
 void NDECL(do_data);
 void NDECL(do_dungeon);
 void NDECL(do_date);
 void NDECL(do_options);
-#if 0
-void NDECL(do_monstr);
-void NDECL(do_permonst);
-#endif
 void NDECL(do_questtxt);
 void NDECL(do_rumors);
 void NDECL(do_oracles);
@@ -177,9 +111,6 @@ static void FDECL(do_rnd_access_file, (const char *));
 static boolean FDECL(d_filter, (char *));
 static boolean FDECL(h_filter, (char *));
 static boolean FDECL(ranged_attk, (struct permonst *));
-#if 0
-static int FDECL(mstrength, (struct permonst *));
-#endif
 static void NDECL(build_savebones_compat_string);
 static void FDECL(do_ext_makedefs, (int, char **));
 static void NDECL(windowing_sanity);
@@ -196,14 +127,6 @@ static void FDECL(do_qt_text, (char *));
 static void NDECL(adjust_qt_hdrs);
 static void NDECL(put_qt_hdrs);
 
-#ifdef VISION_TABLES
-static void NDECL(H_close_gen);
-static void NDECL(H_far_gen);
-static void NDECL(C_close_gen);
-static void NDECL(C_far_gen);
-static int FDECL(clear_path, (int, int, int, int));
-#endif
-
 static char *FDECL(fgetline, (FILE*));
 static char *FDECL(tmpdup, (const char *));
 static char *FDECL(limit, (char *, int));
@@ -212,78 +135,13 @@ static char *FDECL(eos, (char *));
 /* input, output, tmp */
 static FILE *ifp, *ofp, *tfp;
 
-#if defined(__BORLANDC__) && !defined(_WIN32)
-extern unsigned _stklen = STKSIZ;
-#endif
-
-#ifdef MACsansMPWTOOL
-int
-main(void)
-{
-    const char *def_options = "odemvpqrshz";
-    char buf[100];
-    int len;
-
-    printf("Enter options to run: [%s] ", def_options);
-    fflush(stdout);
-    fgets(buf, 100, stdin);
-    len = strlen(buf);
-    if (len <= 1)
-        Strcpy(buf, def_options);
-    else
-        buf[len - 1] = 0; /* remove return */
-
-    if (buf[0] == '-' && buf[1] == '-') {
-#if 0
-        split up buf into words
-        do_ext_makedefs(fakeargc, fakeargv);
-#else
-        printf("extended makedefs not implemented for Mac OS9\n");
-        exit(EXIT_FAILURE);
-#endif
-    }
-
-    do_makedefs(buf);
-    exit(EXIT_SUCCESS);
-    return 0;
-}
-
-#else /* ! MAC */
-
 int
 main(argc, argv)
 int argc;
 char *argv[];
 {
-    if ((argc != 2)
-#ifdef FILE_PREFIX
-        && (argc != 3)
-#endif
-        && !(argv[1][0] == '-' && argv[1][1] == '-')) {
-        Fprintf(stderr, "Bad arg count (%d).\n", argc - 1);
-        (void) fflush(stderr);
-        return 1;
-    }
-
-#ifdef FILE_PREFIX
-    if (argc >= 2 && argv[1][0] != '-') {
-        file_prefix = argv[1];
-        argc--;
-        argv++;
-    }
-#endif
-
-    if (argv[1][0] == '-' && argv[1][1] == '-') {
-        do_ext_makedefs(argc, argv);
-    } else {
-        do_makedefs(&argv[1][1]);
-    }
-    exit(EXIT_SUCCESS);
-    /*NOTREACHED*/
-    return 0;
+    do_makedefs(&argv[1][1]);
 }
-
-#endif
 
 static void
 link_sanity_check()
@@ -299,23 +157,12 @@ void
 do_makedefs(options)
 char *options;
 {
-    boolean more_than_one;
-
     link_sanity_check();
 
     /* construct the current version number */
     make_version();
 
-    more_than_one = strlen(options) > 1;
-    while (*options) {
-        if (more_than_one)
-            Fprintf(stderr, "makedefs -%c\n", *options);
-
-        switch (*options) {
-        case 'o':
-        case 'O':
-            do_objs();
-            break;
+    switch (*options) {
         case 'd':
         case 'D':
             do_data();
@@ -324,23 +171,11 @@ char *options;
         case 'E':
             do_dungeon();
             break;
-#if 0
-        case 'm':
-        case 'M':
-            do_monstr();
-            break;
-#endif
         case 'v':
         case 'V':
             do_date();
             do_options();
             break;
-#if 0
-        case 'p':
-        case 'P':
-            do_permonst();
-            break;
-#endif
         case 'q':
         case 'Q':
             do_questtxt();
@@ -368,11 +203,7 @@ char *options;
             Fprintf(stderr, "Unknown option '%c'.\n", *options);
             (void) fflush(stderr);
             exit(EXIT_FAILURE);
-        }
-        options++;
     }
-    if (more_than_one)
-        Fprintf(stderr, "Completed.\n"); /* feedback */
 }
 
 static char namebuf[1000];
@@ -422,160 +253,8 @@ struct grep_var {
 #include "mdgrep.h"
 
 static void NDECL(do_grep);
-static void NDECL(do_grep_showvars);
 static struct grep_var *FDECL(grepsearch, (char *));
 static int grep_trace = 0;
-
-static void
-do_ext_makedefs(int argc, char **argv)
-{
-    int todo = 0;
-
-    link_sanity_check();
-
-    argc--;
-    argv++; /* skip program name */
-
-    while (argc) {
-        if (argv[0][0] != '-')
-            break;
-        if (argv[0][1] != '-') {
-            Fprintf(stderr, "Can't mix - and -- options.\n");
-            exit(EXIT_FAILURE);
-        }
-#define IS_OPTION(str) if (!strcmp(&argv[0][2], str))
-#define CONTINUE    \
-    argv++, argc--; \
-    continue
-#define CONSUME                              \
-    argv++, argc--;                          \
-    if (argc == 0) {                         \
-        Fprintf(stderr, "missing option\n"); \
-        exit(EXIT_FAILURE);                  \
-    }
-        IS_OPTION("svs")
-        {
-            /* short version string for packaging - note
-             * no \n */
-            char buf[100];
-            char delim[10];
-            argv++; /* not CONSUME */
-            delim[0] = '\0';
-            if (argv[0])
-                strcpy(delim, argv[0]);
-            Fprintf(stdout, "%s", version_string(buf, delim));
-            exit(EXIT_SUCCESS);
-        }
-        IS_OPTION("debug")
-        {
-            debug = TRUE;
-            CONTINUE;
-        }
-        IS_OPTION("make")
-        {
-            CONSUME;
-            do_makedefs(argv[0]);
-            exit(EXIT_SUCCESS);
-        }
-        IS_OPTION("input")
-        {
-            CONSUME;
-            if (!strcmp(argv[0], "-")) {
-                inputfp = stdin;
-            } else {
-                inputfp = fopen(argv[0], RDTMODE);
-                if (!inputfp) {
-                    Fprintf(stderr, "Can't open '%s'.\n", argv[0]);
-                    exit(EXIT_FAILURE);
-                }
-            }
-            CONTINUE;
-        }
-        IS_OPTION("output")
-        {
-            CONSUME;
-            if (!strcmp(argv[0], "-")) {
-                outputfp = stdout;
-            } else {
-                outputfp = fopen(argv[0], WRTMODE);
-                if (!outputfp) {
-                    Fprintf(stderr, "Can't open '%s'.\n", argv[0]);
-                    exit(EXIT_FAILURE);
-                }
-            }
-            CONTINUE;
-        }
-        IS_OPTION("grep")
-        {
-            if (todo) {
-                Fprintf(stderr, "Can't do grep and something else.\n");
-                exit(EXIT_FAILURE);
-            }
-            todo = TODO_GREP;
-            CONTINUE;
-        }
-        IS_OPTION("grep-showvars")
-        {
-            do_grep_showvars();
-            exit(EXIT_SUCCESS);
-        }
-        IS_OPTION("grep-trace")
-        {
-            grep_trace = 1;
-            CONTINUE;
-        }
-        IS_OPTION("grep-define")
-        {
-            struct grep_var *p;
-            CONSUME;
-            p = grepsearch(argv[0]);
-            if (p) {
-                p->is_defined = 1;
-            } else {
-                Fprintf(stderr, "Unknown symbol '%s'\n", argv[0]);
-                exit(EXIT_FAILURE);
-            }
-            CONTINUE;
-        }
-        IS_OPTION("grep-undef")
-        {
-            struct grep_var *p;
-            CONSUME;
-            p = grepsearch(argv[0]);
-            if (p) {
-                p->is_defined = 0;
-            } else {
-                Fprintf(stderr, "Unknown symbol '%s'\n", argv[0]);
-                exit(EXIT_FAILURE);
-            }
-            CONTINUE;
-        }
-#ifdef notyet
-        IS_OPTION("help")
-        {
-        }
-#endif
-#undef IS_OPTION
-        Fprintf(stderr, "Unknown option '%s'.\n", argv[0]);
-        exit(EXIT_FAILURE);
-    }
-    if (argc) {
-        Fprintf(stderr, "unexpected argument '%s'.\n", argv[0]);
-        exit(EXIT_FAILURE);
-    }
-
-    switch (todo) {
-    default:
-        Fprintf(stderr, "Confused about what to do?\n");
-        exit(EXIT_FAILURE);
-    case 0:
-        Fprintf(stderr, "Nothing to do?\n");
-        exit(EXIT_FAILURE);
-    case TODO_GREP:
-        do_grep();
-        break;
-    }
-}
 
 /*
  Filtering syntax:
@@ -610,9 +289,6 @@ do_ext_makedefs(int argc, char **argv)
 */
 #define GREP_MAGIC '^'
 #define GREP_STACK_SIZE 100
-#ifdef notyet
-static int grep_rewrite = 0; /* need to (possibly) rewrite lines */
-#endif
 static int grep_writing = 1; /* need to copy lines to output */
 static int grep_errors = 0;
 static int grep_sp = 0;
@@ -623,14 +299,6 @@ static int grep_sp = 0;
 static int grep_stack[GREP_STACK_SIZE] = { ST_LD(1, 0) };
 static int grep_lineno = 0;
 
-static void
-do_grep_showvars()
-{
-    int x;
-    for (x = 0; x < SIZE(grep_vars) - 1; x++) {
-        printf("%d\t%s\n", grep_vars[x].is_defined, grep_vars[x].name);
-    }
-}
 
 static struct grep_var *
 grepsearch(name)
@@ -697,13 +365,8 @@ char *buf;
 {
     int isif = 1;
     char *buf0 = buf;
-#if 1
     if (isspace(buf[0]))
         return &buf[-1]; /* XXX see docs above */
-#else
-    while (buf[0] && isspace(buf[0]))
-        buf++;
-#endif
     switch (buf[0]) {
     case '#': /* comment */
         break;
@@ -744,9 +407,6 @@ char *buf;
         grep_writing = ST_OPP(grep_stack[grep_sp]);
         grep_stack[grep_sp] |= ST_ELSE;
         break;
-#if defined(notyet)
-    case '(': /* start of expression */
-#endif
     case GREP_MAGIC: /* ^^ -> ^ */
         return buf0;
     default: {
@@ -764,16 +424,6 @@ char *buf;
     }
     return NULL;
 }
-
-#ifdef notyet
-static void
-do_grep_rewrite(buf)
-char *buf;
-{
-    /* no language features use this yet */
-    return;
-}
-#endif
 
 static void grep0(FILE *, FILE *);
 
@@ -821,10 +471,6 @@ FILE *outputfp0;
         } else {
             buf1 = buf;
         }
-#ifdef notyet
-        if (grep_rewrite)
-            do_grep_rewrite(buf1);
-#endif
         if (grep_writing)
             Fprintf(outputfp0, "%s\n", buf1);
     }
@@ -893,7 +539,7 @@ unsigned long old_rumor_offset;
 
     /* copy the rumors */
     while ((line = fgetline(ifp)) != 0) {
-#ifdef PAD_RUMORS_TO
+
         /* rumor selection is accomplished by seeking to a random
            position in the file, advancing to newline, and taking
            the next line; therefore, rumors which follow long-line
@@ -912,12 +558,8 @@ unsigned long old_rumor_offset;
             *base++ = '\n';
             *base = '\0';
         }
-#endif
+
         (*rumor_count)++;
-#if 0
-        /*[if we forced binary output, this would be sufficient]*/
-        *rumor_size += strlen(line); /* includes newline */
-#endif
         (void) fputs(xcrypt(line), tfp);
         free(line);
     }
@@ -947,9 +589,6 @@ const char *fname;
         exit(EXIT_FAILURE);
     }
     filename[0] = '\0';
-#ifdef FILE_PREFIX
-    Strcat(filename, file_prefix);
-#endif
     Sprintf(eos(filename), DATA_TEMPLATE, fname);
     if (!(ofp = fopen(filename, WRTMODE))) {
         perror(filename);
@@ -986,9 +625,6 @@ do_rumors()
 
     Sprintf(tempfile, DATA_TEMPLATE, "rumors.tmp");
     filename[0] = '\0';
-#ifdef FILE_PREFIX
-    Strcat(filename, file_prefix);
-#endif
     Sprintf(eos(filename), DATA_TEMPLATE, RUMOR_FILE);
     if (!(ofp = fopen(filename, WRTMODE))) {
         perror(filename);
@@ -1107,29 +743,18 @@ make_version()
     version.feature_set = (unsigned long) (0L
 /* levels and/or topology (0..4) */
 /* monsters (5..9) */
-#ifdef MAIL
-                                           | (1L << 6)
-#endif
+
 /* objects (10..14) */
 /* flag bits and/or other global variables (15..26) */
-#ifdef TEXTCOLOR
+
                                            | (1L << 17)
-#endif
-#ifdef INSURANCE
+
                                            | (1L << 18)
-#endif
-#ifdef SCORE_ON_BOTL
-                                           | (1L << 19)
-#endif
+
 /* data format (27..31)
  * External compression methods such as COMPRESS and ZLIB_COMP
  * do not affect the contents and are thus excluded from here */
-#ifdef ZEROCOMP
-                                           | (1L << 27)
-#endif
-#ifdef RLECOMP
-                                           | (1L << 28)
-#endif
+
                                                );
     /*
      * Value used for object & monster sanity check.
@@ -1154,11 +779,7 @@ make_version()
          | ((unsigned long) sizeof(struct you)));
     version.struct_sizes2 = (((unsigned long) sizeof(struct flag) << 10) |
 /* free bits in here */
-#ifdef SYSFLAGS
-                             ((unsigned long) sizeof(struct sysflag)));
-#else
                              ((unsigned long) 0L));
-#endif
     return;
 }
 
@@ -1169,9 +790,6 @@ const char *delim;
 {
     Sprintf(outbuf, "%d%s%d%s%d", VERSION_MAJOR, delim, VERSION_MINOR, delim,
             PATCHLEVEL);
-#ifdef BETA
-    Sprintf(eos(outbuf), "-%d", EDITLEVEL);
-#endif
     return outbuf;
 }
 
@@ -1183,13 +801,6 @@ const char *build_date;
     char subbuf[64], versbuf[64];
 
     subbuf[0] = '\0';
-#ifdef PORT_SUB_ID
-    subbuf[0] = ' ';
-    Strcpy(&subbuf[1], PORT_SUB_ID);
-#endif
-#ifdef BETA
-    Strcat(subbuf, " Beta");
-#endif
 
     Sprintf(outbuf, "%s NetHack%s Version %s - last build %s.", PORT_ID,
             subbuf, version_string(versbuf, "."), build_date);
@@ -1204,32 +815,16 @@ const char *build_date;
     char subbuf[64], versbuf[64];
 
     subbuf[0] = '\0';
-#ifdef PORT_SUB_ID
-    subbuf[0] = ' ';
-    Strcpy(&subbuf[1], PORT_SUB_ID);
-#endif
-#ifdef BETA
-    Strcat(subbuf, " Beta");
-#endif
 
     Sprintf(outbuf, "         Version %s %s%s, built %s.",
             version_string(versbuf, "."), PORT_ID, subbuf, &build_date[4]);
-#if 0
-    Sprintf(outbuf, "%s NetHack%s %s Copyright 1985-%s (built %s)",
-            PORT_ID, subbuf, version_string(versbuf,"."), RELEASE_YEAR,
-            &build_date[4]);
-#endif
     return outbuf;
 }
 
 void
 do_date()
 {
-#ifdef KR1ED
-    long clocktim = 0;
-#else
     time_t clocktim = 0;
-#endif
     char *c, cbuf[60], buf[BUFSZ];
     const char *ul_sfx;
 
@@ -1238,9 +833,6 @@ do_date()
     windowing_sanity();
 
     filename[0] = '\0';
-#ifdef FILE_PREFIX
-    Strcat(filename, file_prefix);
-#endif
     Sprintf(eos(filename), INCLUDE_TEMPLATE, DATE_FILE);
     if (!(ofp = fopen(filename, WRTMODE))) {
         perror(filename);
@@ -1261,19 +853,16 @@ do_date()
     Fprintf(ofp, "#define BUILD_DATE \"%s\"\n", cbuf);
     Fprintf(ofp, "#define BUILD_TIME (%ldL)\n", (long) clocktim);
     Fprintf(ofp, "\n");
-#ifdef NHSTDC
     ul_sfx = "UL";
-#else
-    ul_sfx = "L";
-#endif
+
     Fprintf(ofp, "#define VERSION_NUMBER 0x%08lx%s\n", version.incarnation,
             ul_sfx);
     Fprintf(ofp, "#define VERSION_FEATURES 0x%08lx%s\n", version.feature_set,
             ul_sfx);
-#ifdef IGNORED_FEATURES
+
     Fprintf(ofp, "#define IGNORED_FEATURES 0x%08lx%s\n",
             (unsigned long) IGNORED_FEATURES, ul_sfx);
-#endif
+
     Fprintf(ofp, "#define VERSION_SANITY1 0x%08lx%s\n", version.entity_count,
             ul_sfx);
     Fprintf(ofp, "#define VERSION_SANITY2 0x%08lx%s\n", version.struct_sizes1,
@@ -1287,15 +876,6 @@ do_date()
     Fprintf(ofp, "#define COPYRIGHT_BANNER_C \\\n \"%s\"\n",
             bannerc_string(buf, cbuf));
     Fprintf(ofp, "\n");
-#ifdef AMIGA
-    {
-        struct tm *tm = localtime((time_t *) &clocktim);
-        Fprintf(ofp, "#define AMIGA_VERSION_STRING ");
-        Fprintf(ofp, "\"\\0$VER: NetHack %d.%d.%d (%d.%d.%d)\"\n",
-                VERSION_MAJOR, VERSION_MINOR, PATCHLEVEL, tm->tm_mday,
-                tm->tm_mon + 1, tm->tm_year + 1900);
-    }
-#endif
     Fclose(ofp);
     return;
 }
@@ -1305,140 +885,25 @@ static char save_bones_compat_buf[BUFSZ];
 static void
 build_savebones_compat_string()
 {
-#ifdef VERSION_COMPATIBILITY
-    unsigned long uver = VERSION_COMPATIBILITY;
-#endif
     Strcpy(save_bones_compat_buf,
            "save and bones files accepted from version");
-#ifdef VERSION_COMPATIBILITY
-    Sprintf(eos(save_bones_compat_buf), "s %lu.%lu.%lu through %d.%d.%d",
-            ((uver & 0xFF000000L) >> 24), ((uver & 0x00FF0000L) >> 16),
-            ((uver & 0x0000FF00L) >> 8), VERSION_MAJOR, VERSION_MINOR,
-            PATCHLEVEL);
-#else
     Sprintf(eos(save_bones_compat_buf), " %d.%d.%d only", VERSION_MAJOR,
             VERSION_MINOR, PATCHLEVEL);
-#endif
 }
 
 static const char *build_opts[] = {
-#ifdef AMIGA_WBENCH
-    "Amiga WorkBench support",
-#endif
-#ifdef ANSI_DEFAULT
-    "ANSI default terminal",
-#endif
-#ifdef TEXTCOLOR
     "color",
-#endif
-#ifdef COM_COMPL
-    "command line completion",
-#endif
-#ifdef LIFE
-    "Conway's Game of Life",
-#endif
-#ifdef COMPRESS
     "data file compression",
-#endif
-#ifdef ZLIB_COMP
-    "ZLIB data file compression",
-#endif
-#ifdef DLB
-    "data librarian",
-#endif
-#ifdef MFLOPPY
-    "floppy drive support",
-#endif
-#ifdef INSURANCE
     "insurance files for recovering from crashes",
-#endif
-#ifdef HOLD_LOCKFILE_OPEN
     "exclusive lock on level 0 file",
-#endif
-#ifdef LOGFILE
     "log file",
-#endif
-#ifdef MAIL
-    "mail daemon",
-#endif
-#ifdef GNUDOS
-    "MSDOS protected mode",
-#endif
-#ifdef NEWS
     "news file",
-#endif
-#ifdef OVERLAY
-#ifdef MOVERLAY
-    "MOVE overlays",
-#else
-#ifdef VROOMM
-    "VROOMM overlays",
-#else
-    "overlays",
-#endif
-#endif
-#endif
-#ifdef SELECTSAVED
-    "restore saved games via menu",
-#endif
-#ifdef SCORE_ON_BOTL
-    "score on status line",
-#endif
-#ifdef CLIPPING
     "screen clipping",
-#endif
-#ifdef NO_TERMS
-#ifdef MAC
-    "screen control via mactty",
-#endif
-#ifdef SCREEN_BIOS
-    "screen control via BIOS",
-#endif
-#ifdef SCREEN_DJGPPFAST
-    "screen control via DJGPP fast",
-#endif
-#ifdef SCREEN_VGA
-    "screen control via VGA graphics",
-#endif
-#ifdef WIN32CON
-    "screen control via WIN32 console I/O",
-#endif
-#endif
-#ifdef SHELL
     "shell command",
-#endif
-#ifdef SUSPEND
     "suspend command",
-#endif
-#ifdef TERMINFO
     "terminal info library",
-#else
-#if defined(TERMLIB) \
-    || ((!defined(MICRO) && !defined(WIN32)) && defined(TTY_GRAPHICS))
-    "terminal capability library",
-#endif
-#endif
-#ifdef TIMED_DELAY
-    "timed wait for display effects",
-#endif
-#ifdef USER_SOUNDS
-    "user sounds",
-#endif
-#ifdef PREFIXES_IN_USE
-    "variable playground",
-#endif
-#ifdef VISION_TABLES
-    "vision tables",
-#endif
-#ifdef ZEROCOMP
-    "zero-compressed save files",
-#endif
-#ifdef RLECOMP
-    "run-length compression of map in save files",
-#endif
-#ifdef SYSCF
     "system configuration at run-time",
-#endif
+
     save_bones_compat_buf, "and basic NetHack features"
 };
 
@@ -1446,52 +911,15 @@ struct win_info {
     const char *id, /* DEFAULT_WINDOW_SYS string */
         *name;      /* description, often same as id */
 };
+
 static struct win_info window_opts[] = {
-#ifdef TTY_GRAPHICS
     { "tty", "traditional tty-based graphics" },
-#endif
-#ifdef X11_GRAPHICS
-    { "X11", "X11" },
-#endif
-#ifdef QT_GRAPHICS
-    { "Qt", "Qt" },
-#endif
-#ifdef GNOME_GRAPHICS
-    { "Gnome", "Gnome" },
-#endif
-#ifdef MAC
-    { "mac", "Mac" },
-#endif
-#ifdef AMIGA_INTUITION
-    { "amii", "Amiga Intuition" },
-#endif
-#ifdef GEM_GRAPHICS
-    { "Gem", "Gem" },
-#endif
-#ifdef MSWIN_GRAPHICS
-    { "mswin", "mswin" },
-#endif
-#ifdef BEOS_GRAPHICS
-    { "BeOS", "BeOS InterfaceKit" },
-#endif
     { 0, 0 }
 };
 
 static void
 windowing_sanity()
 {
-#ifndef DEFAULT_WINDOW_SYS
-    /* pre-standard compilers didn't support #error; wait til run-time */
-    Fprintf(stderr,
-            "Configuration error: DEFAULT_WINDOW_SYS is not defined.\n");
-    exit(EXIT_FAILURE);
-/*NOTREACHED*/
-
-/* put in a dummy value so that do_options() will compile and makedefs
-   will build, otherwise the message above won't ever get delivered */
-#define DEFAULT_WINDOW_SYS "<undefined>"
-#else  /*DEFAULT_WINDOW_SYS*/
-
     if (!window_opts[0].id) {
         Fprintf(stderr, "Configuration error: no windowing systems "
                         "(TTY_GRAPHICS, &c) enabled.\n");
@@ -1514,7 +942,6 @@ windowing_sanity()
             exit(EXIT_FAILURE);
         }
     }
-#endif /*DEFAULT_WINDOW_SYS*/
 }
 
 void
@@ -1528,9 +955,6 @@ do_options()
     windowing_sanity();
 
     filename[0] = '\0';
-#ifdef FILE_PREFIX
-    Strcat(filename, file_prefix);
-#endif
     Sprintf(eos(filename), DATA_TEMPLATE, OPTIONS_FILE);
     if (!(ofp = fopen(filename, WRTMODE))) {
         perror(filename);
@@ -1539,11 +963,7 @@ do_options()
 
     build_savebones_compat_string();
     Fprintf(ofp,
-#ifdef BETA
-            "\n    NetHack version %d.%d.%d [beta]\n",
-#else
             "\n    NetHack version %d.%d.%d\n",
-#endif
             VERSION_MAJOR, VERSION_MINOR, PATCHLEVEL);
 
     Fprintf(ofp, "\nOptions compiled into this edition:\n");
@@ -1635,16 +1055,9 @@ do_data()
 
     Sprintf(tempfile, DATA_TEMPLATE, "database.tmp");
     filename[0] = '\0';
-#ifdef FILE_PREFIX
-    Strcat(filename, file_prefix);
-#endif
     Sprintf(eos(filename), DATA_TEMPLATE, DATA_FILE);
     Sprintf(infile, DATA_IN_TEMPLATE, DATA_FILE);
-#ifdef SHORT_FILENAMES
-    Strcat(infile, ".bas");
-#else
     Strcat(infile, ".base");
-#endif
     if (!(ifp = fopen(infile, RDTMODE))) { /* data.base */
         perror(infile);
         exit(EXIT_FAILURE);
@@ -1792,9 +1205,6 @@ do_oracles()
 
     Sprintf(tempfile, DATA_TEMPLATE, "oracles.tmp");
     filename[0] = '\0';
-#ifdef FILE_PREFIX
-    Strcat(filename, file_prefix);
-#endif
     Sprintf(eos(filename), DATA_TEMPLATE, ORACLE_FILE);
     Sprintf(infile, DATA_IN_TEMPLATE, ORACLE_FILE);
     Strcat(infile, ".txt");
@@ -1896,27 +1306,14 @@ do_oracles()
     if (ok) {
         Sprintf(line, "data rewrite of \"%s\"", filename);
         for (i = 0; i <= oracle_cnt; i++) {
-#ifndef VMS /* alpha/vms v1.0; this fflush seems to confuse ftell */
             if (!(ok = (fflush(ofp) == 0)))
                 break;
-#endif
             if (!(ok = (fpos = ftell(ofp)) >= 0))
                 break;
             if (!(ok = (fseek(ofp, fpos, SEEK_SET) >= 0)))
                 break;
             if (!(ok = (fscanf(ofp, "%5lx", &offset) == 1)))
                 break;
-#ifdef MAC
-#ifdef __MWERKS__
-            /*
-            MetroWerks CodeWarrior Pro 1's (AKA CW12) version of MSL
-            (ANSI C Libraries) needs this rewind or else the fprintf
-            stops working.  This may also be true for CW11, but has
-            never been checked.
-            */
-            rewind(ofp);
-#endif
-#endif
             if (!(ok = (fseek(ofp, fpos, SEEK_SET) >= 0)))
                 break;
             offset += txt_offset;
@@ -1953,9 +1350,6 @@ do_dungeon()
         exit(EXIT_FAILURE);
     }
     filename[0] = '\0';
-#ifdef FILE_PREFIX
-    Strcat(filename, file_prefix);
-#endif
     Sprintf(eos(filename), DGN_TEMPLATE, DGN_O_FILE);
     if (!(ofp = fopen(filename, WRTMODE))) {
         perror(filename);
@@ -1999,153 +1393,6 @@ register struct permonst *ptr;
 
     return FALSE;
 }
-
-/* This routine is designed to return an integer value which represents
- * an approximation of monster strength.  It uses a similar method of
- * determination as "experience()" to arrive at the strength.
- */
-#if 0
-static int
-mstrength(ptr)
-struct permonst *ptr;
-{
-    int i, tmp2, n, tmp = ptr->mlevel;
-
-    if (tmp > 49) /* special fixed hp monster */
-        tmp = 2 * (tmp - 6) / 4;
-
-    /*  For creation in groups */
-    n = (!!(ptr->geno & G_SGROUP));
-    n += (!!(ptr->geno & G_LGROUP)) << 1;
-
-    /*  For ranged attacks */
-    if (ranged_attk(ptr))
-        n++;
-
-    /*  For higher ac values */
-    n += (ptr->ac < 4);
-    n += (ptr->ac < 0);
-
-    /*  For very fast monsters */
-    n += (ptr->mmove >= 18);
-
-    /*  For each attack and "special" attack */
-    for (i = 0; i < NATTK; i++) {
-        tmp2 = ptr->mattk[i].aatyp;
-        n += (tmp2 > 0);
-        n += (tmp2 == AT_MAGC);
-        n += (tmp2 == AT_WEAP && (ptr->mflags2 & M2_STRONG));
-    }
-
-    /*  For each "special" damage type */
-    for (i = 0; i < NATTK; i++) {
-        tmp2 = ptr->mattk[i].adtyp;
-        if ((tmp2 == AD_DRLI) || (tmp2 == AD_STON) || (tmp2 == AD_DRST)
-            || (tmp2 == AD_DRDX) || (tmp2 == AD_DRCO) || (tmp2 == AD_WERE))
-            n += 2;
-        else if (strcmp(ptr->mname, "grid bug"))
-            n += (tmp2 != AD_PHYS);
-        n += ((int) (ptr->mattk[i].damd * ptr->mattk[i].damn) > 23);
-    }
-
-    /*  Leprechauns are special cases.  They have many hit dice so they can
-        hit and are hard to kill, but they don't really do much damage. */
-    if (!strcmp(ptr->mname, "leprechaun"))
-        n -= 2;
-
-    /*  Finally, adjust the monster level  0 <= n <= 24 (approx.) */
-    if (n == 0)
-        tmp--;
-    else if (n >= 6)
-        tmp += (n / 2);
-    else
-        tmp += (n / 3 + 1);
-
-    return (tmp >= 0) ? tmp : 0;
-}
-
-void
-do_monstr()
-{
-    register struct permonst *ptr;
-    register int i, j;
-
-    /*
-     * create the source file, "monstr.c"
-     */
-    filename[0] = '\0';
-#ifdef FILE_PREFIX
-    Strcat(filename, file_prefix);
-#endif
-    Sprintf(eos(filename), SOURCE_TEMPLATE, MON_STR_C);
-    if (!(ofp = fopen(filename, WRTMODE))) {
-        perror(filename);
-        exit(EXIT_FAILURE);
-    }
-    Fprintf(ofp, "%s", Dont_Edit_Code);
-    Fprintf(ofp, "#include \"config.h\"\n");
-    Fprintf(ofp, "\nconst int monstr[] = {\n");
-    for (ptr = &mons[0], j = 0; ptr->mlet; ptr++) {
-        SpinCursor(3);
-
-        i = mstrength(ptr);
-        Fprintf(ofp, "%2d,%c", i, (++j & 15) ? ' ' : '\n');
-    }
-    /* might want to insert a final 0 entry here instead of just newline */
-    Fprintf(ofp, "%s};\n", (j & 15) ? "\n" : "");
-
-    Fprintf(ofp, "\nvoid NDECL(monstr_init);\n");
-    Fprintf(ofp, "\nvoid\n");
-    Fprintf(ofp, "monstr_init()\n");
-    Fprintf(ofp, "{\n");
-    Fprintf(ofp, "    return;\n");
-    Fprintf(ofp, "}\n");
-    Fprintf(ofp, "\n/*monstr.c*/\n");
-
-    Fclose(ofp);
-    return;
-}
-
-void
-do_permonst()
-{
-    int i;
-    char *c, *nam;
-
-    filename[0] = '\0';
-#ifdef FILE_PREFIX
-    Strcat(filename, file_prefix);
-#endif
-    Sprintf(eos(filename), INCLUDE_TEMPLATE, MONST_FILE);
-    if (!(ofp = fopen(filename, WRTMODE))) {
-        perror(filename);
-        exit(EXIT_FAILURE);
-    }
-    Fprintf(ofp, "%s", Dont_Edit_Code);
-    Fprintf(ofp, "#ifndef PM_H\n#define PM_H\n");
-
-    if (strcmp(mons[0].mname, "playermon") != 0)
-        Fprintf(ofp, "\n#define\tPM_PLAYERMON\t(-1)");
-
-    for (i = 0; mons[i].mlet; i++) {
-        SpinCursor(3);
-
-        Fprintf(ofp, "\n#define\tPM_");
-        if (mons[i].mlet == S_HUMAN && !strncmp(mons[i].mname, "were", 4))
-            Fprintf(ofp, "HUMAN_");
-        for (nam = c = tmpdup(mons[i].mname); *c; c++)
-            if (*c >= 'a' && *c <= 'z')
-                *c -= (char) ('a' - 'A');
-            else if (*c < 'A' || *c > 'Z')
-                *c = '_';
-        Fprintf(ofp, "%s\t%d", nam, i);
-    }
-    Fprintf(ofp, "\n\n#define\tNUMMONS\t%d\n", i);
-    Fprintf(ofp, "\n#endif /* PM_H */\n");
-    Fclose(ofp);
-    return;
-}
-#endif
 
 /*      Start of Quest text file processing. */
 #include "qtext.h"
@@ -2432,9 +1679,6 @@ do_questtxt()
     }
 
     filename[0] = '\0';
-#ifdef FILE_PREFIX
-    Strcat(filename, file_prefix);
-#endif
     Sprintf(eos(filename), DATA_TEMPLATE, QTXT_O_FILE);
     if (!(ofp = fopen(filename, WRBMODE))) {
         perror(filename);
@@ -2503,138 +1747,6 @@ int pref;
     return temp;
 }
 
-void
-do_objs()
-{
-    int i, sum = 0;
-    char *c, *objnam;
-    int nspell = 0;
-    int prefix = 0;
-    char class = '\0';
-    boolean sumerr = FALSE;
-
-    filename[0] = '\0';
-#ifdef FILE_PREFIX
-    Strcat(filename, file_prefix);
-#endif
-    Sprintf(eos(filename), INCLUDE_TEMPLATE, ONAME_FILE);
-    if (!(ofp = fopen(filename, WRTMODE))) {
-        perror(filename);
-        exit(EXIT_FAILURE);
-    }
-    Fprintf(ofp, "%s", Dont_Edit_Code);
-    Fprintf(ofp, "#ifndef ONAMES_H\n#define ONAMES_H\n\n");
-
-    for (i = 0; !i || objects[i].oc_class != ILLOBJ_CLASS; i++) {
-        SpinCursor(3);
-
-        objects[i].oc_name_idx = objects[i].oc_descr_idx = i; /* init */
-        if (!(objnam = tmpdup(OBJ_NAME(objects[i]))))
-            continue;
-
-        /* make sure probabilities add up to 1000 */
-        if (objects[i].oc_class != class) {
-            if (sum && sum != 1000) {
-                Fprintf(stderr, "prob error for class %d (%d%%)", class, sum);
-                (void) fflush(stderr);
-                sumerr = TRUE;
-            }
-            class = objects[i].oc_class;
-            sum = 0;
-        }
-
-        for (c = objnam; *c; c++)
-            if (*c >= 'a' && *c <= 'z')
-                *c -= (char) ('a' - 'A');
-            else if (*c < 'A' || *c > 'Z')
-                *c = '_';
-
-        switch (class) {
-        case WAND_CLASS:
-            Fprintf(ofp, "#define\tWAN_");
-            prefix = 1;
-            break;
-        case RING_CLASS:
-            Fprintf(ofp, "#define\tRIN_");
-            prefix = 1;
-            break;
-        case POTION_CLASS:
-            Fprintf(ofp, "#define\tPOT_");
-            prefix = 1;
-            break;
-        case SPBOOK_CLASS:
-            Fprintf(ofp, "#define\tSPE_");
-            prefix = 1;
-            nspell++;
-            break;
-        case SCROLL_CLASS:
-            Fprintf(ofp, "#define\tSCR_");
-            prefix = 1;
-            break;
-        case AMULET_CLASS:
-            /* avoid trouble with stupid C preprocessors */
-            Fprintf(ofp, "#define\t");
-            if (objects[i].oc_material == PLASTIC) {
-                Fprintf(ofp, "FAKE_AMULET_OF_YENDOR\t%d\n", i);
-                prefix = -1;
-                break;
-            }
-            break;
-        case GEM_CLASS:
-            /* avoid trouble with stupid C preprocessors */
-            if (objects[i].oc_material == GLASS) {
-                Fprintf(ofp, "/* #define\t%s\t%d */\n", objnam, i);
-                prefix = -1;
-                break;
-            }
-        default:
-            Fprintf(ofp, "#define\t");
-        }
-        if (prefix >= 0)
-            Fprintf(ofp, "%s\t%d\n", limit(objnam, prefix), i);
-        prefix = 0;
-
-        sum += objects[i].oc_prob;
-    }
-
-    /* check last set of probabilities */
-    if (sum && sum != 1000) {
-        Fprintf(stderr, "prob error for class %d (%d%%)", class, sum);
-        (void) fflush(stderr);
-        sumerr = TRUE;
-    }
-
-    Fprintf(ofp, "#define\tLAST_GEM\t(JADE)\n");
-    Fprintf(ofp, "#define\tMAXSPELL\t%d\n", nspell + 1);
-    Fprintf(ofp, "#define\tNUM_OBJECTS\t%d\n", i);
-
-    Fprintf(ofp, "\n/* Artifacts (unique objects) */\n\n");
-
-    for (i = 1; artifact_names[i]; i++) {
-        SpinCursor(3);
-
-        for (c = objnam = tmpdup(artifact_names[i]); *c; c++)
-            if (*c >= 'a' && *c <= 'z')
-                *c -= (char) ('a' - 'A');
-            else if (*c < 'A' || *c > 'Z')
-                *c = '_';
-
-        if (!strncmp(objnam, "THE_", 4))
-            objnam += 4;
-        /* fudge _platinum_ YENDORIAN EXPRESS CARD */
-        if (!strncmp(objnam, "PLATINUM_", 9))
-            objnam += 9;
-        Fprintf(ofp, "#define\tART_%s\t%d\n", limit(objnam, 1), i);
-    }
-
-    Fprintf(ofp, "#define\tNROFARTIFACTS\t%d\n", i - 1);
-    Fprintf(ofp, "\n#endif /* ONAMES_H */\n");
-    Fclose(ofp);
-    if (sumerr)
-        exit(EXIT_FAILURE);
-    return;
-}
-
 /* Read one line from input, up to and including the next newline
  * character. Returns a pointer to the heap-allocated string, or a
  * null pointer if no characters were read.
@@ -2692,29 +1804,12 @@ char *str;
 void
 do_vision()
 {
-#ifdef VISION_TABLES
-    int i, j;
-
-    /* Everything is clear.  xclear may be malloc'ed.
-     * Block the upper left corner (BLOCK_HEIGHTxBLOCK_WIDTH)
-     */
-    for (i = 0; i < MAX_ROW; i++)
-        for (j = 0; j < MAX_COL; j++)
-            if (i < BLOCK_HEIGHT && j < BLOCK_WIDTH)
-                xclear[i][j] = '\000';
-            else
-                xclear[i][j] = '\001';
-#endif /* VISION_TABLES */
-
     SpinCursor(3);
 
     /*
      * create the include file, "vis_tab.h"
      */
     filename[0] = '\0';
-#ifdef FILE_PREFIX
-    Strcat(filename, file_prefix);
-#endif
     Sprintf(filename, INCLUDE_TEMPLATE, VIS_TAB_H);
     if (!(ofp = fopen(filename, WRTMODE))) {
         perror(filename);
@@ -2722,10 +1817,7 @@ do_vision()
     }
     Fprintf(ofp, "%s", Dont_Edit_Code);
     Fprintf(ofp, "#ifdef VISION_TABLES\n");
-#ifdef VISION_TABLES
-    H_close_gen();
-    H_far_gen();
-#endif /* VISION_TABLES */
+
     Fprintf(ofp, "\n#endif /* VISION_TABLES */\n");
     Fclose(ofp);
 
@@ -2735,9 +1827,6 @@ do_vision()
      * create the source file, "vis_tab.c"
      */
     filename[0] = '\0';
-#ifdef FILE_PREFIX
-    Strcat(filename, file_prefix);
-#endif
     Sprintf(filename, SOURCE_TEMPLATE, VIS_TAB_C);
     if (!(ofp = fopen(filename, WRTMODE))) {
         perror(filename);
@@ -2752,12 +1841,6 @@ do_vision()
 
     SpinCursor(3);
 
-#ifdef VISION_TABLES
-    C_close_gen();
-    C_far_gen();
-    Fprintf(ofp, "\nvoid vis_tab_init() { return; }\n");
-#endif /* VISION_TABLES */
-
     SpinCursor(3);
 
     Fprintf(ofp, "\n#endif /* VISION_TABLES */\n");
@@ -2767,307 +1850,5 @@ do_vision()
     return;
 }
 
-#ifdef VISION_TABLES
-
-/*--------------  vision tables  --------------*\
- *
- *  Generate the close and far tables.  This is done by setting up a
- *  fake dungeon and moving our source to different positions relative
- *  to a block and finding the first/last visible position.  The fake
- *  dungeon is all clear execpt for the upper left corner (BLOCK_HEIGHT
- *  by BLOCK_WIDTH) is blocked.  Then we move the source around relative
- *  to the corner of the block.  For each new position of the source
- *  we check positions on rows "kittycorner" from the source.  We check
- *  positions until they are either in sight or out of sight (depends on
- *  which table we are generating).  The picture below shows the setup
- *  for the generation of the close table.  The generation of the far
- *  table would switch the quadrants of the '@' and the "Check rows
- *  here".
- *
- *
- *  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
- *  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
- *  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX,,,,,,,,, Check rows here ,,,,,,,,,,,,
- *  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
- *  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXB,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
- *  ...............................
- *  ...............................
- *  .........@.....................
- *  ...............................
- *
- *      Table generation figure (close_table).  The 'X's are blocked points.
- *      The 'B' is a special blocked point.  The '@' is the source.  The ','s
- *      are the target area.  The '.' are just open areas.
- *
- *
- *  Example usage of close_table[][][].
- *
- *  The table is as follows:
- *
- *      dy = |row of '@' - row of 'B'|  - 1
- *      dx = |col of '@' - col of 'B'|
- *
- *  The first indices are the deltas from the source '@' and the block 'B'.
- *  You must check for the value inside the abs value bars being zero.  If
- *  so then the block is on the same row and you don't need to do a table
- *  lookup.  The last value:
- *
- *      dcy = |row of block - row to be checked|
- *
- *  Is the value of the first visible spot on the check row from the
- *  block column.  So
- *
- *  first visible col = close_table[dy][dx][dcy] + col of 'B'
- *
-\*--------------  vision tables  --------------*/
-
-static void
-H_close_gen()
-{
-    Fprintf(ofp, "\n/* Close */\n");
-    Fprintf(ofp,
-            "#define CLOSE_MAX_SB_DY %2d\t/* |src row - block row| - 1\t*/\n",
-            TEST_HEIGHT - 1);
-    Fprintf(ofp,
-            "#define CLOSE_MAX_SB_DX %2d\t/* |src col - block col|\t*/\n",
-            TEST_WIDTH);
-    Fprintf(ofp,
-            "#define CLOSE_MAX_BC_DY %2d\t/* |block row - check row|\t*/\n",
-            TEST_HEIGHT);
-    Fprintf(ofp, "typedef struct {\n");
-    Fprintf(ofp,
-            "    unsigned char close[CLOSE_MAX_SB_DX][CLOSE_MAX_BC_DY];\n");
-    Fprintf(ofp, "} close2d;\n");
-    Fprintf(ofp, "extern close2d close_table[CLOSE_MAX_SB_DY];\n");
-    return;
-}
-
-static void
-H_far_gen()
-{
-    Fprintf(ofp, "\n/* Far */\n");
-    Fprintf(ofp, "#define FAR_MAX_SB_DY %2d\t/* |src row - block row|\t*/\n",
-            TEST_HEIGHT);
-    Fprintf(ofp,
-            "#define FAR_MAX_SB_DX %2d\t/* |src col - block col| - 1\t*/\n",
-            TEST_WIDTH - 1);
-    Fprintf(ofp,
-            "#define FAR_MAX_BC_DY %2d\t/* |block row - check row| - 1\t*/\n",
-            TEST_HEIGHT - 1);
-    Fprintf(ofp, "typedef struct {\n");
-    Fprintf(ofp, "    unsigned char far_q[FAR_MAX_SB_DX][FAR_MAX_BC_DY];\n");
-    Fprintf(ofp, "} far2d;\n");
-    Fprintf(ofp, "extern far2d far_table[FAR_MAX_SB_DY];\n");
-    return;
-}
-
-static void
-C_close_gen()
-{
-    int i, dx, dy;
-    int src_row, src_col;     /* source */
-    int block_row, block_col; /* block */
-    int this_row;
-    int no_more;
-    const char *delim;
-
-    block_row = BLOCK_HEIGHT - 1;
-    block_col = BLOCK_WIDTH - 1;
-
-    Fprintf(ofp, "\n#ifndef FAR_TABLE_ONLY\n");
-    Fprintf(ofp, "\nclose2d close_table[CLOSE_MAX_SB_DY] = {\n");
-#ifndef no_vision_progress
-    Fprintf(stderr, "\nclose:");
-#endif
-
-    for (dy = 1; dy < TEST_HEIGHT; dy++) {
-        src_row = block_row + dy;
-        Fprintf(ofp, "/* DY = %2d (- 1)*/\n  {{\n", dy);
-#ifndef no_vision_progress
-        Fprintf(stderr, " %2d", dy), (void) fflush(stderr);
-#endif
-        for (dx = 0; dx < TEST_WIDTH; dx++) {
-            src_col = block_col - dx;
-            Fprintf(ofp, "  /*%2d*/ {", dx);
-
-            no_more = 0;
-            for (this_row = 0; this_row < TEST_HEIGHT; this_row++) {
-                delim = (this_row < TEST_HEIGHT - 1) ? "," : "";
-                if (no_more) {
-                    Fprintf(ofp, "%s%s", CLOSE_OFF_TABLE_STRING, delim);
-                    continue;
-                }
-                SpinCursor(3);
-
-                /* Find the first column that we can see. */
-                for (i = block_col + 1; i < MAX_COL; i++) {
-                    if (clear_path(src_row, src_col, block_row - this_row, i))
-                        break;
-                }
-
-                if (i == MAX_COL)
-                    no_more = 1;
-                Fprintf(ofp, "%2d%s", i - block_col, delim);
-            }
-            Fprintf(ofp, "}%s", (dx < TEST_WIDTH - 1) ? ",\n" : "\n");
-        }
-        Fprintf(ofp, "  }},\n");
-    }
-
-    Fprintf(ofp, "}; /* close_table[] */\n"); /* closing brace for table */
-    Fprintf(ofp, "#endif /* !FAR_TABLE_ONLY */\n");
-#ifndef no_vision_progress
-    Fprintf(stderr, "\n");
-#endif
-    return;
-}
-
-static void
-C_far_gen()
-{
-    int i, dx, dy;
-    int src_row, src_col;     /* source */
-    int block_row, block_col; /* block */
-    int this_row;
-    const char *delim;
-
-    block_row = BLOCK_HEIGHT - 1;
-    block_col = BLOCK_WIDTH - 1;
-
-    Fprintf(ofp, "\n#ifndef CLOSE_TABLE_ONLY\n");
-    Fprintf(ofp, "\nfar2d far_table[FAR_MAX_SB_DY] = {\n");
-#ifndef no_vision_progress
-    Fprintf(stderr, "\n_far_:");
-#endif
-
-    for (dy = 0; dy < TEST_HEIGHT; dy++) {
-        src_row = block_row - dy;
-        Fprintf(ofp, "/* DY = %2d */\n  {{\n", dy);
-#ifndef no_vision_progress
-        Fprintf(stderr, " %2d", dy), (void) fflush(stderr);
-#endif
-        for (dx = 1; dx < TEST_WIDTH; dx++) {
-            src_col = block_col + dx;
-            Fprintf(ofp, "  /*%2d(-1)*/ {", dx);
-
-            for (this_row = block_row + 1; this_row < block_row + TEST_HEIGHT;
-                 this_row++) {
-                delim = (this_row < block_row + TEST_HEIGHT - 1) ? "," : "";
-
-                SpinCursor(3);
-                /* Find first col that we can see. */
-                for (i = 0; i <= block_col; i++) {
-                    if (clear_path(src_row, src_col, this_row, i))
-                        break;
-                }
-
-                if (block_col - i < 0)
-                    Fprintf(ofp, "%s%s", FAR_OFF_TABLE_STRING, delim);
-                else
-                    Fprintf(ofp, "%2d%s", block_col - i, delim);
-            }
-            Fprintf(ofp, "}%s", (dx < TEST_WIDTH - 1) ? ",\n" : "\n");
-        }
-        Fprintf(ofp, "  }},\n");
-    }
-
-    Fprintf(ofp, "}; /* far_table[] */\n"); /* closing brace for table */
-    Fprintf(ofp, "#endif /* !CLOSE_TABLE_ONLY */\n");
-#ifndef no_vision_progress
-    Fprintf(stderr, "\n");
-#endif
-    return;
-}
-
-/*
- *  "Draw" a line from the hero to the given location.  Stop if we hit a
- *  wall.
- *
- *  Generalized integer Bresenham's algorithm (fast line drawing) for
- *  all quadrants.  From _Procedural Elements for Computer Graphics_, by
- *  David F. Rogers.  McGraw-Hill, 1985.
- *
- *  I have tried a little bit of optimization by pulling compares out of
- *  the inner loops.
- *
- *  NOTE:  This had better *not* be called from a position on the
- *  same row as the hero.
- */
-static int
-clear_path(you_row, you_col, y2, x2)
-int you_row, you_col, y2, x2;
-{
-    int dx, dy, s1, s2;
-    register int i, error, x, y, dxs, dys;
-
-    x = you_col;
-    y = you_row;
-    dx = abs(x2 - you_col);
-    dy = abs(y2 - you_row);
-    s1 = sign(x2 - you_col);
-    s2 = sign(y2 - you_row);
-
-    if (s1 == 0) {     /* same column */
-        if (s2 == 1) { /* below (larger y2 value) */
-            for (i = you_row + 1; i < y2; i++)
-                if (!xclear[i][you_col])
-                    return 0;
-        } else { /* above (smaller y2 value) */
-            for (i = y2 + 1; i < you_row; i++)
-                if (!xclear[i][you_col])
-                    return 0;
-        }
-        return 1;
-    }
-
-    /*
-     *  Lines at 0 and 90 degrees have been weeded out.
-     */
-    if (dy > dx) {
-        error = dx;
-        dx = dy;
-        dy = error;    /* swap the values */
-        dxs = dx << 1; /* save the shifted values */
-        dys = dy << 1;
-        error = dys - dx; /* NOTE: error is used as a temporary above */
-
-        for (i = 0; i < dx; i++) {
-            if (!xclear[y][x])
-                return 0; /* plot point */
-
-            while (error >= 0) {
-                x += s1;
-                error -= dxs;
-            }
-            y += s2;
-            error += dys;
-        }
-    } else {
-        dxs = dx << 1; /* save the shifted values */
-        dys = dy << 1;
-        error = dys - dx;
-
-        for (i = 0; i < dx; i++) {
-            if (!xclear[y][x])
-                return 0; /* plot point */
-
-            while (error >= 0) {
-                y += s2;
-                error -= dxs;
-            }
-            x += s1;
-            error += dys;
-        }
-    }
-    return 1;
-}
-#endif /* VISION_TABLES */
-
-#ifdef STRICT_REF_DEF
-NEARDATA struct flag flags;
-#ifdef ATTRIB_H
-struct attribs attrmax, attrmin;
-#endif
-#endif /* STRICT_REF_DEF */
 
 /*makedefs.c*/

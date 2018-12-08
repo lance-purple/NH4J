@@ -2966,6 +2966,13 @@ public class MonsterType {
 		initializeZruties();
 	}
 	
+	public static int getNumberOfMonsterTypes() {
+		if (monsterTypesByPMID.isEmpty()) {
+			initialize();
+		}
+		return monsterTypesByPMID.size();
+	}
+
 	public static MonsterType getMonsterType(int pmid) {
 		if (monsterTypesByPMID.isEmpty()) {
 			initialize();
