@@ -237,11 +237,6 @@ makedefs.o: makedefs.c $(CONFIG_H) ../include/permonst.h \
 mdgreph: mdgrep.pl
 	perl mdgrep.pl
 
-../include/vis_tab.h: makedefs
-	./makedefs -z
-# makedefs -z makes both vis_tab.h and vis_tab.c, but writes the .h first
-../src/vis_tab.c: ../include/vis_tab.h
-
 lintdefs:
 	@lint -axbh -I../include -DLINT $(MAKESRC) $(CMONOBJ) | sed '/_flsbuf/d'
 

@@ -1603,11 +1603,6 @@ cleardone:
 #define FROM_RIGHT 0
 #define FROM_LEFT 1
 
-/*
- * Include the table definitions.
- */
-#include "vis_tab.h"
-
 /* 3D table pointers. */
 static close2d *close_dy[CLOSE_MAX_BC_DY];
 static far2d *far_dy[FAR_MAX_BC_DY];

@@ -194,10 +194,6 @@ char *options;
         case 'H':
             do_oracles();
             break;
-        case 'z':
-        case 'Z':
-            do_vision();
-            break;
 
         default:
             Fprintf(stderr, "Unknown option '%c'.\n", *options);
@@ -1795,60 +1791,5 @@ char *str;
         str++;
     return str;
 }
-
-/*
- * macro used to control vision algorithms:
- *      VISION_TABLES => generate tables
- */
-
-void
-do_vision()
-{
-    SpinCursor(3);
-
-    /*
-     * create the include file, "vis_tab.h"
-     */
-    filename[0] = '\0';
-    Sprintf(filename, INCLUDE_TEMPLATE, VIS_TAB_H);
-    if (!(ofp = fopen(filename, WRTMODE))) {
-        perror(filename);
-        exit(EXIT_FAILURE);
-    }
-    Fprintf(ofp, "%s", Dont_Edit_Code);
-    Fprintf(ofp, "#ifdef VISION_TABLES\n");
-
-    Fprintf(ofp, "\n#endif /* VISION_TABLES */\n");
-    Fclose(ofp);
-
-    SpinCursor(3);
-
-    /*
-     * create the source file, "vis_tab.c"
-     */
-    filename[0] = '\0';
-    Sprintf(filename, SOURCE_TEMPLATE, VIS_TAB_C);
-    if (!(ofp = fopen(filename, WRTMODE))) {
-        perror(filename);
-        Sprintf(filename, INCLUDE_TEMPLATE, VIS_TAB_H);
-        Unlink(filename);
-        exit(EXIT_FAILURE);
-    }
-    Fprintf(ofp, "%s", Dont_Edit_Code);
-    Fprintf(ofp, "#include \"config.h\"\n");
-    Fprintf(ofp, "#ifdef VISION_TABLES\n");
-    Fprintf(ofp, "#include \"vis_tab.h\"\n");
-
-    SpinCursor(3);
-
-    SpinCursor(3);
-
-    Fprintf(ofp, "\n#endif /* VISION_TABLES */\n");
-    Fprintf(ofp, "\n/*vis_tab.c*/\n");
-
-    Fclose(ofp);
-    return;
-}
-
 
 /*makedefs.c*/
