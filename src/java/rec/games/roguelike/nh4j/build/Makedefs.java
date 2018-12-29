@@ -105,9 +105,6 @@ public class Makedefs {
 			processDate();
 			processOptions();
 			break;
-		case "-z":
-			processVision();
-			break;
 		default:
 			throw new IllegalArgumentException("UNKNOWN OPTION " + option);
 		}
@@ -146,11 +143,16 @@ public class Makedefs {
 	}
 
 	private static void processVersionInfo() {
-		throw new UnsupportedOperationException();
-	}
-
-	private static void processVision() {
-		throw new UnsupportedOperationException();
+		
+		 /*
+		 * integer version number
+		 */
+		 long versionIncarnation = (PatchLevel.VERSION_MAJOR << 24)
+		 | (PatchLevel.VERSION_MINOR << 16)
+		 | (PatchLevel.PATCHLEVEL << 8)
+		 | (PatchLevel.EDITLEVEL);
+		
+		 throw new UnsupportedOperationException();
 	}
 
 }
