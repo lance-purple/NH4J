@@ -11,12 +11,14 @@ JAVA_VERSION=`java -version 2>&1 | head -1 | cut -d' ' -f3`
 JAVA_VERSION=${JAVA_VERSION//\"/}
 JAVA_VERSION=${JAVA_VERSION//[$'\r\n']/}
 
-JAVA_HOME="/cygdrive/c/Program Files/Java/jre"$JAVA_VERSION
+JAVA_HOME=`which java`
+JAVA_HOME=${JAVA_HOME//\/bin\/java/}
 export JAVA_HOME
 
-if [[ $PATH != ?(*:)$JAVA_HOME/bin/server?(:*) ]]
+
+if [[ $PATH != ?(*:)$JAVA_HOME/jre/bin/server?(:*) ]]
 then
-    PATH="$PATH:$JAVA_HOME/bin/server"
+    PATH="$PATH:$JAVA_HOME/jre/bin/server"
 fi
 
 NETHACKOPTIONS=windowtype:tty

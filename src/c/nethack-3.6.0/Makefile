@@ -255,8 +255,8 @@ dofiles:
 	if test -n '$(SHELLDIR)'; then \
 		sed -e 's;/usr/games/lib/nethackdir;$(HACKDIR);' \
 		-e 's;HACKDIR/nethack;HACKDIR/$(GAME);' \
-		< sys/unix/nethack.sh \
-		> $(SHELLDIR)/$(GAME) ; fi
+		< sys/unix/nethack.sh > $(SHELLDIR)/$(GAME) ; \
+		dos2unix $(SHELLDIR)/$(GAME) ; fi
 # set up their permissions
 	-( cd $(INSTDIR) ; $(CHOWN) $(GAMEUID) $(GAME) recover ; \
 			$(CHGRP) $(GAMEGRP) $(GAME) recover )

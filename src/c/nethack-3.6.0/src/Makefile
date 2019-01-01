@@ -344,7 +344,7 @@ WINBELIB = -lbe
 JAVA_VERSION := $(shell java -version 2>&1 | head -n 1 | cut -c14-)
 JAVA_VERSION := $(shell echo $(JAVA_VERSION))
 
-LIBS = -L/cygdrive/c/Program\ Files/Java/jre$(JAVA_VERSION)/bin/server -ljvm
+LIBS = -L/cygdrive/c/Program\ Files/Java/jdk$(JAVA_VERSION)/jre/bin/server -ljvm
 
 # make NetHack
 GAME     = nethack
