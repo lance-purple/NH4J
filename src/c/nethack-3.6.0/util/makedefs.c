@@ -762,8 +762,11 @@ make_version()
     for (i = 1; objects[i].oc_class != ILLOBJ_CLASS; i++)
         continue;
     version.entity_count = (version.entity_count << 12) | (unsigned long) i;
-    for (i = 0; mons[i].XXmlet; i++)
-        continue;
+
+    int monster_count = 0;
+    sscanf(getenv("MONSTER_COUNT"), "%d", &monster_count);
+    i += monster_count;
+
     version.entity_count = (version.entity_count << 12) | (unsigned long) i;
     /*
      * Value used for compiler (word size/field alignment/padding) check.

@@ -355,6 +355,8 @@ GAME     = nethack
 # RANDOBJ = random.o
 RANDOBJ =
 
+MONSTER_COUNT := $(shell java -cp ../../../../classes/ rec.games.roguelike.nh4j.build.Makedefs monster.count)
+
 
 # used by `make depend' to reconstruct this Makefile; you shouldn't need this
 AWK	= nawk
@@ -366,7 +368,7 @@ AWK	= nawk
 # Other things that have to be reconfigured are in config.h,
 # {unixconf.h, pcconf.h, tosconf.h}, and possibly system.h
 
-MAKEDEFS = ../util/makedefs
+MAKEDEFS = MONSTER_COUNT=$(MONSTER_COUNT) ../util/makedefs
 
 # timestamp files to reduce `make' overhead and shorten .o dependency lists
 CONFIG_H = ../src/config.h-t
@@ -563,7 +565,7 @@ tile.c: ../win/share/tilemap.c $(HACK_H)
 #	hack.h depends on makedefs' output, so we know makedefs will be
 #	up to date before being executed
 ../include/date.h:	../util/makedefs $(VERSOURCES) $(HACK_H)
-	../util/makedefs -v
+	$(MAKEDEFS) -v
 
 
 lint:

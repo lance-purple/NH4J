@@ -1,5 +1,7 @@
 package rec.games.roguelike.nh4j.build;
 
+import rec.games.roguelike.nh4j.MonsterType;
+
 public class Makedefs {
 
 	private static final String EPITAPH_FILE = null;
@@ -7,8 +9,8 @@ public class Makedefs {
 	private static final String BOGUS_MONSTER_FILE = null;
 
 	public static void main(String[] args) {
-		processVersionInfo();
-		process(args[1]);
+		processVersionInfo();		
+		process(args[0]);
 	}
 
 	// private static void processVersionInfo() {
@@ -105,6 +107,9 @@ public class Makedefs {
 			processDate();
 			processOptions();
 			break;
+		case "monster.count":
+            processMonsterCount();
+			break;
 		default:
 			throw new IllegalArgumentException("UNKNOWN OPTION " + option);
 		}
@@ -120,6 +125,10 @@ public class Makedefs {
 
 	private static void processDungeon() {
 		throw new UnsupportedOperationException();
+	}
+
+	private static void processMonsterCount() {
+		System.out.println(MonsterType.getNumberOfMonsterTypes());
 	}
 
 	private static void processOptions() {
@@ -152,7 +161,7 @@ public class Makedefs {
 		 | (PatchLevel.PATCHLEVEL << 8)
 		 | (PatchLevel.EDITLEVEL);
 		
-		 throw new UnsupportedOperationException();
+	//	 throw new UnsupportedOperationException();
 	}
 
 }

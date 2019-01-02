@@ -137,31 +137,34 @@ GEM_RSC.RSC:
 	# cp ../win/gem/GEM_RSC.RSC GEM_RSC.RSC
 	$(UUDECODE) ../win/gem/gem_rsc.uu
 
+MONSTER_COUNT := $(shell java -cp ../../../../classes/ rec.games.roguelike.nh4j.build.Makedefs monster.count)
+
+MAKEDEFS := MONSTER_COUNT=$(MONSTER_COUNT) ../util/makedefs
 
 data:	data.base ../util/makedefs
-	../util/makedefs -d
+	$(MAKEDEFS) -d
 
 rumors:	rumors.tru rumors.fal ../util/makedefs
-	../util/makedefs -r
+	$(MAKEDEFS) -r
 
 quest.dat:	quest.txt ../util/makedefs
-	../util/makedefs -q
+	$(MAKEDEFS) -q
 
 oracles:	oracles.txt ../util/makedefs
-	../util/makedefs -h
+	$(MAKEDEFS) -h
 
 engrave:	engrave.txt ../util/makedefs
-	../util/makedefs -s
+	$(MAKEDEFS) -s
 
 epitaph:	epitaph.txt ../util/makedefs
-	../util/makedefs -s
+	$(MAKEDEFS) -s
 
 bogusmon:	bogusmon.txt ../util/makedefs
-	../util/makedefs -s
+	$(MAKEDEFS) -s
 
 # note: 'options' should have already been made when include/date.h was created
 options:	../util/makedefs
-	../util/makedefs -v
+	$(MAKEDEFS) -v
 
 
 spec_levs: ../util/lev_comp \
@@ -200,7 +203,7 @@ quest_levs: ../util/lev_comp \
 	touch quest_levs
 
 dungeon: dungeon.def ../util/makedefs ../util/dgn_comp
-	../util/makedefs -e
+	$(MAKEDEFS) -e
 	../util/dgn_comp dungeon.pdf
 
 spotless:
