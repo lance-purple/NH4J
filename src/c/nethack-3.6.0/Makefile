@@ -136,7 +136,12 @@ DATNODLB = $(VARDATND) license
 DATDLB = $(DATHELP) dungeon tribute $(SPEC_LEVS) $(QUEST_LEVS) $(VARDATD)
 DAT = $(DATNODLB) $(DATDLB)
 
-$(GAME):
+java_jar:
+	( cd ../../java ; find rec -name "*.java" > ../../classes/java_files )
+	( cd ../../java ; javac -d ../../classes @../../classes/java_files )
+	( cd ../../../classes ; jar -cvf ../nh4j.jar rec )
+
+$(GAME): java_jar
 	( cd src ; $(MAKE) )
 
 all:	$(GAME) recover Guidebook $(VARDAT) dungeon spec_levs check-dlb
@@ -327,8 +332,7 @@ install: rootcheck $(GAME) recover $(VARDAT) dungeon spec_levs
 			$(CHGRP) $(GAMEGRP) perm record logfile xlogfile ; \
 			chmod $(VARFILEPERM) perm record logfile xlogfile )
 	true; $(POSTINSTALL)
-	( cd ../../../classes ; tar -cvf $(INSTDIR)/nh4j.tar rec )
-	( cd $(INSTDIR) ; tar -xvf nh4j.tar )
+	( unzip ../../../nh4j.jar -d $(INSTDIR))
 # and a reminder
 	@echo You may also want to reinstall the man pages via the doc Makefile.
 
