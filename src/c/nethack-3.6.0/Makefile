@@ -136,7 +136,12 @@ DATNODLB = $(VARDATND) license
 DATDLB = $(DATHELP) dungeon tribute $(SPEC_LEVS) $(QUEST_LEVS) $(VARDATD)
 DAT = $(DATNODLB) $(DATDLB)
 
+BUILD_DATE := $(shell date +%b\ %d\ %T\ %Y)
+
 java_jar:
+	( cd ../../java/rec/games/roguelike/nh4j/build ; \
+	  sed -e 's/CURRENT_BUILD_DATE/$(BUILD_DATE)/' \
+	  PatchLevel.template > PatchLevel.java )
 	( cd ../../java ; find rec -name "*.java" > ../../classes/java_files )
 	( cd ../../java ; javac -d ../../classes @../../classes/java_files )
 	( cd ../../../classes ; jar -cvf ../nh4j.jar rec )

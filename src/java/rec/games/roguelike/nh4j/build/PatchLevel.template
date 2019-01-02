@@ -20,7 +20,7 @@ public class PatchLevel {
 	/*
 	 * value replaced with actual date during build.
 	 */
-	public static final String BUILD_DATE = "Jan 01 23:43:10 2019";
+	public static final String BUILD_DATE = "CURRENT_BUILD_DATE";
 
 	public static final String COPYRIGHT_BANNER_A = "NetHack, Copyright 1985-2019";
 	public static final String COPYRIGHT_BANNER_B = "         By Stichting Mathematisch Centrum and M. Stephenson.";
